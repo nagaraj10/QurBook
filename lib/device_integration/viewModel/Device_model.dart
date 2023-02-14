@@ -104,7 +104,7 @@ class DevicesViewModel with ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<dynamic>> fetchBPDetails() async {
+  Future<List<dynamic>?> fetchBPDetails() async {
     try {
       var resp = await _helper.getBPData();
       if (resp == null) {
@@ -114,7 +114,7 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
@@ -159,7 +159,7 @@ class DevicesViewModel with ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<dynamic>> fetchGLDetails() async {
+  Future<List<dynamic>?> fetchGLDetails() async {
     try {
       var resp = await _helper.getBloodGlucoseData();
       if (resp == null) {
@@ -169,7 +169,7 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
@@ -211,7 +211,7 @@ class DevicesViewModel with ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<dynamic>> fetchOXYDetails(String response) async {
+  Future<List<dynamic>?> fetchOXYDetails(String response) async {
     try {
       var resp = await _helper.getOxygenSaturationData();
       if (resp == null) {
@@ -221,7 +221,7 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
@@ -268,7 +268,7 @@ class DevicesViewModel with ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<dynamic>> fetchTMPDetails() async {
+  Future<List<dynamic>?> fetchTMPDetails() async {
     try {
       var resp = await _helper.getBodyTemperatureData();
       if (resp == null) {
@@ -278,7 +278,7 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<TMPResult> ret = [];
@@ -316,7 +316,7 @@ class DevicesViewModel with ChangeNotifier {
     }
   }
 
-  Future<List<dynamic>> fetchWVDetails(String response) async {
+  Future<List<dynamic>?> fetchWVDetails(String response) async {
     try {
       var resp = await _helper.getWeightData();
       if (resp == null) {
@@ -326,7 +326,7 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<WVResult> ret = [];
@@ -365,7 +365,7 @@ class DevicesViewModel with ChangeNotifier {
     }
   }
 
-  Future<List<HRResult>> fetchHeartRateDetails(String response) async {
+  Future<List<HRResult>?> fetchHeartRateDetails(String response) async {
     try {
       var resp = await _helper.getHeartRateData();
       if (resp == null) {
@@ -375,7 +375,7 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       final deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       var ret = <HRResult>[];

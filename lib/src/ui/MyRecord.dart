@@ -120,7 +120,7 @@ class _MyRecordsState extends State<MyRecords> {
   List<String> selectedMedia = [];
   static bool audioPage = false;
   LandingViewModel? landingViewModel;
-  BuildContext context;
+ late BuildContext context;
 
   @override
   void initState() {
@@ -279,7 +279,7 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getWidgetForSearchedMedia(List<Data> data) {
-    List<CategoryResult> categoryDataList;
+    List<CategoryResult> categoryDataList = [];
 
     // categoryDataList = new CommonUtil().getAllCategoryList(data);
     completeData = new CommonUtil().getMediaTypeInfo(data);
@@ -1165,7 +1165,7 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Widget getStackBody(List<CategoryResult>? data, HealthRecordList? completeData,
-      List<MediaResult> mediaData) {
+      List<MediaResult>? mediaData) {
     if (mediaData == null) {
       return Container();
     }

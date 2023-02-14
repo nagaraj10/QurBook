@@ -183,7 +183,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           } else {
             //todo proper error msg to users
             toast.getToast('something went wrong!', Colors.red);
-            return getProfileWidget(snapshot.data, null,
+            return getProfileWidget(snapshot.data, null as MyProfileResult,
                 errorMsg: 'something went wrong!');
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
@@ -882,10 +882,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return FutureBuilder(
         future: _healthReportListForUserRepository.getTags(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData ) {
             return CommonCircularIndicator();
           }
-          final List<Tags>? tagslist = snapshot.data!.result;
+        
+        
+          final List<Tags> tagslist = snapshot.data as List<Tags>; // snapshot.data.result to snapshot.data
 
           //  final mediaResultFiltered = removeUnwantedCategories(tagslist);
 

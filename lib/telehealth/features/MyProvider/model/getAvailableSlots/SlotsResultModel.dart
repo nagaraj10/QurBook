@@ -19,7 +19,7 @@ class SlotsResultModel {
     day = json['day'];
     sessionCounts = json['sessionCounts'];
     if (json['sessions'] != null) {
-      sessions = new List<SlotSessionsModel>();
+      sessions = <SlotSessionsModel>[];
       json['sessions'].forEach((v) {
         sessions!.add(new SlotSessionsModel.fromJson(v));
       });

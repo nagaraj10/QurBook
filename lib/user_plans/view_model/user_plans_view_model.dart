@@ -12,8 +12,8 @@ class UserPlansViewModel extends ChangeNotifier {
   Future<void> getUserPlanInfo() async {
     UserPlansResponseModel userPlansData =
         await UserPlansService.getUserPlanInfo();
-    if (userPlansData?.isSuccess! &&
-        ((userPlansData?.result?.length ?? 0) > 0)) {
+    if (userPlansData.isSuccess! &&
+        ((userPlansData.result!.length ?? 0) > 0)) {
       await PreferenceUtil.saveString(KEY_MEMBERSHIP, GOLD_MEMBERSHIP);
       isGoldMember = true;
     } else {

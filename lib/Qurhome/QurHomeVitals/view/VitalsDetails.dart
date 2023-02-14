@@ -125,7 +125,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
       if (catgoryDataList == null) {
         _categoryListBlock.getCategoryLists().then((value) {
           catgoryDataList = value.result!;
-        } as FutureOr<_> Function(CategoryDataList?));
+        } as FutureOr Function(CategoryDataList?));
       }
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
@@ -575,7 +575,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
             categoryDataObj = CommonUtil()
                 .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
             postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-          } as FutureOr<_> Function(CategoryDataList?));
+          } as FutureOr Function(CategoryDataList?));
         }
       }
 
@@ -1610,7 +1610,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
           //List<WVResult> translist = translis.first;
           final List<BPResult> bpResultNew =
               translis!.isNotEmpty ? translis?.first : [];
-          bpResultNew?.sort((translisCopy, translisClone) {
+          bpResultNew.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue!
                 .compareTo(translisCopy.dateTimeValue!);
           });
@@ -1802,7 +1802,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
           //List<WVResult> translist = translis.first;
           final List<WVResult> translistNew =
               translis.isNotEmpty ? translis.first : [];
-          translistNew?.sort((translisCopy, translisClone) {
+          translistNew.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue!
                 .compareTo(translisCopy.dateTimeValue!);
           });

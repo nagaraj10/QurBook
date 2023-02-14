@@ -94,7 +94,7 @@ class QurPlanReminders {
     }
   }
 
-  static Future<bool>? updateRemindersLocally(Reminder data) async {
+  static Future<bool?> updateRemindersLocally(Reminder data) async {
     final reminders = await getLocalReminder();
     Reminder? foundTheMatched;
     for (var i = 0; i < reminders.length; i++) {
@@ -240,7 +240,7 @@ class QurPlanReminders {
     return await saveRemindersLocally(data);
   }
 
-  static Future<bool>? deleteReminderLocally(Reminder data) async {
+  static Future<bool?> deleteReminderLocally(Reminder data) async {
     final reminders = await getLocalReminder();
     Reminder? foundTheMatched;
 

@@ -342,7 +342,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                         },
                         lastStatus: dashboardData?.symptomsCheckIn?.ack != null
                             ? CommonUtil().regimentDateFormat(
-                                dashboardData?.symptomsCheckIn?.ack!,
+                                dashboardData!.symptomsCheckIn!.ack!,
                                 isLanding: true,
                               )
                             : '',

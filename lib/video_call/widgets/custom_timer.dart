@@ -64,10 +64,10 @@ class CustomTimer extends StatelessWidget {
   final Color? backgroundColor;
 
   ///- height of timer widget
-  final double height;
+  final double? height;
 
   ///- width of timer widget
-  final double width;
+  final double? width;
 
   ///- if running is true timer starts with base
   ///  time to initial time. If false timer stops
@@ -91,12 +91,12 @@ class CustomTimer extends StatelessWidget {
   final double? borderRadius;
   CustomTimer(
       {this.backgroundColor,
-      required this.height,
-      required this.width,
+       this.height,
+       this.width,
       this.running,
       this.timerTextStyle,
       this.borderRadius,
-      required this.initialDate,
+       this.initialDate,
       this.tracetime,
       this.isRaised = false});
 

@@ -92,7 +92,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   TextEditingController memoController = TextEditingController(text: '');
   TextEditingController diaStolicPressure = TextEditingController(text: '');
 
-  List<bool?> isSelected = List(3);
+  List<bool?> isSelected = List.filled(3, null, growable: false);
 
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
@@ -145,7 +145,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       if (catgoryDataList == null) {
         _categoryListBlock.getCategoryLists().then((value) {
           catgoryDataList = value.result!;
-        } as FutureOr<_> Function(CategoryDataList?));
+        } as FutureOr Function(CategoryDataList?));
       }
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
@@ -396,7 +396,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             categoryDataObj = CommonUtil()
                 .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
             postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-          } as FutureOr<_> Function(CategoryDataList?));
+          } as FutureOr Function(CategoryDataList?));
         }
       }
 
@@ -1481,7 +1481,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     switch (widget.device_name) {
       case strDataTypeBP:
         {
-          return FutureBuilder<List<dynamic>>(
+          return FutureBuilder<List<dynamic>?>(
               future: devicesViewModel.fetchBPDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -1555,7 +1555,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         break;
       case strGlusoceLevel:
         {
-          return FutureBuilder<List<dynamic>>(
+          return FutureBuilder<List<dynamic>?>(
               future: devicesViewModel.fetchGLDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -1630,7 +1630,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         break;
       case strOxgenSaturation:
         {
-          return FutureBuilder<List<dynamic>>(
+          return FutureBuilder<List<dynamic>?>(
               future: devicesViewModel.fetchOXYDetails(''),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -1703,7 +1703,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         break;
       case strWeight:
         {
-          return FutureBuilder<List<dynamic>>(
+          return FutureBuilder<List<dynamic>?>(
               future: devicesViewModel.fetchWVDetails(''),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -1775,7 +1775,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         break;
       case strTemperature:
         {
-          return FutureBuilder<List<dynamic>>(
+          return FutureBuilder<List<dynamic>?>(
               future: devicesViewModel.fetchTMPDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {

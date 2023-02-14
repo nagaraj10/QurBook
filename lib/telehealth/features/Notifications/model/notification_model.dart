@@ -10,7 +10,7 @@ class NotificationModel {
   NotificationModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<NotificationResult>();
+      result = <NotificationResult>[];
       json['result'].forEach((v) {
         result!.add(new NotificationResult.fromJson(v));
       });

@@ -48,7 +48,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       mInitialTime = DateTime.now();
       providerOrganizationResult =
           Provider.of<PlanProviderViewModel>(context, listen: false)
-              .getCarePlanList(widget.selectedTag!);
+              .getCarePlanList(widget.selectedTag!) as Future<ProviderOrganisationResponse>?;
       //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
     } catch (e) {
       print(e);

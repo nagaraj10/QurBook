@@ -58,7 +58,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   FlutterToast toast = FlutterToast();
   var commonConstants = CommonConstants();
   bool? _value;
-  List<bool?> isSelected = List(2);
+  List<bool?> isSelected = List.filled(2, null, growable: false);
 
   String? deviceName = Constants.STR_WEIGHING_SCALE;
 
@@ -80,7 +80,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     if (catgoryDataList == null) {
       _categoryListBlock.getCategoryLists().then((value) {
         catgoryDataList = value.result!;
-      } as FutureOr<_> Function(CategoryDataList?));
+      } as FutureOr Function(CategoryDataList?));
     }
     _mediaTypeBlock.getMediTypesList().then((value) {
       mediaTypesResponse = value;
@@ -212,9 +212,11 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         ));
   }
 
-  Future<bool> _onBackPressed() {
+  Future<bool> _onBackPressed() async{
+    
     onOkClicked = false;
     Navigator.of(context).pop(true);
+    return true;
     /*return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
@@ -438,7 +440,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                 .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
             postMediaData[parameters.strhealthRecordCategory] =
                 categoryDataObj.toJson();
-          } as FutureOr<_> Function(CategoryDataList?));
+          } as FutureOr Function(CategoryDataList?));
         }
       }
 

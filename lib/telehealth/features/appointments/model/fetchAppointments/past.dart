@@ -227,7 +227,7 @@ class AdditionalInfo {
 
     fee = json.containsKey('fee') ? json["fee"] : 0;
   }
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic>? toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = title;
     data['Address'] = Address;

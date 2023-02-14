@@ -175,14 +175,14 @@ class _DietPlanPageState extends State<DietPlanPage> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          int? totalListCount = 0;
+          int totalListCount = 0;
           totalListCount = (snapshot.data!.result!.length ?? 0) > 0
               ? snapshot.data!.result!.length
               : 0;
-          if (totalListCount > 0) {
+          if (totalListCount > 0 ) {
             totalListCount = 0;
             snapshot.data!.result!.forEach((element) {
-              totalListCount += element.length ?? 0;
+              totalListCount += element.length;
             });
           }
           if (totalListCount! > 0) {

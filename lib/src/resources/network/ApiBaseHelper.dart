@@ -2729,7 +2729,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> uploadAttachmentForTicket(
+  Future<dynamic?> uploadAttachmentForTicket(
       String url, String? ticketId, List<ImagesModel> imagePaths) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -2775,8 +2775,30 @@ class ApiBaseHelper {
     var response;
     List responses = [];
 
-    formData.forEach((element) async {
-      if (responses.length != formData.length) {
+    // formData.forEach((element) async {
+    //   if (responses.length != formData.length) {
+    //     try {
+    //       response = await dio.post(url, data: element);
+
+    //       if (response.statusCode == 200) {
+    //         print(response.data.toString());
+    //         responses.add(response);
+    //       } else {
+    //         responses.add(response);
+    //       }
+    //     } on DioError catch (e) {
+    //       print(e.toString());
+    //       print(e);
+    //       responses.add(response);
+    //     }
+    //   }
+    //   if (responses.length == formData.length ) {
+    //     return responses;
+    //   }
+    // });
+
+       for (var element in formData){
+          if (responses.length != formData.length) {
         try {
           response = await dio.post(url, data: element);
 
@@ -2792,10 +2814,8 @@ class ApiBaseHelper {
           responses.add(response);
         }
       }
-      if (responses.length == formData.length) {
-        return responses;
-      }
-    });
+       }
+         return responses;
   }
 
   Future<UnitConfiguration> getUnitConfiguration(String url) async {

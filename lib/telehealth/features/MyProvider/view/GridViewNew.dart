@@ -50,7 +50,7 @@ class _GridViewNew extends State<GridViewNew> {
           onTap: (){
             _onSelected(index,widget.rowPosition);
           },
-          child:getSpecificSlots(commonUtil.removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),index),
+          child:getSpecificSlots(commonUtil.removeLastThreeDigits(widget.dateTimingsSlot[index].startTime!),index),
         );
       }),
     );
@@ -63,7 +63,7 @@ class _GridViewNew extends State<GridViewNew> {
       width: 35,
       decoration: myBoxDecoration(index),
       child: Center(
-        child: Text(commonUtil.removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),
+        child: Text(commonUtil.removeLastThreeDigits(widget.dateTimingsSlot[index].startTime!),
           style:
           TextStyle(fontSize: fhbStyles.fnt_date_slot, color:
           _selectedIndex != null && _selectedIndex == index && widget.rowPosition == widget.selectedRow

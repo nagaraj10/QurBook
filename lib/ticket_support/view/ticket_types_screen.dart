@@ -51,7 +51,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget getTicketTypes() {
-    return FutureBuilder<TicketTypesModel>(
+    return FutureBuilder<TicketTypesModel?>(
       future: ticketViewModel.getTicketTypesList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -71,9 +71,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           return ErrorsWidget();
         } else {
           //return ticketTypeListTest(context);
-          if (snapshot?.hasData &&
-              snapshot?.data?.ticketTypeResults != null &&
-              snapshot?.data?.ticketTypeResults!.isNotEmpty) {
+          if (snapshot.hasData &&
+              snapshot.data!.ticketTypeResults != null &&
+              snapshot.data!.ticketTypeResults!.isNotEmpty) {
             return Container(
                 child: ticketTypesList(snapshot.data!.ticketTypeResults));
           } else {
@@ -146,7 +146,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             onTap: () {
               try {
                 var createTicketController = Get.put(CreateTicketController());
-                createTicketController.isCTLoading?.value = false;
+                createTicketController.isCTLoading.value = false;
 
                 if (CommonUtil()
                     .validString(ticketList[i].name)

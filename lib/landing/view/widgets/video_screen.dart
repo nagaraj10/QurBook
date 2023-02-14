@@ -20,10 +20,10 @@ import 'package:myfhb/landing/view_model/landing_view_model.dart';
 
 class VideoScreen extends StatefulWidget {
   VideoScreen({
-    required this.videoList,
+  this.videoList,
   });
 
-  List<HelperVideo> videoList;
+  List<HelperVideo>? videoList;
 
   @override
   _VideoScreenState createState() => _VideoScreenState();

@@ -20,8 +20,8 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
   bool status5 = false;
   bool status6 = false;
   var prescriptionMedicineCount = 0;
-  var mockMedicines = List<PrescriptionMedicinesList>();
-  var meds = List<PrescriptionMedicines>();
+  var mockMedicines = <PrescriptionMedicinesList>[];
+  var meds = <PrescriptionMedicines>[];
 
   createMockUpMedicines() {
     var medication = {

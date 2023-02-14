@@ -799,7 +799,7 @@ class CommonUtil {
     return Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
 
-  Future<void> getMedicalPreference({required Function callBackToRefresh}) async {
+  Future<void> getMedicalPreference({ Function? callBackToRefresh}) async {
     /* MyProfileBloc _myProfileBloc = new MyProfileBloc();
     try {
       _myProfileBloc
@@ -878,7 +878,7 @@ class CommonUtil {
         }
       });
     } catch (e) {}*/
-    callBackToRefresh();
+    callBackToRefresh!();
   }
 
   int getThemeColor() {
@@ -1499,7 +1499,7 @@ class CommonUtil {
     try {
       if (PreferenceUtil.getMediaType() != null) {
       } else {
-        await _mediaTypeBlock.getMediTypesList().then((value) {} as FutureOr<_> Function(MediaDataList?));
+        await _mediaTypeBlock.getMediTypesList().then((value) {} as FutureOr Function(MediaDataList?));
       }
     } catch (e) {
       await _mediaTypeBlock.getMediTypesList().then((value) {});
@@ -1967,7 +1967,7 @@ class CommonUtil {
   static Future<File?> downloadFile(String url, String? extension) async {
     try {
       final req = await ApiServices.get(url);
-      final bytes = req.bodyBytes;
+      final bytes = req!.bodyBytes;
       final dir = Platform.isIOS
           ? await FHBUtils.createFolderInAppDocDirForIOS('images')
           : await FHBUtils.createFolderInAppDocDir('images');
@@ -4062,7 +4062,7 @@ class CommonUtil {
       FlutterToast().getToast('Download Started', Colors.green);
       var response = await ApiServices.get(url);
       if (response?.statusCode == 200) {
-        var responseJson = response.bodyBytes;
+        var responseJson = response!.bodyBytes;
         var directory = await getApplicationDocumentsDirectory();
         if (Platform.isAndroid &&
             !(await Permission.manageExternalStorage.isGranted)) {

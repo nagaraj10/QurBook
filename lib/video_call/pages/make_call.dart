@@ -334,7 +334,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
   Widget build(BuildContext context) {
     return Consumer<RTCEngineProvider>(
       builder: (context, rtcEngineProvider, child) {
-        return rtcEngineProvider?.isCustomViewShown
+        return rtcEngineProvider.isCustomViewShown
             ? tryingToConnect()
             : Consumer<AudioCallProvider>(builder: (context, status, child) {
                 if (status.isAudioCall) {

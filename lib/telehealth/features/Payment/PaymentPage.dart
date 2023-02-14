@@ -33,7 +33,7 @@ class PaymentPage extends StatefulWidget {
       {Key? key,
       required this.redirectUrl,
       required this.paymentId,
-      required this.appointmentId,
+     this.appointmentId,
       required this.isFromSubscribe,
       required this.isFromRazor,
       this.isPaymentFromNotification = false,
@@ -159,10 +159,10 @@ class _WebViewExampleState extends State<PaymentPage> {
                       paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
                       subscribeViewModel
                           .subScribePlan(
-                              value?.result?.planPackage?.packageid.toString())
+                              value.result!.planPackage!.packageid.toString())
                           .then((value) {
-                        if (value?.isSuccess!) {
-                          if (value?.result?.result == 'Done') {
+                        if (value!.isSuccess!) {
+                          if (value.result?.result == 'Done') {
                             callResultPage(true, paymentOrderIdSub);
                           } else {
                             FlutterToast().getToast(
@@ -264,9 +264,9 @@ class _WebViewExampleState extends State<PaymentPage> {
                     paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
                     subscribeViewModel
                         .subScribePlan(
-                            value?.result?.planPackage?.packageid.toString())
+                            value.result!.planPackage!.packageid.toString())
                         .then((value) {
-                      if (value?.isSuccess!) {
+                      if (value!.isSuccess!) {
                         if (value?.result?.result == 'Done') {
                           callResultPage(true, paymentOrderIdSub);
                         } else {
@@ -374,7 +374,7 @@ class _WebViewExampleState extends State<PaymentPage> {
                   paymentRetryUrl: PAYMENT_URL,
                   paymentId: paymentId,
                   appointmentId: appointmentId,
-                  isPaymentFromNotification: widget?.isPaymentFromNotification,
+                  isPaymentFromNotification: widget.isPaymentFromNotification,
                 )));
   }
 
@@ -408,11 +408,11 @@ class _WebViewExampleState extends State<PaymentPage> {
       String paymentRequestId,
       bool isFromRazor,
       String signature) async {
-    UpdatePaymentModel updatePaymentModel =
+    UpdatePaymentModel? updatePaymentModel =
         await updatePaymentViewModel.updatePaymentStatus(paymentId,
             paymentOrderId, paymentRequestId, isFromRazor, signature);
 
-    return updatePaymentModel;
+    return updatePaymentModel!;
   }
 
   Future<UpdatePaymentStatusSubscribe> updatePaymentSubscribe(
@@ -421,11 +421,11 @@ class _WebViewExampleState extends State<PaymentPage> {
       String paymentRequestId,
       bool isFromRazor,
       String signature) async {
-    UpdatePaymentStatusSubscribe updatePaymentModel =
+    UpdatePaymentStatusSubscribe? updatePaymentModel =
         await updatePaymentViewModel.updatePaymentSubscribe(paymentId,
             paymentOrderId, paymentRequestId, isFromRazor, signature);
 
-    return updatePaymentModel;
+    return updatePaymentModel!;
   }
 }
 

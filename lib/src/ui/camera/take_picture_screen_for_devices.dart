@@ -574,10 +574,11 @@ class TakePictureScreenForDevicesState
     }
   }
 
-  setRecognitions(
-      recognitions, imageHeight, imageWidth, CameraController control) {
+   void setRecognitions(
+   List? recognitions, int imageHeight, int 
+        imageWidth, CameraController? control) {
     setState(() {
-      recognitions.map((re) {
+      recognitions!.map((re) {
         _recognitions = recognitions;
       });
 
@@ -590,7 +591,7 @@ class TakePictureScreenForDevicesState
               ? ''
               : _recognitions![0][Constants.keyDetectedClass]));
 
-      _controller = control;
+      _controller = control!;
     });
   }
 

@@ -304,10 +304,10 @@ class CallMainMakeCall extends StatelessWidget {
 
     final audioCallStatus =
         Provider.of<AudioCallProvider>(context, listen: false);
-    videoIconStatus?.isVideoOn = audioCallStatus?.isAudioCall ? false : true;
+    videoIconStatus.isVideoOn = audioCallStatus.isAudioCall ? false : true;
 
     /// hide controller after 5 secs
-    if (audioCallStatus?.isAudioCall) {
+    if (audioCallStatus.isAudioCall) {
       //if audio call do not hide status bar
       hideStatus.showMe();
     } else {

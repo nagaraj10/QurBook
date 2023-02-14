@@ -32,7 +32,7 @@ class CaregiverAPIProvider {
       );
       final model = CaregiverAssosicationModel.fromMap(
         json.decode(
-          response.body,
+          response!.body,
         ),
       );
       FlutterToast().getToast(
@@ -66,7 +66,7 @@ class CaregiverAPIProvider {
       );
       final model = CaregiverAssosicationModel.fromMap(
         json.decode(
-          response.body,
+          response!.body,
         ),
       );
       FlutterToast().getToast(

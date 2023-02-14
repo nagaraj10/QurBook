@@ -53,9 +53,9 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   CommonWidgets commonWidgets = new CommonWidgets();
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
-      new List<AvailableTimeSlotsModel>();
-  List<SlotSessionsModel> sessionTimeModel = new List<SlotSessionsModel>();
-  List<Slots> slotsModel = new List<Slots>();
+      <AvailableTimeSlotsModel>[];
+  List<SlotSessionsModel> sessionTimeModel = <SlotSessionsModel>[];
+  List<Slots> slotsModel = <Slots>[];
   ProvidersBloc? _providersBloc;
   MyProvidersResponse? myProvidersResponseList;
   MyProfileModel? myProfile;
@@ -482,18 +482,18 @@ class _HealthOrganizationState extends State<HealthOrganization> {
 
   String? getFees(HealthOrganizationResult result, bool isCSRDiscount) {
     String? fees = '';
-    if (result?.doctorFeeCollection?.isNotEmpty) {
-      if (result?.doctorFeeCollection?.length > 0) {
-        for (int i = 0; i < result?.doctorFeeCollection?.length; i++) {
-          String? feesCode = result?.doctorFeeCollection![i]?.feeType?.code;
-          bool? isActive = result?.doctorFeeCollection![i]?.isActive;
+    if (result.doctorFeeCollection!.isNotEmpty) {
+      if (result.doctorFeeCollection!.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection!.length; i++) {
+          String? feesCode = result.doctorFeeCollection![i].feeType?.code;
+          bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }
@@ -507,7 +507,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   }
 
   Widget getHospitalProviderList(String doctorId) {
-    return new FutureBuilder<HealthOrganizationModel>(
+    return new FutureBuilder<HealthOrganizationModel?>(
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -518,12 +518,12 @@ class _HealthOrganizationState extends State<HealthOrganization> {
           final items = snapshot.data ??
               <DoctorIds>[]; // handle the case that data is null
 
-          return (snapshot?.data?.isSuccess != null &&
-                  !snapshot?.data?.isSuccess! &&
-                  (snapshot?.data?.message ?? '').isNotEmpty)
+          return (snapshot.data!.isSuccess != null &&
+                  !snapshot.data!.isSuccess! &&
+                  (snapshot.data!.message ?? '').isNotEmpty)
               ? Container(
                   child: Center(
-                    child: Text(snapshot?.data?.message!),
+                    child: Text(snapshot.data!.message!),
                   ),
                 )
               : providerListWidget(snapshot.data!.result);

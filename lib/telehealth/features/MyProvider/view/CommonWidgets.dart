@@ -546,7 +546,7 @@ class CommonWidgets {
           );
   }
 
-  Widget showDoctorDetailView(DoctorIds docs, BuildContext context) {
+  Widget? showDoctorDetailView(DoctorIds docs, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -653,7 +653,7 @@ class CommonWidgets {
   }
 
   getSpecificTimeSlots(List<Slots> dateTimingsSlots) {
-    List<Widget> rowSpecificTimeSlots = new List();
+    List<Widget> rowSpecificTimeSlots = [];
     String timeSlots = '';
 
     for (Slots dateTiming in dateTimingsSlots) {
@@ -666,7 +666,7 @@ class CommonWidgets {
   }
 
   getSpecificTimeSlotsNew(List<DateTiming> dateTimingsSlots) {
-    List<Widget> rowSpecificTimeSlots = new List();
+    List<Widget> rowSpecificTimeSlots = [];
 
     for (int i = 0; i < dateTimingsSlots.length; i++) {
       if (i > 0 && i % 5 == 0) {
@@ -794,7 +794,7 @@ class CommonWidgets {
   }
 
   getLanguages(DoctorIds docs) {
-    List<Widget> languageWidget = new List();
+    List<Widget> languageWidget = [];
     if (docs.languages != null && docs.languages!.length > 0) {
       for (Languages lang in docs.languages!) {
         languageWidget.add(getDoctorsAddress(lang.name! + ','));
@@ -807,7 +807,7 @@ class CommonWidgets {
   }
 
   getLanguagesNew(Doctors docs) {
-    List<Widget> languageWidget = new List();
+    List<Widget> languageWidget = [];
     if (docs.doctorLanguageCollection != null &&
         docs.doctorLanguageCollection!.length > 0) {
       for (int i = 0; i < docs.doctorLanguageCollection!.length; i++) {
@@ -822,7 +822,7 @@ class CommonWidgets {
   }
 
   getLanguagesForReschedule(DoctorResult docs) {
-    List<Widget> languageWidget = new List();
+    List<Widget> languageWidget = [];
     if (docs.doctorLanguageCollection != null &&
         docs.doctorLanguageCollection!.length > 0) {
       for (int i = 0; i < docs.doctorLanguageCollection!.length; i++) {
@@ -837,7 +837,7 @@ class CommonWidgets {
   }
 
   getLanguagesNewForHos(DoctorFromHos docs) {
-    List<Widget> languageWidget = new List();
+    List<Widget> languageWidget = [];
     if (docs.doctorLanguageCollection != null &&
         docs.doctorLanguageCollection!.length > 0) {
       for (int i = 0; i < docs.doctorLanguageCollection!.length; i++) {
@@ -851,7 +851,7 @@ class CommonWidgets {
     return languageWidget;
   }
 
-  Widget showDoctorDetailViewNew(Doctors? docs, BuildContext context) {
+  Widget? showDoctorDetailViewNew(Doctors? docs, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -968,7 +968,7 @@ class CommonWidgets {
         });
   }
 
-  Widget showDoctorDetailViewNewForHos(
+  Widget? showDoctorDetailViewNewForHos(
       DoctorFromHos? docs, BuildContext context) {
     showDialog(
         context: context,
@@ -1086,7 +1086,7 @@ class CommonWidgets {
         });
   }
 
-  Widget showDoctorDetailViewForReschedule(
+  Widget? showDoctorDetailViewForReschedule(
       DoctorResult? docs, BuildContext context) {
     showDialog(
         context: context,

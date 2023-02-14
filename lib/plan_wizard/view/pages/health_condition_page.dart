@@ -30,7 +30,7 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
     false;
 
     healthConditions = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getHealthConditions();
+        .getHealthConditions() as Future<Map<String?, List<MenuItem>>>?;
 
     Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;
     Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;

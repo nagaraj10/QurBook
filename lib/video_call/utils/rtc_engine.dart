@@ -21,7 +21,7 @@ class RTCEngineProvider extends ChangeNotifier {
     }
   }
 
-  Future<RtcEngine> startEngine() async {
+  Future<RtcEngine?> startEngine() async {
     _rtcEngine = await RtcEngine.create(APP_ID);
     //notifyListeners();
   }

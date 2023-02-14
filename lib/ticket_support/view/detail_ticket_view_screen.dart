@@ -95,7 +95,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       authToken = token;
       future = ticketViewModel.getTicketDetail(widget.isFromNotification
           ? widget.ticketId.toString()
-          : widget.ticket!.uid.toString());
+          : widget.ticket!.uid.toString()) as Future<TicketDetailResponseModel>?;
     });
   }
 
@@ -157,13 +157,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget detailView(Ticket ticket) {
-    List<Widget> widgetForColumn = List();
+    List<Widget> widgetForColumn = [];
     String strName = "";
     try {
-      if (ticket.additionalInfo?.ticketStatus?.name != null &&
-          ticket.additionalInfo?.ticketStatus?.name != '') {
+      if (ticket.additionalInfo!.ticketStatus?.name != null &&
+          ticket.additionalInfo!.ticketStatus?.name != '') {
         String strStatus = CommonUtil()
-            .validString(ticket.additionalInfo?.ticketStatus?.name)
+            .validString(ticket.additionalInfo!.ticketStatus?.name)
             .toLowerCase();
         if (strStatus.contains("cancelled") ||
             strStatus.contains("completed")) {
@@ -179,8 +179,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           strName.contains("lab appointment") ||
           strName.contains("general health")) {
         if (ticket.type!.additionalInfo != null && dataFields != null) {
-          for (int i = 0; i < ticket.type!.additionalInfo?.field!.length; i++) {
-            Field field = ticket.type!.additionalInfo?.field![i];
+          for (int i = 0; i < ticket.type!.additionalInfo!.field!.length; i++) {
+            Field field = ticket.type!.additionalInfo!.field![i];
             List<FieldData>? fieldData = field.fieldData;
             String fieldName = CommonUtil().validString(field.name ?? "");
             String displayName = CommonUtil().validString(field.displayName);
@@ -196,10 +196,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                     (LabelName.contains("mode_of_service") ||
                         LabelName.contains("modeOfService"))) {
                   widgetForColumn.add(
-                      (ticket?.additionalInfo?.modeOfService != null &&
-                              ticket?.additionalInfo?.modeOfService!.name != "")
+                      (ticket?.additionalInfo!.modeOfService != null &&
+                              ticket?.additionalInfo!.modeOfService!.name != "")
                           ? commonWidgetForDropDownValue("Mode Of Service",
-                              ticket?.additionalInfo?.modeOfService!.name)
+                              ticket?.additionalInfo!.modeOfService!.name)
                           : SizedBox.shrink());
                   break;
                 } else if ((fieldName.contains("preferredDate") ||
@@ -345,8 +345,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  ticket?.subject
-                                      ?.toString()
+                                  ticket.subject
+                                      .toString()
                                       .capitalizeFirstofEach,
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
@@ -377,7 +377,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                           ?.preferredTime !=
                                                       "")
                                               ? Text(
-                                                  ", ${ticket?.additionalInfo?.preferredTime ?? ''}",
+                                                  ", ${ticket?.additionalInfo!.preferredTime ?? ''}",
                                                   style: TextStyle(
                                                     fontSize: 16.0.sp,
                                                     fontWeight: FontWeight.w100,
@@ -391,7 +391,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                         ],
                                       )
                                     : SizedBox(),
-                                (ticket?.additionalInfo?.chooseCategory !=
+                                (ticket?.additionalInfo!.chooseCategory !=
                                             null &&
                                         ticket?.additionalInfo
                                                 ?.chooseCategory !=
@@ -402,12 +402,12 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                 ?.chooseCategory ??
                                             '')
                                     : SizedBox.shrink(),
-                                (ticket?.additionalInfo?.packageName != null &&
-                                        ticket?.additionalInfo?.packageName !=
+                                (ticket?.additionalInfo!.packageName != null &&
+                                        ticket?.additionalInfo!.packageName !=
                                             "")
                                     ? commonWidgetForDropDownValue(
                                         "Package Name",
-                                        ticket?.additionalInfo?.packageName ??
+                                        ticket?.additionalInfo!.packageName ??
                                             '')
                                     : SizedBox.shrink(),
                               ],
@@ -894,7 +894,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     }
   }
 
-  Widget _getChatWidget(BuildContext context, Ticket ticketList) {
+  Widget? _getChatWidget(BuildContext context, Ticket ticketList) {
     print('comments length=======');
     print(ticketList.comments!.length);
     // FU2.5
@@ -1210,7 +1210,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         KEY_OffSet: CommonUtil().setTimeZone()
       },
     );
-    final bytes = request.bodyBytes; //close();
+    final bytes = request!.bodyBytes; //close();
     await file.writeAsBytes(bytes);
     return file.path.toString();
   }
@@ -1233,7 +1233,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         KEY_OffSet: CommonUtil().setTimeZone()
       },
     );
-    final bytes = request.bodyBytes; //close();
+    final bytes = request!.bodyBytes; //close();
     await file.writeAsBytes(bytes);
     return file.path.toString();
   }
@@ -1275,10 +1275,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     String? statusName = '';
     if (widget.isFromNotification) {
       if (ticket?.additionalInfo != null &&
-          ticket?.additionalInfo?.ticketStatus != null) {
+          ticket?.additionalInfo!.ticketStatus != null) {
         if (ticket?.additionalInfo!.ticketStatus?.name != null &&
-            ticket?.additionalInfo?.ticketStatus?.name != '') {
-          statusName = ticket?.additionalInfo?.ticketStatus?.name;
+            ticket?.additionalInfo!.ticketStatus?.name != '') {
+          statusName = ticket?.additionalInfo!.ticketStatus?.name;
         }
       }
     } else {

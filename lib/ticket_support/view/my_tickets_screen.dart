@@ -66,7 +66,7 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
     );
   }
 
-  Future<bool> onBackPressed(BuildContext context) {
+  Future<bool>? onBackPressed(BuildContext context) {
     Get.offAllNamed(
       router.rt_Landing,
       arguments: LandingArguments(

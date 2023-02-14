@@ -21,7 +21,7 @@ class DropdownWithTags extends StatefulWidget {
 }
 
 class _DropdownWithTagsState extends State<DropdownWithTags> {
-  List<CheckboxListTile> data = List();
+  List<CheckboxListTile> data = [];
   final nameController = TextEditingController();
   FocusNode nameFocus = FocusNode();
 

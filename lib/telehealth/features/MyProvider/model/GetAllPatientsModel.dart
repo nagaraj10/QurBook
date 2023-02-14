@@ -9,7 +9,7 @@ class GetAllPatientsModel {
   GetAllPatientsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      data = <Data>[];
       json['data'].forEach((v) {
         data!.add(new Data.fromJson(v));
       });

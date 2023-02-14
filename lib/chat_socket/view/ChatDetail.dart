@@ -85,7 +85,7 @@ class ChatDetail extends StatefulWidget {
       required this.patientName,
       required this.patientPicture,
       required this.isFromVideoCall,
-      required this.groupId,
+      this.groupId,
       this.message,
       this.isCareGiver,
       this.carecoordinatorId,
@@ -2497,7 +2497,7 @@ class TextFieldColorizer extends TextEditingController {
                     if (element.group(0) == match[0]) {
                       patternMatched = e;
                       ret = true;
-                      return true;
+                      return ;
                     }
                   });
                 return ret;

@@ -43,7 +43,7 @@ class UserTicketService {
     final res = await _helper.uploadAttachment(
         query.qr_upload_attachment, ticketId, image);
     // final response = CommonResponseModel.fromJson(res);
-    return res;
+    return res!;
   }
 
   // Get List of ticket types -- Yogeshwar
@@ -52,7 +52,7 @@ class UserTicketService {
         await _helper.getTicketTypesList(query.qr_get_ticket_types);
     _ticketTypesModel = TicketTypesModel.fromJson(response);
     print(
-        'User Ticket Types Reponse : ${_ticketTypesModel.ticketTypeResults.asMap()}');
+        'User Ticket Types Reponse : ${_ticketTypesModel.ticketTypeResults!.asMap()}');
     return _ticketTypesModel;
   }
 

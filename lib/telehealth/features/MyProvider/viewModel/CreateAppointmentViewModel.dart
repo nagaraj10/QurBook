@@ -11,7 +11,7 @@ class CreateAppointMentViewModel {
   AppointmentNotificationPayment appointmentNotification = AppointmentNotificationPayment();
 
 
-  Future<CreateAppointmentModel> putBookAppointment(
+  Future<CreateAppointmentModel?> putBookAppointment(
     String? createdBy,
     String? bookedFor,
     String? doctorSessionId,
@@ -44,7 +44,7 @@ class CreateAppointMentViewModel {
     } catch (e) {}
   }
 
-  Future<AppointmentNotificationPayment> getAppointmentDetailsUsingId(String appointmentId)async{
+  Future<AppointmentNotificationPayment?> getAppointmentDetailsUsingId(String appointmentId)async{
     try {
       AppointmentNotificationPayment appointmentNotificationModel = await createAppointmentService
           .getAppointmentDetailsUsingId(appointmentId);

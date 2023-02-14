@@ -229,7 +229,7 @@ class _MyControllersState extends State<MyControllers> {
       alignment: Alignment.bottomCenter,
       child: Container(
         decoration: BoxDecoration(
-          color: audioCallStatus?.isAudioCall
+          color: audioCallStatus.isAudioCall
               ? Colors.white.withOpacity(0.5)
               : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.3),
           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -347,7 +347,7 @@ class _MyControllersState extends State<MyControllers> {
 
   void _onToggleVideo() async {
     //* this need to uncomment and check
-    if (audioCallStatus?.isAudioCall) {
+    if (audioCallStatus.isAudioCall) {
       //if it's a audio call want switch to video call, request remote user
       //check for camera permission
       var permissionStatus =
@@ -381,12 +381,12 @@ class _MyControllersState extends State<MyControllers> {
             ?.enableAudioCall();
         Provider.of<VideoIconProvider>(context, listen: false)?.turnOffVideo();
       } else {
-        widget.rtcEngine!.muteLocalVideoStream(videoIconStatus?.isVideoOn);
+        widget.rtcEngine!.muteLocalVideoStream(videoIconStatus.isVideoOn);
         Provider.of<RTCEngineProvider>(context, listen: false)
-            ?.changeLocalVideoStatus(videoIconStatus?.isVideoOn);
-        CommonUtil.isLocalUserOnPause = videoIconStatus?.isVideoOn;
-        videoIconStatus?.swapVideo();
-        widget.controllerState(widget.muted, videoIconStatus?.isVideoOn);
+            .changeLocalVideoStatus(videoIconStatus.isVideoOn);
+        CommonUtil.isLocalUserOnPause = videoIconStatus.isVideoOn;
+        videoIconStatus.swapVideo();
+        widget.controllerState(widget.muted, videoIconStatus.isVideoOn);
       }
     }
   }

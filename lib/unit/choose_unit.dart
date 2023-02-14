@@ -133,12 +133,12 @@ class _ChooseUnitState extends State<ChooseUnit> {
             userMappingId, profileSetting!, preferredMeasurementNew, tagsList)
         .then((value) {
       if (value?.isSuccess ?? false) {
-        toast.getToast(value?.message!, Colors.green);
+        toast.getToast(value.message!, Colors.green);
 
         PreferenceUtil.savePreferredMeasurement(
             Constants.KEY_PREFERREDMEASUREMENT, preferredMeasurementNew);
       } else {
-        toast.getToast(value?.message!, Colors.red);
+        toast.getToast(value.message!, Colors.red);
       }
     });
 
@@ -419,7 +419,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
 
   Widget getAppColorsAndDeviceValues() {
     return profileSetting == null
-        ? FutureBuilder<GetDeviceSelectionModel>(
+        ? FutureBuilder<GetDeviceSelectionModel?>(
             future: getProfileSetings(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -434,7 +434,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
         : getBody();
   }
 
-  Future<GetDeviceSelectionModel> getProfileSetings() async {
+  Future<GetDeviceSelectionModel?> getProfileSetings() async {
     var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     await healthReportListForUserRepository
@@ -450,7 +450,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
               tagsList = value.result![0].tags != null &&
                       value.result![0].tags!.length > 0
                   ? value.result![0].tags
-                  : new List();
+                  : [];
             }
 
             if (profileSetting != null) {
@@ -460,7 +460,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                   weightObj = preferredMeasurement?.weight;
 
                   await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      preferredMeasurement!.weight?.unitCode!);
+                      preferredMeasurement!.weight!.unitCode!);
                 } catch (e) {
                   await PreferenceUtil.saveString(
                       Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
@@ -492,7 +492,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
 
                 try {
                   await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement!.height?.unitCode!);
+                      preferredMeasurement!.height!.unitCode!);
 
                   heightObj = preferredMeasurement?.height;
                 } catch (e) {
@@ -527,7 +527,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
 
                 try {
                   await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
-                      preferredMeasurement!.temperature?.unitCode!);
+                      preferredMeasurement!.temperature!.unitCode!);
                   tempObj = preferredMeasurement?.temperature;
                 } catch (e) {
                   await PreferenceUtil.saveString(

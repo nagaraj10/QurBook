@@ -320,10 +320,10 @@ class AppointmentsCommonWidget {
   Future<AssociateSuccessResponse> associateRecords(
       String? doctorId, String? userId, List<String>? healthRecords) async {
     MyProviderViewModel providerViewModel = new MyProviderViewModel();
-    AssociateSuccessResponse associateResponseList = await providerViewModel
+    AssociateSuccessResponse? associateResponseList = await providerViewModel
         .associateRecords(doctorId, userId, healthRecords);
 
-    return associateResponseList;
+    return associateResponseList!;
   }
 
   Widget iconWithText(
@@ -652,10 +652,10 @@ class AppointmentsCommonWidget {
   Future<AssociateUpdateSuccessResponse> associateUpdateRecords(
       String? bookingID, HealthResult healthResult) async {
     MyProviderViewModel providerViewModel = new MyProviderViewModel();
-    AssociateUpdateSuccessResponse associateResponseList =
+    AssociateUpdateSuccessResponse? associateResponseList =
         await providerViewModel.associateUpdateRecords(bookingID, healthResult);
 
-    return associateResponseList;
+    return associateResponseList!;
   }
 
   getImageForAppointment(Past doc) {

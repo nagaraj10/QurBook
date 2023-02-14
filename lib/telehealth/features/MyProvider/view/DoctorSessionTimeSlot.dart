@@ -210,7 +210,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   }
 
   Widget getTimeSlots() {
-    return new FutureBuilder<AvailableTimeSlotsModel>(
+    return new FutureBuilder<AvailableTimeSlotsModel?>(
       future: slotsAvailabilityViewModel.fetchTimeSlots(
           _selectedValue.toString(),
           widget.doctorId!,
@@ -233,16 +233,16 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
           } else if (snapshot.hasError) {
             return ErrorsWidget();
           } else {
-            return (snapshot?.data?.isSuccess != null &&
-                    !snapshot?.data?.isSuccess! &&
-                    (snapshot?.data?.message ?? '').isNotEmpty)
+            return (snapshot.data!.isSuccess != null &&
+                    !snapshot.data!.isSuccess! &&
+                    (snapshot.data!.message ?? '').isNotEmpty)
                 ? Column(
                     children: <Widget>[
                       SizedBoxWidget(
                         height: 8.0.h,
                       ),
                       new Text(
-                        snapshot?.data?.message!,
+                        snapshot.data!.message!,
                         style: TextStyle(
                           fontSize: 12.0.sp,
                         ),

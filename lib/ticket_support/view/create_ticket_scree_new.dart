@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
@@ -124,7 +125,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   var packageName;
   var package_title_ctrl = TextEditingController(text: '');
   PlanListResult? planListModel;
-  List<PlanListResult> planListModelList = List();
+  List<PlanListResult> planListModelList = [];
 
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -155,7 +156,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           _providersBloc!.getMedicalPreferencesForHospital();
       healthConditions =
           Provider.of<PlanWizardViewModel>(context, listen: false)
-              .getHealthConditions();
+              .getHealthConditions() as Future<Map<String?, List<MenuItem>>>?;
     } catch (e) {
       print(e);
     }
@@ -165,9 +166,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
 
   @override
   void dispose() {
-    controller = null;
+    controller = null  as CreateTicketController;
 
-    controller!.dispose();
+    controller.dispose();
 
     super.dispose();
   }
@@ -179,7 +180,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   setBooleanValues() {
     if (widget.ticketList != null) {
       if (widget.ticketList.additionalInfo != null)
-        for (Field field in widget.ticketList.additionalInfo?.field!) {
+        for (Field field in widget.ticketList.additionalInfo!.field!) {
           if (field.type == tckConstants.tckTypeTitle) {
             isTxt = true;
           }
@@ -219,7 +220,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           ),
           title: Text(tckConstants.strAddMyTicket),
         ),
-        body: Obx(() => isFirstTym && controller!.isCTLoading?.value ?? false
+        body: Obx(() => isFirstTym && controller!.isCTLoading.value ?? false
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -248,10 +249,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   }
 
   Widget getColumnBody(TicketTypesResult ticketTypesResult) {
-    List<Widget> widgetForColumn = List();
+    List<Widget> widgetForColumn = [];
     try {
       if (ticketTypesResult.additionalInfo != null) {
-        for (Field field in ticketTypesResult.additionalInfo?.field!) {
+        for (Field field in ticketTypesResult.additionalInfo!.field!) {
           (field.type == tckConstants.tckTypeTitle &&
                   field.name != tckConstants.tckPackageTitle)
               ? widgetForColumn.add(Column(
@@ -1020,7 +1021,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                   onAdd,
                 );
               } else {
-                doctorsListFromProvider = List();
+                doctorsListFromProvider = [];
                 familyWidget = getDoctorDropDownWhenNoList(
                     doctorsListFromProvider, null, onAdd);
               }
@@ -1249,7 +1250,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                   onAdd,
                 );
               } else {
-                hospitalListFromProvider = List();
+                hospitalListFromProvider = [];
                 familyWidget = getHospitalsDropDownWhenNoList(
                     hospitalListFromProvider, null, onAdd);
               }
@@ -1274,6 +1275,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       icon: Icon(Icons.arrow_drop_down),
       color: Color(CommonUtil().getMyPrimaryColor()),
       iconSize: 40,
+      onPressed: (){},
     );
   }
 
@@ -1832,7 +1834,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       suggestionsCallback: (pattern) async {
         if (pattern.length >= 3) {
           return await getPackageNameBasedOnSearch(pattern, '');
-        }
+        }else {
+         return [];
+          }
       },
       itemBuilder: (context, suggestion) {
         return ListTile(
@@ -1885,15 +1889,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           isFrom:
               strFreeDiet) // make sure return type of these functions as Future.
     ]);
-    planListModelList.addAll(responses[0]?.result!);
-    planListModelList.addAll(responses[1]?.result!);
-    planListModelList.addAll(responses[2]?.result!);
-    planListModelList.addAll(responses[3]?.result!);
+    planListModelList.addAll(responses[0]!.result!);
+    planListModelList.addAll(responses[1]!.result!);
+    planListModelList.addAll(responses[2]!.result!);
+    planListModelList.addAll(responses[3]!.result!);
   }
 
   Widget getDropDownForPlanCategory(
       Map<String?, List<MenuItem>> healthConditionsList) {
-    List<MenuItem> menuItems = List();
+    List<MenuItem> menuItems = [];
     healthConditionsList.values.map((element) {
       menuItems.addAll(element);
     }).toList();
@@ -2002,7 +2006,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     String? authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    List<String?> filePathist = new List();
+    List<String?> filePathist = [];
     for (final _currentImage in imagesPathMain) {
       try {
         await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,
@@ -2021,7 +2025,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               Constants.KEY_OffSet: CommonUtil().setTimeZone()
             },
           );
-          final bytes = request.bodyBytes; //close();
+          final bytes = request!.bodyBytes; //close();
           await file.writeAsBytes(bytes);
 
           print("file.path" + file.path);

@@ -80,7 +80,7 @@ class SymptomService {
         uid: uid,aid: aid,formId: formId,formName: formName
     );
     LoaderQurHome.hideLoadingDialog(Get.context!);
-    return response;
+    return response!;
   }
 
   Future<FieldsResponseModel> getFormDataQurHome({

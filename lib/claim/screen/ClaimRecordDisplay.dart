@@ -573,7 +573,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
           Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
       );
-      final bytes = request.bodyBytes; //close();
+      final bytes = request!.bodyBytes; //close();
       await file.writeAsBytes(bytes);
 
       pdfFile = file.path;

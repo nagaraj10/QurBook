@@ -17,15 +17,15 @@ import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Doctor
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
 class MyProviderViewModel extends ChangeNotifier {
-  List<GetAllPatientsModel> mockDoctors = List<GetAllPatientsModel>();
-  List<DoctorIds>? doctorIdsList = new List();
-  List<DateSlotTimings> dateSlotTimings = new List();
-  List<TelehealthProviderModel> teleHealthProviderModel = new List();
+  List<GetAllPatientsModel> mockDoctors = <GetAllPatientsModel>[];
+  List<DoctorIds>? doctorIdsList = [];
+  List<DateSlotTimings> dateSlotTimings = [];
+  List<TelehealthProviderModel> teleHealthProviderModel = [];
   AssociateSuccessResponse associateRecordResponse = AssociateSuccessResponse();
   AssociateUpdateSuccessResponse associateUpdateRecordResponse =
       AssociateUpdateSuccessResponse();
-  List<HealthOrganizationResult> healthOrganizationResult = List();
-  List<ResultFromHospital>? doctorsFromHospital = List();
+  List<HealthOrganizationResult> healthOrganizationResult = [];
+  List<ResultFromHospital>? doctorsFromHospital = [];
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
@@ -62,7 +62,7 @@ class MyProviderViewModel extends ChangeNotifier {
   }
 
   List<DoctorIds> getFilterDoctorList(String doctorName) {
-    List<DoctorIds> filterDoctorData = new List();
+    List<DoctorIds> filterDoctorData = [];
     for (DoctorIds doctorData in doctorIdsList!) {
       if (doctorData.name!
               .toLowerCase()
@@ -82,7 +82,7 @@ class MyProviderViewModel extends ChangeNotifier {
     return filterDoctorData;
   }
 
-  Future<AssociateSuccessResponse> associateRecords(
+  Future<AssociateSuccessResponse?> associateRecords(
       String? doctorId, String? userId, List<String>? healthRecords) async {
     try {
       AssociateSuccessResponse bookAppointmentModel =
@@ -93,7 +93,7 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<AssociateUpdateSuccessResponse> associateUpdateRecords(
+  Future<AssociateUpdateSuccessResponse?> associateUpdateRecords(
       String? bookingID, HealthResult healthResult) async {
     try {
       AssociateUpdateSuccessResponse bookAppointmentModel =
@@ -104,7 +104,7 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<HealthOrganizationModel> getHealthOrgFromDoctor(
+  Future<HealthOrganizationModel?> getHealthOrgFromDoctor(
       String doctorId) async {
     try {
       HealthOrganizationModel healthOrganizationModel =
@@ -129,7 +129,7 @@ class MyProviderViewModel extends ChangeNotifier {
 
   List<Hospitals> getHospitalName(
       {required List<Hospitals> hospitalList, String? query}) {
-    List<Hospitals> dummySearchHospitalList = List();
+    List<Hospitals> dummySearchHospitalList = [];
     dummySearchHospitalList = hospitalList
         .where((element) => element.name!
             .toLowerCase()

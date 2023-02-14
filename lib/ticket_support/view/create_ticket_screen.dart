@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +128,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   var packageName;
   var package_title_ctrl = TextEditingController(text: '');
   PlanListResult? planListModel;
-  List<PlanListResult> planListModelList = List();
+  List<PlanListResult> planListModelList = [];
 
   //FieldData selectedModeOfService;
 
@@ -194,7 +195,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           _providersBloc!.getMedicalPreferencesForHospital();
       healthConditions =
           Provider.of<PlanWizardViewModel>(context, listen: false)
-              .getHealthConditions();
+              .getHealthConditions() as Future<Map<String?, List<MenuItem>>>?;
 
       setBooleanValues();
     } catch (e) {
@@ -205,7 +206,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   @override
   void dispose() {
     try {
-      controller = null;
+      controller = null as CreateTicketController;
 
       //controller.dispose();
       textEditingControllers.forEach((_, v) {
@@ -227,9 +228,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       if (widget.ticketList != null) {
         if (widget.ticketList!.additionalInfo != null)
           for (int i = 0;
-              i < widget.ticketList!.additionalInfo?.field!.length;
+              i < widget.ticketList!.additionalInfo!.field!.length;
               i++) {
-            Field field = widget.ticketList!.additionalInfo?.field![i];
+            Field field = widget.ticketList!.additionalInfo!.field![i];
             if (field.type == tckConstants.tckTypeTitle &&
                 field.name == tckConstants.tckMainTitle) {
               isTxt = true;
@@ -321,7 +322,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           ),
           title: Text(tckConstants.strAddMyTicket),
         ),
-        body: Obx(() => isFirstTym && controller!.isCTLoading?.value ?? false
+        body: Obx(() => isFirstTym && controller.isCTLoading.value ?? false
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -359,13 +360,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   Widget getColumnBody(TicketTypesResult ticketTypesResult) {
-    List<Widget> widgetForColumn = List();
+    List<Widget> widgetForColumn = [];
     try {
       if (ticketTypesResult.additionalInfo != null) {
         for (int i = 0;
-            i < ticketTypesResult.additionalInfo?.field!.length;
+            i < ticketTypesResult.additionalInfo!.field!.length;
             i++) {
-          Field field = ticketTypesResult.additionalInfo?.field![i];
+          Field field = ticketTypesResult.additionalInfo!.field![i];
           String? displayName = displayFieldName(field);
           String placeHolderName = CommonUtil().validString(field.placeholder);
           placeHolderName =
@@ -373,9 +374,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           bool isVisible = false;
           if (CommonUtil().validString(field.isVisible).trim().isNotEmpty) {
             for (int i = 0;
-                i < ticketTypesResult.additionalInfo?.field!.length;
+                i < ticketTypesResult.additionalInfo!.field!.length;
                 i++) {
-              Field tempField = ticketTypesResult.additionalInfo?.field![i];
+              Field tempField = ticketTypesResult.additionalInfo!.field![i];
               if (tempField.selValueDD != null &&
                   field.isVisible!.contains(tempField.selValueDD!.id!) &&
                   field.isVisible!.contains(tempField.selValueDD!.fieldName!)) {
@@ -1239,9 +1240,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       if (widget.ticketList != null) {
         if (widget.ticketList!.additionalInfo != null)
           for (int i = 0;
-              i < widget.ticketList!.additionalInfo?.field!.length;
+              i < widget.ticketList!.additionalInfo!.field!.length;
               i++) {
-            Field field = widget.ticketList!.additionalInfo?.field![i];
+            Field field = widget.ticketList!.additionalInfo!.field![i];
 
             if (field.type == tckConstants.tckTypeTitle &&
                 field.name == tckConstants.tckMainTitle) {
@@ -1586,7 +1587,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   onAdd,
                 );
               } else {
-                doctorsListFromProvider = List();
+                doctorsListFromProvider = [];
                 familyWidget = getDoctorDropDownWhenNoList(
                     doctorsListFromProvider, null, onAdd);
               }
@@ -1818,7 +1819,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   onAdd,
                 );
               } else {
-                hospitalListFromProvider = List();
+                hospitalListFromProvider = [];
                 familyWidget = getHospitalsDropDownWhenNoList(
                     hospitalListFromProvider, null, onAdd);
               }
@@ -1843,6 +1844,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       icon: Icon(Icons.arrow_drop_down),
       color: Color(CommonUtil().getMyPrimaryColor()),
       iconSize: 40,
+      onPressed: (){},
     );
   }
 
@@ -2104,13 +2106,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   void commonMethodToCreateTicket(var ticketListData) {
     try {
       if (ticketListData.additionalInfo != null) {
-        for (Field field in widget.ticketList!.additionalInfo?.field!) {
+        for (Field field in widget.ticketList!.additionalInfo!.field!) {
           bool isVisible = false;
           if (CommonUtil().validString(field.isVisible).trim().isNotEmpty) {
             for (int i = 0;
-                i < widget.ticketList!.additionalInfo?.field!.length;
+                i < widget.ticketList!.additionalInfo!.field!.length;
                 i++) {
-              Field tempField = widget.ticketList!.additionalInfo?.field![i];
+              Field tempField = widget.ticketList!.additionalInfo!.field![i];
               if (tempField.selValueDD != null &&
                   field.isVisible!.contains(tempField.selValueDD!.id!) &&
                   field.isVisible!.contains(tempField.selValueDD!.fieldName!)) {
@@ -2544,7 +2546,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       suggestionsCallback: (pattern) async {
         if (pattern.length >= 3) {
           return await getPackageNameBasedOnSearch(pattern, '');
-        }
+        }  else {
+         return [];
+          }
+        
       },
       itemBuilder: (context, suggestion) {
         return ListTile(
@@ -2601,15 +2606,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           isFrom:
               strFreeDiet) // make sure return type of these functions as Future.
     ]);
-    planListModelList.addAll(responses[0]?.result!);
-    planListModelList.addAll(responses[1]?.result!);
-    planListModelList.addAll(responses[2]?.result!);
-    planListModelList.addAll(responses[3]?.result!);
+    planListModelList.addAll(responses[0]!.result!);
+    planListModelList.addAll(responses[1]!.result!);
+    planListModelList.addAll(responses[2]!.result!);
+    planListModelList.addAll(responses[3]!.result!);
   }
 
   Widget getDropDownForPlanCategory(
       Map<String?, List<MenuItem>> healthConditionsList) {
-    List<MenuItem> menuItems = List();
+    List<MenuItem> menuItems = [];
     healthConditionsList.values.map((element) {
       menuItems.addAll(element);
     }).toList();
@@ -2728,7 +2733,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     String? authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    List<String?> filePathist = new List();
+    List<String?> filePathist = [];
     for (final _currentImage in imagesPathMain) {
       try {
         await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,
@@ -2747,7 +2752,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               Constants.KEY_OffSet: CommonUtil().setTimeZone()
             },
           );
-          final bytes = request.bodyBytes; //close();
+          final bytes = request!.bodyBytes; //close();
           await file.writeAsBytes(bytes);
 
           //print("file.path" + file.path);

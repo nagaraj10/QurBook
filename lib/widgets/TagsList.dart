@@ -18,7 +18,7 @@ class Taglist extends StatefulWidget {
   _TaglistState createState() => _TaglistState();
 }
 class _TaglistState extends State<Taglist> {
-  List<CheckboxListTile> data = List();
+  List<CheckboxListTile> data = [];
 
   @override
   Widget build(BuildContext context) {

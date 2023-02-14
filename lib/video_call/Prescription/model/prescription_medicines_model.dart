@@ -57,7 +57,7 @@ class PrescriptionMedicinesList {
 
   PrescriptionMedicinesList.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      medicines = new List<PrescriptionMedicines>();
+      medicines = <PrescriptionMedicines>[];
       json['data'].forEach((v) {
         medicines.add(new PrescriptionMedicines.fromJson(v));
       });

@@ -52,13 +52,13 @@ class _MyProvidersState extends State<MyProviders> {
   CommonWidgets commonWidgets = new CommonWidgets();
   bool isSearch = false;
 
-  List<DoctorIds> doctorData = new List();
-  List<Doctors?> doctors = new List();
+  List<DoctorIds> doctorData = [];
+  List<Doctors?> doctors = [];
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
-      new List<AvailableTimeSlotsModel>();
-  List<SlotSessionsModel> sessionTimeModel = new List<SlotSessionsModel>();
-  List<Slots> slotsModel = new List<Slots>();
+      <AvailableTimeSlotsModel>[];
+  List<SlotSessionsModel> sessionTimeModel = <SlotSessionsModel>[];
+  List<Slots> slotsModel = <Slots>[];
   late ProvidersBloc _providersBloc;
   MyProvidersResponse? myProvidersResponseList;
   List<Doctors?>? copyOfdoctorsModel = [];
@@ -341,16 +341,16 @@ class _MyProvidersState extends State<MyProviders> {
   Widget myProviderList(MyProvidersResponse? myProvidersResponse) {
     copyOfdoctorsModel = null;
     copyOfdoctorsModel = [];
-    if (myProvidersResponse?.result?.doctors != null &&
-        myProvidersResponse?.result?.doctors!.length > 0)
-      copyOfdoctorsModel!.addAll(myProvidersResponse?.result?.doctors!);
+    if (myProvidersResponse!.result!.doctors != null &&
+        myProvidersResponse.result!.doctors!.length > 0)
+      copyOfdoctorsModel!.addAll(myProvidersResponse.result!.doctors!);
 
     if (myProvidersResponse != null && myProvidersResponse.isSuccess!) {
-      if (myProvidersResponse.result?.providerRequestCollection3 != null &&
-          myProvidersResponse.result?.providerRequestCollection3!.length > 0)
+      if (myProvidersResponse.result!.providerRequestCollection3 != null &&
+          myProvidersResponse.result!.providerRequestCollection3!.length > 0)
         for (ProviderRequestCollection3 providerRequestCollection3
-            in myProvidersResponse.result?.providerRequestCollection3!) {
-          Doctors patientAddedDoctor = providerRequestCollection3?.doctor!;
+            in myProvidersResponse.result!.providerRequestCollection3!) {
+          Doctors patientAddedDoctor = providerRequestCollection3.doctor!;
           patientAddedDoctor.isPatientAssociatedRequest = true;
           doctorsModelPatientAssociated.add(providerRequestCollection3.doctor);
         }

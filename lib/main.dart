@@ -734,12 +734,12 @@ class _MyFHBState extends State<MyFHB> {
 
               if (passedValArr[2] == strWrapperCall) {
                 eventType = passedValArr[2];
-                rawTitle = passedValArr[3]?.split('|')[1];
-                rawBody = passedValArr[3]?.split('|')[2];
-                others = passedValArr[3]?.split('|')[0];
+                rawTitle = passedValArr[3].split('|')[1];
+                rawBody = passedValArr[3].split('|')[2];
+                others = passedValArr[3].split('|')[0];
               } else {
-                rawTitle = passedValArr[2]?.split('|')[0];
-                rawBody = passedValArr[2]?.split('|')[1];
+                rawTitle = passedValArr[2].split('|')[0];
+                rawBody = passedValArr[2].split('|')[1];
                 if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
                   notificationListId = passedValArr[3];
                   FetchNotificationService()
@@ -1134,7 +1134,7 @@ class _MyFHBState extends State<MyFHB> {
           //       duration: Duration(seconds: 3),
           //       backgroundColor: Colors.green.shade500);
         }
-      } else if (passedValArr?.asMap()?.containsKey(4)) {
+      } else if (passedValArr.asMap().containsKey(4)) {
         if (passedValArr[4] == 'call') {
           try {
             doctorPic = passedValArr[3];
@@ -1306,7 +1306,7 @@ class _MyFHBState extends State<MyFHB> {
     );
   }
 
-  Widget findHomeWidget(String navRoute) {
+  Widget? findHomeWidget(String navRoute) {
     if (navRoute.isEmpty && navRoute != 'null') {
       // return SplashScreen();
       if (isFirstTime != null && !isFirstTime!) {

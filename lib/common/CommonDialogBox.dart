@@ -629,7 +629,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String?> imagePath,
       Function(bool, String?) updateAudioUI,
-      HealthResult mediaMetaInfoClone,
+      HealthResult? mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController fileNameClone) {
     if (mediaMetaInfoClone != null) {
@@ -644,7 +644,7 @@ class CommonDialogBox {
     if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
 
-      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone!.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -740,7 +740,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String?> imagePath,
       Function(bool, String?) updateAudioUI,
-      HealthResult mediaMetaInfoClone,
+      HealthResult? mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController fileNameClone,
       TextEditingController dateOfVisitClone,
@@ -762,7 +762,7 @@ class CommonDialogBox {
     setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone!.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -922,7 +922,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String?> imagePath,
       Function(bool, String?) updateAudioUI,
-      HealthResult mediaMetaInfoClone,
+      HealthResult? mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       List<bool>? isSelectedClone,
@@ -944,7 +944,7 @@ class CommonDialogBox {
     isSelected = isSelectedClone;
     if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone!.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1100,7 +1100,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String?> imagePath,
       Function(bool, String?) updateAudioUI,
-      HealthResult mediaMetaInfoClone,
+      HealthResult? mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController fileNameClone,
@@ -1127,7 +1127,7 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
     if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone!.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1262,12 +1262,12 @@ class CommonDialogBox {
         barrierDismissible: false);
   }
 
-  void setFileName(String fileNameClone, HealthResult healthResult,
+  void setFileName(String fileNameClone, HealthResult? healthResult,
       {String? voiceRecord}) async {
     try {
-      categoryName = healthResult.metadata!.healthRecordCategory!.categoryName;
-      deviceName = healthResult.metadata!.healthRecordType!.name;
-      categoryID = healthResult.metadata!.healthRecordCategory!.id;
+      categoryName = healthResult!.metadata!.healthRecordCategory!.categoryName;
+      deviceName = healthResult!.metadata!.healthRecordType!.name;
+      categoryID = healthResult!.metadata!.healthRecordCategory!.id;
     } catch (e) {
       categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
@@ -1306,7 +1306,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String?> imagePath,
       Function(bool, String?) updateAudioUI,
-      HealthResult mediaMetaInfoClone,
+      HealthResult? mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController fileNameClone,
@@ -1335,7 +1335,7 @@ class CommonDialogBox {
 
     if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone!.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1478,7 +1478,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String?> imagePath,
       Function(bool, String?) updateAudioUI,
-      HealthResult mediaMetaInfoClone,
+      HealthResult? mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController pulseClone,
@@ -1501,7 +1501,7 @@ class CommonDialogBox {
 
     if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone!.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1625,7 +1625,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String?> imagePath,
       Function(bool, String?) updateAudioUI,
-      HealthResult mediaMetaInfoClone,
+      HealthResult? mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController pulseClone,
@@ -1649,7 +1649,7 @@ class CommonDialogBox {
     diaStolicPressure.text = diastolicPressureClone.text;
     if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone!.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1938,7 +1938,7 @@ class CommonDialogBox {
       final catgoryDataList = PreferenceUtil.getCategoryType();
 
       categoryDataObj = CommonUtil()
-          .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
+          .getCategoryObjForSelectedLabel(categoryID, catgoryDataList!);
       postMediaData[parameters.strhealthRecordCategory] =
           categoryDataObj.toJson();
       var _mediaTypeBlock = MediaTypeBlock();
@@ -2468,7 +2468,7 @@ class CommonDialogBox {
     setFileName(fileNameClone.text, null);
 
     filteredCategoryData = PreferenceUtil.getCategoryTypeDisplay(
-        Constants.KEY_CATEGORYLIST_VISIBLE);
+        Constants.KEY_CATEGORYLIST_VISIBLE)!;
     fromClassNew = fromClass;
     final dialog = StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
@@ -2683,7 +2683,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String>? imagePath,
       Function(bool, String?) updateAudioUI,
-      HealthResult mediaMetaInfoClone,
+      HealthResult? mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController fileNameClone,
       Function(bool) refresh) {
@@ -2700,7 +2700,7 @@ class CommonDialogBox {
     if (imagePath != null) imagePathMain.addAll(imagePath);
     if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone!.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -2829,13 +2829,13 @@ class CommonDialogBox {
 
   int pickPosition(String categoryName) {
     var position = 0;
-    List<CategoryResult?> categoryDataList = [];
+    List<CategoryResult>? categoryDataList = [];
     categoryDataList = getCategoryList();
     for (var i = 0;
         i < (categoryDataList == null ? 0 : categoryDataList.length);
         i++) {
-      if (categoryName == categoryDataList[i]!.categoryName!) {
-        print(categoryName + ' ****' + categoryDataList[i]!.categoryName!);
+      if (categoryName == categoryDataList![i].categoryName!) {
+        print(categoryName + ' ****' + categoryDataList[i].categoryName!);
         position = i;
       }
     }
@@ -2846,7 +2846,7 @@ class CommonDialogBox {
     }
   }
 
-  List<CategoryResult> getCategoryList() {
+  List<CategoryResult>? getCategoryList() {
     if (filteredCategoryData == null || filteredCategoryData.isEmpty) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = CommonUtil().fliterCategories(value!.result!);

@@ -314,7 +314,7 @@ class _ResultPage extends State<PaymentResultPage> {
   }
 
   Widget getRetryButton() {
-    if (!status! && !widget?.isFreePlan ?? false) {
+    if (!status! && !widget.isFreePlan ?? false) {
       return FlatButton(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),

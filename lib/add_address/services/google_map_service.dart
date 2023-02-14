@@ -21,7 +21,7 @@ class GoogleMapServices {
 
     final response = await ApiServices.get(
         webserviceCall.getQueryForSuggestion(sessionToken!, query));
-    var responseData = json.decode(response.body);
+    var responseData = json.decode(response!.body);
     var predictions = responseData[parameters.strpredictions];
 
     var suggestions = <Place>[];
@@ -39,7 +39,7 @@ class GoogleMapServices {
 
     final response = await ApiServices.get(
         webserviceCall.getQueryForPlaceDetail(placeId, token));
-    var responseData = json.decode(response.body);
+    var responseData = json.decode(response!.body);
     var result = responseData[parameters.dataResult];
 
     final placeDetail = PlaceDetail.fromJson(result);
@@ -52,7 +52,7 @@ class GoogleMapServices {
 
     final response =
         await ApiServices.get(webserviceCall.queryAddrFromLocation(lat, lng));
-    var responseData = json.decode(response.body);
+    var responseData = json.decode(response!.body);
     var formattedAddr =
         responseData[parameters.strresults][0][parameters.strformatted_address];
 

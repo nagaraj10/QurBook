@@ -75,7 +75,7 @@ class Cart {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['productList'] != null) {
-      productList = new List<ProductList>();
+      productList = <ProductList>[];
       json['productList'].forEach((v) {
         productList!.add(new ProductList.fromJson(v));
       });

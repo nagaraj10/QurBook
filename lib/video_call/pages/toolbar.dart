@@ -105,7 +105,7 @@ class _ToolbarState extends State<Toolbar> {
       alignment: Alignment.bottomCenter,
       child: Container(
         decoration: BoxDecoration(
-          color: audioCallStatus?.isAudioCall
+          color: audioCallStatus.isAudioCall
               ? Colors.white.withOpacity(0.5)
               : Colors.black.withOpacity(0.5),
           borderRadius: BorderRadius.all(
@@ -304,7 +304,7 @@ class _ToolbarState extends State<Toolbar> {
   Future<void> _onToggleVideo() async {
     try {
       /// switch to audio call if remote user also in audio call
-      if (audioCallStatus?.isAudioCall) {
+      if (audioCallStatus.isAudioCall) {
         //if it's a audio call want switch to video call, request remote user
         //check for camera permission
         var permissionStatus =
@@ -344,12 +344,12 @@ class _ToolbarState extends State<Toolbar> {
               ?.turnOffVideo();
         } else {
           await rtcProvider?.rtcEngine
-              ?.muteLocalVideoStream(videoIconStatus?.isVideoOn);
+              ?.muteLocalVideoStream(videoIconStatus.isVideoOn);
           Provider.of<RTCEngineProvider>(context, listen: false)
-              ?.changeLocalVideoStatus(videoIconStatus?.isVideoOn);
-          CommonUtil.isLocalUserOnPause = videoIconStatus?.isVideoOn;
+              ?.changeLocalVideoStatus(videoIconStatus.isVideoOn);
+          CommonUtil.isLocalUserOnPause = videoIconStatus.isVideoOn;
           videoIconStatus?.swapVideo();
-          widget.controllerState(widget.muted, videoIconStatus?.isVideoOn);
+          widget.controllerState(widget.muted, videoIconStatus.isVideoOn);
         }
       }
     } catch (e) {

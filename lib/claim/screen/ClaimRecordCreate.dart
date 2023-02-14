@@ -653,7 +653,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       final catgoryDataList = PreferenceUtil.getCategoryType();
 
       categoryDataObj = CommonUtil()
-          .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
+          .getCategoryObjForSelectedLabel(categoryID, catgoryDataList!);
       postMediaData[parameters.strhealthRecordCategory] =
           categoryDataObj.toJson();
       var _mediaTypeBlock = MediaTypeBlock();

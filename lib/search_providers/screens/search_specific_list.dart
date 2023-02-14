@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -398,7 +399,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return StreamBuilder<ApiResponse<LabsSearchListResponse>>(
       stream: _labsListBlock!.labNewStream,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
+        if (!snapshot.hasData) {
+      //  return Container();
 
         switch (snapshot.data!.status) {
           case Status.LOADING:
@@ -445,6 +447,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           default:
             break;
         }
+        }
+        return Container();
+        
       },
     );
   }
@@ -920,7 +925,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Image.memory(
-            snapshot.data,
+            snapshot.data as Uint8List,
             height: 50.0.h,
             width: 50.0.h,
             fit: BoxFit.cover,

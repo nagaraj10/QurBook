@@ -110,11 +110,11 @@ class _CallMainState extends State<CallMain> {
         Provider.of<AudioCallProvider>(context, listen: false);
     final videoIconStatus =
         Provider.of<VideoIconProvider>(Get.context!, listen: false);
-    videoIconStatus?.isVideoOn = audioCallStatus?.isAudioCall ? false : true;
+    videoIconStatus?.isVideoOn = audioCallStatus.isAudioCall ? false : true;
     //_isVideoHide = audioCallStatus?.isAudioCall;
 
     /// hide controller after 5 secs
-    if (audioCallStatus?.isAudioCall) {
+    if (audioCallStatus.isAudioCall) {
       //if audio call do not hide status bar
       hideStatus.showMe();
     } else {

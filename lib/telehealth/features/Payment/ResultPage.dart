@@ -67,7 +67,7 @@ class _ResultPage extends State<ResultPage> {
       if (widget.appointmentId != null && widget.appointmentId != '') {
         checkSlotsRetry(widget.appointmentId!).then((value) {
           if (value != null) {
-            if (value?.isSuccess!) {
+            if (value.isSuccess!) {
               callRefreshButtonState(true);
             } else {
               callRefreshButtonState(false);
@@ -77,7 +77,7 @@ class _ResultPage extends State<ResultPage> {
           }
         });
       } else {
-        if (widget?.isPaymentFromNotification) {
+        if (widget.isPaymentFromNotification) {
           FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
         } else {
           goToSlotPage();
@@ -222,10 +222,10 @@ class _ResultPage extends State<ResultPage> {
           if (widget.appointmentId != null && widget.appointmentId != '') {
             checkSlotsRetry(widget.appointmentId!).then((value) {
               if (value != null) {
-                if (value?.isSuccess!) {
+                if (value.isSuccess!) {
                   goToPaymentPage();
                 } else {
-                  if (widget?.isPaymentFromNotification) {
+                  if (widget.isPaymentFromNotification) {
                     FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
                   } else {
                     goToSlotPage();
@@ -234,7 +234,7 @@ class _ResultPage extends State<ResultPage> {
               }
             });
           } else {
-            if (widget?.isPaymentFromNotification) {
+            if (widget.isPaymentFromNotification) {
               FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
             } else {
               goToSlotPage();
@@ -282,9 +282,9 @@ class _ResultPage extends State<ResultPage> {
   }
 
   Future<PaymentFailureRetryModel> checkSlotsRetry(String appointmentId) async {
-    PaymentFailureRetryModel paymentRetry =
+    PaymentFailureRetryModel? paymentRetry =
         await updatePaymentViewModel.checkSlotsRetry(appointmentId);
 
-    return paymentRetry;
+    return paymentRetry!;
   }
 }

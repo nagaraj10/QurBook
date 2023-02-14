@@ -1,4 +1,6 @@
 
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../common/CommonUtil.dart';
@@ -754,7 +756,7 @@ getDoctorProfileImageWidget(MetaInfo data) {
     builder: (context, snapshot) {
       if (snapshot.hasData) {
         return Image.memory(
-          snapshot.data,
+          snapshot.data as Uint8List,
           height: 50.0.h,
           width: 50.0.h,
           fit: BoxFit.cover,

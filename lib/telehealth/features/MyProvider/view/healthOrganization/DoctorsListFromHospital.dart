@@ -57,9 +57,9 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
   CommonWidgets commonWidgets = new CommonWidgets();
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
-      new List<AvailableTimeSlotsModel>();
-  List<SlotSessionsModel> sessionTimeModel = new List<SlotSessionsModel>();
-  List<Slots> slotsModel = new List<Slots>();
+      <AvailableTimeSlotsModel>[];
+  List<SlotSessionsModel> sessionTimeModel = <SlotSessionsModel>[];
+  List<Slots> slotsModel = <Slots>[];
   ProvidersBloc? _providersBloc;
   MyProvidersResponse? myProvidersResponseList;
   MyProfileModel? myProfile;
@@ -519,18 +519,18 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
 
   String? getFees(ResultFromHospital result, bool isCSRDiscount) {
     String? fees = '';
-    if (result?.doctorFeeCollection?.isNotEmpty) {
-      if (result?.doctorFeeCollection?.length > 0) {
-        for (int i = 0; i < result?.doctorFeeCollection?.length; i++) {
-          String? feesCode = result?.doctorFeeCollection![i]?.feeType?.code;
-          bool? isActive = result?.doctorFeeCollection![i]?.isActive;
+    if (result.doctorFeeCollection!.isNotEmpty) {
+      if (result.doctorFeeCollection!.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection!.length; i++) {
+          String? feesCode = result.doctorFeeCollection![i].feeType?.code;
+          bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }

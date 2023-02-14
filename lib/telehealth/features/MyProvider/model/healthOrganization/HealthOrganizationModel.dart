@@ -12,7 +12,7 @@ class HealthOrganizationModel {
     isSuccess = json['isSuccess'];
     message = json['message'];
     if (json['result'] != null) {
-      result = new List<HealthOrganizationResult>();
+      result = <HealthOrganizationResult>[];
       json['result'].forEach((v) {
         result!.add(new HealthOrganizationResult.fromJson(v));
       });

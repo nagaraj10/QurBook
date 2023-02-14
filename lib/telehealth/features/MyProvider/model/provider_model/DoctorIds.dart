@@ -127,13 +127,13 @@ class DoctorIds {
     isTelehealthEnabled = json[parameters.strisTelehealthEnabled];
     isMCIVerified = json[parameters.strisMCIVerified];
     if (json[parameters.strlanguages] != null) {
-      languages = new List<Languages>();
+      languages = <Languages>[];
       json[parameters.strlanguages].forEach((v) {
         languages!.add(new Languages.fromJson(v));
       });
     }
     if (json[parameters.strprofessionalDetails] != null) {
-      professionalDetails = new List<ProfessionalDetails>();
+      professionalDetails = <ProfessionalDetails>[];
       json[parameters.strprofessionalDetails].forEach((v) {
         professionalDetails!.add(new ProfessionalDetails.fromJson(v));
       });

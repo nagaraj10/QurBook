@@ -187,10 +187,10 @@ class _CallPageState extends State<CallPage> {
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
-    if (!audioStatus?.isAudioCall) {
+    if (!audioStatus.isAudioCall) {
       //* video call
       VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-      configuration.dimensions = widget?.isWeb!
+      configuration.dimensions = widget.isWeb!
           ? VideoDimensions(width: 1280, height: 720)
           : VideoDimensions(width: 640, height: 360);
       configuration.frameRate = VideoFrameRate.Fps15;
@@ -479,7 +479,7 @@ class _CallPageState extends State<CallPage> {
               ?.turnOffVideo();
         } else {
           if (!(Provider.of<AudioCallProvider>(Get.context!, listen: false)
-              ?.isAudioCall)) {
+              .isAudioCall)) {
             FlutterToast()
                 .getToast('Doctor/Care Coordinator has paused the video', Colors.red);
           }
@@ -761,7 +761,7 @@ class _CallPageState extends State<CallPage> {
             itemCount: _infoStrings.length,
             itemBuilder: (BuildContext context, int index) {
               if (_infoStrings.isEmpty) {
-                return null;
+                return Container();
               }
               return Padding(
                 padding: const EdgeInsets.symmetric(

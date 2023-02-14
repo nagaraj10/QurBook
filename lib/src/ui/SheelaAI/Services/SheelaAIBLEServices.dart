@@ -452,7 +452,7 @@ class SheelaBLEController extends GetxController {
             }
             final tempFile =
                 await File('${dir.path}/tempAudioFile$randomNum.mp3').create();
-            await tempFile.writeAsBytesSync(
+             tempFile.writeAsBytesSync(
               bytes,
             );
             SheelaController.conversations.add(currentPlayingConversation);

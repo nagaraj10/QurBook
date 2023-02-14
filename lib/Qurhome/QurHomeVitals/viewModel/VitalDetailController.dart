@@ -159,7 +159,7 @@ class VitalDetailController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> fetchBPDetailsQurHome(
+  Future<List<dynamic>?> fetchBPDetailsQurHome(
       {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
@@ -175,7 +175,7 @@ class VitalDetailController extends GetxController {
         loadingData.value = false;
         return bpList.value = [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
@@ -184,7 +184,7 @@ class VitalDetailController extends GetxController {
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bloodPressureCollection!.isEmpty) {
           loadingData.value = false;
-          return bpList.value = [];
+          return bpList.value = [] ;
         }
         dataElement.bloodPressureCollection!.forEach((bpElement) {
           var bpList = BPResult(
@@ -228,7 +228,7 @@ class VitalDetailController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> fetchGLDetailsQurHome(
+  Future<List<dynamic>?> fetchGLDetailsQurHome(
       {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
@@ -244,7 +244,7 @@ class VitalDetailController extends GetxController {
         loadingData.value = false;
         return gulList.value = [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult] ;//as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
@@ -293,7 +293,7 @@ class VitalDetailController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> fetchOXYDetailsQurHome(
+  Future<List<dynamic>?> fetchOXYDetailsQurHome(
       {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
@@ -309,7 +309,7 @@ class VitalDetailController extends GetxController {
         loadingData.value = false;
         return oxyList.value = [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
@@ -364,7 +364,7 @@ class VitalDetailController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> fetchTMPDetailsQurHome(
+  Future<List<dynamic>?> fetchTMPDetailsQurHome(
       {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
@@ -380,7 +380,7 @@ class VitalDetailController extends GetxController {
         loadingData.value = false;
         return tempList.value = [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult] ;//as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<TMPResult> ret = [];
@@ -388,7 +388,7 @@ class VitalDetailController extends GetxController {
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bodyTemperatureCollection!.isEmpty) {
           loadingData.value = false;
-          return tempList.value = [];
+          return tempList.value = [] ;
         }
         dataElement.bodyTemperatureCollection!.forEach((tempValue) {
           var tempList = TMPResult(
@@ -424,7 +424,7 @@ class VitalDetailController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> fetchWVDetailsQurHome(
+  Future<List<dynamic>?> fetchWVDetailsQurHome(
       {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
@@ -440,13 +440,13 @@ class VitalDetailController extends GetxController {
         loadingData.value = false;
         return weightList.value = [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<WVResult> ret = [];
       List<dynamic> finalResult;
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bodyWeightCollection!.isEmpty) {
+        if (dataElement.bodyWeightCollection!.isEmpty  ) {
           loadingData.value = false;
           return weightList.value = [];
         }

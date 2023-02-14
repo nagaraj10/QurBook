@@ -335,7 +335,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
             paymentRetryUrl: PAYMENT_URL,
             paymentId: widget.paymentId,
             isFromRazor: isFromRazor,
-            isPaymentFromNotification: widget?.isPaymentFromNotification,
+            isPaymentFromNotification: widget.isPaymentFromNotification,
           ),
         ));
   }
@@ -375,7 +375,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
     final updatePaymentResponse =
         await ApiBaseHelper().updatePaymentStatus(body);
 
-    return updatePaymentResponse;
+    return updatePaymentResponse!;
   }
 }
 

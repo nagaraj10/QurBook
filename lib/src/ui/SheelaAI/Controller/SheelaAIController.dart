@@ -118,14 +118,15 @@ class SheelaAIController extends GetxController {
             final buttons = currentPlayingConversation!.buttons!;
             if ((currentPlayingConversation!.currentButtonPlayingIndex ?? 0) <
                 buttons.length) {
-              final index =
+              var index =
                   currentPlayingConversation!.currentButtonPlayingIndex ?? 0;
               if ((index < buttons.length - 1) &&
                   buttons[index + 1].skipTts! &&
                   !currentPlayingConversation!.isButtonNumber!) {
                 if (currentPlayingConversation!.currentButtonPlayingIndex !=
                     null) {
-                  currentPlayingConversation!.currentButtonPlayingIndex++;
+                      index ++;
+                  currentPlayingConversation!.currentButtonPlayingIndex = index;
                 }
               }
               checkForButtonsAndPlay();
@@ -167,10 +168,11 @@ class SheelaAIController extends GetxController {
   checkForButtonsAndPlay() {
     final buttons = currentPlayingConversation!.buttons;
     if (currentPlayingConversation!.currentButtonPlayingIndex != null) {
-      final index = currentPlayingConversation!.currentButtonPlayingIndex!;
-      if (index < (buttons!.length - 1)) {
+      var  index = currentPlayingConversation!.currentButtonPlayingIndex;
+      if (index! < (buttons!.length - 1) ) {
         buttons[index].isPlaying.value = false;
-        currentPlayingConversation!.currentButtonPlayingIndex++;
+        index ++;
+        currentPlayingConversation!.currentButtonPlayingIndex = index ;
         buttons[currentPlayingConversation!.currentButtonPlayingIndex!]
             .isPlaying
             .value = true;
@@ -513,7 +515,7 @@ class SheelaAIController extends GetxController {
               final tempFile =
                   await File('${dir.path}/tempAudioFile$randomNum.mp3')
                       .create();
-              await tempFile.writeAsBytesSync(
+              tempFile.writeAsBytesSync(
                 bytes,
               );
               currentPlayingConversation!.isPlaying.value = true;

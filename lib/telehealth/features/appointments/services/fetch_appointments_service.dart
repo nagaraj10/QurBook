@@ -31,9 +31,9 @@ class FetchAppointmentsService {
     return await ApiServices.get(
       _baseUrl + qr_appointment_fetch + userId!,
       headers: await headerRequest.getRequestHeadersAuthContent(),
-    ).then((http.Response response) {
+    ).then((http.Response? response) {
 //          print(response.body);
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
 //        print(response.body);

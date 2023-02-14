@@ -41,7 +41,7 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   int get _productCount => totalProductCount;
 
-  void loader(bool currentIsLoading, {bool isNeedRelod = false}) {
+  Future<void> loader(bool currentIsLoading, {bool isNeedRelod = false}) async{
     isLoading = currentIsLoading;
     if (isNeedRelod) {
       notifyListeners();
@@ -64,35 +64,35 @@ class CheckoutPageProvider extends ChangeNotifier {
     productList = fetchingCartItemsModel?.result?.cart?.productList;
     if (productList != null && productList!.length > 0) {
       productList!.forEach((product) {
-        if (product?.additionalInfo?.isMembershipAvail ?? false) {
+        if (product.additionalInfo!.isMembershipAvail ?? false) {
           totalProductCount = totalProductCount + 0;
         } else {
-          if (product?.productDetail?.planSubscriptionFee != null &&
-              product?.productDetail?.planSubscriptionFee != "") {
+          if (product.productDetail!.planSubscriptionFee != null &&
+              product.productDetail!.planSubscriptionFee != "") {
             int amtToPay =
-                double.parse(product?.productDetail?.planSubscriptionFee!)
+                double.parse(product.productDetail!.planSubscriptionFee!)
                     .toInt();
             totalProductCount = totalProductCount + amtToPay;
-          } else if (product?.additionalInfo?.newFee != null &&
-              product?.additionalInfo?.newFee != "") {
+          } else if (product.additionalInfo!.newFee != null &&
+              product.additionalInfo!.newFee != "") {
             int amtToPay =
-                double.parse(product?.additionalInfo?.newFee).toInt();
+                double.parse(product.additionalInfo!.newFee).toInt();
             totalProductCount = totalProductCount + amtToPay;
-          } else if (product?.additionalInfo?.actualFee != null &&
-              product?.additionalInfo?.actualFee != "") {
-            if (product?.additionalInfo?.actualFee?.contains(".")) {
+          } else if (product.additionalInfo!.actualFee != null &&
+              product.additionalInfo!.actualFee != "") {
+            if (product.additionalInfo!.actualFee?.contains(".")) {
               int amtToPay =
-                  double.parse(product?.additionalInfo?.actualFee).toInt();
+                  double.parse(product.additionalInfo!.actualFee).toInt();
               totalProductCount = totalProductCount + amtToPay;
-            } else if (!product?.additionalInfo?.actualFee?.contains(".")) {
-              int amtToPay = int.parse(product?.additionalInfo?.actualFee);
+            } else if (!product.additionalInfo!.actualFee?.contains(".")) {
+              int amtToPay = int.parse(product.additionalInfo!.actualFee);
               totalProductCount = totalProductCount + amtToPay;
             }
-          } else if (product?.paidAmount!.contains(".")) {
-            int amtToPay = double.parse(product?.paidAmount!).toInt();
+          } else if (product.paidAmount!.contains(".")) {
+            int amtToPay = double.parse(product.paidAmount!).toInt();
             totalProductCount = totalProductCount + amtToPay;
-          } else if (!product?.paidAmount?.contains(".")) {
-            int amtToPay = int.parse(product?.paidAmount!);
+          } else if (!product.paidAmount!.contains(".")) {
+            int amtToPay = int.parse(product.paidAmount!);
             totalProductCount = totalProductCount + amtToPay;
           }
         }
@@ -142,7 +142,7 @@ class CheckoutPageProvider extends ChangeNotifier {
       String? isFrom}) async {
     var body = {'productId': productId};
     var value = await helper.removeCartItems(body);
-    if (value.isSuccess!) {
+    if (value!.isSuccess!) {
       //item removed from cart
       try {
         if ((productList?.additionalInfo?.isMembershipAvail ?? false) &&
@@ -170,12 +170,12 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   Future<void> clearCartItem({bool isNeedRelod = false}) async {
     var value = await helper.clearCartItems();
-    if (value.isSuccess!) {
+    if (value!.isSuccess!) {
       //item removed from cart
       FlutterToast().getToast(value.message!, Colors.green);
       await fetchCartItems(isNeedRelod: isNeedRelod);
       await fetchCartItem();
-      await updateProductCountBasedOnCondiiton();
+      updateProductCountBasedOnCondiiton();
 
       //setCartType(CartType.DEFAULT_CART);
     } else {
@@ -200,7 +200,7 @@ class CheckoutPageProvider extends ChangeNotifier {
         cartUserId: cartUserId,
         notificationListId: notificationListId,
         firstTym: firstTym);
-    await updateCareCount();
+    updateCareCount();
     //setCartType(CartType.DEFAULT_CART);
   }
 
@@ -230,7 +230,7 @@ class CheckoutPageProvider extends ChangeNotifier {
   void updateCarePlanCount(bool condition) async {
     int careCount =
         await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-            ?.carePlanCount;
+            .carePlanCount;
 
     if (!condition) {
       await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
@@ -238,7 +238,7 @@ class CheckoutPageProvider extends ChangeNotifier {
     }
     print("carePlanCount incheckout" +
         await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-            ?.carePlanCount
+            .carePlanCount
             .toString());
 
     notifyListeners();
@@ -247,7 +247,7 @@ class CheckoutPageProvider extends ChangeNotifier {
   void updateDietPlanCount(bool condition) async {
     int dietCount =
         await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-            ?.dietPlanCount;
+            .dietPlanCount;
 
     if (!condition) {
       await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
@@ -255,7 +255,7 @@ class CheckoutPageProvider extends ChangeNotifier {
     }
     print("dietPlanCount incheckout" +
         await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-            ?.dietPlanCount
+            .dietPlanCount
             .toString());
 
     notifyListeners();
@@ -363,36 +363,36 @@ class CheckoutPageProvider extends ChangeNotifier {
     productList = fetchingCartItemsModel?.result?.cart?.productList;
     if (productList != null && productList!.length > 0) {
       productList!.forEach((product) {
-        if (product?.additionalInfo?.isMembershipAvail ?? false) {
+        if (product.additionalInfo!.isMembershipAvail ?? false) {
           totalProductCount = totalProductCount + 0;
         } else {
           if (!firstTym) {
-            if (product?.productDetail?.planSubscriptionFee != null &&
-                product?.productDetail?.planSubscriptionFee != "") {
+            if (product.productDetail!.planSubscriptionFee != null &&
+                product.productDetail!.planSubscriptionFee != "") {
               int amtToPay =
-                  double.parse(product?.productDetail?.planSubscriptionFee!)
+                  double.parse(product.productDetail!.planSubscriptionFee!)
                       .toInt();
               totalProductCount = totalProductCount + amtToPay;
             }
           } else {
-            if (product?.additionalInfo?.newFee != null &&
-                product?.additionalInfo?.newFee != "") {
-              if (product?.additionalInfo?.newFee?.contains(".")) {
+            if (product.additionalInfo!.newFee != null &&
+                product.additionalInfo!.newFee != "") {
+              if (product.additionalInfo!.newFee?.contains(".")) {
                 int amtToPay =
-                    double.parse(product?.additionalInfo?.newFee).toInt();
+                    double.parse(product.additionalInfo!.newFee).toInt();
                 totalProductCount = totalProductCount + amtToPay;
-              } else if (!product?.additionalInfo?.newFee?.contains(".")) {
-                int amtToPay = int.parse(product?.additionalInfo?.newFee);
+              } else if (!product.additionalInfo!.newFee?.contains(".")) {
+                int amtToPay = int.parse(product.additionalInfo!.newFee);
                 totalProductCount = totalProductCount + amtToPay;
               }
-            } else if (product?.additionalInfo?.actualFee != null &&
-                product?.additionalInfo?.actualFee != "") {
-              if (product?.additionalInfo?.actualFee?.contains(".")) {
+            } else if (product.additionalInfo!.actualFee != null &&
+                product.additionalInfo!.actualFee != "") {
+              if (product.additionalInfo!.actualFee?.contains(".")) {
                 int amtToPay =
-                    double.parse(product?.additionalInfo?.actualFee).toInt();
+                    double.parse(product.additionalInfo!.actualFee).toInt();
                 totalProductCount = totalProductCount + amtToPay;
-              } else if (!product?.additionalInfo?.actualFee?.contains(".")) {
-                int amtToPay = int.parse(product?.additionalInfo?.actualFee);
+              } else if (!product.additionalInfo!.actualFee?.contains(".")) {
+                int amtToPay = int.parse(product.additionalInfo!.actualFee);
                 totalProductCount = totalProductCount + amtToPay;
               }
             }

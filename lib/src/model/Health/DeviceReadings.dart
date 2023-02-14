@@ -24,7 +24,7 @@ class DeviceReadings {
    
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic>? toJson() {
     try{
 
     final data = Map<String, dynamic>();

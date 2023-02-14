@@ -53,7 +53,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   GlobalKey _bottomNavigationKey = GlobalKey();
   static TextStyle optionStyle =
       TextStyle(fontSize: 30.0.sp, fontWeight: FontWeight.bold);
-  List<BottomNavigationArguments> bottomNavigationArgumentsList = new List();
+  List<BottomNavigationArguments> bottomNavigationArgumentsList = [];
   late var _widgetOptions;
 
   void _onItemTapped(int index) {
@@ -289,11 +289,11 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                         FlutterToast toast = new FlutterToast();
                         _isCancelDialogShouldShown = false;
                         Navigator.of(context).pop(true);
-                        CancelAppointmentModel cancelAppointment =
+                        CancelAppointmentModel? cancelAppointment =
                             await CancelAppointmentViewModel()
                                 .fetchCancelAppointment([_bookingId], [date]);
 
-                        if (cancelAppointment.isSuccess == true) {
+                        if (cancelAppointment!.isSuccess == true) {
                           toast.getToast(
                               TranslationConstants.yourBookingSuccess.t(),
                               Colors.green);

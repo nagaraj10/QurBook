@@ -10,7 +10,7 @@ class DoctorListFromHospitalModel {
   DoctorListFromHospitalModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<ResultFromHospital>();
+      result = <ResultFromHospital>[];
       json['result'].forEach((v) {
         result!.add(new ResultFromHospital.fromJson(v));
       });
@@ -63,7 +63,7 @@ class ResultFromHospital {
         ? new DoctorFromHos.fromJson(json['doctor'])
         : null;
     if (json['doctorFeeCollection'] != null) {
-      doctorFeeCollection = new List<DoctorFeeCollection>();
+      doctorFeeCollection = <DoctorFeeCollection>[];
       json['doctorFeeCollection'].forEach((v) {
         doctorFeeCollection!.add(new DoctorFeeCollection.fromJson(v));
       });
@@ -139,14 +139,14 @@ class DoctorFromHos {
     user =
         json['user'] != null ? new UserResponse.fromJson(json['user']) : null;
     if (json['doctorLanguageCollection'] != null) {
-      doctorLanguageCollection = new List<DoctorLanguageCollection>();
+      doctorLanguageCollection = <DoctorLanguageCollection>[];
       json['doctorLanguageCollection'].forEach((v) {
         doctorLanguageCollection!.add(new DoctorLanguageCollection.fromJson(v));
       });
     }
     if (json['doctorProfessionalDetailCollection'] != null) {
       doctorProfessionalDetailCollection =
-          new List<DoctorProfessionalDetailCollection>();
+          <DoctorProfessionalDetailCollection>[];
       json['doctorProfessionalDetailCollection'].forEach((v) {
         doctorProfessionalDetailCollection!
             .add(new DoctorProfessionalDetailCollection.fromJson(v));
@@ -275,14 +275,14 @@ class UserResponse {
     lastModifiedOn = json['lastModifiedOn'];
     providerId = json['providerId'];
     if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = new List<UserAddressCollectionForHospital>();
+      userAddressCollection3 = <UserAddressCollectionForHospital>[];
       json['userAddressCollection3'].forEach((v) {
         userAddressCollection3!
             .add(new UserAddressCollectionForHospital.fromJson(v));
       });
     }
     if (json['userContactCollection3'] != null) {
-      userContactCollection3 = new List<UserContactCollection3>();
+      userContactCollection3 = <UserContactCollection3>[];
       json['userContactCollection3'].forEach((v) {
         userContactCollection3!.add(new UserContactCollection3.fromJson(v));
       });
@@ -536,13 +536,13 @@ class QualificationInfo {
 
   QualificationInfo.fromJson(Map<String, dynamic> json) {
     if (json['degree'] != null) {
-      degree = new List<Degree>();
+      degree = <Degree>[];
       json['degree'].forEach((v) {
         degree!.add(new Degree.fromJson(v));
       });
     }
     if (json['university'] != null) {
-      university = new List<Degree>();
+      university = <Degree>[];
       json['university'].forEach((v) {
         university!.add(new Degree.fromJson(v));
       });

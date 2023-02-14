@@ -3025,7 +3025,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (!snapshot.hasData) {
             return CommonCircularIndicator();
           }
-          final List<Tags> tagslist = snapshot.data.result;
+          final List<Tags> tagslist = snapshot.data as List<Tags>; // snapshot.data.result to snapshot.data
 
           mediaResultFiltered = removeUnwantedCategories(tagslist);
 

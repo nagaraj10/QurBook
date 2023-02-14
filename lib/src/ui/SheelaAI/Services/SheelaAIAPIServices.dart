@@ -29,7 +29,7 @@ class SheelAIAPIService {
       );
       // print("-----------------Sheela response---------------------");
       // print(response.body);
-      return response;
+      return response!;
     } catch (e) {
       throw Exception('$e was thrown');
     }
@@ -51,7 +51,7 @@ class SheelAIAPIService {
       );
       // print("-----------------Sheela response---------------------");
       // print(response.body);
-      return response;
+      return response!;
     } catch (e) {
       throw Exception('$e was thrown');
     }

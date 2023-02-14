@@ -5,6 +5,9 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:get/get.dart';
 import 'package:myfhb/add_providers/controller/add_providers_controller.dart';
+import 'package:myfhb/add_providers/models/add_doctors_providers_id.dart';
+import 'package:myfhb/add_providers/models/add_hospitals_providers_id.dart';
+import 'package:myfhb/add_providers/models/add_labs_providers_id.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
@@ -895,10 +898,14 @@ class AddProvidersState extends State<AddProviders> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Container();
 
-          if (snapshot.data.status == Status.COMPLETED) {
+          // if (snapshot.data.status == Status.COMPLETED) {
+                      if (snapshot.connectionState  == ConnectionState.done) {
+
             updateProvidersBloc.isPreferred = isPreferred;
+            var streamData =  snapshot.data! as AddDoctorsProvidersId;
             updateProvidersBloc.providerId =
-                snapshot.data.data.response.data.id;
+               streamData.response!.data!.id;
+              
             updateDoctorsIdWithUserDetails();
 
             CommonUtil().getMedicalPreference();
@@ -916,10 +923,12 @@ class AddProvidersState extends State<AddProviders> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Container();
 
-          if (snapshot.data.status == Status.COMPLETED) {
+        //  if (snapshot.data.status == Status.COMPLETED) {
+               if (snapshot.connectionState  == ConnectionState.done) {
             updateProvidersBloc.isPreferred = isPreferred;
+               var streamData =  snapshot.data! as AddHospitalsProvidersId;
             updateProvidersBloc.providerId =
-                snapshot.data.data.response.data.id;
+                 streamData.response!.data!.id; 
             updateHospitalsIdWithUserDetails();
 
             CommonUtil().getMedicalPreference();
@@ -937,10 +946,12 @@ class AddProvidersState extends State<AddProviders> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Container();
 
-          if (snapshot.data.status == Status.COMPLETED) {
+         // if (snapshot.data.status == Status.COMPLETED) {
+           if (snapshot.connectionState  == ConnectionState.done) {
             updateProvidersBloc.isPreferred = isPreferred;
+             var streamData =  snapshot.data! as AddLabsProvidersId;
             updateProvidersBloc.providerId =
-                snapshot.data.data.response.data.id;
+                streamData.response!.data!.id;
             updateLabsIdWithUserDetails();
 
             CommonUtil().getMedicalPreference();
@@ -1451,7 +1462,9 @@ class AddProvidersState extends State<AddProviders> {
           if (!snapshot.hasData) {
             return CommonCircularIndicator();
           }
-          final MediaDataList mediaType = snapshot.data;
+
+          var FutureDate = snapshot.data as MediaDataList;
+          final  MediaDataList mediaType = FutureDate ;
           mediaType.result!
               .insert(0, MediaResult(name: 'ALL', isChecked: false, id: '1'));
           mediaType.result!.insert(

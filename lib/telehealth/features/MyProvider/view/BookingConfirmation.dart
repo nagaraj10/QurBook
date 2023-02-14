@@ -122,17 +122,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   late CreateAppointMentViewModel createAppointMentViewModel;
   late FamilyListBloc _familyListBloc;
   FamilyMembers familyMembersModel = new FamilyMembers();
-  List<SharedByUsers> sharedbyme = new List();
+  List<SharedByUsers> sharedbyme = [];
   FlutterToast toast = new FlutterToast();
   FamilyMembers? familyData = new FamilyMembers();
 
-  List<SharedByUsers> _familyNames = new List();
+  List<SharedByUsers> _familyNames = [];
 
   /* List<String> recordIds = new List();
   List<String> notesId = new List();
   List<String> voiceIds = new List();*/
 
-  List<String> healthRecords = new List();
+  List<String> healthRecords = [];
 
   int recordIdCount = 0;
   int notesIdCount = 0;
@@ -153,8 +153,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   CategoryListBlock? _categoryListBlock;
 
-  List<CategoryResult>? categoryDataList = new List();
-  List<CategoryResult> filteredCategoryData = new List();
+  List<CategoryResult>? categoryDataList = [];
+  List<CategoryResult> filteredCategoryData = [];
   CategoryResult categoryDataObjClone = new CategoryResult();
 
   String? doctorId;
@@ -283,20 +283,20 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     if (appointmentNotificationPayment != null) {
       slotTime = CommonUtil.getDateStringFromDateTime(
           appointmentNotificationPayment
-              .result?.appointment?.plannedStartDateTime!,
+              .result!.appointment!.plannedStartDateTime!,
           forNotification: true);
       apiStartTime = appointmentNotificationPayment
-          .result?.appointment?.plannedStartDateTime;
+          .result!.appointment!.plannedStartDateTime;
       apiEndTime = appointmentNotificationPayment
-          .result?.appointment?.plannedEndDateTime;
+          .result!.appointment!.plannedEndDateTime;
       slotNumber = appointmentNotificationPayment
-          .result?.appointment?.slotNumber
+          .result!.appointment!.slotNumber
           .toString();
       doctorSessionId =
           appointmentNotificationPayment.result?.appointment?.doctorSessionId;
       scheduleDate = CommonUtil.dateConversionToApiFormat(DateTime.tryParse(
           appointmentNotificationPayment
-              .result?.appointment?.plannedStartDateTime!)!);
+              .result!.appointment!.plannedStartDateTime!)!);
       isResident =
           appointmentNotificationPayment.result?.doctor?.isResident ?? false;
       doctorId = appointmentNotificationPayment.result?.doctor?.id;
@@ -354,10 +354,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       appointmentNotificationPayment
                               .result?.doctor?.user!.lastName !=
                           null
-                  ? (appointmentNotificationPayment.result?.doctor?.user
-                          ?.firstName!.capitalizeFirstofEach +
+                  ? (appointmentNotificationPayment.result!.doctor!.user
+                          !.firstName!.capitalizeFirstofEach +
                       appointmentNotificationPayment
-                          .result?.doctor?.user?.lastName!.capitalizeFirstofEach)
+                          .result!.doctor!.user!.lastName!.capitalizeFirstofEach)
                   : '')
           : '';
 
@@ -417,14 +417,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
-          ? myProfile.result!.firstName?.capitalizeFirstofEach +
+          ? myProfile.result!.firstName!.capitalizeFirstofEach +
               ' ' +
-              myProfile.result!.lastName?.capitalizeFirstofEach
+              myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
     } catch (e) {}
 
     if (sharedByMeList == null) {
-      sharedByMeList = new List();
+      sharedByMeList = [];
       sharedByMeList
           .add(new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     } else {
@@ -661,7 +661,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     return WillPopScope(
       onWillPop: () {
-        if (widget?.isFromPaymentNotification) {
+        if (widget.isFromPaymentNotification) {
           Get.offAll(NotificationMain());
         } else {
           Navigator.pop(context);
@@ -674,7 +674,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
             onTap: () {
-              if (widget?.isFromPaymentNotification) {
+              if (widget.isFromPaymentNotification) {
                 Get.offAll(NotificationMain());
               } else {
                 if (widget.isFromPaymentNotification == false) widget.refresh!();
@@ -956,7 +956,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     Past? doc,
     bool isResidentDoctorMembership = false,
   }) async {
-    CreateAppointmentModel bookAppointmentModel =
+    CreateAppointmentModel? bookAppointmentModel =
         await createAppointMentViewModel.putBookAppointment(
       createdBy,
       bookedFor,
@@ -971,7 +971,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       isResidentDoctorMembership: isResidentDoctorMembership,
     );
 
-    return bookAppointmentModel;
+    return bookAppointmentModel!;
   }
 
   bookAppointment(
@@ -1475,7 +1475,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     );
   }
 
-  List<CategoryResult> getCategoryList() {
+  List<CategoryResult>? getCategoryList() {
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock!.getCategoryLists().then((value) {
         categoryDataList = value!.result;
@@ -1518,8 +1518,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList = getCategoryList();
-    for (int i = 0; i < categoryDataList.length; i++) {
+    List<CategoryResult>? categoryDataList = getCategoryList();
+    for (int i = 0; i < categoryDataList!.length; i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         saveCategoryToprefernce(categoryDataList[i]);
         position = i;
@@ -1582,10 +1582,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   Future<AssociateSuccessResponse> associateRecords(
       String? doctorId, String? userId, List<String>? healthRecords) async {
-    AssociateSuccessResponse associateResponseList = await providerViewModel
+    AssociateSuccessResponse? associateResponseList = await providerViewModel
         .associateRecords(doctorId, userId, healthRecords);
 
-    return associateResponseList;
+    return associateResponseList!;
   }
 
   Container getMembershipDiscountCheckBox() {
@@ -2326,7 +2326,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   Widget getAppointmentDetailsUsingId() {
-    return FutureBuilder<AppointmentNotificationPayment>(
+    return FutureBuilder<AppointmentNotificationPayment?>(
       future: createAppointMentViewModel
           .getAppointmentDetailsUsingId(widget.appointmentId!),
       builder: (context, snapshot) {

@@ -12,13 +12,13 @@ class QualificationInfo {
 
   QualificationInfo.fromJson(Map<String, dynamic> json) {
     if (json[parameters.strdegree] != null) {
-      degree = new List<Degree>();
+      degree = <Degree>[];
       json[parameters.strdegree].forEach((v) {
         degree!.add(new Degree.fromJson(v));
       });
     }
     if (json[parameters.struniversity] != null) {
-      university = new List<University>();
+      university = <University>[];
       json[parameters.struniversity].forEach((v) {
         university!.add(new University.fromJson(v));
       });

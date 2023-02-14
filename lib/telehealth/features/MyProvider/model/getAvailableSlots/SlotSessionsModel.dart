@@ -30,7 +30,7 @@ class SlotSessionsModel {
     sessionEndTime = json['sessionEndTime'];
     duration = json['duration'];
     if (json['weekdayPreference'] != null) {
-      weekdayPreference = new List<WeekdayPreference>();
+      weekdayPreference = <WeekdayPreference>[];
       json['weekdayPreference'].forEach((v) {
         weekdayPreference!.add(new WeekdayPreference.fromJson(v));
       });
@@ -39,7 +39,7 @@ class SlotSessionsModel {
     isActive = json['isActive'];
     slotCounts = json['slotCounts'];
     if (json['slots'] != null) {
-      slots = new List<Slots>();
+      slots = <Slots>[];
       json['slots'].forEach((v) {
         slots!.add(new Slots.fromJson(v));
       });

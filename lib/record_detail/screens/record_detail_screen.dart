@@ -1477,12 +1477,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               // return getCarousalImage(snapshot.data.data);
               break;
           }
-        } else {
+        } 
+        // else {
           return Container(
             width: 100.0.h,
             height: 100.0.h,
           );
-        }
+        // }
       },
     );
   }
@@ -1536,6 +1537,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         } else {
           return getAudioIconWithFile();
         }
+        return Container();
       },
     );
   }

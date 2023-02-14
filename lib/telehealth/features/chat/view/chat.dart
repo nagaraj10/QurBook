@@ -58,27 +58,27 @@ import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'ChooseDateSlot.dart';
 
 class Chat extends StatefulWidget {
-  final String peerId;
+  final String? peerId;
   final String? peerAvatar;
   final String? peerName;
-  final String lastDate;
-  final String patientId;
-  final String patientName;
-  final String patientPicture;
-  final bool isFromVideoCall;
+  final String? lastDate;
+  final String? patientId;
+  final String? patientName;
+  final String? patientPicture;
+  final bool? isFromVideoCall;
   final String? message;
   final bool? isCareGiver;
 
   Chat(
       {Key? key,
-      required this.peerId,
-      required this.peerAvatar,
-      required this.peerName,
-      required this.lastDate,
-      required this.patientId,
-      required this.patientName,
-      required this.patientPicture,
-      required this.isFromVideoCall,
+       this.peerId,
+       this.peerAvatar,
+       this.peerName,
+     this.lastDate,
+       this.patientId,
+       this.patientName,
+       this.patientPicture,
+       this.isFromVideoCall,
       this.message,
       this.isCareGiver})
       : super(key: key);
@@ -92,14 +92,14 @@ class ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChatScreen(
-        peerId: widget.peerId,
+        peerId: widget.peerId!,
         peerAvatar: widget.peerAvatar,
         peerName: widget.peerName,
-        lastDate: widget.lastDate,
-        patientId: widget.patientId,
-        patientName: widget.patientName,
-        patientPicture: widget.patientPicture,
-        isFromVideoCall: widget.isFromVideoCall,
+        lastDate: widget.lastDate!,
+        patientId: widget.patientId!,
+        patientName: widget.patientName!,
+        patientPicture: widget.patientPicture!,
+        isFromVideoCall: widget.isFromVideoCall!,
         message: widget?.message,
         isCareGiver: widget?.isCareGiver,
       ),
@@ -114,61 +114,61 @@ class ChatState extends State<Chat> {
 }
 
 class ChatScreen extends StatefulWidget {
-  final String peerId;
+  final String? peerId;
   final String? peerAvatar;
   final String? peerName;
-  final String lastDate;
-  final String patientId;
-  final String patientName;
-  final String patientPicture;
-  final bool isFromVideoCall;
+  final String? lastDate;
+  final String? patientId;
+  final String? patientName;
+  final String? patientPicture;
+  final bool? isFromVideoCall;
   final String? message;
   final bool? isCareGiver;
 
   ChatScreen(
       {Key? key,
-      required this.peerId,
-      required this.peerAvatar,
-      required this.peerName,
-      required this.lastDate,
-      required this.patientId,
-      required this.patientName,
-      required this.patientPicture,
-      required this.isFromVideoCall,
+       this.peerId,
+       this.peerAvatar,
+       this.peerName,
+       this.lastDate,
+       this.patientId,
+       this.patientName,
+       this.patientPicture,
+       this.isFromVideoCall,
       this.message,
       this.isCareGiver})
       : super(key: key);
 
   @override
   State createState() => ChatScreenState(
-      peerId: peerId,
+      peerId: peerId!,
       peerAvatar: peerAvatar,
       peerName: peerName,
-      lastDate: lastDate,
+      lastDate: lastDate!,
       patientId: patientId,
-      patientName: patientName,
+      patientName: patientName!,
       patientPicUrl: patientPicture,
-      isFromVideoCall: isFromVideoCall);
+      isFromVideoCall: isFromVideoCall!);
 }
 
 class ChatScreenState extends State<ChatScreen> {
   ChatScreenState(
       {Key? key,
-      required this.peerId,
-      required this.peerAvatar,
-      required this.peerName,
-      required this.lastDate,
-      required this.patientId,
-      required this.patientName,
-      required this.patientPicUrl,
-      required this.isFromVideoCall});
+       this.peerId,
+       this.peerAvatar,
+       this.peerName,
+       this.lastDate,
+       this.patientId,
+       this.patientName,
+       this.patientPicUrl,
+       this.isFromVideoCall});
 
-  String peerId;
+  String? peerId;
   String? peerAvatar;
   String? peerName;
 
   //String id;
-  String lastDate;
+  String? lastDate;
 
   var listMessage;
   String? groupChatId;
@@ -180,9 +180,9 @@ class ChatScreenState extends State<ChatScreen> {
   String? imageUrl;
 
   String? patientId;
-  String patientName;
+  String? patientName;
   String? patientPicUrl;
-  bool isFromVideoCall;
+  bool? isFromVideoCall;
   var pdfFile;
   String? jpefFile;
   String? authToken;
@@ -395,7 +395,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   parseData() async {
     await chatViewModel
-        .fetchAppointmentDetail(widget.peerId, patientId!, '', '')
+        .fetchAppointmentDetail(widget.peerId!, patientId!, '', '')
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
@@ -638,7 +638,7 @@ class ChatScreenState extends State<ChatScreen> {
     });
 
     if (doctorDeviceToken != null && doctorDeviceToken != '' && !isMuted) {
-      _pushNotification(type, patientName);
+      _pushNotification(type, patientName!);
     }
   }
 
@@ -1000,7 +1000,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     children: <Widget>[
                                       CircleAvatar(
                                           child: Text(
-                                        patientName.substring(0, 1),
+                                        patientName!.substring(0, 1),
                                         style: TextStyle(
                                           fontSize: 16.0.sp,
                                         ),
@@ -1728,7 +1728,7 @@ class ChatScreenState extends State<ChatScreen> {
                         : SizedBox.shrink(),
                     Text(
                       widget.lastDate != null
-                          ? LAST_RECEIVED + widget.lastDate
+                          ? LAST_RECEIVED + widget.lastDate!
                           : '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -2080,7 +2080,7 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
               ),
             ),
-            !isFromVideoCall
+            !isFromVideoCall!
                 ? Flexible(
                     flex: 1,
                     child: new Container(
@@ -2165,6 +2165,7 @@ class ChatScreenState extends State<ChatScreen> {
                   //   reverse: true,
                   //   itemScrollController: listScrollController,
                   // );  FU2.5
+                  return Container();
                 }
               },
             ),
@@ -2506,7 +2507,7 @@ class TextFieldColorizer extends TextEditingController {
   }
 
   @override
-  TextSpan buildTextSpan(
+   TextSpan  buildTextSpan(
       {BuildContext? context, TextStyle? style, bool? withComposing}) {
     final List<InlineSpan> children = [];
     String? patternMatched;
@@ -2521,10 +2522,10 @@ class TextFieldColorizer extends TextEditingController {
                 bool ret = false;
                 RegExp(e).allMatches(text)
                   ..forEach((element) {
-                    if (element.group(0) == match[0]) {
+                    if (element.group(0) == match[0]  ) {
                       patternMatched = e;
                       ret = true;
-                      return true;
+                      return ;  // return true;
                     }
                   });
                 return ret;

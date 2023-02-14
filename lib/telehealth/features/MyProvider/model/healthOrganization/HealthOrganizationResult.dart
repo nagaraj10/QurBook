@@ -30,7 +30,7 @@ class HealthOrganizationResult {
         ? new HealthOrganization.fromJson(json['healthOrganization'])
         : null;
     if (json['doctorFeeCollection'] != null) {
-      doctorFeeCollection = new List<DoctorFeeCollection>();
+      doctorFeeCollection = <DoctorFeeCollection>[];
       json['doctorFeeCollection'].forEach((v) {
         doctorFeeCollection!.add(new DoctorFeeCollection.fromJson(v));
       });
@@ -82,7 +82,7 @@ class HealthOrganization {
     lastModifiedOn = json['lastModifiedOn'];
     if (json['healthOrganizationAddressCollection'] != null) {
       healthOrganizationAddressCollection =
-      new List<HealthOrganizationAddressCollection>();
+      <HealthOrganizationAddressCollection>[];
       json['healthOrganizationAddressCollection'].forEach((v) {
         healthOrganizationAddressCollection!
             .add(new HealthOrganizationAddressCollection.fromJson(v));
@@ -90,7 +90,7 @@ class HealthOrganization {
     }
     if (json['healthOrganizationContactCollection'] != null) {
       healthOrganizationContactCollection =
-      new List<HealthOrganizationContactCollection>();
+      <HealthOrganizationContactCollection>[];
       json['healthOrganizationContactCollection'].forEach((v) {
         healthOrganizationContactCollection!
             .add(new HealthOrganizationContactCollection.fromJson(v));

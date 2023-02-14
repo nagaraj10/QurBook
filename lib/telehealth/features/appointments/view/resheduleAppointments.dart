@@ -570,7 +570,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   }
 
   Widget getHospitalProviderList(String doctorId) {
-    return new FutureBuilder<HealthOrganizationModel>(
+    return new FutureBuilder<HealthOrganizationModel?>(
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {

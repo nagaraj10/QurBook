@@ -8,7 +8,7 @@ class AssociateSuccessResponse {
   AssociateSuccessResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = <Result>[];
       json['result'].forEach((v) {
         result!.add(new Result.fromJson(v));
       });
@@ -35,7 +35,7 @@ class Result {
     id = json['id'];
     if (json['healthRecordShareDetailCollection'] != null) {
       healthRecordShareDetailCollection =
-          new List<HealthRecordShareDetailCollection>();
+          <HealthRecordShareDetailCollection>[];
       json['healthRecordShareDetailCollection'].forEach((v) {
         healthRecordShareDetailCollection!
             .add(new HealthRecordShareDetailCollection.fromJson(v));

@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
@@ -177,7 +178,7 @@ class ChatViewModel extends ChangeNotifier {
         return unReadMSGCount;
       }
     } catch (e) {
-      print(e.message);
+      print(e.toString());
     }
   }
 

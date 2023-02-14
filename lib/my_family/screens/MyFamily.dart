@@ -1160,7 +1160,7 @@ class _MyFamilyState extends State<MyFamily> {
                             id: addFamilyOTPResponse.result!.childInfo!.id,
                             isForFamily: false,
                             addFamilyUserInfo:
-                                addFamilyOTPResponse.result ?? '' as Result),
+                                addFamilyOTPResponse.result!),
                       ).then((value) {
                         mobileNoController.text = '';
                         nameController.text = '';

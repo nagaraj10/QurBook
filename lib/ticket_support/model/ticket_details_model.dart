@@ -102,13 +102,13 @@ class Ticket {
       deleted = json['deleted'];
       status = json['status'];
       if (json['tags'] != null) {
-            tags = new List<Tags>();
+            tags = <Tags>[];
             json['tags'].forEach((v) {
               tags!.add(new Tags.fromJson(v));
             });
           }
       if (json['subscribers'] != null) {
-            subscribers = new List<Subscribers>();
+            subscribers = <Subscribers>[];
             json['subscribers'].forEach((v) {
               subscribers!.add(new Subscribers.fromJson(v));
             });
@@ -135,19 +135,19 @@ class Ticket {
             });
           }
       if (json['notes'] != null) {
-            notes = new List<Null>() as List<Notes>?;
+            notes = <Null>[] as List<Notes>?;
             json['notes'].forEach((v) {
               notes!.add(new Notes.fromJson(v));
             });
           }
       if (json['attachments'] != null) {
-            attachments = new List<Attachments>();
+            attachments = <Attachments>[];
             json['attachments'].forEach((v) {
               attachments!.add(new Attachments.fromJson(v));
             });
           }
       if (json['history'] != null) {
-            history = new List<History>();
+            history = <History>[];
             json['history'].forEach((v) {
               history!.add(new History.fromJson(v));
             });
@@ -466,7 +466,7 @@ class Group {
 
   Group.fromJson(Map<String, dynamic> json) {
     if (json['members'] != null) {
-      members = new List<Members>();
+      members = <Members>[];
       json['members'].forEach((v) {
         members!.add(new Members.fromJson(v));
       });
@@ -572,7 +572,7 @@ class Type {
   Type.fromJson(Map<String, dynamic> json) {
     try {
       if (json['priorities'] != null) {
-        priorities = new List<Priorities>();
+        priorities = <Priorities>[];
         json['priorities'].forEach((v) {
           priorities!.add(new Priorities.fromJson(v));
         });

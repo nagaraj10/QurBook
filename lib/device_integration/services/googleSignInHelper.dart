@@ -95,7 +95,7 @@ class GoogleSignInHelper {
         body: jsonBody,
         headers: await m_currentUser!.authHeaders,
       );
-      if (response.statusCode != 200) {
+      if (response!.statusCode != 200) {
         throw '${response.statusCode} and ${response.body}';
       }
       responseJson = response.body;

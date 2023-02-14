@@ -404,7 +404,7 @@ class _ClaimListState extends State<ClaimList> {
 
   void callImportantMethods() async {
     try {
-      categoryDataList = await PreferenceUtil.getCategoryType();
+      categoryDataList = (await PreferenceUtil.getCategoryType())!;
       if (categoryDataList == null && categoryDataList.length < 0) {
         _categoryListBlock = new CategoryListBlock();
         _categoryListBlock.getCategoryLists();

@@ -53,8 +53,8 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
   CommonWidgets commonWidgets = new CommonWidgets();
   bool isSearch = false;
   late ProvidersBloc _providersBloc;
-  List<Hospitals> myProviderHospitalList = List();
-  List<Hospitals>? initialHospitalList = List();
+  List<Hospitals> myProviderHospitalList = [];
+  List<Hospitals>? initialHospitalList = [];
   Future<MyProvidersResponse?>? _medicalPreferenceList;
 
   @override
@@ -177,24 +177,24 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
             // handle the case that data is null
             return hospitalList(isSearch
                 ? myProviderHospitalList
-                : snapshot?.data?.result?.hospitals);
+                : snapshot.data?.result?.hospitals);
           }
-          else if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.hospitals != null &&
-              snapshot?.data?.result?.hospitals?.length > 0) {
-            initialHospitalList = snapshot?.data?.result?.hospitals;
-            if (snapshot?.hasData &&
-                snapshot?.data?.result != null &&
-                snapshot?.data?.result?.clinics != null &&
-                snapshot?.data?.result?.clinics?.length > 0) {
-              initialHospitalList!.addAll(snapshot?.data?.result?.clinics!);
+          else if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.hospitals != null &&
+              snapshot.data!.result!.hospitals!.length > 0) {
+            initialHospitalList = snapshot.data!.result!.hospitals;
+            if (snapshot.hasData &&
+                snapshot.data!.result != null &&
+                snapshot.data!.result!.clinics != null &&
+                snapshot.data!.result!.clinics!.length > 0) {
+              initialHospitalList!.addAll(snapshot.data!.result!.clinics!);
             }
             return hospitalList(isSearch
                 ? myProviderHospitalList
-                : snapshot?.data?.result?.hospitals);
+                : snapshot.data!.result!.hospitals);
           } else {
-            initialHospitalList = snapshot?.data?.result?.hospitals;
+            initialHospitalList = snapshot.data!.result!.hospitals;
             return Container(
                 child: Center(
               child: Text(variable.strNoHospitaldata),

@@ -43,6 +43,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
 
   @override
   Widget build(BuildContext context) {
+    
     if (_familyListBloc != null) {
       _familyListBloc = null;
       _familyListBloc = FamilyListBloc();
@@ -51,12 +52,14 @@ class FamilyListDialogState extends State<FamilyListDialog> {
     getDialogBoxWithFamilyMember(widget.familyData).then((widget) {
       return widget;
     });
+    return Container();
   }
 
   Widget getFamilyMemberList() {
     return PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
         ? getDialogBoxWithFamilyMember(
-            PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER)) as Widget
+          
+            PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER)!) as Widget
         : StreamBuilder<ApiResponse<FamilyMembersList>>(
             stream: _familyListBloc!.familyMemberListStream,
             builder: (context, snapshot) {
@@ -81,15 +84,16 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                             snapshot.data!.data!.response!.data!)
                         .then((widget) {
                       return widget;
-                    } as FutureOr<_> Function(Widget?));
+                    } as FutureOr Function(Widget?));
                     break;
                 }
-              } else {
+              } 
+             // else {
                 return Container(
                   width: 100.0.h,
                   height: 100.0.h,
                 );
-              }
+            //  }
             },
           );
   }

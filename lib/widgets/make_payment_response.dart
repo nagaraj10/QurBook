@@ -43,7 +43,7 @@ class Result {
   Result.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
     if (json['subscribeResponse'] != null) {
-      subscribeResponse = new List<SubscribeResponse>();
+      subscribeResponse = <SubscribeResponse>[];
       json['subscribeResponse'].forEach((v) {
         subscribeResponse!.add(new SubscribeResponse.fromJson(v));
       });

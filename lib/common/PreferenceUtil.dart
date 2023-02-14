@@ -343,7 +343,7 @@ class PreferenceUtil {
 
       return instance.setString(keyFamily, family);
     } catch (e) {
-      return instance.setString(keyFamily, null);
+      return instance.setString(keyFamily, ""); // null to ""
     }
   }
 
@@ -365,7 +365,7 @@ class PreferenceUtil {
 
       return instance.setString(keyFamily, family);
     } catch (e) {
-      return instance.setString(keyFamily, null);
+      return instance.setString(keyFamily, "");// null to ""
     }
   }
 
@@ -399,15 +399,16 @@ class PreferenceUtil {
   }
 
   static Future<bool> saveFamilyRelationShip(
-      String keyFamilyrel, RelationShipResponseList familyData) async {
+      String keyFamilyrel, RelationShipResponseList? familyData) async {
     final instance = await _prefs!;
-
+              
     try {
       final family = json.encode(familyData);
 
       return instance.setString(keyFamilyrel, family);
     } catch (e) {
-      return instance.setString(keyFamilyrel, null);
+      
+      return instance.setString(keyFamilyrel, ""); // null to ""
     }
   }
 
@@ -415,7 +416,7 @@ class PreferenceUtil {
     try {
       if (_prefsInstance == null) {}
 
-      return RelationShipResponseList.fromJson(
+      return RelationShipResponseList?.fromJson(
           json.decode(_prefsInstance!.getString(keyFamilyrel)!));
     } catch (e) {
       return null;

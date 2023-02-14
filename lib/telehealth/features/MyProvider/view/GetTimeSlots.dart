@@ -260,9 +260,9 @@ class GetTimeSlots extends StatelessWidget {
     }
     ResheduleAppointmentViewModel reshedule =
         Provider.of<ResheduleAppointmentViewModel>(context, listen: false);
-    ResheduleModel resheduleAppointment = await reshedule.resheduleAppointment(
+    ResheduleModel? resheduleAppointment = await reshedule.resheduleAppointment(
         bookingIds, slotNumber.toString(), resheduledDate, doctorSessionId);
-    return resheduleAppointment;
+    return resheduleAppointment!;
   }
 
   profileValidationCheck(BuildContext context, int rowPosition,

@@ -31,7 +31,7 @@ class SheelaAICommonTTSService {
     } else {
       String? textForPlaying;
       final result = await controller.getGoogleTTSForText(msg);
-      if ((result.payload?.audioContent ?? '').isNotEmpty) {
+      if ((result!.payload!.audioContent ?? '').isNotEmpty) {
         textForPlaying = result.payload!.audioContent;
       }
       if ((textForPlaying ?? '').isNotEmpty) {

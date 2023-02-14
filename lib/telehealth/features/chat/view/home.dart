@@ -478,11 +478,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                 color: Colors.grey[200],
                                                 child: Center(
                                                     child: Text(
-                                                  snapshotUser?.data![
+                                                  snapshotUser.data![
                                                               STR_NICK_NAME] !=
                                                           ''
                                                       ? snapshotUser
-                                                          ?.data![STR_NICK_NAME]
+                                                          .data![STR_NICK_NAME]
                                                               [0]
                                                           .toString()
                                                           .toUpperCase()
@@ -740,7 +740,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
   int? countChatListUsers(myID, snapshot) {
     int? resultInt = snapshot.data.docs.length;
     for (var data in snapshot.data.docs) {
-      if (data[STR_ID] == myID) {
+      if (data[STR_ID] == myID && resultInt != null) {
         resultInt--;
       }
     }

@@ -225,7 +225,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<Map<String?, List<MenuItem>>> getHealthConditions() async {
+  Future<Map<String?, List<MenuItem>>?> getHealthConditions() async {
     healthConditions = {};
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;

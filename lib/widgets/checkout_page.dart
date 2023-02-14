@@ -69,12 +69,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.initState();
     mInitialTime = DateTime.now();
     // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
-    //     widget?.cartType;
+    //     widget.cartType;
     Provider.of<CheckoutPageProvider>(context, listen: false).fetchCartItems(
         isNeedRelod: true,
-        cartUserId: widget?.cartUserId,
-        notificationListId: widget?.notificationListId,
-        isPaymentLinkViaPush: widget?.isFromNotification,
+        cartUserId: widget.cartUserId,
+        notificationListId: widget.notificationListId,
+        isPaymentLinkViaPush: widget.isFromNotification,
         cartId: widget.cartId,
         firstTym: true);
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -104,8 +104,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     // }
     // Navigator.of(context).pop(true);
 
-    if (widget?.isFromNotification) {
-      Get.offAll(NotificationMain());
+    if (widget.isFromNotification) {
+       Get.offAll(NotificationMain());
     } else if (Navigator.canPop(context)) {
       Get.back();
     } else {
@@ -116,6 +116,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
       );
     }
+    return true;
   }
 
   @override
@@ -166,9 +167,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
               //     value.cartType == CartType.RETRY_CART) {
               //default cart with items
               var cartCount =
-                  value?.fetchingCartItemsModel?.result?.productsCount ?? 0;
+                  value.fetchingCartItemsModel!.result!.productsCount ?? 0;
               //value?.updateCartCount(cartCount,isNeedRelod: true);
-              return (!(value?.fetchingCartItemsModel?.isSuccess ?? false) ||
+              return (!(value.fetchingCartItemsModel!.isSuccess ?? false) ||
                       cartCount == 0)
                   ? widget.isFromNotification
                       ? Container(
@@ -389,7 +390,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                   'Clear cart',
                                                   style: TextStyle(
                                                       color: widget
-                                                              ?.isFromNotification
+                                                              .isFromNotification
                                                           ? Colors.grey
                                                           : Colors
                                                               .redAccent[700]),
@@ -437,19 +438,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           physics:
                                               NeverScrollableScrollPhysics(),
                                           itemCount: value
-                                                  ?.fetchingCartItemsModel
-                                                  ?.result
-                                                  ?.productsCount ??
+                                                  .fetchingCartItemsModel
+                                                  !.result
+                                                  !.productsCount ??
                                               0,
                                           shrinkWrap: true,
                                           itemBuilder: (context, index) {
                                             return _cartItem(
                                                 context,
                                                 value
-                                                    ?.fetchingCartItemsModel
-                                                    ?.result
-                                                    ?.cart
-                                                    ?.productList![index]);
+                                                    .fetchingCartItemsModel
+                                                    !.result
+                                                    !.cart
+                                                    !.productList![index]);
                                           },
                                         ),
                                       ],
@@ -485,7 +486,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         Row(
                                           children: [
                                             Text(
-                                                'Price \(${value?.fetchingCartItemsModel?.result?.productsCount ?? 0} items\)'),
+                                                'Price \(${value?.fetchingCartItemsModel?.result!.productsCount ?? 0} items\)'),
                                             Spacer(),
                                             Text(
                                                 '${CommonUtil.CURRENCY}${value?.totalProductCount ?? 0}'),
@@ -563,7 +564,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   Row(
                                     children: [
                                       InkWell(
-                                        onTap: value?.isLoading
+                                        onTap: value.isLoading
                                             ? null
                                             : () async {
                                                 AuthenticationValidator()
@@ -615,7 +616,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 ],
                                               ),
                                             ),
-                                            child: value?.isLoading
+                                            child: value.isLoading
                                                 ? SizedBox(
                                                     width: 20,
                                                     height: 20,
@@ -675,23 +676,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
       "total": mCartTotal
     });
     var body = {
-      "cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}",
+      "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
     };
     FetchingCartItemsModel? fetchingCartItemsModel =
         await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
                 isNeedRelod: false,
-                cartUserId: widget?.cartUserId,
-                notificationListId: widget?.notificationListId,
-                isPaymentLinkViaPush: widget?.isFromNotification,
+                cartUserId: widget.cartUserId,
+                notificationListId: widget.notificationListId,
+                isPaymentLinkViaPush: widget.isFromNotification,
                 cartId: widget.cartId);
 
     if (mCartTotal > 0) {
       CheckoutPageWidgets().showPaymentConfirmationDialog(
           body: body,
           totalCartAmount: mCartTotal,
-          isPaymentNotification: widget?.isFromNotification,
+          isPaymentNotification: widget.isFromNotification,
           fetchingCartItemsModel: fetchingCartItemsModel,
           isSuccess: (value) {
             if (value!) {
@@ -709,9 +710,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
               Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
                   .fetchCartItems(
                       isNeedRelod: true,
-                      cartUserId: widget?.cartUserId,
-                      notificationListId: widget?.notificationListId,
-                      isPaymentLinkViaPush: widget?.isFromNotification,
+                      cartUserId: widget.cartUserId,
+                      notificationListId: widget.notificationListId,
+                      isPaymentLinkViaPush: widget.isFromNotification,
                       cartId: widget.cartId,
                       firstTym: false);
             }
@@ -719,7 +720,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     } else {
       ApiBaseHelper().makePayment(body).then((value) {
         if (value != null) {
-          if (value?.isSuccess! && !(value?.result != null)) {
+          if (value.isSuccess! && !(value?.result != null)) {
             Alert.displayConfirmation(Get.context!,
                 confirm: "Update Cart",
                 title: "Update",
@@ -738,8 +739,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
           } else if ((value?.isSuccess ?? false) && value?.result != null) {
             Get.off(
               PaymentResultPage(
-                refNo: value?.result?.orderId,
-                status: value?.isSuccess,
+                refNo: value.result!.orderId,
+                status: value.isSuccess,
                 isFreePlan: true,
                 isPaymentFromNotification: widget.isFromNotification,
               ),
@@ -765,7 +766,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           productValue = 0;
         } else {
           productValue =
-              double.parse(item?.productDetail?.planSubscriptionFee!).toInt();
+              double.parse(item.productDetail!.planSubscriptionFee!).toInt();
         }
       }
     } else {
@@ -783,8 +784,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
         } else {
           productValue = double.parse(item?.additionalInfo?.actualFee).toInt();
         }
-      } else if (item?.paidAmount!.contains(".")) {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      } else if (item.paidAmount!.contains(".")) {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
           productValue = double.parse(item.paidAmount!).toInt();
@@ -889,7 +890,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         ic_cart_delete,
                         width: 20.0.sp,
                         height: 20.0.sp,
-                        color: widget?.isFromNotification ? Colors.grey : null,
+                        color: widget.isFromNotification ? Colors.grey : null,
                       ),
                       onPressed: () {
                         if (widget.isFromNotification == false) {
@@ -1178,7 +1179,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       "total": mCartTotal
     });
     var body = {
-      "cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}",
+      "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
     };
 
@@ -1186,19 +1187,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
         await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
                 isNeedRelod: false,
-                cartUserId: widget?.cartUserId,
-                notificationListId: widget?.notificationListId,
-                isPaymentLinkViaPush: widget?.isFromNotification,
+                cartUserId: widget.cartUserId,
+                notificationListId: widget.notificationListId,
+                isPaymentLinkViaPush: widget.isFromNotification,
                 cartId: widget.cartId);
 
     ApiBaseHelper().makePayment(body).then((result) async {
       await Provider.of<CheckoutPageProvider>(context, listen: false)
           .loader(false, isNeedRelod: false);
       if (result != null) {
-        if (result?.isSuccess!) {
+        if (result.isSuccess!) {
           Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
 
-          if (result?.result != null) {
+          if (result.result != null) {
             var checkValidation = await CheckoutPageWidgets()
                 .profileValidationCheckOnCart(context,
                     feeZero:
@@ -1210,7 +1211,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Alert.displayConfirmProceed(Get.context!,
                 confirm: "Update Cart",
                 title: "Update",
-                content: result?.message ?? '', onPressedConfirm: () {
+                content: result.message ?? '', onPressedConfirm: () {
               ApiBaseHelper()
                   .updateCartIcon(fetchingCartItemsModel?.result)
                   .then((value) {
@@ -1230,9 +1231,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
                       .fetchCartItems(
                           isNeedRelod: true,
-                          cartUserId: widget?.cartUserId,
-                          notificationListId: widget?.notificationListId,
-                          isPaymentLinkViaPush: widget?.isFromNotification,
+                          cartUserId: widget.cartUserId,
+                          notificationListId: widget.notificationListId,
+                          isPaymentLinkViaPush: widget.isFromNotification,
                           cartId: widget.cartId,
                           firstTym: false);
                 }

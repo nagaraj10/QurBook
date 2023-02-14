@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -132,9 +134,9 @@ class CheckoutPageWidgets {
                                             .makePayment(body)
                                             .then((value) {
                                           if (value != null) {
-                                            if (value?.isSuccess!) {
-                                              if (value?.result != null) {
-                                                if (value?.result?.payment !=
+                                            if (value.isSuccess!) {
+                                              if (value.result != null) {
+                                                if (value.result?.payment !=
                                                     null) {
                                                   if (value
                                                           ?.result
@@ -352,7 +354,7 @@ class CheckoutPageWidgets {
         });
   }
 
-  Future<bool> profileValidationCheckOnCart(BuildContext context,
+  Future<bool?> profileValidationCheckOnCart(BuildContext context,
       {String? packageId,
       String? isSubscribed,
       String? providerId,

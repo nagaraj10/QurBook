@@ -101,19 +101,19 @@ class Preferences {
 
   Preferences.fromJson(Map<String, dynamic> json) {
     if (json['doctorIds'] != null) {
-      doctorIds = new List<DoctorIds>();
+      doctorIds = <DoctorIds>[];
       json['doctorIds'].forEach((v) {
         doctorIds!.add(new DoctorIds.fromJson(v));
       });
     }
     if (json['hospitalIds'] != null) {
-      hospitalIds = new List<HospitalsIds>();
+      hospitalIds = <HospitalsIds>[];
       json['hospitalIds'].forEach((v) {
         hospitalIds!.add(new HospitalsIds.fromJson(v));
       });
     }
     if (json['laboratoryIds'] != null) {
-      laboratoryIds = new List<LaboratoryIds>();
+      laboratoryIds = <LaboratoryIds>[];
       json['laboratoryIds'].forEach((v) {
         laboratoryIds!.add(new LaboratoryIds.fromJson(v));
       });

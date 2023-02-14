@@ -55,7 +55,7 @@ class _TicketsList extends State<TicketsList> {
   }
 
   Widget getTicketsList() {
-    return FutureBuilder<TicketsListResponse>(
+    return FutureBuilder<TicketsListResponse?>(
       future: ticketViewModel.getTicketsList(),
       builder: (context, snapshot) {
         print('=================');
@@ -76,7 +76,7 @@ class _TicketsList extends State<TicketsList> {
           return ErrorsWidget();
         } else if (snapshot.connectionState == ConnectionState.done) {
           //return ticketListTest(context);
-          if (snapshot?.hasData && snapshot?.data != null) {
+          if (snapshot.hasData && snapshot.data != null) {
             print(snapshot.data!.tickets!.length.toString());
             print('=================');
             return ticketList(snapshot.data!.tickets);

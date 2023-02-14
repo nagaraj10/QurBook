@@ -26,12 +26,12 @@ class NewPrescription extends StatefulWidget {
 }
 
 class NewPrescriptionState extends State<NewPrescription> {
-  List<List<String>> schedule = new List();
+  List<List<String>> schedule = [];
   // String initial, second, third;
   bool status6 = false;
   var prescriptionMedicineCount = 0;
   // var medicationArray = [];
-  List<PrescriptionMedicines>? medicineList = List<PrescriptionMedicines>();
+  List<PrescriptionMedicines>? medicineList = <PrescriptionMedicines>[];
 
   var medicineNameTextController = TextEditingController();
 
