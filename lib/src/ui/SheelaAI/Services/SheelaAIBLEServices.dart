@@ -27,7 +27,7 @@ class SheelaBLEController extends GetxController {
   SheelaAIController SheelaController;
   HubListViewController hublistController;
   Stream stream = EventChannel('QurbookBLE/stream').receiveBroadcastStream();
-  StreamSubscription _timerSubscription;
+  StreamSubscription timerSubscription;
 
   Timer timeOutTimer;
   final String conversationType = "BLESheelaConversations";
@@ -54,16 +54,12 @@ class SheelaBLEController extends GetxController {
     player.onPlayerStateChanged.listen(
       (event) async {
         if (event == PlayerState.COMPLETED) {
+          isPlaying = false;
           if ((playConversations ?? []).isNotEmpty) {
-            playConversations.removeAt(0);
-            isPlaying = false;
-            if (isCompleted) {
-              await Future.delayed(const Duration(seconds: 4));
-              stopTTS();
-            }
-            if ((playConversations ?? []).isNotEmpty) {
-              playTTS();
-            }
+            playTTS();
+          } else if (isCompleted) {
+            await Future.delayed(const Duration(seconds: 4));
+            stopTTS();
           }
         }
       },
@@ -97,11 +93,11 @@ class SheelaBLEController extends GetxController {
   }
 
   void _enableTimer() {
-    if (_timerSubscription != null) {
+    if (timerSubscription != null) {
       return;
     }
 
-    _timerSubscription = stream.listen(
+    timerSubscription = stream.listen(
       (val) async {
         final List<String> receivedValues = val.split('|');
         if ((receivedValues ?? []).length > 0) {
@@ -227,10 +223,11 @@ class SheelaBLEController extends GetxController {
               );
               break;
             case "disconnected":
-              // FlutterToast().getToast(
-              //   "Bluetooth Disconnected",
-              //   Colors.red,
-              // );
+              FlutterToast().getToast(
+                "Bluetooth Disconnected",
+                Colors.red,
+              );
+              showFailure();
               break;
             default:
           }
@@ -345,7 +342,8 @@ class SheelaBLEController extends GetxController {
           model.deviceType = model.deviceType.toUpperCase();
           try {
             weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT);
-          } catch (e) {
+          } catch (e) {}
+          if ((weightUnit ?? '').isEmpty) {
             weightUnit = CommonUtil.REGION_CODE == "IN"
                 ? STR_VAL_WEIGHT_IND
                 : STR_VAL_WEIGHT_US;
@@ -388,8 +386,9 @@ class SheelaBLEController extends GetxController {
                     "Completed reading values. Please take your finger from the device",
               ),
             );
-            await Future.delayed(const Duration(seconds: 5));
-            addToConversationAndPlay(
+            // await Future.delayed(const Duration(seconds: 5));
+            // addToConversationAndPlay(
+            playConversations.add(
               SheelaResponse(
                 recipientId: conversationType,
                 text:
@@ -481,6 +480,7 @@ class SheelaBLEController extends GetxController {
           textForPlaying = result.payload.audioContent;
         }
       }
+      playConversations.removeAt(0);
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
           final bytes = base64Decode(textForPlaying);
@@ -553,9 +553,9 @@ class SheelaBLEController extends GetxController {
     isFromRegiment = false;
     addingDevicesInHublist = false;
     isFromVitals = false;
-    if (_timerSubscription != null) {
-      _timerSubscription.cancel();
-      _timerSubscription = null;
+    if (timerSubscription != null) {
+      timerSubscription.cancel();
+      timerSubscription = null;
     }
     removeTimeOutTimer();
   }

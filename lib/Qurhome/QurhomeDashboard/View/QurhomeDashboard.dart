@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
@@ -29,13 +30,14 @@ import '../../../constants/variable_constant.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../Controller/QurhomeDashboardController.dart';
 import 'QurHomeRegimen.dart';
+import 'package:myfhb/main.dart';
 
 class QurhomeDashboard extends StatefulWidget {
   @override
   _QurhomeDashboardState createState() => _QurhomeDashboardState();
 }
 
-class _QurhomeDashboardState extends State<QurhomeDashboard> {
+class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   final controller = Get.put(QurhomeDashboardController());
   final qurHomeRegimenController = Get.put(QurhomeRegimenController());
   double buttonSize = 70;
@@ -44,7 +46,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
 
   final sheelBadgeController = Get.put(SheelaAIController());
 
-  LandingViewModel landingViewModel;
+  //LandingViewModel landingViewModel;
 
   double selOption = 30.0.sp;
   double unSelOption = 28.0.sp;
@@ -60,12 +62,29 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   void initState() {
     try {
       super.initState();
+      onInit();
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyFHB.routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  onInit() async {
+    try {
       if (CommonUtil.isNotINDReg()) {
         Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
         CommonUtil().initSocket();
 
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
+        await CommonUtil().getUserProfileData();
       }
       if (CommonUtil.REGION_CODE == "IN") {
         CommonUtil().requestQurhomeDialog();
@@ -85,10 +104,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-        landingViewModel = Provider.of<LandingViewModel>(Get.context);
+        //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -102,15 +123,24 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   @override
   dispose() {
     try {
-      if(!CommonUtil.isNotINDReg()){
+      if (!CommonUtil.isNotINDReg()) {
         controller.setActiveQurhomeTo(
           status: false,
         );
       }
       CommonUtil().initPortraitMode();
+      MyFHB.routeObserver.unsubscribe(this);
       super.dispose();
     } catch (e) {
       print(e);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    controller.updateBLETimer(Enable: false);
+    if (controller.currentSelectedIndex.value == 0) {
+      controller.updateBLETimer();
     }
   }
 
@@ -479,7 +509,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
             drawer: QurHomeNavigationDrawer(
               myProfile: myProfile,
               moveToLoginPage: moveToLoginPage,
-              userChangedbool: landingViewModel?.isUserMainId ?? false,
+              userChangedbool: false,
               refresh: (userChanged) => refresh(
                 userChanged: userChanged,
               ),
