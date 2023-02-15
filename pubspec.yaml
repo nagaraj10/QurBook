@@ -123,7 +123,7 @@ dependencies:
   audioplayers: 0.20.1
   mime_type: ^1.0.0
   pin_input_text_field: 4.1.1
-
+  local_auth: ^1.1.6
 
 dev_dependencies:
   flutter_test:

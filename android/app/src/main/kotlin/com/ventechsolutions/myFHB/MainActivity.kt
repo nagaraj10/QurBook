@@ -99,9 +99,9 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.experimental.and
 import kotlin.system.exitProcess
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-
-class MainActivity : FlutterActivity(), SessionController.Listener,
+class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
 
     private var enableBackgroundNotification = false
