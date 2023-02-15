@@ -114,7 +114,6 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                 eventSink?("bleDeviceType|SPO2")
                 SPO2Manager = GoldenSPO2Manager(delegate: self)
                 SPO2Manager.scanLeDevice(true)
-                centralManager = nil
             }else if (deviceName == Constants.Mike){
                 eventSink?("macid|"+macID)
                 eventSink?("bleDeviceType|SPO2")
@@ -126,7 +125,6 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                 eventSink?("bleDeviceType|BP")
                 BloodpressureManager = GoldenBloodpressureManager(delegate: self)
                 BloodpressureManager.scanLeDevice(true)
-                centralManager = nil
             }
             //            else if((deviceName == Constants.WOWGOWT1) || (deviceName == Constants.WOWGOWT2) || (deviceName == Constants.WOWGOWT3)){
             //                eventSink?("macid|"+macID)
@@ -197,7 +195,6 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                             LS202DeviceManager = GoldenLS202DeviceManager(delegate: self)
                             LS202DeviceManager.scanLeDevice(true)
                         }
-                        break
                     }
                 }
             }
@@ -263,6 +260,7 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
     
     func onListen(withArguments arguments: Any?,
                   eventSink: @escaping FlutterEventSink) -> FlutterError? {
+        onCancel(withArguments: [])
         self.eventSink = eventSink
         centralManager = CBCentralManager(delegate: self, queue: nil)
         return nil
@@ -320,11 +318,14 @@ extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallba
             break;
         case G_BLE_STATUS_DISCONNECTED:
             //print("disCONNECTED")
-            
+            eventSink?("disconnected|Bluetooth disconnected")
+
             break;
         case G_BLE_STATUS_DISCONNECTED_BYUSER:
             /*User click stop or disconnect GSH BLE device**/
             //"G_BLE_STATUS_DISCONNECTED_BYUSER"
+            eventSink?("disconnected|Bluetooth disconnected")
+
             break;
         case G_BLE_ERROR:
             //print("error found")

@@ -1677,9 +1677,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   void dispose() {
     try {
       if (animationController != null) {
+        animationController.removeListener(() {});
         animationController.dispose();
       }
-      _events.close();
+      _events?.close();
       WidgetsBinding.instance.removeObserver(this);
       super.dispose();
     } catch (e) {
