@@ -23,7 +23,7 @@ class AppointmentDetailsController extends GetxController {
   var appointmentModeOfService = "".obs;
   var providerName = "".obs;
   var providerAddress = "".obs;
-  var testName = "--".obs;
+  var testName = "".obs;
   var description = "".obs;
   var pickUpAddress = "".obs;
   var dropAddress = "".obs;
@@ -66,7 +66,7 @@ class AppointmentDetailsController extends GetxController {
 
         scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
             ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel.result?.plannedEndDateTime ?? "")).toString() ?? ''}"
-            : "--";
+            : "";
 
         if (appointmentDetailsModel.result?.healthOrganization != null) {
           if (appointmentType.value.toLowerCase() == "doctor appointment") {
@@ -140,7 +140,7 @@ class AppointmentDetailsController extends GetxController {
                             "") ==
                         (element.id ?? "")));
                 if (index >= 0) {
-                  testName.value = field.data[index]?.name ?? "--";
+                  testName.value = field.data[index]?.name ?? "";
                   break;
                 }
               }
@@ -152,16 +152,16 @@ class AppointmentDetailsController extends GetxController {
           case "transportation":
             getTitleDescription();
             pickUpAddress.value =
-                appointmentDetailsModel.result?.additionalInfo.from ?? "--";
+                appointmentDetailsModel.result?.additionalInfo.from ?? "";
             dropAddress.value =
-                appointmentDetailsModel.result?.additionalInfo.to ?? "--";
+                appointmentDetailsModel.result?.additionalInfo.to ?? "";
             break;
           case "doctor appointment":
             slotNumber.value =
-                appointmentDetailsModel.result?.slotNumber?.toString() ?? "--";
+                appointmentDetailsModel.result?.slotNumber?.toString() ?? "";
             hospitalName.value = toBeginningOfSentenceCase(
                 appointmentDetailsModel.result?.healthOrganization?.name ??
-                    "--");
+                    "");
             break;
         }
       }
@@ -185,7 +185,7 @@ class AppointmentDetailsController extends GetxController {
       providerAddress.value = list.join(',');
 
       if (providerAddress.value.trim().isEmpty) {
-        providerAddress.value = "--";
+        providerAddress.value = "";
       }
 
       loadingData.value = false;
@@ -203,7 +203,7 @@ class AppointmentDetailsController extends GetxController {
       appointmentModeOfService.value = "";
       providerName.value = "";
       providerAddress.value = "";
-      testName.value = "--";
+      testName.value = "";
       description.value = "";
       pickUpAddress.value = "";
       dropAddress.value = "";
@@ -225,9 +225,9 @@ class AppointmentDetailsController extends GetxController {
   getTitleDescription() {
     try {
       testName.value =
-          appointmentDetailsModel.result?.additionalInfo.title ?? "--";
+          appointmentDetailsModel.result?.additionalInfo.title ?? "";
       description.value =
-          appointmentDetailsModel.result?.additionalInfo.notes ?? "--";
+          appointmentDetailsModel.result?.additionalInfo.notes ?? "";
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -255,4 +255,21 @@ class AppointmentDetailsController extends GetxController {
       }
     }
   }
+
+  String checkIfEmptyString(String strText) {
+    try {
+      if (strText == null)
+        return "--";
+      else if (strText.trim().isEmpty)
+        return "--";
+      else
+        return strText.trim();
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
+    return "--";
+  }
+
 }

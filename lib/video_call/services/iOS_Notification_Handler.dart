@@ -384,11 +384,8 @@ class IosNotificationHandler {
       }
     } else if (model.redirect == parameters.strAppointmentDetail &&
         (model.appointmentId ?? '').isNotEmpty) {
-      if (!Get.isRegistered<AppointmentDetailsController>())
-        Get.lazyPut(() => AppointmentDetailsController());
-
       AppointmentDetailsController appointmentDetailsController =
-          Get.find<AppointmentDetailsController>();
+      CommonUtil().onInitAppointmentDetailsController();
       appointmentDetailsController.getAppointmentDetail(model.appointmentId);
       Get.to(() => AppointmentDetailScreen());
     } else if (model.redirect == parameters.chat) {
