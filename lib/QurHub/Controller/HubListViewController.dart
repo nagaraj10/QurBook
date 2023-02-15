@@ -116,6 +116,11 @@ class HubListViewController extends GetxController {
           return;
         }
       }
+      _bleController.stopScanning();
+      _bleController.addingDevicesInHublist = true;
+      searchingBleDevice.value = true;
+      _bleController.setupListenerForReadings();
+
       if (hubListResponse?.result?.hub == null) {
         loadingData.value = true;
         bool response = await callCreateVirtualHub();
@@ -125,9 +130,7 @@ class HubListViewController extends GetxController {
         }
         await getHubList();
       }
-      _bleController.addingDevicesInHublist = true;
-      searchingBleDevice.value = true;
-      _bleController.setupListenerForReadings();
+
       Future.delayed(
         const Duration(
           seconds: 30,
@@ -194,6 +197,8 @@ class HubListViewController extends GetxController {
           bleMacId = "";
         },
       );
+    } else {
+      FlutterToast().getToast('Oops Something went wrong', Colors.red);
     }
   }
 }
