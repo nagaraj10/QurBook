@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -326,27 +325,6 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.recipientId ?? '').isEmpty) {
             currentResponse.recipientId = "Sheela Response";
           }
-          if ((currentResponse.directCall != null &&
-                  currentResponse.directCall) &&
-              (currentResponse.recipient != null &&
-                  currentResponse.recipient.trim() == "CC")) {
-            var regController = Get.put(QurhomeRegimenController());
-            if (CommonUtil()
-                .validString(regController.careCoordinatorId.value)
-                .trim()
-                .isNotEmpty) {
-              regController.callSOSEmergencyServices(1);
-            } else {
-              regController.getUserDetails();
-              await regController.getCareCoordinatorId();
-              regController.callSOSEmergencyServices(1);
-            }
-            await Future.delayed(const Duration(seconds: 2));
-            isLoading.value = false;
-            conversations.removeLast();
-            stopTTS();
-            return;
-          }
           currentResponse = await getGoogleTTSForConversation(currentResponse);
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
@@ -385,6 +363,7 @@ class SheelaAIController extends GetxController {
             relationshipId = userId;
           }
           playTTS();
+          callToCC(currentResponse);
           PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang);
           scrollToEnd();
         } else {
@@ -937,6 +916,22 @@ class SheelaAIController extends GetxController {
       }
     } catch (e) {
       printError(info: e.toString());
+    }
+  }
+
+  callToCC(SheelaResponse currentResponse) async {
+    if ((currentResponse.directCall != null && currentResponse.directCall) &&
+        (currentResponse.recipient != null &&
+            currentResponse.recipient.trim().toLowerCase() == "cc")) {
+      var regController = CommonUtil().onInitQurhomeRegimenController();
+      if (CommonUtil()
+          .validString(regController.careCoordinatorId.value)
+          .trim()
+          .isEmpty) {
+        regController.getUserDetails();
+        await regController.getCareCoordinatorId();
+      }
+      regController.callSOSEmergencyServices(1);
     }
   }
 }
