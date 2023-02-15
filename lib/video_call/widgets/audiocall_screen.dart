@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 class AudioCallScreen extends StatelessWidget {
   final String avatar;
   String patName;
   AudioCallScreen({this.avatar, this.patName});
-  var regController = Get.put(QurhomeRegimenController());
+  var regController = CommonUtil().onInitQurhomeRegimenController();
 
   @override
   Widget build(BuildContext context) {

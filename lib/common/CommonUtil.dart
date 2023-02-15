@@ -5534,6 +5534,14 @@ class CommonUtil {
     return appointmentDetailsController;
   }
 
+  QurhomeRegimenController onInitQurhomeRegimenController() {
+    QurhomeRegimenController qurhomeRegimenController;
+    if (!Get.isRegistered<QurhomeRegimenController>()) {
+      Get.put(QurhomeRegimenController());
+    }
+    qurhomeRegimenController = Get.find();
+    return qurhomeRegimenController;
+  }
 }
 
 
@@ -5586,7 +5594,7 @@ class VideoCallCommonUtils {
     final apiResponse = QurHomeApiProvider();
     await PreferenceUtil.init();
     //var regController = Get.put<QurhomeRegimenController>();
-    var regController = Get.put(QurhomeRegimenController());
+    var regController = CommonUtil().onInitQurhomeRegimenController();
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     var docName = regController.userName.value;
     var randomMID = getMyMeetingID();

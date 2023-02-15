@@ -7,7 +7,6 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/chat_socket/view/ChatUserList.dart';
@@ -38,7 +37,7 @@ class QurhomeDashboard extends StatefulWidget {
 
 class _QurhomeDashboardState extends State<QurhomeDashboard> {
   final controller = Get.put(QurhomeDashboardController());
-  final qurHomeRegimenController = Get.put(QurhomeRegimenController());
+  final qurHomeRegimenController = CommonUtil().onInitQurhomeRegimenController();
   double buttonSize = 70;
   double textFontSize = 16;
   int index = 0;
