@@ -364,6 +364,7 @@ const String strDisplayPreferences = 'Display Preferences';
 
 const String strSkillsIntegration = 'Skills/Integration';
 const String strIntegration = 'Integration';
+const String strPrivacyAndSecurity = 'Privacy and Security';
 
 // for my family
 
@@ -612,6 +613,8 @@ const String strAllowDigit = 'Allow digit recognition';
 const String strScanDevices = 'scans for the values from device images';
 const String strAllowDevice = 'Allow device recognition';
 const String strScanAuto = 'scans and auto-detects devices';
+const String strAllowBiometric = 'Enable App lock';
+const String strEnableApplock = 'Allow app lock with FaceID/FingerPrint or Passcode';
 
 //for healthKit and googleFit activation and sync
 const String strGoogleFit = 'Google Fit';

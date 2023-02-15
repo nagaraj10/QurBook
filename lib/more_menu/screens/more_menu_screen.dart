@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -44,6 +45,7 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:local_auth/local_auth.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function(bool userChanged) refresh;
@@ -111,6 +113,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool isCareGiverCommunication = false;
   bool isVitalPreferences = false;
   bool isDisplayDevices = false;
+  bool isPrivacyAndSecurity = false;
+  bool isBiometric = false;
 
   bool isDisplayPreference = false;
   bool isIntegration = false;
@@ -123,7 +127,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     mInitialTime = DateTime.now();
     //getProfileImage();
     //getAppColorValues();
-    if( CommonUtil.REGION_CODE == 'US'){
+    if (CommonUtil.REGION_CODE == 'US') {
       getAvailableDevices();
     }
     PackageInfo.fromPlatform().then((packageInfo) {
@@ -439,7 +443,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     setState(() {
       loading = true;
     });
-    await healthReportListForUserRepository.unPairDexcomm(externalSourceId).then((value) {
+    await healthReportListForUserRepository
+        .unPairDexcomm(externalSourceId)
+        .then((value) {
       setState(() {
         loading = false;
       });
@@ -460,33 +466,44 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           devices.add(ListTile(
             title: Text(element.name,
                 style: TextStyle(fontWeight: FontWeight.w500)),
-            trailing: Text((element.isPaired ? 'Un Pair' : 'Pair'),style: TextStyle(color:element.isPaired ? Colors.red : Colors.green ,fontWeight: FontWeight.bold),),
+            trailing: Text(
+              (element.isPaired ? 'Un Pair' : 'Pair'),
+              style: TextStyle(
+                  color: element.isPaired ? Colors.red : Colors.green,
+                  fontWeight: FontWeight.bold),
+            ),
             onTap: () {
               if (element.isPaired) {
                 unPairDexCom(element.externalSourceId);
               } else {
-                String baseUrl='';
-                String clientId='';
-                String redirectUrl='';
-                String state='';
+                String baseUrl = '';
+                String clientId = '';
+                String redirectUrl = '';
+                String state = '';
                 element.systemConfiguration.forEach((config) {
-                  if(config.name=="clientId"){
-                    clientId=config.value;
+                  if (config.name == "clientId") {
+                    clientId = config.value;
                   }
-                  if(config.name=="redirectUrl"){
-                    redirectUrl=config.value;
+                  if (config.name == "redirectUrl") {
+                    redirectUrl = config.value;
                   }
-                  if(config.name=="baseurl"){
-                    baseUrl=config.value;
+                  if (config.name == "baseurl") {
+                    baseUrl = config.value;
                   }
                 });
-                var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+                var userId =
+                    PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-                state='Dexcom/${userId}';
+                state = 'Dexcom/${userId}';
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DexComWebScreen(baseUrl: baseUrl,redirectUrl: redirectUrl,clientId: clientId,state: state,),
+                    builder: (context) => DexComWebScreen(
+                      baseUrl: baseUrl,
+                      redirectUrl: redirectUrl,
+                      clientId: clientId,
+                      state: state,
+                    ),
                   ),
                 ).then((value) {
                   getAvailableDevices();
@@ -1013,7 +1030,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                     ),
                                     !loading
                                         ? ListView.builder(
-                                      shrinkWrap: true,
+                                            shrinkWrap: true,
                                             itemCount: devices.length,
                                             itemBuilder: (context, index) {
                                               return devices[index];
@@ -1464,30 +1481,76 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         Theme(
           data: theme,
           child: ListTile(
-            onTap: (){
+            onTap: () {
               try {
                 //Get.back();
                 Get.to(
-                      () => HubListView(),
+                  () => HubListView(),
                   binding: BindingsBuilder(
-                        () {
-                      if (!Get.isRegistered<
-                          HubListViewController>()) {
+                    () {
+                      if (!Get.isRegistered<HubListViewController>()) {
                         Get.lazyPut(
-                              () => HubListViewController(),
+                          () => HubListViewController(),
                         );
                       }
                     },
                   ),
                 );
-              } catch (e) {
-              }
+              } catch (e) {}
             },
             title: Text(variable.strConnectedDevices,
                 style: TextStyle(
                     fontWeight: FontWeight.w500, color: Colors.black)),
           ),
         ),
+        Divider(),
+        Theme(
+            data: theme,
+            child: ExpansionTile(
+              backgroundColor: const Color(fhbColors.bgColorContainer),
+              iconColor: Colors.black,
+              initiallyExpanded: isPrivacyAndSecurity,
+              onExpansionChanged: (value) {
+                isPrivacyAndSecurity = value;
+              },
+              title: Text(variable.strPrivacyAndSecurity,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500, color: Colors.black)),
+              children: [
+                ListTile(
+                    leading: ImageIcon(
+                      AssetImage(variable.icon_digit_reco),
+                      //size: 30,
+                      color: Colors.black,
+                    ),
+                    title: Text(variable.strAllowBiometric),
+                    subtitle: Text(
+                      variable.strEnableApplock,
+                      style: TextStyle(fontSize: 12.0.sp),
+                    ),
+                    trailing: Transform.scale(
+                      scale: 0.8,
+                      child: Switch(
+                        value: isBiometric,
+                        activeColor:
+                            Color(new CommonUtil().getMyPrimaryColor()),
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            _enableBiometric();
+                            /* isPrivacyAndSecurity = true;
+                            isTouched = true;
+
+                            isBiometric = newValue;
+                            createAppColorSelection(preColor, greColor);*/
+                            /*PreferenceUtil.saveString(
+                                        Constants.allowDigitRecognition,
+                                        _isdigitRecognition.toString());*/
+                          });
+                        },
+                      ),
+                    )),
+              ],
+            )),
         Divider(),
         Center(
             child: Text(
@@ -1512,5 +1575,28 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     }
     PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
     return ret;
+  }
+
+  _enableBiometric() async {
+    final LocalAuthentication auth = LocalAuthentication();
+    String msg = "You are not authorized.";
+    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    final bool canAuthenticate =
+        //canAuthenticateWithBiometrics ||
+        await auth.isDeviceSupported();
+    //  Future _getAvailableBiometric() async {
+    try {
+      bool pass = await auth.authenticate(
+        localizedReason: 'Authenticate with pattern/pin/passcode',
+      );
+      if (pass) {
+        msg = "You are Authenticated.";
+        setState(() {});
+      }
+    } on PlatformException catch (e) {
+      msg = "Error while opening pattern/pin/passcode";
+      print(msg);
+      print(e.message);
+    }
   }
 }
