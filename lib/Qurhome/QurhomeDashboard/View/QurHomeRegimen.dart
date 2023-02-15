@@ -11,7 +11,6 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
@@ -53,7 +52,7 @@ class QurHomeRegimenScreen extends StatefulWidget {
 
 class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  final controller = Get.put(QurhomeRegimenController());
+  final controller = CommonUtil().onInitQurhomeRegimenController();
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
   String snoozeValue = "5 mins";

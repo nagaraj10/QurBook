@@ -8,7 +8,6 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -83,7 +82,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   var controller = Get.put(CreateTicketController());
-  var regController = Get.put(QurhomeRegimenController());
+  var regController = CommonUtil().onInitQurhomeRegimenController();
   Hospitals selectedLab;
   Doctors selectedDoctor;
 
