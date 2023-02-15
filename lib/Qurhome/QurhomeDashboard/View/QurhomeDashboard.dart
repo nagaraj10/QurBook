@@ -29,13 +29,14 @@ import '../../../constants/variable_constant.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../Controller/QurhomeDashboardController.dart';
 import 'QurHomeRegimen.dart';
+import 'package:myfhb/main.dart';
 
 class QurhomeDashboard extends StatefulWidget {
   @override
   _QurhomeDashboardState createState() => _QurhomeDashboardState();
 }
 
-class _QurhomeDashboardState extends State<QurhomeDashboard> {
+class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   final controller = Get.put(QurhomeDashboardController());
   final qurHomeRegimenController = CommonUtil().onInitQurhomeRegimenController();
   double buttonSize = 70;
@@ -66,6 +67,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
         printError(info: e.toString());
       }
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyFHB.routeObserver.subscribe(this, ModalRoute.of(context));
   }
 
   onInit() async {
@@ -115,15 +122,24 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   @override
   dispose() {
     try {
-      if(!CommonUtil.isNotINDReg()){
+      if (!CommonUtil.isNotINDReg()) {
         controller.setActiveQurhomeTo(
           status: false,
         );
       }
       CommonUtil().initPortraitMode();
+      MyFHB.routeObserver.unsubscribe(this);
       super.dispose();
     } catch (e) {
       print(e);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    controller.updateBLETimer(Enable: false);
+    if (controller.currentSelectedIndex.value == 0) {
+      controller.updateBLETimer();
     }
   }
 
