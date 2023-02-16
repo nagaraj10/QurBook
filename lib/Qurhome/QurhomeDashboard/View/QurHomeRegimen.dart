@@ -34,6 +34,8 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
@@ -376,7 +378,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       RegimentDataModel regimen, int nextRegimenPosition, bool isPortrait) {
     return InkWell(
       onTap: () {
-        if (regimen?.activityOrgin != strAppointmentRegimen) {
+        if (regimen?.activityOrgin == strAppointmentRegimen) {
+          if ((regimen?.eid != null) && (regimen?.eid != '')) {
+            goToAppointmentDetailScreen(regimen?.eid);
+          }
+        } else {
           showRegimenDialog(regimen, itemIndex);
         }
       },
@@ -1694,6 +1700,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     ).then((value) {
       initSocketCountUnread();
     });
+  }
+
+  void goToAppointmentDetailScreen(String appointmentId) {
+    if (!Get.isRegistered<AppointmentDetailsController>())
+      Get.lazyPut(() => AppointmentDetailsController());
+    AppointmentDetailsController appointmentDetailsController =
+    Get.find<AppointmentDetailsController>();
+    appointmentDetailsController.getAppointmentDetail(appointmentId);
+    Get.to(() => AppointmentDetailScreen());
   }
 }
 
