@@ -372,7 +372,7 @@ class ChatState extends State<ChatDetail> {
     }
 
     if (patientName == null || patientName == '') {
-      MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
+      MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
       patientName = myProfile.result != null
           ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
           : '';
@@ -386,7 +386,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   String? getProfileURL() {
-    MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
+    MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
     String? patientPicURL = myProfile.result!.profilePicThumbnailUrl;
 
     return patientPicURL;

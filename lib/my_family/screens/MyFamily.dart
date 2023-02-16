@@ -303,7 +303,7 @@ class _MyFamilyState extends State<MyFamily> {
     } */
     String? fulName = '';
     try {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)!;
       fulName = myProfile.result != null
           ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
           : '';

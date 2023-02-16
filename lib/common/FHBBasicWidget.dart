@@ -300,7 +300,7 @@ class FHBBasicWidget {
           width: 50.0.h,
           fit: BoxFit.cover,
           headers: {
-            HttpHeaders.authorizationHeader: authToken!,
+            HttpHeaders.authorizationHeader: authToken??"",
           },
           errorBuilder: (context, exception, stackTrace) {
             return Container(
@@ -665,7 +665,7 @@ class FHBBasicWidget {
   static customShowCase(
       GlobalKey? _key, String desc, Widget _child, String title) {
     return Showcase.withWidget(
-        key: _key,
+        key: _key!,
         disableAnimation: false,
         shapeBorder: CircleBorder(),
         title: title,

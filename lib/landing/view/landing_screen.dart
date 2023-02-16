@@ -252,7 +252,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Future<MyProfileResult?> getIsCpUser() async {
     MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
     return myProfile.result;
   }
 
@@ -321,7 +321,7 @@ class _LandingScreenState extends State<LandingScreen> {
       });
     }
     return FutureBuilder<MyProfileModel?>(
-      future: profileData!.then((value) => value as MyProfileModel?),
+      future: profileData?.then((value) => value as MyProfileModel?),
       builder: (context, snapshot) {
         return Scaffold(
           key: _scaffoldKey,

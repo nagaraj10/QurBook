@@ -891,7 +891,7 @@ class _ChatUserListState extends State<ChatUserList> {
   Future<String?> getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(KEY_USERID);
 
-    MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
+    MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
     patientName = myProfile.result != null
         ? myProfile.result!.firstName! + myProfile.result!.firstName!
         : '';

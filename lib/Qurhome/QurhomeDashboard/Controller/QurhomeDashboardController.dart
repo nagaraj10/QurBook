@@ -88,7 +88,7 @@ class QurhomeDashboardController extends GetxController {
     MyProfileModel myProfile;
     String fulName = '';
     try {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
       fulName = myProfile.result != null
           ? myProfile.result!.firstName!.capitalizeFirstofEach +
               ' ' +

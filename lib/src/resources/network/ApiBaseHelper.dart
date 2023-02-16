@@ -53,9 +53,9 @@ class ApiBaseHelper {
   Future<dynamic> signIn(String url, String jsonData) async {
     var responseJson;
     try {
-      var response = await ApiServices.post(_baseUrl + url,
+      var response = (await ApiServices.post(_baseUrl + url,
           body: jsonData,
-          headers: await headerRequest.getRequesHeaderWithoutToken());
+          headers: await headerRequest.getRequesHeaderWithoutToken()));
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -650,7 +650,7 @@ class ApiBaseHelper {
         break;
       default:
         throw FetchDataException(
-            variable.strErrComm + '${response!.statusCode}');
+            variable.strErrComm + '${response?.statusCode}');
     }
   }
 
@@ -1188,12 +1188,12 @@ class ApiBaseHelper {
 
   Future<dynamic> postDeviceId(
       String url, String jsonBody, bool isActive) async {
-    final Map<String, String?> requestHeadersAuthAccept = {};
+    final Map<String, String> requestHeadersAuthAccept = {}; // FUcrash Map<String, String?>  to Map<String, String> 
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Content-type'] = 'application/json';
 
     requestHeadersAuthAccept['Authorization'] =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!;
     requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     var responseJson;

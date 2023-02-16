@@ -89,7 +89,7 @@ class SheelaAIController extends GetxController {
     authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
     relationshipId = userId;
-    userName = profile!.result != null
+    userName = profile?.result != null
         ? '${profile!.result!.firstName} ${profile!.result!.lastName}'
         : '';
     conversationFlag = null;

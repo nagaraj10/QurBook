@@ -369,7 +369,7 @@ class NavigationDrawer extends StatelessWidget {
     String? phoneNumber = "";
 
     try {
-      myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
+      myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
       name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
               myProfile?.result?.name != '')
           ? myProfile?.result?.name?.capitalizeFirstofEach

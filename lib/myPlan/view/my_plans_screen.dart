@@ -23,7 +23,7 @@ class MyPlansScreen extends StatefulWidget {
 
 class _MyPlansScreenState extends State<MyPlansScreen> {
 
-  bool? cartEnable=false;
+  bool cartEnable=false; // FUcrash bool ? to bool
   bool addPlanButton=false;
 
   @override
@@ -46,7 +46,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
           size: 24.0.sp,
           onTap: () => onBackPressed(context),
         ),
-        actions: cartEnable!?[
+        actions: cartEnable ?[     // FUcrash cartEnable! to cartEnable
           Center(
             child: Container(
                 margin: EdgeInsets.only(right: 15.0.sp),
@@ -86,7 +86,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
     bool? addplanbutton=await PreferenceUtil.getAddPlanBtn();
     bool? cartEnable=await PreferenceUtil.getCartEnable();
    setState(() {
-     this.cartEnable=cartEnable;
+     this.cartEnable=cartEnable!; // FUcrash
    });
   }
 }

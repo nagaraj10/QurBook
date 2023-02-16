@@ -743,7 +743,7 @@ class CommonUtil {
     // final token = await _firebaseMessaging.getToken();
     try {
       var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-      final profileResult = myProfile.result!;
+      final profileResult = myProfile!.result!;
 
       await CommonUtil()
           .sendDeviceToken(
@@ -770,7 +770,7 @@ class CommonUtil {
 
   Sharedbyme getProfileDetails() {
     var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    var myProfileResult = myProfile.result!;
+    var myProfileResult = myProfile!.result!;
 
     var linkedData =
         LinkedData(roleName: variable.Self, nickName: variable.Self);
@@ -1884,7 +1884,7 @@ class CommonUtil {
     try {
       final myProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-      final profileResult = myProfile.result!;
+      final profileResult = myProfile!.result!;
 
       await CommonUtil().sendDeviceToken(
         PreferenceUtil.getStringValue(Constants.KEY_USERID),
@@ -1926,8 +1926,8 @@ class CommonUtil {
     final _firebaseMessaging = FirebaseMessaging.instance;
     final apiBaseHelper = ApiBaseHelper();
 
-    var token = await (_firebaseMessaging.getToken() as FutureOr<String>);
-    await PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token);
+    var token = await (_firebaseMessaging.getToken() as FutureOr<String?>);
+    await PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token!);
     var deviceInfo = Map<String, dynamic>();
     var user = Map<String, dynamic>();
     var jsonData = Map<String, dynamic>();
@@ -5293,7 +5293,7 @@ class CommonUtil {
     try {
       MyProfileModel myProfile;
 
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
       userName = myProfile?.result != null &&
               myProfile.result!.firstName != null &&
               myProfile.result!.firstName != ''

@@ -216,7 +216,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         try {
           if (widget.arguments!.sharedbyme!.child!.isVirtualUser!) {
             var myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-            if (myProf.result!.userContactCollection3 != null) {
+            if (myProf!.result!.userContactCollection3 != null) {
               if (myProf.result!.userContactCollection3!.isNotEmpty) {
                 mobileNoController.text =
                     myProf.result!.userContactCollection3![0]!.phoneNumber!;
@@ -419,7 +419,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           final myProf =
               PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
           mobileNoController.text =
-              myProf.result!.userContactCollection3![0]!.phoneNumber!;
+              myProf!.result!.userContactCollection3![0]!.phoneNumber!;
           emailController.text = myProf.result!.userContactCollection3![0]!.email!;
         } else {
           mobileNoController.text =

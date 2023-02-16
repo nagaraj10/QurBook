@@ -63,7 +63,7 @@ class QurhomeRegimenController extends GetxController {
   var currLoggedEID = "".obs;
 
   static MyProfileModel prof =
-      PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+      PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
 
   Location? locationModel;
 
@@ -343,7 +343,7 @@ class QurhomeRegimenController extends GetxController {
 
   getUserDetails() {
     try {
-      prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+      prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
       userName.value = prof.result != null
           ? CommonUtil()
               .validString(prof.result!.firstName! + ' ' + prof.result!.lastName!)

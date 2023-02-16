@@ -567,7 +567,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     String fulName = '';
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-      fulName = myProfile.result != null
+      fulName = myProfile!.result != null
           ? myProfile.result!.firstName!.capitalizeFirstofEach +
               ' ' +
               myProfile.result!.lastName!.capitalizeFirstofEach

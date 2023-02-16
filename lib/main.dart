@@ -248,18 +248,18 @@ Future<void> main() async {
         registerOnAppOpenAttributionCallback: true,
         registerOnDeepLinkingCallback: true);
 
-    appsflyerSdk.onDeepLinkingStream!.forEach((element) {
-      final facebookAppEvents = FacebookAppEvents();
-      facebookAppEvents.logEvent(name: "deeplinkclicked", parameters: {
-        "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-        "data": element.toString()
-      });
-      var firebase = FirebaseAnalyticsService();
-      firebase.trackEvent("on_deep_link_clicked", {
-        "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-        "type": "facebookdeeplink"
-      });
-    });
+    // appsflyerSdk.onDeepLinkingStream!.forEach((element) {
+    //   final facebookAppEvents = FacebookAppEvents();
+    //   facebookAppEvents.logEvent(name: "deeplinkclicked", parameters: {
+    //     "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+    //     "data": element.toString()
+    //   });
+    //   var firebase = FirebaseAnalyticsService();
+    //   firebase.trackEvent("on_deep_link_clicked", {
+    //     "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+    //     "type": "facebookdeeplink"
+    //   });
+    // });
 
     if (Platform.isAndroid) {
       await FlutterDownloader.initialize(
@@ -300,14 +300,14 @@ Future<void> main() async {
       isDebuggable: true,
       singleLogFileSize: 10,
     );
-    applog.FlutterLogs.channel.setMethodCallHandler((call) {
-      if (call.method == 'logsExported') {
-        print(call.arguments);
-        CommonUtil.uploadTheLog(
-          call.arguments.toString(),
-        );
-      }
-    } as Future<dynamic> Function(MethodCall)?);
+    // applog.FlutterLogs.channel.setMethodCallHandler((call) {
+    //   if (call.method == 'logsExported') {
+    //     print(call.arguments);
+    //     CommonUtil.uploadTheLog(
+    //       call.arguments.toString(),
+    //     );
+    //   }
+    // } as Future<dynamic> Function(MethodCall)?);
 
     var firebase = FirebaseAnalyticsService();
     firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));

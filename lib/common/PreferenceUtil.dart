@@ -156,11 +156,21 @@ class PreferenceUtil {
     return instance.setString(keyProfile, profile);
   }
 
-  static MyProfileModel getProfileData(String keyProfile) {
-    if (_prefsInstance == null) {}
-    return MyProfileModel.fromJson(
-        json.decode(_prefsInstance!.getString(keyProfile) ?? ''));
-  }
+  static MyProfileModel? getProfileData(String keyProfile) { // FUcrash
+    // if (_prefsInstance == null) {}
+         try{
+           if (_prefsInstance == null) {}
+
+    var jsonData = _prefsInstance!.getString(keyProfile) ?? '';
+ var data = json.decode(jsonData);
+  return MyProfileModel.fromJson(data);
+}catch(e){
+  print(e);
+  return null;
+}
+     // return MyProfileModel.fromJson(json.decode(_prefsInstance!.getString(keyProfile) ?? ''));
+    
+   }
 
   static List<CategoryResult>? getCategoryType() {
     final categoryData = <CategoryResult>[];

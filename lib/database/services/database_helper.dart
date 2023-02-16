@@ -48,9 +48,9 @@ class DatabaseHelper {
   }
 
   Future<int> saveUnitMeasurements(UnitsMesurements unitsMesurements) async {
-    final dbClient = await (db as FutureOr<Database>);
+    final dbClient = await (db as Future<Database?>);  // FUcrash
     final res =
-        await dbClient.insert(DBConstants.UT_NAME, unitsMesurements.toMap());
+        await dbClient!.insert(DBConstants.UT_NAME, unitsMesurements.toMap());
     return res;
   }
 
@@ -67,15 +67,15 @@ class DatabaseHelper {
   }
 
   Future<int> saveCountryMetrics(CountryMetrics countryMetrics) async {
-    final dbClient = await (db as FutureOr<Database>);
+    final dbClient = await (db as Future<Database?>);// FUcrash
     var res =
-        await dbClient.insert(DBConstants.CM_NAME, countryMetrics.toMap());
+        await dbClient!.insert(DBConstants.CM_NAME, countryMetrics.toMap());
     return res;
   }
 
   Future<List<CountryMetrics>> getCountryMetrics() async {
-    final dbClient = await (db as FutureOr<Database>);
-    final List<Map> list = await dbClient.rawQuery(DBConstants.CM_QUERY);
+    final dbClient = await (db as Future<Database?>);// FUcrash
+    final List<Map> list = await dbClient!.rawQuery(DBConstants.CM_QUERY);
     final List<CountryMetrics> employees = [];
     for (var i = 0; i < list.length; i++) {
       final user = CountryMetrics(
@@ -96,8 +96,8 @@ class DatabaseHelper {
   }
 
   Future<int> getDBLength() async {
-    final dbClient = await (db as FutureOr<Database>);
-    final List<Map> list = await dbClient.rawQuery(DBConstants.CM_QUERY);
+    final dbClient = await (db as Future<Database?>);// FUcrash
+    final List<Map> list = await dbClient!.rawQuery(DBConstants.CM_QUERY);
 
     return list.length;
   }
@@ -142,8 +142,8 @@ class DatabaseHelper {
   }
 
   Future<int> getDBLengthUnit() async {
-    final dbClient = await (db as FutureOr<Database>);
-    final List<Map> list = await dbClient.rawQuery(DBConstants.UT_QUERY);
+    final dbClient = await (db as Future<Database?>);// FUcrash
+    final List<Map> list = await dbClient!.rawQuery(DBConstants.UT_QUERY);
 
     return list.length;
   }

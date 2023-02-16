@@ -333,7 +333,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             var myProf =
                 PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) ??
                     PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-            if (myProf.result!.userContactCollection3 != null) {
+            if (myProf!.result!.userContactCollection3 != null) {
               if (myProf.result!.userContactCollection3!.isNotEmpty) {
                 mobileNoController.text =
                     myProf.result!.userContactCollection3![0]!.phoneNumber!;

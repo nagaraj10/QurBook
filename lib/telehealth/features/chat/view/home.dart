@@ -87,7 +87,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     print(patientId);
 
     MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
     patientName = myProfile.result != null
         ? myProfile.result!.firstName! + myProfile.result!.firstName!
         : '';

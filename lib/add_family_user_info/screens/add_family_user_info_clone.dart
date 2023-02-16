@@ -236,8 +236,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   dynamic checkAddressValidation(
       UserAddressCollection3 userAddressCollection3) {
-    var addrLine1 = userAddressCollection3?.addressLine1;
-    var city = userAddressCollection3?.city?.name;
+    var addrLine1 = userAddressCollection3.addressLine1;
+    var city = userAddressCollection3.city?.name;
     var state = userAddressCollection3?.state?.name;
     if (addrLine1 != '' && city != '' && state != '') {
       return true;
@@ -1512,7 +1512,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             var myProf =
                 await PreferenceUtil.getProfileData(Constants.KEY_PROFILE) ??
                     PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-            if (myProf.result!.userContactCollection3 != null &&
+            if (myProf!.result!.userContactCollection3 != null &&
                 myProf.result!.userContactCollection3!.length > 0) {
               if (myProf.result!.userContactCollection3!.isNotEmpty) {
                 mobileNoController.text =
@@ -1523,7 +1523,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             } else {
               var myProf = await PreferenceUtil.getProfileData(
                   Constants.KEY_PROFILE_MAIN);
-              if (myProf.result!.userContactCollection3 != null &&
+              if (myProf!.result!.userContactCollection3 != null &&
                   myProf.result!.userContactCollection3!.length > 0) {
                 if (myProf.result!.userContactCollection3!.isNotEmpty) {
                   mobileNoController.text =
@@ -1674,7 +1674,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) ??
                     PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             try {
-              if (myProf.result!.userContactCollection3 != null) {
+              if (myProf!.result!.userContactCollection3 != null) {
                 if (myProf.result!.userContactCollection3!.isNotEmpty) {
                   mobileNoController.text =
                       myProf.result!.userContactCollection3![0]!.phoneNumber!;
@@ -1687,7 +1687,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             }
 
             try {
-              if (myProf.result!.userProfileSettingCollection3 != null &&
+              if (myProf!.result!.userProfileSettingCollection3 != null &&
                   myProf.result!.userProfileSettingCollection3!.length > 0) {
                 var preferredMesurement = myProf
                     .result
@@ -1843,7 +1843,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             var myProf =
                 PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
             mobileNoController.text =
-                myProf.result!.userContactCollection3![0]!.phoneNumber!;
+                myProf!.result!.userContactCollection3![0]!.phoneNumber!;
             emailController.text =
                 myProf.result!.userContactCollection3![0]!.email!;
           } catch (e) {
@@ -2980,7 +2980,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         } else {
           var profileModel =
               await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-          if (profileModel.result!.userProfileSettingCollection3 != null &&
+          if (profileModel!.result!.userProfileSettingCollection3 != null &&
               profileModel.result!.userProfileSettingCollection3!.length > 0) {
             var profileSetting = profileModel
                 .result!.userProfileSettingCollection3![0].profileSetting;
@@ -2990,7 +2990,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } catch (e) {
         var profileModel =
             await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-        if (profileModel.result!.userProfileSettingCollection3 != null &&
+        if (profileModel!.result!.userProfileSettingCollection3 != null &&
             profileModel.result!.userProfileSettingCollection3!.length > 0) {
           var profileSetting = profileModel
               .result!.userProfileSettingCollection3![0].profileSetting;

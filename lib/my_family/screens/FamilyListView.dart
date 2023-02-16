@@ -90,7 +90,7 @@ class FamilyListView {
       sharedByMeList!.insert(
           0,
           SharedByUsers(
-              id: myProfile.result!.id,
+              id: myProfile!.result!.id,
               nickName: 'Self',
               relationship: RelationsShipModel(name: 'Self')));
     } catch (e) {}
@@ -165,7 +165,7 @@ class FamilyListView {
                               ClipOval(
                                   child: sharedByMe[index].relationship!.name ==
                                           variable.Self
-                                      ? myProfile.result!
+                                      ? myProfile!.result!
                                                   .profilePicThumbnailUrl !=
                                               null
                                           ? FHBBasicWidget()
@@ -332,9 +332,9 @@ class FamilyListView {
                                 sharedByMe[index].id,
                                 sharedByMe[index].nickName,
                                 sharedByMe[index].nickName == variable.Self
-                                    ? myProfile.result!.profilePicThumbnailUrl ??
+                                    ? myProfile!.result!.profilePicThumbnailUrl ??
                                         ""
-                                    : myProfile.result != null
+                                    : myProfile!.result != null
                                         ? myProfile.result!.firstName != null
                                             ? myProfile.result!.firstName![0]
                                                 .toUpperCase()
