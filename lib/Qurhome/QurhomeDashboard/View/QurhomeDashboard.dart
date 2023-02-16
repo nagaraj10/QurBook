@@ -77,7 +77,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
   onInit() async {
     try {
-      if (CommonUtil.isNotINDReg()) {
+      if (CommonUtil.isUSRegion()) {
         Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
         CommonUtil().initSocket();
 
@@ -122,7 +122,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   @override
   dispose() {
     try {
-      if (!CommonUtil.isNotINDReg()) {
+      if(!CommonUtil.isUSRegion()){
         controller.setActiveQurhomeTo(
           status: false,
         );
@@ -155,7 +155,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
               centerTitle: true,
               title: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: (CommonUtil.isNotINDReg())
+                mainAxisAlignment: (CommonUtil.isUSRegion())
                     ? controller.currentSelectedIndex == 0
                         ? MainAxisAlignment.spaceBetween
                         : MainAxisAlignment.center
@@ -199,7 +199,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                     : SizedBox.shrink(),
                           ))
                       : SizedBox.shrink(),
-                  if (CommonUtil.isNotINDReg()) SizedBox(width: 22.w),
+                  if (CommonUtil.isUSRegion()) SizedBox(width: 22.w),
                   Column(
                     children: [
                       RichText(
@@ -238,7 +238,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       },
                     ],
                   ),
-                  if (CommonUtil.isNotINDReg() &&
+                  if (CommonUtil.isUSRegion() &&
                       controller.currentSelectedIndex == 0)
                     Container(
                       child: Row(
@@ -257,7 +257,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 ],
               ),
               leading: controller.currentSelectedIndex == 0
-                  ? (CommonUtil.isNotINDReg())
+                  ? (CommonUtil.isUSRegion())
                       ? Material(
                           color: Colors.transparent,
                           child: IconButton(
@@ -289,7 +289,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             sheelBadgeController.getSheelaBadgeCount(
                                 isNeedSheelaDialog: true);
                           },
-                          child: CommonUtil.isNotINDReg()
+                          child: CommonUtil.isUSRegion()
                               ? Padding(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 8.h,
@@ -614,7 +614,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   }
 
   Widget getSizedBoxIndReg() {
-    if (CommonUtil.isNotINDReg()) {
+    if (CommonUtil.isUSRegion()) {
       if (controller.currentSelectedIndex == 0) {
         return SizedBox.shrink();
       } else {

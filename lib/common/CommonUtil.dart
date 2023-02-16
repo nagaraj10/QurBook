@@ -5511,7 +5511,7 @@ class CommonUtil {
     });
   }
 
-  static bool isNotINDReg() {
+  static bool isUSRegion() {
     try {
       bool value = false;
       if (CommonUtil.REGION_CODE != IND_REG) {
