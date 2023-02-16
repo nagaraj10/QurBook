@@ -360,7 +360,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                       Get.back();
                     },
                   )
-                : CommonUtil.isNotINDReg()
+                : CommonUtil.isUSRegion()
                     ? Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 8.h,

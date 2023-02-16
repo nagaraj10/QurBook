@@ -306,12 +306,14 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                       ),
                       DrawerTile(
                         title: variable.strRefer_friend,
+                        isGreyout: true,
                         // iconWidget: SvgPicture.asset(
                         //   variable.icon_logout,
                         //   color: Colors.black54,
                         // ),
                         iconWidget: Image.asset(
                           variable.icon_refer_friend_icon,
+                          color: Colors.grey,
                           width: 24.sp,
                           height: 24.sp,
                         ),
