@@ -378,11 +378,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       RegimentDataModel regimen, int nextRegimenPosition, bool isPortrait) {
     return InkWell(
       onTap: () {
-        if (regimen?.activityOrgin == strAppointmentRegimen) {
-          if ((regimen?.eid != null) && (regimen?.eid != '')) {
-            goToAppointmentDetailScreen(regimen?.eid);
-          }
-        } else {
+        if (regimen?.activityOrgin != strAppointmentRegimen) {
           showRegimenDialog(regimen, itemIndex);
         }
       },
@@ -1702,14 +1698,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     });
   }
 
-  void goToAppointmentDetailScreen(String appointmentId) {
-    if (!Get.isRegistered<AppointmentDetailsController>())
-      Get.lazyPut(() => AppointmentDetailsController());
-    AppointmentDetailsController appointmentDetailsController =
-    Get.find<AppointmentDetailsController>();
-    appointmentDetailsController.getAppointmentDetail(appointmentId);
-    Get.to(() => AppointmentDetailScreen());
-  }
 }
 
 class SOSAgentCallWidget extends StatelessWidget {
