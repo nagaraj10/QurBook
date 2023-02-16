@@ -71,7 +71,7 @@ class QurhomeDashboardController extends GetxController {
     } else {
       _sheelaBLEController.stopScanning();
       _sheelaBLEController.stopTTS();
-      _bleTimer.cancel();
+      _bleTimer?.cancel();
       _bleTimer = null;
     }
   }

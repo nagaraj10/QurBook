@@ -61,7 +61,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   List<CategoryResult> filteredCategoryData = new List();
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
-  AppointmentDetailsController appointmentDetailsController;
+  AppointmentDetailsController appointmentDetailsController= CommonUtil().onInitAppointmentDetailsController();
 
   @override
   void initState() {
@@ -70,7 +70,6 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         Provider.of<CancelAppointmentViewModel>(context, listen: false);
     getCategoryList();
     commonWidget.getCategoryList();
-    appointmentDetailsController = CommonUtil().onInitAppointmentDetailsController();
     super.initState();
   }
 
