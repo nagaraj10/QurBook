@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
@@ -140,6 +141,7 @@ import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'keysofmodel.dart' as keysConstant;
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
+import '../../constants/fhb_constants.dart' as constants;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -1926,12 +1928,10 @@ class CommonUtil {
     var jsonParam;
     final _firebaseMessaging = FirebaseMessaging.instance;
     final apiBaseHelper = ApiBaseHelper();
-    var token='';
-    try{
+    var token = '';
+    try {
       token = await _firebaseMessaging.getToken();
-    }catch(e){
-
-    }
+    } catch (e) {}
     await PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token);
     var deviceInfo = Map<String, dynamic>();
     var user = Map<String, dynamic>();
@@ -5448,24 +5448,78 @@ class CommonUtil {
   }
 
   OnInitAction() async {
-    dbInitialize();
-    QurPlanReminders.getTheRemindersFromAPI();
-    //initSocket();
-    Future.delayed(const Duration(seconds: 1)).then((_) {
-      if (Platform.isIOS) {
-        if (PreferenceUtil.isKeyValid(NotificationData)) {
-          // changeTabToAppointments();
+    try {
+      dbInitialize();
+      QurPlanReminders.getTheRemindersFromAPI();
+      //initSocket();
+      Future.delayed(const Duration(seconds: 1)).then((_) {
+        if (Platform.isIOS) {
+          if (PreferenceUtil.isKeyValid(NotificationData)) {
+            // changeTabToAppointments();
+          }
         }
+      });
+      if (!Get.isRegistered<SheelaAIController>()) {
+        Get.put(SheelaAIController());
       }
-    });
-    if (!Get.isRegistered<SheelaAIController>()) {
-      Get.put(SheelaAIController());
-    }
-    if (!Get.isRegistered<ChatUserListController>()) {
-      Get.put(ChatUserListController());
-    }
+      if (!Get.isRegistered<ChatUserListController>()) {
+        Get.put(ChatUserListController());
+      }
 
-    Get.find<SheelaAIController>().getSheelaBadgeCount();
+      Get.find<SheelaAIController>().getSheelaBadgeCount();
+      await getMyProfilesetting();
+    } catch (e) {
+      if (kDebugMode) print(e.toString());
+    }
+  }
+
+  Future<MyProfileModel> getMyProfilesetting() async {
+    final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
+    final userIdMain =
+        await PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
+
+    if (userId != null && userId.isNotEmpty) {
+      try {
+        MyProfileModel value =
+            await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+        myProfile = value;
+
+        if (value != null) {
+          if (value?.result?.userProfileSettingCollection3?.isNotEmpty) {
+            var profileSetting =
+                value?.result?.userProfileSettingCollection3[0].profileSetting;
+            if (profileSetting?.preferredMeasurement != null) {
+              PreferredMeasurement preferredMeasurement =
+                  profileSetting?.preferredMeasurement;
+              await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                      preferredMeasurement.height?.unitCode)
+                  .then((value) {
+                PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                        preferredMeasurement.weight?.unitCode)
+                    .then((value) {
+                  PreferenceUtil.saveString(
+                          Constants.STR_KEY_TEMP,
+                          preferredMeasurement.temperature?.unitCode
+                              .toUpperCase())
+                      .then((value) {});
+                });
+              });
+            } else {
+              new CommonUtil().commonMethodToSetPreference();
+            }
+          } else {
+            new CommonUtil().commonMethodToSetPreference();
+          }
+        } else {
+          new CommonUtil().commonMethodToSetPreference();
+        }
+      } catch (e) {
+        new CommonUtil().commonMethodToSetPreference();
+      }
+    } else {
+      CommonUtil().logout(moveToLoginPage);
+    }
+    return myProfile;
   }
 
   // 1
@@ -5548,12 +5602,11 @@ class CommonUtil {
     if (!Get.isRegistered<AppointmentDetailsController>())
       Get.lazyPut(() => AppointmentDetailsController());
     AppointmentDetailsController appointmentDetailsController =
-    Get.find<AppointmentDetailsController>();
+        Get.find<AppointmentDetailsController>();
     appointmentDetailsController.getAppointmentDetail(appointmentId);
     Get.to(() => AppointmentDetailScreen());
   }
 }
-
 
 extension CapExtension on String {
   String get inCaps =>
