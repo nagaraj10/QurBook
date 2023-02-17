@@ -34,7 +34,7 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any], rssi RSSI: NSNumber) {
-//        //print(advertisementData as NSDictionary)
+        //        //print(advertisementData as NSDictionary)
         if let name = advertisementData[Constants.BLENameData] as? String,
            name.lowercased().contains("blesmart"){
             centralManager.stopScan()
@@ -95,39 +95,40 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                     }
                 }
             }
-        }else if let newdata =  advertisementData[Constants.BLEManuData] as? Data,
-                 let serviceIdArray =  advertisementData[Constants.BLEAdvDataServiceUUIDs] as? NSArray,
-                 serviceIdArray.count > 0,
-                 let serviceId = serviceIdArray.firstObject as? CBUUID{
-            let decodedString = newdata.hexEncodedString()
-            let macID = decodedString.inserting()
-            if(centralManager != nil){
-                centralManager.stopScan()
-            }
-            connectedWithWeighingscale = false
-            guard let deviceName = advertisementData[Constants.BLENameData] as? String else {
-                eventSink?("Failed|Failed to get the device details")
-                return
-            }
-            if(deviceName == Constants.WOWGOSPO2){
-                eventSink?("macid|"+macID)
-                eventSink?("bleDeviceType|SPO2")
-                SPO2Manager = GoldenSPO2Manager(delegate: self)
-                SPO2Manager.scanLeDevice(true)
-                centralManager = nil
-            }else if (deviceName == Constants.Mike){
-                eventSink?("macid|"+macID)
-                eventSink?("bleDeviceType|SPO2")
-                poPeripheral = peripheral
-                poPeripheral.delegate = self
-                centralManager.connect(poPeripheral)
-            } else if((deviceName == Constants.WOWGOBP) || (deviceName == Constants.WOWGOBPB)){
-                eventSink?("macid|"+macID)
-                eventSink?("bleDeviceType|BP")
-                BloodpressureManager = GoldenBloodpressureManager(delegate: self)
-                BloodpressureManager.scanLeDevice(true)
-                centralManager = nil
-            }
+        }
+//        else if let newdata =  advertisementData[Constants.BLEManuData] as? Data,
+//                 let serviceIdArray =  advertisementData[Constants.BLEAdvDataServiceUUIDs] as? NSArray,
+//                 serviceIdArray.count > 0,
+//                 let serviceId = serviceIdArray.firstObject as? CBUUID{
+            //            let decodedString = newdata.hexEncodedString()
+            //            let macID = decodedString.inserting()
+            //            if(centralManager != nil){
+            //                centralManager.stopScan()
+            //            }
+            //            connectedWithWeighingscale = false
+            //            guard let deviceName = advertisementData[Constants.BLENameData] as? String else {
+            //                eventSink?("Failed|Failed to get the device details")
+            //                return
+            //            }
+            //            if(deviceName == Constants.WOWGOSPO2){
+            //                eventSink?("macid|"+macID)
+            //                eventSink?("bleDeviceType|SPO2")
+            //                SPO2Manager = GoldenSPO2Manager(delegate: self)
+            //                SPO2Manager.scanLeDevice(true)
+            //
+            //            }else if (deviceName == Constants.Mike){
+            //                eventSink?("macid|"+macID)
+            //                eventSink?("bleDeviceType|SPO2")
+            //                poPeripheral = peripheral
+            //                poPeripheral.delegate = self
+            //                centralManager.connect(poPeripheral)
+            //            } else if((deviceName == Constants.WOWGOBP) || (deviceName == Constants.WOWGOBPB)){
+            //                eventSink?("macid|"+macID)
+            //                eventSink?("bleDeviceType|BP")
+            //                BloodpressureManager = GoldenBloodpressureManager(delegate: self)
+            //                BloodpressureManager.scanLeDevice(true)
+            //
+            //            }
             //            else if((deviceName == Constants.WOWGOWT1) || (deviceName == Constants.WOWGOWT2) || (deviceName == Constants.WOWGOWT3)){
             //                eventSink?("macid|"+macID)
             //                eventSink?("bleDeviceType|weight")
@@ -135,14 +136,29 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
             //                LS202DeviceManager.scanLeDevice(true)
             //                centralManager = nil
             //            }
-        } else if let deviceName = advertisementData[Constants.BLENameData] as? String,((deviceName == Constants.WOWGOWT1) || (deviceName == Constants.WOWGOWT2) || (deviceName == Constants.WOWGOWT3)){
-            connectedWithWeighingscale = true
-            if(centralManager != nil){
-                centralManager.stopScan()
+//        }
+        else if let deviceName = advertisementData[Constants.BLENameData] as? String{
+            if((deviceName == Constants.WOWGOWT1) || (deviceName == Constants.WOWGOWT2) || (deviceName == Constants.WOWGOWT3)){
+                
+                if(LS202DeviceManager == nil){
+                    LS202DeviceManager = GoldenLS202DeviceManager(delegate: self)
+                    LS202DeviceManager.scanLeDevice(true)
+                    
+                }
+            }else  if(deviceName == Constants.WOWGOSPO2){
+                if(SPO2Manager == nil){
+                    SPO2Manager = GoldenSPO2Manager(delegate: self)
+                    SPO2Manager.scanLeDevice(true)
+                }
+                
+            }else if((deviceName == Constants.WOWGOBP) || (deviceName == Constants.WOWGOBPB)){
+                if(BloodpressureManager == nil){
+                    BloodpressureManager = GoldenBloodpressureManager(delegate: self)
+                    BloodpressureManager.scanLeDevice(true)
+                }
+                
+                
             }
-            weightPeripheral = peripheral
-            weightPeripheral.delegate = self
-            centralManager.connect(weightPeripheral)
         }
     }
     
@@ -197,7 +213,6 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                             LS202DeviceManager = GoldenLS202DeviceManager(delegate: self)
                             LS202DeviceManager.scanLeDevice(true)
                         }
-                        break
                     }
                 }
             }
@@ -263,6 +278,7 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
     
     func onListen(withArguments arguments: Any?,
                   eventSink: @escaping FlutterEventSink) -> FlutterError? {
+        onCancel(withArguments: [])
         self.eventSink = eventSink
         centralManager = CBCentralManager(delegate: self, queue: nil)
         return nil
@@ -302,7 +318,29 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
 extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallback,GoldenLS202DeviceManagerCallback{
     
     func onDiscoverDevice(_ device: Any!) {
-        
+        if let _device = device  as? BaseBLEDevice{
+            if((_device.deviceName == Constants.WOWGOWT1) || (_device.deviceName == Constants.WOWGOWT2) || (_device.deviceName == Constants.WOWGOWT3)){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|WEIGHT")
+            }else  if(_device.deviceName == Constants.WOWGOSPO2){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|SPO2")
+            }else if((_device.deviceName == Constants.WOWGOBP) || (_device.deviceName == Constants.WOWGOBPB)){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|BP")
+                
+            }else if((_device.showName == Constants.WOWGOWT1) || (_device.showName == Constants.WOWGOWT2) || (_device.showName == Constants.WOWGOWT3)){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|WEIGHT")
+            }else  if(_device.showName == Constants.WOWGOSPO2){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|SPO2")
+            }else if((_device.showName == Constants.WOWGOBP) || (_device.showName == Constants.WOWGOBPB)){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|BP")
+                
+            }
+        }
     }
     
     func onConnectStatusChange(_ device: Any!, status: Int32) {
@@ -320,11 +358,14 @@ extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallba
             break;
         case G_BLE_STATUS_DISCONNECTED:
             //print("disCONNECTED")
-            
+            eventSink?("disconnected|Bluetooth disconnected")
+
             break;
         case G_BLE_STATUS_DISCONNECTED_BYUSER:
             /*User click stop or disconnect GSH BLE device**/
             //"G_BLE_STATUS_DISCONNECTED_BYUSER"
+            eventSink?("disconnected|Bluetooth disconnected")
+
             break;
         case G_BLE_ERROR:
             //print("error found")
@@ -337,6 +378,7 @@ extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallba
     
     func onReceiveMeasurementData(_ device: Any!, spO2Value SpO2Value: UInt, pulseRateValue: UInt, waveAmplitude: UInt) {
         let _device : BaseBLEDevice = (device as? BaseBLEDevice)!
+        
         if (_device.showName == Constants.WOWGOSPO2){
             if(SpO2Value < 101 && pulseRateValue != 127 && pulseRateValue != 255 && eventSink != nil ){
                 let data : [String:Any] = [
@@ -406,6 +448,6 @@ extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallba
     }
     
     func showLogMessage(_ log: String!) {
-                print("GoldenBleDeviceManager Log : ",log!);
+        print("GoldenBleDeviceManager Log : ",log!);
     }
 }

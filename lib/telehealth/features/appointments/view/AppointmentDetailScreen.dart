@@ -17,7 +17,7 @@ class AppointmentDetailScreen extends StatefulWidget {
 }
 
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
-  final appointmentDetailsController = Get.find<AppointmentDetailsController>();
+  final appointmentDetailsController = CommonUtil().onInitAppointmentDetailsController();
   double imgContainerSize = 70.0;
   double imgSize = 30.0;
 
@@ -448,7 +448,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         Expanded(
           flex: 2,
           child: Text(
-            value,
+            appointmentDetailsController.checkIfEmptyString(value),
             textAlign: TextAlign.start,
             overflow: TextOverflow.visible,
             softWrap: true,
@@ -457,7 +457,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               fontSize: 13.0.sp,
               fontWeight: FontWeight.w600,
               color:
-                  value == "--" ? Colors.grey : Colors.black.withOpacity(0.7),
+                  appointmentDetailsController.checkIfEmptyString(value) == "--"
+                      ? Colors.grey
+                      : Colors.black.withOpacity(0.7),
             ),
           ),
         ),

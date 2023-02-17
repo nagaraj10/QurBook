@@ -2,17 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
 import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
-import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
@@ -118,7 +115,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   UpdateProvidersBloc updateProvidersBloc;
   bool teleHealthAlertShown = false;
 
-  var regController = Get.put(QurhomeRegimenController());
+  var regController = CommonUtil().onInitQurhomeRegimenController();
 
   @override
   void initState() {

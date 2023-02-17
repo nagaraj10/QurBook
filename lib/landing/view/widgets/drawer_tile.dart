@@ -9,6 +9,7 @@ class DrawerTile extends StatelessWidget {
     @required this.title,
     @required this.onPressed,
     this.icon,
+    this.isGreyout = false,
     this.iconWidget,
   });
 
@@ -16,6 +17,7 @@ class DrawerTile extends StatelessWidget {
   final String icon;
   final Widget iconWidget;
   final Function onPressed;
+  final bool isGreyout;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -23,9 +25,11 @@ class DrawerTile extends StatelessWidget {
           Divider(
             height: CommonUtil().isTablet ? 3.0.h : 1.0.h,
           ),
-          CommonUtil().isTablet ?SizedBoxWidget(
-            height: 4.0.h,
-          ):SizedBox.shrink(),
+          CommonUtil().isTablet
+              ? SizedBoxWidget(
+                  height: 4.0.h,
+                )
+              : SizedBox.shrink(),
           Material(
             color: Colors.transparent,
             child: ListTile(
@@ -43,14 +47,16 @@ class DrawerTile extends StatelessWidget {
                 title ?? '',
                 style: TextStyle(
                   fontSize: CommonUtil().isTablet ? 18.0.sp : 16.0.sp,
-                  color: Colors.black54,
+                  color: isGreyout ? Colors.grey : Colors.black54,
                 ),
               ),
             ),
           ),
-          CommonUtil().isTablet ?SizedBoxWidget(
-            height: 4.0.h,
-          ):SizedBox.shrink(),
+          CommonUtil().isTablet
+              ? SizedBoxWidget(
+                  height: 4.0.h,
+                )
+              : SizedBox.shrink(),
         ],
       );
 }

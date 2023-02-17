@@ -23,6 +23,7 @@ import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/video_call/model/UpdatedInfo.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
@@ -5511,7 +5512,7 @@ class CommonUtil {
     });
   }
 
-  static bool isNotINDReg() {
+  static bool isUSRegion() {
     try {
       bool value = false;
       if (CommonUtil.REGION_CODE != IND_REG) {
@@ -5534,6 +5535,23 @@ class CommonUtil {
     return appointmentDetailsController;
   }
 
+  QurhomeRegimenController onInitQurhomeRegimenController() {
+    QurhomeRegimenController qurhomeRegimenController;
+    if (!Get.isRegistered<QurhomeRegimenController>()) {
+      Get.put(QurhomeRegimenController());
+    }
+    qurhomeRegimenController = Get.find();
+    return qurhomeRegimenController;
+  }
+
+  void goToAppointmentDetailScreen(String appointmentId) {
+    if (!Get.isRegistered<AppointmentDetailsController>())
+      Get.lazyPut(() => AppointmentDetailsController());
+    AppointmentDetailsController appointmentDetailsController =
+    Get.find<AppointmentDetailsController>();
+    appointmentDetailsController.getAppointmentDetail(appointmentId);
+    Get.to(() => AppointmentDetailScreen());
+  }
 }
 
 
@@ -5586,7 +5604,7 @@ class VideoCallCommonUtils {
     final apiResponse = QurHomeApiProvider();
     await PreferenceUtil.init();
     //var regController = Get.put<QurhomeRegimenController>();
-    var regController = Get.put(QurhomeRegimenController());
+    var regController = CommonUtil().onInitQurhomeRegimenController();
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     var docName = regController.userName.value;
     var randomMID = getMyMeetingID();

@@ -1257,11 +1257,8 @@ class _NotificationScreen extends State<NotificationScreen> {
         break;
       case strAppointmentDetail:
         if ((result?.messageDetails?.payload?.appointmentId ?? '').isNotEmpty) {
-          if (!Get.isRegistered<AppointmentDetailsController>())
-            Get.lazyPut(() => AppointmentDetailsController());
-
           AppointmentDetailsController appointmentDetailsController =
-              Get.find<AppointmentDetailsController>();
+          CommonUtil().onInitAppointmentDetailsController();
           appointmentDetailsController.getAppointmentDetail(
               result?.messageDetails?.payload?.appointmentId ?? '');
           Get.to(() => AppointmentDetailScreen());
