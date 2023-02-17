@@ -622,12 +622,15 @@ class SheelaAIController extends GetxController {
               if (conversations.isNotEmpty &&
                   ((conversations.last?.buttons?.length ?? 0) > 0)) {
                 try {
-                  final responseRecived =
+                  var responseRecived =
                       response.toString().toLowerCase().trim();
 
                   var button = null;
 
                   if (!conversations?.last?.isButtonNumber) {
+                    if(responseRecived == carGiverSheela){
+                      responseRecived = careGiverSheela;
+                    }
                     button = conversations?.last?.buttons.firstWhere(
                         (element) =>
                             (element.title ?? "").toLowerCase() ==
