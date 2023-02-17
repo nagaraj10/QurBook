@@ -785,6 +785,9 @@ const String city = 'City';
 const String state = 'State';
 const String pincode = 'Pincode';
 
+const String carGiverSheela = 'cargiver';
+const String careGiverSheela = 'caregiver';
+
 Future<void> fbaLog({String eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(
