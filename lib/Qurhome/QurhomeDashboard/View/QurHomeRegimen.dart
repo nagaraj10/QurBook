@@ -11,7 +11,6 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
@@ -35,6 +34,8 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
@@ -53,7 +54,7 @@ class QurHomeRegimenScreen extends StatefulWidget {
 
 class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  final controller = Get.put(QurhomeRegimenController());
+  final controller = CommonUtil().onInitQurhomeRegimenController();
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
   String snoozeValue = "5 mins";
@@ -1677,9 +1678,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   void dispose() {
     try {
       if (animationController != null) {
+        animationController.removeListener(() {});
         animationController.dispose();
       }
-      _events.close();
+      _events?.close();
       WidgetsBinding.instance.removeObserver(this);
       super.dispose();
     } catch (e) {
@@ -1695,6 +1697,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       initSocketCountUnread();
     });
   }
+
 }
 
 class SOSAgentCallWidget extends StatelessWidget {

@@ -341,8 +341,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   @override
   void dispose() {
     try {
-      animationController.dispose();
-      _events.close();
+      animationController?.dispose();
+      _events?.close();
       super.dispose();
       fbaLog(eveName: 'qurbook_screen_event', eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -417,7 +417,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                 controllerGetx.loadingData.isTrue
                     ? SafeArea(
                         child: SizedBox(
-                          height: 1.sh / 1.3,
+                          height: 1.sh / 1.4,
                           child: Container(
                               child: Center(
                             child: CommonCircularQurHome(),
@@ -2460,7 +2460,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                       width: 2,
                                     ),
                                     Text(
-                                      unit != '' ? unit : '',
+                                      unit ?? '',
                                       style: TextStyle(
                                           color: Color(CommonUtil()
                                               .getQurhomePrimaryColor()),

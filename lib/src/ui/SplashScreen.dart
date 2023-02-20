@@ -700,12 +700,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': 'Appointment Detail Page',
                       });
                       if (passedValArr[2] != null) {
-                        if (!Get.isRegistered<AppointmentDetailsController>())
-                          Get.lazyPut(() => AppointmentDetailsController());
-
                         AppointmentDetailsController
                             appointmentDetailsController =
-                            Get.find<AppointmentDetailsController>();
+                        CommonUtil().onInitAppointmentDetailsController();
                         appointmentDetailsController
                             .getAppointmentDetail(passedValArr[2]);
                         Get.to(() => AppointmentDetailScreen()).then((value) =>

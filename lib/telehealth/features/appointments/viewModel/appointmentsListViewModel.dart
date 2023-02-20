@@ -53,39 +53,32 @@ class AppointmentsListViewModel extends ChangeNotifier {
     List<Past> dummySearchListHistory = List<Past>();
     AppointmentsData data = AppointmentsData();
     AppointmentsModel appointments = _appointmentsModel;
-    dummySearchListUpcoming = appointments.result.upcoming
-        .where((element) =>
-    element.doctorSessionId == null
-            ? element.healthOrganization?.name
-                ?.toLowerCase()
-                .trim()
-                .contains(query.toLowerCase().trim())
-            :element.doctor.user.firstName
-                .toLowerCase()
-                .trim()
-                .contains(query.toLowerCase().trim()) ||
-            element.doctor.user.lastName
-                .toLowerCase()
-                .trim()
-                .contains(query.toLowerCase().trim()))
-        .toList();
+    if (appointments.result?.upcoming != null &&
+        appointments.result?.upcoming.length > 0) {
+      for (Past element in appointments.result?.upcoming) {
+        try {
+          String name = '';
+          name = methodToGetTitle(element);
+          if (name?.toLowerCase().trim().contains(query.toLowerCase().trim())) {
+            dummySearchListUpcoming.add(element);
+          }
+        } catch (e) {}
+      }
+    }
 
-    dummySearchListHistory = appointments.result.past
-        .where((element) =>
-    element.doctorSessionId == null
-            ? element.healthOrganization?.name
-                ?.toLowerCase()
-                .trim()
-                .contains(query.toLowerCase().trim())
-            : element.doctor.user.firstName
-                .toLowerCase()
-                .trim()
-                .contains(query.toLowerCase().trim()) ||
-            element.doctor.user.lastName
-                .toLowerCase()
-                .trim()
-                .contains(query.toLowerCase().trim()))
-        .toList();
+    if (appointments.result?.past != null &&
+        appointments.result?.past.length > 0) {
+      for (Past element in appointments.result?.past) {
+        try {
+          String name = '';
+          name = methodToGetTitle(element);
+          if (name?.toLowerCase().trim().contains(query.toLowerCase().trim())) {
+            dummySearchListHistory.add(element);
+          }
+        } catch (e) {}
+      }
+    }
+
     data = AppointmentsData(
         upcoming: dummySearchListUpcoming, past: dummySearchListHistory);
     return AppointmentsData(
@@ -120,5 +113,36 @@ class AppointmentsListViewModel extends ChangeNotifier {
         dur.inHours >= 24 || int.parse(min) <= 0 ? Constants.STATIC_HOUR : min;
     time.daysCount = dys >= 0 ? dys.toString() : Constants.ZERO;
     return time;
+  }
+
+  String methodToGetTitle(Past element) {
+    String name = "";
+    if (element.doctorSessionId == null &&
+        element?.healthOrganization != null) {
+      name = element?.healthOrganization?.name?.capitalizeFirstofEach != null
+          ? element?.healthOrganization?.name?.capitalizeFirstofEach
+          : '';
+    } else if (element?.additionalinfo?.provider_name != null) {
+      name = element?.additionalinfo?.provider_name ?? '';
+    } else if (element.doctorSessionId == null &&
+        element?.healthOrganization == null) {
+      name = element?.additionalinfo?.title ?? '';
+    } else if (element.doctorSessionId != null &&
+        element?.doctor != null &&
+        element?.doctor?.user != null) {
+      name = element?.doctor?.user?.firstName != null
+          ? element?.doctor?.user?.firstName?.capitalizeFirstofEach +
+              ' ' +
+              element?.doctor?.user?.lastName?.capitalizeFirstofEach
+          : '';
+    }
+
+    if (name == '') {
+      if (element?.serviceCategory?.code == 'LAB') {
+        name = element?.additionalinfo?.lab_name ?? '';
+      }
+    }
+
+    return name;
   }
 }
