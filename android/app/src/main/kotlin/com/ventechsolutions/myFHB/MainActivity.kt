@@ -80,6 +80,7 @@ import com.ventechsolutions.myFHB.bluetooth.exception.BleException
 import com.ventechsolutions.myFHB.constants.Constants
 import com.ventechsolutions.myFHB.services.*
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
@@ -99,7 +100,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.experimental.and
 import kotlin.system.exitProcess
-import io.flutter.embedding.android.FlutterFragmentActivity
+
 
 class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
@@ -452,20 +453,6 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
             runOnUiThread {
 //                Toast.makeText(applicationContext, "Weight: "+p1?.toString(), Toast.LENGTH_SHORT).show()
-                if (ActivityCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return@runOnUiThread
-                }
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -530,20 +517,6 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             runOnUiThread {
 //                Toast.makeText(applicationContext, "BP: "+p1.toString(), Toast.LENGTH_SHORT).show()
 
-                if (ActivityCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return@runOnUiThread
-                }
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -613,20 +586,6 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
             runOnUiThread {
 //                Toast.makeText(applicationContext, "SPO2: "+p1.toString(), Toast.LENGTH_SHORT).show()
-                if (ActivityCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return@runOnUiThread
-                }
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -2553,7 +2512,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                         displayText?.setText("")
                         edit_view.clearFocus()
                         val imm: InputMethodManager =
-                            applicationContext.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                         var view = currentFocus
                         if (view == null) {
                             view = View(applicationContext)
