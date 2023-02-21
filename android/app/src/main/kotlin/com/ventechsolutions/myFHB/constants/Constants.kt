@@ -127,4 +127,8 @@ object Constants {
     val NOTIFICATIONLISTID = "notificationListId"
     val APPOINTMENT_DETAIL = "appointmentDetail"
 
+    val idSheela = "id"
+    val eidSheela = "eid"
+    val sayTextSheela = "saytext"
+
 }
