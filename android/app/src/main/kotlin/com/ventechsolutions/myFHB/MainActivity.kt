@@ -453,6 +453,20 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
             runOnUiThread {
 //                Toast.makeText(applicationContext, "Weight: "+p1?.toString(), Toast.LENGTH_SHORT).show()
+                if (ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return@runOnUiThread
+                }
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -517,6 +531,20 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             runOnUiThread {
 //                Toast.makeText(applicationContext, "BP: "+p1.toString(), Toast.LENGTH_SHORT).show()
 
+                if (ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return@runOnUiThread
+                }
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -586,6 +614,20 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
             runOnUiThread {
 //                Toast.makeText(applicationContext, "SPO2: "+p1.toString(), Toast.LENGTH_SHORT).show()
+                if (ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return@runOnUiThread
+                }
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
