@@ -78,6 +78,9 @@ import com.ventechsolutions.myFHB.bluetooth.callback.BleScanCallback
 import com.ventechsolutions.myFHB.bluetooth.data.BleDevice
 import com.ventechsolutions.myFHB.bluetooth.exception.BleException
 import com.ventechsolutions.myFHB.constants.Constants
+import com.ventechsolutions.myFHB.constants.Constants.eidSheela
+import com.ventechsolutions.myFHB.constants.Constants.idSheela
+import com.ventechsolutions.myFHB.constants.Constants.sayTextSheela
 import com.ventechsolutions.myFHB.services.*
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -1899,9 +1902,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
                     scheduleAppointment(retMap)
                     try {
-                        appointmentId = retMap["id"] as String
-                        eid = retMap["eid"] as String
-                        sayText = retMap["saytext"] as String
+                        appointmentId = retMap[idSheela] as String
+                        eid = retMap[eidSheela] as String
+                        sayText = retMap[sayTextSheela] as String
                     } catch (e: Exception) {
                     }
 
