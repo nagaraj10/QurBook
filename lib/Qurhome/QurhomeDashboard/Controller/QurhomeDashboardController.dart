@@ -147,10 +147,18 @@ class QurhomeDashboardController extends GetxController {
       const platform = MethodChannel(APPOINTMENT_DETAILS);
       platform.setMethodCallHandler((call) {
         if (call.method == APPOINTMENT_DETAILS) {
-          final data = Map<String, dynamic>.from(call.arguments);
-          print(data);
-
-          if (PreferenceUtil.getIfQurhomeisAcive()) {
+          if (sheelaAIController.isSheelaScreenActive) {
+            try {
+              var data = Map<String, dynamic>.from(call.arguments);
+              var reqJson = {
+                KIOSK_task: KIOSK_appointment_avail,
+                KIOSK_appoint_id: data[id_sheela] ?? ''.toString(),
+                KIOSK_eid: data[eid_sheela] ?? ''.toString(),
+                KIOSK_say_text: data[sayText_sheela] ?? ''.toString(),
+              };
+              CommonUtil().callQueueNotificationPostApi(reqJson);
+            } catch (e) {}
+          } else if (PreferenceUtil.getIfQurhomeisAcive()) {
             redirectToSheelaScheduleAppointment();
           }
         }
