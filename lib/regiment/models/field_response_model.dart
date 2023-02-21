@@ -86,7 +86,7 @@ class FieldModel {
   String amax;
   dynamic validation;
   dynamic seq;
-  String depth;
+  dynamic depth;
   DateTime ts;
   dynamic deleted;
   String value;
