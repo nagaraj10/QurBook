@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
@@ -50,7 +51,6 @@ class RegimentViewModel extends ChangeNotifier {
   String redirectEventId = '';
   ActivityStatus activityStatus = ActivityStatus.Loaded;
   List<String> cachedEvents = [];
-  String strText = "Once in a Plan";
 
   void updateInitialShowIndex({
     bool isDone = false,
