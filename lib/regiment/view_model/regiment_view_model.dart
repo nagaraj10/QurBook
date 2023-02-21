@@ -13,6 +13,7 @@ import '../models/save_response_model.dart';
 import '../service/regiment_service.dart';
 import '../../src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 
 enum RegimentMode { Schedule, Symptoms }
 
@@ -49,6 +50,7 @@ class RegimentViewModel extends ChangeNotifier {
   String redirectEventId = '';
   ActivityStatus activityStatus = ActivityStatus.Loaded;
   List<String> cachedEvents = [];
+  String strText = "Once in a Plan";
 
   void updateInitialShowIndex({
     bool isDone = false,
@@ -189,6 +191,9 @@ class RegimentViewModel extends ChangeNotifier {
       if (regimentFilter == RegimentFilter.Scheduled) {
         if (regimenData?.scheduled ?? false) {
           filteredRegimenList.add(regimenData);
+        } else if (regimenData.dayrepeat.trim().toLowerCase() ==
+            strText.trim().toLowerCase()) {
+          filteredRegimenList.add(regimenData);
         }
       } else if (regimentFilter == RegimentFilter.Missed) {
         if (!(regimenData?.asNeeded ?? false) &&
@@ -306,6 +311,9 @@ class RegimentViewModel extends ChangeNotifier {
       if (!(event?.isEventDisabled ?? false)) {
         if (event.isSymptom ?? false) {
           regimentsSymptomsList.add(event);
+        } else if (event.dayrepeat.trim().toLowerCase() ==
+            strText.trim().toLowerCase()) {
+          regimentsScheduledList.add(event);
         } else {
           regimentsScheduledList.add(event);
         }

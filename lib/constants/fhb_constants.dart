@@ -787,6 +787,7 @@ const String pincode = 'Pincode';
 
 const String carGiverSheela = 'cargiver';
 const String careGiverSheela = 'caregiver';
+const String strText = "Once in a Plan";
 
 Future<void> fbaLog({String eveName, eveParams}) async {
   try {
