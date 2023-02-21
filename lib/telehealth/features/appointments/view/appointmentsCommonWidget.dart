@@ -576,29 +576,9 @@ class AppointmentsCommonWidget {
 
   Widget getFirstLastNameText(Past doc) {
     if (doc.doctorSessionId == null && doc.healthOrganization != null) {
-      String strName = doc.healthOrganization.name ?? "";
-      String strName1 = "";
-      String strName2 = "";
-      try {
-        if (strName.contains(" ")) {
-          strName1 = strName.split(" ").first;
-          strName2 = strName.split(" ").last;
-        } else {
-          strName1 = strName;
-        }
-      } catch (e) {
-        //print(e);
-      }
-      return Text(
-        strName2.trim().isNotEmpty
-            ? strName1[0].toUpperCase() + strName2[0].toUpperCase()
-            : strName1[0].toUpperCase() + strName1[1]?.toUpperCase(),
-        style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
-          fontSize: 16.0.sp,
-          fontWeight: FontWeight.w400,
-        ),
-      );
+      return commonTextWidget(doc.healthOrganization.name ?? "");
+    } else if (doc?.additionalinfo?.provider_name != null) {
+      return commonTextWidget(doc?.additionalinfo?.provider_name ?? '');
     } else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
       return Text(
           (doc?.additionalinfo?.title != null &&
@@ -751,5 +731,16 @@ class AppointmentsCommonWidget {
       modeOfService = doc?.modeOfService?.name ?? '';
     }
     return modeOfService;
+  }
+
+  Widget commonTextWidget(String strText) {
+    return Text(
+      CommonUtil().getFirstAndLastName(strText),
+      style: TextStyle(
+        color: Color(CommonUtil().getMyPrimaryColor()),
+        fontSize: 16.0.sp,
+        fontWeight: FontWeight.w400,
+      ),
+    );
   }
 }
