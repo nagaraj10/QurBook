@@ -1,93 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:country_pickers/country.dart';
-import 'package:country_pickers/country_pickers.dart';
+import 'package:myfhb/authentication/model/Country.dart';
 import '../constants/constants.dart' as constants;
 import '../../common/CommonUtil.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class CountryCodePickerPage extends StatefulWidget {
-  CountryCodePickerPage(
-      {@required this.selectedDialogCountry, this.onValuePicked});
+  CountryCodePickerPage({
+    @required this.onValuePicked,
+    @required this.selectedCountry,
+  });
 
-  Country selectedDialogCountry;
-  var onValuePicked;
-
+  Function onValuePicked;
+  Country selectedCountry;
   @override
   _CountryCodePickerState createState() => _CountryCodePickerState();
 }
 
 class _CountryCodePickerState extends State<CountryCodePickerPage> {
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => Theme(
-            data: Theme.of(context).copyWith(primaryColor: Colors.black),
-            child: CountryPickerDialog(
-              titlePadding: EdgeInsets.all(8),
-              searchCursorColor: Color(CommonUtil().getMyPrimaryColor()),
-              searchInputDecoration: InputDecoration(
-                  hintText: constants.strSearchCountry,
-                  hintStyle: TextStyle(
-                      fontSize: 15.0.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black)),
-              isSearchable: true,
-              title: Text(
-                constants.strSearchCountryLabel,
-                style: TextStyle(color: Colors.black, fontSize: 15.0.sp),
+  Widget build(BuildContext context) => Center(
+        child: PopupMenuButton(
+          initialValue: widget.selectedCountry.phoneCode,
+          onSelected: (item) {
+            Country selected;
+            if (item == CountryCode.IN) {
+              selected = Country(
+                countryCode: CountryCode.IN,
+                phoneCode: "+91",
+                name: "India",
+              );
+            } else {
+              selected = Country(
+                countryCode: CountryCode.US,
+                phoneCode: "+1",
+                name: "US",
+              );
+            }
+            widget.onValuePicked(selected);
+            // setState(() {
+            //   widget.selectedCountry = selected;
+            // });
+          },
+          itemBuilder: (context) => <PopupMenuEntry>[
+            PopupMenuItem(
+              value: CountryCode.IN,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 2,
+                    ),
+                    child: Text(
+                      '+(91)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  const Text('India'),
+                  const Spacer(
+                    flex: 2,
+                  ),
+                ],
               ),
-              onValuePicked: widget.onValuePicked,
-              itemBuilder: _buildDialogItem,
-              priorityList: [
-                CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE),
-              ],
             ),
-          ),
-        );
-      },
-      child: Container(child: _buildItem(widget.selectedDialogCountry)),
-    );
-  }
-
-  Widget _buildItem(Country country) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(width: 8.0.w),
-          Text(
-            "${'+'}(${country.phoneCode}) ",
-            style: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black),
-          ),
-          Icon(
-            Icons.keyboard_arrow_down,
-            color: Colors.black,
-            size: 20.0.sp,
-          ),
-          SizedBox(width: 8.0.w),
-        ],
-      );
-
-  Widget _buildDialogItem(Country country) => Row(
-        children: <Widget>[
-          CountryPickerUtils.getDefaultFlagImage(country),
-          SizedBox(width: 10.0.w),
-          Text("${'+'}${country.phoneCode}",
+            PopupMenuItem(
+              value: CountryCode.US,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 2,
+                    ),
+                    child: Text(
+                      '+(1)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  const Text('US'),
+                  const Spacer(
+                    flex: 2,
+                  ),
+                ],
+              ),
+            ),
+          ],
+          child: Text(widget.selectedCountry.phoneCode,
               style: TextStyle(
-                  fontSize: 15.0.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black)),
-          SizedBox(width: 10.0.w),
-          Flexible(
-              child: Text(country.name,
-                  style: TextStyle(
-                      fontSize: 15.0.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black)))
-        ],
+                fontSize: 16.0.sp,
+              )),
+        ),
       );
 }
