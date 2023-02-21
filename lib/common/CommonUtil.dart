@@ -5606,6 +5606,30 @@ class CommonUtil {
     appointmentDetailsController.getAppointmentDetail(appointmentId);
     Get.to(() => AppointmentDetailScreen());
   }
+
+  String getFirstAndLastName(String strText) {
+    String strName = strText;
+    String strName1 = "";
+    String strName2 = "";
+    try {
+      if (strName.contains(" ")) {
+        strName1 = strName.split(" ").first;
+        strName2 = strName.split(" ").last;
+      } else {
+        strName1 = strName;
+      }
+      return strName2.trim().isNotEmpty
+          ? strName1[0].toUpperCase() + strName2[0].toUpperCase()
+          : strName1.trim().isNotEmpty
+              ? strName1[0].toUpperCase()
+              : "";
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
+    return strName.trim().isNotEmpty ? strName[0].toUpperCase() : "";
+  }
 }
 
 extension CapExtension on String {
