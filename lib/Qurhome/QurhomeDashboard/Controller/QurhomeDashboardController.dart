@@ -147,6 +147,9 @@ class QurhomeDashboardController extends GetxController {
       const platform = MethodChannel(APPOINTMENT_DETAILS);
       platform.setMethodCallHandler((call) {
         if (call.method == APPOINTMENT_DETAILS) {
+          final data = Map<String, dynamic>.from(call.arguments);
+          print(data);
+
           if (PreferenceUtil.getIfQurhomeisAcive()) {
             redirectToSheelaScheduleAppointment();
           }
