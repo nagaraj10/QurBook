@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 
 import '../../../QurHub/Controller/HubListViewController.dart';
 import '../../../common/CommonUtil.dart';
@@ -24,6 +25,7 @@ class QurhomeDashboardController extends GetxController {
   HubListViewController hubController;
   SheelaBLEController _sheelaBLEController;
   Timer _bleTimer;
+  SheelaAIController sheelaAIController = Get.put(SheelaAIController());
 
   @override
   void onInit() {
@@ -115,6 +117,7 @@ class QurhomeDashboardController extends GetxController {
   }
 
   void getValuesNativeAppointment() {
+    bool isFirstTime = true;
     _appointmentSubscription ??=
         streamAppointment.receiveBroadcastStream().listen((val) {
       print(val);
@@ -122,8 +125,19 @@ class QurhomeDashboardController extends GetxController {
       if ((receivedValues ?? []).length > 0) {
         switch ((receivedValues.first ?? "")) {
           case "scheduleAppointment":
-            if (PreferenceUtil.getIfQurhomeisAcive()) {
-              redirectToSheelaScheduleAppointment();
+            if (isFirstTime) {
+              isFirstTime = false;
+              if (sheelaAIController.isSheelaScreenActive) {
+                var reqJson = {
+                  KIOSK_task: KIOSK_appointment_avail,
+                  KIOSK_appoint_id: receivedValues[1] ?? ''.toString(),
+                  KIOSK_eid: receivedValues[2] ?? ''.toString(),
+                  KIOSK_say_text: receivedValues[3] ?? ''.toString(),
+                };
+                CommonUtil().callQueueNotificationPostApi(reqJson);
+              } else if (PreferenceUtil.getIfQurhomeisAcive()) {
+                redirectToSheelaScheduleAppointment();
+              }
             }
             break;
         }
