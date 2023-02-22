@@ -477,8 +477,8 @@ class ChatState extends State<ChatDetail> {
                     null) {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.patient?.payload[0]?.deviceTokenId;
-            } else if (appointmentResult
-                    ?.deviceToken?.parentMember?.isSuccess &&
+            } else if ((appointmentResult
+                ?.deviceToken?.parentMember?.isSuccess??false) &&
                 appointmentResult
                     ?.deviceToken?.parentMember?.payload?.isNotEmpty &&
                 appointmentResult?.deviceToken?.parentMember?.payload[0]
