@@ -844,7 +844,7 @@ class _ChatUserListState extends State<ChatUserList> {
                   child: Column(
                     children: [
                       Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 8, 4, 4),
+                          padding: const EdgeInsets.fromLTRB(0, 8, 4, 0),
                           child: (userChatList?.unReadCount != null &&
                                   userChatList?.unReadCount != '' &&
                                   !userChatList?.unReadCount?.contains('0'))
@@ -871,7 +871,18 @@ class _ChatUserListState extends State<ChatUserList> {
                                     ],
                                   ),
                                 )
-                              : Text(''))
+                              : Text('')),
+                      if (CommonUtil.isUSRegion() &&
+                              userChatList?.isPrimaryCareCoordinator ??
+                          false)
+                        Container(
+                          child: Text(primary_chat,
+                              style: TextStyle(
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w600)),
+                        ),
                     ],
                   ),
                 )
