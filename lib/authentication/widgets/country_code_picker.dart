@@ -97,7 +97,7 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
                         width: 10,
                       ),
                       const Text(
-                        'US',
+                        'United States',
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 13,
