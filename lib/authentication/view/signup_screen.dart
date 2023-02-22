@@ -388,7 +388,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
       LoaderClass.showLoadingDialog(context);
       var user3 = UserContactCollection3();
       user3.phoneNumber =
-          '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
+          '${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
       user3.email = emailController.text.trim();
       user3.isPrimary = true;
       userCollection.add(user3);
@@ -418,16 +418,18 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     LoaderClass.hideLoadingDialog(context);
     if (response.isSuccess) {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => VerifyPatient(
-                    PhoneNumber:
-                        '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}',
-                    from: strFromSignUp,
-                    userConfirm: false,
-                    fromSignUp: true,
-                    emailId: emailController.text.trim(),
-                  )));
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerifyPatient(
+            PhoneNumber:
+                '${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}',
+            from: strFromSignUp,
+            userConfirm: false,
+            fromSignUp: true,
+            emailId: emailController.text.trim(),
+          ),
+        ),
+      );
     } else {
       toast.getToastWithBuildContext(response.message, Colors.red, context);
     }
