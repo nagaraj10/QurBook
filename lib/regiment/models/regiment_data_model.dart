@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/Status.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 
 class RegimentDataModel {
   RegimentDataModel(
@@ -60,7 +61,8 @@ class RegimentDataModel {
       this.seq,
       this.doctorSessionId,
       this.serviceCategory,
-      this.modeOfService});
+      this.modeOfService,
+      this.dayrepeat});
 
   final dynamic eid;
   final dynamic id;
@@ -117,6 +119,7 @@ class RegimentDataModel {
   final dynamic doctorSessionId;
   final ServiceCategory serviceCategory;
   final ServiceCategory modeOfService;
+  final dynamic dayrepeat;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -166,8 +169,11 @@ class RegimentDataModel {
                 ((json['dosemeal'] ?? 0).toString() == '128')) &&
             (activitynameValues.map[json['activityname']] ==
                 Activityname.SYMPTOM),
-        asNeeded: (((json['dosemeal'] ?? 0).toString() == '64') ||
-            ((json['dosemeal'] ?? 0).toString() == '128')),
+        asNeeded: (json['hour_repeat'].trim().toLowerCase() ==
+                Constants.strText.trim().toLowerCase())
+            ? false
+            : (((json['dosemeal'] ?? 0).toString() == '64') ||
+                ((json['dosemeal'] ?? 0).toString() == '128')),
         scheduled: ((json['dosemeal'] ?? 0).toString() != '64') &&
             ((json['dosemeal'] ?? 0).toString() != '128'),
         doseRepeat: json['doserepeat'],
@@ -193,6 +199,7 @@ class RegimentDataModel {
         modeOfService: json['modeOfService'] != null
             ? new ServiceCategory.fromJson(json['modeOfService'])
             : null,
+        dayrepeat: json['hour_repeat'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -244,6 +251,7 @@ class RegimentDataModel {
         'doctorSessionId': doctorSessionId,
         'serviceCategory': serviceCategory.toJson(),
         'modeOfService': modeOfService.toJson(),
+        'hour_repeat': dayrepeat,
       };
 }
 
