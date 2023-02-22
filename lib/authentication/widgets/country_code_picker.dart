@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/authentication/model/Country.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import '../constants/constants.dart' as constants;
 import '../../common/CommonUtil.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -20,6 +21,14 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
   @override
   Widget build(BuildContext context) => Center(
         child: PopupMenuButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              20,
+            ),
+          ),
+          padding: const EdgeInsets.all(10),
+          elevation: 10,
+          color: Colors.grey.shade100,
           initialValue: widget.selectedCountry.phoneCode,
           onSelected: (item) {
             Country selected;
@@ -43,62 +52,71 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
           },
           itemBuilder: (context) => <PopupMenuEntry>[
             PopupMenuItem(
-              value: CountryCode.IN,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 2,
+                value: CountryCode.IN,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Image(
+                          image: AssetImage(icon_IndianFlag),
+                          width: 20,
+                          height: 20,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Text(
+                          'India',
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      '+(91)',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0.sp,
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  const Text('India'),
-                  const Spacer(
-                    flex: 2,
-                  ),
-                ],
-              ),
-            ),
+                    Divider()
+                  ],
+                )),
             PopupMenuItem(
               value: CountryCode.US,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 2,
-                    ),
-                    child: Text(
-                      '+(1)',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0.sp,
+                  Row(
+                    children: [
+                      const Image(
+                        image: AssetImage(
+                          icon_USAFlag,
+                        ),
+                        width: 20,
+                        height: 20,
                       ),
-                    ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        'US',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
-                  const Spacer(),
-                  const Text('US'),
-                  const Spacer(
-                    flex: 2,
-                  ),
+                  const Divider()
                 ],
               ),
             ),
           ],
-          child: Text(widget.selectedCountry.phoneCode,
-              style: TextStyle(
-                fontSize: 16.0.sp,
-              )),
+          child: Text(
+            widget.selectedCountry.phoneCode,
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+          ),
         ),
       );
 }
