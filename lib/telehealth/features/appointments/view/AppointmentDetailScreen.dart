@@ -322,7 +322,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             commonWidgetForTitleValue(parameters.dateAndTime,
                 appointmentDetailsController.scheduleDateTime.value),
             appointmentDetailsController.appointmentType.value.toLowerCase() ==
-                    "doctor appointment"
+                strDoctorAppointment
                 ? Column(
                     children: [
                       SizedBox(height: 5.h),
@@ -351,7 +351,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   showWidget() {
     switch (appointmentDetailsController.appointmentType.value.toLowerCase()) {
-      case "lab appointment":
+      case strLabAppointment:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -363,7 +363,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ],
         );
         break;
-      case "homecare service":
+      case strHomecareService:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -378,7 +378,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ],
         );
         break;
-      case "transportation":
+      case strTransportation:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -396,7 +396,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ],
         );
         break;
-      case "doctor appointment":
+      case strDoctorAppointment:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
