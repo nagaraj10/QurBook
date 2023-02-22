@@ -583,11 +583,13 @@ class AppointmentsCommonWidget {
       return Text(
           (doc?.additionalinfo?.title != null &&
                   doc?.additionalinfo?.title != '')
-              ? doc?.additionalinfo?.title[0].toUpperCase() ?? ''
+              ? CommonUtil()
+                  .getFirstAndLastName(doc?.additionalinfo?.title ?? '')
               : (doc?.serviceCategory?.code == 'LAB')
                   ? (doc?.additionalinfo?.lab_name != null &&
                           doc?.additionalinfo?.lab_name != '')
-                      ? doc?.additionalinfo?.lab_name[0].toUpperCase()
+                      ? CommonUtil().getFirstAndLastName(
+                          doc?.additionalinfo?.lab_name ?? '')
                       : ''
                   : '',
           style: TextStyle(
