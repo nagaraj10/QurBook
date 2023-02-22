@@ -1,10 +1,9 @@
-import 'package:country_pickers/country.dart';
-import 'package:country_pickers/country_pickers.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/authentication/model/Country.dart';
 import '../model/patientlogin_model.dart';
 import '../constants/constants.dart';
 import 'authentication_validator.dart';
@@ -34,8 +33,7 @@ class PatientSignInScreen extends StatefulWidget {
 }
 
 class _PatientSignInScreenState extends State<PatientSignInScreen> {
-  Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+  Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
   final numberController = TextEditingController();
   final passwordController = TextEditingController();
   var isLoading = false;
@@ -129,13 +127,15 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                   counterText: "",
                                   prefixIcon: Container(
                                     constraints: BoxConstraints(
-                                        maxWidth: 100.0.w, minWidth: 50.0.w),
+                                      maxWidth: 50.0.w,
+                                      minWidth: 50.0.w,
+                                    ),
                                     child: CountryCodePickerPage(
-                                        onValuePicked: (country) => setState(
-                                            () => _selectedDialogCountry =
-                                                country),
-                                        selectedDialogCountry:
-                                            _selectedDialogCountry),
+                                      selectedCountry: _selectedDialogCountry,
+                                      onValuePicked: (country) => setState(
+                                        () => _selectedDialogCountry = country,
+                                      ),
+                                    ),
                                   ),
                                   hintText: strNewPhoneHint,
                                   labelText: strNumberHint,
