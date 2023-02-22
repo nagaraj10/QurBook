@@ -792,6 +792,8 @@ const String id_sheela = 'id';
 const String eid_sheela = 'eid';
 const String sayText_sheela = 'saytext';
 
+const String primary_chat = '(Primary)';
+
 
 
 Future<void> fbaLog({String eveName, eveParams}) async {
