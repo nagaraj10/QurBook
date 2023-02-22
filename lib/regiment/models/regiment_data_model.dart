@@ -9,6 +9,7 @@ import '../../../constants/fhb_constants.dart' as Constants;
 class RegimentDataModel {
   RegimentDataModel(
       {this.eid,
+      this.id,
       this.providerid,
       this.uid,
       this.title,
@@ -64,6 +65,7 @@ class RegimentDataModel {
       this.dayrepeat});
 
   final dynamic eid;
+  final dynamic id;
   final dynamic providerid;
   final dynamic uid;
   final dynamic title;
@@ -122,6 +124,7 @@ class RegimentDataModel {
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
         eid: json['eid'],
+        id: json['id'],
         providerid: json['providerid'],
         uid: json['uid'],
         title: json['title'],
@@ -201,6 +204,7 @@ class RegimentDataModel {
 
   Map<String, dynamic> toJson() => {
         'eid': eid,
+        'id': id,
         'providerid': providerid,
         'uid': uid,
         'title': title,

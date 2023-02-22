@@ -704,7 +704,8 @@ import LS202_DeviceManager
         if let userInfo = notification.request.content.userInfo as? NSDictionary,let type = userInfo["activityname_orig"] as? String,type.lowercased() == "appointment",let controller = navigationController?.children.first as? FlutterViewController{
             print("Inside the notification")
             let notificationChannel = FlutterMethodChannel.init(name: Constants.appointmentDetailsMethodAndChannel, binaryMessenger: controller.binaryMessenger)
-            notificationChannel.invokeMethod(Constants.appointmentDetailsMethodAndChannel, arguments: Constants.appointmentDetailsMethodAndChannel)
+
+            notificationChannel.invokeMethod(Constants.appointmentDetailsMethodAndChannel, arguments: userInfo)
             completionHandler([])
             
         }else if let userInfo = notification.request.content.userInfo as? NSDictionary,
