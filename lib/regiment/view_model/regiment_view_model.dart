@@ -191,7 +191,7 @@ class RegimentViewModel extends ChangeNotifier {
       if (regimentFilter == RegimentFilter.Scheduled) {
         if (regimenData?.scheduled ?? false) {
           filteredRegimenList.add(regimenData);
-        } else if (regimenData.dayrepeat.trim().toLowerCase() ==
+        } else if (regimenData?.dayrepeat?.trim().toLowerCase() ==
             strText.trim().toLowerCase()) {
           filteredRegimenList.add(regimenData);
         }
@@ -311,8 +311,9 @@ class RegimentViewModel extends ChangeNotifier {
       if (!(event?.isEventDisabled ?? false)) {
         if (event.isSymptom ?? false) {
           regimentsSymptomsList.add(event);
-        } else if (event.dayrepeat.trim().toLowerCase() ==
-            strText.trim().toLowerCase()) {
+        } else if ((event?.dayrepeat != null) ??
+            event?.dayrepeat?.trim().toLowerCase() ==
+                strText.trim().toLowerCase()) {
           regimentsScheduledList.add(event);
         } else {
           regimentsScheduledList.add(event);
