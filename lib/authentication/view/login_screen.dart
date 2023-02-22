@@ -291,14 +291,12 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
       _loginKey.currentState.save();
       LoaderClass.showLoadingDialog(context);
       var logInModel = PatientLogIn(
-        userName:
-            '$strPlusSymbol${_selectedDialogCountry.phoneCode}${numberController.text}',
+        userName: '${_selectedDialogCountry.phoneCode}${numberController.text}',
         password: passwordController.text,
         source: strSource,
       );
       final map = logInModel.toJson();
       final response = await authViewModel.loginPatient(map);
-      //print(response.toString());
       dataForResendOtp = map;
       //_checkResponse(response);
       _checkifItsGuest(response);
@@ -317,7 +315,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
           MaterialPageRoute(
               builder: (context) => VerifyPatient(
                     PhoneNumber:
-                        '$strPlusSymbol${_selectedDialogCountry.phoneCode}${numberController.text}',
+                        '${_selectedDialogCountry.phoneCode}${numberController.text}',
                     from: strFromLogin,
                     userConfirm: false,
                     dataForResendOtp: dataForResendOtp,
