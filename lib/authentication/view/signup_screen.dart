@@ -1,10 +1,9 @@
-import 'package:country_pickers/country.dart';
-import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/authentication/model/Country.dart';
 import '../model/patientsignup_model.dart';
 import '../constants/constants.dart';
 import 'authentication_validator.dart';
@@ -39,8 +38,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   List<UserContactCollection3> userCollection;
   AuthViewModel authViewModel;
   var checkedValue = true;
-  Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+  Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
 
   bool _isHidden = true;
 
@@ -188,13 +186,15 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   counterText: "",
                                   prefixIcon: Container(
                                     constraints: BoxConstraints(
-                                        maxWidth: 100.0.w, minWidth: 50.0.w),
+                                      maxWidth: 50.0.w,
+                                      minWidth: 50.0.w,
+                                    ),
                                     child: CountryCodePickerPage(
-                                        onValuePicked: (country) => setState(
-                                            () => _selectedDialogCountry =
-                                                country),
-                                        selectedDialogCountry:
-                                            _selectedDialogCountry),
+                                      selectedCountry: _selectedDialogCountry,
+                                      onValuePicked: (country) => setState(
+                                        () => _selectedDialogCountry = country,
+                                      ),
+                                    ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -388,7 +388,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
       LoaderClass.showLoadingDialog(context);
       var user3 = UserContactCollection3();
       user3.phoneNumber =
-          '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
+          '${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
       user3.email = emailController.text.trim();
       user3.isPrimary = true;
       userCollection.add(user3);
@@ -418,16 +418,18 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     LoaderClass.hideLoadingDialog(context);
     if (response.isSuccess) {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => VerifyPatient(
-                    PhoneNumber:
-                        '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}',
-                    from: strFromSignUp,
-                    userConfirm: false,
-                    fromSignUp: true,
-                    emailId: emailController.text.trim(),
-                  )));
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerifyPatient(
+            PhoneNumber:
+                '${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}',
+            from: strFromSignUp,
+            userConfirm: false,
+            fromSignUp: true,
+            emailId: emailController.text.trim(),
+          ),
+        ),
+      );
     } else {
       toast.getToastWithBuildContext(response.message, Colors.red, context);
     }
