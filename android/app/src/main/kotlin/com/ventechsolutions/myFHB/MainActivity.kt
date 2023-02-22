@@ -78,6 +78,9 @@ import com.ventechsolutions.myFHB.bluetooth.callback.BleScanCallback
 import com.ventechsolutions.myFHB.bluetooth.data.BleDevice
 import com.ventechsolutions.myFHB.bluetooth.exception.BleException
 import com.ventechsolutions.myFHB.constants.Constants
+import com.ventechsolutions.myFHB.constants.Constants.eidSheela
+import com.ventechsolutions.myFHB.constants.Constants.idSheela
+import com.ventechsolutions.myFHB.constants.Constants.sayTextSheela
 import com.ventechsolutions.myFHB.services.*
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -183,7 +186,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private lateinit var dialog: Dialog
     private lateinit var countDownTimerDialog: Dialog
 
-    var countDown : CountDownTimer? = null
+    var countDown: CountDownTimer? = null
 
     //private lateinit var builder: AlertDialog.Builder
     internal lateinit var displayText: EditText
@@ -265,12 +268,16 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private var gManager: GoldenBLEDeviceManager? = null
     private var gManagerBP: com.gsh.bloodpressure.api.GoldenBLEDeviceManager? = null
     private var gManagerFat: com.gsh.weightscale.api.GoldenBLEDeviceManager? = null
-    private var selectedBle=""
+    private var selectedBle = ""
+
+    private var appointmentId = ""
+    private var eid = ""
+    private var sayText = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setAutoInitEnabled(true)
-        OHQDeviceManager.init(applicationContext,this)
+        OHQDeviceManager.init(applicationContext, this)
         registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 //            val alarmManager = ContextCompat.getSystemService(context, AlarmManager::class.java)
@@ -388,8 +395,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 speechRecognizer?.cancel()
                 speechRecognizer?.destroy()
                 _result?.success(displayText.text.toString())
-                _result=null
-                finalWords=""
+                _result = null
+                finalWords = ""
                 dialog.dismiss()
                 spin_kit.visibility = View.VISIBLE
                 displayText?.setText("")
@@ -428,148 +435,163 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.e("mainActivitycalled", "mainActivitycalled")
             if (::scheduleAppointmentChannel.isInitialized) {
-                scheduleAppointmentChannel.success("scheduleAppointment|success")
+                scheduleAppointmentChannel.success("scheduleAppointment|${appointmentId}|${eid}|${sayText}")
             }
         }
     }
 
 
-    var gCallbackFat:com.gsh.weightscale.api.GoldenBLEDeviceManagerCallback = object : com.gsh.weightscale.api.GoldenBLEDeviceManagerCallback{
-        override fun onSupootBluetooth(p0: Boolean) {
-
-        }
-
-        override fun onBluetoothAvailable(p0: Boolean) {
-
-        }
-
-        override fun onDiscoverDevice(p0: BluetoothDevice?) {
-            runOnUiThread {
-//                Toast.makeText(applicationContext, "Weight: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
-            runOnUiThread {
-//                Toast.makeText(applicationContext, "Weight: "+p1?.toString(), Toast.LENGTH_SHORT).show()
-                bleName = p0?.name
-                var bleMacId: String
-                bleMacId = p0?.address.toString()
-                var bleDeviceType: String
-                bleDeviceType = "weight"
-                if(p1==BluetoothStatus.BLE_STATUS_CONNECTED){
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("macid|" + bleMacId)
-                    }
-                    sendPost("Connected", DEVICE_WT, 0, 0, 0)
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
-                    }
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
-                    }
-                }else if(p1== BluetoothStatus.BLE_STATUS_CONNECTING){
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("scanstarted|connection started")
-                    }
-                }
+    var gCallbackFat: com.gsh.weightscale.api.GoldenBLEDeviceManagerCallback =
+        object : com.gsh.weightscale.api.GoldenBLEDeviceManagerCallback {
+            override fun onSupootBluetooth(p0: Boolean) {
 
             }
-        }
 
-        override fun onReceiveMeasurementData(p0: BluetoothDevice?, p1: WeightData?) {
-            try {
+            override fun onBluetoothAvailable(p0: Boolean) {
+
+            }
+
+            override fun onDiscoverDevice(p0: BluetoothDevice?) {
                 runOnUiThread {
-                    if (p1 != null) {
-//                        Toast.makeText(applicationContext, "Weight: "+p1.weight.toString(), Toast.LENGTH_SHORT).show()
-                        uploaded = 1
-                        sendPost("Measurement", DEVICE_WT, 0, 0, 0, weight = p1.weight)
+//                Toast.makeText(applicationContext, "Weight: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onConnectStatusChange(
+                p0: BluetoothDevice?,
+                p1: BluetoothStatus?,
+                p2: Int
+            ) {
+                runOnUiThread {
+//                Toast.makeText(applicationContext, "Weight: "+p1?.toString(), Toast.LENGTH_SHORT).show()
+                    bleName = p0?.name
+                    var bleMacId: String
+                    bleMacId = p0?.address.toString()
+                    var bleDeviceType: String
+                    bleDeviceType = "weight"
+                    if (p1 == BluetoothStatus.BLE_STATUS_CONNECTED) {
                         if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("measurement|" + postBleData)
+                            BLEEventChannel.success("macid|" + bleMacId)
+                        }
+                        sendPost("Connected", DEVICE_WT, 0, 0, 0)
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                        }
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                        }
+                    } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("scanstarted|connection started")
                         }
                     }
+
                 }
-            }catch (e:Exception){
+            }
+
+            override fun onReceiveMeasurementData(p0: BluetoothDevice?, p1: WeightData?) {
+                try {
+                    runOnUiThread {
+                        if (p1 != null) {
+//                        Toast.makeText(applicationContext, "Weight: "+p1.weight.toString(), Toast.LENGTH_SHORT).show()
+                            uploaded = 1
+                            sendPost("Measurement", DEVICE_WT, 0, 0, 0, weight = p1.weight)
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("measurement|" + postBleData)
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
 //                Toast.makeText(
 //                    applicationContext,
 //                    "try catch in onReceiveMeasurementData weight",
 //                    Toast.LENGTH_SHORT
 //                ).show()
+                }
+
+            }
+
+            override fun showLogMessage(p0: String?) {
+
             }
 
         }
 
-        override fun showLogMessage(p0: String?) {
-
-        }
-
-    }
-
-    var gCallBackBP:com.gsh.bloodpressure.api.GoldenBLEDeviceManagerCallback = object : com.gsh.bloodpressure.api.GoldenBLEDeviceManagerCallback{
-        override fun onDiscoverDevice(p0: BluetoothDevice?) {
-            runOnUiThread {
+    var gCallBackBP: com.gsh.bloodpressure.api.GoldenBLEDeviceManagerCallback =
+        object : com.gsh.bloodpressure.api.GoldenBLEDeviceManagerCallback {
+            override fun onDiscoverDevice(p0: BluetoothDevice?) {
+                runOnUiThread {
 //                Toast.makeText(applicationContext, "BP: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
+                }
             }
-        }
 
-        override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
-            runOnUiThread {
+            override fun onConnectStatusChange(
+                p0: BluetoothDevice?,
+                p1: BluetoothStatus?,
+                p2: Int
+            ) {
+                runOnUiThread {
 //                Toast.makeText(applicationContext, "BP: "+p1.toString(), Toast.LENGTH_SHORT).show()
 
-                bleName = p0?.name
-                var bleMacId: String
-                bleMacId = p0?.address.toString()
-                var bleDeviceType: String
-                bleDeviceType = "BP"
-                if(p1==BluetoothStatus.BLE_STATUS_CONNECTED){
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("macid|" + bleMacId)
+                    bleName = p0?.name
+                    var bleMacId: String
+                    bleMacId = p0?.address.toString()
+                    var bleDeviceType: String
+                    bleDeviceType = "BP"
+                    if (p1 == BluetoothStatus.BLE_STATUS_CONNECTED) {
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("macid|" + bleMacId)
+                        }
+                        sendPost("Connected", DEVICE_BP, 0, 0, 0)
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                        }
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                        }
+                    } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("scanstarted|connection started")
+                        }
                     }
-                    sendPost("Connected", DEVICE_BP, 0, 0, 0)
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
-                    }
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
-                    }
-                }else if(p1==BluetoothStatus.BLE_STATUS_CONNECTING){
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("scanstarted|connection started")
-                    }
+
                 }
-
             }
-        }
 
-        override fun onReceiveMeasurementData(p0: BluetoothDevice?, dia: Int, sis: Int, pulse: Int) {
-            try {
-                runOnUiThread {
-                    uploaded = 1
-                    sendPost("Measurement", DEVICE_BP, sis, dia, pulse)
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("measurement|" + postBleData)
-                    }
+            override fun onReceiveMeasurementData(
+                p0: BluetoothDevice?,
+                dia: Int,
+                sis: Int,
+                pulse: Int
+            ) {
+                try {
+                    runOnUiThread {
+                        uploaded = 1
+                        sendPost("Measurement", DEVICE_BP, sis, dia, pulse)
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("measurement|" + postBleData)
+                        }
 //                    Toast.makeText(applicationContext, "BP: dia: "+dia.toString()+" sis: "+sis.toString()+" pulse: "+pulse.toString(), Toast.LENGTH_SHORT).show()
 
-                }
-            }catch(e:Exception) {
+                    }
+                } catch (e: Exception) {
 //                Toast.makeText(
 //                    applicationContext,
 //                    "try catch in onReceiveMeasurementData bp",
 //                    Toast.LENGTH_SHORT
 //                ).show()
+                }
+
+
             }
 
+            override fun showLogMessage(p0: String?) {
 
+            }
         }
-
-        override fun showLogMessage(p0: String?) {
-
-        }
-    }
     var WOWGoDataUpload = 0
 
-    var gCallback: GoldenBLEDeviceManagerCallback =object : GoldenBLEDeviceManagerCallback{
+    var gCallback: GoldenBLEDeviceManagerCallback = object : GoldenBLEDeviceManagerCallback {
 
         override fun onDiscoverDevice(p0: BluetoothDevice?) {
             runOnUiThread {
@@ -590,7 +612,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 bleMacId = p0?.address.toString()
                 var bleDeviceType: String
                 bleDeviceType = "SPO2"
-                if(p1==BluetoothStatus.BLE_STATUS_CONNECTED){
+                if (p1 == BluetoothStatus.BLE_STATUS_CONNECTED) {
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("macid|" + bleMacId)
                     }
@@ -603,7 +625,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (::BLEEventChannel.isInitialized && WOWGoDataUpload == 0) {
                         BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
                     }
-                }else if(p1==BluetoothStatus.BLE_STATUS_CONNECTING){
+                } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("scanstarted|connection started")
                     }
@@ -615,13 +637,13 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         }
 
         override fun onReceiveSPO2MeasurementData(p0: BluetoothDevice?, spo2: Int, pulseRate: Int) {
-            try{
+            try {
                 runOnUiThread {
-                    if(spo2 < 101 && pulseRate != 127 && pulseRate != 255 && WOWGoDataUpload == 0 ) {
+                    if (spo2 < 101 && pulseRate != 127 && pulseRate != 255 && WOWGoDataUpload == 0) {
                         gManager?.scanLeDevice(false)
                         gManager?.disconnect()
 
-WOWGoDataUpload = 1
+                        WOWGoDataUpload = 1
                         sendPost(
                             "Measurement",
                             DEVICE_SPO2,
@@ -638,7 +660,7 @@ WOWGoDataUpload = 1
 //                    Toast.makeText(applicationContext, "SPO2: spo2: "+spo2.toString()+" pulse: "+pulseRate.toString(), Toast.LENGTH_SHORT).show()
                 }
 
-            }catch (e:Exception){
+            } catch (e: Exception) {
 //                Toast.makeText(applicationContext, "try catch in onReceiveSPO2MeasurementData", Toast.LENGTH_SHORT).show()
             }
 
@@ -659,7 +681,14 @@ WOWGoDataUpload = 1
          unregisterReceiver(smsBroadcastReceiver)
      }*/
 
-    fun GetDeviceDataJson(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int,weight : Double): String? {
+    fun GetDeviceDataJson(
+        Status: String,
+        deviceType: Int,
+        v1: Int,
+        v2: Int,
+        v3: Int,
+        weight: Double
+    ): String? {
         var DataToPost = ""
         val DevSeq = "03" // Kiran
         //String DevSeq="02";//Kunduru
@@ -831,9 +860,9 @@ WOWGoDataUpload = 1
 
 
     var uploaded = 0
-    fun sendPost(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int,weight : Double=0.0) {
+    fun sendPost(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int, weight: Double = 0.0) {
         try {
-            postBleData = GetDeviceDataJson(Status, deviceType, v1, v2, v3,weight)
+            postBleData = GetDeviceDataJson(Status, deviceType, v1, v2, v3, weight)
         } catch (ex: Exception) {
             Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
@@ -974,7 +1003,7 @@ WOWGoDataUpload = 1
                     if (bleDevice.name == null) return
                     val DevName: String = bleDevice.name
                     Log.d("startScan", "Found " + DevName + " " + bleDevice.mac)
-                    if ( DevName == "Mike") {
+                    if (DevName == "Mike") {
                         stopScan()
                         connectToSPO2(bleDevice)
                     }
@@ -984,30 +1013,36 @@ WOWGoDataUpload = 1
                         getBpAddress(bleDevice.mac);
                     }
 
-                    if(DevName=="GSH601"){
+                    if (DevName == "GSH601") {
                         stopScan()
                         Handler().postDelayed({
-                            selectedBle="spo2"
+                            selectedBle = "spo2"
                             gManager = GoldenBLEDeviceManager(applicationContext, gCallback)
                             gManager?.scanLeDevice(true)
                             WOWGoDataUpload = 0
                         }, 1500)
 
                     }
-                    if(DevName=="GSH862"||DevName=="GSH_862B"){
+                    if (DevName == "GSH862" || DevName == "GSH_862B") {
                         stopScan()
                         Handler().postDelayed({
-                            selectedBle="bp"
-                            gManagerBP = com.gsh.bloodpressure.api.GoldenBLEDeviceManager(applicationContext, gCallBackBP)
+                            selectedBle = "bp"
+                            gManagerBP = com.gsh.bloodpressure.api.GoldenBLEDeviceManager(
+                                applicationContext,
+                                gCallBackBP
+                            )
                             gManagerBP?.scanLeDevice(true)
                         }, 1500)
 
                     }
-                    if(DevName=="GSH-202"||DevName=="GSH-231"||DevName=="0202B-0001"){
+                    if (DevName == "GSH-202" || DevName == "GSH-231" || DevName == "0202B-0001") {
                         stopScan()
                         Handler().postDelayed({
-                            selectedBle="weight"
-                            gManagerFat = com.gsh.weightscale.api.GoldenBLEDeviceManager(applicationContext, gCallbackFat)
+                            selectedBle = "weight"
+                            gManagerFat = com.gsh.weightscale.api.GoldenBLEDeviceManager(
+                                applicationContext,
+                                gCallbackFat
+                            )
                             gManagerFat?.scanLeDevice(true)
                         }, 1500)
 
@@ -1398,7 +1433,7 @@ WOWGoDataUpload = 1
                 private fun connectToBGL(bleDevice: BleDevice) {}
             })
         } catch (ex: Exception) {
-            Log.e("bleconnectstartscan", "startScan: "+ ex.localizedMessage )
+            Log.e("bleconnectstartscan", "startScan: " + ex.localizedMessage)
 //            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
 
@@ -1532,18 +1567,18 @@ WOWGoDataUpload = 1
                             gManager?.disconnect()
                             gManager?.destroy()
                         }
-                        "weight" ->{
+                        "weight" -> {
                             gManagerFat?.scanLeDevice(false)
                             gManagerFat?.disconnect()
                             gManagerFat?.destroy()
                         }
-                        "bp" ->{
+                        "bp" -> {
                             gManagerBP?.scanLeDevice(false)
                             gManagerBP?.disconnect()
                             gManagerBP?.destroy()
                         }
                     }
-                    selectedBle=""
+                    selectedBle = ""
                 }
             }
         )
@@ -1748,18 +1783,18 @@ WOWGoDataUpload = 1
                         gManager?.disconnect()
                         gManager?.destroy()
                     }
-                    "weight" ->{
+                    "weight" -> {
                         gManagerFat?.scanLeDevice(false)
                         gManagerFat?.disconnect()
                         gManagerFat?.destroy()
                     }
-                    "bp" ->{
+                    "bp" -> {
                         gManagerBP?.scanLeDevice(false)
                         gManagerBP?.disconnect()
                         gManagerBP?.destroy()
                     }
                 }
-                selectedBle=""
+                selectedBle = ""
             }
         }
 
@@ -1866,6 +1901,13 @@ WOWGoDataUpload = 1
                     )
 
                     scheduleAppointment(retMap)
+                    try {
+                        appointmentId = retMap[idSheela] as String
+                        eid = retMap[eidSheela] as String
+                        sayText = retMap[sayTextSheela] as String
+                    } catch (e: Exception) {
+                    }
+
                     result.success("success")
 
                 } catch (e: Exception) {
@@ -2165,7 +2207,7 @@ WOWGoDataUpload = 1
         val senderProfilePic = intent.getStringExtra(Constants.SENDER_PROFILE_PIC)
         val audioURL = intent.getStringExtra(Constants.PROP_sheelaAudioMsgUrl)
 
-        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
+        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH, false)
         val eid = intent.getStringExtra("eid")
         val task = intent.getStringExtra("task")
         val action = intent.getStringExtra("action")
@@ -2185,14 +2227,15 @@ WOWGoDataUpload = 1
         } else if (redirect_to == "sheela|pushMessage") {
             sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL"
         } else if (redirect_to == "isSheelaFollowup") {
-        sharedValue = "${redirect_to}&${message}&$rawBody"
+            sharedValue = "${redirect_to}&${message}&$rawBody"
 
-    } else if (redirect_to?.contains("myRecords") == true) {
+        } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
-        }else if (redirect_to?.contains("notifyCaregiverForMedicalRecord") == true) {
+        } else if (redirect_to?.contains("notifyCaregiverForMedicalRecord") == true) {
 
-            sharedValue = "ack&${redirect_to}&${userId}&${patientName}&${careCoordinatorUserId}&${isCareGiver}&${deliveredDateTime}&${isFromCareCoordinator}&${senderProfilePic}"
+            sharedValue =
+                "ack&${redirect_to}&${userId}&${patientName}&${careCoordinatorUserId}&${isCareGiver}&${deliveredDateTime}&${isFromCareCoordinator}&${senderProfilePic}"
         } else if (redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true) {
 
             sharedValue =
@@ -2205,22 +2248,24 @@ WOWGoDataUpload = 1
 
             sharedValue =
                 "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${patName}&${paymentLinkViaPush}"
-        }else if (redirect_to?.contains("familyProfile") == true) {
+        } else if (redirect_to?.contains("familyProfile") == true) {
 
             sharedValue =
                 "ack&${redirect_to}&${userId}"
-        }else if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true || redirect_to?.contains("notifyPatientServiceTicketByCC") == true) {
+        } else if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true || redirect_to?.contains(
+                "notifyPatientServiceTicketByCC"
+            ) == true
+        ) {
 
-if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
-            sharedValue =
-                "ack&${redirect_to}&${uuid}"
-                }
-                if (redirect_to?.contains("notifyPatientServiceTicketByCC") == true ){
-            sharedValue =
-                "ack&${redirect_to}&${EVEId}"
-                }
-        }
-         else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
+            if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true) {
+                sharedValue =
+                    "ack&${redirect_to}&${uuid}"
+            }
+            if (redirect_to?.contains("notifyPatientServiceTicketByCC") == true) {
+                sharedValue =
+                    "ack&${redirect_to}&${EVEId}"
+            }
+        } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
             sharedValue =
                 "ack&${redirect_to}&${type}&${patientPhoneNumber}&${verificationCode}&${caregiverReceiver}&${caregiverRequestor}"
@@ -2233,9 +2278,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
         } else if (redirect_to?.contains("communicationSetting") == true) {
 
             sharedValue = "ack&${redirect_to}"
-        }
-        else if (redirect_to?.contains(Constants.APPOINTMENT_DETAIL) == true)
-        {
+        } else if (redirect_to?.contains(Constants.APPOINTMENT_DETAIL) == true) {
 
             sharedValue = "ack&${redirect_to}&${appointmentID}&${notificationListId}"
         } else if (externalLink != null && externalLink != "") {
@@ -2288,23 +2331,23 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                         } else if (eventType != null && eventType == Constants.WRAPPERCALL) {
                             sharedValue =
                                 "${Constants.PROP_ACK}&${redirect_to}&${eventType}&${"$others|$rawTitle|$rawBody"}&${notificationListId}"
-                        }else {
-                            if(rawBody!=null && rawBody!="")
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
-                            else if(rawTitle!=null && rawTitle!="")
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
+                        } else {
+                            if (rawBody != null && rawBody != "")
+                                sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
+                            else if (rawTitle != null && rawTitle != "")
+                                sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
                             else
-                             sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${message}"
+                                sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${message}"
 
 
                         }
                     } else {
-                        if(rawTitle!=null && rawTitle!="")
-                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
-                        else if(rawBody!=null && rawBody!="")
-                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
+                        if (rawTitle != null && rawTitle != "")
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
+                        else if (rawBody != null && rawBody != "")
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
                         else
-                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${message}"
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${message}"
 
 
                     }
@@ -2334,7 +2377,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
 
     override fun onPause() {
         try {
-            Constants.foregroundActivityRef=false;
+            Constants.foregroundActivityRef = false;
             stopCriticalAlertServices()
             lbm.unregisterReceiver(badgeListener)
             super.onPause()
@@ -2344,13 +2387,12 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
     }
 
 
-
     override fun onResume() {
         Log.e("Myapp", "onResume: " + " onResume")
-        Constants.foregroundActivityRef=true
+        Constants.foregroundActivityRef = true
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         nsManager.cancel(2022)
-        registerReceiver(badgeListener,IntentFilter("remainderSheelaInvokeEvent"))
+        registerReceiver(badgeListener, IntentFilter("remainderSheelaInvokeEvent"))
         super.onResume()
     }
 
@@ -2358,7 +2400,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
     override fun onDestroy() {
         try {
             Log.e("Myapp", "onDestroy: " + " onDestroy")
-            Constants.foregroundActivityRef=false;
+            Constants.foregroundActivityRef = false;
             if (enableBackgroundNotification) {
                 val serviceIntent = Intent(this, CriticalAlertServices::class.java)
                 startService(serviceIntent)
@@ -2378,7 +2420,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
     private val badgeListener = object : BroadcastReceiver() {
         override fun onReceive(ctx: Context, data: Intent) {
             val redirectTo = data.getStringExtra(Constants.PROP_REDIRECT_TO)
-            if(redirectTo!=null&&redirectTo.equals("isSheelaFollowup")){
+            if (redirectTo != null && redirectTo.equals("isSheelaFollowup")) {
                 val message = data.getStringExtra("message")
                 val rawMessage = data.getStringExtra("rawMessage")
                 val sheelaAudioMsgUrl = data.getStringExtra("sheelaAudioMsgUrl")
@@ -2391,7 +2433,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                 val rawBody = data.getStringExtra(Constants.PROP_RAWBODY)
                 val notificationListId = data.getStringExtra(Constants.NOTIFICATIONLISTID)
                 mEventChannel.success("${Constants.PROP_ACK}&${redirect_to}&${eventType}&${"$others|$rawTitle|$rawBody"}&${notificationListId}")
-            }else{
+            } else {
                 val eid = data.getStringExtra("eid")
                 mEventChannel.success("activityRemainderInvokeSheela&${eid}")
             }
@@ -2400,21 +2442,21 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
 
     val handler: Handler = Handler()
     val runnable = Runnable {
-        try{
+        try {
             if (dialog.isShowing) {
-                Log.e("showing" ,"showing dialog")
+                Log.e("showing", "showing dialog")
                 close.performClick()
-                _result?.error("100","no response",100)
-                _result=null
+                _result?.error("100", "no response", 100)
+                _result = null
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
 
         }
     }
 
     //todo this method need to uncomment
     private fun speakWithVoiceAssistant(langCode: String) {
-        Log.e("langs",langCode)
+        Log.e("langs", langCode)
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
 
         speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -2458,10 +2500,11 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
         countDownTimerDialog.show()
 
-        countDown= object: CountDownTimer(11000, 1000) {
+        countDown = object : CountDownTimer(11000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                countDownTimer.text=(millisUntilFinished/1000).toString()+" seconds"
+                countDownTimer.text = (millisUntilFinished / 1000).toString() + " seconds"
             }
+
             override fun onFinish() {
                 countDownTimerDialog.dismiss()
                 countDown?.cancel()
@@ -2469,8 +2512,8 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                 speechRecognizer?.cancel()
                 speechRecognizer?.destroy()
                 close.performClick()
-                _result?.error("100","no response",100)
-                _result=null
+                _result?.error("100", "no response", 100)
+                _result = null
             }
         }
         countDown?.start()
@@ -2484,16 +2527,16 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
 //         })
     }
 
-    private fun setRecognizerListener(){
+    private fun setRecognizerListener() {
         try {
             //startActivityForResult(intent, REQ_CODE)
             speechRecognizer?.setRecognitionListener(object : RecognitionListener {
                 override fun onReadyForSpeech(bundle: Bundle) {
-                    Log.e("speechreco", "onReadyForSpeech: " )
+                    Log.e("speechreco", "onReadyForSpeech: ")
                 }
 
                 override fun onBeginningOfSpeech() {
-                    Log.e("speechreco", "onBeginningOfSpeech: " )
+                    Log.e("speechreco", "onBeginningOfSpeech: ")
                     countDown?.cancel()
                     countDownTimerDialog.dismiss()
                     if (!dialog.isShowing) {
@@ -2526,11 +2569,11 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                 }
 
                 override fun onBufferReceived(bytes: ByteArray) {
-                    Log.e("speechreco", "onBufferReceived: " )
+                    Log.e("speechreco", "onBufferReceived: ")
                 }
 
                 override fun onEndOfSpeech() {
-                    Log.e("speechreco", "onEndOfSpeech: " )
+                    Log.e("speechreco", "onEndOfSpeech: ")
                     if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                         //dialog.dismiss()
                     } else if (finalWords == "") {
@@ -2569,7 +2612,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                 }
 
                 override fun onError(errorCode: Int) {
-                    Log.e("speechreco", "onError: " )
+                    Log.e("speechreco", "onError: ")
 //                    handler.postDelayed(runnable, 10000);
                     speechRecognizer?.cancel()
                     speechRecognizer?.stopListening()
@@ -2597,22 +2640,22 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                         }
 
                     }
-                    Log.e("speechErrorNative", "onError: "+message )
+                    Log.e("speechErrorNative", "onError: " + message)
 
                 }
 
                 override fun onResults(bundle: Bundle) {
-                    Log.e("speechreco", "onResults: " )
+                    Log.e("speechreco", "onResults: ")
 
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    Log.e("speechreco", "onResults: "+data )
+                    Log.e("speechreco", "onResults: " + data)
 
 //                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                     if (data != null && data.size > 0) {
                         val pattern = Regex("^[A-Za-z]+\$")
 //                        if(pattern.containsMatchIn(data[0])){
-                            finalWords+=data[0]+" "
-                            displayText.setText(finalWords)
+                        finalWords += data[0] + " "
+                        displayText.setText(finalWords)
 //                        }
                         speechRecognizer?.cancel()
                         speechRecognizer?.startListening(speechIntent)
@@ -2688,7 +2731,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                 }
 
                 override fun onPartialResults(bundle: Bundle) {
-                    Log.e("speechreco", "onPartialResults: " )
+                    Log.e("speechreco", "onPartialResults: ")
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     if (data != null && data.size > 0) {
                         finalWords = data[0].toString()
@@ -3094,7 +3137,6 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
             }
 
 
-
             val snoozeIntent = Intent(this, SnoozeReceiver::class.java)
             snoozeIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
             snoozeIntent.putExtra(this.getString(R.string.currentMillis), currentMillis)
@@ -3117,8 +3159,6 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
             }
 
 
-
-
             val onTapNS = Intent(this, OnTapNotification::class.java)
             onTapNS.putExtra("nsid", nsId)
             onTapNS.putExtra("meeting_id", "")
@@ -3127,7 +3167,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
             onTapNS.putExtra(Constants.PROP_DATA, "")
             onTapNS.putExtra(Constants.PROP_REDIRECT_TO, "regiment_screen")
             onTapNS.putExtra(Constants.PROP_HRMID, "")
-            val onTapPendingIntent =if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_IMMUTABLE)
 
             } else {
@@ -3190,7 +3230,6 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                     PendingIntent.FLAG_CANCEL_CURRENT
                 )
             }
-
 
 
             val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -3425,11 +3464,17 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
         if (mSessionData != null && mSessionData.measurementRecords != null && mSessionData.measurementRecords!!.size > 0) {
 //            _resultBp.success(mSessionData.toString())
 //
-          var sys:Int =  mSessionData.measurementRecords!!.last().get(OHQMeasurementRecordKey.SystolicKey).toString().toDouble().toInt()
-         var dia:Int =   mSessionData.measurementRecords!!.last().get(OHQMeasurementRecordKey.DiastolicKey).toString().toDouble().toInt()
-          var pul:Int =  mSessionData.measurementRecords!!.last().get(OHQMeasurementRecordKey.PulseRateKey).toString().toDouble().toInt()
+            var sys: Int =
+                mSessionData.measurementRecords!!.last().get(OHQMeasurementRecordKey.SystolicKey)
+                    .toString().toDouble().toInt()
+            var dia: Int =
+                mSessionData.measurementRecords!!.last().get(OHQMeasurementRecordKey.DiastolicKey)
+                    .toString().toDouble().toInt()
+            var pul: Int =
+                mSessionData.measurementRecords!!.last().get(OHQMeasurementRecordKey.PulseRateKey)
+                    .toString().toDouble().toInt()
 
-            sendPost("Measurement", DEVICE_BP, sys,  dia,  pul)
+            sendPost("Measurement", DEVICE_BP, sys, dia, pul)
             if (::BLEEventChannel.isInitialized) {
                 BLEEventChannel.success("measurement|" + postBleData)
             }

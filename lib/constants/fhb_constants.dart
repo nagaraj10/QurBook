@@ -787,6 +787,13 @@ const String pincode = 'Pincode';
 
 const String carGiverSheela = 'cargiver';
 const String careGiverSheela = 'caregiver';
+const String strText = "Once in a Plan";
+
+const String id_sheela = 'id';
+const String eid_sheela = 'eid';
+const String sayText_sheela = 'saytext';
+
+
 
 Future<void> fbaLog({String eveName, eveParams}) async {
   try {

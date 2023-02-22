@@ -88,7 +88,9 @@ class QurhomeRegimenController extends GetxController {
       loadingDataWithoutProgress.value = false;
       qurHomeRegimenResponseModel.regimentsList.removeWhere((element) =>
           element?.isEventDisabled && !element?.isSymptom ||
-          !element?.scheduled);
+          !element?.scheduled &&
+              !(element.dayrepeat.trim().toLowerCase() ==
+                  strText.trim().toLowerCase()));
       for (int i = 0;
           i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0;
           i++) {
@@ -289,8 +291,7 @@ class QurhomeRegimenController extends GetxController {
     }
   }
 
-  callSOSEmergencyServices(int flag) async
-  {
+  callSOSEmergencyServices(int flag) async {
     try {
       //flag == 0 SOS Call
       //flag == 1 Normal Call
@@ -335,7 +336,7 @@ class QurhomeRegimenController extends GetxController {
                 patienInfo: null,
                 patientPrescriptionId: userId.value,
                 callType: 'audio',
-                isFrom: isFromSOS.value?"SOS":"")
+                isFrom: isFromSOS.value ? "SOS" : "")
             .then((value) {
           //onGoingSOSCall.value = true;
         });
