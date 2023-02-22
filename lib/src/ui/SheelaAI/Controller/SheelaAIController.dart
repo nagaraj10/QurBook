@@ -455,7 +455,10 @@ class SheelaAIController extends GetxController {
       if (playButtons) {
         final currentButton = currentPlayingConversation
             .buttons[currentPlayingConversation.currentButtonPlayingIndex];
-        if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
+        if (currentButton.title.contains("Exit")) {
+          gettingReposnseFromNative();
+          return;
+        } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
             .isNotEmpty) {
           textForPlaying = currentButton.ttsResponse.payload.audioContent;
         } else if ((currentButton.title ?? '').isNotEmpty) {
@@ -628,7 +631,7 @@ class SheelaAIController extends GetxController {
                   var button = null;
 
                   if (!conversations?.last?.isButtonNumber) {
-                    if(responseRecived == carGiverSheela){
+                    if (responseRecived == carGiverSheela) {
                       responseRecived = careGiverSheela;
                     }
                     button = conversations?.last?.buttons.firstWhere(
