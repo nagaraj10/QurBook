@@ -89,7 +89,7 @@ class QurhomeRegimenController extends GetxController {
       qurHomeRegimenResponseModel.regimentsList.removeWhere((element) =>
           element?.isEventDisabled && !element?.isSymptom ||
           !element?.scheduled &&
-              !(element.dayrepeat.trim().toLowerCase() ==
+              !(element?.dayrepeat?.trim().toLowerCase() ==
                   strText.trim().toLowerCase()));
       for (int i = 0;
           i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0;

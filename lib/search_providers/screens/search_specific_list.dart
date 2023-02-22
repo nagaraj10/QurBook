@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
 import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
+import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
@@ -37,9 +38,6 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 
 import '../bloc/doctors_list_block.dart';
 import '../bloc/hospital_list_block.dart';
-
-import 'package:country_pickers/country_pickers.dart';
-import 'package:country_pickers/country.dart';
 
 export '../models/hospital_list_response.dart';
 
@@ -100,8 +98,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   HospitalListRepository hospitalListRepository = HospitalListRepository();
 
   //var _selected = Country.IN;
-  Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+  Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   MyProfileModel myProfile;
@@ -1187,10 +1184,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             Row(
                               children: <Widget>[
                                 CountryCodePickerPage(
-                                    onValuePicked: (country) => setState(
-                                        () => _selectedDialogCountry = country),
-                                    selectedDialogCountry:
-                                        _selectedDialogCountry),
+                                  selectedCountry: _selectedDialogCountry,
+                                  onValuePicked: (country) => setState(
+                                    () => _selectedDialogCountry = country,
+                                  ),
+                                ),
                                 _ShowMobileNoTextField()
                               ],
                             ),

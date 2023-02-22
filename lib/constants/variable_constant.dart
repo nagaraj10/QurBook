@@ -228,7 +228,8 @@ const String icon_modified = 'assets/icons/modified.svg';
 const String icon_mandatory = 'assets/icons/mandatory.svg';
 const String icon_language = 'assets/icons/language.png';
 const String icon_claim = 'assets/icons/claim.svg';
-
+const String icon_IndianFlag = 'assets/icons/India_flag.png';
+const String icon_USAFlag = 'assets/icons/USA_flag.png';
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';
 const String strUnderstood = 'Understood';
