@@ -147,6 +147,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   Widget build(BuildContext context) {
     return Obx(() => WillPopScope(
           child: Scaffold(
+            drawerEnableOpenDragGesture: false,
             key: _scaffoldKey,
             appBar: AppBar(
               backgroundColor: Colors.white,

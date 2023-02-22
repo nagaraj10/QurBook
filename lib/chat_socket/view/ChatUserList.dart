@@ -872,7 +872,9 @@ class _ChatUserListState extends State<ChatUserList> {
                                   ),
                                 )
                               : Text('')),
-                      if (userChatList?.isPrimaryCareCoordinator ?? false)
+                      if (CommonUtil.isUSRegion() &&
+                              userChatList?.isPrimaryCareCoordinator ??
+                          false)
                         Container(
                           child: Text(primary_chat,
                               style: TextStyle(
