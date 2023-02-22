@@ -231,7 +231,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               var logInModel = PatientForgotPasswordModel(
                 //userName: mobileController.text,
                 userName:
-                    '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileController.text}',
+                    '${_selectedDialogCountry.phoneCode}${mobileController.text}',
                 source: strSource,
               );
               final map = logInModel.toJson();
@@ -284,7 +284,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               builder: (context) => ChangePasswordScreen(
                     //userName: mobileController.text,
                     userName:
-                        '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileController.text}',
+                        '${_selectedDialogCountry.phoneCode}${mobileController.text}',
                     isVirtualNumber: response?.result?.isVirtualNumber ?? false,
                   )));
     } else {
