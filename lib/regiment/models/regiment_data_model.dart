@@ -169,11 +169,13 @@ class RegimentDataModel {
                 ((json['dosemeal'] ?? 0).toString() == '128')) &&
             (activitynameValues.map[json['activityname']] ==
                 Activityname.SYMPTOM),
-        asNeeded: (json['hour_repeat'].trim().toLowerCase() ==
-                Constants.strText.trim().toLowerCase())
-            ? false
-            : (((json['dosemeal'] ?? 0).toString() == '64') ||
-                ((json['dosemeal'] ?? 0).toString() == '128')),
+        asNeeded: json['hour_repeat'] != null
+            ? (json['hour_repeat']?.trim().toLowerCase() ==
+                    Constants.strText.trim().toLowerCase())
+                ? false
+                : (((json['dosemeal'] ?? 0).toString() == '64') ||
+                    ((json['dosemeal'] ?? 0).toString() == '128'))
+            : false,
         scheduled: ((json['dosemeal'] ?? 0).toString() != '64') &&
             ((json['dosemeal'] ?? 0).toString() != '128'),
         doseRepeat: json['doserepeat'],
