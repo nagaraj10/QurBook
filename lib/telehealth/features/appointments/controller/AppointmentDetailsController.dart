@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentDetailsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
@@ -64,12 +65,14 @@ class AppointmentDetailsController extends GetxController {
             ? "${scheduleDateTime.value}, ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel.result?.plannedStartDateTime ?? "")).toString() ?? ''}"
             : "";
 
-        scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
-            ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel.result?.plannedEndDateTime ?? "")).toString() ?? ''}"
-            : "";
+        if (appointmentType.value.toLowerCase() != strTransportation) {
+          scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
+              ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel.result?.plannedEndDateTime ?? "")).toString() ?? ''}"
+              : "";
+        }
 
         if (appointmentDetailsModel.result?.healthOrganization != null) {
-          if (appointmentType.value.toLowerCase() == "doctor appointment") {
+          if (appointmentType.value.toLowerCase() == strDoctorAppointment) {
             providerName.value = appointmentDetailsModel.result.doctor != null
                 ? toBeginningOfSentenceCase(
                     (appointmentDetailsModel.result.doctor?.user.firstName ??
@@ -88,8 +91,8 @@ class AppointmentDetailsController extends GetxController {
               appointmentDetailsModel.result?.healthOrganization
                       ?.healthOrganizationAddressCollection.length >
                   0) {
-            if (appointmentType.value.toLowerCase() == "lab appointment" ||
-                appointmentType.value.toLowerCase() == "doctor appointment") {
+            if (appointmentType.value.toLowerCase() == strLabAppointment ||
+                appointmentType.value.toLowerCase() == strDoctorAppointment) {
               addressLine1 = appointmentDetailsModel.result?.healthOrganization
                       ?.healthOrganizationAddressCollection[0].addressLine1 ??
                   "";
@@ -113,7 +116,7 @@ class AppointmentDetailsController extends GetxController {
             }
           }
         } else {
-          if (appointmentType.value.toLowerCase() == "lab appointment") {
+          if (appointmentType.value.toLowerCase() == strLabAppointment) {
             providerName.value = toBeginningOfSentenceCase(
                 appointmentDetailsModel.result?.additionalInfo?.labName ?? "");
             getAddress();
@@ -125,7 +128,7 @@ class AppointmentDetailsController extends GetxController {
         }
 
         switch (appointmentType.value.toLowerCase()) {
-          case "lab appointment":
+          case strLabAppointment:
             for (int i = 0;
                 i <
                         appointmentDetailsModel.result?.serviceCategory
@@ -146,17 +149,17 @@ class AppointmentDetailsController extends GetxController {
               }
             }
             break;
-          case "homecare service":
+          case strHomecareService:
             getTitleDescription();
             break;
-          case "transportation":
+          case strTransportation:
             getTitleDescription();
             pickUpAddress.value =
                 appointmentDetailsModel.result?.additionalInfo.from ?? "";
             dropAddress.value =
                 appointmentDetailsModel.result?.additionalInfo.to ?? "";
             break;
-          case "doctor appointment":
+          case strDoctorAppointment:
             slotNumber.value =
                 appointmentDetailsModel.result?.slotNumber?.toString() ?? "";
             hospitalName.value = toBeginningOfSentenceCase(
