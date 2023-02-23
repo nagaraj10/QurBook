@@ -53,7 +53,7 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-//import 'package:progress_dialog/progress_dialog.dart';  FU2.5
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';  //FU2.5
 import 'package:myfhb/constants/router_variable.dart' as router;
 
 import 'TelehealthProviders.dart';
@@ -148,8 +148,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   String? apiStartTime = '', apiEndTime = '';
   SharedByUsers? selectedUser;
   String? selectedId = '';
-  //ProgressDialog pr;  FU2.5
-   late var pr ;//  FU2.5
+  late ProgressDialog pr; // FU2.5
 
   CategoryListBlock? _categoryListBlock;
 
@@ -632,7 +631,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   Widget build(BuildContext context) {
-    // pr = new ProgressDialog(context, type: ProgressDialogType.Normal);  FU2.5
+    pr = new ProgressDialog(context, type: ProgressDialogType.normal);//  FU2.5
     pr.style(
         message: checkSlots,
         borderRadius: 6.0,

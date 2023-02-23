@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_geocoder/geocoder.dart';
 // import 'package:geocoder/geocoder.dart';  FU2.5
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -217,11 +218,11 @@ class QurhomeRegimenController extends GetxController {
   getAddressFromLatLng(double latitude, double longitude) async {
     try {
       if (latitude != null && longitude != null) {
-        // var coordinates = Coordinates(latitude, longitude);
-        // final addresses =
-        //     await Geocoder.local.findAddressesFromCoordinates(coordinates);
-        // Address address = addresses.first;  FU2.5
-        var address;//  FU2.5
+        var coordinates = Coordinates(latitude, longitude);
+        final addresses =
+            await Geocoder.local.findAddressesFromCoordinates(coordinates);
+        Address address = addresses.first;  //FU2.5
+        // var address;//  FU2.5
 
         if (address != null) {
           locationModel = Location(

@@ -6,6 +6,7 @@ import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/widgets/ShowImage.dart';
+import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 import '../../constants/fhb_parameters.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -541,16 +542,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
-                // await OpenFile.open(
-                //   path.path,
-                // );FU2.5
-                // final controller = Get.find<PDFViewController>();
-                // final data = OpenPDF(
-                //     type: PDFLocation.Path,
-                //     path: path.path,
-                //     title: widget.data.metadata.fileName);
-                // controller.data = data;
-                // Get.to(() => PDFView());
+                await OpenFilex.open(
+                  path?.path,
+                );//FU2.5
+                final controller = Get.find<PDFViewController>();
+                final data = OpenPDF(
+                    type: PDFLocation.Path,
+                    path: path?.path,
+                    title: widget.data.metadata?.fileName);
+                controller.data = data;
+                Get.to(() => PDFView());
               },
             ),
           ),
@@ -570,9 +571,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 action: SnackBarAction(
                   label: 'Open',
                   onPressed: () async {
-                    // await OpenFile.open(
-                    //   pdfFile,
-                    // );FU2.5
+                    await OpenFilex.open(
+                      pdfFile,
+                    );//FU2.5
                   },
                 ),
               ),

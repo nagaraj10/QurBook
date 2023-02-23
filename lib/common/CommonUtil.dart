@@ -24,6 +24,9 @@ import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/video_call/model/UpdatedInfo.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
@@ -65,6 +68,7 @@ import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/video_call/utils/settings.dart';
 import 'package:myfhb/video_call/utils/videoicon_provider.dart';
 import 'package:myfhb/widgets/device_type.dart';
+import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -4099,14 +4103,14 @@ class CommonUtil {
           action: SnackBarAction(
             label: 'Open',
             onPressed: () async {
-              // await OpenFile.open(
-              //   response.result,
-              // );FU2.5
-              // final controller = Get.find<PDFViewController>();
-              // final data =
-              //     OpenPDF(type: PDFLocation.Path, path: response.result);
-              // controller.data = data;
-              // Get.to(() => PDFView());
+              await OpenFilex.open(
+                response.result,
+              );//FU2.5
+              final controller = Get.find<PDFViewController>();
+              final data =
+                  OpenPDF(type: PDFLocation.Path, path: response.result);
+              controller.data = data;
+              Get.to(() => PDFView());
             },
           ),
         ),

@@ -2,6 +2,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flutter_geocoder/geocoder.dart';
+
 import '../../common/CommonUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -269,10 +271,10 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   }
 
   getAddressesFromCoordinates(double lat, double long) async {
-    // var coordinates = Coordinates(lat, long);
-    // final addresses =
-    //     await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    // address = addresses.first;
-    // searchController.text = address.addressLine;  FU2.5
+    var coordinates = Coordinates(lat, long);
+    final addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    address = addresses.first;
+    searchController.text = address.addressLine; // FU2.5
   }
 }

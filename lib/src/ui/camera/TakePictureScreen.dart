@@ -1,5 +1,7 @@
 
 import 'dart:io';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+// import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
@@ -562,9 +564,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     if (!mounted) return;
 
     for (Asset asset in resultList) {
-      // String filePath =
-      //     await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      // imagePaths.add(filePath);  FU2.5
+      // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
+      // if(filePath!=null)imagePaths.add(filePath);
+      String filePath =
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      imagePaths.add(filePath);  //FU2.5
     }
 
     setState(() {
@@ -639,8 +643,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     );
     if ((filePaths?.files?.length ?? 0) > 0) {
       for (PlatformFile file in filePaths!.files) {
-        // String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);
-        // imagePaths.add(filePath);  FU2.5
+        // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: file.path??'');
+        // if(filePath!=null)imagePaths.add(filePath);
+        String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);
+        imagePaths.add(filePath);  //FU2.5
       }
     }
   }

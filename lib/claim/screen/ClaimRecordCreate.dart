@@ -30,7 +30,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-//import 'package:open_file/open_file.dart'; FU2.5
+import 'package:open_filex/open_filex.dart'; //FU2.5
 
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -916,9 +916,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             icon: ImageIcon(AssetImage(variable.icon_attach),
                 color: Colors.white),
             onPressed: () async {
-              // await OpenFile.open(
-              //   pdfFile.path,
-              // );FU2.5
+              await OpenFilex.open(
+                pdfFile.path,
+              );//FU2.5
             },
           )
         ],

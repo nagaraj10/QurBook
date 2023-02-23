@@ -4,12 +4,14 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+// import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
@@ -43,6 +45,7 @@ import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
+import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 import 'package:provider/provider.dart';
 import '../../common/CommonUtil.dart';
@@ -55,7 +58,7 @@ import '../../constants/variable_constant.dart' as variable;
 import 'dart:convert';
 import '../../../my_providers/models/UserAddressCollection.dart' as address;
 import '../../constants/fhb_parameters.dart' as parameters;
-//import 'package:flutter_absolute_path/flutter_absolute_path.dart';  FU2.5
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';  //FU2.5
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
@@ -1705,10 +1708,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
     for (Asset asset in resultList) {
-      // String filePath =
-      //     await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      // imagePaths.add(ImagesModel(
-      //     isFromFile: true, file: filePath, isdownloaded: true, asset: asset));  FU2.5
+      // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
+      // if(filePath!=null)imagePaths.add(ImagesModel(isFromFile: true, file: filePath, isdownloaded: true, asset: asset));
+      String filePath =
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      imagePaths.add(ImagesModel(
+          isFromFile: true, file: filePath, isdownloaded: true, asset: asset));  //FU2.5
     }
     setState(() {
       images = resultList;
@@ -1760,9 +1765,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                                                       variable.icon_attach),
                                                   color: Colors.white),
                                               onPressed: () async {
-                                                // await OpenFile.open(
-                                                //   imagePaths[index].file,
-                                                // ); FU2.5
+                                                await OpenFilex.open(
+                                                  imagePaths[index].file,
+                                                ); //FU2.5
                                               },
                                             ),
                                           ))

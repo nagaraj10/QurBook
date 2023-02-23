@@ -38,6 +38,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart';FU2.5
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -2213,13 +2214,13 @@ class ChatState extends State<ChatDetail> {
           action: SnackBarAction(
             label: 'Open',
             onPressed: () async {
-              // await OpenFile.open(
-              //   file.path,
-              // );FU2.5
-              // final controller = Get.find<PDFViewController>();
-              // final data = OpenPDF(type: PDFLocation.Path, path: file.path);
-              // controller.data = data;
-              // Get.to(() => PDFView());
+              await OpenFilex.open(
+                file?.path,
+              );//FU2.5
+              final controller = Get.find<PDFViewController>();
+              final data = OpenPDF(type: PDFLocation.Path, path: file?.path);
+              controller.data = data;
+              Get.to(() => PDFView());
             },
           ),
         );
@@ -2250,15 +2251,15 @@ class ChatState extends State<ChatDetail> {
               action: SnackBarAction(
                 label: 'Open',
                 onPressed: () async {
-                  // await OpenFile.open(
-                  //   filePath.path,
-                  // );FU2.5
+                  await OpenFilex.open(
+                    filePath?.path,
+                  );//FU2.5
 
-                  // final controller = Get.find<PDFViewController>();
-                  // final data =
-                  //     OpenPDF(type: PDFLocation.Path, path: filePath.path);
-                  // controller.data = data;
-                  // Get.to(() => PDFView());
+                  final controller = Get.find<PDFViewController>();
+                  final data =
+                      OpenPDF(type: PDFLocation.Path, path: filePath?.path);
+                  controller.data = data;
+                  Get.to(() => PDFView());
                 },
               ),
             );
