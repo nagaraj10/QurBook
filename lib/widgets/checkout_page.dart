@@ -166,8 +166,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
               // if (value.cartType == CartType.DEFAULT_CART ||
               //     value.cartType == CartType.RETRY_CART) {
               //default cart with items
-              var cartCount =
-                  value.fetchingCartItemsModel!.result!.productsCount ?? 0;
+              int? cartCount =           // FUcrash var to int?
+                  value.fetchingCartItemsModel!.result?.productsCount ?? 0;
               //value?.updateCartCount(cartCount,isNeedRelod: true);
               return (!(value.fetchingCartItemsModel!.isSuccess ?? false) ||
                       cartCount == 0)

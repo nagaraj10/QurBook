@@ -167,7 +167,7 @@ class AddProvidersState extends State<AddProviders> {
       _hospitalListBlock = HospitalListBlock();
       _labsListBlock = LabsListBlock();
       providerViewModel = MyProviderViewModel();
-      if (widget?.arguments?.data?.isTelehealthEnabled != null) {
+      if (widget.arguments?.data?.isTelehealthEnabled != null) {
         teleHealthAlertShown = widget.arguments!.data!.isTelehealthEnabled;
       }
 
@@ -177,14 +177,14 @@ class AddProvidersState extends State<AddProviders> {
       }
 
       if (widget.arguments!.searchKeyWord == CommonConstants.doctors) {
-        selectedCategories = widget?.arguments?.doctorsModel?.sharedCategories;
+        selectedCategories = widget.arguments?.doctorsModel?.sharedCategories;
       }
       if (widget.arguments!.searchKeyWord == CommonConstants.hospitals) {
         selectedCategories =
-            widget?.arguments?.hospitalsModel?.sharedCategories;
+            widget.arguments?.hospitalsModel?.sharedCategories;
       }
       if (widget.arguments!.searchKeyWord == CommonConstants.labs) {
-        selectedCategories = widget?.arguments?.labsModel?.sharedCategories;
+        selectedCategories = widget.arguments?.labsModel?.sharedCategories;
         if (widget.arguments!.fromClass == router.rt_myprovider) {
           getTicketList();
           labBookAppointmentBtnShown = true;
@@ -386,7 +386,7 @@ class AddProvidersState extends State<AddProviders> {
       if (widget.arguments!.hasData!) {
         if (widget.arguments!.searchKeyWord == CommonConstants.doctors) {
           doctorController.text = (widget.arguments!.data!.name != null
-              ? widget?.arguments?.data?.name
+              ? widget.arguments?.data?.name
                   ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.data.name)
               : '')!;
 //          isPreferred = widget.arguments.data.isUserDefined ?? false;
@@ -414,7 +414,7 @@ class AddProvidersState extends State<AddProviders> {
           doctorController.text = (widget
                       .arguments!.labData!.healthOrganizationName !=
                   null
-              ? widget?.arguments?.labData?.healthOrganizationName
+              ? widget.arguments?.labData?.healthOrganizationName
                   ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.labData.healthOrganizationName)
               : '')!;
 //          isPreferred = widget.arguments.labData.isUserDefined ?? false;
@@ -466,7 +466,7 @@ class AddProvidersState extends State<AddProviders> {
             widget.arguments!.doctorsModel, 'address2');
       } else if (widget.arguments!.searchKeyWord == CommonConstants.hospitals) {
         doctorController.text = (widget.arguments!.hospitalsModel!.name != null
-            ? widget?.arguments?.hospitalsModel?.name
+            ? widget.arguments?.hospitalsModel?.name
                 ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name)
             : '')!;
         isPreferred = widget.arguments!.hospitalsModel!.isDefault;

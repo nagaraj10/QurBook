@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -84,7 +85,7 @@ class PlanDetail extends State<MyPlanDetail> {
 
   InAppWebViewController? webView;
   bool? showRenewOrSubscribeButton = false;
-  Future<MyPlanListModel>? planListFetch;
+  late Future<MyPlanListModel?> planListFetch; // FUcash add late
   String? packageDuration;
   @override
   void initState() {
@@ -92,7 +93,7 @@ class PlanDetail extends State<MyPlanDetail> {
     mInitialTime = DateTime.now();
     //setValues();
     getConfiguration();
-    planListFetch = myPlanViewModel.getMyPlanListDetail(widget.packageId) as Future<MyPlanListModel>?;
+    planListFetch = myPlanViewModel.getMyPlanListDetail(widget.packageId) as Future<MyPlanListModel?>;
   }
 
   Future<void> getConfiguration() async {
@@ -154,7 +155,7 @@ class PlanDetail extends State<MyPlanDetail> {
           ),
         ),
       ),
-      body: FutureBuilder<MyPlanListModel>(
+      body: FutureBuilder<MyPlanListModel?>( //FUcrash add ?
         future: planListFetch,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

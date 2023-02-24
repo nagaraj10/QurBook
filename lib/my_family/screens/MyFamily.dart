@@ -446,7 +446,7 @@ class _MyFamilyState extends State<MyFamily> {
                                 color: Color(fhbColors.bgColorContainer),
                                 child: Center(
                                   child: Text(
-                                    fulName != null
+                                    fulName != null && fulName.isNotEmpty
                                         ? fulName[0].toUpperCase()
                                         : '',
                                     style: TextStyle(
@@ -462,7 +462,7 @@ class _MyFamilyState extends State<MyFamily> {
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
-                                fulName != null ? fulName[0].toUpperCase() : '',
+                                fulName != null  && fulName.isNotEmpty ? fulName[0].toUpperCase() : '',
                                 style: TextStyle(
                                     fontSize: 22.0.sp,
                                     color: Color(
@@ -482,7 +482,7 @@ class _MyFamilyState extends State<MyFamily> {
                   children: <Widget>[
                     Text(
                       position == 0
-                          ? fulName != null
+                          ? fulName != null&& fulName.isNotEmpty
                               ? CommonUtil().titleCase(fulName.toLowerCase())
                               : ''
                           : data.child?.firstName != null

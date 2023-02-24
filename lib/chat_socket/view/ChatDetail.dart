@@ -107,7 +107,7 @@ class ChatState extends State<ChatDetail> {
 
   //IO.Socket socket;
 
-  Future<ChatHistoryModel>? chatHistoryModel;
+  late Future<ChatHistoryModel?> chatHistoryModel;
 
   ChatViewModel chatViewModel = new ChatViewModel();
   AppointmentResult? appointmentResult;
@@ -227,7 +227,7 @@ class ChatState extends State<ChatDetail> {
       Provider.of<ChatSocketViewModel>(
         Get.context!,
         listen: false,
-      )?.updateChatHistoryList([], shouldUpdate: false);
+      ).updateChatHistoryList([], shouldUpdate: false);
     });
 
     peerId = widget.peerId;
@@ -269,11 +269,11 @@ class ChatState extends State<ChatDetail> {
           .getUserIdFromDocId(peerId!)
           .then((value) {
         if (value != null) {
-          if (value?.result != null) {
-            if (value?.result?.user != null) {
-              if (value?.result?.user?.id != null &&
-                  value?.result?.user?.id != '') {
-                chatPeerId = value?.result?.user?.id;
+          if (value.result != null) {
+            if (value.result?.user != null) {
+              if (value.result?.user?.id != null &&
+                  value.result?.user?.id != '') {
+                chatPeerId = value.result?.user?.id;
                 getGroupId();
                 getChatHistory();
               }
@@ -303,8 +303,8 @@ class ChatState extends State<ChatDetail> {
 
   void getChatHistory() {
     chatHistoryModel = Provider.of<ChatSocketViewModel>(context, listen: false)
-        .getChatHistory(chatPeerId!, familyUserId!, isFromCareCoordinator!,
-            carecoordinatorId!, isFromFamilyListChat) as Future<ChatHistoryModel>?;
+        .getChatHistory(chatPeerId!, familyUserId, isFromCareCoordinator!,
+            carecoordinatorId!, isFromFamilyListChat) as Future<ChatHistoryModel?>;
   }
 
   void getGroupId() {
@@ -394,11 +394,11 @@ class ChatState extends State<ChatDetail> {
 
   void initSocket() {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        .socket!
         .off(message);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        .socket!
         .on(message, (data) {
       if (data != null) {
         //print('OnMessageack$data');
@@ -426,7 +426,7 @@ class ChatState extends State<ChatDetail> {
     var data = {"chatListId": groupId, "userId": userId};
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        ?.socket!
         .emitWithAck(unreadNotification, data, ack: (res) {
       //print('emitWithackCount$res');
     });
@@ -439,7 +439,7 @@ class ChatState extends State<ChatDetail> {
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
-        setState(() {
+        if (mounted) setState(() { // FUcrash add mounted
           isCareGiverApi = appointmentResult?.isCaregiver ?? false;
           isFamilyPatientApi = appointmentResult?.isPatient ?? false;
           isChatDisable = appointmentResult?.chatList?.isDisable ?? false;
@@ -528,7 +528,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   Widget getChatHistoryList() {
-    return new FutureBuilder<ChatHistoryModel>(
+    return new FutureBuilder<ChatHistoryModel?>(
       future: chatHistoryModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -603,7 +603,7 @@ class ChatState extends State<ChatDetail> {
 
         try {
           Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              ?.socket
+              ?.socket!
               .emitWithAck(message, data, ack: (res) {
             //print('emitWithack$res');
             if (res != null) {
@@ -841,7 +841,7 @@ class ChatState extends State<ChatDetail> {
                                                   familyUserId!,
                                                   isFromCareCoordinator!,
                                                   carecoordinatorId!,
-                                                  isFromFamilyListChat) as Future<ChatHistoryModel>?;
+                                                  isFromFamilyListChat) as Future<ChatHistoryModel?>;
                                       setState(() {});
                                     });
                                   },

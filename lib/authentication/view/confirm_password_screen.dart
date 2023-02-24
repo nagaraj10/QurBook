@@ -49,7 +49,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     listenForCode();
     SmsAutoFill().listenForCode;
     authViewModel = AuthViewModel();
-    Provider.of<OtpViewModel>(context, listen: false)?.startTimer();
+    Provider.of<OtpViewModel>(context, listen: false).startTimer();
   }
 
   @override

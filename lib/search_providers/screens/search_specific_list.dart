@@ -996,7 +996,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   void passdataToNextScreen(
-      String name,
+      String? name,
       BuildContext context,
       DoctorsListResult data,
       HospitalsListResult hospitalData,

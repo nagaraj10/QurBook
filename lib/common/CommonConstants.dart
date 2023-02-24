@@ -362,19 +362,19 @@ class CommonConstants {
     return unitsMeasurements;
   }
 
-  String? get bpSPUNIT => countryMetrics!.bpSPUnit;
+  String? get bpSPUNIT => countryMetrics?.bpSPUnit;
 
-  String? get bpDPUNIT => countryMetrics!.bpDPUnit;
+  String? get bpDPUNIT => countryMetrics?.bpDPUnit;
 
-  String? get bpPulseUNIT => countryMetrics!.bpPulseUnit;
+  String? get bpPulseUNIT => countryMetrics?.bpPulseUnit;
 
-  String? get glucometerUNIT => countryMetrics!.glucometerUnit;
+  String? get glucometerUNIT => countryMetrics?.glucometerUnit;
 
-  String? get poOxySatUNIT => countryMetrics!.poOxySatUnit;
+  String? get poOxySatUNIT => countryMetrics?.poOxySatUnit;
 
-  String? get poPulseUNIT => countryMetrics!.poPulseUnit;
+  String? get poPulseUNIT => countryMetrics?.poPulseUnit;
 
-  String? get tempUNIT => countryMetrics!.tempUnit;
+  String? get tempUNIT => countryMetrics?.tempUnit;
 
   String? get weightUNIT => countryMetrics!.weightUnit;
 

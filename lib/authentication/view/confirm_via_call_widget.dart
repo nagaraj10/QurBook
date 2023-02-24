@@ -19,7 +19,7 @@ class ConfirmViaCallWidget extends StatelessWidget {
     return WillPopScope(
       onWillPop: () {
         Provider.of<OtpViewModel>(context, listen: false)
-            ?.updateDialogStatus(false);
+            .updateDialogStatus(false);
         return Future.value(true);
       },
       child: SimpleDialog(

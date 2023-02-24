@@ -28,7 +28,7 @@ class ProviderCarePlans extends StatefulWidget {
 }
 
 class _ProviderCarePlans extends State<ProviderCarePlans> {
-  Future<PlanListModel>? planListModel;
+  late Future<PlanListModel?> planListModel;// FUcrash
 
   PlanListModel? myPlanListModel;
 
@@ -63,7 +63,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList(strProviderCare,conditionChosen: conditionChosen) as Future<PlanListModel>?;
+        .getCarePlanList(strProviderCare,conditionChosen: conditionChosen) as Future<PlanListModel?>;// FUcrash
   }
 
   @override
@@ -139,7 +139,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
   }
 
   Widget getCarePlanList() {
-    return new FutureBuilder<PlanListModel>(
+    return new FutureBuilder<PlanListModel?>( // FUcrash
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -336,7 +336,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         .then((value) => setState(() {
               planListModel =
                   Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .getCarePlanList(strProviderCare,conditionChosen: conditionChosen) as Future<PlanListModel>?;
+                      .getCarePlanList(strProviderCare,conditionChosen: conditionChosen) as Future<PlanListModel?>; // FUcrash
             }));
     /*Navigator.pushNamed(
       Get.context,

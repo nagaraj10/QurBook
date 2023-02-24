@@ -359,9 +359,9 @@ class _MyRecordsState extends State<MyRecords> {
     if (!fromSearch) {
       PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
 
-      List<CategoryResult> categoryDataFromPrefernce =
+      List<CategoryResult>? categoryDataFromPrefernce =
           PreferenceUtil.getCategoryTypeDisplay(
-              Constants.KEY_CATEGORYLIST_VISIBLE)!;
+              Constants.KEY_CATEGORYLIST_VISIBLE) ;
       if (data != null && data.length > 0) {
         categoryData = fliterCategories(data);
         categoryData.add(categoryDataObjClone);

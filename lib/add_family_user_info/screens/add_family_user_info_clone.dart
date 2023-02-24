@@ -896,12 +896,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   )),
               suggestionsCallback: (pattern) async {
                 if (pattern.length >= 3) {
-                  return await (getCitybasedOnSearch(
+                  return await getCitybasedOnSearch(
                     pattern,
                     'city',
-                  ) as FutureOr<Iterable<City>>);
+                  )as FutureOr<Iterable<City>>;
+                }else{
+                  return [];
                 }
-              } as FutureOr<Iterable<City>> Function(String),
+                  
+              } ,
               itemBuilder: (context, suggestion) {
                 return ListTile(
                   title: Text(
@@ -965,8 +968,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     pattern,
                     'state',
                   ) as FutureOr<Iterable<stateObj.State>>);
+                }else{
+                  return[];
                 }
-              } as FutureOr<Iterable<stateObj.State>> Function(String),
+              }, //as FutureOr<Iterable<stateObj.State>> Function(String),
               itemBuilder: (context, suggestion) {
                 return ListTile(
                   title: Text(
@@ -1401,21 +1406,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     });
   }
 
-  Future<List<City>?> getCitybasedOnSearch(
+  Future<List<City>> getCitybasedOnSearch(
     String cityname,
     String apibody,
-  ) {
-    Future<List<City>?> citylist;
-    citylist = addFamilyUserInfoBloc!.getCityDataList(cityname, apibody);
+  ) async{
+    Future<List<City>> citylist;
+    citylist = await addFamilyUserInfoBloc!.getCityDataList(cityname, apibody) as Future<List<City>>;
     return citylist;
   }
 
-  Future<List<stateObj.State>?> getStateBasedOnSearch(
+  Future<List<stateObj.State>> getStateBasedOnSearch(
     String stateName,
     String apibody,
-  ) {
-    Future<List<stateObj.State>?> stateList;
-    stateList = addFamilyUserInfoBloc!.geStateDataList(stateName, apibody);
+  ) async{
+    Future<List<stateObj.State>> stateList;
+    stateList =await addFamilyUserInfoBloc!.geStateDataList(stateName, apibody) as Future<List<stateObj.State>>;
     return stateList;
   }
 
@@ -1598,17 +1603,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments!.myProfileResult!.firstName != null) {
           firstNameController.text =
               (widget.arguments!.myProfileResult!.firstName != null
-                  ? widget?.arguments?.myProfileResult?.firstName
+                  ? widget.arguments?.myProfileResult?.firstName
                       ?.capitalizeFirstofEach
                   : '')!;
           middleNameController.text =
-              (widget?.arguments?.myProfileResult?.middleName != null
-                  ? widget?.arguments?.myProfileResult?.middleName
+              (widget.arguments?.myProfileResult?.middleName != null
+                  ? widget.arguments?.myProfileResult?.middleName
                       ?.capitalizeFirstofEach
                   : '')!;
           lastNameController.text =
-              (widget?.arguments?.myProfileResult?.lastName != null
-                  ? widget?.arguments?.myProfileResult?.lastName
+              (widget.arguments?.myProfileResult?.lastName != null
+                  ? widget.arguments?.myProfileResult?.lastName
                       ?.capitalizeFirstofEach
                   : '')!;
         }
@@ -1663,7 +1668,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       relationShipResponseList = widget.arguments?.defaultrelationShips;
 
-      if (widget?.arguments?.sharedbyme?.relationship?.name != null) {
+      if (widget.arguments?.sharedbyme?.relationship?.name != null) {
         selectedRelationShip = widget.arguments!.sharedbyme!.relationship;
       }
 
@@ -1739,17 +1744,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments!.sharedbyme!.child!.firstName != null) {
           firstNameController.text =
               (widget.arguments!.sharedbyme!.child!.firstName != null
-                  ? widget?.arguments?.sharedbyme?.child?.firstName
+                  ? widget.arguments?.sharedbyme?.child?.firstName
                       ?.capitalizeFirstofEach
                   : '')!;
           middleNameController.text =
               (widget.arguments!.sharedbyme!.child!.middleName != null
-                  ? widget?.arguments?.sharedbyme?.child?.middleName
+                  ? widget.arguments?.sharedbyme?.child?.middleName
                       ?.capitalizeFirstofEach
                   : '')!;
           lastNameController.text =
               (widget.arguments!.sharedbyme!.child!.lastName != null
-                  ? widget?.arguments?.sharedbyme?.child?.lastName
+                  ? widget.arguments?.sharedbyme?.child?.lastName
                       ?.capitalizeFirstofEach
                   : '')!;
         } else {
@@ -1852,12 +1857,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         } else {
           mobileNoController.text =
               value!.result!.userContactCollection3![0]!.phoneNumber!;
-          if (value?.result?.userContactCollection3![0]!.email != null &&
-              value?.result?.userContactCollection3![0]!.email != '') {
+          if (value.result?.userContactCollection3![0]!.email != null &&
+              value.result?.userContactCollection3![0]!.email != '') {
             emailController.text = value.result!.userContactCollection3![0]!.email!;
           }
 
-          mContactInfo = value?.result?.userContactCollection3![0];
+          mContactInfo = value.result?.userContactCollection3![0];
         }
         //*user already user exist set the address data if available
         if (value!.result!.userAddressCollection3!.isNotEmpty) {
@@ -1904,7 +1909,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             _addressResult = _addressList[0];
           });
         } catch (e) {}
-        if (commonUtil.checkIfStringisNull(value!.result!.bloodGroup)) {
+        if (commonUtil.checkIfStringisNull(value.result!.bloodGroup)) {
           currentselectedBloodGroup = value.result!.bloodGroup!.split(' ')[0];
           currentselectedBloodGroupRange =
               value.result!.bloodGroup!.split(' ')[1];
@@ -1923,9 +1928,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ? FHBUtils().getFormattedDateOnlyNew(value.result!.dateOfBirth)!
             : '';
 
-        if (value?.result?.additionalInfo != null) {
-          heightController.text = value?.result?.additionalInfo?.height ?? '';
-          weightController.text = value?.result?.additionalInfo?.weight ?? '';
+        if (value.result?.additionalInfo != null) {
+          heightController.text = value.result?.additionalInfo?.height ?? '';
+          weightController.text = value.result?.additionalInfo?.weight ?? '';
         }
 
         if (value.result!.membershipOfferedBy != null &&
@@ -1982,9 +1987,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (isFeetOrInches) {
         heightObj.valueFeet = heightController.text;
         heightObj.valueInches = heightInchController.text;
-        additionalInfo!.heightObj = heightObj;
+        additionalInfo.heightObj = heightObj;
       } else {
-        additionalInfo!.height = heightController.text;
+        additionalInfo.height = heightController.text;
       }
       additionalInfo.weight = weightController.text;
       additionalInfo.age = 0;
@@ -2428,8 +2433,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .getUserProfilePic(widget.arguments!.sharedbyme!.child!.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot?.data?.isSuccess != null &&
-                snapshot?.data?.result != null) {
+            if (snapshot.data?.isSuccess != null &&
+                snapshot.data?.result != null) {
               if (snapshot.data!.isSuccess!) {
                 return Image(
                   image: NetworkImage(
@@ -2528,8 +2533,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .getUserProfilePic(widget.arguments!.myProfileResult!.id!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot?.data?.isSuccess != null &&
-                snapshot?.data?.result != null) {
+            if (snapshot.data?.isSuccess != null &&
+                snapshot.data?.result != null) {
               if (snapshot.data!.isSuccess!) {
                 return Image.network(
                   snapshot.data!.result!,
@@ -2623,8 +2628,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             widget.arguments!.addFamilyUserInfo!.childInfo!.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot?.data?.isSuccess != null &&
-                snapshot?.data?.result != null) {
+            if (snapshot.data?.isSuccess != null &&
+                snapshot.data?.result != null) {
               if (snapshot.data!.isSuccess!) {
                 return Image.network(
                   snapshot.data!.result!,
@@ -2974,7 +2979,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       var profileSetting;
       try {
         profileSetting = widget.arguments?.myProfileResult
-            ?.userProfileSettingCollection3![0]?.profileSetting;
+            ?.userProfileSettingCollection3![0].profileSetting;
         if (profileSetting != null) {
           getUnitFromPreferredMeasurement(profileSetting);
         } else {
@@ -3004,7 +3009,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (preferredMeasurment != null) {
           try {
-            heightUnit = preferredMeasurment?.height?.unitCode;
+            heightUnit = preferredMeasurment.height?.unitCode;
             weightUnit = preferredMeasurment.weight?.unitCode;
             setHeightAndWeightUnit();
           } catch (e) {

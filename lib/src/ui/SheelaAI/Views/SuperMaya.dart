@@ -92,12 +92,13 @@ class _SuperMayaState extends State<SuperMaya> {
         builder: (context) {
           _myContext = context;
           return WillPopScope(
-            onWillPop: () {
+            onWillPop: () async{ // FUcrash added async
               if (widget.isHome) {
                 widget.onBackPressed!();
               }
               Future.value(widget.isHome ? false : true);
-            } as Future<bool> Function()?,
+              return true;  // FUcrash added return and removed cast
+            } ,
             child: Scaffold(
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 appBar: widget.isHome

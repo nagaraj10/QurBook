@@ -22,7 +22,7 @@ import 'package:provider/provider.dart';
 class ChatSocketService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<ChatHistoryModel> getChatHistory(
+  Future<ChatHistoryModel?> getChatHistory(
       String userId,
       String peerId,
       String familyUserId,

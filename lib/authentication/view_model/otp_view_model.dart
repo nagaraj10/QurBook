@@ -54,10 +54,10 @@ class OtpViewModel extends ChangeNotifier {
     final ivrNumberslist = await getIVRNumbers();
     LoaderClass.hideLoadingDialog(Get.context!);
     updateDialogStatus(true);
-    if ((ivrNumberslist?.result?.length ?? 0) > 0) {
+    if ((ivrNumberslist.result?.length ?? 0) > 0) {
       await Get.dialog(
         ConfirmViaCallWidget(
-          ivrNumbersList: ivrNumberslist?.result,
+          ivrNumbersList: ivrNumberslist.result,
         ),
       );
       _otpTimer = Timer.periodic(

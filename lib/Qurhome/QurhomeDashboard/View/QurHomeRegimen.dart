@@ -126,11 +126,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   initSocketCountUnread() {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        ?.socket!
         .off(notifyQurhomeUser);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        ?.socket!
         .on(notifyQurhomeUser, (data) {
       if (data != null) {
         UnreadChatSocketNotify unreadCountNotify =

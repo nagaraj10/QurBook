@@ -45,8 +45,8 @@ class _MyPlanState extends State<MyPlanList> {
   final GlobalKey _GotoRegimentKey = GlobalKey();
   final GlobalKey _PlanCardKey = GlobalKey();
   late bool isFirst;
-  bool? addplanbutton = false;
-  bool? showRenewOrSubscribeButton = false;
+  bool addplanbutton = false;
+  bool showRenewOrSubscribeButton = false;
   late BuildContext _myContext;
   @override
   void initState() {
@@ -86,8 +86,8 @@ class _MyPlanState extends State<MyPlanList> {
         await PreferenceUtil.getUnSubscribeValue();
     print('addplanbtn: ' + addplanbutton.toString());
     setState(() {
-      this.addplanbutton = addplanbutton;
-      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton;
+      this.addplanbutton = addplanbutton?? false; // FUcrash add ?? false
+      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton?? false;// FUcrash add ?? false;
     });
   }
 
@@ -111,7 +111,7 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          floatingActionButton: addplanbutton!
+          floatingActionButton: addplanbutton // FUcrash addplanbutton! to addplanbutton
               ? FloatingActionButton.extended(
                   onPressed: () async {
                     var firebase = FirebaseAnalyticsService();
@@ -441,7 +441,7 @@ class _MyPlanState extends State<MyPlanList> {
                   if (planList[i]?.tags != strMemb)
                     Row(
                       children: [
-                        showRenewOrSubscribeButton!
+                        showRenewOrSubscribeButton
                             ? Column(
                                 children: [
                                   Align(

@@ -117,7 +117,7 @@ class _VerifyPatientState extends State<VerifyPatient>
     if (widget.userConfirm!) {
       _resendOtpDetails();
     }
-    Provider.of<OtpViewModel>(context, listen: false)?.startTimer();
+    Provider.of<OtpViewModel>(context, listen: false).startTimer();
   }
 
   @override
@@ -630,7 +630,7 @@ class _VerifyPatientState extends State<VerifyPatient>
       _getPatientDetails();
     } else {
       LoaderClass.hideLoadingDialog(context);
-      if (response?.message?.contains('expired') ?? false) {
+      if (response.message?.contains('expired') ?? false) {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -733,7 +733,7 @@ class _VerifyPatientState extends State<VerifyPatient>
       await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no!)
           .then((onValue) {});
       await PreferenceUtil.saveString(
-              Constants.KEY_EMAIL, saveuser?.email ?? '')
+              Constants.KEY_EMAIL, saveuser.email ?? '')
           .then((onValue) {});
       await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring!)
           .then((onValue) {});

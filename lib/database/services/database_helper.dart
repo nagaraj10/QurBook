@@ -56,10 +56,10 @@ class DatabaseHelper {
 
   Future<UnitsMesurements?> getMeasurementsBasedOnUnits(
       String? unitsMeasure,String range) async {
-    final dbClient = await (db as FutureOr<Database>);
+    final dbClient = await (db as FutureOr<Database?>);
 
     final results =
-        await dbClient.rawQuery(DBConstants.UT_QUERY_BY_UN, [unitsMeasure,range]);
+        await dbClient!.rawQuery(DBConstants.UT_QUERY_BY_UN, [unitsMeasure,range]);
 
     if (results.isNotEmpty) {
       return UnitsMesurements.map(results.first);

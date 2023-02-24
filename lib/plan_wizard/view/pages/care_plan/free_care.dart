@@ -22,7 +22,7 @@ class FreeCarePlans extends StatefulWidget {
 }
 
 class _FreeCarePlans extends State<FreeCarePlans> {
-  Future<PlanListModel>? planListModel;
+   late Future<PlanListModel?> planListModel; // FUcrash
 
   PlanListModel? myPlanListModel;
 
@@ -45,7 +45,7 @@ class _FreeCarePlans extends State<FreeCarePlans> {
         .currentPackageFreeCareId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList(strFreeCare) as Future<PlanListModel>?;
+        .getCarePlanList(strFreeCare) as Future<PlanListModel?>;
   }
 
   @override
@@ -121,7 +121,7 @@ class _FreeCarePlans extends State<FreeCarePlans> {
   }
 
   Widget getCarePlanList() {
-    return new FutureBuilder<PlanListModel>(
+    return new FutureBuilder<PlanListModel?>( // FUcrash
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
