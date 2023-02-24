@@ -720,9 +720,11 @@ class AppointmentsCommonWidget {
 
   getServiceCategory(Past doc) {
     String serviceCategory = '';
-
     if (doc.serviceCategory != null) {
       serviceCategory = doc?.serviceCategory?.name ?? '';
+      if (serviceCategory.toLowerCase() == "others") {
+        serviceCategory = doc?.additionalinfo?.title ?? "";
+      }
     }
     return serviceCategory;
   }
