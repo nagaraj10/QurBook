@@ -579,6 +579,8 @@ class AppointmentsCommonWidget {
       return commonTextWidget(doc.healthOrganization.name ?? "");
     } else if (doc?.additionalinfo?.provider_name != null) {
       return commonTextWidget(doc?.additionalinfo?.provider_name ?? '');
+    } else if (doc?.additionalinfo?.healthOrganizationId != null) {
+      return commonTextWidget(doc?.additionalinfo?.healthOrganizationId ?? '');
     } else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
       return Text(
           (doc?.additionalinfo?.title != null &&
@@ -675,6 +677,8 @@ class AppointmentsCommonWidget {
           : '';
     } else if (doc?.additionalinfo?.provider_name != null) {
       name = doc?.additionalinfo?.provider_name ?? '';
+    } else if (doc?.additionalinfo?.healthOrganizationId != null) {
+      name = doc?.additionalinfo?.healthOrganizationId ?? '';
     } else if (doc.doctorSessionId == null && doc?.healthOrganization == null) {
       name = doc?.additionalinfo?.title ?? '';
     } else if (doc.doctorSessionId != null &&
