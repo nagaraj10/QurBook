@@ -2652,13 +2652,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
 //                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                     if (data != null && data.size > 0) {
-                        val pattern = Regex("^[A-Za-z]+\$")
-//                        if(pattern.containsMatchIn(data[0])){
-                        finalWords += data[0] + " "
+                        finalWords+=data[0]+" "
                         displayText.setText(finalWords)
-//                        }
-                        speechRecognizer?.cancel()
-                        speechRecognizer?.startListening(speechIntent)
+                        sendBtn.performClick()
                     }
 //                    if (data != null && data.size > 0) {
 //                        finalWords = data[0].toString()
