@@ -334,7 +334,10 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () async {
                           Get.back();
-                          Get.toNamed(rt_Regimen);
+                          await Navigator.pushNamed(
+                            context,
+                            router.rt_Regimen
+                          );
                         },
                       ),
                       Visibility(
