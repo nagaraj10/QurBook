@@ -687,8 +687,8 @@ class AddProvidersState extends State<AddProviders> {
                                 primaryUserProfile?.result?.id
                             ? variable.Self
                             : myProfile?.result?.firstName
-                        : selectedFamilyMemberName
-                            .capitalizeFirstofEach, //toBeginningOfSentenceCase(selectedFamilyMemberName),
+                        : selectedFamilyMemberName.capitalizeFirstofEach,
+                    //toBeginningOfSentenceCase(selectedFamilyMemberName),
                     softWrap: true,
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -963,13 +963,18 @@ class AddProvidersState extends State<AddProviders> {
         routeClassName = router.rt_TelehealthProvider;
       }
 
-      Navigator.popUntil(context, (route) {
-        var shouldPop = false;
-        if (route.settings.name == routeClassName || route.settings == null) {
-          shouldPop = true;
-        }
-        return shouldPop;
-      });
+      if (CommonUtil.isUSRegion()) {
+        Navigator.popUntil(
+            context, ModalRoute.withName(router.rt_UserAccounts));
+      } else {
+        Navigator.popUntil(context, (route) {
+          var shouldPop = false;
+          if (route.settings.name == routeClassName || route.settings == null) {
+            shouldPop = true;
+          }
+          return shouldPop;
+        });
+      }
     });
   }
 
@@ -984,13 +989,19 @@ class AddProvidersState extends State<AddProviders> {
         routeClassName = router.rt_TelehealthProvider;
       }
 
-      Navigator.popUntil(context, (route) {
-        var shouldPop = false;
-        if (route.settings.name == routeClassName) {
-          shouldPop = true;
-        }
-        return shouldPop;
-      });
+      if (CommonUtil.isUSRegion()) {
+        Navigator.popUntil(
+            context, ModalRoute.withName(router.rt_UserAccounts));
+      }else{
+        Navigator.popUntil(context, (route) {
+          var shouldPop = false;
+          if (route.settings.name == routeClassName) {
+            shouldPop = true;
+          }
+          return shouldPop;
+        });
+      }
+
     });
   }
 
@@ -1005,13 +1016,18 @@ class AddProvidersState extends State<AddProviders> {
         routeClassName = router.rt_TelehealthProvider;
       }
 
-      Navigator.popUntil(context, (route) {
-        var shouldPop = false;
-        if (route.settings.name == routeClassName) {
-          shouldPop = true;
-        }
-        return shouldPop;
-      });
+      if (CommonUtil.isUSRegion()) {
+        Navigator.popUntil(
+            context, ModalRoute.withName(router.rt_UserAccounts));
+      }else {
+        Navigator.popUntil(context, (route) {
+          var shouldPop = false;
+          if (route.settings.name == routeClassName) {
+            shouldPop = true;
+          }
+          return shouldPop;
+        });
+      }
     });
   }
 
