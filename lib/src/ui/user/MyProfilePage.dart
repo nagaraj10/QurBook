@@ -162,6 +162,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         });
       } else {
         languagePreferred = "English";
+        PreferenceUtil.saveString(SHEELA_LANG, 'en-IN');
       }
 
       return languagePreferred;
