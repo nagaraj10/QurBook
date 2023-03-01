@@ -65,6 +65,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
 
   Widget buildPlayersList() {
     return ListView.separated(
+      padding: EdgeInsets.only(bottom: 200),
       itemBuilder: (context, index) {
         final eachLabModel = widget.labsModel[index];
         return InkWell(
@@ -84,7 +85,15 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
               });
             },
             child: Container(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: CommonUtil.isUSRegion() &&
+                                eachLabModel?.isPrimaryProvider ??
+                            false
+                        ? 0
+                        : 10),
                 margin: EdgeInsets.only(left: 12, right: 12, top: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -96,91 +105,100 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                     )
                   ],
                 ),
-                child: Row(
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 18,
-                      child: ClipOval(
-                          child: eachLabModel != null
-                              ? /*myProfile.result.profilePicThumbnailUrl != null
-                              ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                                  myProfile.result.profilePicThumbnailUrl)
-                              :*/
-                              Container(
-                                  height: 50.0.h,
-                                  width: 50.0.h,
-                                  color: Color(fhbColors.bgColorContainer),
-                                  child: Center(
-                                    child: Text(
-                                      eachLabModel.name != null
-                                          ? eachLabModel.name[0].toUpperCase()
-                                          : '',
-                                      style: TextStyle(
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor())),
-                                    ),
-                                  ))
-                              : Container(
-                                  height: 50.0.h,
-                                  width: 50.0.h,
-                                  color: Color(fhbColors.bgColorContainer),
-                                )),
-                    ),
-                    SizedBox(
-                      width: 20.0.w,
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 5.0.h),
-                          AutoSizeText(
-                            eachLabModel.name != null
-                                ? eachLabModel?.name
-                                    ?.capitalizeFirstofEach //toBeginningOfSentenceCase(eachLabModel.name)
-                                : '',
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 18,
+                          child: ClipOval(
+                              child: eachLabModel != null
+                                  ? /*myProfile.result.profilePicThumbnailUrl != null
+                                  ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                                      myProfile.result.profilePicThumbnailUrl)
+                                  :*/
+                                  Container(
+                                      height: 50.0.h,
+                                      width: 50.0.h,
+                                      color: Color(fhbColors.bgColorContainer),
+                                      child: Center(
+                                        child: Text(
+                                          eachLabModel.name != null
+                                              ? eachLabModel.name[0].toUpperCase()
+                                              : '',
+                                          style: TextStyle(
+                                              color: Color(CommonUtil()
+                                                  .getMyPrimaryColor())),
+                                        ),
+                                      ))
+                                  : Container(
+                                      height: 50.0.h,
+                                      width: 50.0.h,
+                                      color: Color(fhbColors.bgColorContainer),
+                                    )),
+                        ),
+                        SizedBox(
+                          width: 20.0.w,
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(height: 5.0.h),
+                              AutoSizeText(
+                                eachLabModel.name != null
+                                    ? eachLabModel?.name
+                                        ?.capitalizeFirstofEach //toBeginningOfSentenceCase(eachLabModel.name)
+                                    : '',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontSize: 16.0.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                              SizedBox(height: 5.0.h),
+                              AutoSizeText(
+                                '' + commonWidgets.getCityHospital(eachLabModel),
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontSize: 15.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: ColorUtils.lightgraycolor),
+                              ),
+                              SizedBox(height: 5.0.h),
+                            ],
                           ),
-                          SizedBox(height: 5.0.h),
-                          AutoSizeText(
-                            '' + commonWidgets.getCityHospital(eachLabModel),
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: 15.0.sp,
-                                fontWeight: FontWeight.w400,
-                                color: ColorUtils.lightgraycolor),
+                        ),
+                        Expanded(
+                            child: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              commonWidgets.getBookMarkedIconHealth(eachLabModel,
+                                  () {
+                                providerViewModel
+                                    .bookMarkHealthOrg(
+                                        eachLabModel, false, 'ListItem', null)
+                                    .then((status) {
+                                  if (status) {
+                                    widget.isRefresh();
+                                  }
+                                });
+                              }),
+                            ],
                           ),
-                          SizedBox(height: 5.0.h),
-                        ],
-                      ),
+                        )),
+                      ],
                     ),
-                    Expanded(
-                        child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          commonWidgets.getBookMarkedIconHealth(eachLabModel,
-                              () {
-                            providerViewModel
-                                .bookMarkHealthOrg(
-                                    eachLabModel, false, 'ListItem', null)
-                                .then((status) {
-                              if (status) {
-                                widget.isRefresh();
-                              }
-                            });
-                          }),
-                        ],
-                      ),
-                    )),
+                    if (CommonUtil.isUSRegion() &&
+                            eachLabModel?.isPrimaryProvider ??
+                        false)
+                      CommonUtil().primaryProviderIndication(),
                   ],
                 )));
       },

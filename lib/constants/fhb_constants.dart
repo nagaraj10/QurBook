@@ -795,6 +795,8 @@ const String sayText_sheela = 'saytext';
 
 const String primary_chat = '(Primary)';
 
+const String primary_provider = 'Primary';
+
 
 
 Future<void> fbaLog({String eveName, eveParams}) async {

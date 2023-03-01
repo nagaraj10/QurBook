@@ -5630,6 +5630,22 @@ class CommonUtil {
     }
     return strName.trim().isNotEmpty ? strName[0].toUpperCase() : "";
   }
+
+  Widget primaryProviderIndication() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          padding: EdgeInsets.only(bottom: 10),
+          child: Text(primary_provider,
+              style: TextStyle(
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w600)),
+        ),
+      ],
+    );
+  }
 }
 
 extension CapExtension on String {
