@@ -5488,6 +5488,25 @@ class CommonUtil {
           if (value?.result?.userProfileSettingCollection3?.isNotEmpty) {
             var profileSetting =
                 value?.result?.userProfileSettingCollection3[0].profileSetting;
+            if (profileSetting != null) {
+              CommonUtil.langaugeCodes.forEach((language, languageCode) {
+                if (language == profileSetting.preferred_language) {
+                  final langCode = language.split("-").first;
+                  String currentLanguage = langCode;
+                  if (currentLanguage.isNotEmpty) {
+                    CommonUtil.supportedLanguages
+                        .forEach((language, languageCode) {
+                      if (currentLanguage == languageCode) {
+                        PreferenceUtil.saveString(SHEELA_LANG,
+                            CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+                      }
+                    });
+                  }
+                }
+              });
+            } else {
+              PreferenceUtil.saveString(SHEELA_LANG, 'en-IN');
+            }
             if (profileSetting?.preferredMeasurement != null) {
               PreferredMeasurement preferredMeasurement =
                   profileSetting?.preferredMeasurement;
