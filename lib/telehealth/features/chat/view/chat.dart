@@ -46,6 +46,7 @@ import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/ShowImage.dart';
+import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 //import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';  FU2.5
 import 'package:permission_handler/permission_handler.dart';
@@ -727,13 +728,13 @@ class ChatScreenState extends State<ChatScreen> {
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
-                // await OpenFile.open(
-                //   file.path,
-                // );FU2.5
-                // final controller = Get.find<PDFViewController>();
-                // final data = OpenPDF(type: PDFLocation.Path, path: file.path);
-                // controller.data = data;
-                // Get.to(() => PDFView());
+                await OpenFilex.open(
+                  file?.path,
+                );//FU2.5
+                final controller = Get.find<PDFViewController>();
+                final data = OpenPDF(type: PDFLocation.Path, path: file?.path);
+                controller.data = data;
+                Get.to(() => PDFView());
               },
             ),
           ),
@@ -753,9 +754,9 @@ class ChatScreenState extends State<ChatScreen> {
           action: SnackBarAction(
             label: 'Open',
             onPressed: () async {
-              // await OpenFile.open(
-              //   pdfFile,
-              // );FU2.5
+              await OpenFilex.open(
+                pdfFile,
+              );//FU2.5
             },
           ),
         ));

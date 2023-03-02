@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flutter_geocoder/geocoder.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/add_providers/controller/add_providers_controller.dart';
 import 'package:myfhb/add_providers/models/add_doctors_providers_id.dart';
@@ -537,11 +538,11 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   getAddressesFromCoordinates() async {
-    // var coordinates = Coordinates(
-    //     widget.arguments.placeDetail.lat, widget.arguments.placeDetail.lng);
-    // final addresses =
-    //     await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    // address = addresses.first; FU2.5
+    var coordinates = Coordinates(
+        widget.arguments?.placeDetail?.lat, widget.arguments?.placeDetail?.lng);
+    final addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    address = addresses.first; //FU2.5
   }
 
   Future addMarker() async {

@@ -1,4 +1,7 @@
 
+import 'package:country_pickers/country.dart';
+import 'package:country_pickers/country_picker_dropdown.dart';
+import 'package:country_pickers/country_pickers.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -97,6 +100,35 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   child: Row(
                     children: <Widget>[
+                   CountryPickerDropdown(
+                  underline: Container(
+                    height: 2,
+                    color: Colors.red,
+                  ),
+                  //show'em (the text fields) you're in charge now
+                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                  //if you want your dropdown button's selected item UI to be different
+                  //than itemBuilder's(dropdown menu item UI), then provide this selectedItemBuilder.
+                  onValuePicked: (Country country) {
+                        setState(() {
+                          _selected = country;
+                        });
+                  },
+                  itemBuilder: (Country country) {
+                    return Row(
+                      children: <Widget>[
+                        SizedBox(width: 8.0),
+                        CountryPickerUtils.getDefaultFlagImage(country),
+                        SizedBox(width: 8.0),
+                        Expanded(child: Text(country.name)),
+                      ],
+                    );
+                  },
+                  itemHeight: null,
+                  isExpanded: true,
+                  //initialValue: 'TR',
+                  icon: Icon(Icons.arrow_downward),
+                ),
                       // CountryPicker(
                       //   nameTextStyle: TextStyle(
                       //       color: Colors.black, fontWeight: FontWeight.w500),

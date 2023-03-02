@@ -23,6 +23,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -605,13 +606,13 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
               if (Platform.isIOS) {
                 final path = await CommonUtil.downloadFile(
                     pdfId!.healthRecordUrl!, pdfId!.fileType);
-                // await OpenFile.open(
-                //   path.path,
-                // );FU2.5
+                await OpenFilex.open(
+                  path?.path,
+                );//FU2.5
               }else {
-                // await OpenFile.open(
-                //   pdfFile,
-                // );FU2.5
+                await OpenFilex.open(
+                  pdfFile,
+                );//FU2.5
               }
             },
           )

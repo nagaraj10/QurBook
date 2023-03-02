@@ -1,11 +1,12 @@
 
 import 'dart:io';
+// import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 // import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:camera/camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_absolute_path/flutter_absolute_path.dart';  FU2.5
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';  //FU2.5
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -530,9 +531,11 @@ class TakePictureScreenForDevicesState
     if (!mounted) return;
 
     for (Asset asset in resultList) {
-      // String filePath =
-      //     await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      // imagePaths.add(filePath); FU2.5
+      // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
+      // if(filePath!=null)imagePaths.add(filePath);
+      String filePath =
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      imagePaths.add(filePath);// FU2.5
     }
 
     setState(() {

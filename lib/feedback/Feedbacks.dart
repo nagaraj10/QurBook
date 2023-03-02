@@ -1,9 +1,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 //import 'package:flutter_absolute_path/flutter_absolute_path.dart';  FU2.5
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+// import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
 import 'package:myfhb/feedback/Controller/FeedbackController.dart';
 import 'package:myfhb/feedback/Model/FeedbackCategoriesTypeModel.dart';
 import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
@@ -85,9 +87,11 @@ class _FeedbacksState extends State<Feedbacks> {
     if (!mounted) return;
 
     for (var asset in resultList) {
-      // var filePath =
-      //     await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      // imagePaths.add(filePath); FU2.5
+      // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
+      // if(filePath!=null)imagePaths.add(filePath);
+      var filePath =
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      imagePaths.add(filePath);// FU2.5
     }
 
     setState(() {
