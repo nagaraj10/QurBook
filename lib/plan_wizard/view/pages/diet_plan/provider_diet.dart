@@ -27,7 +27,7 @@ class ProviderDietPlans extends StatefulWidget {
 }
 
 class _ProviderDietPlans extends State<ProviderDietPlans> {
-  Future<PlanListModel>? planListModel;
+  late  Future<PlanListModel?> planListModel; // FUcrash
 
   PlanListModel? myPlanListModel;
 
@@ -52,7 +52,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         .currentPackageProviderDietId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel>?;
+        .getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel?>;// FUcrash
 
     Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty =
         false;
@@ -151,7 +151,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
   }
 
   Widget getDietPlanList() {
-    return new FutureBuilder<PlanListModel>(
+    return new FutureBuilder<PlanListModel?>(// FUcrash
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -345,13 +345,13 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
       setState(() {
         isSwitched = true;
         planListModel = planListProvider!.getDietPlanListNew(
-            isFrom: strProviderDiet, isVeg: true) as Future<PlanListModel>?;
+            isFrom: strProviderDiet, isVeg: true) as Future<PlanListModel?>;// FUcrash
       });
     } else {
       setState(() {
         isSwitched = false;
         planListModel =
-            planListProvider!.getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel>?;
+            planListProvider!.getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel?>;// FUcrash
       });
     }
   }
@@ -455,7 +455,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     Get.to(AddProviderPlan(
         planListProvider!.selectedTag))!.then((value) =>  setState(() {
       planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-          .getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel>?;
+          .getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel?>;// FUcrash
     }));
 
     /*Navigator.pushNamed(

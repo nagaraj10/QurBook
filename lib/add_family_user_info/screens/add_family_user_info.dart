@@ -175,7 +175,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else { */
       //getAllCustomRoles();
       relationShipResponseList = widget.arguments?.defaultrelationShips;
-      if (widget?.arguments?.sharedbyme?.relationship?.name != null) {
+      if (widget.arguments?.sharedbyme?.relationship?.name != null) {
         selectedRelationShip = widget.arguments!.sharedbyme!.relationship;
       }
       // addFamilyUserInfoBloc.getCustomRoles().then((value) {
@@ -566,7 +566,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .getUserProfilePic(widget.arguments!.sharedbyme!.child!.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data!.isSuccess! && snapshot?.data?.result != null) {
+            if (snapshot.data!.isSuccess! && snapshot.data?.result != null) {
               return Image.network(
                 snapshot.data!.result!,
                 fit: BoxFit.cover,
@@ -1376,8 +1376,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     pattern,
                     'city',
                   ) as FutureOr<Iterable<City>>);
+                }else{
+                return [];
                 }
-              } as FutureOr<Iterable<City>> Function(String),
+              } ,//as FutureOr<Iterable<City>> Function(String), // FUcrash
               itemBuilder: (context, suggestion) {
                 return ListTile(
                   title: Text(
@@ -1436,8 +1438,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     pattern,
                     'state',
                   ) as FutureOr<Iterable<stateObj.State>>);
+                }else{
+                  return [];
                 }
-              } as FutureOr<Iterable<stateObj.State>> Function(String),
+              }, //as FutureOr<Iterable<stateObj.State>> Function(String),// FUcrash
               itemBuilder: (context, suggestion) {
                 return ListTile(
                   title: Text(suggestion.name!),
@@ -2602,20 +2606,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
   }
 
-  Future<List<City>?> getCitybasedOnSearch(
+  Future<List<City>> getCitybasedOnSearch(
     String cityname,
     String apibody,
   ) {
-    Future<List<City>?> citylist;
+    Future<List<City>> citylist;
     citylist = addFamilyUserInfoBloc.getCityDataList(cityname, apibody);
     return citylist;
   }
 
-  Future<List<stateObj.State>?> getStateBasedOnSearch(
+  Future<List<stateObj.State>> getStateBasedOnSearch(
     String stateName,
     String apibody,
   ) {
-    Future<List<stateObj.State>?> stateList;
+    Future<List<stateObj.State>> stateList;
     stateList = addFamilyUserInfoBloc.geStateDataList(stateName, apibody);
     return stateList;
   }

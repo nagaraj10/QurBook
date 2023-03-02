@@ -86,9 +86,10 @@ class _ChatUserListState extends State<ChatUserList> {
   bool isShowNewChat = false;
 
   final controller = Get.put(ChatUserListController());
+  
 
   @override
-  Future<void> initState() async {
+ initState(){ //FUcrash Future<void> initState()async{
     super.initState();
 
     token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
@@ -102,7 +103,7 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   void getFamilyListMap() async {
-    familyListModel = await (controller.getFamilyMappingList() as FutureOr<CaregiverPatientChatModel?>);
+    familyListModel = await (controller.getFamilyMappingList() as Future<dynamic>);//FUcrash Future<CaregiverPatientChatModel?>
     if (familyListModel != null) {
       if (familyListModel!.result != null) {
         if (familyListModel!.result!.isNotEmpty) {
@@ -122,11 +123,11 @@ class _ChatUserListState extends State<ChatUserList> {
 
   void initSocket(bool isLoad) {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        .socket!
         .off(message);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        .socket!
         .off(notifyChatList);
 
     if (isLoad) {
@@ -137,8 +138,8 @@ class _ChatUserListState extends State<ChatUserList> {
 
     var careGiverIds = [];
 
-    if ((widget?.careGiversList?.length ?? 0) > 0) {
-      widget?.careGiversList?.forEach((careGiver) {
+    if ((widget.careGiversList?.length ?? 0) > 0) {
+      widget.careGiversList?.forEach((careGiver) {
         careGiverIds.add(careGiver.doctorId);
       });
     }
@@ -146,7 +147,7 @@ class _ChatUserListState extends State<ChatUserList> {
     emitGetUserList(careGiverIds, isLoad);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        .socket!
         .on(notifyChatList, (data) {
       if (data != null) {
         emitGetUserList(careGiverIds, isLoad);
@@ -156,7 +157,7 @@ class _ChatUserListState extends State<ChatUserList> {
 
   void emitGetUserList(var careGiverIds, bool isLoad) {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        ?.socket!
         .emitWithAck(getChatsList, {
       'userId': userId,
       'isCaregiverFilter': (careGiverIds?.length ?? 0) > 0 ? true : false,

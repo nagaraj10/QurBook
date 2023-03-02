@@ -304,20 +304,20 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     return verifyEmailResponse;
   }
 
-  Future<List<City>?> getCityDataList(String cityname, String apibody) async {
+  Future<List<City>> getCityDataList(String cityname, String apibody) async {
     CityModel cityListModel;
 
     cityListModel = await addFamilyUserInfoRepository.getValuesBaseOnSearch(
         cityname, apibody);
-    return cityListModel.result;
+    return cityListModel.result!;
   }
 
-  Future<List<State>?> geStateDataList(String cityname, String apibody) async {
+  Future<List<State>> geStateDataList(String cityname, String apibody) async {
     StateModel stateModel;
 
     stateModel = await addFamilyUserInfoRepository.getStateValuesBaseOnSearch(
         cityname, apibody);
-    return stateModel.result;
+    return stateModel.result!;
   }
 
   Future<void> getDeviceSelectionValues() async {
@@ -562,7 +562,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             preferredMeasurement)
         .then(
       (value) {
-        if (value?.isSuccess ?? false) {
+        if (value.isSuccess ?? false) {
           getDeviceSelectionValues();
         } else {
           //var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);

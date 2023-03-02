@@ -18,7 +18,7 @@ class HealthConditionPage extends StatefulWidget {
 }
 
 class _HealthConditionPageState extends State<HealthConditionPage> {
-  Future<Map<String?, List<MenuItem>>>? healthConditions;
+ late Future<Map<String?, List<MenuItem>>?> healthConditions;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
     false;
 
     healthConditions = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getHealthConditions() as Future<Map<String?, List<MenuItem>>>?;
+        .getHealthConditions() as Future<Map<String?, List<MenuItem>>?>;
 
     Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;
     Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
@@ -49,7 +49,7 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
           //   },
           // ),
           Expanded(
-            child: FutureBuilder<Map<String?, List<MenuItem>>>(
+            child: FutureBuilder<Map<String?, List<MenuItem>>?>(
                 future: healthConditions,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {

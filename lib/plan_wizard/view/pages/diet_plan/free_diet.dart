@@ -23,7 +23,7 @@ class FreeDietPlans extends StatefulWidget {
 }
 
 class _FreeDietPlans extends State<FreeDietPlans> {
-  Future<PlanListModel>? planListModel;
+  late Future<PlanListModel?> planListModel;
 
   PlanListModel? myPlanListModel;
 
@@ -48,7 +48,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
         .currentPackageFreeDietId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel>?;
+        .getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel?>;
   }
 
   @override
@@ -143,7 +143,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
   }
 
   Widget getDietPlanList() {
-    return new FutureBuilder<PlanListModel>(
+    return new FutureBuilder<PlanListModel?>(
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -324,13 +324,13 @@ class _FreeDietPlans extends State<FreeDietPlans> {
       setState(() {
         isSwitched = true;
         planListModel = planListProvider!.getDietPlanListNew(
-            isFrom: strFreeDiet, isVeg: true) as Future<PlanListModel>?;
+            isFrom: strFreeDiet, isVeg: true) as Future<PlanListModel?>;
       });
     } else {
       setState(() {
         isSwitched = false;
         planListModel =
-            planListProvider!.getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel>?;
+            planListProvider!.getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel?>;
       });
     }
   }

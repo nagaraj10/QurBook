@@ -4739,14 +4739,14 @@ class CommonUtil {
     String? userId = PreferenceUtil.getStringValue(KEY_USERID);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        ?.socket!
         .disconnect();
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.initSocket()
         .then((value) {
       //update common count
       Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-          ?.socket
+          ?.socket!
           .emitWithAck(getChatTotalCountEmit, {
         'userId': userId,
       }, ack: (countResponseEmit) {

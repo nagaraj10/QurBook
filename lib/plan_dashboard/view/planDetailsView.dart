@@ -103,13 +103,13 @@ class PlanDetail extends State<MyPlanDetailView> {
   InAppWebViewController? webView;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Future<PlanListModel>? planListModel;
+  late Future<PlanListModel?> planListModel;
   @override
   void initState() {
     super.initState();
     mInitialTime = DateTime.now();
     // setValues();
-    planListModel = PlanViewModel().getPlanDetail(widget.packageId) as Future<PlanListModel>?;
+    planListModel = PlanViewModel().getPlanDetail(widget.packageId) as Future<PlanListModel?>;
   }
 
   @override
@@ -124,24 +124,24 @@ class PlanDetail extends State<MyPlanDetailView> {
   }
 
   void setValues(PlanListResult planList) {
-    title = planList?.title;
-    description = planList?.description;
-    price = planList?.price;
-    issubscription = planList?.issubscription;
-    packageId = planList?.packageid;
-    providerName = planList?.providerName;
-    packageDuration = planList?.packageDuration;
-    docName = planList?.metadata?.doctorName ?? '';
-    providerId = planList?.plinkid;
+    title = planList.title;
+    description = planList.description;
+    price = planList.price;
+    issubscription = planList.issubscription;
+    packageId = planList.packageid;
+    providerName = planList.providerName;
+    packageDuration = planList.packageDuration;
+    docName = planList.metadata?.doctorName ?? '';
+    providerId = planList.plinkid;
     isDisable = false;
-    hosIcon = planList?.providerMetadata?.icon;
-    iconApi = planList?.metadata?.icon;
-    catIcon = planList?.catmetadata?.icon;
-    metaDataForURL = planList?.metadata;
-    isRenew = planList?.isexpired == '1' ? true : false;
+    hosIcon = planList.providerMetadata?.icon;
+    iconApi = planList.metadata?.icon;
+    catIcon = planList.catmetadata?.icon;
+    metaDataForURL = planList.metadata;
+    isRenew = planList.isexpired == '1' ? true : false;
     isFrom = widget.isFrom;
-    isExtendable = planList?.isSubscribed == '1'
-        ? planList?.isExtendable == '1'
+    isExtendable = planList.isSubscribed == '1'
+        ? planList.isExtendable == '1'
             ? true
             : false
         : true;
@@ -151,7 +151,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (widget?.isFrom == strDeepLink) {
+        if (widget.isFrom == strDeepLink) {
           Get.offAllNamed(rt_PlanWizard);
           return Future.value(false);
         } else {
@@ -164,7 +164,7 @@ class PlanDetail extends State<MyPlanDetailView> {
           flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
             onTap: () {
-              if (widget?.isFrom == strDeepLink) {
+              if (widget.isFrom == strDeepLink) {
                 Get.offAllNamed(rt_PlanWizard);
               } else {
                 Get.back();
@@ -183,7 +183,7 @@ class PlanDetail extends State<MyPlanDetailView> {
             ),
           ),
         ),
-        body: FutureBuilder<PlanListModel>(
+        body: FutureBuilder<PlanListModel?>(
           future: planListModel,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -206,7 +206,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                   snapshot.data!.result != null &&
                   snapshot.data!.result!.isNotEmpty) {
                 PlanListResult planList =
-                    snapshot?.data?.result![0] as PlanListResult;
+                    snapshot.data?.result![0] as PlanListResult;
                 setValues(planList);
                 return Builder(
                   builder: (contxt) => Container(

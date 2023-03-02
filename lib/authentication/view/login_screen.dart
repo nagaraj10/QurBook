@@ -424,7 +424,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
         await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no!)
             .then((onValue) {});
         await PreferenceUtil.saveString(
-                Constants.KEY_EMAIL, saveuser?.email ?? '')
+                Constants.KEY_EMAIL, saveuser.email ?? '')
             .then((onValue) {});
         await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring!)
             .then((onValue) {});

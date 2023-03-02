@@ -173,11 +173,11 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void initSocket() {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        ?.socket!
         .off(getChatTotalCountOn);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        ?.socket!
         .emitWithAck(getChatTotalCountEmit, {
       'userId': userId,
     }, ack: (countResponseEmit) {
@@ -192,7 +192,7 @@ class _LandingScreenState extends State<LandingScreen> {
     });
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        ?.socket!
         .on(getChatTotalCountOn, (countResponseOn) {
       if (countResponseOn != null) {
         TotalCountModel totalCountModelOn =

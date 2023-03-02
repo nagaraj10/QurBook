@@ -184,7 +184,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                         },
                         onAddPressed: activePlanCount > 0
                             ? null
-                            : addPlanButton!
+                            : addPlanButton ?? true
                                 ? () async {
                                     await Get.toNamed(rt_PlanWizard);
                                     await landingViewModel

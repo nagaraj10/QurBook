@@ -84,9 +84,9 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
 
   Future<void> getConfiguration() async {
     bool? addplanbutton=await PreferenceUtil.getAddPlanBtn();
-    bool? cartEnable=await PreferenceUtil.getCartEnable();
+   bool? cartEnable=await PreferenceUtil.getCartEnable()?? false;
    setState(() {
-     this.cartEnable=cartEnable!; // FUcrash
+     this.cartEnable=cartEnable; // FUcrash
    });
   }
 }
