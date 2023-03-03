@@ -462,7 +462,19 @@ class SheelaAIController extends GetxController {
             .isNotEmpty) {
           textForPlaying = currentButton.ttsResponse.payload.audioContent;
         } else if ((currentButton.title ?? '').isNotEmpty) {
-          final result = await getGoogleTTSForText(currentButton.title);
+          var result;
+          try {
+            var stringToSpeech = currentButton.title;
+            if (currentButton.title.contains(".")) {
+              stringToSpeech = currentButton.title.split(".")[1];
+              result = await getGoogleTTSForText(stringToSpeech);
+            } else {
+              result = await getGoogleTTSForText(currentButton.title);
+            }
+          } catch (e) {
+            result = await getGoogleTTSForText(currentButton.title);
+          }
+
           if ((result.payload?.audioContent ?? '').isNotEmpty) {
             textForPlaying = result.payload.audioContent;
           }
