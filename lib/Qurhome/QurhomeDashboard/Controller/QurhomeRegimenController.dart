@@ -91,7 +91,9 @@ class QurhomeRegimenController extends GetxController {
           !element?.scheduled &&
               !(element?.dayrepeat?.trim().toLowerCase() ==
                   strText.trim().toLowerCase()));
-      for (int i = 0;
+    bool allActivitiesCompleted=true;
+
+    for (int i = 0;
           i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0;
           i++) {
         String strCurrLoggedEID = CommonUtil().validString(currLoggedEID.value);
@@ -102,6 +104,7 @@ class QurhomeRegimenController extends GetxController {
           nextRegimenPosition = i;
           currentIndex = i;
           currLoggedEID.value = "";
+          allActivitiesCompleted=false;
           restartTimer();
           break;
         } else if (DateTime.now()
@@ -111,15 +114,29 @@ class QurhomeRegimenController extends GetxController {
             if (qurHomeRegimenResponseModel?.regimentsList?.length > (i + 1)) {
               nextRegimenPosition = i + 1;
               currentIndex = i + 1;
+              allActivitiesCompleted=false;
+
+
             } else {
               nextRegimenPosition = i;
               currentIndex = i;
+              allActivitiesCompleted=false;
+
+
             }
           } else {
             nextRegimenPosition = i;
             currentIndex = i;
+            allActivitiesCompleted=false;
+
           }
           break;
+        }
+      }
+      if(allActivitiesCompleted){
+        if((qurHomeRegimenResponseModel?.regimentsList?.length ?? 0)>0){
+          nextRegimenPosition = qurHomeRegimenResponseModel?.regimentsList?.length+1;
+          currentIndex = qurHomeRegimenResponseModel?.regimentsList?.length+1;
         }
       }
       for (int i = 0;
