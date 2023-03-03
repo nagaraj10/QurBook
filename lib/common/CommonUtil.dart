@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
@@ -142,6 +143,7 @@ import 'keysofmodel.dart' as keysConstant;
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import '../../constants/fhb_constants.dart' as constants;
+import 'package:local_auth/error_codes.dart' as auth_error;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -1870,6 +1872,37 @@ class CommonUtil {
     var currentToken = await FirebaseMessaging.instance.getToken();
     if (localToken != currentToken) {
       await saveTokenToDatabase(currentToken);
+    }
+  }
+
+  Future<bool> checkAppLock({bool useErrorDialogs: true}) async {
+    try {
+      var value = await LocalAuthentication().authenticate(
+        localizedReason: strAuthToUseApp,
+        stickyAuth: true,
+        biometricOnly: false,
+        //useErrorDialogs: useErrorDialogs,
+        useErrorDialogs: useErrorDialogs,
+        // androidAuthStrings: AndroidAuthMessages(
+        //   signInTitle: 'Oops! Biometric authentication required!',
+        //   cancelButton: 'No thanks',
+        // ),
+        // iOSAuthStrings: IOSAuthMessages(
+        //   cancelButton: 'No thanks',
+        // ),
+      );
+      print("value:${value}");
+      return value;
+    } on PlatformException catch (e) {
+      if (e.code == auth_error.notAvailable) {
+        print(e.message);
+        return false;
+
+        // Add handling of no hardware here.
+      } else if (e.code == auth_error.notEnrolled) {
+      } else if (e.code == auth_error.passcodeNotSet) {
+      } else {}
+      return true;
     }
   }
 

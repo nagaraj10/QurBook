@@ -5,10 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:local_auth/auth_strings.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/landing/view/widgets/drawer_tile.dart';
@@ -46,6 +48,7 @@ import '../../widgets/GradientAppBar.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:local_auth/local_auth.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 
 class MoreMenuScreen extends StatefulWidget {
   final Function(bool userChanged) refresh;
@@ -1531,21 +1534,36 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     trailing: Transform.scale(
                       scale: 0.8,
                       child: Switch(
-                        value: isBiometric,
+                        value: PreferenceUtil.getEnableAppLock(),
                         activeColor:
                             Color(new CommonUtil().getMyPrimaryColor()),
-                        onChanged: (bool newValue) {
-                          setState(() {
-                            _enableBiometric();
-                            /* isPrivacyAndSecurity = true;
-                            isTouched = true;
+                        onChanged: (bool newValue) async {
+                          if (newValue) {
+                            String msg = 'You are not authorized.';
+                            try {
+                              var value = await CommonUtil().checkAppLock();
 
-                            isBiometric = newValue;
-                            createAppColorSelection(preColor, greColor);*/
-                            /*PreferenceUtil.saveString(
-                                        Constants.allowDigitRecognition,
-                                        _isdigitRecognition.toString());*/
-                          });
+                              setState(() {
+                                PreferenceUtil.saveEnableAppLock(
+                                  appLockStatus: value,
+                                );
+                              });
+                            } on PlatformException catch (e) {
+                              msg = "Error while opening pattern/pin/passcode";
+                              print(msg);
+                              print(e.message);
+                              if (e.code == auth_error.notAvailable) {
+                                // Add handling of no hardware here.
+                              } else if (e.code == auth_error.notEnrolled) {
+                              } else {}
+                            }
+                          } else {
+                            setState(() {
+                              PreferenceUtil.saveEnableAppLock(
+                                appLockStatus: false,
+                              );
+                            });
+                          }
                         },
                       ),
                     )),
@@ -1578,25 +1596,37 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   _enableBiometric() async {
-    final LocalAuthentication auth = LocalAuthentication();
     String msg = "You are not authorized.";
-    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-    final bool canAuthenticate =
-        //canAuthenticateWithBiometrics ||
-        await auth.isDeviceSupported();
-    //  Future _getAvailableBiometric() async {
     try {
-      bool pass = await auth.authenticate(
+      var value = await LocalAuthentication().authenticate(
         localizedReason: 'Authenticate with pattern/pin/passcode',
+        stickyAuth: true,
       );
-      if (pass) {
-        msg = "You are Authenticated.";
-        setState(() {});
-      }
     } on PlatformException catch (e) {
       msg = "Error while opening pattern/pin/passcode";
       print(msg);
       print(e.message);
     }
+
+    // final LocalAuthentication auth = LocalAuthentication();
+    // String msg = "You are not authorized.";
+    // final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    // final bool canAuthenticate =
+    //     //canAuthenticateWithBiometrics ||
+    //     await auth.isDeviceSupported();
+    // //  Future _getAvailableBiometric() async {
+    // try {
+    //   bool pass = await auth.authenticate(
+    //     localizedReason: 'Authenticate with pattern/pin/passcode',
+    //   );
+    //   if (pass) {
+    //     msg = "You are Authenticated.";
+    //     // setState(() {});
+    //   }
+    // } on PlatformException catch (e) {
+    //   msg = "Error while opening pattern/pin/passcode";
+    //   print(msg);
+    //   print(e.message);
+    // }
   }
 }

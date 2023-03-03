@@ -279,6 +279,7 @@ const String strCheckConnection = 'Check your connection or try again';
 const String strBackOnline = 'back to online';
 const String strNoConnection = 'no connection';
 const String strve = 've';
+const String callAppLockFeatureMethod = "callAppLockFeatureMethod";
 
 //new icons for menu
 const String activity_non_adherance =
@@ -293,13 +294,38 @@ const String strApprovAdd = 'This provider addition needs approval';
 //sheela respond by number
 const zero = "zero";
 const oneToNine = [
-  "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine"
 ];
 const tenToNinteen = [
-  "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+  "ten",
+  "eleven",
+  "twelve",
+  "thirteen",
+  "fourteen",
+  "fifteen",
+  "sixteen",
+  "seventeen",
+  "eighteen",
+  "nineteen"
 ];
 const dozens = [
-  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
+  "ten",
+  "twenty",
+  "thirty",
+  "forty",
+  "fifty",
+  "sixty",
+  "seventy",
+  "eighty",
+  "ninety"
 ];
 
 //for audioWidget
@@ -614,7 +640,9 @@ const String strScanDevices = 'scans for the values from device images';
 const String strAllowDevice = 'Allow device recognition';
 const String strScanAuto = 'scans and auto-detects devices';
 const String strAllowBiometric = 'Enable App lock';
-const String strEnableApplock = 'Allow app lock with FaceID/FingerPrint or Passcode';
+const String strEnableApplock =
+    'Allow app lock with FaceID/FingerPrint or Passcode';
+const String strAuthToUseApp = 'Please complete the authentication to proceed.';
 
 //for healthKit and googleFit activation and sync
 const String strGoogleFit = 'Google Fit';
@@ -648,7 +676,7 @@ const String strConnectBpMeter =
     'Please connect your BP device and start recording';
 const String strConnectPulseMeter =
     'Please connect your pulse oximeter and start recording';
-    const String strConnectWeighingScale =
+const String strConnectWeighingScale =
     'Please connect your weighing scale and start recording';
 
 //introslider
@@ -751,15 +779,19 @@ const String str_far = 'Fahrenheit';
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
 const addReminderMethod = 'addReminder';
 const navigateToSheelaReminderMethod = 'navigateToSheelaReminderMethod';
+const notificationReceivedMethod = "notificationReceived";
 const removeReminderMethod = 'removeReminder';
 const removeAllReminderMethod = 'removeAllReminder';
 const navigateToRegimentMethod = 'navigateToRegiment';
 const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
+const reponseToTriggerAppLockMethodChannel =
+    MethodChannel('flutter.native.QurBook/appLockMethodChannel');
 const notificationResponseMethod = 'notificationResponse';
 const iOSMethodChannel = MethodChannel('flutter.native/iOS');
 const getWifiDetailsMethod = 'getWifiDetails';
 const listenToCallStatusMethod = 'listenToCallStatus';
+
 // True Desk
 
 const String strNoTicketsRaised = 'Tap on + icon to create new tickets';

@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -19,6 +22,7 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
@@ -59,6 +63,7 @@ import 'package:get/get.dart';
 
 import 'SheelaAI/Models/sheela_arguments.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -90,6 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
   GetDeviceSelectionModel selectionResult;
+  bool _loaded = false;
 
   @override
   void initState() {
@@ -98,6 +104,56 @@ class _SplashScreenState extends State<SplashScreen> {
     CommonUtil().ListenForTokenUpdate();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
     CommonUtil().OnInitAction();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      variable.reponseToTriggerAppLockMethodChannel
+          .setMethodCallHandler((call) async {
+        if (call.method == variable.callAppLockFeatureMethod) {
+          final data = Map<String, dynamic>.from(call.arguments);
+          if (data[isCallRecieved] == false) {
+            // No call notification is received so call security types code
+            String authToken = PreferenceUtil.getStringValue(Constants
+                .KEY_AUTHTOKEN); // To check whether it's logged in or not
+            if (PreferenceUtil.getEnableAppLock() &&
+                authToken != null &&
+                !PreferenceUtil.getNotificationReceived()) {
+              _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
+              setState(() {});
+
+              if (Platform.isIOS) {
+                reponseToRemoteNotificationMethodChannel.invokeListMethod(
+                  IsAppLockChecked,
+                  {'status': _loaded},
+                );
+              }
+            } else {
+              PreferenceUtil.setNotificationRecieved(isCalled: false);
+              if (Platform.isIOS) {
+                reponseToRemoteNotificationMethodChannel.invokeListMethod(
+                  IsAppLockChecked,
+                  {'status': true},
+                );
+              }
+              setState(() {
+                _loaded = true;
+              });
+            }
+          } else {
+            // Recieved from call notification so don't call security types code
+            PreferenceUtil.setNotificationRecieved(isCalled: false);
+            if (Platform.isIOS) {
+              reponseToRemoteNotificationMethodChannel.invokeListMethod(
+                IsAppLockChecked,
+                {'status': true},
+              );
+            }
+            setState(() {
+              _loaded = true;
+            });
+          }
+        }
+      });
+    });
   }
 
   @override
@@ -105,7 +161,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return FutureBuilder<ConnectivityResult>(
         future: Connectivity().checkConnectivity(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.connectionState == ConnectionState.done && _loaded) {
             if (snapshot.hasData &&
                 (snapshot.data == ConnectivityResult.mobile ||
                     snapshot.data == ConnectivityResult.wifi)) {
@@ -247,8 +303,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           rawTitle = parsedData[0];
                           rawBody = parsedData[1];
                           notificationListId = parsedData[2] ?? '';
-                        } else if (parsedData.length == 5) 
-                        {
+                        } else if (parsedData.length == 5) {
                           eventType = parsedData[0];
                           others = parsedData[1];
                           rawBody = parsedData[3];
@@ -702,7 +757,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       if (passedValArr[2] != null) {
                         AppointmentDetailsController
                             appointmentDetailsController =
-                        CommonUtil().onInitAppointmentDetailsController();
+                            CommonUtil().onInitAppointmentDetailsController();
                         appointmentDetailsController
                             .getAppointmentDetail(passedValArr[2]);
                         Get.to(() => AppointmentDetailScreen()).then((value) =>

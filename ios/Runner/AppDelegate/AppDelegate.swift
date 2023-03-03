@@ -65,7 +65,12 @@ import LS202_DeviceManager
     var idForBP :UUID?
     var isQurhomeDefaultUI = false
     var ResponseNotificationChannel : FlutterMethodChannel!
+    var ReponseAppLockMethodChannel : FlutterMethodChannel!
     var connectedWithWeighingscale = false
+    
+    var isFromKilledStateNotification = false
+    var payloadResonse: UNNotificationResponse!
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -214,10 +219,10 @@ import LS202_DeviceManager
                 print(Constants.speechToText)
                 print(Constants.STT, result)
                 self?.startLoadingVC()
-//                Loading.sharedInstance.showLoader()
-//                let mytapGestureRecog = UITapGestureRecognizer(target: self, action: #selector(self?.myTapActions))
-//                mytapGestureRecog.numberOfTapsRequired = 1
-//                Loading.sharedInstance.bgBlurView.addGestureRecognizer(mytapGestureRecog)
+                //                Loading.sharedInstance.showLoader()
+                //                let mytapGestureRecog = UITapGestureRecognizer(target: self, action: #selector(self?.myTapActions))
+                //                mytapGestureRecog.numberOfTapsRequired = 1
+                //                Loading.sharedInstance.bgBlurView.addGestureRecognizer(mytapGestureRecog)
                 self?.STT_Result = result;
                 do{
                     try self?.startRecording();
@@ -259,6 +264,27 @@ import LS202_DeviceManager
             self?.TTS_Result = result;
             self?.textToSpeech(messageToSpeak: message, isClose: isClose)
         })
+        
+        ResponseNotificationChannel.setMethodCallHandler {[weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
+            guard let self = self else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            if call.method == Constants.IsAppLockChecked{
+                if let QurhomeDefault = call.arguments as? NSDictionary,let status = QurhomeDefault["status"] as? Bool{
+                    if(status == true && self.payloadResonse != nil){
+                        let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
+                        self.navigationController?.children.first?.present(alert, animated: true)
+                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+4) {
+                            alert.dismiss(animated: true)
+                            self.responsdToNotificationTap(response: self.payloadResonse)
+                            self.payloadResonse = nil
+                        }
+                    }
+                }
+            }
+        }
+        
         //        print("fcm token \(String(describing: Messaging.messaging().fcmToken))")
         GeneratedPluginRegistrant.register(with: self)
         let flutterViewController: FlutterViewController = window?.rootViewController as! FlutterViewController
@@ -266,12 +292,48 @@ import LS202_DeviceManager
         navigationController?.isNavigationBarHidden = true
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        
+        // To check whether the app is launched from push notification or not from killed state
+        if launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] != nil {
+            // Launched from push notification
+            if let userInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [String: AnyObject] {
+                if let notificationType = userInfo[Constants.type] as? NSString {
+                    isFromKilledStateNotification = true;
+
+                    if(notificationType as String == Constants.call){
+                        // Received call notification
+                        triggerAppLockMethod(isCallRecieved: true)
+                    }else{
+                        // Received normal notification(Not call)
+                        triggerAppLockMethod(isCallRecieved: false)
+                    }
+                }
+            }
+        }else{
+            //Not launched from push notification
+            triggerAppLockMethod(isCallRecieved: false)
+            //            let alert = UIAlertController(title: nil, message: "Triggered", preferredStyle: .actionSheet)
+            //            navigationController?.children.first?.present(alert, animated: true)
+            
+        }
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+    
+    func triggerAppLockMethod(isCallRecieved: Bool){
+        let data = [ Constants.isCallRecieved : isCallRecieved]
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
+            if let controller = self.navigationController?.children.first as? FlutterViewController{
+                if (self.ReponseAppLockMethodChannel == nil){
+                    self.ReponseAppLockMethodChannel = FlutterMethodChannel.init(name: Constants.reponseToTriggerAppLockMethodChannel, binaryMessenger: controller.binaryMessenger)
+                }
+            }
+            self.ReponseAppLockMethodChannel.invokeMethod(Constants.callAppLockFeatureMethod, arguments:data)
+        }
     }
     
     @objc func myTapActions(recognizer: UITapGestureRecognizer) {
         STT_Result?("");
-//        Loading.sharedInstance.hideLoader()
+        //        Loading.sharedInstance.hideLoader()
         stopRecording()
         if let controller = self.navigationController?.children.first as? FlutterViewController{
             let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
@@ -815,17 +877,31 @@ import LS202_DeviceManager
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          didReceive response: UNNotificationResponse,
                                          withCompletionHandler completionHandler: @escaping () -> Void) {
+        //        if(isFromKilledState == true){
+        //            if (ResponseNotificationChannel == nil){
+        //                var controller = navigationController?.children.first as? FlutterViewController;
+        //                ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller!.binaryMessenger)
+        //            }
+        //            ResponseNotificationChannel.invokeMethod(Constants.notificationReceivedMethod, arguments:nil)
+        //        }
+        
         //        let appState =  UIApplication.shared.applicationState
         //        if( appState == .active){
         //            responsdToNotificationTap(response: response)
         //            completionHandler()
         //        }else{
-        let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
-        navigationController?.children.first?.present(alert, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+4) {
-            alert.dismiss(animated: true)
-            self.responsdToNotificationTap(response: response)
-            completionHandler()
+        
+        payloadResonse = nil
+        if(isFromKilledStateNotification == false){
+            let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
+            navigationController?.children.first?.present(alert, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+4) {
+                alert.dismiss(animated: true)
+                self.responsdToNotificationTap(response: response)
+                completionHandler()
+            }
+        }else{
+            payloadResonse = response;
         }
         
         //        }
