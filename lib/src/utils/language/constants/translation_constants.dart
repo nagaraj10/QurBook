@@ -81,6 +81,7 @@ class TranslationConstants {
   static const String STR_WEARABLES = 'Wearable';
   static const String STR_TELEHEALTH = 'Telehealth';
   static const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
+  static const String STR_PROVIDERUPLOADED = 'Provider Uploaded';
 
   static const String terms_of_service = 'Terms of use';
   static const String privacy_policy = 'Privacy policy';
