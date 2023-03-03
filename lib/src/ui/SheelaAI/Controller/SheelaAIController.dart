@@ -467,9 +467,10 @@ class SheelaAIController extends GetxController {
             var stringToSpeech = currentButton.title;
             if (currentButton.title.contains(".")) {
               stringToSpeech = currentButton.title.split(".")[1];
+              result = await getGoogleTTSForText(stringToSpeech);
+            } else {
+              result = await getGoogleTTSForText(currentButton.title);
             }
-
-            result = await getGoogleTTSForText(stringToSpeech);
           } catch (e) {
             result = await getGoogleTTSForText(currentButton.title);
           }
