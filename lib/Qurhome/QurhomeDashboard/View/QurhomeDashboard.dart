@@ -43,7 +43,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   double buttonSize = 70;
   double textFontSize = 16;
   int index = 0;
-
+  double badgeSize = 30;
   final sheelBadgeController = Get.put(SheelaAIController());
 
   //LandingViewModel landingViewModel;
@@ -93,7 +93,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
       if (CommonUtil().isTablet) {
         CommonUtil().initQurHomePortraitLandScapeMode();
-        buttonSize = 100;
+        buttonSize = buttonSize.h;
+        badgeSize = badgeSize.h;
         textFontSize = 26;
       }
 
@@ -150,17 +151,19 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         child: Container(
           decoration: BoxDecoration(
             color: ColorUtils.countColor,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(
+              badgeSize / 2,
+            ),
           ),
-          height: 30,
-          width: 30,
+          height: badgeSize,
+          width: badgeSize,
           child: SizedBox(
             child: Center(
               child: Text(
                 count > 9 ? '9+' : count.toString(),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                 ),
               ),
             ),
@@ -365,8 +368,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
             floatingActionButton: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10,
+                  padding: EdgeInsets.only(
+                    top: CommonUtil().isTablet ? 20.h : 20,
                   ),
                   child: SizedBox(
                     height: buttonSize,
@@ -403,8 +406,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         }
                       },
                       child: Container(
-                        height: 60,
-                        width: 60,
+                        height: buttonSize,
+                        width: buttonSize,
                         padding: const EdgeInsets.all(
                           8,
                         ),
