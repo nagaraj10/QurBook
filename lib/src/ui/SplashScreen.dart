@@ -75,6 +75,7 @@ class SplashScreen extends StatefulWidget {
   final String healthOrganizationId;
   final String templateName;
   final dynamic bundle;
+  final bool isFromCallScreen;
 
   SplashScreen(
       {this.nsRoute,
@@ -84,7 +85,8 @@ class SplashScreen extends StatefulWidget {
       this.doctorSessionId,
       this.healthOrganizationId,
       this.templateName,
-      this.bundle});
+      this.bundle,
+      this.isFromCallScreen = false});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -109,15 +111,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (Platform.isIOS) {
-        variable.reponseToTriggerAppLockMethodChannel
-            .setMethodCallHandler((call) async {
-          if (call.method == variable.callAppLockFeatureMethod) {
-            final data = Map<String, dynamic>.from(call.arguments);
-            callAppLockFeatureMethod(data[isCallRecieved]);
-          }
-        });
+        if (widget.isFromCallScreen) {
+          // It comes from callscreen on iOS after clicking the cancel call button
+          callAppLockFeatureMethod(false);
+        } else {
+          variable.reponseToTriggerAppLockMethodChannel
+              .setMethodCallHandler((call) async {
+            if (call.method == variable.callAppLockFeatureMethod) {
+              final data = Map<String, dynamic>.from(call.arguments);
+              callAppLockFeatureMethod(data[isCallRecieved]);
+            }
+          });
+        }
       } else {
-        callAppLockFeatureMethod(widget.nsRoute!=null&&widget.nsRoute == call?true:false);
+        callAppLockFeatureMethod(
+            widget.nsRoute != null && widget.nsRoute == call ? true : false);
       }
     });
   }
@@ -128,9 +136,7 @@ class _SplashScreenState extends State<SplashScreen> {
         // No call notification is received so call security types code
         String authToken = PreferenceUtil.getStringValue(
             Constants.KEY_AUTHTOKEN); // To check whether it's logged in or not
-        if (PreferenceUtil.getEnableAppLock() &&
-            authToken != null &&
-            !PreferenceUtil.getNotificationReceived()) {
+        if (PreferenceUtil.getEnableAppLock() && authToken != null) {
           _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
           setState(() {});
 
@@ -141,8 +147,8 @@ class _SplashScreenState extends State<SplashScreen> {
             );
           }
         } else {
-          PreferenceUtil.setNotificationRecieved(isCalled: false);
           if (Platform.isIOS) {
+            PreferenceUtil.setCallNotificationRecieved(isCalled: false);
             reponseToRemoteNotificationMethodChannel.invokeListMethod(
               IsAppLockChecked,
               {'status': true},
@@ -154,8 +160,8 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       } else {
         // Recieved from call notification so don't call security types code
-        PreferenceUtil.setNotificationRecieved(isCalled: false);
         if (Platform.isIOS) {
+          PreferenceUtil.setCallNotificationRecieved(isCalled: true);
           reponseToRemoteNotificationMethodChannel.invokeListMethod(
             IsAppLockChecked,
             {'status': true},

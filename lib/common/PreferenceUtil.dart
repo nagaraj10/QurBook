@@ -488,19 +488,19 @@ class PreferenceUtil {
         false;
   }
 
-  static bool getNotificationReceived() {
+  static bool getCallNotificationReceived() {
     return _prefsInstance.getBool(
-          Constants.notificationReceived,
+          Constants.callNotificationReceived,
         ) ??
         false;
   }
 
-  static Future<bool> setNotificationRecieved({
+  static Future<bool> setCallNotificationRecieved({
     bool isCalled = false,
   }) async {
     final instance = await _prefs;
     return instance.setBool(
-      Constants.notificationReceived,
+      Constants.callNotificationReceived,
       isCalled,
     );
   }

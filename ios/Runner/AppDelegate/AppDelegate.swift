@@ -273,9 +273,11 @@ import LS202_DeviceManager
             if call.method == Constants.IsAppLockChecked{
                 if let QurhomeDefault = call.arguments as? NSDictionary,let status = QurhomeDefault["status"] as? Bool{
                     if(status == true && self.payloadResonse != nil){
+                        self.isFromKilledStateNotification = false;
+                        let data = self.payloadResonse.notification.request.content.userInfo
                         let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
                         self.navigationController?.children.first?.present(alert, animated: true)
-                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+4) {
+                        DispatchQueue.main.asyncAfter(deadline: data[Constants.type] as! String == Constants.call ? DispatchTime.now()+2 : DispatchTime.now()+3) {
                             alert.dismiss(animated: true)
                             self.responsdToNotificationTap(response: self.payloadResonse)
                             self.payloadResonse = nil
