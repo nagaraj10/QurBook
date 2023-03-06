@@ -60,6 +60,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/video_call/pages/calling_page.dart';
+import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/pages/callmain_makecall.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
@@ -5638,6 +5639,62 @@ class CommonUtil {
         Get.find<AppointmentDetailsController>();
     appointmentDetailsController.getAppointmentDetail(appointmentId);
     Get.to(() => AppointmentDetailScreen());
+  }
+
+  Widget startTheCall(String navRoute) {
+    try {
+      var docPic = navRoute.split('&')[3];
+      var patPic = navRoute.split('&')[7];
+      var callType = navRoute.split('&')[8];
+      var isWeb = navRoute.split('&')[9] == null
+          ? false
+          : navRoute.split('&')[9] == 'true'
+              ? true
+              : false;
+      try {
+        if (docPic.isNotEmpty) {
+          try {
+            docPic = json.decode(navRoute.split('&')[3]);
+          } catch (e) {}
+        } else {
+          docPic = '';
+        }
+        if (patPic.isNotEmpty) {
+          try {
+            patPic = json.decode(navRoute.split('&')[7]);
+          } catch (e) {}
+        } else {
+          patPic = '';
+        }
+      } catch (e) {}
+      fbaLog(eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'ns_type': 'call',
+        'navigationPage': 'TeleHelath Call screen',
+      });
+
+      if (callType.toLowerCase() == 'audio') {
+        Provider.of<AudioCallProvider>(Get.context, listen: false)
+            .enableAudioCall();
+      } else if (callType.toLowerCase() == 'video') {
+        Provider.of<AudioCallProvider>(Get.context, listen: false)
+            .disableAudioCall();
+      }
+      Get.to(CallMain(
+        isAppExists: false,
+        role: ClientRole.Broadcaster,
+        channelName: navRoute.split('&')[0],
+        doctorName: navRoute.split('&')[1] ?? 'Test',
+        doctorId: navRoute.split('&')[2] ?? 'Doctor',
+        doctorPic: docPic,
+        patientId: navRoute.split('&')[5] ?? 'Patient',
+        patientName: navRoute.split('&')[6] ?? 'Test',
+        patientPicUrl: patPic,
+        isWeb: isWeb,
+      ));
+    } catch (e) {
+      if (kDebugMode) print(e.toString());
+    }
   }
 }
 

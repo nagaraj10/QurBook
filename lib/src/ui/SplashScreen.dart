@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -96,6 +97,7 @@ class _SplashScreenState extends State<SplashScreen> {
       HealthReportListForUserRepository();
   GetDeviceSelectionModel selectionResult;
   bool _loaded = false;
+  //bool _loaded = true;
 
   @override
   void initState() {
@@ -106,54 +108,66 @@ class _SplashScreenState extends State<SplashScreen> {
     CommonUtil().OnInitAction();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      variable.reponseToTriggerAppLockMethodChannel
-          .setMethodCallHandler((call) async {
-        if (call.method == variable.callAppLockFeatureMethod) {
-          final data = Map<String, dynamic>.from(call.arguments);
-          if (data[isCallRecieved] == false) {
-            // No call notification is received so call security types code
-            String authToken = PreferenceUtil.getStringValue(Constants
-                .KEY_AUTHTOKEN); // To check whether it's logged in or not
-            if (PreferenceUtil.getEnableAppLock() &&
-                authToken != null &&
-                !PreferenceUtil.getNotificationReceived()) {
-              _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
-              setState(() {});
-
-              if (Platform.isIOS) {
-                reponseToRemoteNotificationMethodChannel.invokeListMethod(
-                  IsAppLockChecked,
-                  {'status': _loaded},
-                );
-              }
-            } else {
-              PreferenceUtil.setNotificationRecieved(isCalled: false);
-              if (Platform.isIOS) {
-                reponseToRemoteNotificationMethodChannel.invokeListMethod(
-                  IsAppLockChecked,
-                  {'status': true},
-                );
-              }
-              setState(() {
-                _loaded = true;
-              });
-            }
-          } else {
-            // Recieved from call notification so don't call security types code
-            PreferenceUtil.setNotificationRecieved(isCalled: false);
-            if (Platform.isIOS) {
-              reponseToRemoteNotificationMethodChannel.invokeListMethod(
-                IsAppLockChecked,
-                {'status': true},
-              );
-            }
-            setState(() {
-              _loaded = true;
-            });
+      if (Platform.isIOS) {
+        variable.reponseToTriggerAppLockMethodChannel
+            .setMethodCallHandler((call) async {
+          if (call.method == variable.callAppLockFeatureMethod) {
+            final data = Map<String, dynamic>.from(call.arguments);
+            callAppLockFeatureMethod(data[isCallRecieved]);
           }
-        }
-      });
+        });
+      } else {
+        callAppLockFeatureMethod(widget.nsRoute!=null&&widget.nsRoute == call?true:false);
+      }
     });
+  }
+
+  callAppLockFeatureMethod(bool isCallRecieved) async {
+    try {
+      if (!isCallRecieved) {
+        // No call notification is received so call security types code
+        String authToken = PreferenceUtil.getStringValue(
+            Constants.KEY_AUTHTOKEN); // To check whether it's logged in or not
+        if (PreferenceUtil.getEnableAppLock() &&
+            authToken != null &&
+            !PreferenceUtil.getNotificationReceived()) {
+          _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
+          setState(() {});
+
+          if (Platform.isIOS) {
+            reponseToRemoteNotificationMethodChannel.invokeListMethod(
+              IsAppLockChecked,
+              {'status': _loaded},
+            );
+          }
+        } else {
+          PreferenceUtil.setNotificationRecieved(isCalled: false);
+          if (Platform.isIOS) {
+            reponseToRemoteNotificationMethodChannel.invokeListMethod(
+              IsAppLockChecked,
+              {'status': true},
+            );
+          }
+          setState(() {
+            _loaded = true;
+          });
+        }
+      } else {
+        // Recieved from call notification so don't call security types code
+        PreferenceUtil.setNotificationRecieved(isCalled: false);
+        if (Platform.isIOS) {
+          reponseToRemoteNotificationMethodChannel.invokeListMethod(
+            IsAppLockChecked,
+            {'status': true},
+          );
+        }
+        setState(() {
+          _loaded = true;
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) print(e.toString());
+    }
   }
 
   @override
@@ -764,6 +778,8 @@ class _SplashScreenState extends State<SplashScreen> {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }
+                    } else if (widget.nsRoute == call) {
+                      CommonUtil().startTheCall(widget.bundle);
                     } else {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
