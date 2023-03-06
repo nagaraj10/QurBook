@@ -38,11 +38,12 @@ class QurhomeDashboard extends StatefulWidget {
 
 class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   final controller = Get.put(QurhomeDashboardController());
-  final qurHomeRegimenController = CommonUtil().onInitQurhomeRegimenController();
+  final qurHomeRegimenController =
+      CommonUtil().onInitQurhomeRegimenController();
   double buttonSize = 70;
   double textFontSize = 16;
   int index = 0;
-
+  double badgeSize = 30;
   final sheelBadgeController = Get.put(SheelaAIController());
 
   //LandingViewModel landingViewModel;
@@ -92,7 +93,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
       if (CommonUtil().isTablet) {
         CommonUtil().initQurHomePortraitLandScapeMode();
-        buttonSize = 100;
+        buttonSize = buttonSize.h;
+        badgeSize = badgeSize.h;
         textFontSize = 26;
       }
 
@@ -122,7 +124,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   @override
   dispose() {
     try {
-      if(!CommonUtil.isUSRegion()){
+      if (!CommonUtil.isUSRegion()) {
         controller.setActiveQurhomeTo(
           status: false,
         );
@@ -143,6 +145,31 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     }
   }
 
+  Widget badge(int count) => Positioned(
+        right: 0,
+        top: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            color: ColorUtils.countColor,
+            borderRadius: BorderRadius.circular(
+              badgeSize / 2,
+            ),
+          ),
+          height: badgeSize,
+          width: badgeSize,
+          child: SizedBox(
+            child: Center(
+              child: Text(
+                count > 9 ? '9+' : count.toString(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.sp,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
   @override
   Widget build(BuildContext context) {
     return Obx(() => WillPopScope(
@@ -338,62 +365,77 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
               // ],
             ),
             body: getCurrentTab(),
-            floatingActionButton: Padding(
-              padding: const EdgeInsets.only(
-                top: 20,
-              ),
-              child: SizedBox(
-                height: buttonSize,
-                width: buttonSize,
-                child: FloatingActionButton(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  onPressed: () {
-                    if (sheelBadgeController?.sheelaIconBadgeCount?.value > 0) {
-                      Get.toNamed(
-                        rt_Sheela,
-                        arguments: SheelaArgument(
-                          rawMessage: sheelaQueueShowRemind,
-                        ),
-                      ).then((value) {
-                        sheelBadgeController.getSheelaBadgeCount(
-                            isNeedSheelaDialog: true);
-                      });
-                    } else {
-                      String sheela_lang =
-                          PreferenceUtil.getStringValue(SHEELA_LANG);
-                      Get.toNamed(
-                        rt_Sheela,
-                        arguments: SheelaArgument(
-                          isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
-                          langCode: (sheela_lang ?? ''),
-                        ),
-                      ).then((value) {
-                        sheelBadgeController.getSheelaBadgeCount(
-                            isNeedSheelaDialog: true);
-                      });
-                    }
-                  },
-                  child: Container(
+            floatingActionButton: Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: CommonUtil().isTablet ? 20.h : 20,
+                  ),
+                  child: SizedBox(
                     height: buttonSize,
                     width: buttonSize,
-                    padding: const EdgeInsets.all(
-                      8,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Color(
-                          CommonUtil().getQurhomeGredientColor(),
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      onPressed: () {
+                        if (sheelBadgeController?.sheelaIconBadgeCount?.value >
+                            0) {
+                          Get.toNamed(
+                            rt_Sheela,
+                            arguments: SheelaArgument(
+                              rawMessage: sheelaQueueShowRemind,
+                            ),
+                          ).then((value) {
+                            sheelBadgeController.getSheelaBadgeCount(
+                                isNeedSheelaDialog: true);
+                          });
+                        } else {
+                          String sheela_lang =
+                              PreferenceUtil.getStringValue(SHEELA_LANG);
+                          Get.toNamed(
+                            rt_Sheela,
+                            arguments: SheelaArgument(
+                              isSheelaAskForLang:
+                                  !((sheela_lang ?? '').isNotEmpty),
+                              langCode: (sheela_lang ?? ''),
+                            ),
+                          ).then((value) {
+                            sheelBadgeController.getSheelaBadgeCount(
+                                isNeedSheelaDialog: true);
+                          });
+                        }
+                      },
+                      child: Container(
+                        height: buttonSize,
+                        width: buttonSize,
+                        padding: const EdgeInsets.all(
+                          8,
                         ),
-                        width: 1,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color(
+                              CommonUtil().getQurhomeGredientColor(),
+                            ),
+                            width: 1,
+                          ),
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: Image.asset(
+                          icon_mayaMain,
+                          height: buttonSize,
+                          width: buttonSize,
+                        ),
                       ),
-                      shape: BoxShape.circle,
-                      color: Colors.white,
                     ),
-                    child: getSheelaIcon(),
                   ),
                 ),
-              ),
+                if ((sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0) >
+                    0)
+                  badge(
+                    sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0,
+                  ),
+              ],
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
@@ -402,9 +444,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
               child: Container(
                 decoration: BoxDecoration(
                   border: Border(
-                    // left: getBorder(),
                     top: getBorder(),
-                    // right: getBorder(),
                   ),
                 ),
                 child: Row(
@@ -548,21 +588,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   String getFormatedDate() {
     DateTime now = DateTime.now();
     return DateFormat('dd MMM yyyy').format(now);
-  }
-
-  Widget getSheelaIcon() {
-    return BadgeIcon(
-      icon: Image.asset(
-        icon_mayaMain,
-        height: buttonSize,
-        width: buttonSize,
-      ),
-      size: 18,
-      fontSize: 14,
-      badgeColor: ColorUtils.countColor,
-      badgeCount: sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0,
-      isForSheelaQueue: true,
-    );
   }
 
   Widget getChatSocketIcon() {
