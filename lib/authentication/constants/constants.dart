@@ -114,6 +114,7 @@ const String c_content_type_key = 'Content-Type';
 const String c_content_type_val = 'application/json';
 const String c_auth_key = 'Authorization';
 const String myFHB_logo = 'assets/launcher/myfhb.png';
+const String noMoreActivity = 'assets/no_more_activity.png';
 const String strSignUpEndpoint = 'register-user';
 const String strSignEndpoint = 'login';
 const String strUserVerifyEndpoint = 'confirm-user';
@@ -129,6 +130,7 @@ const String strWentWrong = 'Something went Wrong';
 const String strResendConfirmCode = 'resend-confirm-code';
 const String strResendGenerateOTP = 'user-relationship/generate-otp';
 const String strAdditionalInstructions = 'Additional Instructions';
+const String noMoreActivites = 'No more activites for the day';
 
 //tickets
 const String ticketCreatedSuccessfully = 'Ticket Created Successfully';
