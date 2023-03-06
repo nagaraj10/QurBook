@@ -84,8 +84,7 @@ class QurhomeRegimenController extends GetxController {
       }
       loadingData.value = true;
       qurHomeRegimenResponseModel = await _apiProvider.getRegimenList("");
-      loadingData.value = false;
-      loadingDataWithoutProgress.value = false;
+
       qurHomeRegimenResponseModel.regimentsList.removeWhere((element) =>
           element?.isEventDisabled && !element?.isSymptom ||
           !element?.scheduled &&
@@ -164,7 +163,8 @@ class QurhomeRegimenController extends GetxController {
           }
         }
       }
-
+      loadingData.value = false;
+      loadingDataWithoutProgress.value = false;
       qurhomeDashboardController.getValuesNativeAppointment();
 
       update(["newUpdate"]);
