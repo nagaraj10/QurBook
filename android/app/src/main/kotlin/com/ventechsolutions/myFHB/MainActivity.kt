@@ -484,7 +484,13 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                         if (::BLEEventChannel.isInitialized) {
                             BLEEventChannel.success("scanstarted|connection started")
                         }
+                    }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
+
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("connectionfailed| connection failed")
+                        }
                     }
+
 
                 }
             }
@@ -552,6 +558,10 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
                         if (::BLEEventChannel.isInitialized) {
                             BLEEventChannel.success("scanstarted|connection started")
+                        }
+                    }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("connectionfailed| connection failed")
                         }
                     }
 
@@ -628,6 +638,10 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("scanstarted|connection started")
+                    }
+                }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("connectionfailed| connection failed")
                     }
                 }
 
@@ -962,10 +976,17 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private fun stopScan() {
         try {
             autoRepeatScan = 0
-            scanningBleTimer.cancel()
+            scanningBleTimer?.cancel()
             Handler().postDelayed({
                 if (BleManager.getInstance() != null) {
-                    BleManager.getInstance().cancelScan()
+                    runOnUiThread {
+                        try {
+                            BleManager.getInstance().cancelScan()
+
+                        }catch (ex: Exception){
+
+                        }
+                    }
                 }
             }, 1000)
         } catch (ex: Exception) {
@@ -1548,12 +1569,13 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventSink?) {
                     BLEEventChannel = events!!
+                    onCancel("")
                     Log.d("BLE VITALS", "StartingPoint")
                     BleManager.getInstance().init(application)
                     BleManager.getInstance()
                         .enableLog(true)
-                        .setReConnectCount(1, 5000)
-                        .setConnectOverTime(20000).operateTimeout = 5000
+                       // .setReConnectCount(1, 5000)
+                       // .setConnectOverTime(20000).operateTimeout = 5000
 //                    val temp = checkPermissionStartScan(false)
                     startScanTimer()
                 }
@@ -1561,23 +1583,35 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 override fun onCancel(arguments: Any?) {
                     Log.d("BLE_SCAN_CANCEL", "bleScanCancel")
                     stopScan()
-                    when (selectedBle) {
-                        "spo2" -> {
-                            gManager?.scanLeDevice(false)
-                            gManager?.disconnect()
-                            gManager?.destroy()
-                        }
-                        "weight" -> {
-                            gManagerFat?.scanLeDevice(false)
-                            gManagerFat?.disconnect()
-                            gManagerFat?.destroy()
-                        }
-                        "bp" -> {
-                            gManagerBP?.scanLeDevice(false)
-                            gManagerBP?.disconnect()
-                            gManagerBP?.destroy()
-                        }
-                    }
+                    gManager?.scanLeDevice(false)
+                    gManager?.disconnect()
+                    gManager?.destroy()
+                    gManagerFat?.scanLeDevice(false)
+                    gManagerFat?.disconnect()
+                    gManagerFat?.destroy()
+                    gManagerBP?.scanLeDevice(false)
+                    gManagerBP?.disconnect()
+                    gManagerBP?.destroy()
+                    gManager=null
+                    gManagerFat=null
+                    gManagerBP=null
+//                    when (selectedBle) {
+//                        "spo2" -> {
+//                            gManager?.scanLeDevice(false)
+//                            gManager?.disconnect()
+//                            gManager?.destroy()
+//                        }
+//                        "weight" -> {
+//                            gManagerFat?.scanLeDevice(false)
+//                            gManagerFat?.disconnect()
+//                            gManagerFat?.destroy()
+//                        }
+//                        "bp" -> {
+//                            gManagerBP?.scanLeDevice(false)
+//                            gManagerBP?.disconnect()
+//                            gManagerBP?.destroy()
+//                        }
+//                    }
                     selectedBle = ""
                 }
             }

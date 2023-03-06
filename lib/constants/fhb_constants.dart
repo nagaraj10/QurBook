@@ -797,6 +797,10 @@ const String primary_chat = '(Primary)';
 
 const String primary_provider = 'Primary';
 
+const String STR_PROVIDERDOCUMENTS = 'Provider Documents';
+const String STR_PRESCRIPTION = 'Prescription';
+const String STR_ALL = 'ALL';
+
 
 
 Future<void> fbaLog({String eveName, eveParams}) async {

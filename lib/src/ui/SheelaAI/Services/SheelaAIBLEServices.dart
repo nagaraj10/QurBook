@@ -99,6 +99,9 @@ class SheelaBLEController extends GetxController {
 
     timerSubscription = stream.listen(
       (val) async {
+        if (val == null || val == "") {
+          return;
+        }
         final List<String> receivedValues = val.split('|');
         if ((receivedValues ?? []).length > 0) {
           switch (receivedValues.first ?? "") {
@@ -171,14 +174,16 @@ class SheelaBLEController extends GetxController {
                     ),
                   ),
                 ).then((_) {
-                  Future.delayed(const Duration(seconds: 1)).then((value) {
-                    Get.find<VitalDetailController>().getData();
-                  });
-                  Future.delayed(const Duration(seconds: 1)).then((value) {
-                    Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                        hublistController.eid;
-                    Get.find<QurhomeRegimenController>().getRegimenList();
-                  });
+                  if (Get.isRegistered<VitalDetailController>())
+                    Future.delayed(const Duration(seconds: 1)).then((value) {
+                      Get.find<VitalDetailController>().getData();
+                    });
+                  if (Get.isRegistered<QurhomeRegimenController>())
+                    Future.delayed(const Duration(seconds: 1)).then((value) {
+                      Get.find<QurhomeRegimenController>().currLoggedEID.value =
+                          hublistController.eid;
+                      Get.find<QurhomeRegimenController>().getRegimenList();
+                    });
                 });
               }
               break;
@@ -207,14 +212,16 @@ class SheelaBLEController extends GetxController {
                     ),
                   ),
                 ).then((_) {
-                  Future.delayed(const Duration(seconds: 1)).then((value) {
-                    Get.find<VitalDetailController>().getData();
-                  });
-                  Future.delayed(const Duration(seconds: 1)).then((value) {
-                    Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                        hublistController.eid;
-                    Get.find<QurhomeRegimenController>().getRegimenList();
-                  });
+                  if (Get.isRegistered<VitalDetailController>())
+                    Future.delayed(const Duration(seconds: 1)).then((value) {
+                      Get.find<VitalDetailController>().getData();
+                    });
+                  if (Get.isRegistered<QurhomeRegimenController>())
+                    Future.delayed(const Duration(seconds: 1)).then((value) {
+                      Get.find<QurhomeRegimenController>().currLoggedEID.value =
+                          hublistController.eid;
+                      Get.find<QurhomeRegimenController>().getRegimenList();
+                    });
                 });
                 await Future.delayed(const Duration(seconds: 4));
               }
@@ -392,7 +399,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your last reading for SPO2 ${model.data.sPO2} and Pulse ${model.data.pulse} are successfully recorded, Bye!",
+                    "Thank you. Your last reading for SPO2 ${model.data.sPO2} and Pulse ${model.data.pulse} are successfully recorded. Bye!.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -409,7 +416,7 @@ class SheelaBLEController extends GetxController {
                 recipientId: conversationType,
                 text: "Thank you. Your BP systolic ${model.data.systolic} "
                     ", Diastolic ${model.data.diastolic} "
-                    "and Pulse ${model.data.pulse} are successfully recorded, Bye!",
+                    "and Pulse ${model.data.pulse} are successfully recorded. Bye!.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -423,7 +430,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your Weight ${model.data.weight} ${weightUnit} is successfully recorded, Bye!",
+                    "Thank you. Your Weight ${model.data.weight} ${weightUnit} is successfully recorded. Bye!.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -523,16 +530,18 @@ class SheelaBLEController extends GetxController {
     SheelaController.bleController = null;
     if (SheelaController.isSheelaScreenActive) {
       if (isFromVitals) {
-        Future.delayed(const Duration(seconds: 1)).then((value) {
-          Get.find<VitalDetailController>().getData();
-        });
+        if (Get.isRegistered<VitalDetailController>())
+          Future.delayed(const Duration(seconds: 1)).then((value) {
+            Get.find<VitalDetailController>().getData();
+          });
       }
       if (isFromRegiment) {
-        Future.delayed(const Duration(seconds: 1)).then((value) {
-          Get.find<QurhomeRegimenController>().currLoggedEID.value =
-              hublistController.eid;
-          Get.find<QurhomeRegimenController>().getRegimenList();
-        });
+        if (Get.isRegistered<QurhomeRegimenController>())
+          Future.delayed(const Duration(seconds: 1)).then((value) {
+            Get.find<QurhomeRegimenController>().currLoggedEID.value =
+                hublistController.eid;
+            Get.find<QurhomeRegimenController>().getRegimenList();
+          });
       }
       Get.back();
     }

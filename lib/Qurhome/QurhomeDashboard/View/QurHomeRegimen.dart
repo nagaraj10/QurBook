@@ -294,7 +294,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 child: Container(
                   child: PageView.builder(
                     itemCount:
-                        val.qurHomeRegimenResponseModel.regimentsList.length,
+                        val.qurHomeRegimenResponseModel.regimentsList.length+1,
                     scrollDirection: Axis.vertical,
                     onPageChanged: (int index) {
                       setState(() {
@@ -305,13 +305,29 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         initialPage: val.nextRegimenPosition,
                         viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
                     itemBuilder: (BuildContext context, int itemIndex) {
-                      return _buildCarouselItem(
-                          context,
-                          itemIndex,
-                          val.qurHomeRegimenResponseModel
-                              .regimentsList[itemIndex],
-                          val.nextRegimenPosition,
-                          isPortrait);
+                      if(itemIndex==(val.qurHomeRegimenResponseModel.regimentsList.length)){
+                         return Padding(
+                           padding: const EdgeInsets.only(top: 22.0),
+                           child: Column(
+                            children: [
+                              Image.asset(noMoreActivity,height: 50,width: 50,),
+                              SizedBox(height: 5,),
+                              Text(noMoreActivites,style: TextStyle(color: Color(
+                                CommonUtil().getQurhomePrimaryColor(),
+                              )),)
+                            ],
+                        ),
+                         );
+                      }else{
+                        return _buildCarouselItem(
+                            context,
+                            itemIndex,
+                            val.qurHomeRegimenResponseModel
+                                .regimentsList[itemIndex],
+                            val.nextRegimenPosition,
+                            isPortrait);
+
+                      }
                     },
                   ),
                 ),
