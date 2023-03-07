@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -1550,12 +1551,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               });
                             } on PlatformException catch (e) {
                               msg = "Error while opening pattern/pin/passcode";
-                              print(msg);
-                              print(e.message);
-                              if (e.code == auth_error.notAvailable) {
-                                // Add handling of no hardware here.
-                              } else if (e.code == auth_error.notEnrolled) {
-                              } else {}
+                              if (kDebugMode) {
+                                printError(info: msg.toString());
+                                printError(info: e.toString());
+                                if (e.code == auth_error.notAvailable) {
+                                  // Add handling of no hardware here.
+                                } else if (e.code == auth_error.notEnrolled) {}
+                              }
                             }
                           } else {
                             setState(() {
