@@ -83,6 +83,7 @@ import com.ventechsolutions.myFHB.constants.Constants.idSheela
 import com.ventechsolutions.myFHB.constants.Constants.sayTextSheela
 import com.ventechsolutions.myFHB.services.*
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
@@ -104,7 +105,7 @@ import kotlin.experimental.and
 import kotlin.system.exitProcess
 
 
-class MainActivity : FlutterActivity(), SessionController.Listener,
+class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
 
     private var enableBackgroundNotification = false
@@ -387,7 +388,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             speechRecognizer?.cancel()
             if (displayText.text.toString().trim() == "") {
                 displayText.clearFocus()
-                val toast = Toast.makeText(context, "Please enter a valid input", Toast.LENGTH_LONG)
+                val toast = Toast.makeText(applicationContext, "Please enter a valid input", Toast.LENGTH_LONG)
                 toast.setGravity(Gravity.CENTER, 0, 0)
                 toast.show()
             } else {
@@ -464,6 +465,20 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             ) {
                 runOnUiThread {
 //                Toast.makeText(applicationContext, "Weight: "+p1?.toString(), Toast.LENGTH_SHORT).show()
+ if (ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return@runOnUiThread
+                }
                     bleName = p0?.name
                     var bleMacId: String
                     bleMacId = p0?.address.toString()
@@ -539,30 +554,40 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 runOnUiThread {
 //                Toast.makeText(applicationContext, "BP: "+p1.toString(), Toast.LENGTH_SHORT).show()
 
-                    bleName = p0?.name
-                    var bleMacId: String
-                    bleMacId = p0?.address.toString()
-                    var bleDeviceType: String
-                    bleDeviceType = "BP"
-                    if (p1 == BluetoothStatus.BLE_STATUS_CONNECTED) {
-                        if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("macid|" + bleMacId)
-                        }
-                        sendPost("Connected", DEVICE_BP, 0, 0, 0)
-                        if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
-                        }
-                        if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
-                        }
-                    } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
-                        if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("scanstarted|connection started")
-                        }
-                    }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
-                        if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("connectionfailed| connection failed")
-                        }
+                    if (ActivityCompat.checkSelfPermission(
+                                    applicationContext,
+                                    Manifest.permission.BLUETOOTH_CONNECT
+                            ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return@runOnUiThread
+                    }
+                }
+                bleName = p0?.name
+                var bleMacId: String
+                bleMacId = p0?.address.toString()
+                var bleDeviceType: String
+                bleDeviceType = "BP"
+                if(p1==BluetoothStatus.BLE_STATUS_CONNECTED){
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("macid|" + bleMacId)
+                    }
+                    sendPost("Connected", DEVICE_BP, 0, 0, 0)
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                    }
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                    }
+                }else if(p1==BluetoothStatus.BLE_STATUS_CONNECTING){
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("scanstarted|connection started")
                     }
 
                 }
@@ -617,6 +642,20 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
             runOnUiThread {
 //                Toast.makeText(applicationContext, "SPO2: "+p1.toString(), Toast.LENGTH_SHORT).show()
+                if (ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return@runOnUiThread
+                }
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -2097,7 +2136,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     private fun registerBpDevice() {
-        mSessionController!!.setConfig(getConfig(context))
+        mSessionController!!.setConfig(getConfig(applicationContext))
         mOption[OHQSessionOptionKey.ReadMeasurementRecordsKey] = true
         mOption[OHQSessionOptionKey.ConnectionWaitTimeKey] = CONNECTION_WAIT_TIME
         mSessionController!!.startSession(mAddress, mOption)
@@ -2115,7 +2154,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private fun disconnect(): Int {
         if (android.os.Build.VERSION.SDK_INT >= 29) {
             val connectivityManager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             connectivityManager.unregisterNetworkCallback(mNetworkCallback)
         }
         return 1
@@ -2126,7 +2165,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         override fun onAvailable(network: Network) {
             //phone is connected to wifi network
             val connectivityManager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             connectivityManager.bindProcessToNetwork(network)
         }
     }
@@ -2145,7 +2184,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 .build()
 
             val connectivityManager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
             connectivityManager.requestNetwork(request, mNetworkCallback)
 
@@ -2159,7 +2198,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             var conf = WifiConfiguration()
             conf.SSID = "\"" + networkSSID + "\""
             conf.preSharedKey = "\"" + networkPass + "\""
-            var wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            var wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             var netid = wifiManager.addNetwork(conf)
             wifiManager.disconnect()
             wifiManager.enableNetwork(netid, true)
@@ -2588,10 +2627,10 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                         displayText?.setText("")
                         edit_view.clearFocus()
                         val imm: InputMethodManager =
-                            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-                        var view = activity.currentFocus
+                            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                        var view = currentFocus
                         if (view == null) {
-                            view = View(activity)
+                            view = View(applicationContext)
                         }
                         imm.hideSoftInputFromWindow(view.windowToken, 0)
                         dialog.show()
@@ -3206,11 +3245,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
             val builder: NotificationCompat.Builder
             if (isButtonShown) {
-                builder = NotificationCompat.Builder(context, channelId)
+                builder = NotificationCompat.Builder(applicationContext, channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(
                         BitmapFactory.decodeResource(
-                            context.resources,
+                            applicationContext.resources,
                             R.mipmap.ic_launcher
                         )
                     )
@@ -3224,11 +3263,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     .setAutoCancel(true)
                     .setOnlyAlertOnce(false)
             } else {
-                builder = NotificationCompat.Builder(context, channelId)
+                builder = NotificationCompat.Builder(applicationContext, channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(
                         BitmapFactory.decodeResource(
-                            context.resources,
+                            applicationContext.resources,
                             R.mipmap.ic_launcher
                         )
                     )
@@ -3359,7 +3398,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
         reminderBroadcaster.putExtra("nsid", notificationAndAlarmId)
         reminderBroadcaster.putExtra("isCancel", true)
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             PendingIntent.getBroadcast(
                 this,
@@ -3383,7 +3422,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     private fun validateMicAvailability(): Boolean {
         var available = true
-        val am: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val am: AudioManager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         if (am.mode === AudioManager.MODE_IN_COMMUNICATION) {
             //Mic is in use
             available = false
