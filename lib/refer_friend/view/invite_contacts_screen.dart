@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import '../../common/CommonUtil.dart';
@@ -17,8 +18,6 @@ import '../../src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:country_pickers/country_pickers.dart';
-import 'package:country_pickers/country.dart';
 
 class InviteContactsScreen extends StatefulWidget {
   const InviteContactsScreen();
@@ -34,8 +33,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   bool onSearch = false;
   TextEditingController searchController = TextEditingController();
 
-  Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+  Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
 
   @override
   void initState() {

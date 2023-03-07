@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../src/model/Media/media_result.dart';
 
@@ -120,26 +121,27 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
   }
 
   void whenAllIsChecked(bool val, String name) {
-    if (name == 'ALL' || name == 'Devices') {
-      if (name == 'ALL') {
+    if (name == STR_ALL || name == STR_DEVICES) {
+      if (name == STR_ALL) {
         for (var mediaResult in widget.mediaData) {
-          if (mediaResult.name == 'Prescription' ||
-              mediaResult.name == 'Lab Report' ||
-              mediaResult.name == 'Medical Report' ||
-              mediaResult.name == 'Hospital Documents' ||
-              mediaResult.name == 'Devices' ||
-              mediaResult.healthRecordCategory?.categoryName == 'Devices') {
+          if (mediaResult.name == STR_PRESCRIPTION ||
+              mediaResult.name == STR_LABREPORT ||
+              mediaResult.name == STR_MEDICALREPORT ||
+              mediaResult.name == STR_HOSPITALDOCUMENT ||
+              mediaResult.name == STR_PROVIDERDOCUMENTS ||
+              mediaResult.name == STR_DEVICES ||
+              mediaResult.healthRecordCategory?.categoryName == STR_DEVICES) {
             mediaResult.isChecked = val;
           }
         }
-      } else if (name == 'Devices') {
+      } else if (name == STR_DEVICES) {
         for (var mediaResult in widget.mediaData) {
-          if (mediaResult.name == 'Pulse Oximeter' ||
-              mediaResult.name == 'Thermometer' ||
-              mediaResult.name == 'Glucometer' ||
-              mediaResult.name == 'BP Monitor' ||
-              mediaResult.name == 'Weighing Scale' ||
-              mediaResult.healthRecordCategory?.categoryName == 'Devices') {
+          if (mediaResult.name == STR_PULSE_OXIMETER ||
+              mediaResult.name == STR_THERMOMETER ||
+              mediaResult.name == STR_GLUCOMETER ||
+              mediaResult.name == STR_BP_MONITOR ||
+              mediaResult.name == STR_WEIGHING_SCALE ||
+              mediaResult.healthRecordCategory?.categoryName == STR_DEVICES) {
             mediaResult.isChecked = val;
           }
         }

@@ -455,11 +455,26 @@ class SheelaAIController extends GetxController {
       if (playButtons) {
         final currentButton = currentPlayingConversation
             .buttons[currentPlayingConversation.currentButtonPlayingIndex];
-        if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
+        if (currentButton.title.contains("Exit")) {
+          gettingReposnseFromNative();
+          return;
+        } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
             .isNotEmpty) {
           textForPlaying = currentButton.ttsResponse.payload.audioContent;
         } else if ((currentButton.title ?? '').isNotEmpty) {
-          final result = await getGoogleTTSForText(currentButton.title);
+          var result;
+          try {
+            var stringToSpeech = currentButton.title;
+            if (currentButton.title.contains(".")) {
+              stringToSpeech = currentButton.title.split(".")[1];
+              result = await getGoogleTTSForText(stringToSpeech);
+            } else {
+              result = await getGoogleTTSForText(currentButton.title);
+            }
+          } catch (e) {
+            result = await getGoogleTTSForText(currentButton.title);
+          }
+
           if ((result.payload?.audioContent ?? '').isNotEmpty) {
             textForPlaying = result.payload.audioContent;
           }
@@ -628,7 +643,7 @@ class SheelaAIController extends GetxController {
                   var button = null;
 
                   if (!conversations?.last?.isButtonNumber) {
-                    if(responseRecived == carGiverSheela){
+                    if (responseRecived == carGiverSheela) {
                       responseRecived = careGiverSheela;
                     }
                     button = conversations?.last?.buttons.firstWhere(
