@@ -134,7 +134,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   String hosId = "";
 
   bool isLabAddressVisible = false;
-
   bool isLabNameOthers = false;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -790,26 +789,25 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               : SizedBox.shrink();
 
           (field.type == tckTypeTitle &&
-                  field.isVisible != null &&
-                  field.name == strLabName &&
-                  isLabNameOthers)
-              ? widgetForColumn.add(Visibility(
-                  visible: isLabNameOthers,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 15.h),
-                      getWidgetForTitleText(
-                          title: displayName,
-                          isRequired:isLabNameOthers ??
-                              false),
-                      SizedBox(height: 10.h),
-                      getWidgetForTextValue(
-                          i, CommonUtil().getFieldName(field.name), field),
-                    ],
-                  ),
-                ))
-              : SizedBox.shrink();
-
+                                field.isVisible != null &&
+                                field.name == strLabName &&
+                                isLabNameOthers)
+                  ? widgetForColumn.add(Visibility(
+                      visible: isLabNameOthers,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 15.h),
+                          getWidgetForTitleText(
+                              title: displayName,
+                              isRequired:isLabNameOthers ??
+                                  false),
+                          SizedBox(height: 10.h),
+                          getWidgetForTextValue(
+                              i, CommonUtil().getFieldName(field.name), field),
+                        ],
+                      ),
+                    ))
+                  : SizedBox.shrink();
 
           isFirstTym = false;
         }

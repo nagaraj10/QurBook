@@ -423,7 +423,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         snapshot?.data?.data?.result ?? []),
                   )
                 : snapshot.data.data.result == null
-                ? Container(
+                    ? Container(
                     child: Center(
                       child: Text(variable.strNodata),
                     ),

@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
@@ -59,6 +60,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/video_call/pages/calling_page.dart';
+import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/pages/callmain_makecall.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
@@ -142,6 +144,7 @@ import 'keysofmodel.dart' as keysConstant;
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import '../../constants/fhb_constants.dart' as constants;
+import 'package:local_auth/error_codes.dart' as auth_error;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -1874,6 +1877,37 @@ class CommonUtil {
     var currentToken = await FirebaseMessaging.instance.getToken();
     if (localToken != currentToken) {
       await saveTokenToDatabase(currentToken);
+    }
+  }
+
+  Future<bool> checkAppLock({bool useErrorDialogs: true}) async {
+    try {
+      var value = await LocalAuthentication().authenticate(
+        localizedReason: strAuthToUseApp,
+        stickyAuth: true,
+        biometricOnly: false,
+        //useErrorDialogs: useErrorDialogs,
+        useErrorDialogs: useErrorDialogs,
+        // androidAuthStrings: AndroidAuthMessages(
+        //   signInTitle: 'Oops! Biometric authentication required!',
+        //   cancelButton: 'No thanks',
+        // ),
+        // iOSAuthStrings: IOSAuthMessages(
+        //   cancelButton: 'No thanks',
+        // ),
+      );
+      print("value:${value}");
+      return value;
+    } on PlatformException catch (e) {
+      if (e.code == auth_error.notAvailable) {
+        print(e.message);
+        return false;
+
+        // Add handling of no hardware here.
+      } else if (e.code == auth_error.notEnrolled) {
+      } else if (e.code == auth_error.passcodeNotSet) {
+      } else {}
+      return true;
     }
   }
 
@@ -5603,6 +5637,30 @@ class CommonUtil {
     }
   }
 
+    String getFirstAndLastName(String strText) {
+    String strName = strText;
+    String strName1 = "";
+    String strName2 = "";
+    try {
+      if (strName.contains(" ")) {
+        strName1 = strName.split(" ").first;
+        strName2 = strName.split(" ").last;
+      } else {
+        strName1 = strName;
+      }
+      return strName2.trim().isNotEmpty
+          ? strName1[0].toUpperCase() + strName2[0].toUpperCase()
+          : strName1.trim().isNotEmpty
+              ? strName1[0].toUpperCase()
+              : "";
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
+    return strName.trim().isNotEmpty ? strName[0].toUpperCase() : "";
+  }
+
   AppointmentDetailsController onInitAppointmentDetailsController() {
     AppointmentDetailsController appointmentDetailsController;
     if (!Get.isRegistered<AppointmentDetailsController>()) {
@@ -5630,28 +5688,60 @@ class CommonUtil {
     Get.to(() => AppointmentDetailScreen());
   }
 
-  String getFirstAndLastName(String strText) {
-    String strName = strText;
-    String strName1 = "";
-    String strName2 = "";
+  Widget startTheCall(String navRoute) {
     try {
-      if (strName.contains(" ")) {
-        strName1 = strName.split(" ").first;
-        strName2 = strName.split(" ").last;
-      } else {
-        strName1 = strName;
+      var docPic = navRoute.split('&')[3];
+      var patPic = navRoute.split('&')[7];
+      var callType = navRoute.split('&')[8];
+      var isWeb = navRoute.split('&')[9] == null
+          ? false
+          : navRoute.split('&')[9] == 'true'
+              ? true
+              : false;
+      try {
+        if (docPic.isNotEmpty) {
+          try {
+            docPic = json.decode(navRoute.split('&')[3]);
+          } catch (e) {}
+        } else {
+          docPic = '';
+        }
+        if (patPic.isNotEmpty) {
+          try {
+            patPic = json.decode(navRoute.split('&')[7]);
+          } catch (e) {}
+        } else {
+          patPic = '';
+        }
+      } catch (e) {}
+      fbaLog(eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'ns_type': 'call',
+        'navigationPage': 'TeleHelath Call screen',
+      });
+
+      if (callType.toLowerCase() == 'audio') {
+        Provider.of<AudioCallProvider>(Get.context, listen: false)
+            .enableAudioCall();
+      } else if (callType.toLowerCase() == 'video') {
+        Provider.of<AudioCallProvider>(Get.context, listen: false)
+            .disableAudioCall();
       }
-      return strName2.trim().isNotEmpty
-          ? strName1[0].toUpperCase() + strName2[0].toUpperCase()
-          : strName1.trim().isNotEmpty
-              ? strName1[0].toUpperCase()
-              : "";
+      Get.to(CallMain(
+        isAppExists: false,
+        role: ClientRole.Broadcaster,
+        channelName: navRoute.split('&')[0],
+        doctorName: navRoute.split('&')[1] ?? 'Test',
+        doctorId: navRoute.split('&')[2] ?? 'Doctor',
+        doctorPic: docPic,
+        patientId: navRoute.split('&')[5] ?? 'Patient',
+        patientName: navRoute.split('&')[6] ?? 'Test',
+        patientPicUrl: patPic,
+        isWeb: isWeb,
+      ));
     } catch (e) {
-      if (kDebugMode) {
-        printError(info: e.toString());
-      }
+      if (kDebugMode) print(e.toString());
     }
-    return strName.trim().isNotEmpty ? strName[0].toUpperCase() : "";
   }
 }
 

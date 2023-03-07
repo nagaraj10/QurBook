@@ -184,6 +184,7 @@ const String icon_digit_reco = 'assets/settings/digit_recognition.png';
 const String icon_device_recon = 'assets/settings/device_recognition.png';
 const String icon_provider = 'assets/navicons/my_providers.png';
 const String icon_orderHistory = 'assets/navicons/orderHistory.png';
+const String icon_lock = 'assets/settings/unlock.png';
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';
@@ -280,6 +281,7 @@ const String strCheckConnection = 'Check your connection or try again';
 const String strBackOnline = 'back to online';
 const String strNoConnection = 'no connection';
 const String strve = 've';
+const String callAppLockFeatureMethod = "callAppLockFeatureMethod";
 
 //new icons for menu
 const String activity_non_adherance =
@@ -294,13 +296,38 @@ const String strApprovAdd = 'This provider addition needs approval';
 //sheela respond by number
 const zero = "zero";
 const oneToNine = [
-  "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine"
 ];
 const tenToNinteen = [
-  "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+  "ten",
+  "eleven",
+  "twelve",
+  "thirteen",
+  "fourteen",
+  "fifteen",
+  "sixteen",
+  "seventeen",
+  "eighteen",
+  "nineteen"
 ];
 const dozens = [
-  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
+  "ten",
+  "twenty",
+  "thirty",
+  "forty",
+  "fifty",
+  "sixty",
+  "seventy",
+  "eighty",
+  "ninety"
 ];
 
 //for audioWidget
@@ -365,6 +392,7 @@ const String strDisplayPreferences = 'Display Preferences';
 
 const String strSkillsIntegration = 'Skills/Integration';
 const String strIntegration = 'Integration';
+const String strPrivacyAndSecurity = 'Privacy and Security';
 
 // for my family
 
@@ -613,6 +641,10 @@ const String strAllowDigit = 'Allow digit recognition';
 const String strScanDevices = 'scans for the values from device images';
 const String strAllowDevice = 'Allow device recognition';
 const String strScanAuto = 'scans and auto-detects devices';
+const String strAllowBiometric = 'Enable App lock';
+const String strEnableApplock =
+    'Allow app lock with FaceID/FingerPrint or Passcode';
+const String strAuthToUseApp = 'Please complete the authentication to proceed.';
 
 //for healthKit and googleFit activation and sync
 const String strGoogleFit = 'Google Fit';
@@ -646,7 +678,7 @@ const String strConnectBpMeter =
     'Please connect your BP device and start recording';
 const String strConnectPulseMeter =
     'Please connect your pulse oximeter and start recording';
-    const String strConnectWeighingScale =
+const String strConnectWeighingScale =
     'Please connect your weighing scale and start recording';
 
 //introslider
@@ -749,15 +781,19 @@ const String str_far = 'Fahrenheit';
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
 const addReminderMethod = 'addReminder';
 const navigateToSheelaReminderMethod = 'navigateToSheelaReminderMethod';
+const notificationReceivedMethod = "notificationReceived";
 const removeReminderMethod = 'removeReminder';
 const removeAllReminderMethod = 'removeAllReminder';
 const navigateToRegimentMethod = 'navigateToRegiment';
 const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
+const reponseToTriggerAppLockMethodChannel =
+    MethodChannel('flutter.native.QurBook/appLockMethodChannel');
 const notificationResponseMethod = 'notificationResponse';
 const iOSMethodChannel = MethodChannel('flutter.native/iOS');
 const getWifiDetailsMethod = 'getWifiDetails';
 const listenToCallStatusMethod = 'listenToCallStatus';
+
 // True Desk
 
 const String strNoTicketsRaised = 'Tap on + icon to create new tickets';
