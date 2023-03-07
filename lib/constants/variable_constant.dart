@@ -184,6 +184,7 @@ const String icon_digit_reco = 'assets/settings/digit_recognition.png';
 const String icon_device_recon = 'assets/settings/device_recognition.png';
 const String icon_provider = 'assets/navicons/my_providers.png';
 const String icon_orderHistory = 'assets/navicons/orderHistory.png';
+const String icon_lock = 'assets/settings/unlock.png';
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';

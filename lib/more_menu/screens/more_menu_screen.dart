@@ -1522,7 +1522,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               children: [
                 ListTile(
                     leading: ImageIcon(
-                      AssetImage(variable.icon_digit_reco),
+                      AssetImage(variable.icon_lock),
                       //size: 30,
                       color: Colors.black,
                     ),
