@@ -802,6 +802,9 @@ const String primary_chat = '(Primary)';
 const String STR_PROVIDERDOCUMENTS = 'Provider Documents';
 const String STR_PRESCRIPTION = 'Prescription';
 const String STR_ALL = 'ALL';
+const String strOthers = 'others';
+const String strOther = 'other';
+const String strLabName = 'lab_name';
 
 
 
