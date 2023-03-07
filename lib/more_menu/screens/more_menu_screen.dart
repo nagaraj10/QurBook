@@ -1597,38 +1597,4 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     return ret;
   }
 
-  _enableBiometric() async {
-    String msg = "You are not authorized.";
-    try {
-      var value = await LocalAuthentication().authenticate(
-        localizedReason: 'Authenticate with pattern/pin/passcode',
-        stickyAuth: true,
-      );
-    } on PlatformException catch (e) {
-      msg = "Error while opening pattern/pin/passcode";
-      print(msg);
-      print(e.message);
-    }
-
-    // final LocalAuthentication auth = LocalAuthentication();
-    // String msg = "You are not authorized.";
-    // final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-    // final bool canAuthenticate =
-    //     //canAuthenticateWithBiometrics ||
-    //     await auth.isDeviceSupported();
-    // //  Future _getAvailableBiometric() async {
-    // try {
-    //   bool pass = await auth.authenticate(
-    //     localizedReason: 'Authenticate with pattern/pin/passcode',
-    //   );
-    //   if (pass) {
-    //     msg = "You are Authenticated.";
-    //     // setState(() {});
-    //   }
-    // } on PlatformException catch (e) {
-    //   msg = "Error while opening pattern/pin/passcode";
-    //   print(msg);
-    //   print(e.message);
-    // }
-  }
 }
