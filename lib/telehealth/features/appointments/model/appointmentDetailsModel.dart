@@ -145,7 +145,16 @@ class AdditionalInfo {
       title = json['title'];
       labName = json['lab_name'];
       pinCode = json['pin_code'];
-      testName = json['test_name'];
+
+      if (json['test_name'] != null && json['test_name'] is String) {
+        testName = json['test_name'];
+      } else {
+        Data testNameObject = json['test_name'] != null
+            ? new Data.fromJson(json['test_name'])
+            : null;
+        testName = testNameObject?.id ?? "";
+      }
+
       addressLine1 = json['address_line_1'];
       addressLine2 = json['address_line_2'];
       providerName = json['provider_name'];
