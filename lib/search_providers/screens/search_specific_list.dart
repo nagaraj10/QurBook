@@ -391,6 +391,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return StreamBuilder<ApiResponse<LabsSearchListResponse>>(
       stream: _labsListBlock.labNewStream,
       builder: (context, snapshot) {
+        String strText = value ?? "";
         if (!snapshot.hasData) return Container();
 
         switch (snapshot.data.status) {
@@ -414,7 +415,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.COMPLETED:
             rebuildBlockObject();
-            return snapshot.data.data.result == null
+            return (strText.trim().isNotEmpty &&
+                    strOthers.toLowerCase().contains(strText))
+                ? Container(
+                    margin: EdgeInsets.all(5),
+                    child: getAllDatasInLabsList(
+                        snapshot?.data?.data?.result ?? []),
+                  )
+                : snapshot.data.data.result == null
                 ? Container(
                     child: Center(
                       child: Text(variable.strNodata),
@@ -718,6 +726,17 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               otherLabListResult;
           finalLabListResult = finalLabListResult.toSet().toList();
           data = finalLabListResult;
+        }
+
+        String strText = value ?? "";
+
+        if (strText.trim().isEmpty ||
+            strOthers.toLowerCase().contains(strText)) {
+          LabListResult labListResult = LabListResult();
+          labListResult.healthOrganizationName =
+              toBeginningOfSentenceCase(strOthers);
+          labListResult.healthOrganizationId = strOthers;
+          data.add(labListResult);
         }
       }
     } catch (e) {

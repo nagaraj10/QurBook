@@ -32,12 +32,8 @@ import '../../model/common_response.dart';
 import '../../model/error_map.dart';
 import 'AppException.dart';
 
-import 'AppException.dart';
 import 'package:http_parser/http_parser.dart';
 
-import 'dart:async';
-import '../../../constants/fhb_query.dart';
-import 'AppException.dart';
 import 'package:mime_type/mime_type.dart';
 
 class ApiBaseHelper {
@@ -2860,6 +2856,18 @@ class ApiBaseHelper {
     return responseJson;
   }
 */
+
+  Future<dynamic> getProviderList(type) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + CommonUtil.getProviderType(type),
+          headers: await headerRequest.getAuth());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 
 }
 

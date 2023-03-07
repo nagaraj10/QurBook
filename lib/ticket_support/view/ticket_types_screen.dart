@@ -192,13 +192,22 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   //print(e);
                 }*/
 
-                ticketList[i].additionalInfo != null
+                /*ticketList[i].additionalInfo != null
                     ? Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
                                 CreateTicketScreen(ticketList[i])),
                       )
+                    : null;*/
+                //TODO
+                ticketList[i].additionalInfo != null
+                    ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CreateTicketScreen(ticketList[i])),
+                )
                     : null;
               } catch (e) {
                 print(e);

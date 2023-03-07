@@ -135,6 +135,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   bool isLabAddressVisible = false;
 
+  bool isLabNameOthers = false;
+
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
         initialDatePickerMode: DatePickerMode.day,
@@ -220,7 +222,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 
-  setBooleanValues() {
+  setBooleanValues() async {
     try {
       if (widget.ticketList != null) {
         if (widget.ticketList.additionalInfo != null)
@@ -236,20 +238,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 (field.name != tckConstants.tckMainTitle &&
                     field.name != tckConstants.tckPackageTitle) &&
                 field.isVisible == null) {
-              var textEditingController = new TextEditingController();
-              textEditingControllers.putIfAbsent(
-                  CommonUtil().getFieldName(field.name),
-                  () => textEditingController);
+              getTextField(field);
             }
 
             if (field.type == tckConstants.tckTypeTitle &&
                 (field.name != tckConstants.tckMainTitle &&
                     field.name != tckConstants.tckPackageTitle) &&
                 field.isVisible != null) {
-              var textEditingController = new TextEditingController();
-              textEditingControllers.putIfAbsent(
-                  CommonUtil().getFieldName(field.name),
-                  () => textEditingController);
+              getTextField(field);
             }
 
             if (field.type == tckConstants.tckTypeDescription &&
@@ -259,19 +255,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (field.type == tckConstants.tckTypeDescription &&
                 field.name != tckConstants.tckMainDescription &&
                 field.isVisible == null) {
-              var textEditingController = new TextEditingController();
-              textEditingControllers.putIfAbsent(
-                  CommonUtil().getFieldName(field.name),
-                  () => textEditingController);
+              getTextField(field);
             }
 
             if (field.type == tckConstants.tckTypeDescription &&
                 field.name != tckConstants.tckMainDescription &&
                 field.isVisible != null) {
-              var textEditingController = new TextEditingController();
-              textEditingControllers.putIfAbsent(
-                  CommonUtil().getFieldName(field.name),
-                  () => textEditingController);
+              getTextField(field);
             }
 
             if (field.type == tckConstants.tckTypeDropdown && field.isDoctor) {
@@ -289,17 +279,40 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             }
             if (field.type == tckConstants.tckTypeDropdown &&
                 field.fieldData != null &&
-                field.fieldData.length > 0) {
-              var textEditingController = new TextEditingController();
-              textEditingControllers.putIfAbsent(
-                  CommonUtil().getFieldName(field.name),
-                  () => textEditingController);
+                (field.fieldData?.length??0) > 0) {
+              getTextField(field);
+              if (field.fieldData.length == 1) {
+                onSelectDD(field.fieldData[0], field);
+              }
+            }
+
+            if (field.type == tckTypeDropdown &&
+                (field.isProvider != null && field.isProvider)) {
+              if (field.providerType != null && field.providerType.length > 0) {
+                await controller.getProviderList(
+                    field.providerType[0] ?? "", field);
+              }
+              getTextField(field);
+              if (field.fieldData != null &&
+                  (field.fieldData?.length ?? 0) > 0 &&
+                  field?.fieldData?.length == 1) {
+                await Future.delayed(Duration(milliseconds: 50));
+                onSelectDD(field.fieldData[0], field);
+              }
             }
           }
       }
     } catch (e) {
       //print(e);
     }
+  }
+
+  getTextField(Field field) {
+    try {
+      var textEditingController = new TextEditingController();
+      textEditingControllers.putIfAbsent(
+          CommonUtil().getFieldName(field.name), () => textEditingController);
+    } catch (e) {}
   }
 
   @override
@@ -420,7 +433,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForTextValue(
-                        i, CommonUtil().getFieldName(field.name)),
+                        i, CommonUtil().getFieldName(field.name),field),
                   ],
                 ))
               : SizedBox.shrink();
@@ -439,7 +452,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                           isRequired: /*field.isRequired*/ isVisible ?? false),
                       SizedBox(height: 10.h),
                       getWidgetForTextValue(
-                          i, CommonUtil().getFieldName(field.name)),
+                          i, CommonUtil().getFieldName(field.name),field),
                     ],
                   ),
                 ))
@@ -776,6 +789,28 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   : widgetForColumn.add(getWidgetForLab())
               : SizedBox.shrink();
 
+          (field.type == tckTypeTitle &&
+                  field.isVisible != null &&
+                  field.name == strLabName &&
+                  isLabNameOthers)
+              ? widgetForColumn.add(Visibility(
+                  visible: isLabNameOthers,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForTitleText(
+                          title: displayName,
+                          isRequired:isLabNameOthers ??
+                              false),
+                      SizedBox(height: 10.h),
+                      getWidgetForTextValue(
+                          i, CommonUtil().getFieldName(field.name), field),
+                    ],
+                  ),
+                ))
+              : SizedBox.shrink();
+
+
           isFirstTym = false;
         }
       }
@@ -827,6 +862,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 CommonUtil().validString(labData[parameters.strpincode]);
             controller.strStateName.value =
                 CommonUtil().validString(labData[parameters.strstateName]);
+            if (lab.text.trim().toLowerCase() == strOthers) {
+              isLabNameOthers = true;
+            } else {
+              isLabNameOthers = false;
+            }
+            onRefreshWidget();
           }
         }
       });
@@ -1171,7 +1212,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTextValue(int index, String strName) {
+  Widget getWidgetForTextValue(int index, String strName,Field field) {
     return TextField(
       textCapitalization: TextCapitalization.sentences,
       autofocus: false,
@@ -1179,6 +1220,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,
+        enabled: field.isDisable != null && field.isDisable ? false : true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           borderSide: BorderSide(width: 0, color: Colors.white),
@@ -1248,13 +1290,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               i < widget.ticketList.additionalInfo?.field.length;
               i++) {
             Field field = widget.ticketList.additionalInfo?.field[i];
+            String displayName = displayFieldName(field);
 
             if (field.type == tckConstants.tckTypeTitle &&
                 field.name == tckConstants.tckMainTitle) {
               if (titleController.text.isNotEmpty) {
                 tckConstants.tckTitle = titleController.text.toString();
               } else if (field.isRequired) {
-                showAlertMsg(CommonConstants.ticketTitle);
+                showAlertMsg("Please fill $displayName");
                 return;
               }
             }
@@ -1262,7 +1305,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (field.type == tckConstants.tckTypeTitle &&
                 field.name == tckConstants.tckPackageTitle) {
               if (field.isRequired && package_title_ctrl.text.isEmpty) {
-                showAlertMsg(CommonConstants.ticketPackage);
+                showAlertMsg("Please fill $displayName");
                 return;
               }
             }
@@ -1272,7 +1315,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               if (descController.text.isNotEmpty) {
                 tckConstants.tckDesc = descController.text.toString();
               } else if (field.isRequired) {
-                showAlertMsg(CommonConstants.ticketDesc);
+                showAlertMsg("Please fill $displayName");
                 return;
               }
             }
@@ -1282,7 +1325,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 tckConstants.tckSelectedDoctor = doctor.text;
                 tckConstants.tckSelectedDoctorId = docId;
               } else if (field.isRequired) {
-                showAlertMsg(CommonConstants.ticketDoctor);
+                showAlertMsg("Please choose $displayName");
                 return;
               }
             }
@@ -1293,7 +1336,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 tckConstants.tckSelectedHospital = hospital.text;
                 tckConstants.tckSelectedHospitalId = hosId;
               } else if (field.isRequired) {
-                showAlertMsg(CommonConstants.ticketHospital);
+                showAlertMsg("Please choose $displayName");
                 return;
               }
             }
@@ -1303,10 +1346,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 field.isLab) {
               if (CommonUtil.REGION_CODE == "IN") {
                 if (lab.text.isNotEmpty) {
-                  controller.dynamicTextFiledObj[field.name] =
-                      lab.text.toString();
+                  if (isLabNameOthers) {
+                    controller.dynamicTextFiledObj[field.name] =
+                        controller.selPrefLabId.value;
+                  } else {
+                    controller.dynamicTextFiledObj[field.name] =
+                        lab.text.toString();
+                  }
                 } else if (field.isRequired) {
-                  showAlertMsg(CommonConstants.ticketLab);
+                  showAlertMsg("Please choose $displayName");
                   return;
                 }
               } else {
@@ -1317,22 +1365,22 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               }
             }
 
-            if (field.type == tckConstants.tckTypeDate && field.isRequired) {
+            if (field.type == tckConstants.tckTypeDate) {
               if (preferredDateController.text.isNotEmpty) {
                 tckConstants.tckPrefDate =
                     preferredDateController.text.toString();
                 controller.dynamicTextFiledObj[field.name] =
                     preferredDateController.text.toString();
               } else if (field.isRequired) {
-                showAlertMsg(CommonConstants.ticketDate);
+                showAlertMsg("Please select $displayName");
                 return;
               }
             }
 
             if (field.type == tckConstants.tckTypeDropdown &&
                 field.isCategory) {
-              if (field.isRequired && package_title_ctrl.text != "") {
-                showAlertMsg(CommonConstants.ticketPackage);
+              if (field.isRequired && package_title_ctrl.text.trim().isEmpty) {
+                showAlertMsg("Please choose $displayName");
                 return;
               }
             }
@@ -2119,7 +2167,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   void commonMethodToCreateTicket(var ticketListData) {
     try {
       if (ticketListData.additionalInfo != null) {
+
         for (Field field in widget.ticketList.additionalInfo?.field) {
+          String displayName = displayFieldName(field);
           bool isVisible = false;
           if (CommonUtil().validString(field.isVisible).trim().isNotEmpty) {
             for (int i = 0;
@@ -2135,23 +2185,20 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             }
           }
 
-          if (field.type == tckConstants.tckTypeDropdown) {
-            if (field.isRequired) {
-              if (field.fieldData != null && field.fieldData.length > 0) {
-                String strMOS = CommonUtil().validString(textEditingControllers[
-                        CommonUtil().getFieldName(field.name)]
+          if (field.type == tckConstants.tckTypeDropdown &&
+              (field.fieldData != null && field.fieldData.length > 0)) {
+            String strMOS = CommonUtil().validString(
+                textEditingControllers[CommonUtil().getFieldName(field.name)]
                     .text);
-                if (strMOS.isNotEmpty) {
-                  tckConstants.tckPrefMOSId = field.selValueDD != null
-                      ? CommonUtil().validString(field.selValueDD.id)
-                      : "";
-                  tckConstants.tckPrefMOSName = strMOS;
-                  controller.dynamicTextFiledObj[field.name] = field.selValueDD;
-                } else if (field.isRequired && dropdownValue == null) {
-                  showAlertMsg("Please choose " + displayFieldName(field));
-                  return;
-                }
-              }
+            if (strMOS.isNotEmpty) {
+              tckConstants.tckPrefMOSId = field.selValueDD != null
+                  ? CommonUtil().validString(field.selValueDD.id)
+                  : "";
+              tckConstants.tckPrefMOSName = strMOS;
+              controller.dynamicTextFiledObj[field.name] = field.selValueDD;
+            } else if (field.isRequired /* && dropdownValue == null*/) {
+              showAlertMsg("Please choose $displayName");
+              return;
             }
           }
 
@@ -2162,7 +2209,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               tckConstants.tckPrefTime = strTime;
               controller.dynamicTextFiledObj[field.name] = strTime;
             } else if (field.isRequired) {
-              showAlertMsg(CommonConstants.ticketTime);
+              showAlertMsg("Please select $displayName");
               return;
             }
           }
@@ -2177,7 +2224,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
             } else if (field.isRequired) {
-              showAlertMsg("Please fill " + displayFieldName(field));
+              showAlertMsg("Please fill $displayName");
               return;
             }
           }
@@ -2193,7 +2240,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               if (strText.isNotEmpty) {
                 controller.dynamicTextFiledObj[field.name] = strText;
               } else if (isVisible) {
-                showAlertMsg("Please fill " + displayFieldName(field));
+                showAlertMsg("Please fill $displayName");
                 return;
               }
             }
@@ -2208,7 +2255,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
             } else if (field.isRequired) {
-              showAlertMsg("Please fill " + displayFieldName(field));
+              showAlertMsg("Please fill $displayName");
               return;
             }
           }
@@ -2223,9 +2270,25 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               if (strText.isNotEmpty) {
                 controller.dynamicTextFiledObj[field.name] = strText;
               } else if (isVisible) {
-                showAlertMsg("Please fill " + displayFieldName(field));
+                showAlertMsg("Please fill $displayName");
                 return;
               }
+            }
+          }
+
+          if ((field.type == tckConstants.tckTypeTitle) &&
+              field.isVisible != null &&
+              field.name == strLabName &&
+              isLabNameOthers) {
+            String strText = CommonUtil().validString(
+                textEditingControllers[CommonUtil().getFieldName(field.name)]
+                    .text);
+            if (strText.isNotEmpty) {
+              controller.dynamicTextFiledObj[field.name] =
+                  strText;
+            } else if (isLabNameOthers) {
+              showAlertMsg("Please fill $displayName");
+              return;
             }
           }
         }
@@ -2874,29 +2937,30 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 .toList()
             : SizedBox.shrink(),
         onSelected: (value) {
-          try {
-            field.selValueDD = value;
-            field.selValueDD.fieldName = field.name;
-            if (controller.labBookAppointment.value &&
-                (field.selValueDD.name.contains("Centre") ||
-                    field.selValueDD.name.contains("Center"))) {
-              isLabAddressVisible = true;
-            } else {
-              isLabAddressVisible = false;
-            }
-            setState(() {
-              textEditingControllers[CommonUtil().getFieldName(field.name)]
-                      .text =
-                  field.selValueDD.name != null ? field.selValueDD.name : '';
-            });
-            onRefreshWidget();
-          } catch (e) {
-            //print(e);
-          }
+          onSelectDD(value,field);
         },
         child: child ?? getIconButton(),
       );
     });
+  }
+
+  onSelectDD(FieldData value, Field field) {
+    try {
+      field.selValueDD = value;
+      field.selValueDD.fieldName = field.name;
+      if (controller.labBookAppointment.value &&
+          (field.selValueDD.name.contains("Centre") ||
+              field.selValueDD.name.contains("Center"))) {
+        isLabAddressVisible = true;
+      } else {
+        isLabAddressVisible = false;
+      }
+      setState(() {
+        textEditingControllers[CommonUtil().getFieldName(field.name)].text =
+            field.selValueDD.name != null ? field.selValueDD.name : '';
+      });
+      onRefreshWidget();
+    } catch (e) {}
   }
 
   onRefreshWidget() {

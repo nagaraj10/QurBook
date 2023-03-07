@@ -194,6 +194,10 @@ class CommonUtil {
   final String CONTENT_NO_REFUND =
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
 
+  static getProviderType(String type) {
+    return 'health-organization/search/efhb?healthOrganizationType=%5B%22${type}%22%5D&limit=100&sortBy=asc';
+  }
+
   static bool dialogboxOpen = false;
 
   static String bookedForId = null;
