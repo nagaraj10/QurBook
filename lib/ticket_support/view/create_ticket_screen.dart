@@ -138,6 +138,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   bool isLabAddressVisible = false;
   bool isLabNameOthers = false;
   cityListModel.CityListData cityListData;
+  bool isProviderOthers = false;
 
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -289,7 +290,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               }
             }
 
-            if (field.type == tckTypeDropdown &&
+            if (field.type == tckConstants.tckTypeDropdown &&
                 (field.isProvider != null && field.isProvider)) {
               if (field.providerType != null && field.providerType.length > 0) {
                 await controller.getProviderList(
@@ -1409,12 +1410,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 field.isLab) {
               if (CommonUtil.REGION_CODE == "IN") {
                 if (lab.text.isNotEmpty) {
-                  if (isLabNameOthers) {
-                    controller.dynamicTextFiledObj[field.name] =
-                        controller.selPrefLabId.value;
-                  } else {
-                    controller.dynamicTextFiledObj[field.name] =
-                        lab.text.toString();
+                  controller.dynamicTextFiledObj[field.name] =
+                      controller.selPrefLabId.value;
+                  if (!isLabNameOthers) {
+                    controller.dynamicTextFiledObj[strLabName] =
+                        lab.text.toString().trim();
                   }
                 } else if (field.isRequired) {
                   showAlertMsg("Please choose $displayName");
@@ -2245,7 +2245,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           }
 
           if (field.type == tckConstants.tckTypeDropdown &&
-              (field.fieldData != null && field.fieldData.length > 0)) {
+              (field.fieldData != null && field.fieldData.length > 0)&&!field.isProvider)
+          {
             String strMOS = CommonUtil().validString(
                 textEditingControllers[CommonUtil().getFieldName(field.name)]
                     .text);
@@ -2255,6 +2256,23 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   : "";
               tckConstants.tckPrefMOSName = strMOS;
               controller.dynamicTextFiledObj[field.name] = field.selValueDD;
+            } else if (field.isRequired) {
+              showAlertMsg("Please choose $displayName");
+              return;
+            }
+          }
+
+          if (field.type == tckConstants.tckTypeDropdown &&
+              (field.fieldData != null && field.fieldData.length > 0) &&
+              field.isProvider) {
+            String strProviderField = getText(field);
+            if (strProviderField.isNotEmpty) {
+              controller.dynamicTextFiledObj[field.name] =
+                  field?.selValueDD?.id ?? "";
+              if (!isProviderOthers) {
+                controller.dynamicTextFiledObj[strProviderName] =
+                    field?.selValueDD?.name ?? "";
+              }
             } else if (field.isRequired) {
               showAlertMsg("Please choose $displayName");
               return;
@@ -2277,9 +2295,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               (field.name != tckConstants.tckMainTitle &&
                   field.name != tckConstants.tckPackageTitle) &&
               field.isVisible == null) {
-            String strText = CommonUtil().validString(
-                textEditingControllers[CommonUtil().getFieldName(field.name)]
-                    .text);
+            String strText = getText(field);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
             } else if (field.isRequired) {
@@ -2292,9 +2308,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               (field.name != tckConstants.tckMainTitle &&
                   field.name != tckConstants.tckPackageTitle) &&
               field.isVisible != null) {
-            String strText = CommonUtil().validString(
-                textEditingControllers[CommonUtil().getFieldName(field.name)]
-                    .text);
+            String strText = getText(field);
             if (isVisible) {
               if (strText.isNotEmpty) {
                 controller.dynamicTextFiledObj[field.name] = strText;
@@ -2308,9 +2322,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           if (field.type == tckConstants.tckTypeDescription &&
               field.name != tckConstants.tckMainDescription &&
               field.isVisible == null) {
-            String strText = CommonUtil().validString(
-                textEditingControllers[CommonUtil().getFieldName(field.name)]
-                    .text);
+            String strText = getText(field);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
             } else if (field.isRequired) {
@@ -2322,9 +2334,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           if (field.type == tckConstants.tckTypeDescription &&
               field.name != tckConstants.tckMainDescription &&
               field.isVisible != null) {
-            String strText = CommonUtil().validString(
-                textEditingControllers[CommonUtil().getFieldName(field.name)]
-                    .text);
+            String strText = getText(field);
             if (isVisible) {
               if (strText.isNotEmpty) {
                 controller.dynamicTextFiledObj[field.name] = strText;
@@ -2339,9 +2349,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               field.isVisible != null &&
               field.name == strLabName &&
               isLabNameOthers) {
-            String strText = CommonUtil().validString(
-                textEditingControllers[CommonUtil().getFieldName(field.name)]
-                    .text);
+            String strText = getText(field);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] =
                   strText;
@@ -2358,9 +2366,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (field.isVisible == null) {
               isVisibleTrue = true;
             }
-            String strText = CommonUtil().validString(
-                textEditingControllers[CommonUtil().getFieldName(field.name)]
-                    .text);
+            String strText = getText(field);
             controller.dynamicTextFiledObj[field.name] = strText;
             if (isVisibleTrue && strText.trim().isEmpty) {
               showAlertMsg("Please select $displayName");
@@ -3031,6 +3037,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       } else {
         isLabAddressVisible = false;
       }
+      if (field.isProvider != null && field.isProvider) {
+        if (value?.id?.toLowerCase() == strOthers) {
+          isProviderOthers = true;
+        } else {
+          isProviderOthers = false;
+        }
+      }
       setState(() {
         textEditingControllers[CommonUtil().getFieldName(field.name)].text =
             field.selValueDD.name != null ? field.selValueDD.name : '';
@@ -3057,6 +3070,16 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       return displayName;
     } catch (e) {}
     return displayName;
+  }
+
+  String getText(Field field) {
+    String strText = "";
+    try {
+      strText = CommonUtil().validString(
+          textEditingControllers[CommonUtil().getFieldName(field.name)].text);
+      return strText;
+    } catch (e) {}
+    return strText;
   }
 }
 

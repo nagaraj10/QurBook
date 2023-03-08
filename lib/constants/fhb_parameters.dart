@@ -638,7 +638,6 @@ const String strRefundMediaMetaId = 'refundMediaMetaId';
 const String strPrescription = 'prescription';
 const String strVoice = 'voice';
 const String strrx = 'rx';
-const String strothers = 'others';
 const String strCreatedFor = 'createdFor';
 const String strStatusId = 'statusId';
 const String strIsFollowUpFee = 'isFollowUpFee';
