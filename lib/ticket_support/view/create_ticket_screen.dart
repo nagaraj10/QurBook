@@ -16,6 +16,7 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/exception/FetchException.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
@@ -55,6 +56,7 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:myfhb/search_providers/models/CityListModel.dart'as cityListModel;
 
 class CreateTicketScreen extends StatefulWidget {
   CreateTicketScreen(this.ticketList);
@@ -135,6 +137,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   bool isLabAddressVisible = false;
   bool isLabNameOthers = false;
+  cityListModel.CityListData cityListData;
 
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -204,6 +207,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   @override
   void dispose() {
     try {
+      setDefaultValues();
       controller = null;
 
       //controller.dispose();
@@ -299,6 +303,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 onSelectDD(field.fieldData[0], field);
               }
             }
+
+            if ((field.type == tckConstants.tckTypeDropdown ||
+                    field.type == tckConstants.tckTypeLookUp) &&
+                field.name == strCity) {
+              getTextField(field);
+            }
+
           }
       }
     } catch (e) {
@@ -535,14 +546,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                   () {
                                     Navigator.pop(context);
                                     moveToSearchScreen(
-                                        context, CommonConstants.keyDoctor,
+                                        context, CommonConstants.keyDoctor,field,
                                         setState: setState);
                                   },
                                 )
                               : getAllCustomRoles(doctorObj, () {
                                   Navigator.pop(context);
                                   moveToSearchScreen(
-                                      context, CommonConstants.keyDoctor,
+                                      context, CommonConstants.keyDoctor,field,
                                       setState: setState);
                                 }),
                         ),
@@ -584,14 +595,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                   () {
                                     Navigator.pop(context);
                                     moveToSearchScreen(
-                                        context, CommonConstants.keyHospital,
+                                        context, CommonConstants.keyHospital,field,
                                         setState: setState);
                                   },
                                 )
                               : getAllHospitalRoles(hospitalObj, () {
                                   Navigator.pop(context);
                                   moveToSearchScreen(
-                                      context, CommonConstants.keyHospital,
+                                      context, CommonConstants.keyHospital,field,
                                       setState: setState);
                                 }),
                         ),
@@ -607,7 +618,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           ));*/
 
           (field.type == tckConstants.tckTypeDropdown &&
-                  /*field.name == tckConstants.tckTypeModeOfService &&*/
                   field.fieldData != null &&
                   field.fieldData.length > 0)
               ? widgetForColumn.add(Column(
@@ -626,17 +636,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                           flex: 2,
                           child: fhbBasicWidget.getTextFiledWithHint(
                               context,
-                              '$placeHolderName',
+                              placeHolderName,
                               textEditingControllers[
                                   CommonUtil().getFieldName(field.name)],
                               enabled: false),
                         ),
                         Container(
                           height: 50,
-                          child: getDropDownFields(field
-                              /*controller.modeOfServiceList,
-                            selectedModeOfService,*/
-                              ),
+                          child: getDropDownFields(field),
                         ),
                       ],
                     ),
@@ -688,7 +695,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   children: [
                     SizedBox(height: 15.h),
                     getWidgetForTitleText(
-                        title: "Package Name",
+                        title: displayName,
                         isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getTitleForPlanPackage()
@@ -701,7 +708,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   children: [
                     SizedBox(height: 15.h),
                     getWidgetForTitleText(
-                        title: "Category",
+                        title: displayName,
                         isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     healthConditionsResult != null
@@ -751,7 +758,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                       }
                                       await regController.getCurrentLocation();
                                       moveToSearchScreen(
-                                          context, CommonConstants.keyLabs,
+                                          context, CommonConstants.keyLabs,field,
                                           setState: setState);
                                     } catch (e) {
                                       //print(e);
@@ -809,6 +816,52 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     ))
                   : SizedBox.shrink();
 
+          ((field.type == tckConstants.tckTypeDropdown ||
+                      field.type == tckConstants.tckTypeLookUp) &&
+                  field.name == strCity)
+              ? widgetForColumn.add(Visibility(
+                  visible: field.isVisible != null ? isVisible : true,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForTitleText(
+                          title: displayName,
+                          isRequired: isVisible ?? false),
+                      SizedBox(height: 10.h),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: fhbBasicWidget.getTextFiledWithHint(
+                                context,
+                                placeHolderName,
+                                textEditingControllers[
+                                    CommonUtil().getFieldName(field.name)],
+                                enabled: false),
+                          ),
+                          Container(
+                            height: 50,
+                            child: GestureDetector(
+                                onTap: () async {
+                                  try {
+                                    moveToSearchScreen(
+                                        context, CommonConstants.keyCity, field,
+                                        setState: setState);
+                                  } catch (e) {}
+                                },
+                                child: getIconButton()),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.h),
+                    ],
+                  ),
+                ))
+              : SizedBox.shrink();
+
           isFirstTym = false;
         }
       }
@@ -820,7 +873,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     return Column(children: widgetForColumn);
   }
 
-  moveToSearchScreen(BuildContext context, String searchParam,
+  moveToSearchScreen(BuildContext context, String searchParam,Field field,
       {setState}) async {
     try {
       await Navigator.of(context)
@@ -866,6 +919,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               isLabNameOthers = false;
             }
             onRefreshWidget();
+          } else if (results.containsKey(tckConstants.keyCity)) {
+            cityListData = results[tckConstants.keyCity];
+
+            textEditingControllers[CommonUtil().getFieldName(field.name)]
+                ?.text = CommonUtil().validString(cityListData?.name ?? "");
+            textEditingControllers[CommonUtil().getFieldName(strState)]?.text =
+                CommonUtil().validString(cityListData?.state?.name);
           }
         }
       });
@@ -1292,7 +1352,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
             if (field.type == tckConstants.tckTypeTitle &&
                 field.name == tckConstants.tckMainTitle) {
-              if (titleController.text.isNotEmpty) {
+              if (titleController.text.trim().isNotEmpty) {
                 tckConstants.tckTitle = titleController.text.toString();
               } else if (field.isRequired) {
                 showAlertMsg("Please fill $displayName");
@@ -1302,7 +1362,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
             if (field.type == tckConstants.tckTypeTitle &&
                 field.name == tckConstants.tckPackageTitle) {
-              if (field.isRequired && package_title_ctrl.text.isEmpty) {
+              if (package_title_ctrl.text.trim().isNotEmpty) {
+                controller.dynamicTextFiledObj[field.name] =
+                    package_title_ctrl.text.toString();
+              } else if (field.isRequired) {
                 showAlertMsg("Please fill $displayName");
                 return;
               }
@@ -1312,6 +1375,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 field.name == tckConstants.tckMainDescription) {
               if (descController.text.isNotEmpty) {
                 tckConstants.tckDesc = descController.text.toString();
+                controller.dynamicTextFiledObj[field.name] =
+                    descController.text.toString();
               } else if (field.isRequired) {
                 showAlertMsg("Please fill $displayName");
                 return;
@@ -1377,7 +1442,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
             if (field.type == tckConstants.tckTypeDropdown &&
                 field.isCategory) {
-              if (field.isRequired && package_title_ctrl.text.trim().isEmpty) {
+              if (dropdownValue != null) {
+                controller.dynamicTextFiledObj[field.name] = dropdownValue;
+              } else if (field.isRequired) {
                 showAlertMsg("Please choose $displayName");
                 return;
               }
@@ -1393,39 +1460,33 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           }
       }
 
-      if (strName.contains("doctor appointment") ||
-          strName.contains("lab appointment")) {
+      if (strName.contains(variable.strDoctorAppointment) ||
+          strName.contains(variable.strLabAppointment)) {
         controller.dynamicTextFiledObj["title"] =
             titleController.text.toString();
-        controller.dynamicTextFiledObj["description"] =
-            descController.text.toString();
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
         controller.dynamicTextFiledObj["healthOrgTypeId"] =
             widget.ticketList.additionalInfo.healthOrgTypeId ?? "";
         commonMethodToCreateTicket(ticketListData);
-      } else if (strName.contains("general health")) {
+      } else if (strName.contains(variable.strGeneralHealth)) {
         controller.dynamicTextFiledObj["title"] =
             titleController.text.toString();
-        controller.dynamicTextFiledObj["description"] =
-            descController.text.toString();
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
 
         commonMethodToCreateTicket(ticketListData);
-      } else if (strName.contains("order prescription")) {
+      } else if (strName.contains(variable.strOrderPrescription)) {
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
         commonMethodToCreateTicket(ticketListData);
-      } else if (strName.contains("care/diet plan")) {
+      } else if (strName.contains(variable.strCareDietPlan)) {
         tckConstants.tckSelectedCategory = dropdownValue?.title ?? "";
         Constants.tckPackageName = package_title_ctrl.text;
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
         commonMethodToCreateTicket(ticketListData);
-      } else if (strName.contains("transportation") ||
-          strName.contains("homecare services") ||
-          strName.contains("food delivery")) {
+      } else if (strName.contains(variable.strTransportation) ||
+          strName.contains(variable.strHomecareServices) ||
+          strName.contains(variable.strFoodDelivery)||strName.contains(strOthers)) {
         controller.dynamicTextFiledObj["title"] =
             titleController.text.toString();
-        controller.dynamicTextFiledObj["description"] =
-            descController.text.toString();
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
         controller.dynamicTextFiledObj["healthOrgTypeId"] =
             widget.ticketList.additionalInfo.healthOrgTypeId ?? "";
@@ -2194,7 +2255,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   : "";
               tckConstants.tckPrefMOSName = strMOS;
               controller.dynamicTextFiledObj[field.name] = field.selValueDD;
-            } else if (field.isRequired /* && dropdownValue == null*/) {
+            } else if (field.isRequired) {
               showAlertMsg("Please choose $displayName");
               return;
             }
@@ -2289,6 +2350,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               return;
             }
           }
+
+          if ((field.type == tckConstants.tckTypeDropdown ||
+                  field.type == tckConstants.tckTypeLookUp) &&
+              field.name == strCity) {
+            bool isVisibleTrue = isVisible;
+            if (field.isVisible == null) {
+              isVisibleTrue = true;
+            }
+            String strText = CommonUtil().validString(
+                textEditingControllers[CommonUtil().getFieldName(field.name)]
+                    .text);
+            controller.dynamicTextFiledObj[field.name] = strText;
+            if (isVisibleTrue && strText.trim().isEmpty) {
+              showAlertMsg("Please select $displayName");
+              return;
+            }
+          }
+
         }
       }
 
@@ -2889,7 +2968,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   getDropDownFields(Field field,
-      /*List<FieldData> modeOfServiceList, FieldData modeOfServiceSample,*/
       {Widget child}) {
     if (field.selValueDD != null) {
       for (var modeOfServiceObj in field.fieldData) {

@@ -268,6 +268,7 @@ const String ADD_NEW_FAMILY_MEMBER = 'Add new family member';
 const String keyDoctor = 'doctor';
 const String keyHospital = 'hospital';
 const String keyLab = 'laboratory';
+const String keyCity = 'City';
 const String keyFamily = 'keyFamilyrel';
 const String keyTheme = 'my_theme';
 const String keyPriColor = 'pri_color';

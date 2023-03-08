@@ -11,6 +11,7 @@ import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
+import 'package:myfhb/search_providers/models/CityListModel.dart'as cityListModel;
 import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
@@ -147,6 +148,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             widget.arguments.searchWord == CommonConstants.lab) {
           _labsListBlock.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID);
         }
+        else if (widget.arguments.searchWord == CommonConstants.keyCity) {
+          _labsListBlock.getCityList('a');
+        }
       }
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => _refreshIndicatorKey.currentState?.show());
@@ -224,7 +228,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         : widget.arguments.searchWord ==
                                 CommonConstants.hospitals
                             ? _hospitalListBlock.getHospitalListNew(value)
-                            : _labsListBlock.getLabsListNew(value);
+                            : widget.arguments.searchWord ==
+                        CommonConstants.labs ||
+                        widget.arguments.searchWord ==
+                            CommonConstants.lab
+                        ? _labsListBlock.getLabsListNew(value):_labsListBlock.getCityList(value);
                     setState(() {});
                   } else {
                     widget.arguments.searchWord == CommonConstants.doctors
@@ -233,8 +241,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 CommonConstants.hospitals
                             ? _hospitalListBlock.getExistingHospitalListNew(
                                 Constants.STR_HEALTHORG_HOSPID)
-                            : _labsListBlock.getExistingLabsListNew(
-                                Constants.STR_HEALTHORG_LABID);
+                            : widget.arguments.searchWord ==
+                                        CommonConstants.labs ||
+                                    widget.arguments.searchWord ==
+                                        CommonConstants.lab
+                                ? _labsListBlock.getExistingLabsListNew(
+                                    Constants.STR_HEALTHORG_LABID)
+                                : _labsListBlock.getCityList('a');
                     setState(() {});
                   }
                 },
@@ -265,12 +278,22 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       ? getResponseFromApiWidgetForDoctors()
                       : widget.arguments.searchWord == CommonConstants.hospitals
                           ? getResponseFromApiWidgetForHospital()
-                          : getResponseFromApiWidgetForLabs()
+                          : widget.arguments.searchWord ==
+                      CommonConstants.labs ||
+                                  widget.arguments.searchWord ==
+                                      CommonConstants.lab
+                              ? getResponseFromApiWidgetForLabs()
+                              : getResponseFromApiWidgetForCity()
                   : widget.arguments.searchWord == CommonConstants.doctors
                       ? getResponseFromApiWidgetForDoctors()
                       : widget.arguments.searchWord == CommonConstants.hospitals
                           ? getResponseFromApiWidgetForHospital()
-                          : getResponseFromApiWidgetForLabs()),
+                          : widget.arguments.searchWord ==
+                                      CommonConstants.labs ||
+                                  widget.arguments.searchWord ==
+                                      CommonConstants.lab
+                              ? getResponseFromApiWidgetForLabs()
+                              : getResponseFromApiWidgetForCity()),
         ],
       ),
     );
@@ -495,7 +518,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         : widget.arguments.searchWord ==
                                 CommonConstants.hospitals
                             ? saveHospitalDialog(context)
-                            : passLaboratoryValue(null, context);
+                            : widget.arguments.searchWord ==
+                        CommonConstants.labs ||
+                        widget.arguments.searchWord ==
+                            CommonConstants.lab
+                        ? passLaboratoryValue(null, context):passCityValue(null, context);
                   }
                 }, text: 'Click here to add', width: 150.w),
               ],
@@ -516,7 +543,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ? passDoctorsValue(diagnostics.errorData, context)
               : widget.arguments.searchWord == CommonConstants.hospitals
                   ? passHospitalValue(null, context)
-                  : passLaboratoryValue(null, context);
+                  : widget.arguments.searchWord ==
+              CommonConstants.labs ||
+              widget.arguments.searchWord ==
+                  CommonConstants.lab
+              ? passLaboratoryValue(null, context):passCityValue(null, context);
         }
       },
       child: Container(
@@ -859,6 +890,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
+  void passCityValue(cityListModel.CityListData cityData, BuildContext context) {
+    Navigator.of(context).pop({Constants.keyCity: cityData});
+  }
+
   getDataToView(
     String name,
     String address,
@@ -1092,7 +1127,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           ? passDoctorsValue(diagnostics.errorData, context)
           : widget.arguments.searchWord == CommonConstants.hospitals
               ? passHospitalValue(null, context)
-              : passLaboratoryValue(null, context);
+              : widget.arguments.searchWord ==
+          CommonConstants.labs ||
+          widget.arguments.searchWord ==
+              CommonConstants.lab
+          ? passLaboratoryValue(null, context):passCityValue(null, context);
     }
   }
 
@@ -2153,5 +2192,149 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
 
     return loginButtonWithGesture;
+  }
+
+  Widget getResponseFromApiWidgetForCity() {
+    return StreamBuilder<ApiResponse<cityListModel.CityListModel>>(
+      stream: _labsListBlock.cityNewStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return Container();
+
+        switch (snapshot.data.status) {
+          case Status.LOADING:
+            rebuildBlockObject();
+            return Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: CommonCircularIndicator(),
+                ));
+
+            break;
+
+          case Status.ERROR:
+            rebuildBlockObject();
+            return Text(
+                variable.strNoDataAvailable + ' ' + CommonConstants.keyCity,
+                style: TextStyle(color: Colors.red));
+            break;
+
+          case Status.COMPLETED:
+            rebuildBlockObject();
+            return snapshot.data.data.result == null
+                ? Container(
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            )
+            //getEmptyCard()
+                : snapshot.data.data.result.isEmpty
+                ? Container(
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            )
+            //getEmptyCard()
+                : Container(
+              margin: EdgeInsets.all(5),
+              child: getAllDatasInCityList(snapshot.data.data.result),
+            );
+
+            break;
+
+          default:
+            break;
+        }
+      },
+    );
+  }
+
+  Widget getAllDatasInCityList(List<cityListModel.CityListData> data) {
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      onRefresh: _refresh,
+      color: Color(CommonUtil().getMyPrimaryColor()),
+      child: data != null
+          ? Container(
+              color: Color(fhbColors.bgColorContainer),
+              child: ListView.builder(
+                itemBuilder: (c, index) => Container(
+                  padding: EdgeInsets.only(top: 2, bottom: 2),
+                  child: InkWell(
+                    onTap: () {
+                      try {
+                        if (widget.toPreviousScreen) {
+                          passCityValue(data[index] ?? null, context);
+                        }
+                      } catch (e) {}
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      margin: EdgeInsets.only(
+                        top: 5.0.sp,
+                        bottom: 5.0.sp,
+                        left: 10.0.sp,
+                        right: 10.0.sp,
+                      ),
+                      elevation: 0.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.white,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0))),
+                        child: Container(
+                          padding: EdgeInsets.all(
+                            10.0.sp,
+                          ),
+                          margin: EdgeInsets.only(
+                            left: 8.0.w,
+                            right: 15.0.w,
+                            top: 8.0.h,
+                            bottom: 8.0.h,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 3,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    right: 4.0.w,
+                                  ),
+                                  child: Text(
+                                    CommonUtil()
+                                        .validString(data[index]?.name ?? ""),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16.0.sp,
+                                      color: Colors.black,
+                                    ),
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                itemCount: data.length,
+              ))
+          : Container(
+              color: Color(fhbColors.bgColorContainer),
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            ),
+    );
   }
 }
