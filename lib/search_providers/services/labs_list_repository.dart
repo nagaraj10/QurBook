@@ -1,3 +1,6 @@
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+
 import '../../common/CommonConstants.dart';
 import '../../constants/fhb_query.dart' as query;
 import '../models/labs_list_response.dart';
@@ -16,9 +19,11 @@ class LabsListRepository {
   }
 
   Future<LabsSearchListResponse> getLabsFromSearchNew(String param) async {
+    String userID = PreferenceUtil.getStringValue(KEY_USERID);
+
     String categories = '[\"LAB\"]';
     var response = await _helper.getHospitalListFromSearchNew(
-        "${query.qr_health_organization}${query.qr_health_Search}${query.qr_healthOrgType}${categories}${query.qr_limitSearchText}$param${query.qr_sortByDesc}");
+        "${query.qr_health_organization}${query.qr_health_Search}${query.qr_healthOrgType}${categories}${query.qr_limitSearchText}$param${query.qr_sortByDesc}${query.qr_patientEqaul}$userID");
     return LabsSearchListResponse.fromJson(response);
   }
 
