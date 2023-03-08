@@ -30,6 +30,7 @@ const String KEY_UN_SUBCRIBE_BTN = 'unSubscribeBtn';
 const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
+const String IsAppLockChecked = "IsAppLockChecked";
 const String ScanningForDevices = 'Scanning for devices...';
 const String SettingUpTheDevice = 'Setting up the Device...';
 const String ScanningForBpDevices = 'Scanning for Bp devices...';
@@ -48,7 +49,10 @@ const String KEY_CATEGORYID = 'categoryID';
 const String KEY_CATEGORYLIST = 'categoryList';
 const String KEY_PROFILE = 'profile';
 const String KEY_PREFERREDMEASUREMENT = 'preferredMeasurement';
-
+const String enableAppLock = 'enableAppLock';
+const String notificationCalled = 'notificationCalled';
+const String callNotificationReceived = 'callNotificationReceived';
+const String isCallRecieved = 'isCallRecieved';
 const String KEY_USERID = 'userID';
 const String KEY_LASTLOGGEDTIME = 'lastLoggedIn';
 const String KEY_AUTHTOKEN = 'authToken';
@@ -800,6 +804,9 @@ const String primary_provider = 'Primary';
 const String STR_PROVIDERDOCUMENTS = 'Provider Documents';
 const String STR_PRESCRIPTION = 'Prescription';
 const String STR_ALL = 'ALL';
+const String strOthers = 'others';
+const String strOther = 'other';
+const String strLabName = 'lab_name';
 
 
 

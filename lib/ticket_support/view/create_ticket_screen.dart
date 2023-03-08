@@ -134,6 +134,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   String hosId = "";
 
   bool isLabAddressVisible = false;
+  bool isLabNameOthers = false;
 
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -420,7 +421,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForTextValue(
-                        i, CommonUtil().getFieldName(field.name)),
+                        i, CommonUtil().getFieldName(field.name),field),
                   ],
                 ))
               : SizedBox.shrink();
@@ -439,7 +440,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                           isRequired: /*field.isRequired*/ isVisible ?? false),
                       SizedBox(height: 10.h),
                       getWidgetForTextValue(
-                          i, CommonUtil().getFieldName(field.name)),
+                          i, CommonUtil().getFieldName(field.name),field),
                     ],
                   ),
                 ))
@@ -776,6 +777,27 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   : widgetForColumn.add(getWidgetForLab())
               : SizedBox.shrink();
 
+          (field.type == tckTypeTitle &&
+                                field.isVisible != null &&
+                                field.name == strLabName &&
+                                isLabNameOthers)
+                  ? widgetForColumn.add(Visibility(
+                      visible: isLabNameOthers,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 15.h),
+                          getWidgetForTitleText(
+                              title: displayName,
+                              isRequired:isLabNameOthers ??
+                                  false),
+                          SizedBox(height: 10.h),
+                          getWidgetForTextValue(
+                              i, CommonUtil().getFieldName(field.name), field),
+                        ],
+                      ),
+                    ))
+                  : SizedBox.shrink();
+
           isFirstTym = false;
         }
       }
@@ -827,6 +849,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 CommonUtil().validString(labData[parameters.strpincode]);
             controller.strStateName.value =
                 CommonUtil().validString(labData[parameters.strstateName]);
+            if (lab.text.trim().toLowerCase() == strOthers) {
+              isLabNameOthers = true;
+            } else {
+              isLabNameOthers = false;
+            }
+            onRefreshWidget();
           }
         }
       });
@@ -1171,7 +1199,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTextValue(int index, String strName) {
+  Widget getWidgetForTextValue(int index, String strName,Field field) {
     return TextField(
       textCapitalization: TextCapitalization.sentences,
       autofocus: false,
@@ -1303,8 +1331,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 field.isLab) {
               if (CommonUtil.REGION_CODE == "IN") {
                 if (lab.text.isNotEmpty) {
-                  controller.dynamicTextFiledObj[field.name] =
-                      lab.text.toString();
+                  if (isLabNameOthers) {
+                    controller.dynamicTextFiledObj[field.name] =
+                        controller.selPrefLabId.value;
+                  } else {
+                    controller.dynamicTextFiledObj[field.name] =
+                        lab.text.toString();
+                  }
                 } else if (field.isRequired) {
                   showAlertMsg(CommonConstants.ticketLab);
                   return;
@@ -1317,7 +1350,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               }
             }
 
-            if (field.type == tckConstants.tckTypeDate && field.isRequired) {
+            if (field.type == tckConstants.tckTypeDate) {
               if (preferredDateController.text.isNotEmpty) {
                 tckConstants.tckPrefDate =
                     preferredDateController.text.toString();
@@ -2226,6 +2259,21 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 showAlertMsg("Please fill " + displayFieldName(field));
                 return;
               }
+            }
+          }
+
+          if ((field.type == tckConstants.tckTypeTitle) &&
+              field.isVisible != null &&
+              field.name == strLabName &&
+              isLabNameOthers) {
+            String strText = CommonUtil().validString(
+                textEditingControllers[CommonUtil().getFieldName(field.name)]
+                    .text);
+            if (strText.isNotEmpty) {
+              controller.dynamicTextFiledObj[field.name] = strText;
+            } else if (isLabNameOthers) {
+              showAlertMsg("Please fill " + displayFieldName(field));
+              return;
             }
           }
         }

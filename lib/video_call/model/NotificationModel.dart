@@ -38,7 +38,7 @@ class NotificationModel {
   String caregiverReceiver;
   CallArguments callArguments;
   bool isWeb;
-  bool isCaregiver;
+  String isCaregiver;
   String deliveredDateTime;
   bool isFromCareCoordinator;
   String callType;
