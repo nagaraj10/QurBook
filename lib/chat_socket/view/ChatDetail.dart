@@ -478,7 +478,8 @@ class ChatState extends State<ChatDetail> {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.patient?.payload[0]?.deviceTokenId;
             } else if ((appointmentResult
-                ?.deviceToken?.parentMember?.isSuccess??false) &&
+                        ?.deviceToken?.parentMember?.isSuccess ??
+                    false) &&
                 appointmentResult
                     ?.deviceToken?.parentMember?.payload?.isNotEmpty &&
                 appointmentResult?.deviceToken?.parentMember?.payload[0]
@@ -1045,7 +1046,8 @@ class ChatState extends State<ChatDetail> {
                   children: <Widget>[
                     Text(
                         widget.peerName != null && widget.peerName != ''
-                            ? isFromCareCoordinator&&(familyUserId!=null&&familyUserId!='')
+                            ? isFromCareCoordinator &&
+                                    (familyUserId != null && familyUserId != '')
                                 ? widget.peerName?.capitalizeFirstofEach +
                                     CARE_COORDINATOR_STRING
                                 : widget.peerName?.capitalizeFirstofEach
@@ -1074,7 +1076,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   Widget getTopBookingDetail() {
-    if (isFromCareCoordinator&&(familyUserId!=null&&familyUserId!='')) {
+    if (isFromCareCoordinator && (familyUserId != null && familyUserId != '')) {
       return Text('Name: ' + careCoordinatorName,
           textAlign: TextAlign.left,
           overflow: TextOverflow.ellipsis,
@@ -1085,7 +1087,8 @@ class ChatState extends State<ChatDetail> {
               color: Colors.white));
     } else {
       if (!isCareGiverApi) {
-        if (!isFamilyPatientApi &&(familyUserId!=null&&familyUserId!='')) {
+        if (!isFamilyPatientApi &&
+            (familyUserId != null && familyUserId != '')) {
           return Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1344,41 +1347,65 @@ class ChatState extends State<ChatDetail> {
         children: <Widget>[
           chatList?.messages?.type == 0
               // Text
-              ? Card(
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          bottomLeft: Radius.circular(25),
-                          bottomRight: Radius.circular(25))),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: 1.sw * .6,
-                    ),
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25),
+              ? chatList?.isCommonContent
+                  ? Card(
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 1.sw * .8,
+                        ),
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                        ),
+                        child: RichText(
+                          text: TextSpan(
+                              style: TextStyle(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                fontSize: 16.0.sp,
+                              ),
+                              children: textSpanList),
+                        ),
                       ),
-                    ),
-                    /*child: Text(
+                    )
+                  : Card(
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25))),
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 1.sw * .6,
+                        ),
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
+                          ),
+                        ),
+                        /*child: Text(
                       document[STR_CONTENT],
                       style: TextStyle(
                           color: Color(CommonUtil().getMyPrimaryColor())),
                     ),*/
-                    child: RichText(
-                      text: TextSpan(
-                          style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            fontSize: 16.0.sp,
-                          ),
-                          children: textSpanList),
-                    ),
-                  ),
-                )
+                        child: RichText(
+                          text: TextSpan(
+                              style: TextStyle(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                fontSize: 16.0.sp,
+                              ),
+                              children: textSpanList),
+                        ),
+                      ),
+                    )
               : chatList?.messages?.type == 1
                   // Image
                   ? Container(
@@ -1514,7 +1541,9 @@ class ChatState extends State<ChatDetail> {
                                   right: 10.0),
                             ),
         ],
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: chatList?.isCommonContent
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.end,
       );
     } else {
       // Left (peer message)
@@ -1712,8 +1741,9 @@ class ChatState extends State<ChatDetail> {
                                           children: <Widget>[
                                             Expanded(
                                               child: fhbBasicWidget
-                                                .getAudioWidgetForChat(
-                                                    chatList?.messages?.content),
+                                                  .getAudioWidgetForChat(
+                                                      chatList
+                                                          ?.messages?.content),
                                             )
                                           ],
                                         ),
@@ -1750,7 +1780,9 @@ class ChatState extends State<ChatDetail> {
                   )
                 : Container()
           ],
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: chatList?.isCommonContent
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.start,
         ),
         margin: EdgeInsets.only(bottom: 10.0),
       );
@@ -1789,8 +1821,9 @@ class ChatState extends State<ChatDetail> {
         ),
       );
 
-  WidgetSpan buildDateComponent(
-          String text, String linkToOpen, int index, bool isPatient, String fullContent,{bool isFromBtnDirection = false}) =>
+  WidgetSpan buildDateComponent(String text, String linkToOpen, int index,
+          bool isPatient, String fullContent,
+          {bool isFromBtnDirection = false}) =>
       WidgetSpan(
         child: !isPatient
             ? InkWell(
@@ -1804,9 +1837,11 @@ class ChatState extends State<ChatDetail> {
                     padding: const EdgeInsets.all(6.0),
                     child: RichText(
                       text: TextSpan(
-                        children: getSplittedTextWidget(isFromBtnDirection
-                            ? chooseDirection
-                            : chooseYourDate, index),
+                        children: getSplittedTextWidget(
+                            isFromBtnDirection
+                                ? chooseDirection
+                                : chooseYourDate,
+                            index),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14.0.sp,
@@ -1815,44 +1850,49 @@ class ChatState extends State<ChatDetail> {
                     ),
                   ),
                 ),
-                onTap:  isFromBtnDirection
-                               ? null
-                               : () async {
-                  FocusManager.instance.primaryFocus.unfocus();
-                  parsedReferenceText = '';
-                  //tapDatePicker();
-                  //Get.to(ChooseDateSlot());
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ChooseDateSlot(messageContent: fullContent,
-                        getRefNumber: (message) {
-                          if (message != null && message != '') {
-                            if (message.toString().contains(')')) {
-                              parsedReferenceText =
-                                  getSubstringByString(message.toString());
+                onTap: isFromBtnDirection
+                    ? null
+                    : () async {
+                        FocusManager.instance.primaryFocus.unfocus();
+                        parsedReferenceText = '';
+                        //tapDatePicker();
+                        //Get.to(ChooseDateSlot());
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChooseDateSlot(
+                                    messageContent: fullContent,
+                                    getRefNumber: (message) {
+                                      if (message != null && message != '') {
+                                        if (message.toString().contains(')')) {
+                                          parsedReferenceText =
+                                              getSubstringByString(
+                                                  message.toString());
+                                        }
+                                      }
+                                    }))).then((value) {
+                          if (value != null) {
+                            List<String> result = [];
+                            result.add(value);
+                            try {
+                              if (result?.length > 0) {
+                                final removedBrackets = result
+                                    .toString()
+                                    .substring(2, result.toString().length - 2);
+                                if (removedBrackets.length > 0) {
+                                  onSendMessage(
+                                      removedBrackets.toString() + getRefText(),
+                                      0,
+                                      null,
+                                      true);
+                                }
+                              }
+                            } catch (e) {
+                              //print(e);
                             }
                           }
-                        }))
-                  ).then((value) {
-                    if (value != null) {
-                      List<String> result = [];
-                      result.add(value);
-                      try {
-                        if (result?.length > 0) {
-                          final removedBrackets = result
-                              .toString()
-                              .substring(2, result.toString().length - 2);
-                          if (removedBrackets.length > 0) {
-                            onSendMessage(
-                                removedBrackets.toString()  + getRefText(), 0, null, true);
-                          }
-                        }
-                      } catch (e) {
-                        //print(e);
-                      }
-                    }
-                  });
-                },
+                        });
+                      },
               )
             : SizedBox.shrink(),
       );
@@ -1863,7 +1903,7 @@ class ChatState extends State<ChatDetail> {
     const String directionPattern = '{map}';
     final RegExp dateRegExp = RegExp('($datePattern)', caseSensitive: false);
     final RegExp btnDirectionExp =
-            RegExp('($directionPattern)', caseSensitive: false);
+        RegExp('($directionPattern)', caseSensitive: false);
     final RegExp linkRegExp = RegExp('($urlPattern)', caseSensitive: false);
 
     final List<InlineSpan> list = <InlineSpan>[];
@@ -1889,10 +1929,10 @@ class ChatState extends State<ChatDetail> {
     }
 
     if ((directionMap?.start ?? 0) > 0) {
-            list.add(TextSpan(
-                   children: getSplittedTextWidget(
-                        text.substring(0, directionMap.start), index)));
-        }
+      list.add(TextSpan(
+          children: getSplittedTextWidget(
+              text.substring(0, directionMap.start), index)));
+    }
 
     final String linkText = match?.group(0) ?? '';
     final String dateText = dateMatch?.group(0) ?? '';
@@ -1902,11 +1942,12 @@ class ChatState extends State<ChatDetail> {
     }
 
     if (dateText.contains(RegExp(datePattern, caseSensitive: false))) {
-      list.add(buildDateComponent(dateText, dateText, index, isPatient, text,isFromBtnDirection: false));
+      list.add(buildDateComponent(dateText, dateText, index, isPatient, text,
+          isFromBtnDirection: false));
     }
 
     if (directionText
-            .contains(RegExp(directionPattern, caseSensitive: false))) {
+        .contains(RegExp(directionPattern, caseSensitive: false))) {
       list.add(buildDateComponent(
           directionText, directionText, index, isPatient, text,
           isFromBtnDirection: true));
@@ -1914,7 +1955,7 @@ class ChatState extends State<ChatDetail> {
 
     list.addAll(linkify(
         text.substring(getMatchLinkText(
-                        match, dateMatch, directionMap, linkText, dateText, directionText)),
+            match, dateMatch, directionMap, linkText, dateText, directionText)),
         index,
         isPatient));
 
@@ -1922,32 +1963,32 @@ class ChatState extends State<ChatDetail> {
   }
 
   getMatchLinkText(
-        RegExpMatch match,
-        RegExpMatch dateMatch,
-        RegExpMatch directionMap,
-        String linkText,
-        String dateText,
-        String directionText) {
-      int value = 0;
+      RegExpMatch match,
+      RegExpMatch dateMatch,
+      RegExpMatch directionMap,
+      String linkText,
+      String dateText,
+      String directionText) {
+    int value = 0;
 
-      try {
-        if (match != null) {
-          value = match?.start + linkText?.length;
+    try {
+      if (match != null) {
+        value = match?.start + linkText?.length;
+      } else {
+        if (dateMatch != null) {
+          value = dateMatch?.start + dateText?.length;
+        } else if (directionMap != null) {
+          value = directionMap?.start + directionText?.length;
         } else {
-          if (dateMatch != null) {
-            value = dateMatch?.start + dateText?.length;
-          } else if (directionMap != null) {
-            value = directionMap?.start + directionText?.length;
-          } else {
-            value = 0;
-          }
+          value = 0;
         }
-
-        return value;
-      } catch (e) {
-        return value;
       }
+
+      return value;
+    } catch (e) {
+      return value;
     }
+  }
 
   String getSubstringByString(String content) {
     String value = '';
