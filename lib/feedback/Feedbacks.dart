@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
@@ -90,8 +89,8 @@ class _FeedbacksState extends State<Feedbacks> {
       // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
       // if(filePath!=null)imagePaths.add(filePath);
       var filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      imagePaths.add(filePath);// FU2.5
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
+      imagePaths.add(filePath); // FU2.5
     }
 
     setState(() {

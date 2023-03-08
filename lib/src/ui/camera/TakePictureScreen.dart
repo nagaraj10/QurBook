@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 // import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
@@ -366,9 +365,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       } else {
                                         try {
                                           String filePath;
-                                          var image = await (ImagePicker.platform
-                                              .pickImage(
-                                                  source: ImageSource.gallery) as Future<PickedFile>);
+                                          var image = await (ImagePicker
+                                                  .platform
+                                                  .pickImage(
+                                                      source:
+                                                          ImageSource.gallery)
+                                              as Future<PickedFile>);
                                           filePath = image.path;
                                           imagePaths.add(filePath);
                                           callDisplayPictureScreen(context);
@@ -567,8 +569,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
       // if(filePath!=null)imagePaths.add(filePath);
       String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      imagePaths.add(filePath);  //FU2.5
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
+      imagePaths.add(filePath); //FU2.5
     }
 
     setState(() {
@@ -645,8 +647,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       for (PlatformFile file in filePaths!.files) {
         // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: file.path??'');
         // if(filePath!=null)imagePaths.add(filePath);
-        String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);
-        imagePaths.add(filePath);  //FU2.5
+        String filePath =
+            await FlutterAbsolutePath.getAbsolutePath(file.path ?? '');
+        imagePaths.add(filePath); //FU2.5
       }
     }
   }

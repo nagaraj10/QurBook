@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
@@ -192,7 +191,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       _getInitialDate(context);
       tckConstants.tckTitleOpt = widget.ticketList!.name;
       setAuthToken();
-      _medicalPreferenceList = _providersBloc!.getMedicalPreferencesForDoctors();
+      _medicalPreferenceList =
+          _providersBloc!.getMedicalPreferencesForDoctors();
       _medicalhospitalPreferenceList =
           _providersBloc!.getMedicalPreferencesForHospital();
       healthConditions =
@@ -371,8 +371,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           Field field = ticketTypesResult.additionalInfo!.field![i];
           String? displayName = displayFieldName(field);
           String placeHolderName = CommonUtil().validString(field.placeholder);
-          placeHolderName =
-              placeHolderName.trim().isNotEmpty ? placeHolderName : displayName!;
+          placeHolderName = placeHolderName.trim().isNotEmpty
+              ? placeHolderName
+              : displayName!;
           bool isVisible = false;
           if (CommonUtil().validString(field.isVisible).trim().isNotEmpty) {
             for (int i = 0;
@@ -758,7 +759,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         controller!.strAddressLine.value.trim().isNotEmpty &&
                                 isLabAddressVisible
                             ? CommonUtil().commonWidgetForTitleValue(
-                                "Address Line", controller!.strAddressLine.value)
+                                "Address Line",
+                                controller!.strAddressLine.value)
                             : SizedBox.shrink(),
                         controller!.strCityName.value.trim().isNotEmpty &&
                                 isLabAddressVisible
@@ -1326,7 +1328,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             titleController.text.toString();
         controller!.dynamicTextFiledObj["description"] =
             descController.text.toString();
-        controller!.dynamicTextFiledObj["serviceType"] = widget.ticketList!.name;
+        controller!.dynamicTextFiledObj["serviceType"] =
+            widget.ticketList!.name;
         controller!.dynamicTextFiledObj["healthOrgTypeId"] =
             widget.ticketList!.additionalInfo!.healthOrgTypeId ?? "";
         commonMethodToCreateTicket(ticketListData);
@@ -1335,7 +1338,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             titleController.text.toString();
         controller!.dynamicTextFiledObj["description"] =
             descController.text.toString();
-        controller!.dynamicTextFiledObj["serviceType"] = widget.ticketList!.name;
+        controller!.dynamicTextFiledObj["serviceType"] =
+            widget.ticketList!.name;
 
         commonMethodToCreateTicket(ticketListData);
       } else if (strName.contains("order prescription")) {
@@ -1368,7 +1372,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             titleController.text.toString();
         controller!.dynamicTextFiledObj["description"] =
             descController.text.toString();
-        controller!.dynamicTextFiledObj["serviceType"] = widget.ticketList!.name;
+        controller!.dynamicTextFiledObj["serviceType"] =
+            widget.ticketList!.name;
         controller!.dynamicTextFiledObj["healthOrgTypeId"] =
             widget.ticketList!.additionalInfo!.healthOrgTypeId ?? "";
 
@@ -1655,7 +1660,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
                               child: Text(element!.user != null
-                                  ? new CommonUtil().getDoctorName(element.user!)!
+                                  ? new CommonUtil()
+                                      .getDoctorName(element.user!)!
                                   : ''),
                             ),
                             SizedBox(height: 10),
@@ -1702,8 +1708,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     });
   }
 
-  getHospitalDropDown(List<Hospitals>? hospitallist, Hospitals? hospitalObjSample,
-      Function onAddClick,
+  getHospitalDropDown(List<Hospitals>? hospitallist,
+      Hospitals? hospitalObjSample, Function onAddClick,
       {Widget? child}) {
     if (hospitalObjSample != null) {
       for (var hospitalObjS in hospitallist!) {
@@ -1745,7 +1751,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         value: element,
                         child: Container(
                           width: 0.5.sw,
-                          child: Text(element.name != null ? element.name! : ''),
+                          child:
+                              Text(element.name != null ? element.name! : ''),
                         ),
                       ))
                 .toList()
@@ -1846,7 +1853,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       icon: Icon(Icons.arrow_drop_down),
       color: Color(CommonUtil().getMyPrimaryColor()),
       iconSize: 40,
-      onPressed: (){},
+      onPressed: () {},
     );
   }
 
@@ -2248,16 +2255,17 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     value?.result?.ticket?.id,
                     imagePaths)
                 .then((values) {
-              FlutterToast()
-                  .getToast('Ticket Created Successfully', Colors.grey);
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              //print('Hitting API .. : ${value.toJson()}');
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
-              );
-            } as FutureOr<List<dynamic>> Function(dynamic));
+                  FlutterToast()
+                      .getToast('Ticket Created Successfully', Colors.grey);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  //print('Hitting API .. : ${value.toJson()}');
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyTicketsListScreen()),
+                  );
+                } as FutureOr<List<dynamic>> Function(dynamic));
           } else {
             FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
             Navigator.of(context).pop();
@@ -2406,9 +2414,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
       // if(filePath!=null)imagePaths.add(ImagesModel(isFromFile: true, file: filePath, isdownloaded: true, asset: asset));
       String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
       imagePaths.add(ImagesModel(
-          isFromFile: true, file: filePath, isdownloaded: true, asset: asset));  //FU2.5
+          isFromFile: true,
+          file: filePath,
+          isdownloaded: true,
+          asset: asset)); //FU2.5
     }
     setState(() {
       images = resultList;
@@ -2460,7 +2471,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                             onPressed: () async {
                                               await OpenFilex.open(
                                                 imagePaths[index].file,
-                                              );// FU2.5
+                                              ); // FU2.5
                                             },
                                           ),
                                         ))
@@ -2550,10 +2561,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       suggestionsCallback: (pattern) async {
         if (pattern.length >= 3) {
           return await getPackageNameBasedOnSearch(pattern, '');
-        }  else {
-         return [];
-          }
-        
+        } else {
+          return [];
+        }
       },
       itemBuilder: (context, suggestion) {
         return ListTile(
@@ -2859,7 +2869,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         value: element,
                         child: Container(
                           width: 0.5.sw,
-                          child: Text(element.name != null ? element.name! : ''),
+                          child:
+                              Text(element.name != null ? element.name! : ''),
                         ),
                       ))
                 .toList()

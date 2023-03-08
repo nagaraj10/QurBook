@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -58,7 +57,7 @@ import '../../constants/variable_constant.dart' as variable;
 import 'dart:convert';
 import '../../../my_providers/models/UserAddressCollection.dart' as address;
 import '../../constants/fhb_parameters.dart' as parameters;
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';  //FU2.5
+import 'package:flutter_absolute_path/flutter_absolute_path.dart'; //FU2.5
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
@@ -154,7 +153,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       super.initState();
       _getInitialDate(context);
       setAuthToken();
-      _medicalPreferenceList = _providersBloc!.getMedicalPreferencesForDoctors();
+      _medicalPreferenceList =
+          _providersBloc!.getMedicalPreferencesForDoctors();
       _medicalhospitalPreferenceList =
           _providersBloc!.getMedicalPreferencesForHospital();
       healthConditions =
@@ -169,7 +169,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
 
   @override
   void dispose() {
-    controller = null  as CreateTicketController;
+    controller = null as CreateTicketController;
 
     controller.dispose();
 
@@ -1090,7 +1090,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
                               child: Text(element!.user != null
-                                  ? new CommonUtil().getDoctorName(element.user!)!
+                                  ? new CommonUtil()
+                                      .getDoctorName(element.user!)!
                                   : ''),
                             ),
                             SizedBox(height: 10),
@@ -1135,8 +1136,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     });
   }
 
-  getHospitalDropDown(List<Hospitals>? hospitallist, Hospitals? hospitalObjSample,
-      Function onAddClick,
+  getHospitalDropDown(List<Hospitals>? hospitallist,
+      Hospitals? hospitalObjSample, Function onAddClick,
       {Widget? child}) {
     if (hospitalObjSample != null) {
       for (var hospitalObjS in hospitallist!) {
@@ -1178,7 +1179,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                         value: element,
                         child: Container(
                           width: 0.5.sw,
-                          child: Text(element.name != null ? element.name! : ''),
+                          child:
+                              Text(element.name != null ? element.name! : ''),
                         ),
                       ))
                 .toList()
@@ -1278,7 +1280,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       icon: Icon(Icons.arrow_drop_down),
       color: Color(CommonUtil().getMyPrimaryColor()),
       iconSize: 40,
-      onPressed: (){},
+      onPressed: () {},
     );
   }
 
@@ -1565,15 +1567,17 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                   value?.result?.ticket?.id,
                   imagePaths)
               .then((values) {
-            FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-            print('Hitting API .. : ${value.toJson()}');
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
-            );
-          } as FutureOr<List<dynamic>> Function(dynamic));
+                FlutterToast()
+                    .getToast('Ticket Created Successfully', Colors.grey);
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                print('Hitting API .. : ${value.toJson()}');
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MyTicketsListScreen()),
+                );
+              } as FutureOr<List<dynamic>> Function(dynamic));
         } else {
           FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
           Navigator.of(context).pop();
@@ -1711,9 +1715,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
       // if(filePath!=null)imagePaths.add(ImagesModel(isFromFile: true, file: filePath, isdownloaded: true, asset: asset));
       String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
       imagePaths.add(ImagesModel(
-          isFromFile: true, file: filePath, isdownloaded: true, asset: asset));  //FU2.5
+          isFromFile: true,
+          file: filePath,
+          isdownloaded: true,
+          asset: asset)); //FU2.5
     }
     setState(() {
       images = resultList;
@@ -1839,9 +1846,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       suggestionsCallback: (pattern) async {
         if (pattern.length >= 3) {
           return await getPackageNameBasedOnSearch(pattern, '');
-        }else {
-         return [];
-          }
+        } else {
+          return [];
+        }
       },
       itemBuilder: (context, suggestion) {
         return ListTile(

@@ -1,4 +1,3 @@
-
 import 'dart:io';
 // import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -6,7 +5,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:camera/camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';  //FU2.5
+import 'package:flutter_absolute_path/flutter_absolute_path.dart'; //FU2.5
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -198,8 +197,9 @@ class TakePictureScreenForDevicesState
                                       padding: EdgeInsets.all(5),
                                       decoration: BoxDecoration(),
                                       alignment: Alignment.center,
-                                      child: Text( //FU2.5
-                                   //   AutoSizeText( FU2.5
+                                      child: Text(
+                                        //FU2.5
+                                        //   AutoSizeText( FU2.5
                                         _recognitions != null
                                             ? _recognitions!.length > 0
                                                 ? deviceNames(_recognitions![0][
@@ -225,8 +225,7 @@ class TakePictureScreenForDevicesState
                                             color: Colors.white,
                                             fontSize: 16.0.sp,
                                             fontWeight: FontWeight.w500),
-                                      )  
-                                      ),
+                                      )),
                                 ),
                                 onTap: () {
                                   _showOverlay(context);
@@ -534,8 +533,8 @@ class TakePictureScreenForDevicesState
       // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
       // if(filePath!=null)imagePaths.add(filePath);
       String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      imagePaths.add(filePath);// FU2.5
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
+      imagePaths.add(filePath); // FU2.5
     }
 
     setState(() {
@@ -568,8 +567,8 @@ class TakePictureScreenForDevicesState
   void setFileName() {
     if (categoryName == variable.strDevices) {
       fileName = new TextEditingController(
-          text:
-              deviceName! + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+          text: deviceName! +
+              '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     } else {
       fileName = new TextEditingController(
           text: categoryName! +
@@ -577,9 +576,8 @@ class TakePictureScreenForDevicesState
     }
   }
 
-   void setRecognitions(
-   List? recognitions, int imageHeight, int 
-        imageWidth, CameraController? control) {
+  void setRecognitions(List? recognitions, int imageHeight, int imageWidth,
+      CameraController? control) {
     setState(() {
       recognitions!.map((re) {
         _recognitions = recognitions;
