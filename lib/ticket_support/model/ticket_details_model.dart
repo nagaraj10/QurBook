@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:myfhb/constants/fhb_parameters.dart'as fhbParameters;
 
 import '../../constants/fhb_constants.dart' as constants;
 import 'package:myfhb/constants/variable_constant.dart';
@@ -193,6 +194,14 @@ class Ticket {
                 dataFields[constants.strProviderName] ?? "";
             dataFields[constants.strProviderName] = null;
           }
+        }
+
+        String cityName = dataFields[strCity] ?? "";
+        cityName = dataFields[fhbParameters.strcityName] != null
+            ? dataFields[fhbParameters.strcityName]
+            : cityName;
+        if (dataFields[strCity] != null) {
+          dataFields[strCity] = cityName;
         }
       }
     } catch (e) {

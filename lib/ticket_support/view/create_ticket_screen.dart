@@ -2367,7 +2367,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               isVisibleTrue = true;
             }
             String strText = getText(field);
-            controller.dynamicTextFiledObj[field.name] = strText;
+            controller.dynamicTextFiledObj[field.name] = cityListData?.id??"";
+            controller.dynamicTextFiledObj[strcityName] = cityListData?.name??"";
             if (isVisibleTrue && strText.trim().isEmpty) {
               showAlertMsg("Please select $displayName");
               return;
