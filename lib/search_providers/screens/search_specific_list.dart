@@ -146,7 +146,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               .getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
         } else if (widget.arguments.searchWord == CommonConstants.labs ||
             widget.arguments.searchWord == CommonConstants.lab) {
-          _labsListBlock.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID);
+          _labsListBlock.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID,widget.isFromCreateTicket);
         }
         else if (widget.arguments.searchWord == CommonConstants.keyCity) {
           _labsListBlock.getCityList('a');
@@ -232,7 +232,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         CommonConstants.labs ||
                         widget.arguments.searchWord ==
                             CommonConstants.lab
-                        ? _labsListBlock.getLabsListNew(value):_labsListBlock.getCityList(value);
+                        ? _labsListBlock.getLabsListNew(value,widget.isFromCreateTicket):_labsListBlock.getCityList(value);
                     setState(() {});
                   } else {
                     widget.arguments.searchWord == CommonConstants.doctors
@@ -246,7 +246,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                     widget.arguments.searchWord ==
                                         CommonConstants.lab
                                 ? _labsListBlock.getExistingLabsListNew(
-                                    Constants.STR_HEALTHORG_LABID)
+                                    Constants.STR_HEALTHORG_LABID,widget.isFromCreateTicket)
                                 : _labsListBlock.getCityList('a');
                     setState(() {});
                   }

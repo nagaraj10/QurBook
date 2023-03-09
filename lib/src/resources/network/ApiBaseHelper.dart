@@ -645,7 +645,7 @@ class ApiBaseHelper {
         break;
       default:
         throw FetchDataException(
-            variable.strErrComm + '${response.statusCode}');
+            variable.strErrComm + '${response.statusCode??"0"}');
     }
   }
 
