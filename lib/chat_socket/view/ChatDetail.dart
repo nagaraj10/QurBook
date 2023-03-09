@@ -1351,21 +1351,22 @@ class ChatState extends State<ChatDetail> {
                   ? Card(
                       color: Colors.transparent,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25))),
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Container(
                         constraints: BoxConstraints(
-                          maxWidth: 1.sw * .8,
+                          maxWidth: 0.6.sw,
                         ),
-                        padding: const EdgeInsets.all(15.0),
+                        padding: EdgeInsets.all(10.0.sp),
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
                         child: RichText(
+                          textAlign: TextAlign.center,
                           text: TextSpan(
                               style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                fontSize: 16.0.sp,
+                                color: Colors.black54,
+                                fontSize: 14.0.sp,
                               ),
                               children: textSpanList),
                         ),
@@ -1547,245 +1548,292 @@ class ChatState extends State<ChatDetail> {
       );
     } else {
       // Left (peer message)
-      return Container(
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                isIconNeed
-                    ? Material(
-                        child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                                  child: CommonCircularIndicator(),
-                                  width: 35.0.h,
-                                  height: 35.0.h,
-                                  padding: EdgeInsets.all(10.0),
-                                ),
-                            imageUrl:
-                                peerAvatar != null ? peerAvatar ?? '' : '',
-                            width: 35.0.h,
-                            height: 35.0.h,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => Container(
-                                  height: 35.0.h,
-                                  width: 35.0.h,
-                                  color: Colors.grey[200],
-                                  child: Center(
-                                      child: Text(
-                                    peerName != null && peerName != ''
-                                        ? peerName[0].toString().toUpperCase()
-                                        : '',
-                                    style: TextStyle(
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 16.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  )),
-                                )),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                      )
-                    : Container(width: 38.0.w),
-                chatList?.messages?.type == 0
-                    ? Card(
-                        color: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(25),
-                                bottomLeft: Radius.circular(25),
-                                bottomRight: Radius.circular(25))),
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: 1.sw * .6,
-                          ),
-                          padding: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(25),
-                              bottomLeft: Radius.circular(25),
-                              bottomRight: Radius.circular(25),
+      return chatList?.isCommonContent
+          ? Container(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Card(
+                    color: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 0.6.sw,
+                      ),
+                      padding: EdgeInsets.all(10.0.sp),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 14.0.sp,
                             ),
-                          ),
-                          child: RichText(
-                            text: TextSpan(
-                                style: TextStyle(color: Colors.white),
-                                children: textSpanList),
-                          ),
-                        ),
-                      )
-                    : chatList?.messages?.type == 1
-                        ? Container(
-                            child: FlatButton(
-                              child: Material(
-                                child: CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    child: CommonCircularIndicator(),
-                                    width: 200.0.h,
-                                    height: 200.0.h,
-                                    padding: EdgeInsets.all(70.0),
-                                    decoration: BoxDecoration(
-                                      color: greyColor2,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Material(
-                                    child: Image.asset(
-                                      'images/img_not_available.jpeg',
-                                      width: 200.0.h,
-                                      height: 200.0.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                  ),
-                                  imageUrl: chatList?.messages?.content ?? '',
-                                  width: 200.0.h,
-                                  height: 200.0.h,
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8.0)),
-                                clipBehavior: Clip.hardEdge,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FullPhoto(
-                                            url: chatList?.messages?.content)));
-                              },
-                              onLongPress: () {
-                                openDownloadAlert(chatList?.messages?.content,
-                                    context, false, '.jpg');
-                              },
-                              padding: EdgeInsets.all(0),
-                            ),
-                            margin: EdgeInsets.only(left: 10.0),
-                          )
-                        : chatList?.messages?.type == 2
-                            ? Card(
-                                color: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(25),
-                                        bottomLeft: Radius.circular(25),
-                                        bottomRight: Radius.circular(25))),
-                                child: InkWell(
-                                  onTap: () {
-                                    goToPDFViewBasedonURL(
-                                        chatList?.messages?.content);
-                                  },
-                                  onLongPress: () {
-                                    openDownloadAlert(
-                                        chatList?.messages?.content,
-                                        context,
-                                        false,
-                                        '.pdf');
-                                  },
-                                  child: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: 1.sw * .6,
-                                    ),
-                                    padding: const EdgeInsets.all(15.0),
-                                    decoration: BoxDecoration(
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(25),
-                                        bottomLeft: Radius.circular(25),
-                                        bottomRight: Radius.circular(25),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.picture_as_pdf,
-                                          size: 14,
-                                          color: Colors.black54,
-                                        ),
-                                        SizedBoxWidget(
-                                          width: 5.0.w,
-                                        ),
-                                        Text(
-                                          'Click to view PDF',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : chatList?.messages?.type == 3
-                                ? Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Material(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      elevation: 2.0,
-                                      child: Container(
-                                        padding: EdgeInsets.all(10.0),
-                                        width: 1.sw / 1.5,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: fhbBasicWidget
-                                                  .getAudioWidgetForChat(
-                                                      chatList
-                                                          ?.messages?.content),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    child: Image.asset(
-                                      'images/${chatList?.messages?.content}.gif',
-                                      width: 100.0.h,
-                                      height: 100.0.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    margin: EdgeInsets.only(
-                                        bottom: isIconNeed ? 20.0 : 10.0,
-                                        right: 10.0),
-                                  ),
-              ],
-            ),
-            // Time
-            isIconNeed
-                ? Container(
-                    child: Text(
-                      getFormattedDateTime(DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(
-                                  chatList?.messages?.timestamp?.sSeconds))
-                          .toString()),
-                      style: TextStyle(
-                          color: greyColor,
-                          fontSize: 14.0.sp,
-                          fontStyle: FontStyle.italic),
+                            children: textSpanList),
+                      ),
                     ),
-                    margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
-                  )
-                : Container()
-          ],
-          crossAxisAlignment: chatList?.isCommonContent
-              ? CrossAxisAlignment.center
-              : CrossAxisAlignment.start,
-        ),
-        margin: EdgeInsets.only(bottom: 10.0),
-      );
+                  ),
+                ],
+              ),
+          )
+          : Container(
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      isIconNeed
+                          ? Material(
+                              child: CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                        child: CommonCircularIndicator(),
+                                        width: 35.0.h,
+                                        height: 35.0.h,
+                                        padding: EdgeInsets.all(10.0),
+                                      ),
+                                  imageUrl: peerAvatar != null
+                                      ? peerAvatar ?? ''
+                                      : '',
+                                  width: 35.0.h,
+                                  height: 35.0.h,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                        height: 35.0.h,
+                                        width: 35.0.h,
+                                        color: Colors.grey[200],
+                                        child: Center(
+                                            child: Text(
+                                          peerName != null && peerName != ''
+                                              ? peerName[0]
+                                                  .toString()
+                                                  .toUpperCase()
+                                              : '',
+                                          style: TextStyle(
+                                            color: Color(new CommonUtil()
+                                                .getMyPrimaryColor()),
+                                            fontSize: 16.0.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        )),
+                                      )),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(18.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                            )
+                          : Container(width: 38.0.w),
+                      chatList?.messages?.type == 0
+                          ? Card(
+                              color: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(25),
+                                      bottomLeft: Radius.circular(25),
+                                      bottomRight: Radius.circular(25))),
+                              child: Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: 1.sw * .6,
+                                ),
+                                padding: const EdgeInsets.all(15.0),
+                                decoration: BoxDecoration(
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(25),
+                                    bottomLeft: Radius.circular(25),
+                                    bottomRight: Radius.circular(25),
+                                  ),
+                                ),
+                                child: RichText(
+                                  text: TextSpan(
+                                      style: TextStyle(color: Colors.white),
+                                      children: textSpanList),
+                                ),
+                              ),
+                            )
+                          : chatList?.messages?.type == 1
+                              ? Container(
+                                  child: FlatButton(
+                                    child: Material(
+                                      child: CachedNetworkImage(
+                                        placeholder: (context, url) =>
+                                            Container(
+                                          child: CommonCircularIndicator(),
+                                          width: 200.0.h,
+                                          height: 200.0.h,
+                                          padding: EdgeInsets.all(70.0),
+                                          decoration: BoxDecoration(
+                                            color: greyColor2,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0),
+                                            ),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Material(
+                                          child: Image.asset(
+                                            'images/img_not_available.jpeg',
+                                            width: 200.0.h,
+                                            height: 200.0.h,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(8.0),
+                                          ),
+                                          clipBehavior: Clip.hardEdge,
+                                        ),
+                                        imageUrl:
+                                            chatList?.messages?.content ?? '',
+                                        width: 200.0.h,
+                                        height: 200.0.h,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0)),
+                                      clipBehavior: Clip.hardEdge,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => FullPhoto(
+                                                  url: chatList
+                                                      ?.messages?.content)));
+                                    },
+                                    onLongPress: () {
+                                      openDownloadAlert(
+                                          chatList?.messages?.content,
+                                          context,
+                                          false,
+                                          '.jpg');
+                                    },
+                                    padding: EdgeInsets.all(0),
+                                  ),
+                                  margin: EdgeInsets.only(left: 10.0),
+                                )
+                              : chatList?.messages?.type == 2
+                                  ? Card(
+                                      color: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(25),
+                                              bottomLeft: Radius.circular(25),
+                                              bottomRight:
+                                                  Radius.circular(25))),
+                                      child: InkWell(
+                                        onTap: () {
+                                          goToPDFViewBasedonURL(
+                                              chatList?.messages?.content);
+                                        },
+                                        onLongPress: () {
+                                          openDownloadAlert(
+                                              chatList?.messages?.content,
+                                              context,
+                                              false,
+                                              '.pdf');
+                                        },
+                                        child: Container(
+                                          constraints: BoxConstraints(
+                                            maxWidth: 1.sw * .6,
+                                          ),
+                                          padding: const EdgeInsets.all(15.0),
+                                          decoration: BoxDecoration(
+                                            color: Color(new CommonUtil()
+                                                .getMyPrimaryColor()),
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(25),
+                                              bottomLeft: Radius.circular(25),
+                                              bottomRight: Radius.circular(25),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.picture_as_pdf,
+                                                size: 14,
+                                                color: Colors.black54,
+                                              ),
+                                              SizedBoxWidget(
+                                                width: 5.0.w,
+                                              ),
+                                              Text(
+                                                'Click to view PDF',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : chatList?.messages?.type == 3
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Material(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            elevation: 2.0,
+                                            child: Container(
+                                              padding: EdgeInsets.all(10.0),
+                                              width: 1.sw / 1.5,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: fhbBasicWidget
+                                                        .getAudioWidgetForChat(
+                                                            chatList?.messages
+                                                                ?.content),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : Container(
+                                          child: Image.asset(
+                                            'images/${chatList?.messages?.content}.gif',
+                                            width: 100.0.h,
+                                            height: 100.0.h,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          margin: EdgeInsets.only(
+                                              bottom: isIconNeed ? 20.0 : 10.0,
+                                              right: 10.0),
+                                        ),
+                    ],
+                  ),
+                  // Time
+                  isIconNeed
+                      ? Container(
+                          child: Text(
+                            getFormattedDateTime(
+                                DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                        chatList
+                                            ?.messages?.timestamp?.sSeconds))
+                                    .toString()),
+                            style: TextStyle(
+                                color: greyColor,
+                                fontSize: 14.0.sp,
+                                fontStyle: FontStyle.italic),
+                          ),
+                          margin: EdgeInsets.only(
+                              left: 50.0, top: 5.0, bottom: 5.0),
+                        )
+                      : Container()
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              margin: EdgeInsets.only(bottom: 10.0),
+            );
     }
   }
 
