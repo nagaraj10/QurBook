@@ -134,8 +134,8 @@ class QurhomeRegimenController extends GetxController {
       }
       if(allActivitiesCompleted){
         if((qurHomeRegimenResponseModel?.regimentsList?.length ?? 0)>0){
-          nextRegimenPosition = qurHomeRegimenResponseModel?.regimentsList?.length+1;
-          currentIndex = qurHomeRegimenResponseModel?.regimentsList?.length+1;
+          nextRegimenPosition = qurHomeRegimenResponseModel?.regimentsList?.length-1;
+          currentIndex = qurHomeRegimenResponseModel?.regimentsList?.length-1;
         }
       }
       for (int i = 0;
