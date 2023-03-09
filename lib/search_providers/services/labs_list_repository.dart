@@ -1,3 +1,5 @@
+import 'package:myfhb/search_providers/models/CityListModel.dart';
+
 import '../../common/CommonConstants.dart';
 import '../../constants/fhb_query.dart' as query;
 import '../models/labs_list_response.dart';
@@ -35,5 +37,10 @@ class LabsListRepository {
     var response = await _helper.getHospitalListFromSearchNew(
         "${query.qr_patient_update_default}${query.qr_list}${query.qr_healthOrganizationList}${query.qr_skip}${skip.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_halthOrganization}$healthOrganizationId");
     return LabsSearchListResponse.fromJson(response);
+  }
+
+  Future<CityListModel> getCityList(String param) async {
+    var response = await _helper.getCityList("${query.get_city_list}$param");
+    return CityListModel.fromJson(response);
   }
 }

@@ -172,6 +172,9 @@ class Field {
   String placeholder;
   FieldData selValueDD;
   String isVisible;
+  bool isProvider;
+  List<String> providerType;
+  bool isDisable;
 
   Field(
       {this.name,
@@ -182,7 +185,11 @@ class Field {
       this.isCategory = false,
       this.isLab = false,
       this.isRequired = false,
-      this.fieldData,this.displayName, this.placeholder,this.selValueDD=null,this.isVisible});
+      this.fieldData,this.displayName, this.placeholder,this.selValueDD=null,this.isVisible,this.isProvider, this.providerType, this.isDisable});
+
+  setFieldData(data){
+    this.fieldData=data;
+  }
 
   Field.fromJson(Map<String, dynamic> json) {
     try {
@@ -204,6 +211,14 @@ class Field {
       placeholder = json['placeholder'];
       selValueDD = null;
       isVisible = json['is_visible'];
+      isProvider = json['isProvider']!=null?json['isProvider']:false;
+      if (json['provider_type'] != null) {
+        providerType = <String>[];
+        json['provider_type'].forEach((v) {
+          providerType.add(v);
+        });
+      }
+      isDisable = json['isDisable']!=null?json['isDisable']:false;
     } catch (e) {
       //print(e);
     }
@@ -226,6 +241,9 @@ class Field {
       data['display_name'] = this.displayName;
       data['placeholder'] = this.placeholder;
       data['is_visible'] = this.isVisible;
+      data['isProvider'] = this.isProvider;
+      data['provider_type'] = this.providerType;
+      data['isDisable'] = this.isDisable;
     } catch (e) {
       //print(e);
     }
