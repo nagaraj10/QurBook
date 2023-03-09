@@ -97,6 +97,7 @@ class AdditionalInfo {
   String to;
   String from;
   String city;
+  String cityName;
   String notes;
   String state;
   String title;
@@ -112,6 +113,7 @@ class AdditionalInfo {
       {this.to,
       this.from,
       this.city,
+      this.cityName,
       this.notes,
       this.state,
       this.title,
@@ -136,6 +138,10 @@ class AdditionalInfo {
               ? json['From']
               : "";
       city = json['city'];
+      cityName = json['cityName'];
+      if(cityName!=null){
+        city = cityName;
+      }
       notes = json['notes'] != null
           ? json['notes']
           : json['description'] != null
@@ -161,6 +167,7 @@ class AdditionalInfo {
       modeOfService = json['mode_of_service'] != null
           ? new Status.fromJson(json['mode_of_service'])
           : null;
+
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
