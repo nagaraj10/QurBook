@@ -1,3 +1,4 @@
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 
@@ -18,12 +19,18 @@ class LabsListRepository {
     return LabsListResponse.fromJson(response);
   }
 
-  Future<LabsSearchListResponse> getLabsFromSearchNew(String param) async {
+  Future<LabsSearchListResponse> getLabsFromSearchNew(String param,bool isFromCreateTicket) async {
     String userID = PreferenceUtil.getStringValue(KEY_USERID);
+    String patientIdQuery="";
+    if(isFromCreateTicket){
+      if (CommonUtil.REGION_CODE == 'IN') {
+        patientIdQuery="${query.qr_patientEqaul}$userID";
+      }
+    }
 
     String categories = '[\"LAB\"]';
     var response = await _helper.getHospitalListFromSearchNew(
-        "${query.qr_health_organization}${query.qr_health_Search}${query.qr_healthOrgType}${categories}${query.qr_limitSearchText}$param${query.qr_sortByDesc}${query.qr_patientEqaul}$userID");
+        "${query.qr_health_organization}${query.qr_health_Search}${query.qr_healthOrgType}${categories}${query.qr_limitSearchText}$param${query.qr_sortByDesc}${patientIdQuery}");
     return LabsSearchListResponse.fromJson(response);
   }
 
@@ -33,12 +40,20 @@ class LabsListRepository {
   }
 
   Future<LabsSearchListResponse> getExistingLabsFromSearchNew(
-      String healthOrganizationId) async {
+      String healthOrganizationId,bool isFromCreateTicket) async {
     var limit = 50;
     final skip = 1;
+    String patientIdQuery="";
+    if(isFromCreateTicket){
+      if (CommonUtil.REGION_CODE == 'IN') {
+        patientIdQuery="${query.qr_patientEqaul}$userID";
+      }
+    }
 
-    var response = await _helper.getHospitalListFromSearchNew(
-        "${query.qr_patient_update_default}${query.qr_list}${query.qr_healthOrganizationList}${query.qr_skip}${skip.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_halthOrganization}$healthOrganizationId");
-    return LabsSearchListResponse.fromJson(response);
+      var response = await _helper.getHospitalListFromSearchNew(
+          "${query.qr_patient_update_default}${query.qr_list}${query.qr_healthOrganizationList}${query.qr_skip}${skip.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_halthOrganization}$healthOrganizationId${patientIdQuery}");
+      return LabsSearchListResponse.fromJson(response);
+
+
   }
 }

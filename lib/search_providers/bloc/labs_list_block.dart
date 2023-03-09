@@ -47,11 +47,11 @@ class LabsListBlock implements BaseBloc {
     }
   }
 
-  getLabsListNew(String param) async {
+  getLabsListNew(String param,bool isFromCreateTicket) async {
     labListNewSink.add(ApiResponse.loading(variable.strGetLabList));
     try {
       final labsListResponse =
-          await _labsListRepository.getLabsFromSearchNew(param);
+          await _labsListRepository.getLabsFromSearchNew(param,isFromCreateTicket);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
       labListNewSink.add(ApiResponse.error(e.toString()));
@@ -70,11 +70,11 @@ class LabsListBlock implements BaseBloc {
     return labsListResponse;
   }
 
-  getExistingLabsListNew(String param) async {
+  getExistingLabsListNew(String param,bool isFromCreateTicket) async {
     labListNewSink.add(ApiResponse.loading(variable.strGetLabList));
     try {
       var labsListResponse =
-          await _labsListRepository.getExistingLabsFromSearchNew(param);
+          await _labsListRepository.getExistingLabsFromSearchNew(param,isFromCreateTicket);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
       labListNewSink.add(ApiResponse.error(e.toString()));
