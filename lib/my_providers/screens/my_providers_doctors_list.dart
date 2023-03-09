@@ -82,6 +82,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
 
   Widget buildPlayersList() {
     return ListView.separated(
+      padding: EdgeInsets.only(bottom: 200),
       itemBuilder: (context, index) {
         var eachDoctorModel = doctorsModel[index];
         var specialization =

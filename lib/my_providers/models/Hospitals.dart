@@ -13,6 +13,7 @@ class Hospitals {
   String providerPatientMappingId;
   List<String> sharedCategories;
   CreatedBy createdBy;
+  bool isPrimaryProvider;
 
   Hospitals({
     this.id,
@@ -27,6 +28,7 @@ class Hospitals {
     this.providerPatientMappingId,
     this.sharedCategories,
     this.createdBy,
+    this.isPrimaryProvider,
   });
 
   Hospitals.fromJson(Map<String, dynamic> json) {
@@ -63,6 +65,8 @@ class Hospitals {
     createdBy = json['createdBy'] != null
         ? new CreatedBy.fromJson(json['createdBy'])
         : null;
+    isPrimaryProvider =
+        json['isPrimaryProvider'] != null ? json['isPrimaryProvider'] : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -89,6 +93,7 @@ class Hospitals {
     if (this.createdBy != null) {
       data['createdBy'] = this.createdBy.toJson();
     }
+    data['isPrimaryProvider'] = this.isPrimaryProvider;
     return data;
   }
 }

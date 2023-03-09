@@ -197,6 +197,10 @@ class CommonUtil {
   final String CONTENT_NO_REFUND =
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
 
+  static getProviderType(String type) {
+    return 'health-organization/search/efhb?healthOrganizationType=%5B%22${type}%22%5D&limit=100&sortBy=asc';
+  }
+
   static bool dialogboxOpen = false;
 
   static String bookedForId = null;
@@ -5738,6 +5742,22 @@ class CommonUtil {
     } catch (e) {
       if (kDebugMode) print(e.toString());
     }
+  }
+
+  Widget primaryProviderIndication() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          padding: EdgeInsets.only(bottom: 10),
+          child: Text(primary_provider,
+              style: TextStyle(
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w600)),
+        ),
+      ],
+    );
   }
 }
 

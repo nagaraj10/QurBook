@@ -419,3 +419,5 @@ const String updateSnoozeEvent = '/update-snoozed-event';
 const String user_activity_status = 'activity-master/user-activity-status?eid=';
 
 const String user_activity_status_date = '&date=';
+
+const String get_city_list = 'city/search/';

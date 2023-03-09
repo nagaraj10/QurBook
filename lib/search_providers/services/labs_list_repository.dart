@@ -1,3 +1,5 @@
+import 'package:myfhb/search_providers/models/CityListModel.dart';
+
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -55,5 +57,10 @@ class LabsListRepository {
       return LabsSearchListResponse.fromJson(response);
 
 
+  }
+
+  Future<CityListModel> getCityList(String param) async {
+    var response = await _helper.getCityList("${query.get_city_list}$param");
+    return CityListModel.fromJson(response);
   }
 }
