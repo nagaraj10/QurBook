@@ -67,6 +67,23 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
       }
     }
 
+    doctorsModel?.sort((a, b) => a?.user?.name
+        ?.toString()
+        ?.toLowerCase()
+        ?.compareTo(b?.user?.name?.toString()?.toLowerCase()));
+
+    hospitalsModel?.sort((a, b) => a?.name
+        ?.toString()
+        ?.toLowerCase()
+        ?.compareTo(b?.name?.toString()?.toLowerCase()));
+
+    hospitalsModel?.sort((a, b) {
+      if (b?.isPrimaryProvider ?? false) {
+        return 1;
+      }
+      return -1;
+    });
+
     // // 1
     // // Doctors
     // doctorsModel.sort((a, b) => a.user.name
@@ -109,10 +126,17 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
 
     // 3
     // Labs
-    labsModel.sort((a, b) => a.name
-        .toString()
-        .toLowerCase()
-        .compareTo(b.name.toString().toLowerCase()));
+    labsModel?.sort((a, b) => a?.name
+        ?.toString()
+        ?.toLowerCase()
+        ?.compareTo(b?.name?.toString()?.toLowerCase()));
+
+    labsModel?.sort((a, b) {
+      if (b?.isPrimaryProvider ?? false) {
+        return 1;
+      }
+      return -1;
+    });
 
     /*  labsModel.sort((a, b) => (a.isDefault
             ? a.name
@@ -156,7 +180,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                   ),
                 ),
               ),
-        if (hospitalsModel.length > 0)
+        if (hospitalsModel!=null&&hospitalsModel.length > 0)
           Container(
               color: Color(fhbColors.bgColorContainer),
               child: MyProvidersHospitalsList(
@@ -180,7 +204,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
             ),
             color: Color(fhbColors.bgColorContainer),
           ),
-        if (labsModel.length > 0)
+        if (labsModel!=null&&labsModel.length > 0)
           Container(
               color: Color(fhbColors.bgColorContainer),
               child: MyProvidersLabsList(
