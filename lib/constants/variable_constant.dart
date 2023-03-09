@@ -839,6 +839,13 @@ const String strTransportation = "transportation";
 const String strDoctorAppointment = "doctor appointment";
 const String strLabAppointment = "lab appointment";
 const String strHomecareService = "homecare service";
+const String strGeneralHealth = "general health";
+const String strOrderPrescription = "order prescription";
+const String strCareDietPlan = "care/diet plan";
+const String strHomecareServices = "homecare services";
+const String strFoodDelivery = "food delivery";
+
+const String strGetCityList = 'Getting City List';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

@@ -32,12 +32,8 @@ import '../../model/common_response.dart';
 import '../../model/error_map.dart';
 import 'AppException.dart';
 
-import 'AppException.dart';
 import 'package:http_parser/http_parser.dart';
 
-import 'dart:async';
-import '../../../constants/fhb_query.dart';
-import 'AppException.dart';
 import 'package:mime_type/mime_type.dart';
 
 class ApiBaseHelper {
@@ -2394,13 +2390,6 @@ class ApiBaseHelper {
         'patientUserId': userid,
         'additionalInfo': {
           ...createTicketController.dynamicTextFiledObj,
-          /*'preferredDate':
-              Constants.tckPrefDate != 'pref_date' ? Constants.tckPrefDate : '',
-          'preferredTime':
-              Constants.tckPrefTime != 'pref_time' ? Constants.tckPrefTime : '',
-          'preferredLabName': Constants.tckPrefLab.trim().isNotEmpty
-              ? Constants.tckPrefLab
-              : "",*/
           'preferredLabId': Constants.tckPrefLabId.trim().isNotEmpty
               ? Constants.tckPrefLabId
               : "",
@@ -2432,14 +2421,6 @@ class ApiBaseHelper {
                 ? Constants.tckSelectedHospital
                 : ''
           },
-          /*"modeOfService": {
-            "id": Constants.tckPrefMOSId != 'pref_mos_id'
-                ? Constants.tckPrefMOSId
-                : '',
-            "name": Constants.tckPrefMOSName != 'pref_mos_name'
-                ? Constants.tckPrefMOSName
-                : ''
-          },*/
         },
       };
       var response = await ApiServices.post(_baseUrl + url,
@@ -2860,6 +2841,31 @@ class ApiBaseHelper {
     return responseJson;
   }
 */
+
+  Future<dynamic> getProviderList(type) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + CommonUtil.getProviderType(type),
+          headers: await headerRequest.getAuth());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getCityList(String param) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl +param,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 
 }
 

@@ -119,12 +119,12 @@ class AppointmentDetailsController extends GetxController {
           if (appointmentType.value.toLowerCase() == strLabAppointment) {
             providerName.value = toBeginningOfSentenceCase(
                 appointmentDetailsModel.result?.additionalInfo?.labName ?? "");
-            getAddress();
           } else {
             providerName.value = toBeginningOfSentenceCase(
                 appointmentDetailsModel.result?.additionalInfo?.providerName ??
                     "");
           }
+          getAddress();
         }
 
         switch (appointmentType.value.toLowerCase()) {

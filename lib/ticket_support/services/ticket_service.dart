@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/landing/model/membership_detail_response.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/common_response.dart';
-import 'package:myfhb/src/model/common_response_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/ticket_support/model/create_ticket_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
-import 'package:myfhb/ticket_support/model/ticket_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/model/user_comments_model.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
@@ -72,4 +72,13 @@ class UserTicketService {
 
     return _userCommentModels;
   }
+
+  // Get List of provider
+  Future<MemberShipDetailResponse> getProviderList(String type) async {
+    final response =
+    await _helper.getProviderList(type);
+    MemberShipDetailResponse memberShipDetailResponse = MemberShipDetailResponse.fromJson(response);
+    return memberShipDetailResponse;
+  }
+
 }

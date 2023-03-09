@@ -51,6 +51,7 @@ class CommonConstants {
   static String keyHospital = 'Hospitals';
   static String keyLab = 'Lab';
   static String keyLabs = 'Labs';
+  static String keyCity = 'City';
 
   /// Following are the constants string used as hint text for the pop
   /// box that appears when a card is saved
