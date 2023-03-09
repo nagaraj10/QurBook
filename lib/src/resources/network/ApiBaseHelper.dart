@@ -645,7 +645,7 @@ class ApiBaseHelper {
         break;
       default:
         throw FetchDataException(
-            variable.strErrComm + '${response?.statusCode}');
+            variable.strErrComm + '${response.statusCode ?? "0"}');
     }
   }
 
@@ -2845,7 +2845,8 @@ class ApiBaseHelper {
   Future<dynamic> getProviderList(type) async {
     var responseJson;
     try {
-      var response = await ApiServices.get(_baseUrl + CommonUtil.getProviderType(type),
+      var response = await ApiServices.get(
+          _baseUrl + CommonUtil.getProviderType(type),
           headers: await headerRequest.getAuth());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -2857,7 +2858,7 @@ class ApiBaseHelper {
   Future<dynamic> getCityList(String param) async {
     var responseJson;
     try {
-      var response = await ApiServices.get(_baseUrl +param,
+      var response = await ApiServices.get(_baseUrl + param,
           headers: await headerRequest.getRequestHeadersTimeSlot());
 
       responseJson = _returnResponse(response);
@@ -2866,7 +2867,6 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-
 }
 
 void exitFromApp() async {
