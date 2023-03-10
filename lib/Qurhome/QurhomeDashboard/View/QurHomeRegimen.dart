@@ -978,6 +978,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             },
             onPressCancel: () async {
               Get.back();
+              hubController.eid = null;
+              hubController.uid = null;
               _sheelaBLEController.stopTTS();
               _sheelaBLEController.stopScanning();
             },
@@ -1018,7 +1020,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             },
             onPressCancel: () async {
               Get.back();
+              hubController.eid = null;
+              hubController.uid = null;
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
             },
             title: strConnectBpMeter,
             isFromVital: false,
@@ -1056,6 +1061,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             },
             onPressCancel: () async {
               Get.back();
+              hubController.eid = null;
+              hubController.uid = null;
               _sheelaBLEController.stopTTS();
               _sheelaBLEController.stopScanning();
             },
