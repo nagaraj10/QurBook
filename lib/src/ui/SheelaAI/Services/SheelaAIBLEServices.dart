@@ -180,16 +180,18 @@ class SheelaBLEController extends GetxController {
                     ),
                   ),
                 ).then((_) {
-                  if (Get.isRegistered<VitalDetailController>())
-                    Future.delayed(const Duration(seconds: 1)).then((value) {
+                  Future.delayed(const Duration(seconds: 1)).then((_) {
+                    if (Get.isRegistered<VitalDetailController>())
                       Get.find<VitalDetailController>().getData();
-                    });
-                  if (Get.isRegistered<QurhomeRegimenController>())
-                    Future.delayed(const Duration(seconds: 1)).then((value) {
+                  });
+
+                  Future.delayed(const Duration(seconds: 1)).then((_) {
+                    if (Get.isRegistered<QurhomeRegimenController>()) {
                       Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController.eid;
+                          hublistController?.eid ?? '';
                       Get.find<QurhomeRegimenController>().getRegimenList();
-                    });
+                    }
+                  });
                 });
               }
               break;
@@ -222,14 +224,17 @@ class SheelaBLEController extends GetxController {
                 ).then((_) {
                   if (Get.isRegistered<VitalDetailController>())
                     Future.delayed(const Duration(seconds: 1)).then((value) {
-                      Get.find<VitalDetailController>().getData();
+                      if (Get.isRegistered<VitalDetailController>())
+                        Get.find<VitalDetailController>().getData();
                     });
-                  if (Get.isRegistered<QurhomeRegimenController>())
-                    Future.delayed(const Duration(seconds: 1)).then((value) {
+
+                  Future.delayed(const Duration(seconds: 1)).then((value) {
+                    if (Get.isRegistered<QurhomeRegimenController>()) {
                       Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController.eid;
+                          hublistController?.eid ?? '';
                       Get.find<QurhomeRegimenController>().getRegimenList();
-                    });
+                    }
+                  });
                 });
                 await Future.delayed(const Duration(seconds: 4));
               }
