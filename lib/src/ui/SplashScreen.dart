@@ -123,6 +123,11 @@ class _SplashScreenState extends State<SplashScreen> {
             }
           });
         }
+        if (kDebugMode) {
+          setState(() {
+            _loaded = true;
+          });
+        }
       } else {
         callAppLockFeatureMethod(
             widget.nsRoute != null && widget.nsRoute == call ? true : false);
