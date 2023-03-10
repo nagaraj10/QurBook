@@ -102,9 +102,13 @@ class SheelaBLEController extends GetxController {
 
     timerSubscription = stream.listen(
       (val) async {
+        print("Val in ");
+
         if (val == null || val == "") {
           return;
         }
+
+        print("Val in " + val.toString());
         final List<String> receivedValues = val.split('|');
         if ((receivedValues ?? []).length > 0) {
           switch (receivedValues.first ?? "") {
@@ -176,16 +180,18 @@ class SheelaBLEController extends GetxController {
                     ),
                   ),
                 ).then((_) {
-                  if (Get.isRegistered<VitalDetailController>())
-                    Future.delayed(const Duration(seconds: 1)).then((value) {
+                  Future.delayed(const Duration(seconds: 1)).then((_) {
+                    if (Get.isRegistered<VitalDetailController>())
                       Get.find<VitalDetailController>().getData();
-                    });
-                  if (Get.isRegistered<QurhomeRegimenController>())
-                    Future.delayed(const Duration(seconds: 1)).then((value) {
+                  });
+
+                  Future.delayed(const Duration(seconds: 1)).then((_) {
+                    if (Get.isRegistered<QurhomeRegimenController>()) {
                       Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController.eid;
+                          hublistController?.eid ?? '';
                       Get.find<QurhomeRegimenController>().getRegimenList();
-                    });
+                    }
+                  });
                 });
               }
               break;
@@ -218,14 +224,17 @@ class SheelaBLEController extends GetxController {
                 ).then((_) {
                   if (Get.isRegistered<VitalDetailController>())
                     Future.delayed(const Duration(seconds: 1)).then((value) {
-                      Get.find<VitalDetailController>().getData();
+                      if (Get.isRegistered<VitalDetailController>())
+                        Get.find<VitalDetailController>().getData();
                     });
-                  if (Get.isRegistered<QurhomeRegimenController>())
-                    Future.delayed(const Duration(seconds: 1)).then((value) {
+
+                  Future.delayed(const Duration(seconds: 1)).then((value) {
+                    if (Get.isRegistered<QurhomeRegimenController>()) {
                       Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController.eid;
+                          hublistController?.eid ?? '';
                       Get.find<QurhomeRegimenController>().getRegimenList();
-                    });
+                    }
+                  });
                 });
                 await Future.delayed(const Duration(seconds: 4));
               }
@@ -243,6 +252,13 @@ class SheelaBLEController extends GetxController {
               );
               showFailure();
               break;
+            case "connectionfailed":
+              _disableTimer();
+              await Future.delayed(const Duration(seconds: 2));
+              setupListenerForReadings();
+
+              break;
+
             default:
           }
         }

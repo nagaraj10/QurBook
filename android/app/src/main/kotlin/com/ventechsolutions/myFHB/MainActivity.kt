@@ -465,19 +465,20 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             ) {
                 runOnUiThread {
 //                Toast.makeText(applicationContext, "Weight: "+p1?.toString(), Toast.LENGTH_SHORT).show()
- if (ActivityCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return@runOnUiThread
+                    if (ActivityCompat.checkSelfPermission(
+                            applicationContext,
+                            Manifest.permission.BLUETOOTH_CONNECT
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return@runOnUiThread
+                    }
                 }
                     bleName = p0?.name
                     var bleMacId: String
@@ -485,29 +486,50 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     var bleDeviceType: String
                     bleDeviceType = "weight"
                     if (p1 == BluetoothStatus.BLE_STATUS_CONNECTED) {
-                        if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("macid|" + bleMacId)
+//                        if(p0?.address!=null && p0?.name!=null){
+//                            if (::BLEEventChannel.isInitialized) {
+//                                BLEEventChannel.success("macid|" + bleMacId)
+//                            }
+//                            sendPost("Connected", DEVICE_WT, 0, 0, 0)
+//                            if (::BLEEventChannel.isInitialized) {
+//                                BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+//                            }
+//                            if (::BLEEventChannel.isInitialized) {
+//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+//                            }
+//                        }
+                        if(p0?.address!=null ) {
+                            if (::BLEEventChannel.isInitialized) {
+                                MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+//                                BLEEventChannel.success("macid|" + bleMacId)
+                            }
                         }
                         sendPost("Connected", DEVICE_WT, 0, 0, 0)
                         if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                            MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)
+//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
                         }
-                        if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                        if(p0?.name!=null){
+                            if (::BLEEventChannel.isInitialized) {
+                                MainThreadEventSink(BLEEventChannel).success("connected|" + bleName + " connected successfully!!!")
+//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                            }
                         }
                     } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
                         if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("scanstarted|connection started")
+                            MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+//                            BLEEventChannel.success("scanstarted|connection started")
                         }
-                    }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
+                    }else if (p1 == BluetoothStatus.BLE_ERROR){
 
                         if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("connectionfailed| connection failed")
+                            MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
+//                            BLEEventChannel.success("connectionfailed| connection failed")
                         }
                     }
 
 
-                }
+
             }
 
             override fun onReceiveMeasurementData(p0: BluetoothDevice?, p1: WeightData?) {
@@ -518,7 +540,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                             uploaded = 1
                             sendPost("Measurement", DEVICE_WT, 0, 0, 0, weight = p1.weight)
                             if (::BLEEventChannel.isInitialized) {
-                                BLEEventChannel.success("measurement|" + postBleData)
+                                MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
+//                                BLEEventChannel.success("measurement|" + postBleData)
                             }
                         }
                     }
@@ -575,21 +598,51 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 var bleDeviceType: String
                 bleDeviceType = "BP"
                 if(p1==BluetoothStatus.BLE_STATUS_CONNECTED){
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("macid|" + bleMacId)
+                    if(p0?.address!=null ) {
+                        if (::BLEEventChannel.isInitialized) {
+                            runOnUiThread {
+                                Log.e("qurhealth","wowgostatus: macid")
+                            }
+                            MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+//                            BLEEventChannel.success("macid|" + bleMacId)
+                        }
                     }
-                    sendPost("Connected", DEVICE_BP, 0, 0, 0)
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
-                    }
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
-                    }
-                }else if(p1==BluetoothStatus.BLE_STATUS_CONNECTING){
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("scanstarted|connection started")
+                        sendPost("Connected", DEVICE_BP, 0, 0, 0)
+                        if (::BLEEventChannel.isInitialized) {
+                            runOnUiThread {
+                                Log.e("qurhealth","wowgostatus: devicetype")
+                            }
+                            MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)
+
+//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                        }
+                    if(p0?.name!=null){
+                        if (::BLEEventChannel.isInitialized) {
+                            runOnUiThread {
+                                Log.e("qurhealth","wowgostatus: connected")
+                            }
+                            MainThreadEventSink(BLEEventChannel).success("connected|" + bleName + " connected successfully!!!")
+
+//                            BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                        }
                     }
 
+                }else if(p1==BluetoothStatus.BLE_STATUS_CONNECTING){
+                    if (::BLEEventChannel.isInitialized) {
+                        runOnUiThread {
+                            Log.e("qurhealth","wowgostatus: scanstarted")
+                        }
+                        MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+
+//                        BLEEventChannel.success("scanstarted|connection started")
+                    }
+
+                }else if (p1 == BluetoothStatus.BLE_ERROR){
+
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
+//                            BLEEventChannel.success("connectionfailed| connection failed")
+                    }
                 }
             }
 
@@ -602,9 +655,13 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 try {
                     runOnUiThread {
                         uploaded = 1
+                        runOnUiThread {
+                            Log.e("qurhealth","wowgostatus: measurementdata")
+                        }
                         sendPost("Measurement", DEVICE_BP, sis, dia, pulse)
                         if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("measurement|" + postBleData)
+                            MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
+//                            BLEEventChannel.success("measurement|" + postBleData)
                         }
 //                    Toast.makeText(applicationContext, "BP: dia: "+dia.toString()+" sis: "+sis.toString()+" pulse: "+pulse.toString(), Toast.LENGTH_SHORT).show()
 
@@ -656,35 +713,79 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     // for ActivityCompat#requestPermissions for more details.
                     return@runOnUiThread
                 }
+            }
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
                 var bleDeviceType: String
                 bleDeviceType = "SPO2"
                 if (p1 == BluetoothStatus.BLE_STATUS_CONNECTED) {
-                    if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("macid|" + bleMacId)
+//                    if(p0?.address!=null && p0?.name!=null) {
+//                        if (::BLEEventChannel.isInitialized) {
+//                            BLEEventChannel.success("macid|" + bleMacId)
+//                        }
+//                        //Toast.makeText(applicationContext, "" + bleName + " connected successfully!!!" , Toast.LENGTH_LONG).show();
+//                        sendPost("deviceConnected", DEVICE_SPO2, 0, 0, 0)
+//                        if (::BLEEventChannel.isInitialized) {
+//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+//                        }
+//
+//                        if (::BLEEventChannel.isInitialized && WOWGoDataUpload == 0) {
+//                            BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+//                        }
+//                    }
+
+                    if(p0?.address!=null ) {
+                        if (::BLEEventChannel.isInitialized) {
+                            runOnUiThread {
+                                Log.e("qurhealth","wowgostatus: macid")
+                            }
+
+                            MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+//                            BLEEventChannel.success("macid|" + bleMacId)
+                        }
                     }
-                    //Toast.makeText(applicationContext, "" + bleName + " connected successfully!!!" , Toast.LENGTH_LONG).show();
-                    sendPost("deviceConnected", DEVICE_SPO2, 0, 0, 0)
+                    sendPost("Connected", DEVICE_SPO2, 0, 0, 0)
                     if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                        runOnUiThread {
+                            Log.e("qurhealth","wowgostatus: bleDeviceType")
+                        }
+
+                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)
+//                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                    }
+                    if(p0?.name!=null){
+                        if (::BLEEventChannel.isInitialized) {
+                            runOnUiThread {
+                                Log.e("qurhealth","wowgostatus: connected")
+                            }
+
+                            MainThreadEventSink(BLEEventChannel).success("connected|" + bleName + " connected successfully!!!")
+//                            BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                        }
                     }
 
-                    if (::BLEEventChannel.isInitialized && WOWGoDataUpload == 0) {
-                        BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
-                    }
                 } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
                     if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("scanstarted|connection started")
+                        runOnUiThread {
+                            Log.e("qurhealth","wowgostatus: scanstarted")
+                        }
+
+                        MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+//                        BLEEventChannel.success("scanstarted|connection started")
                     }
-                }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
+                }else if (p1 == BluetoothStatus.BLE_ERROR){
                     if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("connectionfailed| connection failed")
+                        runOnUiThread {
+                            Log.e("qurhealth","wowgostatus: connectionfailed")
+                        }
+
+                        MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
+//                        BLEEventChannel.success("connectionfailed| connection failed")
                     }
                 }
 
-            }
+
 
 
         }
@@ -705,8 +806,12 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                             0
                         )
                         if (::BLEEventChannel.isInitialized) {
+                            runOnUiThread {
+                                Log.e("qurhealth","wowgostatus: measurement")
+                            }
 
-                            BLEEventChannel.success("measurement|" + postBleData)
+                            MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
+//                            BLEEventChannel.success("measurement|" + postBleData)
 
                         }
                     }
@@ -1204,9 +1309,12 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                             bleMacId = bleDevice!!.mac
                             var bleDeviceType: String
                             bleDeviceType = "SPO2"
-                            if (::BLEEventChannel.isInitialized) {
-                                BLEEventChannel.success("macid|" + bleMacId)
+                            if(bleMacId!=null && bleMacId.isNotEmpty()){
+                                if (::BLEEventChannel.isInitialized) {
+                                    BLEEventChannel.success("macid|" + bleMacId)
+                                }
                             }
+
                             //Toast.makeText(applicationContext, "" + bleName + " connected successfully!!!" , Toast.LENGTH_LONG).show();
                             sendPost("deviceConnected", DEVICE_SPO2, 0, 0, 0)
                             if (::BLEEventChannel.isInitialized) {
@@ -3522,9 +3630,12 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         mSessionData = sessionData
         mSessionData.setCompletionReason(sessionData.completionReason)
         mSessionData.deviceAddress = mAddress
-        if (::BLEEventChannel.isInitialized) {
-            BLEEventChannel.success("macid|" + mAddress)
+        if(mAddress!=null&& mAddress.isNotEmpty()){
+            if (::BLEEventChannel.isInitialized) {
+                BLEEventChannel.success("macid|" + mAddress)
+            }
         }
+
 
         if (::BLEEventChannel.isInitialized) {
             BLEEventChannel.success("bleDeviceType|" + "BP")
