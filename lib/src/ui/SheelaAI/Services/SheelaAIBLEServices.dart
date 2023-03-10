@@ -99,9 +99,12 @@ class SheelaBLEController extends GetxController {
 
     timerSubscription = stream.listen(
       (val) async {
+        print("val in");
         if (val == null || val == "") {
           return;
         }
+        print("val in: "+val.toString());
+
         final List<String> receivedValues = val.split('|');
         if ((receivedValues ?? []).length > 0) {
           switch (receivedValues.first ?? "") {

@@ -593,21 +593,26 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 if(p1==BluetoothStatus.BLE_STATUS_CONNECTED){
                     if(p0?.address!=null ) {
                         if (::BLEEventChannel.isInitialized) {
+                            Log.e("qurhealth","wowgostatus: macid")
                             BLEEventChannel.success("macid|" + bleMacId)
                         }
                     }
                         sendPost("Connected", DEVICE_BP, 0, 0, 0)
                         if (::BLEEventChannel.isInitialized) {
+                            Log.e("qurhealth","wowgostatus: devicetype")
+
                             BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
                         }
                     if(p0?.name!=null){
                         if (::BLEEventChannel.isInitialized) {
+                            Log.e("qurhealth","wowgostatus: connected")
                             BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
                         }
                     }
 
                 }else if(p1==BluetoothStatus.BLE_STATUS_CONNECTING){
                     if (::BLEEventChannel.isInitialized) {
+                        Log.e("qurhealth","wowgostatus: scanstarted")
                         BLEEventChannel.success("scanstarted|connection started")
                     }
 
@@ -623,6 +628,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 try {
                     runOnUiThread {
                         uploaded = 1
+                        Log.e("qurhealth","wowgostatus: measurementdata")
                         sendPost("Measurement", DEVICE_BP, sis, dia, pulse)
                         if (::BLEEventChannel.isInitialized) {
                             BLEEventChannel.success("measurement|" + postBleData)
