@@ -102,13 +102,11 @@ class SheelaBLEController extends GetxController {
 
     timerSubscription = stream.listen(
       (val) async {
-        print("val in");
         print("Val in ");
 
         if (val == null || val == "") {
           return;
         }
-        print("val in: " + val.toString());
 
         print("Val in " + val.toString());
         final List<String> receivedValues = val.split('|');
@@ -249,6 +247,13 @@ class SheelaBLEController extends GetxController {
               );
               showFailure();
               break;
+            case "connectionfailed":
+              _disableTimer();
+              await Future.delayed(const Duration(seconds: 2));
+              setupListenerForReadings();
+
+              break;
+
             default:
           }
         }

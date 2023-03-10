@@ -520,7 +520,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                             MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
 //                            BLEEventChannel.success("scanstarted|connection started")
                         }
-                    }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
+                    }else if (p1 == BluetoothStatus.BLE_ERROR){
 
                         if (::BLEEventChannel.isInitialized) {
                             MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
@@ -637,7 +637,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 //                        BLEEventChannel.success("scanstarted|connection started")
                     }
 
-                }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
+                }else if (p1 == BluetoothStatus.BLE_ERROR){
 
                     if (::BLEEventChannel.isInitialized) {
                         MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
@@ -774,7 +774,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                         MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
 //                        BLEEventChannel.success("scanstarted|connection started")
                     }
-                }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
+                }else if (p1 == BluetoothStatus.BLE_ERROR){
                     if (::BLEEventChannel.isInitialized) {
                         runOnUiThread {
                             Log.e("qurhealth","wowgostatus: connectionfailed")
