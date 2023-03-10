@@ -683,6 +683,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     // for ActivityCompat#requestPermissions for more details.
                     return@runOnUiThread
                 }
+            }
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -706,30 +707,55 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
                     if(p0?.address!=null ) {
                         if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("macid|" + bleMacId)
+                            runOnUiThread {
+                                Log.e("qurhealth","wowgostatus: macid")
+                            }
+
+                            MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+//                            BLEEventChannel.success("macid|" + bleMacId)
                         }
                     }
                     sendPost("Connected", DEVICE_SPO2, 0, 0, 0)
                     if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                        runOnUiThread {
+                            Log.e("qurhealth","wowgostatus: bleDeviceType")
+                        }
+
+                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)
+//                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
                     }
                     if(p0?.name!=null){
                         if (::BLEEventChannel.isInitialized) {
-                            BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                            runOnUiThread {
+                                Log.e("qurhealth","wowgostatus: connected")
+                            }
+
+                            MainThreadEventSink(BLEEventChannel).success("connected|" + bleName + " connected successfully!!!")
+//                            BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
                         }
                     }
 
                 } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
                     if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("scanstarted|connection started")
+                        runOnUiThread {
+                            Log.e("qurhealth","wowgostatus: scanstarted")
+                        }
+
+                        MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+//                        BLEEventChannel.success("scanstarted|connection started")
                     }
                 }else if (p1 == BluetoothStatus.BLE_ERROR||p1 == BluetoothStatus.BLE_STATUS_DISCONNECTED){
                     if (::BLEEventChannel.isInitialized) {
-                        BLEEventChannel.success("connectionfailed| connection failed")
+                        runOnUiThread {
+                            Log.e("qurhealth","wowgostatus: connectionfailed")
+                        }
+
+                        MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
+//                        BLEEventChannel.success("connectionfailed| connection failed")
                     }
                 }
 
-            }
+
 
 
         }
@@ -750,8 +776,12 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                             0
                         )
                         if (::BLEEventChannel.isInitialized) {
+                            runOnUiThread {
+                                Log.e("qurhealth","wowgostatus: measurement")
+                            }
 
-                            BLEEventChannel.success("measurement|" + postBleData)
+                            MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
+//                            BLEEventChannel.success("measurement|" + postBleData)
 
                         }
                     }
