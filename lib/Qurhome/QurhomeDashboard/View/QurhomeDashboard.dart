@@ -594,6 +594,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     return BadgeIcon(
       icon: GestureDetector(
         onTap: () {
+          if (Get.isRegistered<QurhomeDashboardController>())
+            Get.find<QurhomeDashboardController>()
+                .updateBLETimer(Enable: false);
+
           Get.to(ChatUserList(careGiversList: [], isFromQurDay: true));
         },
         child: ImageIcon(AssetImage(icon_chat),

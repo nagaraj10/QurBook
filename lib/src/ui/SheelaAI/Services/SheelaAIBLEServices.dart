@@ -41,6 +41,8 @@ class SheelaBLEController extends GetxController {
   AudioPlayer player;
   int randomNum = 0;
   String weightUnit = "";
+  String filteredDeviceType = '';
+
   @override
   void onInit() {
     super.onInit();
@@ -60,6 +62,7 @@ class SheelaBLEController extends GetxController {
           } else if (isCompleted) {
             await Future.delayed(const Duration(seconds: 4));
             stopTTS();
+            if (SheelaController?.isSheelaScreenActive ?? false) Get.back();
           }
         }
       },
@@ -159,16 +162,15 @@ class SheelaBLEController extends GetxController {
               //   Colors.red,
               // );
               if (!checkForParedDevice()) {
-                _disableTimer();
+                //_disableTimer();
                 return;
               }
-              if (hublistController.bleDeviceType.toLowerCase() ==
-                      "SPO2".toLowerCase() ||
-                  hublistController.bleDeviceType.toLowerCase() ==
-                      "BP".toLowerCase() ||
-                  hublistController.bleDeviceType.toLowerCase() ==
-                      "weight".toLowerCase()) {
-                //show next method
+              String deviceType =
+                  hublistController.bleDeviceType?.toLowerCase() ?? '';
+              if (deviceType.isNotEmpty &&
+                  (deviceType == "SPO2".toLowerCase() ||
+                      deviceType == "BP".toLowerCase() ||
+                      deviceType == "weight".toLowerCase())) {
                 if (isFromVitals || isFromRegiment) {
                   Get.back();
                 }
@@ -194,14 +196,16 @@ class SheelaBLEController extends GetxController {
               }
               break;
             case "measurement":
+              if (!checkForParedDevice()) return;
+              String deviceType =
+                  hublistController.bleDeviceType?.toLowerCase() ?? '';
+              if (!checkForParedDevice()) {
+                return;
+              }
               receivedData = true;
-              if (hublistController.bleDeviceType.toLowerCase() ==
-                      "BP".toLowerCase() ||
-                  hublistController.bleDeviceType.toLowerCase() ==
-                      "SPO2".toLowerCase() ||
-                  hublistController.bleDeviceType.toLowerCase() ==
-                      "Weight".toLowerCase()) {
-                //show next method
+              if (deviceType == "BP".toLowerCase() ||
+                  deviceType == "SPO2".toLowerCase() ||
+                  deviceType == "Weight".toLowerCase()) {
                 if (SheelaController.isSheelaScreenActive) {
                   updateUserData(
                     data: receivedValues.last,
@@ -236,6 +240,9 @@ class SheelaBLEController extends GetxController {
               );
               break;
             case "disconnected":
+              if (!checkForParedDevice()) {
+                return;
+              }
               FlutterToast().getToast(
                 "Bluetooth Disconnected",
                 Colors.red,
@@ -262,7 +269,14 @@ class SheelaBLEController extends GetxController {
         (element) => (CommonUtil().validString(element.device.serialNumber) ==
             hublistController.bleMacId),
       );
-      return index >= 0;
+      String deviceType = hublistController.bleDeviceType?.toLowerCase() ?? '';
+      bool filteredDeviceTypeCheck = true;
+      if (isFromVitals || isFromRegiment) {
+        if (filteredDeviceType.isNotEmpty) {
+          if (deviceType != filteredDeviceType) filteredDeviceTypeCheck = false;
+        }
+      }
+      return (index >= 0 && filteredDeviceTypeCheck);
     } catch (e) {
       printError(info: e.toString());
       return false;
@@ -301,7 +315,7 @@ class SheelaBLEController extends GetxController {
     var msg = '';
     if ((arguments.deviceType ?? '').isNotEmpty) {
       String strText = CommonUtil().validString(arguments.deviceType);
-      if (strText.toLowerCase() == "weight") {
+      if (strText?.toLowerCase() == "weight") {
         strText = "Weighing scale";
       }
       msg = "Your $strText device is connected & reading values. Please wait";
@@ -350,9 +364,9 @@ class SheelaBLEController extends GetxController {
         final model = BleDataModel.fromJson(
           jsonDecode(data),
         );
-        if (model.deviceType.toLowerCase() == "weight" &&
+        if (model.deviceType?.toLowerCase() == "weight" &&
             (model.data.weight ?? '').isNotEmpty) {
-          model.deviceType = model.deviceType.toUpperCase();
+          model.deviceType = model.deviceType?.toUpperCase();
           try {
             weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT);
           } catch (e) {}
@@ -430,7 +444,7 @@ class SheelaBLEController extends GetxController {
             receivedData = false;
             showFailure();
           }
-        } else if (model.deviceType.toLowerCase() == "weight") {
+        } else if (model.deviceType?.toLowerCase() == "weight") {
           if ((model.data.weight ?? '').isNotEmpty) {
             addToConversationAndPlay(
               SheelaResponse(
@@ -549,7 +563,6 @@ class SheelaBLEController extends GetxController {
             Get.find<QurhomeRegimenController>().getRegimenList();
           });
       }
-      Get.back();
     }
   }
 
@@ -568,6 +581,7 @@ class SheelaBLEController extends GetxController {
     isFromRegiment = false;
     addingDevicesInHublist = false;
     isFromVitals = false;
+    filteredDeviceType = '';
     if (timerSubscription != null) {
       timerSubscription.cancel();
       timerSubscription = null;

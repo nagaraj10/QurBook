@@ -46,6 +46,8 @@ class LabsListRepository {
     var limit = 50;
     final skip = 1;
     String patientIdQuery="";
+    String userID = PreferenceUtil.getStringValue(KEY_USERID);
+
     if(isFromCreateTicket){
       if (CommonUtil.REGION_CODE == 'IN') {
         patientIdQuery="${query.qr_patientEqaul}$userID";

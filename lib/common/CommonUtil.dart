@@ -11,6 +11,7 @@ import 'package:html_unescape/html_unescape.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
@@ -2177,6 +2178,10 @@ class CommonUtil {
               return GestureDetector(
                 onTap: () {
                   try {
+                    if (Get.isRegistered<QurhomeDashboardController>())
+                      Get.find<QurhomeDashboardController>()
+                          .updateBLETimer(Enable: false);
+
                     navigateToNotificationScreen(isFromQurday);
                   } catch (e) {
                     print(e);
@@ -5637,7 +5642,7 @@ class CommonUtil {
     }
   }
 
-    String getFirstAndLastName(String strText) {
+  String getFirstAndLastName(String strText) {
     String strName = strText;
     String strName1 = "";
     String strName2 = "";

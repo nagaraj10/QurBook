@@ -109,7 +109,7 @@ class CommonConstants {
   static String strOxygenValue = '%spo2';
   static String strOxygenParams = 'oxygenSaturation';
   static String strOxygenParamsName = 'spo2';
-  static String strOxygenUnits = '%sp02';
+  static String strOxygenUnits = '%spo2';
   static String strOxygenUnitsName = '%';
   static String strPulseRate = 'pulseRate';
   static String strPulseUnit = 'PUL/min';
