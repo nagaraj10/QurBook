@@ -73,6 +73,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       controller.bleController?.stopTTS();
       controller.bleController?.stopScanning();
       controller.bleController?.isFromRegiment = false;
+      controller.bleController?.filteredDeviceType = '';
       controller.bleController?.addingDevicesInHublist = false;
       controller.bleController?.isFromVitals = false;
       controller.bleController = null;

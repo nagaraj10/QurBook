@@ -294,7 +294,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 child: Container(
                   child: PageView.builder(
                     itemCount:
-                        val.qurHomeRegimenResponseModel.regimentsList.length+1,
+                        val.qurHomeRegimenResponseModel.regimentsList.length +
+                            1,
                     scrollDirection: Axis.vertical,
                     onPageChanged: (int index) {
                       setState(() {
@@ -305,20 +306,32 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         initialPage: val.nextRegimenPosition,
                         viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
                     itemBuilder: (BuildContext context, int itemIndex) {
-                      if(itemIndex==(val.qurHomeRegimenResponseModel.regimentsList.length)){
-                         return Padding(
-                           padding: const EdgeInsets.only(top: 22.0),
-                           child: Column(
+                      if (itemIndex ==
+                          (val.qurHomeRegimenResponseModel.regimentsList
+                              .length)) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 22.0),
+                          child: Column(
                             children: [
-                              Image.asset(noMoreActivity,height: 50,width: 50,),
-                              SizedBox(height: 5,),
-                              Text(noMoreActivites,style: TextStyle(color: Color(
-                                CommonUtil().getQurhomePrimaryColor(),
-                              )),)
+                              Image.asset(
+                                noMoreActivity,
+                                height: 50,
+                                width: 50,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                noMoreActivites,
+                                style: TextStyle(
+                                    color: Color(
+                                  CommonUtil().getQurhomePrimaryColor(),
+                                )),
+                              )
                             ],
-                        ),
-                         );
-                      }else{
+                          ),
+                        );
+                      } else {
                         return _buildCarouselItem(
                             context,
                             itemIndex,
@@ -326,7 +339,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 .regimentsList[itemIndex],
                             val.nextRegimenPosition,
                             isPortrait);
-
                       }
                     },
                   ),
@@ -973,6 +985,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             isFromVital: false,
           );
           _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.filteredDeviceType = 'spo2';
           _sheelaBLEController.setupListenerForReadings();
         } else {
           FlutterToast().getToast(
@@ -1011,6 +1024,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             isFromVital: false,
           );
           _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.filteredDeviceType = 'bp';
           _sheelaBLEController.setupListenerForReadings();
         } else {
           FlutterToast().getToast(
@@ -1049,6 +1063,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             isFromVital: false,
           );
           _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.filteredDeviceType = 'weight';
           _sheelaBLEController.setupListenerForReadings();
         } else {
           FlutterToast().getToast(
@@ -1713,7 +1728,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       initSocketCountUnread();
     });
   }
-
 }
 
 class SOSAgentCallWidget extends StatelessWidget {
