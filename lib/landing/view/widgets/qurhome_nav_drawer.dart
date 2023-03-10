@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
@@ -112,6 +113,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         onPressed: () async {
                           try {
                             Get.back();
+                            if (Get.isRegistered<QurhomeDashboardController>())
+                              Get.find<QurhomeDashboardController>()
+                                  .updateBLETimer(Enable: false);
                             await Navigator.pushNamed(
                               context,
                               router.rt_UserAccounts,
@@ -145,6 +149,10 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         onPressed: () async {
                           try {
                             Get.back();
+                            if (Get.isRegistered<QurhomeDashboardController>())
+                              Get.find<QurhomeDashboardController>()
+                                  .updateBLETimer(Enable: false);
+
                             Get.to(MyRecords(
                               argument: MyRecordsArgument(),
                             ));
@@ -265,6 +273,11 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           onPressed: () {
                             try {
                               Get.back();
+                              if (Get.isRegistered<
+                                  QurhomeDashboardController>())
+                                Get.find<QurhomeDashboardController>()
+                                    .updateBLETimer(Enable: false);
+
                               Get.to(() => OrdersView());
                             } catch (e) {
                               //print(e);
@@ -334,10 +347,11 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () async {
                           Get.back();
-                          await Navigator.pushNamed(
-                            context,
-                            router.rt_Regimen
-                          );
+                          if (Get.isRegistered<QurhomeDashboardController>())
+                            Get.find<QurhomeDashboardController>()
+                                .updateBLETimer(Enable: false);
+
+                          await Navigator.pushNamed(context, router.rt_Regimen);
                         },
                       ),
                       Visibility(
@@ -356,6 +370,11 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           onPressed: () {
                             try {
                               Get.back();
+                              if (Get.isRegistered<
+                                  QurhomeDashboardController>())
+                                Get.find<QurhomeDashboardController>()
+                                    .updateBLETimer(Enable: false);
+
                               Get.to(() => ReportListScreen());
                             } catch (e) {
                               //print(e);
@@ -377,6 +396,11 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             onPressed: () {
                               try {
                                 Get.back();
+                                if (Get.isRegistered<
+                                    QurhomeDashboardController>())
+                                  Get.find<QurhomeDashboardController>()
+                                      .updateBLETimer(Enable: false);
+
                                 Get.to(() => ClaimList());
                               } catch (e) {
                                 //print(e);
@@ -393,6 +417,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () {
                           FHBBasicWidget().exitApp(context, () {
+                            if (Get.isRegistered<QurhomeDashboardController>())
+                              Get.find<QurhomeDashboardController>()
+                                  .updateBLETimer(Enable: false);
                             CommonUtil().logout(moveToLoginPage);
                           });
                         },
