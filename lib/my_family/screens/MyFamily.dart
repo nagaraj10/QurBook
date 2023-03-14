@@ -1191,7 +1191,7 @@ class _MyFamilyState extends State<MyFamily> {
             });
           } else {
             final mobileNo =
-                '+${_selectedDialogCountry.phoneCode}${mobileNoController.text}';
+                '${_selectedDialogCountry.phoneCode}${mobileNoController.text}';
             final addFamilyMemberRequest = {};
             addFamilyMemberRequest['isVirtualUser'] = false;
             addFamilyMemberRequest['firstName'] = firstNameController.text;
