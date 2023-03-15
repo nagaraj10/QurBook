@@ -99,7 +99,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         _resetbutton(),
                         SizedBox(height: height * .015),
                         Text(
-                          strsupportEmail,
+                          CommonUtil.isUSRegion()?strUSsupportEmail:strINsupportEmail,
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 15.0.sp),
                         ),
