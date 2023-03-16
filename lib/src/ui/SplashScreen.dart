@@ -1,10 +1,14 @@
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -16,9 +20,11 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
@@ -35,11 +41,13 @@ import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.da
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
@@ -57,6 +65,7 @@ import 'package:get/get.dart';
 
 import 'SheelaAI/Models/sheela_arguments.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 
 class SplashScreen extends StatefulWidget {
   final String? nsRoute;
@@ -67,6 +76,7 @@ class SplashScreen extends StatefulWidget {
   final String? healthOrganizationId;
   final String? templateName;
   final dynamic bundle;
+  final bool isFromCallScreen;
 
   SplashScreen(
       {this.nsRoute,
@@ -76,7 +86,8 @@ class SplashScreen extends StatefulWidget {
       this.doctorSessionId,
       this.healthOrganizationId,
       this.templateName,
-      this.bundle});
+      this.bundle,
+      this.isFromCallScreen = false});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -88,13 +99,87 @@ class _SplashScreenState extends State<SplashScreen> {
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
   GetDeviceSelectionModel? selectionResult;
+  bool _loaded = false;
+  //bool _loaded = true;
 
   @override
   void initState() {
     super.initState();
     PreferenceUtil.init();
     CommonUtil().ListenForTokenUpdate();
-    Provider.of<ChatSocketViewModel>(Get.context!)?.initSocket();
+    Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+    CommonUtil().OnInitAction();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      if (Platform.isIOS) {
+        if (widget.isFromCallScreen) {
+          // It comes from callscreen on iOS after clicking the cancel call button
+          callAppLockFeatureMethod(false);
+        } else {
+          variable.reponseToTriggerAppLockMethodChannel
+              .setMethodCallHandler((call) async {
+            if (call.method == variable.callAppLockFeatureMethod) {
+              final data = Map<String, dynamic>.from(call.arguments);
+              callAppLockFeatureMethod(data[isCallRecieved]);
+            }
+          });
+        }
+        if (kDebugMode) {
+          setState(() {
+            _loaded = true;
+          });
+        }
+      } else {
+        callAppLockFeatureMethod(
+            widget.nsRoute != null && widget.nsRoute == call ? true : false);
+      }
+    });
+  }
+
+  callAppLockFeatureMethod(bool isCallRecieved) async {
+    try {
+      if (!isCallRecieved) {
+        // No call notification is received so call security types code
+        String authToken = PreferenceUtil.getStringValue(
+            Constants.KEY_AUTHTOKEN); // To check whether it's logged in or not
+        if (PreferenceUtil.getEnableAppLock() && authToken != null) {
+          _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
+          setState(() {});
+
+          if (Platform.isIOS) {
+            reponseToRemoteNotificationMethodChannel.invokeListMethod(
+              IsAppLockChecked,
+              {'status': _loaded},
+            );
+          }
+        } else {
+          if (Platform.isIOS) {
+            PreferenceUtil.setCallNotificationRecieved(isCalled: false);
+            reponseToRemoteNotificationMethodChannel.invokeListMethod(
+              IsAppLockChecked,
+              {'status': true},
+            );
+          }
+          setState(() {
+            _loaded = true;
+          });
+        }
+      } else {
+        // Recieved from call notification so don't call security types code
+        if (Platform.isIOS) {
+          PreferenceUtil.setCallNotificationRecieved(isCalled: true);
+          reponseToRemoteNotificationMethodChannel.invokeListMethod(
+            IsAppLockChecked,
+            {'status': true},
+          );
+        }
+        setState(() {
+          _loaded = true;
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) print(e.toString());
+    }
   }
 
   @override
@@ -102,7 +187,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return FutureBuilder<ConnectivityResult>(
         future: Connectivity().checkConnectivity(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.connectionState == ConnectionState.done && _loaded) {
             if (snapshot.hasData &&
                 (snapshot.data == ConnectivityResult.mobile ||
                     snapshot.data == ConnectivityResult.wifi)) {
@@ -244,8 +329,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           rawTitle = parsedData[0];
                           rawBody = parsedData[1];
                           notificationListId = parsedData[2] ?? '';
-                        }else if (parsedData.length == 5)
-                        {
+                        } else if (parsedData.length == 5) {
                           eventType = parsedData[0];
                           others = parsedData[1];
                           rawBody = parsedData[3];
@@ -689,6 +773,25 @@ class _SplashScreenState extends State<SplashScreen> {
                       Get.to(ManageActivitiesScreen())!.then((value) =>
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
+                    } else if (widget.nsRoute == strAppointmentDetail) {
+                      var passedValArr = widget.bundle?.split('&');
+                      fbaLog(eveParams: {
+                        'eventTime': '${DateTime.now()}',
+                        'ns_type': 'appointmentDetail',
+                        'navigationPage': 'Appointment Detail Page',
+                      });
+                      if (passedValArr[2] != null) {
+                        AppointmentDetailsController
+                            appointmentDetailsController =
+                            CommonUtil().onInitAppointmentDetailsController();
+                        appointmentDetailsController
+                            .getAppointmentDetail(passedValArr[2]);
+                        Get.to(() => AppointmentDetailScreen()).then((value) =>
+                            PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+                      }
+                    } else if (widget.nsRoute == call) {
+                      CommonUtil().startTheCall(widget.bundle);
                     } else {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

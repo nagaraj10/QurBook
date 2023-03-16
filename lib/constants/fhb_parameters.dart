@@ -108,6 +108,8 @@ const String KIOSK_audio = 'audio';
 const String KIOSK_audio_url = 'audioUrl';
 const String KIOSK_appointment_avail = 'availability';
 const String KIOSK_eid = 'eid';
+const String KIOSK_appoint_id = 'appointmentId';
+const String KIOSK_say_text = 'text';
 const String KIOSK_action = 'Action';
 const String KIOSK_activityName = 'ActivityName';
 const String KIOSK_message = 'Message';
@@ -637,7 +639,6 @@ const String strRefundMediaMetaId = 'refundMediaMetaId';
 const String strPrescription = 'prescription';
 const String strVoice = 'voice';
 const String strrx = 'rx';
-const String strothers = 'others';
 const String strCreatedFor = 'createdFor';
 const String strStatusId = 'statusId';
 const String strIsFollowUpFee = 'isFollowUpFee';
@@ -646,6 +647,7 @@ const String strPlannedFollowupDate = 'plannedFollowupDate';
 const String strPaymentInfo = 'paymentInfo';
 const String eventType = 'eventType';
 const String others = 'others';
+const String appointmentId = 'appointmentId';
 
 //Add Family User Info
 const String make_a_choice = 'Make a Choice!';
@@ -816,6 +818,7 @@ const String strHealthRecordMetaId = 'healthRecordMetaId';
 const String strDestinationUserId = 'destinationUserId';
 const String strSourceUserId = 'sourceUserId';
 const String strcityName = 'cityName';
+const String strstateName = 'stateName';
 
 const String errAssociateRecords =
     'Error while creating shared record details.';
@@ -831,3 +834,4 @@ const String strCopyVitalsMsg =
     'Matching activity is found in your regimen, do you want to copy the values?';
 const String strglucose = 'SPO2';
 const String strBloodSugar = 'BloodSugar';
+const String strAppointmentDetail = 'appointmentDetail';

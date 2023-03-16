@@ -46,20 +46,24 @@ extension Dictionary {
                                                             options: [.prettyPrinted]) else {
             return nil
         }
-
+        
         return String(data: theJSONData, encoding: .ascii)
     }
 }
 
 extension String {
-    func inserting(reverse:Bool = true) -> String {
+    func inserting(reverse:Bool = true,forWeight : Bool = false) -> String {
         var result: String = ""
         let characters = Array(self)
         var sepCar:Array<String> = []
         var count = 0
         stride(from: 0, to: characters.count, by: 2).forEach {
             count += 1
-            if (reverse){
+            if(forWeight){
+                if  (count <= 7){
+                    sepCar.append(String(characters[$0..<min($0+2, characters.count)]))
+                }
+            }else if (reverse){
                 if ($0+2 < characters.count) && (count <= 6){
                     sepCar.append(String(characters[$0..<min($0+2, characters.count)]))
                 }
@@ -68,7 +72,6 @@ extension String {
                     sepCar.append(String(characters[$0..<min($0+2, characters.count)]))
                 }
             }
-            
         }
         if (reverse){
             sepCar = sepCar.reversed()

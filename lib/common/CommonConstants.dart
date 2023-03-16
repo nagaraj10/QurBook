@@ -52,6 +52,7 @@ class CommonConstants {
   static String keyHospital = 'Hospitals';
   static String keyLab = 'Lab';
   static String keyLabs = 'Labs';
+  static String keyCity = 'City';
 
   /// Following are the constants string used as hint text for the pop
   /// box that appears when a card is saved
@@ -109,7 +110,7 @@ class CommonConstants {
   static String strOxygenValue = '%spo2';
   static String strOxygenParams = 'oxygenSaturation';
   static String strOxygenParamsName = 'spo2';
-  static String strOxygenUnits = '%sp02';
+  static String strOxygenUnits = '%spo2';
   static String strOxygenUnitsName = '%';
   static String strPulseRate = 'pulseRate';
   static String strPulseUnit = 'PUL/min';

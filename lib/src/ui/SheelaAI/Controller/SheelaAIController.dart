@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -329,28 +328,7 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.recipientId ?? '').isEmpty) {
             currentResponse.recipientId = "Sheela Response";
           }
-          if ((currentResponse.directCall != null &&
-                  currentResponse.directCall!) &&
-              (currentResponse.recipient != null &&
-                  currentResponse.recipient!.trim() == "CC")) {
-            var regController = Get.put(QurhomeRegimenController());
-            if (CommonUtil()
-                .validString(regController.careCoordinatorId.value)
-                .trim()
-                .isNotEmpty) {
-              regController.callSOSEmergencyServices(1);
-            } else {
-              regController.getUserDetails();
-              await regController.getCareCoordinatorId();
-              regController.callSOSEmergencyServices(1);
-            }
-            await Future.delayed(const Duration(seconds: 2));
-            isLoading.value = false;
-            conversations.removeLast();
-            stopTTS();
-            return;
-          }
-          currentResponse = (await getGoogleTTSForConversation(currentResponse))!;
+          currentResponse = await getGoogleTTSForConversation(currentResponse);
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
           if ((currentResponse.buttons ?? []).length > 0) {
@@ -388,7 +366,8 @@ class SheelaAIController extends GetxController {
             relationshipId = userId;
           }
           playTTS();
-          PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang!);
+          callToCC(currentResponse);
+          PreferenceUtil.saveString(SHEELA_LANG, currentResponse!.lang!);
           scrollToEnd();
         } else {
           //Received a wrong format data
@@ -479,13 +458,28 @@ class SheelaAIController extends GetxController {
       if (playButtons) {
         final currentButton = currentPlayingConversation!
             .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
-        if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
+        if (currentButton.title.contains("Exit")) {
+          gettingReposnseFromNative();
+          return;
+        } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
             .isNotEmpty) {
           textForPlaying = currentButton.ttsResponse!.payload!.audioContent;
         } else if ((currentButton.title ?? '').isNotEmpty) {
-          final result = await getGoogleTTSForText(currentButton.title);
-          if ((result!.payload!.audioContent ?? '').isNotEmpty) {
-            textForPlaying = result.payload!.audioContent;
+          var result;
+          try {
+            var stringToSpeech = currentButton.title;
+            if (currentButton.title!.contains(".")) {
+              stringToSpeech = currentButton.title.split(".")[1];
+              result = await getGoogleTTSForText(stringToSpeech);
+            } else {
+              result = await getGoogleTTSForText(currentButton.title);
+            }
+          } catch (e) {
+            result = await getGoogleTTSForText(currentButton.title);
+          }
+
+          if ((result.payload?.audioContent ?? '').isNotEmpty) {
+            textForPlaying = result.payload.audioContent;
           }
         }
       } else {
@@ -646,12 +640,15 @@ class SheelaAIController extends GetxController {
               if (conversations.isNotEmpty &&
                   ((conversations.last?.buttons?.length ?? 0) > 0)) {
                 try {
-                  final responseRecived =
+                  var responseRecived =
                       response.toString().toLowerCase().trim();
 
                   dynamic button = null;
 
                   if (!conversations?.last?.isButtonNumber) {
+                    if (responseRecived == carGiverSheela) {
+                      responseRecived = careGiverSheela;
+                    }
                     button = conversations?.last?.buttons.firstWhere(
                         (element) =>
                             (element.title ?? "").toLowerCase() ==
@@ -940,6 +937,22 @@ class SheelaAIController extends GetxController {
       }
     } catch (e) {
       printError(info: e.toString());
+    }
+  }
+
+  callToCC(SheelaResponse currentResponse) async {
+    if ((currentResponse.directCall != null && currentResponse.directCall) &&
+        (currentResponse.recipient != null &&
+            currentResponse.recipient.trim().toLowerCase() == "cc")) {
+      var regController = CommonUtil().onInitQurhomeRegimenController();
+      if (CommonUtil()
+          .validString(regController.careCoordinatorId.value)
+          .trim()
+          .isEmpty) {
+        regController.getUserDetails();
+        await regController.getCareCoordinatorId();
+      }
+      regController.callSOSEmergencyServices(1);
     }
   }
 }

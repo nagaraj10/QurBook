@@ -34,10 +34,11 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
+        //        //print(advertisementData as NSDictionary)
         if let name = advertisementData[Constants.BLENameData] as? String,
            name.lowercased().contains("blesmart"){
             centralManager.stopScan()
+            connectedWithWeighingscale = false
             let tempMacId = String(name.suffix(12))
             let macID = tempMacId.inserting(reverse: false)
             OHQDeviceManager.shared().scanForDevices(with: OHQDeviceCategory.any) {[weak self] deviceInfoKeys in
@@ -57,7 +58,7 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                                 ]
                             ];
                             if let serlized = lsOBj.jsonStringRepresentation{
-                                print(serlized)
+                                //print(serlized)
                                 self.eventSink?("measurement|"+serlized)
                                 self.eventSink = nil
                                 if self.idForBP != nil {
@@ -75,7 +76,7 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                     }, completion: { completionReason in
                         if (completionReason == OHQCompletionReason.busy || completionReason == OHQCompletionReason.poweredOff){
                             DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
-                                print("restarted");
+                                //print("restarted");
                                 self.centralManager = CBCentralManager(delegate: self, queue: nil)
                                 self.centralManager.scanForPeripherals(withServices: [])
                             }
@@ -88,81 +89,154 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
             } completion: { completionReason in
                 if (completionReason == OHQCompletionReason.busy || completionReason == OHQCompletionReason.poweredOff){
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
-                        print("restarted");
+                        //print("restarted");
                         self.centralManager = CBCentralManager(delegate: self, queue: nil)
                         self.centralManager.scanForPeripherals(withServices: [])
                     }
                 }
             }
-        }else if let newdata =  advertisementData[Constants.BLEManuData] as? Data,
-                 let serviceIdArray =  advertisementData[Constants.BLEAdvDataServiceUUIDs] as? NSArray,
-                 serviceIdArray.count > 0,
-                 let serviceId = serviceIdArray.firstObject as? CBUUID{
-            let decodedString = newdata.hexEncodedString()
-            let macID = decodedString.inserting()
-            centralManager.stopScan()
-            guard let deviceName = advertisementData[Constants.BLENameData] as? String else {
-                eventSink?("Failed|Failed to get the device details")
-                return
-            }
-            if(deviceName == Constants.WOWGOSPO2){
-                eventSink?("macid|"+macID)
-                eventSink?("bleDeviceType|SPO2")
-                SPO2Manager = GoldenSPO2Manager(delegate: self)
-                SPO2Manager.scanLeDevice(true)
-                centralManager = nil
-            }else if (deviceName == Constants.Mike){
-                eventSink?("macid|"+macID)
-                eventSink?("bleDeviceType|SPO2")
-                poPeripheral = peripheral
-                poPeripheral.delegate = self
-                centralManager.connect(poPeripheral)
-            } else if((deviceName == Constants.WOWGOBP) || (deviceName == Constants.WOWGOBPB)){
-                eventSink?("macid|"+macID)
-                eventSink?("bleDeviceType|BP")
-                BloodpressureManager = GoldenBloodpressureManager(delegate: self)
-                BloodpressureManager.scanLeDevice(true)
-                centralManager = nil
-            }else if((deviceName == Constants.WOWGOWT1) || (deviceName == Constants.WOWGOWT2) || (deviceName == Constants.WOWGOWT3)){
-                eventSink?("macid|"+macID)
-                eventSink?("bleDeviceType|weight")
-                LS202DeviceManager = GoldenLS202DeviceManager(delegate: self)
-                LS202DeviceManager.scanLeDevice(true)
-                centralManager = nil
+        }
+//        else if let newdata =  advertisementData[Constants.BLEManuData] as? Data,
+//                 let serviceIdArray =  advertisementData[Constants.BLEAdvDataServiceUUIDs] as? NSArray,
+//                 serviceIdArray.count > 0,
+//                 let serviceId = serviceIdArray.firstObject as? CBUUID{
+            //            let decodedString = newdata.hexEncodedString()
+            //            let macID = decodedString.inserting()
+            //            if(centralManager != nil){
+            //                centralManager.stopScan()
+            //            }
+            //            connectedWithWeighingscale = false
+            //            guard let deviceName = advertisementData[Constants.BLENameData] as? String else {
+            //                eventSink?("Failed|Failed to get the device details")
+            //                return
+            //            }
+            //            if(deviceName == Constants.WOWGOSPO2){
+            //                eventSink?("macid|"+macID)
+            //                eventSink?("bleDeviceType|SPO2")
+            //                SPO2Manager = GoldenSPO2Manager(delegate: self)
+            //                SPO2Manager.scanLeDevice(true)
+            //
+            //            }else if (deviceName == Constants.Mike){
+            //                eventSink?("macid|"+macID)
+            //                eventSink?("bleDeviceType|SPO2")
+            //                poPeripheral = peripheral
+            //                poPeripheral.delegate = self
+            //                centralManager.connect(poPeripheral)
+            //            } else if((deviceName == Constants.WOWGOBP) || (deviceName == Constants.WOWGOBPB)){
+            //                eventSink?("macid|"+macID)
+            //                eventSink?("bleDeviceType|BP")
+            //                BloodpressureManager = GoldenBloodpressureManager(delegate: self)
+            //                BloodpressureManager.scanLeDevice(true)
+            //
+            //            }
+            //            else if((deviceName == Constants.WOWGOWT1) || (deviceName == Constants.WOWGOWT2) || (deviceName == Constants.WOWGOWT3)){
+            //                eventSink?("macid|"+macID)
+            //                eventSink?("bleDeviceType|weight")
+            //                LS202DeviceManager = GoldenLS202DeviceManager(delegate: self)
+            //                LS202DeviceManager.scanLeDevice(true)
+            //                centralManager = nil
+            //            }
+//        }
+        else if let deviceName = advertisementData[Constants.BLENameData] as? String{
+            if((deviceName == Constants.WOWGOWT1) || (deviceName == Constants.WOWGOWT2) || (deviceName == Constants.WOWGOWT3)){
+                
+                if(LS202DeviceManager == nil){
+                    LS202DeviceManager = GoldenLS202DeviceManager(delegate: self)
+                    LS202DeviceManager.scanLeDevice(true)
+                    
+                }
+            }else  if(deviceName == Constants.WOWGOSPO2){
+                if(SPO2Manager == nil){
+                    SPO2Manager = GoldenSPO2Manager(delegate: self)
+                    SPO2Manager.scanLeDevice(true)
+                }
+                
+            }else if((deviceName == Constants.WOWGOBP) || (deviceName == Constants.WOWGOBPB)){
+                if(BloodpressureManager == nil){
+                    BloodpressureManager = GoldenBloodpressureManager(delegate: self)
+                    BloodpressureManager.scanLeDevice(true)
+                }
+                
+                
             }
         }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        eventSink?("connected|connected successfully!!!")
-        poPeripheral.discoverServices([Constants.poServiceCBUUID])
+        if(connectedWithWeighingscale){
+            peripheral.discoverServices([Constants.deviceInformationServiceUUID])
+        }else{
+            eventSink?("connected|connected successfully!!!")
+            poPeripheral.discoverServices([Constants.poServiceCBUUID])
+        }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard let services = peripheral.services else { return }
-        for service in services {
-            peripheral.discoverCharacteristics(nil, for: service)
+        //        guard let services = peripheral.services else { return }
+        //        for service in services {
+        //            peripheral.discoverCharacteristics(nil, for: service)
+        //        }
+        guard error == nil else {
+            //print("Failed to discover services, error: \(error?.localizedDescription ?? "failed to obtain error description")")
+            return
+        }
+        if let services = peripheral.services {
+            services.forEach { peripheral.discoverCharacteristics(nil, for: $0) }
         }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        guard let characteristics = service.characteristics else { return }
-        for characteristic in characteristics {
-            if characteristic.properties.contains(.read) {
-                peripheral.readValue(for: characteristic)
+        guard error == nil else {
+            //            //print("Failed to discover characteristics for service \(service.uuid), error: \(error?.localizedDescription ?? "no error description")")
+            return
+        }
+        guard let discoveredCharacteristics = service.characteristics else {
+            //            //print("peripheralDidDiscoverCharacteristics called for empty characteristics for service \(service.uuid)")
+            return
+        }
+        if(connectedWithWeighingscale){
+            if service.uuid == Constants.deviceInformationServiceUUID {
+                for characteristic in discoveredCharacteristics {
+                    if characteristic.uuid == Constants.deviceSerialNumberServiceUUID {
+                        guard let data = characteristic.value else {
+                            //                            //print("Unable to obtain notification/indication data from CBPeripheral")
+                            return
+                        }
+                        if let macString = String(data: data, encoding: .utf8) {
+                            let macID = macString.inserting(reverse: true,forWeight: true)
+                            //                            //print( "mac string read as \(macID)!")
+                            eventSink?("macid|"+macID)
+                            eventSink?("bleDeviceType|weight")
+                            centralManager.cancelPeripheralConnection(weightPeripheral)
+                            weightPeripheral.delegate = nil
+                            weightPeripheral = nil
+                            LS202DeviceManager = GoldenLS202DeviceManager(delegate: self)
+                            LS202DeviceManager.scanLeDevice(true)
+                        }
+                    }
+                }
             }
-            if characteristic.properties.contains(.notify) {
-                peripheral.setNotifyValue(true, for: characteristic)
+        }else{
+            for characteristic in discoveredCharacteristics {
+                if characteristic.properties.contains(.read) {
+                    peripheral.readValue(for: characteristic)
+                }
+                if characteristic.properties.contains(.notify) {
+                    peripheral.setNotifyValue(true, for: characteristic)
+                }
             }
         }
+        
+        
     }
-    
+    //5659A8286CF2
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         switch characteristic.uuid {
         case Constants.poMeasurementCharacteristicCBUUID:
             spoReading(from: characteristic,peripheral:peripheral)
         default:
-            print("Unhandled Characteristic UUID: \(characteristic.uuid)")
+            break
+            //print("Unhandled Characteristic UUID: \(characteristic.uuid)")
         }
     }
     
@@ -185,10 +259,14 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                     ]
                 ]
                 if let serlized = data.jsonStringRepresentation{
-                    print(serlized)
+                    //print(serlized)
                     eventSink?("measurement|"+serlized)
                     eventSink = nil
-                    centralManager.stopScan()
+                    if(centralManager != nil){
+                        centralManager.stopScan()
+                        centralManager.cancelPeripheralConnection(poPeripheral)
+                    }
+                    
                     if( characteristic.isNotifying){
                         peripheral.setNotifyValue(false, for: characteristic)
                     }
@@ -200,6 +278,7 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
     
     func onListen(withArguments arguments: Any?,
                   eventSink: @escaping FlutterEventSink) -> FlutterError? {
+        onCancel(withArguments: [])
         self.eventSink = eventSink
         centralManager = CBCentralManager(delegate: self, queue: nil)
         return nil
@@ -239,32 +318,57 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
 extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallback,GoldenLS202DeviceManagerCallback{
     
     func onDiscoverDevice(_ device: Any!) {
-        
+        if let _device = device  as? BaseBLEDevice{
+            if((_device.deviceName == Constants.WOWGOWT1) || (_device.deviceName == Constants.WOWGOWT2) || (_device.deviceName == Constants.WOWGOWT3)){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|WEIGHT")
+            }else  if(_device.deviceName == Constants.WOWGOSPO2){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|SPO2")
+            }else if((_device.deviceName == Constants.WOWGOBP) || (_device.deviceName == Constants.WOWGOBPB)){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|BP")
+                
+            }else if((_device.showName == Constants.WOWGOWT1) || (_device.showName == Constants.WOWGOWT2) || (_device.showName == Constants.WOWGOWT3)){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|WEIGHT")
+            }else  if(_device.showName == Constants.WOWGOSPO2){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|SPO2")
+            }else if((_device.showName == Constants.WOWGOBP) || (_device.showName == Constants.WOWGOBPB)){
+                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("bleDeviceType|BP")
+                
+            }
+        }
     }
     
     func onConnectStatusChange(_ device: Any!, status: Int32) {
         switch Int(status) {
         case G_BLE_STATUS_SCANNING:
-            print("Scanning")
+            //print("Scanning")
             break;
         case G_BLE_STATUS_CONNECTING:
-            print("CONNECTING")
+            //print("CONNECTING")
             
             break;
         case G_BLE_STATUS_CONNECTED:
-            print("CONNECTED")
+            //print("CONNECTED")
             eventSink?("connected|connected successfully!!!")
             break;
         case G_BLE_STATUS_DISCONNECTED:
-            print("disCONNECTED")
-            
+            //print("disCONNECTED")
+            eventSink?("disconnected|Bluetooth disconnected")
+
             break;
         case G_BLE_STATUS_DISCONNECTED_BYUSER:
             /*User click stop or disconnect GSH BLE device**/
             //"G_BLE_STATUS_DISCONNECTED_BYUSER"
+            eventSink?("disconnected|Bluetooth disconnected")
+
             break;
         case G_BLE_ERROR:
-            print("error found")
+            //print("error found")
             break;
         default:
             break;
@@ -274,6 +378,7 @@ extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallba
     
     func onReceiveMeasurementData(_ device: Any!, spO2Value SpO2Value: UInt, pulseRateValue: UInt, waveAmplitude: UInt) {
         let _device : BaseBLEDevice = (device as? BaseBLEDevice)!
+        
         if (_device.showName == Constants.WOWGOSPO2){
             if(SpO2Value < 101 && pulseRateValue != 127 && pulseRateValue != 255 && eventSink != nil ){
                 let data : [String:Any] = [
@@ -285,12 +390,12 @@ extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallba
                     ]
                 ]
                 if let serlized = data.jsonStringRepresentation{
-                    print(serlized)
+                    //print(serlized)
                     eventSink?("measurement|"+serlized)
                     eventSink = nil
                 }
             }
-            print("SPO2 is %d PulseRate is %d",SpO2Value,pulseRateValue)
+            //print("SPO2 is %d PulseRate is %d",SpO2Value,pulseRateValue)
         }
     }
     
@@ -309,12 +414,12 @@ extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallba
                     ]
                 ]
                 if let serlized = data.jsonStringRepresentation{
-                    print(serlized)
+                    //print(serlized)
                     eventSink?("measurement|"+serlized)
                     eventSink = nil
                 }
             }
-            print("BP is systolic is %d,diastolic is %d and PulseRate is %d",sys,dia,pulse)
+            //print("BP is systolic is %d,diastolic is %d and PulseRate is %d",sys,dia,pulse)
         }
     }
     
@@ -330,12 +435,15 @@ extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallba
                     ]
                 ]
                 if let serlized = data.jsonStringRepresentation{
-                    print(serlized)
+                    //print(serlized)
                     eventSink?("measurement|"+serlized)
                     eventSink = nil
+                    if(centralManager != nil){
+                        centralManager.stopScan()
+                    }
                 }
             }
-            print("Weight is %d",weight)
+            //            //print("Weight is %d",weight)
         }
     }
     

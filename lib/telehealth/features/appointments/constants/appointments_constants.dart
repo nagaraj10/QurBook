@@ -37,6 +37,7 @@ const String CANCEL_SOURCE = "cancellationSource";
 const String qr_appoinment_reshedule = "appointment/reschedule";
 const String qr_appointment_cancel = "appointment";
 const String qr_appointment_fetch = 'appointment?patientId=';
+const String qr_appointment = 'appointment/';
 
 // conditions
 const String PATDNA = 'PATDNA';

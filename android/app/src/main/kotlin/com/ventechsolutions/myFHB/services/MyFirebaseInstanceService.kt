@@ -116,7 +116,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
             val NS_ID = 9090
             var MEETING_ID = data[getString(R.string.meetid)]
-            val USER_NAME = data[getString(R.string.username)]
+            var USER_NAME = data["userName"]
+            if(USER_NAME==null||USER_NAME=="null"){
+                USER_NAME = data[getString(R.string.username)]
+            }
             val DOC_ID = data[getString(R.string.docId)]
             val DOC_PIC = data[getString(R.string.docPic)]
             val PAT_ID = data[getString(R.string.pat_id)]
@@ -376,11 +379,19 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         else {
             getRegularNotification(data)
             val intent = Intent("remainderSheelaInvokeEvent")
-            intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
-            intent.putExtra("message", data[getString(R.string.pro_ns_body)])
-            intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
-            intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
-
+            if (data[Constants.EVENT_TYPE] != null && data[Constants.EVENT_TYPE] == Constants.WRAPPERCALL) {
+                intent.putExtra(Constants.PROP_REDIRECT_TO, "sheela")
+                intent.putExtra(Constants.EVENT_TYPE, data[Constants.EVENT_TYPE])
+                intent.putExtra(Constants.OTHERS, data[Constants.OTHERS])
+                intent.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
+                intent.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
+                intent.putExtra(Constants.NOTIFICATIONLISTID, data[Constants.NOTIFICATIONLISTID])
+            }else {
+                intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
+                intent.putExtra("message", data[getString(R.string.pro_ns_body)])
+                intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
+                intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
+            }
             this.sendBroadcast(intent)
         }
     }
@@ -448,6 +459,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_MSG, data[getString(R.string.pro_ns_body)])
         onTapNS.putExtra(Constants.PROP_sheelaAudioMsgUrl, data[Constants.PROP_sheelaAudioMsgUrl])
         onTapNS.putExtra(Constants.PROP_ISSHEELA, data[Constants.PROP_ISSHEELA])
+        onTapNS.putExtra(Constants.OTHERS, data[Constants.OTHERS])
+        onTapNS.putExtra(Constants.EVENT_TYPE, data[Constants.EVENT_TYPE])
+        onTapNS.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
 
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)

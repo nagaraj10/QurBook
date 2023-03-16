@@ -207,10 +207,11 @@ class ProvidersListRepository {
     return DoctorListFromHospitalModel.fromJson(response);
   }
 
-  Future<AppointmentDetailModel> getAppointmentDetail(
-      String doctorId, String patientId, String? careCoorId,String isNormalChatUserList) async {
-    dynamic carCooApiId = null;
-    carCooApiId = (careCoorId != '' && careCoorId!=null)? careCoorId : 'null';
+  Future<AppointmentDetailModel> getAppointmentDetail(String doctorId,
+      String patientId, String? careCoorId, String isNormalChatUserList) async {
+    var carCooApiId = null;
+    carCooApiId =
+        (careCoorId != '' && careCoorId != null) ? careCoorId : 'null';
     var response = await _helper.getAppointmentDetail(appointmentSlash +
         patientIdEqualTo +
         patientId +
@@ -218,7 +219,13 @@ class ProvidersListRepository {
         doctorId +
         isDoctor +
         careCoordiantorId +
-        carCooApiId+isNormalChatList+isNormalChatUserList);
+        carCooApiId +
+        userIdChat +
+        patientId +
+        peerIdChat +
+        doctorId +
+        isNormalChatList +
+        isNormalChatUserList);
     return AppointmentDetailModel.fromJson(response);
   }
 

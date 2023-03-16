@@ -691,6 +691,8 @@ class _VerifyPatientState extends State<VerifyPatient>
       authToken = decodesstring;
       final _firebaseMessaging = FirebaseMessaging.instance;
       var token = await _firebaseMessaging.getToken();
+      CommonUtil().OnInitAction();
+
       await CommonUtil()
           .sendDeviceToken(
               userId, widget.emailId, widget.PhoneNumber, token, true)
@@ -745,7 +747,11 @@ class _VerifyPatientState extends State<VerifyPatient>
       PreferenceUtil.save(strUserDetails, saveuser);
       authToken = decodesstring;
       final _firebaseMessaging = FirebaseMessaging.instance;
-      var token = await _firebaseMessaging.getToken();
+      var token = '';
+      try {
+        token = await _firebaseMessaging.getToken();
+      } catch (e) {}
+      CommonUtil().OnInitAction();
       await CommonUtil()
           .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {

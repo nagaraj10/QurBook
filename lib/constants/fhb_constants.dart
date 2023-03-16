@@ -31,6 +31,7 @@ const String KEY_UN_SUBCRIBE_BTN = 'unSubscribeBtn';
 const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
+const String IsAppLockChecked = "IsAppLockChecked";
 const String ScanningForDevices = 'Scanning for devices...';
 const String SettingUpTheDevice = 'Setting up the Device...';
 const String ScanningForBpDevices = 'Scanning for Bp devices...';
@@ -49,7 +50,10 @@ const String KEY_CATEGORYID = 'categoryID';
 const String KEY_CATEGORYLIST = 'categoryList';
 const String KEY_PROFILE = 'profile';
 const String KEY_PREFERREDMEASUREMENT = 'preferredMeasurement';
-
+const String enableAppLock = 'enableAppLock';
+const String notificationCalled = 'notificationCalled';
+const String callNotificationReceived = 'callNotificationReceived';
+const String isCallRecieved = 'isCallRecieved';
 const String KEY_USERID = 'userID';
 const String KEY_LASTLOGGEDTIME = 'lastLoggedIn';
 const String KEY_AUTHTOKEN = 'authToken';
@@ -265,6 +269,7 @@ const String ADD_NEW_FAMILY_MEMBER = 'Add new family member';
 const String keyDoctor = 'doctor';
 const String keyHospital = 'hospital';
 const String keyLab = 'laboratory';
+const String keyCity = 'City';
 const String keyFamily = 'keyFamilyrel';
 const String keyTheme = 'my_theme';
 const String keyPriColor = 'pri_color';
@@ -705,6 +710,7 @@ var tckPackageTitle = "package_title";
 var tckMainTitle = "title";
 var tckMainDescription = "description";
 var tckTypeModeOfService = "mode_of_service";
+var tckTypeFileUpload = "File Upload";
 
 const String keyMembeShipID = 'memberShipID';
 const String keyClaimAmount = 'claimAmt';
@@ -758,7 +764,8 @@ const String UnSubscribed = 'UnSubscribed';
 
 const String Expired = 'Expired';
 
-const String msgData = 'Values will not have an impact. Are you sure you want to update?';
+const String msgData =
+    'Values will not have an impact. Are you sure you want to update?';
 
 const String sheelaRecepId = 'Sheela Response';
 
@@ -766,6 +773,8 @@ const String sheelaRecepId = 'Sheela Response';
 const String FETCH_PROFILE_PIC = 'file-guard/fileData/profilePicture/';
 
 const String strWrapperCall = 'wrapperCall';
+
+const String IND_REG = 'IN';
 
 double height = 0.0;
 double width = 0.0;
@@ -776,6 +785,36 @@ double itemWidth = width / 2;
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 late var mInitialTime;
+
+const String address = 'Address';
+const String city = 'City';
+const String state = 'State';
+const String pincode = 'Pincode';
+
+const String carGiverSheela = 'cargiver';
+const String careGiverSheela = 'caregiver';
+const String strText = "Once in a Plan";
+
+const String id_sheela = 'id';
+const String eid_sheela = 'eid';
+const String sayText_sheela = 'saytext';
+
+const String primary_chat = '(Primary)';
+
+const String primary_provider = 'Primary';
+
+const String STR_PROVIDERDOCUMENTS = 'Provider Documents';
+const String STR_PRESCRIPTION = 'Prescription';
+const String STR_ALL = 'ALL';
+const String strOthers = 'others';
+const String strOther = 'other';
+const String strLabName = 'lab_name';
+const String strProviderName = 'provider_name';
+const String strServiceType = 'serviceType';
+const String str_preferred_lab = 'preferred_lab';
+const String strHealthOrganizationId = 'healthOrganizationId';
+
+
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {

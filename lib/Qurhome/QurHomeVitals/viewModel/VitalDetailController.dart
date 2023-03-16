@@ -114,12 +114,16 @@ class VitalDetailController extends GetxController {
 
   checkForBleDevices() async {
     var device = "";
+    String filterKey = '';
     if (deviceName == strOxgenSaturation) {
       device = strConnectPulseMeter;
+      filterKey = 'spo2';
     } else if (deviceName == strDataTypeBP) {
       device = strConnectBpMeter;
+      filterKey = 'bp';
     } else if (deviceName == strWeight) {
       device = strConnectWeighingScale;
+      filterKey = 'weight';
     }
     if (device.isEmpty) {
       return;
@@ -140,6 +144,7 @@ class VitalDetailController extends GetxController {
             .length >
         0) {
       _sheelaBLEController.isFromVitals = true;
+      _sheelaBLEController.filteredDeviceType = filterKey;
       _sheelaBLEController.setupListenerForReadings();
       CommonUtil().dialogForScanDevices(
         Get.context!,

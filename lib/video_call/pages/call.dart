@@ -5,6 +5,8 @@ import 'package:agora_rtc_engine/rtc_channel.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:connectivity/connectivity.dart';
@@ -278,7 +280,17 @@ class _CallPageState extends State<CallPage> {
           //print('user is OFFLINE');
         } else if (reason == UserOfflineReason.Quit) {
           if (Platform.isIOS) {
-            PageNavigator.goToPermanent(context, router.rt_Landing);
+            if (PreferenceUtil.getCallNotificationReceived()) {
+              PreferenceUtil.setCallNotificationRecieved(isCalled: false);
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          SplashScreen(isFromCallScreen: true)),
+                  (route) => false);
+            } else {
+              PageNavigator.goToPermanent(context, router.rt_Landing);
+            }
           } else {
             if (widget.isAppExists!) {
               PageNavigator.goToPermanent(context, router.rt_Landing);
@@ -461,8 +473,8 @@ class _CallPageState extends State<CallPage> {
         CommonUtil.isRemoteUserOnPause = false;
       } else if (reason == VideoRemoteStateReason.RemoteUnmuted) {
         CommonUtil.isRemoteUserOnPause = false;
-        FlutterToast()
-            .getToast('Doctor/Care Coordinator has resumed the video', Colors.green);
+        FlutterToast().getToast(
+            'Doctor/Care Coordinator has resumed the video', Colors.green);
         videoPauseResumeState = 1;
       } else if (reason == VideoRemoteStateReason.RemoteMuted) {
         CommonUtil.isRemoteUserOnPause = true;
@@ -480,8 +492,8 @@ class _CallPageState extends State<CallPage> {
         } else {
           if (!(Provider.of<AudioCallProvider>(Get.context!, listen: false)
               .isAudioCall)) {
-            FlutterToast()
-                .getToast('Doctor/Care Coordinator has paused the video', Colors.red);
+            FlutterToast().getToast(
+                'Doctor/Care Coordinator has paused the video', Colors.red);
           }
 
           videoPauseResumeState = 2;
@@ -503,10 +515,12 @@ class _CallPageState extends State<CallPage> {
         (uid, state, reason, elapsed) {
       switch (reason) {
         case AudioRemoteStateReason.RemoteUnmuted:
-          FlutterToast().getToast('Doctor/Care Coordinator has Unmuted', Colors.green);
+          FlutterToast()
+              .getToast('Doctor/Care Coordinator has Unmuted', Colors.green);
           break;
         case AudioRemoteStateReason.RemoteMuted:
-          FlutterToast().getToast('Doctor/Care Coordinator has muted', Colors.red);
+          FlutterToast()
+              .getToast('Doctor/Care Coordinator has muted', Colors.red);
           break;
         default:
           break;

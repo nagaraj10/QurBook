@@ -33,9 +33,11 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 class Appointments extends StatefulWidget {
   Appointments({
     this.isHome = false,
+    this.isFromQurday = false,
   });
 
   final bool isHome;
+  final bool isFromQurday;
 
   @override
   _AppointmentsState createState() => _AppointmentsState();
@@ -415,7 +417,8 @@ class _AppointmentsState extends State<Appointments> {
           ),
         ),
         CommonUtil().getNotificationIcon(context),
-        SwitchProfile().buildActions(context, _key, callBackToRefresh, false),
+        if (!widget.isFromQurday)
+          SwitchProfile().buildActions(context, _key, callBackToRefresh, false),
         // IconWidget(
         //   icon: Icons.more_vert,
         //   colors: Colors.white,

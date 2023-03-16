@@ -1589,7 +1589,9 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
     } else {
       saveCategoryToPrefernce();
       if (categoryName == AppConstants.voiceRecords ||
-          categoryName == Constants.STR_HOSPITALDOCUMENT) {
+          categoryName == (CommonUtil.isUSRegion()
+                  ? Constants.STR_PROVIDERDOCUMENTS
+                  : Constants.STR_HOSPITALDOCUMENT)) {
         new FHBBasicWidget().showInSnackBar(
             Constants.MSG_NO_CAMERA_VOICERECORDS + ' ' + categoryName!,
             widget.scaffold_state!);
@@ -1633,7 +1635,10 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
 
   onVoiceRecordClicked() async {
     saveCategoryToPrefernce();
-    if (categoryName == Constants.STR_HOSPITALDOCUMENT) {
+    if (categoryName ==
+        (CommonUtil.isUSRegion()
+            ? Constants.STR_PROVIDERDOCUMENTS
+            : Constants.STR_HOSPITALDOCUMENT)) {
       new FHBBasicWidget().showInSnackBar(
           Constants.MSG_NO_VOICERECORDS + ' ' + categoryName!,
           widget.scaffold_state!);

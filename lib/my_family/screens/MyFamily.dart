@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
+import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import '../../add_family_otp/models/add_family_otp_arguments.dart';
@@ -34,9 +35,6 @@ import '../../src/utils/alert.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:country_pickers/country_pickers.dart';
-import 'package:country_pickers/country.dart';
-import 'package:country_pickers/countries.dart';
 
 class MyFamily extends StatefulWidget {
   @override
@@ -47,8 +45,7 @@ class _MyFamilyState extends State<MyFamily> {
   FamilyListBloc? _familyListBloc;
 
   //var _selected = CommonUtil.REGION_CODE == 'IN' ? Country.IN : Country.US;
-  Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+  Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
   bool isPrimaryNoSelected = false;
 
   final mobileNoController = TextEditingController();
@@ -640,8 +637,7 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   saveMediaDialog(BuildContext context) {
-    _selectedDialogCountry =
-        CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+    _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
     firstNameController.text = '';
     middleNameController.text = '';
     lastNameController.text = '';
@@ -705,10 +701,11 @@ class _MyFamilyState extends State<MyFamily> {
                                   selectedCountry: _selected,
                                 ),*/
                                 CountryCodePickerPage(
-                                    onValuePicked: (country) => setState(
-                                        () => _selectedDialogCountry = country),
-                                    selectedDialogCountry:
-                                        _selectedDialogCountry),
+                                  selectedCountry: _selectedDialogCountry,
+                                  onValuePicked: (country) => setState(
+                                    () => _selectedDialogCountry = country,
+                                  ),
+                                ),
                                 _ShowMobileNoTextField()
                               ],
                             ),
@@ -1196,7 +1193,7 @@ class _MyFamilyState extends State<MyFamily> {
             });
           } else {
             final mobileNo =
-                '+${_selectedDialogCountry.phoneCode}${mobileNoController.text}';
+                '${_selectedDialogCountry.phoneCode}${mobileNoController.text}';
             final addFamilyMemberRequest = {};
             addFamilyMemberRequest['isVirtualUser'] = false;
             addFamilyMemberRequest['firstName'] = firstNameController.text;

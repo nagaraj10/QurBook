@@ -6,6 +6,8 @@ import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_country_picker/flutter_country_picker.dart';  FU2.5
+import 'package:myfhb/authentication/model/Country.dart';
+import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -31,8 +33,7 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   late LoginBloc _loginBloc;
- // var _selected = Country.IN;
- late var _selected ; //  FU2.5
+  Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
   TextEditingController phoneTextController = new TextEditingController();
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
@@ -100,55 +101,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   child: Row(
                     children: <Widget>[
-                   CountryPickerDropdown(
-                  underline: Container(
-                    height: 2,
-                    color: Colors.red,
-                  ),
-                  //show'em (the text fields) you're in charge now
-                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-                  //if you want your dropdown button's selected item UI to be different
-                  //than itemBuilder's(dropdown menu item UI), then provide this selectedItemBuilder.
-                  onValuePicked: (Country country) {
-                        setState(() {
-                          _selected = country;
-                        });
-                  },
-                  itemBuilder: (Country country) {
-                    return Row(
-                      children: <Widget>[
-                        SizedBox(width: 8.0),
-                        CountryPickerUtils.getDefaultFlagImage(country),
-                        SizedBox(width: 8.0),
-                        Expanded(child: Text(country.name)),
-                      ],
-                    );
-                  },
-                  itemHeight: null,
-                  isExpanded: true,
-                  //initialValue: 'TR',
-                  icon: Icon(Icons.arrow_downward),
-                ),
-                      // CountryPicker(
-                      //   nameTextStyle: TextStyle(
-                      //       color: Colors.black, fontWeight: FontWeight.w500),
-                      //   dialingCodeTextStyle: TextStyle(
-                      //       color: Colors.black54, fontWeight: FontWeight.w500),
-                      //   dense: false,
-                      //   showFlag: true, //displays flag, true by default
-                      //   showDialingCode:
-                      //       true, //displays dialing code, false by default
-                      //   showName:
-                      //       false, //displays country name, true by default
-                      //   showCurrency: false, //eg. 'British pound'
-                      //   showCurrencyISO: false, //eg. 'GBP'
-                      //   onChanged: (Country country) {
-                      //     setState(() {
-                      //       _selected = country;
-                      //     });
-                      //   },
-                      //   selectedCountry: _selected,
-                      // ), FU2.5
+                      CountryCodePickerPage(
+                        selectedCountry: _selectedDialogCountry,
+                        onValuePicked: (country) => setState(
+                          () => _selectedDialogCountry = country,
+                        ),
+                      ),
                       Container(
                         width: 1.0.w,
                         height: 30.0.h,
@@ -164,7 +122,10 @@ class _SignInScreenState extends State<SignInScreen> {
               SizedBox(height: 20.0.h),
               SizedBox(height: 20.0.h),
               submitButton(
-                  _loginBloc, _selected.dialingCode, phoneTextController),
+                _loginBloc,
+                _selectedDialogCountry.phoneCode,
+                phoneTextController,
+              ),
               SizedBox(height: 20.0.h)
             ],
           ),
@@ -240,7 +201,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               return SignUpScreen(
                                 enteredMobNumber: phoneTextController.text,
                                 selectedCountryCode: countryCode,
-                                selectedCountry: _selected.name,
+                                selectedCountry: _selectedDialogCountry.name,
                               );
                             },
                           ),
@@ -252,7 +213,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                 Constants.MOB_NUM, phoneTextController.text)
                             .then((onValue) {});
                         PreferenceUtil.saveString(
-                            CommonConstants.KEY_COUNTRYNAME, _selected.name);
+                            CommonConstants.KEY_COUNTRYNAME,
+                            _selectedDialogCountry.name);
                         moveToNext(signInResponse, phoneTextController.text,
                             countryCode);
                       }

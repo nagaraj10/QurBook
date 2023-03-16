@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart';
+import 'package:myfhb/telehealth/features/appointments/model/appointmentDetailsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
@@ -48,5 +50,26 @@ class FetchAppointmentsService {
         throw Exception(TranslationConstants.failedToInvoke.t());
       }
     });
+  }
+
+
+  Future<AppointmentDetailsModel> getAppointmentDetail(
+      String appointmentId) async {
+    try {
+      var headers = await headerRequest.getRequestHeadersAuthContent();
+
+      final response = await ApiServices.get(
+        _baseUrl + qr_appointment + appointmentId,
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        return AppointmentDetailsModel.fromJson(jsonDecode(response.body));
+      } else {
+        return AppointmentDetailsModel();
+      }
+    } on SocketException {
+      return AppointmentDetailsModel();
+    }
   }
 }

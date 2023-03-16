@@ -114,6 +114,7 @@ const String c_content_type_key = 'Content-Type';
 const String c_content_type_val = 'application/json';
 const String c_auth_key = 'Authorization';
 const String myFHB_logo = 'assets/launcher/myfhb.png';
+const String noMoreActivity = 'assets/no_more_activity.png';
 const String strSignUpEndpoint = 'register-user';
 const String strSignEndpoint = 'login';
 const String strUserVerifyEndpoint = 'confirm-user';
@@ -129,6 +130,7 @@ const String strWentWrong = 'Something went Wrong';
 const String strResendConfirmCode = 'resend-confirm-code';
 const String strResendGenerateOTP = 'user-relationship/generate-otp';
 const String strAdditionalInstructions = 'Additional Instructions';
+const String noMoreActivites = 'No more activites for the day';
 
 //tickets
 const String ticketCreatedSuccessfully = 'Ticket Created Successfully';
@@ -230,8 +232,11 @@ const String strIndianPhoneCode = 'IN';
 
 const String strContextId = 'contextId';
 const String strIsSkipMFA = 'isSkipMFA';
-const String strsupportEmail =
+const String strINsupportEmail =
     'If One Time Password is not received within 5mins, please contact support at support@qurhealth.in';
+
+const String strUSsupportEmail =
+    'If One Time Password is not received within 5mins, please contact support at support@qurhealth.com';
 
 const String strEmptyWebView = 'Plan summary will be available soon';
 

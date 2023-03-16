@@ -23,7 +23,10 @@ struct Constants {
     static let errorIs = "error is";
     static let reponseToRemoteNotificationMethodChannel =
     "flutter.native.QurBook/notificationResponse";
+    static let reponseToTriggerAppLockMethodChannel =
+    "flutter.native.QurBook/appLockMethodChannel";
     static let notificationResponseMethod = "notificationResponse";
+    static let callAppLockFeatureMethod = "callAppLockFeatureMethod";
     static let devicesEventChannel = "QurbookBLE/stream"
     static let reminderMethodChannel = "flutter.native/reminder"
     static let addReminderMethod = "addReminder"
@@ -41,6 +44,8 @@ struct Constants {
     static let importance = "importance";
     static let beepSound = "beep_beep.mp3";
     static let before = "remindbefore";
+    static let isCallRecieved = "isCallRecieved";
+    static let type = "type";
     struct paramaters {
         static let message = "message"
         static let isClose = "isClose"
@@ -59,6 +64,8 @@ struct Constants {
     static let BLENameData = "kCBAdvDataLocalName";
     static let BLEAdvDataServiceUUIDs = "kCBAdvDataServiceUUIDs";
     static let QurhomeDefaultUI = "QurhomeDefaultUI";
+    static let IsAppLockChecked = "IsAppLockChecked";
+    static let call = "call";
     static let Mike = "Mike";
     static let WOWGOSPO2 = "GSH601";
     static let WOWGOBP = "GSH862";
@@ -67,4 +74,6 @@ struct Constants {
     static let WOWGOWT2 = "GSH-231";
     static let WOWGOWT3 = "0202B-0001";
     static let closeSheelaDialog = "closeSheelaDialog"
+    static let deviceInformationServiceUUID = CBUUID(string: "180a")
+    static let deviceSerialNumberServiceUUID = CBUUID(string: "2A25")
 }

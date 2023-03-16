@@ -3,11 +3,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_geocoder/geocoder.dart';
 // import 'package:geocoder/geocoder.dart';  FU2.5
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -63,6 +65,8 @@ class QurhomeRegimenController extends GetxController {
   var SOSAgentNumberEmptyMsg = "".obs;
   var currLoggedEID = "".obs;
 
+  var dateHeader = "".obs;
+
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
 
@@ -73,6 +77,8 @@ class QurhomeRegimenController extends GetxController {
 
   Timer? timer;
 
+  var isFirstTime = true.obs;
+
   getRegimenList({bool isLoading = true}) async {
     try {
       if (!isLoading) {
@@ -80,13 +86,16 @@ class QurhomeRegimenController extends GetxController {
       }
       loadingData.value = true;
       qurHomeRegimenResponseModel = await (_apiProvider.getRegimenList("") as FutureOr<RegimentResponseModel?>);
-      loadingData.value = false;
-      loadingDataWithoutProgress.value = false;
+
       qurHomeRegimenResponseModel!.regimentsList!.removeWhere((element) =>
           element.isEventDisabled && !element.isSymptom ||
-          !element.scheduled);
-      for (int i = 0;
-          i < qurHomeRegimenResponseModel!.regimentsList!.length ?? 0 as bool;
+          !element.scheduled &&
+              !(element.dayrepeat?.trim().toLowerCase() ==
+                  strText.trim().toLowerCase()));
+    bool allActivitiesCompleted=true;
+
+    for (int i = 0;
+          i < qurHomeRegimenResponseModel.regimentsList?.length ?? 0;
           i++) {
         String strCurrLoggedEID = CommonUtil().validString(currLoggedEID.value);
         String strCurrRegimenEID = CommonUtil().validString(
@@ -96,6 +105,7 @@ class QurhomeRegimenController extends GetxController {
           nextRegimenPosition = i;
           currentIndex = i;
           currLoggedEID.value = "";
+          allActivitiesCompleted=false;
           restartTimer();
           break;
         } else if (DateTime.now()
@@ -105,15 +115,29 @@ class QurhomeRegimenController extends GetxController {
             if (qurHomeRegimenResponseModel!.regimentsList!.length > (i + 1)) {
               nextRegimenPosition = i + 1;
               currentIndex = i + 1;
+              allActivitiesCompleted=false;
+
+
             } else {
               nextRegimenPosition = i;
               currentIndex = i;
+              allActivitiesCompleted=false;
+
+
             }
           } else {
             nextRegimenPosition = i;
             currentIndex = i;
+            allActivitiesCompleted=false;
+
           }
           break;
+        }
+      }
+      if(allActivitiesCompleted){
+        if((qurHomeRegimenResponseModel?.regimentsList?.length ?? 0)>0){
+          nextRegimenPosition = qurHomeRegimenResponseModel?.regimentsList?.length-1;
+          currentIndex = qurHomeRegimenResponseModel?.regimentsList?.length-1;
         }
       }
       for (int i = 0;
@@ -141,14 +165,20 @@ class QurhomeRegimenController extends GetxController {
           }
         }
       }
-
+      loadingData.value = false;
+      loadingDataWithoutProgress.value = false;
       qurhomeDashboardController.getValuesNativeAppointment();
 
       update(["newUpdate"]);
-      getUserDetails();
-      getCareCoordinatorId();
+      if (isFirstTime.value) {
+        isFirstTime.value = false;
+        getUserDetails();
+        getCareCoordinatorId();
+      }
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
     }
@@ -160,33 +190,23 @@ class QurhomeRegimenController extends GetxController {
       timer?.cancel();
       super.onClose();
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
   @override
   void onInit() {
-    try {
-      super.onInit();
-    } catch (e) {
-      print(e);
-    }
+    super.onInit();
   }
 
   updateTimerValue(double value) async {
-    try {
-      timerProgress.value = value;
-    } catch (e) {
-      print(e);
-    }
+    timerProgress.value = value;
   }
 
   updateisShowTimerDialog(bool value) async {
-    try {
-      isShowTimerDialog.value = value;
-    } catch (e) {
-      print(e);
-    }
+    isShowTimerDialog.value = value;
   }
 
   getCurrentLocation() async {
@@ -207,11 +227,15 @@ class QurhomeRegimenController extends GetxController {
             .then((Position position) {
           getAddressFromLatLng(position.latitude, position.longitude);
         }).catchError((e) {
-          print(e);
+          if (kDebugMode) {
+            printError(info: e.toString());
+          }
         });
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -243,7 +267,9 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -279,12 +305,13 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
-  callSOSEmergencyServices(int flag) async
-  {
+  callSOSEmergencyServices(int flag) async {
     try {
       //flag == 0 SOS Call
       //flag == 1 Normal Call
@@ -329,7 +356,7 @@ class QurhomeRegimenController extends GetxController {
                 patienInfo: null,
                 patientPrescriptionId: userId.value,
                 callType: 'audio',
-                isFrom: isFromSOS.value?"SOS":"")
+                isFrom: isFromSOS.value ? "SOS" : "")
             .then((value) {
           //onGoingSOSCall.value = true;
         });
@@ -338,7 +365,9 @@ class QurhomeRegimenController extends GetxController {
             'Could not start call due to permission issue', Colors.red);
       }
     } catch (e) {
-      //print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -361,7 +390,9 @@ class QurhomeRegimenController extends GetxController {
               .validString(prof.result!.userContactCollection3![0]!.phoneNumber)
           : '';
     } catch (e) {
-      //print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -387,26 +418,27 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
-      //print(e.toString());
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
   void updateSOSAgentCallDialogStatus(bool newStatus) {
-    try {
-      isSOSAgentCallDialogOpen.value = newStatus;
-    } catch (e) {
-      //print(e);
-    }
+    isSOSAgentCallDialogOpen.value = newStatus;
   }
 
   void startTimer() {
     try {
       //30 seconds API calling
       timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
+        dateHeader.value = getFormatedDate();
         getRegimenList(isLoading: false);
       });
     } catch (e) {
-      //print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -415,16 +447,20 @@ class QurhomeRegimenController extends GetxController {
       timer?.cancel();
       startTimer();
     } catch (e) {
-      //print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
   showCurrLoggedRegimen(RegimentDataModel regimen) {
-    try {
-      currLoggedEID.value = CommonUtil().validString(regimen.eid.toString());
-      getRegimenList();
-    } catch (e) {
-      //print(e);
-    }
+    currLoggedEID.value = CommonUtil().validString(regimen?.eid?.toString());
+    getRegimenList();
+  }
+
+  String getFormatedDate() {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd MMM yyyy').format(now);
+    return formattedDate;
   }
 }

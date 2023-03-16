@@ -8,7 +8,9 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/video_call/model/videocallStatus.dart';
@@ -326,7 +328,12 @@ class _MyControllersState extends State<MyControllers> {
 
   void _onCallEnd(BuildContext context) async {
     if (Platform.isIOS) {
-      Navigator.pop(context);
+      if (PreferenceUtil.getCallNotificationReceived()) {
+        PreferenceUtil.setCallNotificationRecieved(isCalled: false);
+         Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context) => SplashScreen(isFromCallScreen: true)), (route) => false);
+      } else {
+        Navigator.pop(context);
+      }
     } else {
       if (widget.isAppExists!) {
         Navigator.pop(context);

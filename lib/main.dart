@@ -21,6 +21,8 @@ import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
@@ -270,11 +272,17 @@ Future<void> main() async {
     }
 
     // check if the app install on first time
-    var isFirstTime = await CommonUtil().isFirstTime();
-    if (!isFirstTime) {
-      try {
+    try {
+      var isFirstTime = await CommonUtil().isFirstTime();
+      var tokenForLogin =
+          await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      if (!isFirstTime && (tokenForLogin ?? '').isNotEmpty) {
         CategoryListBlock().getCategoryLists();
-      } catch (e) {}
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
     // SystemChrome.setSystemUIOverlayStyle(
     //   const SystemUiOverlayStyle(
@@ -971,6 +979,18 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.to(ManageActivitiesScreen())!.then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
+        }  else if (passedValArr[1] == strAppointmentDetail) {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'appointmentDetail',
+            'navigationPage': 'Appointment Detail Page',
+          });
+          if (passedValArr[2] != null) {
+            AppointmentDetailsController appointmentDetailsController =
+                CommonUtil().onInitAppointmentDetailsController();
+            appointmentDetailsController.getAppointmentDetail(passedValArr[2]);
+            Get.to(() => AppointmentDetailScreen());
+          }
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1530,73 +1550,85 @@ class _MyFHBState extends State<MyFHB> {
                 nsRoute: 'manageActivities',
                 bundle: parsedData[2],
               );
+            } else if (parsedData[1] == strAppointmentDetail) {
+              if (parsedData[2] != null) {
+                return SplashScreen(
+                    nsRoute: strAppointmentDetail, bundle: navRoute);
+              }
             } else {
               return SplashScreen(
                 nsRoute: '',
               );
             }
+          }else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
+            return SplashScreen(
+                nsRoute: 'DoctorRescheduling',
+                doctorID: navRoute.split('&')[1],
+                bookingID: navRoute.split('&')[2],
+                doctorSessionId: navRoute.split('&')[3],
+                healthOrganizationId: navRoute.split('&')[4],
+                templateName: navRoute.split('&')[5]);
+          } else if (navRoute.split('&')[0] == 'DoctorCancellation') {
+            return SplashScreen(
+              nsRoute: 'DoctorCancellation',
+              bookingID: navRoute.split('&')[1],
+              appointmentDate: navRoute.split('&')[2],
+              templateName: navRoute.split('&')[3],
+            );
+          } else if (navRoute.split('&')[0] == 'accept' ||
+              navRoute.split('&')[0] == 'decline') {
+            final jsonInput = {};
+            jsonInput['providerRequestId'] = navRoute.split('&')[1];
+            jsonInput['action'] = navRoute.split('&')[2];
+            // var body = {
+            //   "templateName": 'GoFHBDoctorOnboardingByHospital',
+            //   "contextId": parsedData[1]
+            // };
+            return SplashScreen();
+          } else if (navRoute.split('&')[0] == 'openurl') {
+            return SplashScreen(
+              nsRoute: 'openurl',
+              bundle: navRoute.split('&')[1],
+            );
+          } else if (navRoute.split('&')[0] == 'Renew' ||
+              navRoute.split('&')[0] == 'Callback') {
+            return SplashScreen(
+              nsRoute: navRoute.split('&')[0],
+              bundle: {
+                'planid': '${navRoute.split('&')[1]}',
+                'template': '${navRoute.split('&')[2]}',
+                'userId': '${navRoute.split('&')[3]}',
+                'patName': '${navRoute.split('&')[4]}'
+              },
+            );
+          } else if (navRoute.split('&')[0] == 'myplandetails') {
+            return SplashScreen(
+              nsRoute: navRoute.split('&')[0],
+              bundle: {
+                'planid': '${navRoute.split('&')[1]}',
+                'template': '${navRoute.split('&')[2]}',
+                'userId': '${navRoute.split('&')[3]}',
+                'patName': '${navRoute.split('&')[4]}'
+              },
+            );
+          } else if (navRoute.split('&')[0] == 'claimList') {
+            return SplashScreen(
+              nsRoute: navRoute.split('&')[0],
+              bundle: {
+                'claimId': '${navRoute.split('&')[1]}',
+                'userId': '${navRoute.split('&')[2]}'
+              },
+            );
+          } else if (parsedData?.asMap()?.containsKey(4)) {
+            if (parsedData[4] == call) {
+              return SplashScreen(
+                nsRoute: parsedData[4],
+                bundle: navRoute,
+              );
+            }
+          } else {
+            return SplashScreen();
           }
-        } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
-          return SplashScreen(
-              nsRoute: 'DoctorRescheduling',
-              doctorID: navRoute.split('&')[1],
-              bookingID: navRoute.split('&')[2],
-              doctorSessionId: navRoute.split('&')[3],
-              healthOrganizationId: navRoute.split('&')[4],
-              templateName: navRoute.split('&')[5]);
-        } else if (navRoute.split('&')[0] == 'DoctorCancellation') {
-          return SplashScreen(
-            nsRoute: 'DoctorCancellation',
-            bookingID: navRoute.split('&')[1],
-            appointmentDate: navRoute.split('&')[2],
-            templateName: navRoute.split('&')[3],
-          );
-        } else if (navRoute.split('&')[0] == 'accept' ||
-            navRoute.split('&')[0] == 'decline') {
-          final jsonInput = {};
-          jsonInput['providerRequestId'] = navRoute.split('&')[1];
-          jsonInput['action'] = navRoute.split('&')[2];
-          // var body = {
-          //   "templateName": 'GoFHBDoctorOnboardingByHospital',
-          //   "contextId": parsedData[1]
-          // };
-          return SplashScreen();
-        } else if (navRoute.split('&')[0] == 'openurl') {
-          return SplashScreen(
-            nsRoute: 'openurl',
-            bundle: navRoute.split('&')[1],
-          );
-        } else if (navRoute.split('&')[0] == 'Renew' ||
-            navRoute.split('&')[0] == 'Callback') {
-          return SplashScreen(
-            nsRoute: navRoute.split('&')[0],
-            bundle: {
-              'planid': '${navRoute.split('&')[1]}',
-              'template': '${navRoute.split('&')[2]}',
-              'userId': '${navRoute.split('&')[3]}',
-              'patName': '${navRoute.split('&')[4]}'
-            },
-          );
-        } else if (navRoute.split('&')[0] == 'myplandetails') {
-          return SplashScreen(
-            nsRoute: navRoute.split('&')[0],
-            bundle: {
-              'planid': '${navRoute.split('&')[1]}',
-              'template': '${navRoute.split('&')[2]}',
-              'userId': '${navRoute.split('&')[3]}',
-              'patName': '${navRoute.split('&')[4]}'
-            },
-          );
-        } else if (navRoute.split('&')[0] == 'claimList') {
-          return SplashScreen(
-            nsRoute: navRoute.split('&')[0],
-            bundle: {
-              'claimId': '${navRoute.split('&')[1]}',
-              'userId': '${navRoute.split('&')[2]}'
-            },
-          );
-        } else {
-          return StartTheCall();
         }
       } catch (e) {}
     }
@@ -1677,58 +1709,6 @@ class _MyFHBState extends State<MyFHB> {
         });
         break;
     }
-  }
-
-  Widget StartTheCall() {
-    var docPic = navRoute.split('&')[3];
-    var patPic = navRoute.split('&')[7];
-    var callType = navRoute.split('&')[8];
-    var isWeb = navRoute.split('&')[9] == null
-        ? false
-        : navRoute.split('&')[9] == 'true'
-            ? true
-            : false;
-    try {
-      if (docPic.isNotEmpty) {
-        try {
-          docPic = json.decode(navRoute.split('&')[3]);
-        } catch (e) {}
-      } else {
-        docPic = '';
-      }
-      if (patPic.isNotEmpty) {
-        try {
-          patPic = json.decode(navRoute.split('&')[7]);
-        } catch (e) {}
-      } else {
-        patPic = '';
-      }
-    } catch (e) {}
-    fbaLog(eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'ns_type': 'call',
-      'navigationPage': 'TeleHelath Call screen',
-    });
-
-    if (callType.toLowerCase() == 'audio') {
-      Provider.of<AudioCallProvider>(Get.context!, listen: false)
-          .enableAudioCall();
-    } else if (callType.toLowerCase() == 'video') {
-      Provider.of<AudioCallProvider>(Get.context!, listen: false)
-          .disableAudioCall();
-    }
-    return CallMain(
-      isAppExists: false,
-      role: ClientRole.Broadcaster,
-      channelName: navRoute.split('&')[0],
-      doctorName: navRoute.split('&')[1] ?? 'Test',
-      doctorId: navRoute.split('&')[2] ?? 'Doctor',
-      doctorPic: docPic,
-      patientId: navRoute.split('&')[5] ?? 'Patient',
-      patientName: navRoute.split('&')[6] ?? 'Test',
-      patientPicUrl: patPic,
-      isWeb: isWeb,
-    );
   }
 
   void onBoardNSAcknowledge(data, body) {

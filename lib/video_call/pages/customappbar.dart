@@ -43,7 +43,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       Row(
                         children: [
                           Text(
-                            (widget.userName.isEmpty || widget.userName != null)
+                            (widget.userName != null)
                                 ? widget.userName
                                 : '',
                             style: TextStyle(

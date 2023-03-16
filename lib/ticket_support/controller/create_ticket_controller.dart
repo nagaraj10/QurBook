@@ -1,12 +1,18 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/landing/model/membership_detail_response.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
+import 'package:myfhb/ticket_support/services/ticket_service.dart';
 
 class CreateTicketController extends GetxController {
   List<Hospitals>? labsList = [];
@@ -32,7 +38,12 @@ class CreateTicketController extends GetxController {
   var strAddressLine = "".obs;
   var strCityName = "".obs;
   var strPincode = "".obs;
+   var strStateName = "".obs;
 
+
+  UserTicketService userTicketService = UserTicketService();
+
+   
   @override
   void onClose() {
     try {
@@ -120,6 +131,40 @@ class CreateTicketController extends GetxController {
       doctorsList!.insert(0, new Doctors(user: User(name: 'Select')));
       isCTLoading.value = false;
       isPreferredDoctorDisable.value = true;
+    }
+  }
+
+  getProviderList(String type,Field field) async {
+    try {
+      isCTLoading.value = true;
+      List<FieldData> providerList = [];
+
+      MemberShipDetailResponse memberShipDetailResponse =
+          await userTicketService.getProviderList(type);
+
+      if (memberShipDetailResponse != null &&
+          memberShipDetailResponse.result != null &&
+          memberShipDetailResponse.result.length > 0) {
+        memberShipDetailResponse?.result?.forEach((element) {
+          providerList.add(FieldData.fromJson({
+            id_sheela: element?.healthOrganizationId??"",
+            strName: element?.healthOrganizationName??"",
+          }));
+        });
+      }
+
+      providerList.add(FieldData.fromJson({
+        id_sheela: strOthers,
+        strName: toBeginningOfSentenceCase(strOthers),
+      }));
+
+      field.setFieldData(providerList);
+
+      isCTLoading.value = false;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
   }
 }

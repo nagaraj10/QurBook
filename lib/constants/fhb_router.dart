@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/add_address/models/AddAddressArguments.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_arguments.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/claim/screen/ClaimList.dart';
@@ -87,9 +90,18 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_Dashboard: (context) => DevicesScreen(),
     router.rt_Regimen: (context) =>
         RegimentScreen(aruguments: ModalRoute.of(context)!.settings.arguments as RegimentArguments?),
-    router.rt_Landing: (context) => LandingScreen(
+    router.rt_Landing: (context) {
+      if (CommonUtil.REGION_CODE == "US") {
+        // US
+        Get.lazyPut(() => QurhomeDashboardController());
+        return QurhomeDashboard();
+      } else {
+        // IN
+        return LandingScreen(
           landingArguments: ModalRoute.of(context)!.settings.arguments as LandingArguments?,
-        ),
+        );
+      }
+    },
     router.rt_ManageActivitiesScreen: (context) => ManageActivitiesScreen(),
     router.rt_MyPlans: (context) => MyPlansScreen(),
     router.rt_Plans: (context) => PlansScreen(),

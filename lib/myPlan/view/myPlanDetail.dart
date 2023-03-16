@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -83,9 +82,8 @@ class PlanDetail extends State<MyPlanDetail> {
   String isExtendable = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  InAppWebViewController? webView;
   bool? showRenewOrSubscribeButton = false;
-  late Future<MyPlanListModel?> planListFetch; // FUcash add late
+  Future<MyPlanListModel>? planListFetch;
   String? packageDuration;
   @override
   void initState() {

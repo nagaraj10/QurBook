@@ -131,11 +131,11 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       controller.updateNewChatFloatShown(false);
       mInitialTime = DateTime.now();
-      dbInitialize();
+      // dbInitialize();
       userId = PreferenceUtil.getStringValue(KEY_USERID);
-      QurPlanReminders.getTheRemindersFromAPI();
+      // QurPlanReminders.getTheRemindersFromAPI();
       Provider.of<ChatSocketViewModel>(Get.context!)?.initSocket();
-      callImportantsMethod();
+      await callImportantsMethod();
       moveToQurhome();
       callGetFamiltMappingCaregiver();
       var profilebanner =
@@ -156,24 +156,24 @@ class _LandingScreenState extends State<LandingScreen> {
             .getQurPlanDashBoard();
       }
       Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
-      Future.delayed(const Duration(seconds: 1)).then((_) {
-        if (Platform.isIOS) {
-          if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
-            changeTabToAppointments();
-          }
-        }
-      });
+      // Future.delayed(const Duration(seconds: 1)).then((_) {
+      //   if (Platform.isIOS) {
+      //     if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
+      //       changeTabToAppointments();
+      //     }
+      //   }
+      // });
 
-      initSocket();
+       CommonUtil().initSocket();
       sheelBadgeController.getSheelaBadgeCount();
     } catch (e) {
       print(e);
     }
   }
 
-  void initSocket() {
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket!
+  /*void initSocket() {
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
         .off(getChatTotalCountOn);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
@@ -203,7 +203,7 @@ class _LandingScreenState extends State<LandingScreen> {
         }
       }
     });
-  }
+  }*/
 
   @override
   void dispose() {

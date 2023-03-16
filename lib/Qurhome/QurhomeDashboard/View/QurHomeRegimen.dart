@@ -12,7 +12,6 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
@@ -36,6 +35,8 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
@@ -54,7 +55,7 @@ class QurHomeRegimenScreen extends StatefulWidget {
 
 class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  final controller = Get.put(QurhomeRegimenController());
+  final controller = CommonUtil().onInitQurhomeRegimenController();
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
   String? snoozeValue = "5 mins";
@@ -62,7 +63,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   HubListViewController hubController = Get.find();
   late SheelaBLEController _sheelaBLEController;
-  var chatGetXController = Get.find<ChatUserListController>();
+  ChatUserListController chatGetXController;
 
   AnimationController? animationController;
 
@@ -74,7 +75,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   @override
   void initState() {
     try {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.dateHeader.value = controller.getFormatedDate();
+      });
+
+      if (!Get.isRegistered<ChatUserListController>()) {
+        Get.put(ChatUserListController());
+      }
+      chatGetXController = Get.find();
       controller.currLoggedEID.value = "";
+      controller.isFirstTime.value = true;
       controller.getRegimenList();
       chatGetXController.getUnreadCountFamily().then(
         (value) {
@@ -210,8 +220,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             GestureDetector(
               onTap: () {
                 try {
-                  FHBUtils().check().then((intenet) {
+                  FHBUtils().check().then((intenet) async {
                     if (intenet != null && intenet) {
+                      if (CommonUtil().isTablet &&
+                          controller.careCoordinatorId.value.trim().isEmpty) {
+                        await controller.getCareCoordinatorId();
+                      }
                       initSOSCall();
                     } else {
                       FlutterToast().getToast(
@@ -281,7 +295,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 child: Container(
                   child: PageView.builder(
                     itemCount:
-                        val.qurHomeRegimenResponseModel!.regimentsList!.length,
+                        val.qurHomeRegimenResponseModel!.regimentsList!.length +
+                            1,
                     scrollDirection: Axis.vertical,
                     onPageChanged: (int index) {
                       setState(() {
@@ -292,13 +307,40 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         initialPage: val.nextRegimenPosition,
                         viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
                     itemBuilder: (BuildContext context, int itemIndex) {
-                      return _buildCarouselItem(
-                          context,
-                          itemIndex,
-                          val.qurHomeRegimenResponseModel!
-                              .regimentsList![itemIndex],
-                          val.nextRegimenPosition,
-                          isPortrait);
+                      if (itemIndex ==
+                          (val.qurHomeRegimenResponseModel!.regimentsList
+                              .length)) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 22.0),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                noMoreActivity,
+                                height: 50,
+                                width: 50,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                noMoreActivites,
+                                style: TextStyle(
+                                    color: Color(
+                                  CommonUtil().getQurhomePrimaryColor(),
+                                )),
+                              )
+                            ],
+                          ),
+                        );
+                      } else {
+                        return _buildCarouselItem(
+                            context,
+                            itemIndex,
+                            val.qurHomeRegimenResponseModel!
+                                .regimentsList![itemIndex],
+                            val.nextRegimenPosition,
+                            isPortrait);
+                      }
                     },
                   ),
                 ),
@@ -937,6 +979,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             },
             onPressCancel: () async {
               Get.back();
+              hubController.eid = null;
+              hubController.uid = null;
               _sheelaBLEController.stopTTS();
               _sheelaBLEController.stopScanning();
             },
@@ -944,6 +988,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             isFromVital: false,
           );
           _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.filteredDeviceType = 'spo2';
           _sheelaBLEController.setupListenerForReadings();
         } else {
           FlutterToast().getToast(
@@ -976,12 +1021,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             },
             onPressCancel: () async {
               Get.back();
+              hubController.eid = null;
+              hubController.uid = null;
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
             },
             title: strConnectBpMeter,
             isFromVital: false,
           );
           _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.filteredDeviceType = 'bp';
           _sheelaBLEController.setupListenerForReadings();
         } else {
           FlutterToast().getToast(
@@ -1013,6 +1062,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             },
             onPressCancel: () async {
               Get.back();
+              hubController.eid = null;
+              hubController.uid = null;
               _sheelaBLEController.stopTTS();
               _sheelaBLEController.stopScanning();
             },
@@ -1020,6 +1071,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             isFromVital: false,
           );
           _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.filteredDeviceType = 'weight';
           _sheelaBLEController.setupListenerForReadings();
         } else {
           FlutterToast().getToast(
@@ -1665,9 +1717,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   void dispose() {
     try {
       if (animationController != null) {
+        animationController!.removeListener(() {});
         animationController!.dispose();
       }
-      _events.close();
+      _events?.close();
       WidgetsBinding.instance!.removeObserver(this);
       super.dispose();
     } catch (e) {

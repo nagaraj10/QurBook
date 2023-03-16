@@ -30,24 +30,29 @@ class ChatHistoryResult {
   String? chatListId;
   String? deliveredDateTime;
   bool? isRead;
+  bool? isCommonContent;
+
   //int messageType;
   Messages? messages;
   var documentId;
 
   ChatHistoryResult(
       {this.id,
-        this.chatListId,
-        this.deliveredDateTime,
-        this.isRead,
-        //this.messageType,
-        this.messages,
-        this.documentId});
+      this.chatListId,
+      this.deliveredDateTime,
+      this.isRead,
+      this.isCommonContent,
+      //this.messageType,
+      this.messages,
+      this.documentId});
 
   ChatHistoryResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     chatListId = json['chatListId'];
     deliveredDateTime = json['deliveredDateTime'];
     isRead = json['isRead'];
+    isCommonContent =
+        json['isCommonContent'] != null ? json['isCommonContent'] : false;
     //messageType = json['type'];
     messages = json['messages'] != null
         ? new Messages.fromJson(json['messages'])
@@ -61,7 +66,8 @@ class ChatHistoryResult {
     data['chatListId'] = this.chatListId;
     data['deliveredDateTime'] = this.deliveredDateTime;
     data['isRead'] = this.isRead;
-   //data['messageType'] = this.messageType;
+    data['isCommonContent'] = this.isCommonContent;
+    //data['messageType'] = this.messageType;
     if (this.messages != null) {
       data['messages'] = this.messages!.toJson();
     }
@@ -81,12 +87,12 @@ class Messages {
 
   Messages(
       {this.id,
-        this.idTo,
-        this.type,
-        this.idFrom,
-        this.isread,
-        this.content,
-        this.timestamp});
+      this.idTo,
+      this.type,
+      this.idFrom,
+      this.isread,
+      this.content,
+      this.timestamp});
 
   Messages.fromJson(Map<String, dynamic> json) {
     id = json['id'];

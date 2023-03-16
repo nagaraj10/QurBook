@@ -178,21 +178,6 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   createTicketController.doctorsList = [];
                 }
 
-                /*try {
-                  final index = ticketList[i].additionalInfo.field.indexWhere(
-                      (element) => element.name == "mode_of_service");
-                  if (index >= 0) {
-                    List<FieldData> fieldData =
-                        ticketList[i].additionalInfo.field[index].fieldData;
-                    if (fieldData != null && fieldData.length > 0) {
-                      createTicketController.modeOfServiceList =
-                          ticketList[i].additionalInfo.field[index].fieldData;
-                    }
-                  }
-                } catch (e) {
-                  //print(e);
-                }*/
-
                 ticketList[i].additionalInfo != null
                     ? Navigator.pushReplacement(
                         context,
@@ -202,7 +187,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                       )
                     : null;
               } catch (e) {
-                print(e);
+                //print(e);
               }
             },
             child: Container(

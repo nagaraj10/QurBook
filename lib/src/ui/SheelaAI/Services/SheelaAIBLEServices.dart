@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -26,7 +28,7 @@ class SheelaBLEController extends GetxController {
   late SheelaAIController SheelaController;
   late HubListViewController hublistController;
   Stream stream = EventChannel('QurbookBLE/stream').receiveBroadcastStream();
-  StreamSubscription? _timerSubscription;
+  StreamSubscription? timerSubscription;
 
   Timer? timeOutTimer;
   final String conversationType = "BLESheelaConversations";
@@ -39,6 +41,8 @@ class SheelaBLEController extends GetxController {
   bool receivedData = false;
   late AudioPlayer player;
   int randomNum = 0;
+  String weightUnit = "";
+  String filteredDeviceType = '';
 
   @override
   void onInit() {
@@ -53,16 +57,13 @@ class SheelaBLEController extends GetxController {
     player.onPlayerStateChanged.listen(
       (event) async {
         if (event == PlayerState.COMPLETED) {
+          isPlaying = false;
           if ((playConversations ?? []).isNotEmpty) {
-            playConversations.removeAt(0);
-            isPlaying = false;
-            if (isCompleted) {
-              await Future.delayed(const Duration(seconds: 4));
-              stopTTS();
-            }
-            if ((playConversations ?? []).isNotEmpty) {
-              playTTS();
-            }
+            playTTS();
+          } else if (isCompleted) {
+            await Future.delayed(const Duration(seconds: 4));
+            stopTTS();
+            if (SheelaController?.isSheelaScreenActive ?? false) Get.back();
           }
         }
       },
@@ -96,12 +97,19 @@ class SheelaBLEController extends GetxController {
   }
 
   void _enableTimer() {
-    if (_timerSubscription != null) {
+    if (timerSubscription != null) {
       return;
     }
 
-    _timerSubscription = stream.listen(
+    timerSubscription = stream.listen(
       (val) async {
+        print("Val in ");
+
+        if (val == null || val == "") {
+          return;
+        }
+
+        print("Val in " + val.toString());
         final List<String>? receivedValues = val.split('|');
         if ((receivedValues ?? []).length > 0) {
           switch (receivedValues!.first ?? "") {
@@ -153,16 +161,15 @@ class SheelaBLEController extends GetxController {
               //   Colors.red,
               // );
               if (!checkForParedDevice()) {
-                _disableTimer();
+                //_disableTimer();
                 return;
               }
-              if (hublistController.bleDeviceType!.toLowerCase() ==
-                      "SPO2".toLowerCase() ||
-                  hublistController.bleDeviceType!.toLowerCase() ==
-                      "BP".toLowerCase() ||
-                  hublistController.bleDeviceType!.toLowerCase() ==
-                      "weight".toLowerCase()) {
-                //show next method
+              String deviceType =
+                  hublistController.bleDeviceType!.toLowerCase() ?? '';
+              if (deviceType.isNotEmpty &&
+                  (deviceType == "SPO2".toLowerCase() ||
+                      deviceType == "BP".toLowerCase() ||
+                      deviceType == "weight".toLowerCase())) {
                 if (isFromVitals || isFromRegiment) {
                   Get.back();
                 }
@@ -173,23 +180,33 @@ class SheelaBLEController extends GetxController {
                       takeActiveDeviceReadings: true,
                     ),
                   ),
-                )!.then((_) {
-                  Future.delayed(const Duration(seconds: 1)).then((value) {
-                    Get.find<VitalDetailController>().getData();
+                ).then((_) {
+                  Future.delayed(const Duration(seconds: 1)).then((_) {
+                    if (Get.isRegistered<VitalDetailController>())
+                      Get.find<VitalDetailController>().getData();
                   });
-                  Future.delayed(const Duration(seconds: 1)).then((value) {
-                    Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                        hublistController.eid!;
-                    Get.find<QurhomeRegimenController>().getRegimenList();
+
+                  Future.delayed(const Duration(seconds: 1)).then((_) {
+                    if (Get.isRegistered<QurhomeRegimenController>()) {
+                      Get.find<QurhomeRegimenController>().currLoggedEID.value =
+                          hublistController?.eid ?? '';
+                      Get.find<QurhomeRegimenController>().getRegimenList();
+                    }
                   });
                 });
               }
               break;
             case "measurement":
+              if (!checkForParedDevice()) return;
+              String deviceType =
+                  hublistController.bleDeviceType?.toLowerCase() ?? '';
+              if (!checkForParedDevice()) {
+                return;
+              }
               receivedData = true;
-              if (hublistController.bleDeviceType!.toLowerCase() ==
-                  "BP".toLowerCase()) {
-                //show next method
+              if (deviceType == "BP".toLowerCase() ||
+                  deviceType == "SPO2".toLowerCase() ||
+                  deviceType == "Weight".toLowerCase()) {
                 if (SheelaController.isSheelaScreenActive) {
                   updateUserData(
                     data: receivedValues.last,
@@ -205,14 +222,19 @@ class SheelaBLEController extends GetxController {
                       takeActiveDeviceReadings: true,
                     ),
                   ),
-                )!.then((_) {
+                ).then((_) {
+                  if (Get.isRegistered<VitalDetailController>())
+                    Future.delayed(const Duration(seconds: 1)).then((value) {
+                      if (Get.isRegistered<VitalDetailController>())
+                        Get.find<VitalDetailController>().getData();
+                    });
+
                   Future.delayed(const Duration(seconds: 1)).then((value) {
-                    Get.find<VitalDetailController>().getData();
-                  });
-                  Future.delayed(const Duration(seconds: 1)).then((value) {
-                    Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                        hublistController.eid!;
-                    Get.find<QurhomeRegimenController>().getRegimenList();
+                    if (Get.isRegistered<QurhomeRegimenController>()) {
+                      Get.find<QurhomeRegimenController>().currLoggedEID.value =
+                          hublistController?.eid ?? '';
+                      Get.find<QurhomeRegimenController>().getRegimenList();
+                    }
                   });
                 });
                 await Future.delayed(const Duration(seconds: 4));
@@ -222,11 +244,22 @@ class SheelaBLEController extends GetxController {
               );
               break;
             case "disconnected":
-              // FlutterToast().getToast(
-              //   "Bluetooth Disconnected",
-              //   Colors.red,
-              // );
+              if (!checkForParedDevice()) {
+                return;
+              }
+              FlutterToast().getToast(
+                "Bluetooth Disconnected",
+                Colors.red,
+              );
+              showFailure();
               break;
+            case "connectionfailed":
+              _disableTimer();
+              await Future.delayed(const Duration(seconds: 2));
+              setupListenerForReadings();
+
+              break;
+
             default:
           }
         }
@@ -247,7 +280,14 @@ class SheelaBLEController extends GetxController {
         (element) => (CommonUtil().validString(element.device!.serialNumber) ==
             hublistController.bleMacId),
       );
-      return index >= 0;
+      String deviceType = hublistController.bleDeviceType?.toLowerCase() ?? '';
+      bool filteredDeviceTypeCheck = true;
+      if (isFromVitals || isFromRegiment) {
+        if (filteredDeviceType.isNotEmpty) {
+          if (deviceType != filteredDeviceType) filteredDeviceTypeCheck = false;
+        }
+      }
+      return (index >= 0 && filteredDeviceTypeCheck);
     } catch (e) {
       printError(info: e.toString());
       return false;
@@ -286,7 +326,7 @@ class SheelaBLEController extends GetxController {
     var msg = '';
     if ((arguments.deviceType ?? '').isNotEmpty) {
       String strText = CommonUtil().validString(arguments.deviceType);
-      if (strText.toLowerCase() == "weight") {
+      if (strText?.toLowerCase() == "weight") {
         strText = "Weighing scale";
       }
       msg = "Your $strText device is connected & reading values. Please wait";
@@ -335,6 +375,27 @@ class SheelaBLEController extends GetxController {
         final model = BleDataModel.fromJson(
           jsonDecode(data),
         );
+        if (model.deviceType?.toLowerCase() == "weight" &&
+            (model.data!.weight ?? '').isNotEmpty) {
+          model.deviceType = model.deviceType?.toUpperCase();
+          try {
+            weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT)!;
+          } catch (e) {}
+          if ((weightUnit ?? '').isEmpty) {
+            weightUnit = CommonUtil.REGION_CODE == "IN"
+                ? STR_VAL_WEIGHT_IND
+                : STR_VAL_WEIGHT_US;
+          }
+          if (weightUnit == STR_VAL_WEIGHT_US) {
+            double convertedWeight = 1;
+            try {
+              convertedWeight = double.parse(model.data!.weight!);
+            } catch (e) {
+              convertedWeight = 1;
+            }
+            model.data.weight = (convertedWeight * 2.205).toStringAsFixed(2);
+          }
+        }
         // model.hubId = hublistController.virtualHubId;
         model.deviceId = hublistController.bleMacId;
         model.eid = hublistController.eid;
@@ -344,6 +405,7 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
+
         final bool response =
             await BleConnectApiProvider().uploadBleDataReadings(
           model,
@@ -362,12 +424,13 @@ class SheelaBLEController extends GetxController {
                     "Completed reading values. Please take your finger from the device",
               ),
             );
-            await Future.delayed(const Duration(seconds: 5));
-            addToConversationAndPlay(
+            // await Future.delayed(const Duration(seconds: 5));
+            // addToConversationAndPlay(
+            playConversations.add(
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your last reading for SPO2 is  ${model.data!.sPO2} and Pulse is ${model.data!.pulse} is successfully recorded, Bye!",
+                    "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye!.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -382,9 +445,23 @@ class SheelaBLEController extends GetxController {
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
-                text: "Thank you. Your BP systolic is ${model.data!.systolic} "
-                    ", Diastolic is ${model.data!.diastolic} "
-                    "and Pulse is ${model.data!.pulse} is successfully recorded, Bye!",
+                text: "Thank you. Your BP systolic ${model.data!.systolic} "
+                    ", Diastolic ${model.data!.diastolic} "
+                    "and Pulse ${model.data!.pulse} are successfully recorded. Bye!.",
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+          } else {
+            receivedData = false;
+            showFailure();
+          }
+        } else if (model.deviceType?.toLowerCase() == "weight") {
+          if ((model.data!.weight ?? '').isNotEmpty) {
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text:
+                    "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye!.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -441,6 +518,7 @@ class SheelaBLEController extends GetxController {
           textForPlaying = result.payload!.audioContent;
         }
       }
+      playConversations.removeAt(0);
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
           final bytes = base64Decode(textForPlaying!);
@@ -483,18 +561,19 @@ class SheelaBLEController extends GetxController {
     SheelaController.bleController = null;
     if (SheelaController.isSheelaScreenActive) {
       if (isFromVitals) {
-        Future.delayed(const Duration(seconds: 1)).then((value) {
-          Get.find<VitalDetailController>().getData();
-        });
+        if (Get.isRegistered<VitalDetailController>())
+          Future.delayed(const Duration(seconds: 1)).then((value) {
+            Get.find<VitalDetailController>().getData();
+          });
       }
       if (isFromRegiment) {
-        Future.delayed(const Duration(seconds: 1)).then((value) {
-          Get.find<QurhomeRegimenController>().currLoggedEID.value =
-              hublistController.eid!;
-          Get.find<QurhomeRegimenController>().getRegimenList();
-        });
+        if (Get.isRegistered<QurhomeRegimenController>())
+          Future.delayed(const Duration(seconds: 1)).then((value) {
+            Get.find<QurhomeRegimenController>().currLoggedEID.value =
+                hublistController.eid!;
+            Get.find<QurhomeRegimenController>().getRegimenList();
+          });
       }
-      Get.back();
     }
   }
 
@@ -513,9 +592,10 @@ class SheelaBLEController extends GetxController {
     isFromRegiment = false;
     addingDevicesInHublist = false;
     isFromVitals = false;
-    if (_timerSubscription != null) {
-      _timerSubscription!.cancel();
-      _timerSubscription = null;
+    filteredDeviceType = '';
+    if (timerSubscription != null) {
+      timerSubscription!.cancel();
+      timerSubscription = null;
     }
     removeTimeOutTimer();
   }

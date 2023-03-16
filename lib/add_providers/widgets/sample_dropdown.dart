@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../src/model/Media/media_result.dart';
 
@@ -120,14 +121,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void whenAllIsChecked(bool? val, String? name) {
-    if (name == 'ALL') {
-      for (var mediaResult in widget.mediaData!) {
-        if (mediaResult.name == 'Prescription' ||
-            mediaResult.name == 'Lab Report' ||
-            mediaResult.name == 'Medical Report' ||
-            mediaResult.name == 'Hospital Documents' ||
-            mediaResult.healthRecordCategory?.categoryName == 'Devices') {
+  void whenAllIsChecked(bool val, String name) {
+    if (name == STR_ALL) {
+      for (var mediaResult in widget.mediaData) {
+        if (mediaResult.name == STR_PRESCRIPTION ||
+            mediaResult.name == STR_LABREPORT ||
+            mediaResult.name == STR_MEDICALREPORT ||
+            mediaResult.name == STR_HOSPITALDOCUMENT ||
+            mediaResult.name == STR_PROVIDERDOCUMENTS ||
+            mediaResult.healthRecordCategory?.categoryName == STR_DEVICES) {
           mediaResult.isChecked = val;
         }
       }

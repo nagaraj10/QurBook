@@ -172,16 +172,17 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       }
       strName = CommonUtil().validString(ticket.type!.name ?? "").toLowerCase();
       final dataFields = ticket.dataFields;
-      if (strName.contains("transportation") ||
-          strName.contains("homecare services") ||
-          strName.contains("food delivery") ||
-          strName.contains("doctor appointment") ||
-          strName.contains("lab appointment") ||
-          strName.contains("general health")) {
+      if (strName.contains(variable.strTransportation) ||
+          strName.contains(variable.strHomecareServices) ||
+          strName.contains(variable.strFoodDelivery) ||
+          strName.contains(variable.strDoctorAppointment) ||
+          strName.contains(variable.strLabAppointment) ||
+          strName.contains(strOthers) ||
+          strName.contains(variable.strGeneralHealth)) {
         if (ticket.type!.additionalInfo != null && dataFields != null) {
           for (int i = 0; i < ticket.type!.additionalInfo!.field!.length; i++) {
-            Field field = ticket.type!.additionalInfo!.field![i];
-            List<FieldData>? fieldData = field.fieldData;
+            Field field = ticket.type!.additionalInfo!.field[i];
+            List<FieldData> fieldData = field.fieldData!;
             String fieldName = CommonUtil().validString(field.name ?? "");
             String displayName = CommonUtil().validString(field.displayName);
             displayName = displayName.trim().isNotEmpty
@@ -332,12 +333,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         ],
                       ),
                       SizedBox(height: 5.0),
-                      (strName.contains("transportation") ||
-                              strName.contains("homecare services") ||
-                              strName.contains("food delivery") ||
-                              strName.contains("doctor appointment") ||
-                              strName.contains("lab appointment") ||
-                          strName.contains("general health"))
+                      (strName.contains(variable.strTransportation) ||
+                              strName.contains(variable.strHomecareServices) ||
+                              strName.contains(variable.strFoodDelivery) ||
+                              strName.contains(variable.strDoctorAppointment) ||
+                              strName.contains(variable.strLabAppointment) ||
+                              strName.contains(strOthers) ||
+                          strName.contains(variable.strGeneralHealth))
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: widgetForColumn)

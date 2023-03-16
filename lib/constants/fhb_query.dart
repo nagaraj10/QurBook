@@ -262,6 +262,8 @@ const String qr_update_appointment_records = '/update-appointment-records';
 
 const String appointmentSlash = 'appointment/';
 const String patientIdEqualTo = 'chat-screen-details?patientId=';
+const String userIdChat = '&userId=';
+const String peerIdChat = '&peerId=';
 const String doctorIdEqualTo = '&doctorId=';
 const String device_health = 'device-health-record/';
 
@@ -417,3 +419,5 @@ const String updateSnoozeEvent = '/update-snoozed-event';
 const String user_activity_status = 'activity-master/user-activity-status?eid=';
 
 const String user_activity_status_date = '&date=';
+
+const String get_city_list = 'city/search/';

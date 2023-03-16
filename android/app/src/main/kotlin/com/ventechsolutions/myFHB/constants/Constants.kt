@@ -121,5 +121,14 @@ object Constants {
     val PROP_UUID ="uid"
 
     val CLOSE_SHEELA_DIALOG = "closeSheelaDialog"
+    val EVENT_TYPE = "eventType"
+    val OTHERS = "others"
+    val WRAPPERCALL = "wrapperCall"
+    val NOTIFICATIONLISTID = "notificationListId"
+    val APPOINTMENT_DETAIL = "appointmentDetail"
+
+    val idSheela = "id"
+    val eidSheela = "eid"
+    val sayTextSheela = "saytext"
 
 }

@@ -185,6 +185,7 @@ const String icon_digit_reco = 'assets/settings/digit_recognition.png';
 const String icon_device_recon = 'assets/settings/device_recognition.png';
 const String icon_provider = 'assets/navicons/my_providers.png';
 const String icon_orderHistory = 'assets/navicons/orderHistory.png';
+const String icon_lock = 'assets/settings/unlock.png';
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';
@@ -229,7 +230,8 @@ const String icon_modified = 'assets/icons/modified.svg';
 const String icon_mandatory = 'assets/icons/mandatory.svg';
 const String icon_language = 'assets/icons/language.png';
 const String icon_claim = 'assets/icons/claim.svg';
-
+const String icon_IndianFlag = 'assets/icons/India_flag.png';
+const String icon_USAFlag = 'assets/icons/USA_flag.png';
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';
 const String strUnderstood = 'Understood';
@@ -280,6 +282,7 @@ const String strCheckConnection = 'Check your connection or try again';
 const String strBackOnline = 'back to online';
 const String strNoConnection = 'no connection';
 const String strve = 've';
+const String callAppLockFeatureMethod = "callAppLockFeatureMethod";
 
 //new icons for menu
 const String activity_non_adherance =
@@ -294,13 +297,38 @@ const String strApprovAdd = 'This provider addition needs approval';
 //sheela respond by number
 const zero = "zero";
 const oneToNine = [
-  "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine"
 ];
 const tenToNinteen = [
-  "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+  "ten",
+  "eleven",
+  "twelve",
+  "thirteen",
+  "fourteen",
+  "fifteen",
+  "sixteen",
+  "seventeen",
+  "eighteen",
+  "nineteen"
 ];
 const dozens = [
-  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
+  "ten",
+  "twenty",
+  "thirty",
+  "forty",
+  "fifty",
+  "sixty",
+  "seventy",
+  "eighty",
+  "ninety"
 ];
 
 //for audioWidget
@@ -365,6 +393,7 @@ const String strDisplayPreferences = 'Display Preferences';
 
 const String strSkillsIntegration = 'Skills/Integration';
 const String strIntegration = 'Integration';
+const String strPrivacyAndSecurity = 'Privacy and Security';
 
 // for my family
 
@@ -613,6 +642,10 @@ const String strAllowDigit = 'Allow digit recognition';
 const String strScanDevices = 'scans for the values from device images';
 const String strAllowDevice = 'Allow device recognition';
 const String strScanAuto = 'scans and auto-detects devices';
+const String strAllowBiometric = 'Enable App lock';
+const String strEnableApplock =
+    'Allow app lock with FaceID/FingerPrint or Passcode';
+const String strAuthToUseApp = 'Please complete the authentication to proceed.';
 
 //for healthKit and googleFit activation and sync
 const String strGoogleFit = 'Google Fit';
@@ -625,6 +658,7 @@ const String strDefaultUI = 'Set Qurhome as default UI';
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
+const String strGoToQurbook = 'Go to Qurbook';
 const String strConnectedDevices = 'Connected Devices';
 const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
@@ -645,7 +679,7 @@ const String strConnectBpMeter =
     'Please connect your BP device and start recording';
 const String strConnectPulseMeter =
     'Please connect your pulse oximeter and start recording';
-    const String strConnectWeighingScale =
+const String strConnectWeighingScale =
     'Please connect your weighing scale and start recording';
 
 //introslider
@@ -748,15 +782,19 @@ const String str_far = 'Fahrenheit';
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
 const addReminderMethod = 'addReminder';
 const navigateToSheelaReminderMethod = 'navigateToSheelaReminderMethod';
+const notificationReceivedMethod = "notificationReceived";
 const removeReminderMethod = 'removeReminder';
 const removeAllReminderMethod = 'removeAllReminder';
 const navigateToRegimentMethod = 'navigateToRegiment';
 const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
+const reponseToTriggerAppLockMethodChannel =
+    MethodChannel('flutter.native.QurBook/appLockMethodChannel');
 const notificationResponseMethod = 'notificationResponse';
 const iOSMethodChannel = MethodChannel('flutter.native/iOS');
 const getWifiDetailsMethod = 'getWifiDetails';
 const listenToCallStatusMethod = 'listenToCallStatus';
+
 // True Desk
 
 const String strNoTicketsRaised = 'Tap on + icon to create new tickets';
@@ -785,6 +823,30 @@ const String strAlert = 'Alert';
 
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
+
+const String appointmentDetails = "Appointment Details";
+const String appointmentSchedule = "Schedule";
+const String appointmentInformation = "Appointment Information";
+const String appointmentTestName = "Test Name";
+const String appointmentAddress = "Address";
+const String appointmentLabAddress = "Lab Address";
+const String appointmentDescription = "Description";
+const String appointmentPickupaddress = "Pick up address";
+const String appointmentDropAddress = "Drop address";
+const String appointmentSlot = "Slot";
+const String appointmentHospitalName = "Hospital Name";
+const String appointmentHospitalAddress = "Hospital Address";
+const String strTransportation = "transportation";
+const String strDoctorAppointment = "doctor appointment";
+const String strLabAppointment = "lab appointment";
+const String strHomecareService = "homecare service";
+const String strGeneralHealth = "general health";
+const String strOrderPrescription = "order prescription";
+const String strCareDietPlan = "care/diet plan";
+const String strHomecareServices = "homecare services";
+const String strFoodDelivery = "food delivery";
+
+const String strGetCityList = 'Getting City List';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

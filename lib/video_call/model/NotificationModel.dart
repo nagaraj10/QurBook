@@ -15,43 +15,44 @@ class NotificationModel {
   bool? isCall = false;
   bool? needToHighlight = false;
   bool isCancellation = false;
-  String? meeting_id;
-  String? doctorId;
-  String? username;
-  String? type;
-  String? eventId;
-  String? rawTitle;
-  String? rawBody;
-  String? doctorName;
-  String? doctorPicture;
-  String? patientId;
-  String? careCoordinatorUserId;
-  String? careGiverName;
-  String? activityTime;
-  String? activityName;
-  String? patientName;
-  String? patientPicture;
-  String? externalLink;
-  String? patientPhoneNumber;
-  String? uid;
-  String? verificationCode;
-  String? caregiverRequestor;
-  String? caregiverReceiver;
-  CallArguments? callArguments;
-  bool? isWeb;
-  bool? isCaregiver;
-  String? deliveredDateTime;
-  bool? isFromCareCoordinator;
-  String? callType;
-  String? claimId;
-  Map<int, dynamic>? redirectData;
-  String? planId;
-  String? notificationListId;
-  bool? viewRecordAction, isSheela, chatWithCC = false;
-  String? message;
-  String? sheelaAudioMsgUrl;
-  String? eventType;
-  String? others;
+  String meeting_id;
+  String doctorId;
+  String username;
+  String type;
+  String eventId;
+  String rawTitle;
+  String rawBody;
+  String doctorName;
+  String doctorPicture;
+  String patientId;
+  String careCoordinatorUserId;
+  String careGiverName;
+  String activityTime;
+  String activityName;
+  String patientName;
+  String patientPicture;
+  String externalLink;
+  String patientPhoneNumber;
+  String uid;
+  String verificationCode;
+  String caregiverRequestor;
+  String caregiverReceiver;
+  CallArguments callArguments;
+  bool isWeb;
+  String isCaregiver;
+  String deliveredDateTime;
+  bool isFromCareCoordinator;
+  String callType;
+  String claimId;
+  Map<int, dynamic> redirectData;
+  String planId;
+  String notificationListId;
+  bool viewRecordAction, isSheela, chatWithCC = false;
+  String message;
+  String sheelaAudioMsgUrl;
+  String eventType;
+  String others;
+  String appointmentId;
 
   NotificationModel(
       {this.title,
@@ -92,7 +93,8 @@ class NotificationModel {
       this.message,
       this.sheelaAudioMsgUrl,
       this.eventType,
-      this.others});
+      this.others,
+      this.appointmentId});
 
   Map<String, dynamic> toMap() {
     return {
@@ -130,7 +132,8 @@ class NotificationModel {
       'viewRecordAction': viewRecordAction,
       'chatWithCC': chatWithCC,
       'eventType': eventType,
-      'others': others
+      'others': others,
+      'appointmentId': appointmentId
     };
   }
 
@@ -168,6 +171,7 @@ class NotificationModel {
     others = message['others'];
     viewRecordAction = message['viewRecordAction'];
     chatWithCC = message['chatWithCC'];
+    appointmentId = message['appointmentId'];
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
@@ -283,6 +287,10 @@ class NotificationModel {
           others = message[parameters.others];
         }
 
+        if ((message[parameters.appointmentId] ?? '').isNotEmpty) {
+          appointmentId = message[parameters.appointmentId];
+        }
+
         if (message[parameters.externalLink] != null) {
           externalLink = message[parameters.externalLink];
         }
@@ -395,7 +403,7 @@ class NotificationModel {
       callArguments = CallArguments(
         role: ClientRole.Broadcaster,
         channelName: meeting_id,
-        userName: username,
+        userName: username ?? doctorName,
         doctorId: doctorId,
         doctorName: doctorName,
         isWeb: isWeb ?? false,
@@ -453,6 +461,10 @@ class NotificationModel {
 
     if ((message[parameters.others] ?? '').isNotEmpty) {
       others = message[parameters.others];
+    }
+
+    if ((message[parameters.appointmentId] ?? '').isNotEmpty) {
+      appointmentId = message[parameters.appointmentId];
     }
 
     if (message[parameters.strMessage] != null) {

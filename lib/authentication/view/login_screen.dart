@@ -1,11 +1,9 @@
-
-import 'package:country_pickers/country.dart';
-import 'package:country_pickers/country_pickers.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/authentication/model/Country.dart';
 import '../model/patientlogin_model.dart';
 import '../constants/constants.dart';
 import 'authentication_validator.dart';
@@ -35,8 +33,7 @@ class PatientSignInScreen extends StatefulWidget {
 }
 
 class _PatientSignInScreenState extends State<PatientSignInScreen> {
-  Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+  Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
   final numberController = TextEditingController();
   final passwordController = TextEditingController();
   var isLoading = false;
@@ -130,13 +127,15 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                   counterText: "",
                                   prefixIcon: Container(
                                     constraints: BoxConstraints(
-                                        maxWidth: 100.0.w, minWidth: 50.0.w),
+                                      maxWidth: 50.0.w,
+                                      minWidth: 50.0.w,
+                                    ),
                                     child: CountryCodePickerPage(
-                                        onValuePicked: (country) => setState(
-                                            () => _selectedDialogCountry =
-                                                country),
-                                        selectedDialogCountry:
-                                            _selectedDialogCountry),
+                                      selectedCountry: _selectedDialogCountry,
+                                      onValuePicked: (country) => setState(
+                                        () => _selectedDialogCountry = country,
+                                      ),
+                                    ),
                                   ),
                                   hintText: strNewPhoneHint,
                                   labelText: strNumberHint,
@@ -292,14 +291,12 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
       _loginKey.currentState!.save();
       LoaderClass.showLoadingDialog(context);
       var logInModel = PatientLogIn(
-        userName:
-            '$strPlusSymbol${_selectedDialogCountry.phoneCode}${numberController.text}',
+        userName: '${_selectedDialogCountry.phoneCode}${numberController.text}',
         password: passwordController.text,
         source: strSource,
       );
       final map = logInModel.toJson();
       final response = await authViewModel.loginPatient(map);
-      //print(response.toString());
       dataForResendOtp = map;
       //_checkResponse(response);
       _checkifItsGuest(response);
@@ -318,7 +315,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
           MaterialPageRoute(
               builder: (context) => VerifyPatient(
                     PhoneNumber:
-                        '$strPlusSymbol${_selectedDialogCountry.phoneCode}${numberController.text}',
+                        '${_selectedDialogCountry.phoneCode}${numberController.text}',
                     from: strFromLogin,
                     userConfirm: false,
                     dataForResendOtp: dataForResendOtp,

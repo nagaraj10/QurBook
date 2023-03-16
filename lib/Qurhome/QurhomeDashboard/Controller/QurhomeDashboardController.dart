@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 
 import '../../../QurHub/Controller/HubListViewController.dart';
 import '../../../common/CommonUtil.dart';
@@ -25,6 +26,7 @@ class QurhomeDashboardController extends GetxController {
   late HubListViewController hubController;
   late SheelaBLEController _sheelaBLEController;
   Timer? _bleTimer;
+  SheelaAIController sheelaAIController = Get.put(SheelaAIController());
 
   @override
   void onInit() {
@@ -86,22 +88,20 @@ class QurhomeDashboardController extends GetxController {
   void updateTabIndex(int newIndex) {
     currentSelectedIndex.value = newIndex;
     MyProfileModel myProfile;
-    String fulName = '';
+    String firstName = '';
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
-      fulName = myProfile.result != null
-          ? myProfile.result!.firstName!.capitalizeFirstofEach +
-              ' ' +
-              myProfile.result!.lastName!.capitalizeFirstofEach
+      firstName = myProfile.result != null
+          ? myProfile.result!.firstName!.capitalizeFirstofEach
           : '';
     } catch (e) {}
     switch (currentSelectedIndex.value) {
       case 0:
-        appBarTitle = '$fulName'.obs;
+        appBarTitle = '$firstName'.obs;
         updateBLETimer();
         break;
       case 1:
-        appBarTitle = '$fulName'.obs;
+        appBarTitle = '$firstName'.obs;
         updateBLETimer();
         break;
       case 2:
@@ -116,6 +116,7 @@ class QurhomeDashboardController extends GetxController {
   }
 
   void getValuesNativeAppointment() {
+    bool isFirstTime = true;
     _appointmentSubscription ??=
         streamAppointment.receiveBroadcastStream().listen((val) {
       print(val);
@@ -123,8 +124,19 @@ class QurhomeDashboardController extends GetxController {
       if ((receivedValues ?? []).length > 0) {
         switch ((receivedValues!.first ?? "")) {
           case "scheduleAppointment":
-            if (PreferenceUtil.getIfQurhomeisAcive()) {
-              redirectToSheelaScheduleAppointment();
+            if (isFirstTime) {
+              isFirstTime = false;
+              if (sheelaAIController.isSheelaScreenActive) {
+                var reqJson = {
+                  KIOSK_task: KIOSK_appointment_avail,
+                  KIOSK_appoint_id: receivedValues[1] ?? ''.toString(),
+                  KIOSK_eid: receivedValues[2] ?? ''.toString(),
+                  KIOSK_say_text: receivedValues[3] ?? ''.toString(),
+                };
+                CommonUtil().callQueueNotificationPostApi(reqJson);
+              } else if (PreferenceUtil.getIfQurhomeisAcive()) {
+                redirectToSheelaScheduleAppointment();
+              }
             }
             break;
         }
@@ -134,7 +146,18 @@ class QurhomeDashboardController extends GetxController {
       const platform = MethodChannel(APPOINTMENT_DETAILS);
       platform.setMethodCallHandler((call) {
         if (call.method == APPOINTMENT_DETAILS) {
-          if (PreferenceUtil.getIfQurhomeisAcive()) {
+          if (sheelaAIController.isSheelaScreenActive) {
+            try {
+              var data = Map<String, dynamic>.from(call.arguments);
+              var reqJson = {
+                KIOSK_task: KIOSK_appointment_avail,
+                KIOSK_appoint_id: data[id_sheela] ?? ''.toString(),
+                KIOSK_eid: data[eid_sheela] ?? ''.toString(),
+                KIOSK_say_text: data[sayText_sheela] ?? ''.toString(),
+              };
+              CommonUtil().callQueueNotificationPostApi(reqJson);
+            } catch (e) {}
+          } else if (PreferenceUtil.getIfQurhomeisAcive()) {
             redirectToSheelaScheduleAppointment();
           }
         }

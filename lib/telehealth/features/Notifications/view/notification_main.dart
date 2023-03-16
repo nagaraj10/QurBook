@@ -7,6 +7,11 @@ import 'package:provider/provider.dart';
 
 
 class NotificationMain extends StatefulWidget {
+
+  bool isFromQurday;
+
+  NotificationMain({Key key, this.isFromQurday = false}) : super(key: key);
+
   @override
   _NotificationMainState createState() => _NotificationMainState();
 }
@@ -26,10 +31,7 @@ class _NotificationMainState extends State<NotificationMain> {
               create: (_) => CancelAppointmentViewModel(),
             ),
           ],
-          child: NotificationScreen(
-
-
-          ),
+          child: NotificationScreen(isFromQurday: widget.isFromQurday),
         )
     );
   }

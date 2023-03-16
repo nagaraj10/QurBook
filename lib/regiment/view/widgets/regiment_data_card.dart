@@ -74,7 +74,12 @@ class RegimentDataCard extends StatelessWidget {
                 : Colors.white,
             child: InkWell(
               onTap: () {
-                if (regimentData?.activityOrgin != strAppointmentRegimen) {
+                if (regimentData?.activityOrgin == strAppointmentRegimen) {
+                  if ((regimentData?.eid != null) &&
+                      (regimentData?.eid != '')) {
+                    CommonUtil().goToAppointmentDetailScreen(regimentData?.eid);
+                  }
+                } else {
                   onCardPressed(context,
                       aid: aid, uid: uid, formId: formId, formName: formName);
                 }

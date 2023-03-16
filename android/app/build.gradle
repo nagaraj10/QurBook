@@ -97,6 +97,14 @@ android {
         }
     }
 
+//    allprojects {
+//        repositories {
+//            flatDir {
+//                dirs 'libs'
+//            }
+//        }
+//    }
+
 
 }
 
@@ -145,6 +153,8 @@ dependencies {
     implementation files('libs/GSH601_Device.jar')
     implementation files('libs/DB62M_Device.jar')
     implementation files('libs/LS202_Device.jar')
+//    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
 
 }
 apply plugin: 'com.google.gms.google-services'

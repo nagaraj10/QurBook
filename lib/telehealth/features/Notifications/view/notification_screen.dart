@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -17,6 +18,8 @@ import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 
 import '../../../../claim/screen/ClaimRecordDisplay.dart';
@@ -69,6 +72,10 @@ import '../../../../constants/router_variable.dart' as routervariable;
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
 
 class NotificationScreen extends StatefulWidget {
+  bool isFromQurday;
+
+  NotificationScreen({Key key, this.isFromQurday = false}) : super(key: key);
+
   @override
   _NotificationScreen createState() => _NotificationScreen();
 }
@@ -163,7 +170,8 @@ class _NotificationScreen extends State<NotificationScreen> {
 
   Widget notificationAppBar(BuildContext context) {
     return AppBar(
-      flexibleSpace: GradientAppBar(),
+      flexibleSpace:
+          widget.isFromQurday ? GradientAppBarQurhome() : GradientAppBar(),
       //centerTitle: true,
       leading: IconWidget(
         icon: Icons.arrow_back_ios,
@@ -491,6 +499,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                             );
                           } else if (payload?.redirectTo ==
                               'appointmentPayment') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          } else if (payload?.redirectTo ==
+                              strAppointmentDetail) {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
@@ -1241,6 +1255,16 @@ class _NotificationScreen extends State<NotificationScreen> {
               claimID: result?.messageDetails?.payload?.claimId,
             ),
           );
+        }
+        readUnreadAction(result);
+        break;
+      case strAppointmentDetail:
+        if ((result?.messageDetails?.payload?.appointmentId ?? '').isNotEmpty) {
+          AppointmentDetailsController appointmentDetailsController =
+          CommonUtil().onInitAppointmentDetailsController();
+          appointmentDetailsController.getAppointmentDetail(
+              result?.messageDetails?.payload?.appointmentId ?? '');
+          Get.to(() => AppointmentDetailScreen());
         }
         readUnreadAction(result);
         break;

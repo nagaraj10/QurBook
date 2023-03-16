@@ -483,6 +483,57 @@ class PreferenceUtil {
     );
   }
 
+  static Future<bool> saveEnableAppLock({
+    bool appLockStatus = false,
+  }) async {
+    final instance = await _prefs;
+    return instance.setBool(
+      Constants.enableAppLock,
+      appLockStatus,
+    );
+  }
+
+  static bool getEnableAppLock() {
+    return _prefsInstance.getBool(
+          Constants.enableAppLock,
+        ) ??
+        false;
+  }
+
+  static bool getCallNotificationReceived() {
+    return _prefsInstance.getBool(
+          Constants.callNotificationReceived,
+        ) ??
+        false;
+  }
+
+  static Future<bool> setCallNotificationRecieved({
+    bool isCalled = false,
+  }) async {
+    final instance = await _prefs;
+    return instance.setBool(
+      Constants.callNotificationReceived,
+      isCalled,
+    );
+  }
+
+  // static Future<bool> setNotificationCalled({
+  //   bool isCalled = false,
+  // }) async {
+  //   final instance = await _prefs;
+  //   return instance.setBool(
+  //     Constants.notificationCalled,
+  //     isCalled,
+  //   );
+  // }
+
+  // static bool getNotificationCalled() {
+  //   return _prefsInstance.getBool(
+  //         Constants.notificationCalled,
+  //       ) ??
+  //       false;
+  // }
+
   static bool getIfQurhomeisDefaultUI() {
     return _prefsInstance!.getBool(
           Constants.QurhomeDefaultUI,

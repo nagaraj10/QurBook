@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/Status.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 
 class RegimentDataModel {
   RegimentDataModel(
       {this.eid,
+      this.id,
       this.providerid,
       this.uid,
       this.title,
@@ -60,9 +62,11 @@ class RegimentDataModel {
       this.seq,
       this.doctorSessionId,
       this.serviceCategory,
-      this.modeOfService});
+      this.modeOfService,
+      this.dayrepeat});
 
   final dynamic eid;
+  final dynamic id;
   final dynamic providerid;
   final dynamic uid;
   final dynamic title;
@@ -116,10 +120,12 @@ class RegimentDataModel {
   final dynamic doctorSessionId;
   final ServiceCategory? serviceCategory;
   final ServiceCategory? modeOfService;
+  final dynamic dayrepeat;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
         eid: json['eid'],
+        id: json['id'],
         providerid: json['providerid'],
         uid: json['uid'],
         title: json['title'],
@@ -164,8 +170,13 @@ class RegimentDataModel {
                 ((json['dosemeal'] ?? 0).toString() == '128')) &&
             (activitynameValues.map[json['activityname']] ==
                 Activityname.SYMPTOM),
-        asNeeded: (((json['dosemeal'] ?? 0).toString() == '64') ||
-            ((json['dosemeal'] ?? 0).toString() == '128')),
+        asNeeded: json['hour_repeat'] != null
+            ? (json['hour_repeat']?.trim().toLowerCase() ==
+                    Constants.strText.trim().toLowerCase())
+                ? false
+                : (((json['dosemeal'] ?? 0).toString() == '64') ||
+                    ((json['dosemeal'] ?? 0).toString() == '128'))
+            : false,
         scheduled: ((json['dosemeal'] ?? 0).toString() != '64') &&
             ((json['dosemeal'] ?? 0).toString() != '128'),
         doseRepeat: json['doserepeat'],
@@ -191,10 +202,12 @@ class RegimentDataModel {
         modeOfService: json['modeOfService'] != null
             ? new ServiceCategory.fromJson(json['modeOfService'])
             : null,
+        dayrepeat: json['hour_repeat'],
       );
 
   Map<String, dynamic> toJson() => {
         'eid': eid,
+        'id': id,
         'providerid': providerid,
         'uid': uid,
         'title': title,
@@ -241,6 +254,7 @@ class RegimentDataModel {
         'doctorSessionId': doctorSessionId,
         'serviceCategory': serviceCategory!.toJson(),
         'modeOfService': modeOfService!.toJson(),
+        'hour_repeat': dayrepeat,
       };
 }
 

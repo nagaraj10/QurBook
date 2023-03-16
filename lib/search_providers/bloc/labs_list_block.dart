@@ -1,6 +1,8 @@
 
 import 'dart:async';
 
+import 'package:myfhb/search_providers/models/CityListModel.dart';
+
 import '../../constants/variable_constant.dart' as variable;
 import '../models/labs_list_response.dart';
 import '../models/labs_list_response_new.dart';
@@ -24,6 +26,13 @@ class LabsListBlock implements BaseBloc {
   Stream<ApiResponse<LabsSearchListResponse>> get labNewStream =>
       _labsListNewController.stream as Stream<ApiResponse<LabsSearchListResponse>>;
 
+  StreamController _cityListNewController;
+
+  StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
+      _cityListNewController.sink;
+  Stream<ApiResponse<CityListModel>> get cityNewStream =>
+      _cityListNewController.stream;
+
   @override
   void dispose() {
     _labsListController?.close();
@@ -33,6 +42,8 @@ class LabsListBlock implements BaseBloc {
     _labsListController = StreamController<ApiResponse<LabsListResponse>>();
     _labsListNewController =
         StreamController<ApiResponse<LabsSearchListResponse>>();
+    _cityListNewController =
+        StreamController<ApiResponse<CityListModel>>();
 
     _labsListRepository = LabsListRepository();
   }
@@ -48,11 +59,11 @@ class LabsListBlock implements BaseBloc {
     }
   }
 
-  getLabsListNew(String param) async {
+  getLabsListNew(String param,bool isFromCreateTicket) async {
     labListNewSink.add(ApiResponse.loading(variable.strGetLabList));
     try {
       final labsListResponse =
-          await _labsListRepository.getLabsFromSearchNew(param);
+          await _labsListRepository.getLabsFromSearchNew(param,isFromCreateTicket);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
       labListNewSink.add(ApiResponse.error(e.toString()));
@@ -71,14 +82,24 @@ class LabsListBlock implements BaseBloc {
     return labsListResponse;
   }
 
-  getExistingLabsListNew(String param) async {
+  getExistingLabsListNew(String param,bool isFromCreateTicket) async {
     labListNewSink.add(ApiResponse.loading(variable.strGetLabList));
     try {
       var labsListResponse =
-          await _labsListRepository.getExistingLabsFromSearchNew(param);
+          await _labsListRepository.getExistingLabsFromSearchNew(param,isFromCreateTicket);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
       labListNewSink.add(ApiResponse.error(e.toString()));
+    }
+  }
+
+  getCityList(String param) async {
+    cityListNewSink.add(ApiResponse.loading(variable.strGetCityList));
+    try {
+      var labsListResponse = await _labsListRepository.getCityList(param);
+      cityListNewSink.add(ApiResponse.completed(labsListResponse));
+    } catch (e) {
+      cityListNewSink.add(ApiResponse.error(e.toString()));
     }
   }
 }

@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
@@ -14,6 +15,7 @@ import '../models/save_response_model.dart';
 import '../service/regiment_service.dart';
 import '../../src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 
 enum RegimentMode { Schedule, Symptoms }
 
@@ -190,6 +192,9 @@ class RegimentViewModel extends ChangeNotifier {
       if (regimentFilter == RegimentFilter.Scheduled) {
         if (regimenData?.scheduled ?? false) {
           filteredRegimenList.add(regimenData);
+        } else if (regimenData?.dayrepeat?.trim().toLowerCase() ==
+            strText.trim().toLowerCase()) {
+          filteredRegimenList.add(regimenData);
         }
       } else if (regimentFilter == RegimentFilter.Missed) {
         if (!(regimenData?.asNeeded ?? false) &&
@@ -307,6 +312,10 @@ class RegimentViewModel extends ChangeNotifier {
       if (!(event?.isEventDisabled ?? false)) {
         if (event.isSymptom ?? false) {
           regimentsSymptomsList.add(event);
+        } else if ((event?.dayrepeat != null) ??
+            event?.dayrepeat?.trim().toLowerCase() ==
+                strText.trim().toLowerCase()) {
+          regimentsScheduledList.add(event);
         } else {
           regimentsScheduledList.add(event);
         }

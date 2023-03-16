@@ -111,7 +111,7 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          floatingActionButton: addplanbutton // FUcrash addplanbutton! to addplanbutton
+          floatingActionButton: addplanbutton??false
               ? FloatingActionButton.extended(
                   onPressed: () async {
                     var firebase = FirebaseAnalyticsService();

@@ -44,6 +44,8 @@ class PayloadChat {
   String? familyUserFirstName;
   String? familyUserLastName;
   bool? isFamilyUserCareCoordinator;
+  bool? isPrimaryCareCoordinator;
+
 
   PayloadChat({
     this.id,
@@ -63,6 +65,7 @@ class PayloadChat {
     this.familyUserFirstName,
     this.familyUserLastName,
     this.isFamilyUserCareCoordinator,
+    this.isPrimaryCareCoordinator,
   });
 
   PayloadChat.fromJson(Map<String, dynamic> json) {
@@ -88,6 +91,9 @@ class PayloadChat {
     isFamilyUserCareCoordinator = json['isFamilyUserCareCoordinator'] != null
         ? json['isFamilyUserCareCoordinator']
         : false;
+    isPrimaryCareCoordinator = json['isPrimaryCareCoordinator'] != null
+        ? json['isPrimaryCareCoordinator']
+        : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -112,6 +118,7 @@ class PayloadChat {
     data['familyUserFirstName'] = this.familyUserFirstName;
     data['familyUserLastName'] = this.familyUserLastName;
     data['isFamilyUserCareCoordinator'] = this.isFamilyUserCareCoordinator;
+    data['isPrimaryCareCoordinator'] = this.isPrimaryCareCoordinator;
     return data;
   }
 }

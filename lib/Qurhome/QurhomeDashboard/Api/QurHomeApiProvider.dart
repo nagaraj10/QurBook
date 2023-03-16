@@ -29,7 +29,7 @@ import 'package:myfhb/video_call/model/UpdatedInfo.dart';
 import '../../../constants/variable_constant.dart' as variable;
 
 class QurHomeApiProvider {
-  DateTime selectedRegimenDate = DateTime.now();
+  //DateTime selectedRegimenDate = DateTime.now();
   final ApiBaseHelper apiBaseHelper = ApiBaseHelper();
 
   Future<dynamic> getRegimenList(String date) async {
@@ -42,7 +42,7 @@ class QurHomeApiProvider {
 
       regimentsData = await RegimentService.getRegimentData(
         dateSelected: CommonUtil.dateConversionToApiFormat(
-          selectedRegimenDate,
+          DateTime.now(),
           isIndianTime: true,
         ),
         isSymptoms: 0,

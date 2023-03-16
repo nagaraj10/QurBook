@@ -577,39 +577,23 @@ class AppointmentsCommonWidget {
 
   Widget getFirstLastNameText(Past doc) {
     if (doc.doctorSessionId == null && doc.healthOrganization != null) {
-      String strName = doc.healthOrganization!.name ?? "";
-      String strName1 = "";
-      String strName2 = "";
-      try {
-        if (strName.contains(" ")) {
-          strName1 = strName.split(" ").first;
-          strName2 = strName.split(" ").last;
-        } else {
-          strName1 = strName;
-        }
-      } catch (e) {
-        //print(e);
-      }
-      return Text(
-        strName2.trim().isNotEmpty
-            ? strName1[0].toUpperCase() + strName2[0].toUpperCase()
-            : strName1[0].toUpperCase() + strName1[1].toUpperCase(),
-        style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
-          fontSize: 16.0.sp,
-          fontWeight: FontWeight.w400,
-        ),
-      );
+      return commonTextWidget(doc.healthOrganization!.name ?? "");
+    } else if (doc?.additionalinfo?.provider_name != null) {
+      return commonTextWidget(doc?.additionalinfo?.provider_name ?? '');
+    } else if (doc?.additionalinfo?.healthOrganizationId != null) {
+      return commonTextWidget(doc?.additionalinfo?.healthOrganizationId ?? '');
     } else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
       return Text(
           (doc?.additionalinfo?.title != null &&
                   doc?.additionalinfo?.title != '')
-              ? doc?.additionalinfo?.title![0].toUpperCase() ?? ''
+              ? CommonUtil()
+                  .getFirstAndLastName(doc?.additionalinfo?.title! ?? '')
               : (doc?.serviceCategory?.code == 'LAB')
                   ? ((doc?.additionalinfo?.lab_name != null &&
                           doc?.additionalinfo?.lab_name != '')
-                      ? doc?.additionalinfo?.lab_name![0].toUpperCase()
-                      : '')!
+                      ? CommonUtil().getFirstAndLastName(
+                          doc?.additionalinfo?.lab_name ?? '')
+                      : ''
                   : '',
           style: TextStyle(
             color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -694,6 +678,8 @@ class AppointmentsCommonWidget {
           : '';
     } else if (doc?.additionalinfo?.provider_name != null) {
       name = doc?.additionalinfo?.provider_name ?? '';
+    } else if (doc?.additionalinfo?.healthOrganizationId != null) {
+      name = doc?.additionalinfo?.healthOrganizationId ?? '';
     } else if (doc.doctorSessionId == null && doc?.healthOrganization == null) {
       name = doc?.additionalinfo?.title ?? '';
     } else if (doc.doctorSessionId != null &&
@@ -727,10 +713,11 @@ class AppointmentsCommonWidget {
           '';
     } else if (doc.doctorSessionId != null &&
         doc.doctor != null &&
-        doc.doctor!.user != null &&
-        doc.doctor!.user!.userAddressCollection3 != null &&
-        doc.doctor!.user!.userAddressCollection3!.length > 0) {
-      location = doc!.doctor!.user!.userAddressCollection3![0].city!.name;
+        doc.doctor?.user != null &&
+        doc.doctor?.user?.userAddressCollection3 != null &&
+        doc.doctor?.user?.userAddressCollection3!.length > 0) {
+      location =
+          doc.doctor?.user?.userAddressCollection3![0].city?.name ?? "";
     }
 
     return location;
@@ -738,9 +725,11 @@ class AppointmentsCommonWidget {
 
   getServiceCategory(Past doc) {
     String serviceCategory = '';
-
     if (doc.serviceCategory != null) {
       serviceCategory = doc?.serviceCategory?.name ?? '';
+      if (serviceCategory.toLowerCase() == "others") {
+        serviceCategory = doc?.additionalinfo?.title ?? "";
+      }
     }
     return serviceCategory;
   }
@@ -751,5 +740,16 @@ class AppointmentsCommonWidget {
       modeOfService = doc?.modeOfService?.name ?? '';
     }
     return modeOfService;
+  }
+
+  Widget commonTextWidget(String strText) {
+    return Text(
+      CommonUtil().getFirstAndLastName(strText),
+      style: TextStyle(
+        color: Color(CommonUtil().getMyPrimaryColor()),
+        fontSize: 16.0.sp,
+        fontWeight: FontWeight.w400,
+      ),
+    );
   }
 }
