@@ -215,6 +215,8 @@ class SheelaAIController extends GetxController {
       bleController.startSheelaBLEDeviceReadings();
       isLoading(true);
     } else {
+      if (Get.isRegistered<SheelaBLEController>())
+        Get.find<SheelaBLEController>().stopScanning();
       var msg = strhiMaya;
       if ((arguments?.rawMessage ?? '').isNotEmpty) {
         msg = arguments.rawMessage;
