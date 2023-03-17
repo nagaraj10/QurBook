@@ -34,8 +34,6 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
-import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
@@ -706,23 +704,42 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: () async {
-                                    if (regimen.isPlaying.value) {
-                                      stopRegimenTTS();
-                                      regimen.isPlaying.value = false;
-                                      setState(() {});
+                                    if (CommonUtil.isUSRegion() &&
+                                        regimen?.activityOrgin != strDiet) {
+                                      if (checkCanEdit(regimen)) {
+                                        Navigator.pop(context);
+                                        redirectToSheelaScreen(regimen);
+                                      } else {
+                                        onErrorMessage();
+                                      }
                                     } else {
-                                      stopRegimenTTS();
-                                      regimen.isPlaying.value = true;
-                                      setState(() {});
-                                      final status = await sheelaController
-                                          .playTTS(regimen?.title ?? '', () {
-                                        sheelaController.stopTTS();
+                                      if (regimen.isPlaying.value) {
+                                        stopRegimenTTS();
                                         regimen.isPlaying.value = false;
                                         setState(() {});
-                                      });
+                                      } else {
+                                        stopRegimenTTS();
+                                        regimen.isPlaying.value = true;
+                                        setState(() {});
+                                        final status = await sheelaController
+                                            .playTTS(regimen?.title ?? '', () {
+                                          sheelaController.stopTTS();
+                                          regimen.isPlaying.value = false;
+                                          setState(() {});
+                                        });
+                                      }
                                     }
                                   },
-                                  child: Obx(() {
+                                  child: CommonUtil.isUSRegion() &&
+                                          regimen?.activityOrgin != strDiet
+                                      ? Image.asset(
+                                          icon_mayaMain,
+                                          height:
+                                              CommonUtil().isTablet ? 60 : 50,
+                                          width:
+                                              CommonUtil().isTablet ? 60 : 50,
+                                        )
+                                      : Obx(() {
                                     return Icon(
                                       (regimen.isPlaying.value ?? false)
                                           ? Icons.stop_circle_outlined
@@ -969,12 +986,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               Get.back();
               _sheelaBLEController.stopTTS();
               _sheelaBLEController.stopScanning();
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  eId: regimen.eid,
-                ),
-              ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+              redirectToSheelaScreen(regimen);
             },
             onPressCancel: () async {
               Get.back();
@@ -990,14 +1002,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           _sheelaBLEController.filteredDeviceType = 'spo2';
           _sheelaBLEController.setupListenerForReadings();
         } else {
-          FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false)
-                        .regimentMode ==
-                    RegimentMode.Symptoms)
-                ? symptomsError
-                : activitiesError,
-            Colors.red,
-          );
+          onErrorMessage();
         }
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
@@ -1011,12 +1016,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               Get.back();
               _sheelaBLEController.stopTTS();
               _sheelaBLEController.stopScanning();
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  eId: regimen.eid,
-                ),
-              ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+              redirectToSheelaScreen(regimen);
             },
             onPressCancel: () async {
               Get.back();
@@ -1032,14 +1032,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           _sheelaBLEController.filteredDeviceType = 'bp';
           _sheelaBLEController.setupListenerForReadings();
         } else {
-          FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false)
-                        .regimentMode ==
-                    RegimentMode.Symptoms)
-                ? symptomsError
-                : activitiesError,
-            Colors.red,
-          );
+          onErrorMessage();
         }
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
@@ -1052,12 +1045,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               Get.back();
               _sheelaBLEController.stopTTS();
               _sheelaBLEController.stopScanning();
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  eId: regimen.eid,
-                ),
-              ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+              redirectToSheelaScreen(regimen);
             },
             onPressCancel: () async {
               Get.back();
@@ -1073,56 +1061,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           _sheelaBLEController.filteredDeviceType = 'weight';
           _sheelaBLEController.setupListenerForReadings();
         } else {
-          FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false)
-                        .regimentMode ==
-                    RegimentMode.Symptoms)
-                ? symptomsError
-                : activitiesError,
-            Colors.red,
-          );
+          onErrorMessage();
         }
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "bloodsugar")) {
         if (checkCanEdit(regimen)) {
-          Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(
-              eId: regimen.eid,
-            ),
-          ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+          redirectToSheelaScreen(regimen);
         } else {
-          FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false)
-                        .regimentMode ==
-                    RegimentMode.Symptoms)
-                ? symptomsError
-                : activitiesError,
-            Colors.red,
-          );
+          onErrorMessage();
         }
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "temperature")) {
         if (checkCanEdit(regimen)) {
-          Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(
-              eId: regimen.eid,
-            ),
-          ).then((value) => {
-                /*controller.getRegimenList()*/ controller
-                    .showCurrLoggedRegimen(regimen)
-              });
+          redirectToSheelaScreen(regimen);
         } else {
-          FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false)
-                        .regimentMode ==
-                    RegimentMode.Symptoms)
-                ? symptomsError
-                : activitiesError,
-            Colors.red,
-          );
+          onErrorMessage();
         }
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
@@ -1294,13 +1248,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         LoaderClass.hideLoadingDialog(Get.context);
       }
     } else {
-      FlutterToast().getToast(
-        (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
-            ? symptomsError
-            : activitiesError,
-        Colors.red,
-      );
+      onErrorMessage();
     }
   }
 
@@ -1734,6 +1682,25 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     ).then((value) {
       initSocketCountUnread();
     });
+  }
+
+  onErrorMessage() {
+    FlutterToast().getToast(
+      (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+              RegimentMode.Symptoms)
+          ? symptomsError
+          : activitiesError,
+      Colors.red,
+    );
+  }
+
+  redirectToSheelaScreen(RegimentDataModel regimen) {
+    Get.toNamed(
+      rt_Sheela,
+      arguments: SheelaArgument(
+        eId: regimen?.eid ?? "",
+      ),
+    ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
   }
 }
 

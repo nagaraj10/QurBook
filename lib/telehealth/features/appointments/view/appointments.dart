@@ -55,6 +55,8 @@ class _AppointmentsState extends State<Appointments> {
   SharedPreferences prefs;
   Function(String) closePage;
   final GlobalKey<State> _key = new GlobalKey<State>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -85,7 +87,11 @@ class _AppointmentsState extends State<Appointments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body(),
+      body: RefreshIndicator(
+          onRefresh: () {
+            return refreshPage();
+          },
+          child: body()),
       appBar: widget.isHome ? null : appBar(),
       floatingActionButton: Visibility(
         visible: CommonUtil.REGION_CODE == 'IN',
@@ -438,5 +444,11 @@ class _AppointmentsState extends State<Appointments> {
     Provider.of<AppointmentsListViewModel>(context, listen: false)
       ..clearAppointments()
       ..fetchAppointments();
+  }
+
+  Future<String> refreshPage() async {
+    await appointmentsViewModel.clearAppointments();
+    await appointmentsViewModel.fetchAppointments();
+    return 'success';
   }
 }
