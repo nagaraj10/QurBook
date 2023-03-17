@@ -53,14 +53,14 @@ class AppointmentsListViewModel extends ChangeNotifier {
     List<Past> dummySearchListUpcoming = <Past>[];
     List<Past> dummySearchListHistory = <Past>[];
     AppointmentsData data = AppointmentsData();
-    AppointmentsModel appointments = _appointmentsModel;
+    AppointmentsModel appointments = _appointmentsModel!;
     if (appointments.result?.upcoming != null &&
-        appointments.result?.upcoming.length > 0) {
-      for (Past element in appointments.result?.upcoming) {
+        appointments.result!.upcoming!.length > 0) {
+      for (Past element in appointments!.result!.upcoming!) {
         try {
           String name = '';
           name = methodToGetTitle(element);
-          if (name?.toLowerCase().trim().contains(query.toLowerCase().trim())) {
+          if (name.toLowerCase().trim().contains(query.toLowerCase().trim())) {
             dummySearchListUpcoming.add(element);
           }
         } catch (e) {}
@@ -68,12 +68,12 @@ class AppointmentsListViewModel extends ChangeNotifier {
     }
 
     if (appointments.result?.past != null &&
-        appointments.result?.past.length > 0) {
-      for (Past element in appointments.result?.past) {
+        appointments.result!.past!.length > 0) {
+      for (Past element in appointments.result!.past!) {
         try {
           String name = '';
           name = methodToGetTitle(element);
-          if (name?.toLowerCase().trim().contains(query.toLowerCase().trim())) {
+          if (name.toLowerCase().trim().contains(query.toLowerCase().trim())) {
             dummySearchListHistory.add(element);
           }
         } catch (e) {}
@@ -120,8 +120,8 @@ class AppointmentsListViewModel extends ChangeNotifier {
     String name = "";
     if (element.doctorSessionId == null &&
         element?.healthOrganization != null) {
-      name = element?.healthOrganization?.name?.capitalizeFirstofEach != null
-          ? element?.healthOrganization?.name?.capitalizeFirstofEach
+      name = (element.healthOrganization!.name?.capitalizeFirstofEach) != null
+          ? element.healthOrganization!.name!.capitalizeFirstofEach
           : '';
     } else if (element?.additionalinfo?.provider_name != null) {
       name = element?.additionalinfo?.provider_name ?? '';
@@ -132,9 +132,9 @@ class AppointmentsListViewModel extends ChangeNotifier {
         element?.doctor != null &&
         element?.doctor?.user != null) {
       name = element?.doctor?.user?.firstName != null
-          ? element?.doctor?.user?.firstName?.capitalizeFirstofEach +
+          ? element.doctor!.user!.firstName!.capitalizeFirstofEach! +
               ' ' +
-              element?.doctor?.user?.lastName?.capitalizeFirstofEach
+              element.doctor!.user!.lastName!.capitalizeFirstofEach
           : '';
     }
 

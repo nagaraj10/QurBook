@@ -72,7 +72,7 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
                   )),
               onChanged: (val) {
                 print(val);
-                whenAllIsChecked(val, e.name);
+                whenAllIsChecked(val!, e.name!);
                 e.isChecked = val;
                 setState(() {
                   e.isChecked = val;
@@ -124,7 +124,7 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
   void whenAllIsChecked(bool val, String name) {
     if (name == STR_ALL || name == STR_DEVICES) {
       if (name == STR_ALL) {
-        for (var mediaResult in widget.mediaData) {
+        for (var mediaResult in widget.mediaData!) {
           if (mediaResult.name == STR_PRESCRIPTION ||
               mediaResult.name == STR_LABREPORT ||
               mediaResult.name == STR_MEDICALREPORT ||
@@ -136,7 +136,7 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
           }
         }
       } else if (name == STR_DEVICES) {
-        for (var mediaResult in widget.mediaData) {
+        for (var mediaResult in widget.mediaData!) {
           if (mediaResult.name == STR_PULSE_OXIMETER ||
               mediaResult.name == STR_THERMOMETER ||
               mediaResult.name == STR_GLUCOMETER ||

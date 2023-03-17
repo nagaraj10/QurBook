@@ -181,7 +181,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           strName.contains(variable.strGeneralHealth)) {
         if (ticket.type!.additionalInfo != null && dataFields != null) {
           for (int i = 0; i < ticket.type!.additionalInfo!.field!.length; i++) {
-            Field field = ticket.type!.additionalInfo!.field[i];
+            Field field = ticket.type!.additionalInfo!.field![i];
             List<FieldData> fieldData = field.fieldData!;
             String fieldName = CommonUtil().validString(field.name ?? "");
             String displayName = CommonUtil().validString(field.displayName);

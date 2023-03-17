@@ -26,12 +26,12 @@ class LabsListBlock implements BaseBloc {
   Stream<ApiResponse<LabsSearchListResponse>> get labNewStream =>
       _labsListNewController.stream as Stream<ApiResponse<LabsSearchListResponse>>;
 
-  StreamController _cityListNewController;
+  StreamController? _cityListNewController;
 
-  StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
-      _cityListNewController.sink;
+StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
+      _cityListNewController!.sink  as StreamSink<ApiResponse<CityListModel>>;
   Stream<ApiResponse<CityListModel>> get cityNewStream =>
-      _cityListNewController.stream;
+      _cityListNewController!.stream  as Stream<ApiResponse<CityListModel>>;
 
   @override
   void dispose() {

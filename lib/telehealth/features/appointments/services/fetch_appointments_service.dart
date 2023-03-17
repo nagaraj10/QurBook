@@ -63,7 +63,7 @@ class FetchAppointmentsService {
         headers: headers,
       );
 
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         return AppointmentDetailsModel.fromJson(jsonDecode(response.body));
       } else {
         return AppointmentDetailsModel();

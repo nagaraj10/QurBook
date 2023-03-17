@@ -749,7 +749,7 @@ class _VerifyPatientState extends State<VerifyPatient>
       final _firebaseMessaging = FirebaseMessaging.instance;
       var token = '';
       try {
-        token = await _firebaseMessaging.getToken();
+        token = (await _firebaseMessaging.getToken())!;
       } catch (e) {}
       CommonUtil().OnInitAction();
       await CommonUtil()

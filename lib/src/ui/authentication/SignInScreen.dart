@@ -1,7 +1,7 @@
 
-import 'package:country_pickers/country.dart';
-import 'package:country_pickers/country_picker_dropdown.dart';
-import 'package:country_pickers/country_pickers.dart';
+// import 'package:country_pickers/country.dart';
+// import 'package:country_pickers/country_picker_dropdown.dart';
+// import 'package:country_pickers/country_pickers.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -214,7 +214,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             .then((onValue) {});
                         PreferenceUtil.saveString(
                             CommonConstants.KEY_COUNTRYNAME,
-                            _selectedDialogCountry.name);
+                            _selectedDialogCountry.name!);
                         moveToNext(signInResponse, phoneTextController.text,
                             countryCode);
                       }

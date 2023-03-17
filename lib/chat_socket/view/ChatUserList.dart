@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 
@@ -89,10 +88,10 @@ class _ChatUserListState extends State<ChatUserList> {
   bool isShowNewChat = false;
 
   final controller = Get.put(ChatUserListController());
-  
 
   @override
- initState(){ //FUcrash Future<void> initState()async{
+  initState() {
+    //FUcrash Future<void> initState()async{
     super.initState();
 
     token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
@@ -106,7 +105,8 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   void getFamilyListMap() async {
-    familyListModel = await (controller.getFamilyMappingList() as Future<dynamic>);//FUcrash Future<CaregiverPatientChatModel?>
+    familyListModel = await (controller.getFamilyMappingList()
+        as Future<dynamic>); //FUcrash Future<CaregiverPatientChatModel?>
     if (familyListModel != null) {
       if (familyListModel!.result != null) {
         if (familyListModel!.result!.isNotEmpty) {
@@ -126,12 +126,12 @@ class _ChatUserListState extends State<ChatUserList> {
 
   void initSocket(bool isLoad) {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket!
-        .off(message);
+        .socket
+        ?.off(message);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket!
-        .off(notifyChatList);
+        .socket
+        ?.off(notifyChatList);
 
     if (isLoad) {
       setState(() {
@@ -150,8 +150,8 @@ class _ChatUserListState extends State<ChatUserList> {
     emitGetUserList(careGiverIds, isLoad);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket!
-        .on(notifyChatList, (data) {
+        .socket
+        ?.on(notifyChatList, (data) {
       if (data != null) {
         emitGetUserList(careGiverIds, isLoad);
       }
@@ -159,29 +159,34 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   void emitGetUserList(var careGiverIds, bool isLoad) {
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket!
-        .emitWithAck(getChatsList, {
-      'userId': userId,
-      'isCaregiverFilter': (careGiverIds?.length ?? 0) > 0 ? true : false,
-      'careGiverList': careGiverIds ?? [],
-      'limit': 'all'
-    }, ack: (userList) {
-      if (userList != null) {
-        UserChatListModel userChatList = UserChatListModel.fromJson(userList);
-        if (userChatList != null) {
-          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              ?.updateChatUserList(userChatList);
-        }
-      }
-      if (mounted) {
-        if (isLoad) {
-          setState(() {
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false).socket != null
+        ? Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+            .socket
+            ?.emitWithAck(getChatsList, {
+            'userId': userId,
+            'isCaregiverFilter': (careGiverIds?.length ?? 0) > 0 ? true : false,
+            'careGiverList': careGiverIds ?? [],
+            'limit': 'all'
+          }, ack: (userList) {
+            if (userList != null) {
+              UserChatListModel userChatList =
+                  UserChatListModel.fromJson(userList);
+              if (userChatList != null) {
+                Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+                    .updateChatUserList(userChatList);
+              }
+            }
+            if (mounted) {
+              if (isLoad) {
+                setState(() {
+                  isLoading = false;
+                });
+              }
+            }
+          })
+        : setState(() {
             isLoading = false;
           });
-        }
-      }
-    });
   }
 
   @override
@@ -368,7 +373,7 @@ class _ChatUserListState extends State<ChatUserList> {
               String strLastDate = data.chatListItem!.deliveredOn != null &&
                       data?.chatListItem!.deliveredOn != ''
                   ? CommonUtil()
-                      .getFormattedDateTime(data?.chatListItem?.deliveredOn)
+                      .getFormattedDateTime(data.chatListItem!.deliveredOn!)
                   : '';
               Get.back();
               Navigator.push(
@@ -876,7 +881,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 )
                               : Text('')),
                       if (CommonUtil.isUSRegion() &&
-                              userChatList?.isPrimaryCareCoordinator ??
+                              userChatList.isPrimaryCareCoordinator! ??
                           false)
                         Container(
                           child: Text(primary_chat,
@@ -945,7 +950,7 @@ class _ChatUserListState extends State<ChatUserList> {
             userChatList.familyUserFirstName != '') {
           if (userChatList.familyUserLastName != null &&
               userChatList.familyUserLastName != '') {
-            name = userChatList.familyUserFirstName +
+            name = userChatList.familyUserFirstName! +
                     ' ' +
                     userChatList.familyUserLastName! ??
                 '';
@@ -957,11 +962,10 @@ class _ChatUserListState extends State<ChatUserList> {
         }
       } else {
         if (userChatList != null) {
-          if (userChatList.firstName != null &&
-              userChatList.firstName != '') {
-            if (userChatList.lastName != null &&
-                userChatList.lastName != '') {
-              name = userChatList.firstName + ' ' + userChatList.lastName! ?? '';
+          if (userChatList.firstName != null && userChatList.firstName != '') {
+            if (userChatList.lastName != null && userChatList.lastName != '') {
+              name =
+                  userChatList.firstName! + ' ' + userChatList.lastName! ?? '';
             } else {
               name = (userChatList?.firstName ?? '').toString();
             }

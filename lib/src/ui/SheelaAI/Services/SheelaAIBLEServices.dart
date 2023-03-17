@@ -180,7 +180,7 @@ class SheelaBLEController extends GetxController {
                       takeActiveDeviceReadings: true,
                     ),
                   ),
-                ).then((_) {
+                )?.then((_) {
                   Future.delayed(const Duration(seconds: 1)).then((_) {
                     if (Get.isRegistered<VitalDetailController>())
                       Get.find<VitalDetailController>().getData();
@@ -222,7 +222,7 @@ class SheelaBLEController extends GetxController {
                       takeActiveDeviceReadings: true,
                     ),
                   ),
-                ).then((_) {
+                )?.then((_) {
                   if (Get.isRegistered<VitalDetailController>())
                     Future.delayed(const Duration(seconds: 1)).then((value) {
                       if (Get.isRegistered<VitalDetailController>())
@@ -393,7 +393,7 @@ class SheelaBLEController extends GetxController {
             } catch (e) {
               convertedWeight = 1;
             }
-            model.data.weight = (convertedWeight * 2.205).toStringAsFixed(2);
+            model.data!.weight = (convertedWeight * 2.205).toStringAsFixed(2);
           }
         }
         // model.hubId = hublistController.virtualHubId;

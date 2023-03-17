@@ -82,8 +82,8 @@ class PlanDetail extends State<MyPlanDetail> {
   String isExtendable = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  bool? showRenewOrSubscribeButton = false;
-  Future<MyPlanListModel>? planListFetch;
+  bool showRenewOrSubscribeButton = false;
+  late Future<MyPlanListModel?> planListFetch;
   String? packageDuration;
   @override
   void initState() {
@@ -98,7 +98,7 @@ class PlanDetail extends State<MyPlanDetail> {
     bool? showRenewOrSubscribeButton =
         await PreferenceUtil.getUnSubscribeValue();
     setState(() {
-      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton;
+      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton ?? false;
     });
   }
 
@@ -349,7 +349,7 @@ class PlanDetail extends State<MyPlanDetail> {
                       ],
                     ),
             ),
-            if (tags != strMemb && showRenewOrSubscribeButton!)
+            if (tags != strMemb && showRenewOrSubscribeButton)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

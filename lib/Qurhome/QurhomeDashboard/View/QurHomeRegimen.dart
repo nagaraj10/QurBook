@@ -63,7 +63,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   HubListViewController hubController = Get.find();
   late SheelaBLEController _sheelaBLEController;
-  ChatUserListController chatGetXController;
+  ChatUserListController? chatGetXController;
 
   AnimationController? animationController;
 
@@ -75,7 +75,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   @override
   void initState() {
     try {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         controller.dateHeader.value = controller.getFormatedDate();
       });
 
@@ -86,7 +86,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       controller.currLoggedEID.value = "";
       controller.isFirstTime.value = true;
       controller.getRegimenList();
-      chatGetXController.getUnreadCountFamily().then(
+      chatGetXController!.getUnreadCountFamily().then(
         (value) {
           if (value != null) {
             if (value.isSuccess!) {
@@ -222,7 +222,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 try {
                   FHBUtils().check().then((intenet) async {
                     if (intenet != null && intenet) {
-                      if (CommonUtil().isTablet &&
+                      if (CommonUtil().isTablet! &&
                           controller.careCoordinatorId.value.trim().isEmpty) {
                         await controller.getCareCoordinatorId();
                       }
@@ -308,7 +308,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
                     itemBuilder: (BuildContext context, int itemIndex) {
                       if (itemIndex ==
-                          (val.qurHomeRegimenResponseModel!.regimentsList
+                          (val.qurHomeRegimenResponseModel!.regimentsList!
                               .length)) {
                         return Padding(
                           padding: const EdgeInsets.only(top: 22.0),

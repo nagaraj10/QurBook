@@ -107,7 +107,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     PreferenceUtil.init();
     CommonUtil().ListenForTokenUpdate();
-    Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+    Provider.of<ChatSocketViewModel>(Get.context!)?.initSocket();
     CommonUtil().OnInitAction();
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
@@ -141,7 +141,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!isCallRecieved) {
         // No call notification is received so call security types code
         String authToken = PreferenceUtil.getStringValue(
-            Constants.KEY_AUTHTOKEN); // To check whether it's logged in or not
+            Constants.KEY_AUTHTOKEN)!; // To check whether it's logged in or not
         if (PreferenceUtil.getEnableAppLock() && authToken != null) {
           _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
           setState(() {});
@@ -786,7 +786,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             CommonUtil().onInitAppointmentDetailsController();
                         appointmentDetailsController
                             .getAppointmentDetail(passedValArr[2]);
-                        Get.to(() => AppointmentDetailScreen()).then((value) =>
+                        Get.to(() => AppointmentDetailScreen())!.then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }

@@ -1,7 +1,7 @@
 class Country {
-  String name;
-  String phoneCode;
-  CountryCode countryCode;
+  String? name;
+  String? phoneCode;
+  CountryCode? countryCode;
 
   Country({
     this.phoneCode,

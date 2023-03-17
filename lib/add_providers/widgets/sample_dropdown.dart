@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   )),
               onChanged: (val) {
                 print(val);
-                whenAllIsChecked(val, e.name);
+                whenAllIsChecked(val!, e.name!);
                 e.isChecked = val;
                 setState(() {
                   e.isChecked = val;
@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void whenAllIsChecked(bool val, String name) {
     if (name == STR_ALL) {
-      for (var mediaResult in widget.mediaData) {
+      for (var mediaResult in widget.mediaData!) {
         if (mediaResult.name == STR_PRESCRIPTION ||
             mediaResult.name == STR_LABREPORT ||
             mediaResult.name == STR_MEDICALREPORT ||

@@ -328,7 +328,7 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.recipientId ?? '').isEmpty) {
             currentResponse.recipientId = "Sheela Response";
           }
-          currentResponse = await getGoogleTTSForConversation(currentResponse);
+          currentResponse = (await getGoogleTTSForConversation(currentResponse!))!;
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
           if ((currentResponse.buttons ?? []).length > 0) {
@@ -458,7 +458,7 @@ class SheelaAIController extends GetxController {
       if (playButtons) {
         final currentButton = currentPlayingConversation!
             .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
-        if (currentButton.title.contains("Exit")) {
+        if (currentButton.title!.contains("Exit")) {
           gettingReposnseFromNative();
           return;
         } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
@@ -469,7 +469,7 @@ class SheelaAIController extends GetxController {
           try {
             var stringToSpeech = currentButton.title;
             if (currentButton.title!.contains(".")) {
-              stringToSpeech = currentButton.title.split(".")[1];
+              stringToSpeech = currentButton.title!.split(".")[1];
               result = await getGoogleTTSForText(stringToSpeech);
             } else {
               result = await getGoogleTTSForText(currentButton.title);
@@ -941,9 +941,9 @@ class SheelaAIController extends GetxController {
   }
 
   callToCC(SheelaResponse currentResponse) async {
-    if ((currentResponse.directCall != null && currentResponse.directCall) &&
+    if ((currentResponse.directCall != null && currentResponse.directCall!) &&
         (currentResponse.recipient != null &&
-            currentResponse.recipient.trim().toLowerCase() == "cc")) {
+            currentResponse.recipient!.trim().toLowerCase() == "cc")) {
       var regController = CommonUtil().onInitQurhomeRegimenController();
       if (CommonUtil()
           .validString(regController.careCoordinatorId.value)

@@ -74,7 +74,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/appointments/Appointm
 class NotificationScreen extends StatefulWidget {
   bool isFromQurday;
 
-  NotificationScreen({Key key, this.isFromQurday = false}) : super(key: key);
+  NotificationScreen({Key? key, this.isFromQurday = false}) : super(key: key);
 
   @override
   _NotificationScreen createState() => _NotificationScreen();

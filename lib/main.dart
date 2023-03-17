@@ -1619,7 +1619,7 @@ class _MyFHBState extends State<MyFHB> {
                 'userId': '${navRoute.split('&')[2]}'
               },
             );
-          } else if (parsedData?.asMap()?.containsKey(4)) {
+          } else if (parsedData.asMap().containsKey(4)) {
             if (parsedData[4] == call) {
               return SplashScreen(
                 nsRoute: parsedData[4],

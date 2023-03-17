@@ -487,21 +487,21 @@ class PreferenceUtil {
     bool appLockStatus = false,
   }) async {
     final instance = await _prefs;
-    return instance.setBool(
+    return instance!.setBool(
       Constants.enableAppLock,
       appLockStatus,
     );
   }
 
   static bool getEnableAppLock() {
-    return _prefsInstance.getBool(
+    return _prefsInstance!.getBool(
           Constants.enableAppLock,
         ) ??
         false;
   }
 
   static bool getCallNotificationReceived() {
-    return _prefsInstance.getBool(
+    return _prefsInstance!.getBool(
           Constants.callNotificationReceived,
         ) ??
         false;
@@ -511,7 +511,7 @@ class PreferenceUtil {
     bool isCalled = false,
   }) async {
     final instance = await _prefs;
-    return instance.setBool(
+    return instance!.setBool(
       Constants.callNotificationReceived,
       isCalled,
     );

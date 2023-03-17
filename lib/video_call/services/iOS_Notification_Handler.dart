@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
@@ -289,7 +288,7 @@ class IosNotificationHandler {
               isFromFamilyListChat: true,
               isFromCareCoordinator: (model.isFromCareCoordinator ?? false),
               carecoordinatorId: model.careCoordinatorUserId,
-              isCareGiver: (model.isCaregiver ?? false),
+              isCareGiver: model.isCaregiver ?? false,
               groupId: '',
               lastDate: model.deliveredDateTime,
             ),
@@ -386,8 +385,8 @@ class IosNotificationHandler {
     } else if (model.redirect == parameters.strAppointmentDetail &&
         (model.appointmentId ?? '').isNotEmpty) {
       AppointmentDetailsController appointmentDetailsController =
-      CommonUtil().onInitAppointmentDetailsController();
-      appointmentDetailsController.getAppointmentDetail(model.appointmentId);
+          CommonUtil().onInitAppointmentDetailsController();
+      appointmentDetailsController.getAppointmentDetail(model.appointmentId!);
       Get.to(() => AppointmentDetailScreen());
     } else if (model.redirect == parameters.chat) {
       if (!notificationReceivedFromKilledState) {
@@ -482,12 +481,14 @@ class IosNotificationHandler {
                     packageId: model.planId,
                     showRenew: renewAction,
                     templateName: model.templateName),
-              )!.then((value) {
+              )!
+                .then((value) {
                 renewAction = false;
               })
             : Get.to(() => SplashScreen(
-                  nsRoute: 'regiment_screen',
-                ))!.then((value) {
+                      nsRoute: 'regiment_screen',
+                    ))!
+                .then((value) {
                 renewAction = false;
               });
       } else {
@@ -511,7 +512,8 @@ class IosNotificationHandler {
             showRenew: false,
             templateName: model.templateName,
           ),
-        )!.then((value) {
+        )!
+            .then((value) {
           renewAction = false;
         });
       } else {

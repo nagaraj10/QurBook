@@ -350,11 +350,11 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               controller.updateTimer(enable: false);
               Get.back();
             },
-            child: CommonUtil().isTablet
+            child: CommonUtil().isTablet!
                 ? IconWidget(
                     icon: Icons.arrow_back_ios,
                     colors: Colors.black,
-                    size: CommonUtil().isTablet ? 38.0 : 24.0,
+                    size: CommonUtil().isTablet! ? 38.0 : 24.0,
                     onTap: () {
                       controller.canSpeak = false;
                       controller.stopTTS();

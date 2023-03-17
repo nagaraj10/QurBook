@@ -140,7 +140,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   bool isLabAddressVisible = false;
   bool isLabNameOthers = false;
-  cityListModel.CityListData cityListData;
+  cityListModel.CityListData? cityListData;
   bool isProviderOthers = false;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -298,14 +298,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 (field.isProvider != null && field.isProvider!)) {
               if (field.providerType != null && field.providerType!.length > 0) {
                 await controller.getProviderList(
-                    field.providerType[0] ?? "", field);
+                    field.providerType![0] ?? "", field);
               }
               getTextField(field);
               if (field.fieldData != null &&
                   (field.fieldData?.length ?? 0) > 0 &&
                   field?.fieldData?.length == 1) {
                 await Future.delayed(Duration(milliseconds: 50));
-                onSelectDD(field.fieldData[0], field);
+                onSelectDD(field.fieldData![0], field);
               }
             }
 
@@ -1284,7 +1284,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,
-        enabled: field.isDisable != null && field.isDisable ? false : true,
+        enabled: field.isDisable != null && field.isDisable! ? false : true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           borderSide: BorderSide(width: 0, color: Colors.white),
@@ -1354,7 +1354,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               i < widget.ticketList!.additionalInfo!.field!.length;
               i++) {
             Field field = widget.ticketList!.additionalInfo!.field![i];
-            String displayName = displayFieldName(field);
+            String displayName = displayFieldName(field)!;
 
             if (field.type == tckConstants.tckTypeTitle &&
                 field.name == tckConstants.tckMainTitle) {
@@ -2236,7 +2236,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       if (ticketListData.additionalInfo != null) {
 
         for (Field field in widget.ticketList!.additionalInfo!.field!) {
-          String displayName = displayFieldName(field);
+          String displayName = displayFieldName(field)!;
           bool isVisible = false;
           if (CommonUtil().validString(field.isVisible).trim().isNotEmpty) {
             for (int i = 0;
@@ -3094,7 +3094,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     String strText = "";
     try {
       strText = CommonUtil().validString(
-          textEditingControllers[CommonUtil().getFieldName(field.name)].text);
+          textEditingControllers[CommonUtil().getFieldName(field.name)]!.text);
       return strText;
     } catch (e) {}
     return strText;

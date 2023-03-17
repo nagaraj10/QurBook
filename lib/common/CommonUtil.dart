@@ -5046,22 +5046,22 @@ class CommonUtil {
     if (number == 0) {
       return zero;
     }
-    return generate(number!).trim();
+    return generate(number!)!.trim();
   }
 
   String? generate(int number) {
     if (number >= 1000000000) {
-      return generate(number ~/ 1000000000) +
+      return generate(number ~/ 1000000000)! +
           " billion " +
-          generate(number % 1000000000);
+          generate(number % 1000000000)!;
     } else if (number >= 1000000) {
-      return generate(number ~/ 1000000) +
+      return generate(number ~/ 1000000)! +
           " million " +
-          generate(number % 1000000);
+          generate(number % 1000000)!;
     } else if (number >= 1000) {
-      return generate(number ~/ 1000) + " thousand " + generate(number % 1000);
+      return generate(number ~/ 1000)! + " thousand " + generate(number % 1000)!;
     } else if (number >= 100) {
-      return generate(number ~/ 100) + " hundred " + generate(number % 100);
+      return generate(number ~/ 100)! + " hundred " + generate(number % 100)!;
     }
     return generate1To99(number);
   }
@@ -5536,9 +5536,9 @@ class CommonUtil {
         myProfile = value;
 
         if (value != null) {
-          if (value?.result?.userProfileSettingCollection3?.isNotEmpty) {
+          if (value.result!.userProfileSettingCollection3!.isNotEmpty!) {
             var profileSetting =
-                value?.result?.userProfileSettingCollection3[0].profileSetting;
+                value?.result?.userProfileSettingCollection3![0].profileSetting;
             if (profileSetting != null) {
               CommonUtil.langaugeCodes.forEach((language, languageCode) {
                 if (language == profileSetting.preferred_language) {
@@ -5560,16 +5560,16 @@ class CommonUtil {
             }
             if (profileSetting?.preferredMeasurement != null) {
               PreferredMeasurement preferredMeasurement =
-                  profileSetting?.preferredMeasurement;
+                  profileSetting!.preferredMeasurement!;
               await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement.height?.unitCode)
+                      preferredMeasurement.height!.unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                        preferredMeasurement.weight?.unitCode)
+                        preferredMeasurement.weight!.unitCode!)
                     .then((value) {
                   PreferenceUtil.saveString(
                           Constants.STR_KEY_TEMP,
-                          preferredMeasurement.temperature?.unitCode
+                          preferredMeasurement.temperature!.unitCode!
                               .toUpperCase())
                       .then((value) {});
                 });
@@ -5589,7 +5589,7 @@ class CommonUtil {
     } else {
       CommonUtil().logout(moveToLoginPage);
     }
-    return myProfile;
+    return myProfile!;
   }
 
   // 1
@@ -5603,12 +5603,12 @@ class CommonUtil {
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
 
     if (userId == null)
-      return Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-          ?.socket
+      return Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+          ?.socket!
           .off(getChatTotalCountOn);
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-        ?.socket
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+        ?.socket!
         .emitWithAck(getChatTotalCountEmit, {
       'userId': userId,
     }, ack: (countResponseEmit) {
@@ -5616,20 +5616,20 @@ class CommonUtil {
         TotalCountModel totalCountModel =
             TotalCountModel.fromJson(countResponseEmit);
         if (totalCountModel != null) {
-          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
               ?.updateChatTotalCount(totalCountModel);
         }
       }
     });
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-        ?.socket
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+        ?.socket!
         .on(getChatTotalCountOn, (countResponseOn) {
       if (countResponseOn != null) {
         TotalCountModel totalCountModelOn =
             TotalCountModel.fromJson(countResponseOn);
         if (totalCountModelOn != null) {
-          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
               ?.updateChatTotalCount(totalCountModelOn);
         }
       }
@@ -5701,7 +5701,7 @@ class CommonUtil {
     Get.to(() => AppointmentDetailScreen());
   }
 
-  Widget startTheCall(String navRoute) {
+  Widget? startTheCall(String navRoute) {
     try {
       var docPic = navRoute.split('&')[3];
       var patPic = navRoute.split('&')[7];
@@ -5734,10 +5734,10 @@ class CommonUtil {
       });
 
       if (callType.toLowerCase() == 'audio') {
-        Provider.of<AudioCallProvider>(Get.context, listen: false)
+        Provider.of<AudioCallProvider>(Get.context!, listen: false)
             .enableAudioCall();
       } else if (callType.toLowerCase() == 'video') {
-        Provider.of<AudioCallProvider>(Get.context, listen: false)
+        Provider.of<AudioCallProvider>(Get.context!, listen: false)
             .disableAudioCall();
       }
       Get.to(CallMain(

@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class AppointmentDetailsModel {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   AppointmentDetailsModel({this.isSuccess, this.result});
 
@@ -17,21 +17,21 @@ class AppointmentDetailsModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String plannedStartDateTime;
-  String plannedEndDateTime;
-  int slotNumber;
-  AdditionalInfo additionalInfo;
-  ServiceCategory serviceCategory;
-  Status modeOfService;
-  HealthOrganization healthOrganization;
-  Doctor doctor;
+  String? plannedStartDateTime;
+  String? plannedEndDateTime;
+  int? slotNumber;
+  AdditionalInfo? additionalInfo;
+  ServiceCategory? serviceCategory;
+  Status? modeOfService;
+  HealthOrganization? healthOrganization;
+  Doctor? doctor;
 
   Result(
       {this.plannedStartDateTime,
@@ -75,39 +75,39 @@ class Result {
     data['plannedEndDateTime'] = this.plannedEndDateTime;
     data['slotNumber'] = this.slotNumber;
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo!.toJson();
     }
     if (this.serviceCategory != null) {
-      data['serviceCategory'] = this.serviceCategory.toJson();
+      data['serviceCategory'] = this.serviceCategory!.toJson();
     }
     if (this.modeOfService != null) {
-      data['modeOfService'] = this.modeOfService.toJson();
+      data['modeOfService'] = this.modeOfService!.toJson();
     }
     if (this.healthOrganization != null) {
-      data['healthOrganization'] = this.healthOrganization.toJson();
+      data['healthOrganization'] = this.healthOrganization!.toJson();
     }
     if (this.doctor != null) {
-      data['doctor'] = this.doctor.toJson();
+      data['doctor'] = this.doctor!.toJson();
     }
     return data;
   }
 }
 
 class AdditionalInfo {
-  String to;
-  String from;
-  String city;
-  String cityName;
-  String notes;
-  String state;
-  String title;
-  String labName;
-  String pinCode;
-  String testName;
-  String addressLine1;
-  String addressLine2;
-  Status modeOfService;
-  String providerName;
+  String? to;
+  String? from;
+  String? city;
+  String? cityName;
+  String? notes;
+  String? state;
+  String? title;
+  String? labName;
+  String? pinCode;
+  String? testName;
+  String? addressLine1;
+  String? addressLine2;
+  Status? modeOfService;
+  String? providerName;
 
   AdditionalInfo(
       {this.to,
@@ -155,7 +155,7 @@ class AdditionalInfo {
       if (json['test_name'] != null && json['test_name'] is String) {
         testName = json['test_name'];
       } else {
-        Data testNameObject = json['test_name'] != null
+        Data? testNameObject = json['test_name'] != null
             ? new Data.fromJson(json['test_name'])
             : null;
         testName = testNameObject?.id ?? "";
@@ -195,7 +195,7 @@ class AdditionalInfo {
 }
 
 class Status {
-  String name;
+  String? name;
 
   Status({this.name});
 
@@ -211,8 +211,8 @@ class Status {
 }
 
 class ServiceCategory {
-  String name;
-  ServiceCategoryAdditionalInfo additionalInfo;
+  String? name;
+  ServiceCategoryAdditionalInfo? additionalInfo;
 
   ServiceCategory({this.name, this.additionalInfo});
 
@@ -227,15 +227,15 @@ class ServiceCategory {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo!.toJson();
     }
     return data;
   }
 }
 
 class ServiceCategoryAdditionalInfo {
-  List<Field> field;
-  String iconUrl;
+  List<Field>? field;
+  String? iconUrl;
 
   ServiceCategoryAdditionalInfo({this.field, this.iconUrl});
 
@@ -243,7 +243,7 @@ class ServiceCategoryAdditionalInfo {
     if (json['field'] != null) {
       field = <Field>[];
       json['field'].forEach((v) {
-        field.add(new Field.fromJson(v));
+        field!.add(new Field.fromJson(v));
       });
     }
     iconUrl = json['iconUrl'];
@@ -252,7 +252,7 @@ class ServiceCategoryAdditionalInfo {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.field != null) {
-      data['field'] = this.field.map((v) => v.toJson()).toList();
+      data['field'] = this.field!.map((v) => v.toJson()).toList();
     }
     data['iconUrl'] = this.iconUrl;
     return data;
@@ -260,8 +260,8 @@ class ServiceCategoryAdditionalInfo {
 }
 
 class Field {
-  String key;
-  List<Data> data;
+  String? key;
+  List<Data>? data;
 
   Field({this.key, this.data});
 
@@ -270,7 +270,7 @@ class Field {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data!.add(new Data.fromJson(v));
       });
     }
   }
@@ -279,15 +279,15 @@ class Field {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['key'] = this.key;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Data {
-  String id;
-  String name;
+  String? id;
+  String? name;
 
   Data({this.id, this.name});
 
@@ -305,8 +305,8 @@ class Data {
 }
 
 class HealthOrganization {
-  String name;
-  List<HealthOrganizationAddressCollection> healthOrganizationAddressCollection;
+  String? name;
+  List<HealthOrganizationAddressCollection>? healthOrganizationAddressCollection;
 
   HealthOrganization({this.name, this.healthOrganizationAddressCollection});
 
@@ -316,7 +316,7 @@ class HealthOrganization {
       healthOrganizationAddressCollection =
           <HealthOrganizationAddressCollection>[];
       json['healthOrganizationAddressCollection'].forEach((v) {
-        healthOrganizationAddressCollection
+        healthOrganizationAddressCollection!
             .add(new HealthOrganizationAddressCollection.fromJson(v));
       });
     }
@@ -327,7 +327,7 @@ class HealthOrganization {
     data['name'] = this.name;
     if (this.healthOrganizationAddressCollection != null) {
       data['healthOrganizationAddressCollection'] = this
-          .healthOrganizationAddressCollection
+          .healthOrganizationAddressCollection!
           .map((v) => v.toJson())
           .toList();
     }
@@ -336,11 +336,11 @@ class HealthOrganization {
 }
 
 class HealthOrganizationAddressCollection {
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  State state;
-  City city;
+  String? addressLine1;
+  String? addressLine2;
+  String? pincode;
+  State? state;
+  City? city;
 
   HealthOrganizationAddressCollection(
       {this.addressLine1,
@@ -363,17 +363,17 @@ class HealthOrganizationAddressCollection {
     data['addressLine2'] = this.addressLine2;
     data['pincode'] = this.pincode;
     if (this.state != null) {
-      data['state'] = this.state.toJson();
+      data['state'] = this.state!.toJson();
     }
     if (this.city != null) {
-      data['city'] = this.city.toJson();
+      data['city'] = this.city!.toJson();
     }
     return data;
   }
 }
 
 class State {
-  String name;
+  String? name;
 
   State({this.name});
 
@@ -389,7 +389,7 @@ class State {
 }
 
 class City {
-  String name;
+  String? name;
 
   City({this.name});
 
@@ -405,7 +405,7 @@ class City {
 }
 
 class Doctor {
-  User user;
+  User? user;
 
   Doctor({
     this.user,
@@ -418,15 +418,15 @@ class Doctor {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user!.toJson();
     }
     return data;
   }
 }
 
 class User {
-  String firstName;
-  String lastName;
+  String? firstName;
+  String? lastName;
 
   User({this.firstName, this.lastName});
 

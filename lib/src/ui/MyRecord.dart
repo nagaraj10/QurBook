@@ -293,8 +293,8 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getResponseFromApiWidget() {
-    List<CategoryResult> categoryDataFromPrefernce =
-        PreferenceUtil.getCategoryType()!;
+    List<CategoryResult>? categoryDataFromPrefernce =
+        PreferenceUtil.getCategoryType();
     /* if (categoryDataFromPrefernce != null &&
         categoryDataFromPrefernce.length > 0)
       return getMainWidgets(categoryDataFromPrefernce);

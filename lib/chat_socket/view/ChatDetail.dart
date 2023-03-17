@@ -478,7 +478,7 @@ class ChatState extends State<ChatDetail> {
                         ?.deviceToken?.patient?.payload![0]?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
-                  ?.deviceToken?.patient?.payload[0]?.deviceTokenId;
+                  ?.deviceToken?.patient?.payload![0]?.deviceTokenId;
             } else if ((appointmentResult
                         ?.deviceToken!.parentMember!.isSuccess! ??
                     false) &&
@@ -1052,7 +1052,7 @@ class ChatState extends State<ChatDetail> {
                                     (familyUserId != null && familyUserId != '')
                                 ? widget.peerName!.capitalizeFirstofEach +
                                     CARE_COORDINATOR_STRING
-                                : widget.peerName!.capitalizeFirstofEach)!
+                                : widget.peerName!.capitalizeFirstofEach
                             : '',
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
@@ -1352,7 +1352,7 @@ class ChatState extends State<ChatDetail> {
         children: <Widget>[
           chatList?.messages?.type == 0
               // Text
-              ? chatList?.isCommonContent
+              ? chatList!.isCommonContent!
                   ? Card(
                       color: Colors.transparent,
                       shape: RoundedRectangleBorder(
@@ -1547,13 +1547,13 @@ class ChatState extends State<ChatDetail> {
                                   right: 10.0),
                             ),
         ],
-        mainAxisAlignment: chatList?.isCommonContent
+        mainAxisAlignment: chatList.isCommonContent!
             ? MainAxisAlignment.center
             : MainAxisAlignment.end,
       );
     } else {
       // Left (peer message)
-      return chatList?.isCommonContent
+      return chatList.isCommonContent!
           ? Container(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1613,7 +1613,7 @@ class ChatState extends State<ChatDetail> {
                                         child: Center(
                                             child: Text(
                                           peerName != null && peerName != ''
-                                              ? peerName[0]
+                                              ? peerName![0]
                                                   .toString()
                                                   .toUpperCase()
                                               : '',
@@ -1822,8 +1822,7 @@ class ChatState extends State<ChatDetail> {
                           child: Text(
                             getFormattedDateTime(
                                 DateTime.fromMillisecondsSinceEpoch(int.parse(
-                                        chatList
-                                            ?.messages?.timestamp?.sSeconds))
+                                        chatList!.messages!.timestamp!.sSeconds!))
                                     .toString()),
                             style: TextStyle(
                                 color: greyColor,
@@ -1928,7 +1927,7 @@ class ChatState extends State<ChatDetail> {
                             List<String> result = [];
                             result.add(value);
                             try {
-                              if (result?.length > 0) {
+                              if (result.length! > 0) {
                                 final removedBrackets = result
                                     .toString()
                                     .substring(2, result.toString().length - 2);

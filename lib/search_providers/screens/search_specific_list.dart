@@ -151,7 +151,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           _labsListBlock!.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID,widget.isFromCreateTicket);
         }
         else if (widget.arguments!.searchWord == CommonConstants.keyCity) {
-          _labsListBlock.getCityList('a');
+          _labsListBlock!.getCityList('a');
         }
       }
       WidgetsBinding.instance!.addPostFrameCallback(
@@ -230,11 +230,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         : widget.arguments!.searchWord ==
                                 CommonConstants.hospitals
                             ? _hospitalListBlock!.getHospitalListNew(value)
-                            : widget.arguments.searchWord ==
+                            : widget.arguments!.searchWord! ==
                         CommonConstants.labs ||
-                        widget.arguments.searchWord ==
+                        widget.arguments!.searchWord ==
                             CommonConstants.lab
-                        ? _labsListBlock.getLabsListNew(value,widget.isFromCreateTicket):_labsListBlock.getCityList(value);
+                        ? _labsListBlock!.getLabsListNew(value!,widget.isFromCreateTicket):_labsListBlock!.getCityList(value!);
                     setState(() {});
                   } else {
                     widget.arguments!.searchWord == CommonConstants.doctors
@@ -447,7 +447,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     child: getAllDatasInLabsList(
                         snapshot?.data?.data?.result ?? []),
                   )
-                : snapshot.data.data!.result == null
+                : snapshot.data!.data!.result == null
                     ? Container(
                     child: Center(
                       child: Text(variable.strNodata),
@@ -471,8 +471,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           default:
             break;
         }
-        }
-        return Container();
+        // }
+       return Container();
+    
         
       },
     );
@@ -516,16 +517,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 SizedBox(
                   height: 10,
                 ),
-                fhbBasicWidget.getSaveButton(() {
+                fhbBasicWidget!.getSaveButton(() {
                   if (widget.toPreviousScreen!) {
                     widget.arguments!.searchWord == CommonConstants.doctors
                         ? saveMediaDialog(context)
                         : widget.arguments!.searchWord ==
                                 CommonConstants.hospitals
                             ? saveHospitalDialog(context)
-                            : widget.arguments.searchWord ==
+                            : widget.arguments!.searchWord ==
                         CommonConstants.labs ||
-                        widget.arguments.searchWord ==
+                        widget.arguments!.searchWord ==
                             CommonConstants.lab
                         ? passLaboratoryValue(null, context):passCityValue(null, context);
                   }
@@ -548,9 +549,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ? passDoctorsValue(diagnostics.errorData, context)
               : widget.arguments!.searchWord == CommonConstants.hospitals
                   ? passHospitalValue(null, context)
-                  : widget.arguments.searchWord ==
+                  : widget.arguments!.searchWord ==
               CommonConstants.labs ||
-              widget.arguments.searchWord ==
+              widget.arguments!.searchWord ==
                   CommonConstants.lab
               ? passLaboratoryValue(null, context):passCityValue(null, context);
         }
@@ -772,7 +773,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           labListResult.healthOrganizationName =
               toBeginningOfSentenceCase(strOthers);
           labListResult.healthOrganizationId = strOthers;
-          data.add(labListResult);
+          data!.add(labListResult);
         }
       }
     } catch (e) {
@@ -895,7 +896,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
-  void passCityValue(cityListModel.CityListData cityData, BuildContext context) {
+  void passCityValue(cityListModel.CityListData? cityData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyCity: cityData});
   }
 
@@ -1132,9 +1133,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           ? passDoctorsValue(diagnostics.errorData, context)
           : widget.arguments!.searchWord == CommonConstants.hospitals
               ? passHospitalValue(null, context)
-              : widget.arguments.searchWord ==
+              : widget.arguments!.searchWord ==
           CommonConstants.labs ||
-          widget.arguments.searchWord ==
+          widget.arguments!.searchWord ==
               CommonConstants.lab
           ? passLaboratoryValue(null, context):passCityValue(null, context);
     }
@@ -2201,11 +2202,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   Widget getResponseFromApiWidgetForCity() {
     return StreamBuilder<ApiResponse<cityListModel.CityListModel>>(
-      stream: _labsListBlock.cityNewStream,
+      stream: _labsListBlock!.cityNewStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data.status) {
+        switch (snapshot.data!.status) {
           case Status.LOADING:
             rebuildBlockObject();
             return Center(
@@ -2226,14 +2227,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.COMPLETED:
             rebuildBlockObject();
-            return snapshot.data.data.result == null
+            return snapshot.data!.data!.result == null
                 ? Container(
               child: Center(
                 child: Text(variable.strNodata),
               ),
             )
             //getEmptyCard()
-                : snapshot.data.data.result.isEmpty
+                : snapshot.data!.data!.result!.isEmpty
                 ? Container(
               child: Center(
                 child: Text(variable.strNodata),
@@ -2242,7 +2243,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             //getEmptyCard()
                 : Container(
               margin: EdgeInsets.all(5),
-              child: getAllDatasInCityList(snapshot.data.data.result),
+              child: getAllDatasInCityList(snapshot.data!.data!.result!),
             );
 
             break;
@@ -2250,6 +2251,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           default:
             break;
         }
+        return Container();
       },
     );
   }
@@ -2268,8 +2270,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   child: InkWell(
                     onTap: () {
                       try {
-                        if (widget.toPreviousScreen) {
-                          passCityValue(data[index] ?? null, context);
+                        if (widget.toPreviousScreen!) {
+                          passCityValue(data[index], context);
                         }
                       } catch (e) {}
                     },

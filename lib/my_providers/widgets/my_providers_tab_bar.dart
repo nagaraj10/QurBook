@@ -68,18 +68,18 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
       }
     }
 
-    doctorsModel?.sort((a, b) => a?.user?.name
-        ?.toString()
-        ?.toLowerCase()
-        ?.compareTo(b?.user?.name?.toString()?.toLowerCase()));
+     doctorsModel?.sort((a, b) => a!.user!.name
+        .toString()
+        .toLowerCase()
+        .compareTo(b!.user!.name.toString().toLowerCase()));
 
-    hospitalsModel?.sort((a, b) => a?.name
-        ?.toString()
-        ?.toLowerCase()
-        ?.compareTo(b?.name?.toString()?.toLowerCase()));
+    hospitalsModel?.sort((a, b) => a.name
+        .toString()
+        .toLowerCase()
+        .compareTo(b.name.toString().toLowerCase()));
 
     hospitalsModel?.sort((a, b) {
-      if (b?.isPrimaryProvider ?? false) {
+      if (b.isPrimaryProvider ?? false) {
         return 1;
       }
       return -1;

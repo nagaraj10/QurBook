@@ -1,5 +1,5 @@
-
 // import 'package:auto_size_text/auto_size_text.dart';  FU2.5
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
@@ -86,10 +86,12 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                   });
                 },
                 child: Container(
-                  padding:
-                  EdgeInsets.only(left: 10, right: 10, top: 10,
+                  padding: EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                      top: 10,
                       bottom: CommonUtil.isUSRegion() &&
-                                  eachHospitalModel?.isPrimaryProvider ??
+                                  eachHospitalModel.isPrimaryProvider! ??
                               false
                           ? 0
                           : 10),
@@ -121,10 +123,12 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                     Container(
                                         height: 50.0.h,
                                         width: 50.0.h,
-                                        color: Color(fhbColors.bgColorContainer),
+                                        color:
+                                            Color(fhbColors.bgColorContainer),
                                         child: Center(
                                           child: Text(
-                                            getHospitalName(eachHospitalModel)[0]
+                                            getHospitalName(
+                                                    eachHospitalModel)![0]
                                                 .toUpperCase(),
                                             style: TextStyle(
                                                 color: Color(CommonUtil()
@@ -134,7 +138,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                     : Container(
                                         height: 50.0.h,
                                         width: 50.0.h,
-                                        color: Color(fhbColors.bgColorContainer),
+                                        color:
+                                            Color(fhbColors.bgColorContainer),
                                       )),
                           ),
                           SizedBox(
@@ -149,7 +154,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                 SizedBox(height: 5.0.h),
                                 AutoSizeText(
                                   getHospitalName(
-                                      eachHospitalModel) /* toBeginningOfSentenceCase(
+                                      eachHospitalModel)! /* toBeginningOfSentenceCase(
                                         eachHospitalModel.name) */
                                   ,
                                   maxLines: 1,
@@ -162,8 +167,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                 SizedBox(height: 5.0.h),
                                 AutoSizeText(
                                   '' +
-                                      commonWidgets
-                                          .getCityHospital(eachHospitalModel),
+                                      commonWidgets!
+                                          .getCityHospital(eachHospitalModel)!,
                                   maxLines: 1,
                                   style: TextStyle(
                                       fontSize: 15.0.sp,
@@ -180,8 +185,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                commonWidgets
-                                    .getBookMarkedIconHealth(eachHospitalModel, () {
+                                commonWidgets.getBookMarkedIconHealth(
+                                    eachHospitalModel, () {
                                   providerViewModel
                                       .bookMarkHealthOrg(
                                           eachHospitalModel,
@@ -189,8 +194,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                           'ListItem',
                                           eachHospitalModel.sharedCategories)
                                       .then((status) {
-                                    if (status) {
-                                      widget.isRefresh();
+                                    if (status!) {
+                                      widget.isRefresh!();
                                     }
                                   });
                                 }),

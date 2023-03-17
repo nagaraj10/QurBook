@@ -35,8 +35,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   bool _autoValidateBool = false;
   FlutterToast toast = FlutterToast();
   final _SignupKey = GlobalKey<FormState>();
-  List<UserContactCollection3> userCollection;
-  AuthViewModel authViewModel;
+  List<UserContactCollection3>? userCollection;
+  AuthViewModel? authViewModel;
   var checkedValue = true;
   Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
 
@@ -381,7 +381,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
   _savePatientDetails() async {
     FocusScope.of(context).unfocus();
-    userCollection.clear();
+    userCollection!.clear();
     userCollection = [];
     if (_SignupKey.currentState!.validate() && checkedValue!) {
       _SignupKey.currentState!.save();
@@ -391,7 +391,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
           '${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
       user3.email = emailController.text.trim();
       user3.isPrimary = true;
-      userCollection.add(user3);
+      userCollection!.add(user3);
       var patientSignUp = PatientSignUp();
       patientSignUp.firstName = firstNameController.text.trim();
       patientSignUp.lastName = lastNamController.text.trim();
@@ -402,8 +402,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
       postMediaData[strlastName] = lastNamController.text.trim();
       postMediaData[strsource] = strSource;
       postMediaData[strpassword] = passwordController.text.trim();
-      postMediaData[struserContactCollection3] = userCollection.toList();
-      final response = await authViewModel.registerPatient(postMediaData);
+      postMediaData[struserContactCollection3] = userCollection!.toList();
+      final response = await authViewModel!.registerPatient(postMediaData);
       print(response.toString());
       _checkResponse(response);
     } else {
@@ -483,7 +483,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
           value: checkedValue,
           onChanged: (newValue) {
             setState(() {
-              checkedValue = newValue;
+              checkedValue = newValue!;
             });
           },
         ),

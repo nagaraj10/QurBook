@@ -593,7 +593,7 @@ class AppointmentsCommonWidget {
                           doc?.additionalinfo?.lab_name != '')
                       ? CommonUtil().getFirstAndLastName(
                           doc?.additionalinfo?.lab_name ?? '')
-                      : ''
+                      : '')
                   : '',
           style: TextStyle(
             color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -715,7 +715,7 @@ class AppointmentsCommonWidget {
         doc.doctor != null &&
         doc.doctor?.user != null &&
         doc.doctor?.user?.userAddressCollection3 != null &&
-        doc.doctor?.user?.userAddressCollection3!.length > 0) {
+        doc.doctor!.user!.userAddressCollection3!.length > 0) {
       location =
           doc.doctor?.user?.userAddressCollection3![0].city?.name ?? "";
     }

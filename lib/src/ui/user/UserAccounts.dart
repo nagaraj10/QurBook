@@ -51,9 +51,9 @@ class _UserAccountsState extends State<UserAccounts>
   MyProfileModel? myProfile;
   bool islogout = false;
   final GlobalKey<State> _key = GlobalKey<State>();
-  Future profileData;
+  Future? profileData;
   bool isUserMainId = true;
-  LandingViewModel landingViewModel;
+  LandingViewModel? landingViewModel;
 
   @override
   void initState() {
@@ -249,8 +249,8 @@ class _UserAccountsState extends State<UserAccounts>
             PreferenceUtil.saveProfileData(
                 Constants.KEY_PROFILE, snapshot.data);
 
-          imageCache.clear();
-          imageCache.clearLiveImages();
+          imageCache!.clear();
+          imageCache!.clearLiveImages();
 
           return SwitchProfile().buildActions(
             context,
@@ -258,8 +258,8 @@ class _UserAccountsState extends State<UserAccounts>
             () {
               profileData = getMyProfile();
               checkIfUserIdSame();
-              landingViewModel.getQurPlanDashBoard(needNotify: true);
-              landingViewModel.checkIfUserIdSame().then((value) {
+              landingViewModel!.getQurPlanDashBoard(needNotify: true);
+              landingViewModel!.checkIfUserIdSame().then((value) {
                 isUserMainId = value;
               });
               QurPlanReminders.getTheRemindersFromAPI();
@@ -304,21 +304,21 @@ class _UserAccountsState extends State<UserAccounts>
         myProfile = value;
 
         if (value != null) {
-          if (value?.result?.userProfileSettingCollection3?.isNotEmpty) {
+          if (value.result!.userProfileSettingCollection3!.isNotEmpty) {
             var profileSetting =
-                value?.result?.userProfileSettingCollection3[0].profileSetting;
+                value?.result?.userProfileSettingCollection3![0].profileSetting;
             if (profileSetting?.preferredMeasurement != null) {
               PreferredMeasurement preferredMeasurement =
-                  profileSetting?.preferredMeasurement;
+                  profileSetting!.preferredMeasurement!;
               await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement.height?.unitCode)
+                      preferredMeasurement.height!.unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                        preferredMeasurement.weight?.unitCode)
+                        preferredMeasurement.weight!.unitCode!)
                     .then((value) {
                   PreferenceUtil.saveString(
                           Constants.STR_KEY_TEMP,
-                          preferredMeasurement.temperature?.unitCode
+                          preferredMeasurement.temperature!.unitCode!
                               .toUpperCase())
                       .then((value) {});
                 });
@@ -338,7 +338,7 @@ class _UserAccountsState extends State<UserAccounts>
     } else {
       CommonUtil().logout(moveToLoginPage);
     }
-    return myProfile;
+    return myProfile!;
   }
 }
 

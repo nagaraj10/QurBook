@@ -127,7 +127,7 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
-  onInit() async {
+   Future onInit() async {
     try {
       controller.updateNewChatFloatShown(false);
       mInitialTime = DateTime.now();
@@ -858,7 +858,7 @@ class _LandingScreenState extends State<LandingScreen> {
     commonConstants.getCountryMetrics();
   }
 
-  void callImportantsMethod() async {
+ callImportantsMethod() async {
     Get.lazyPut(
       () => PDFViewController(),
     );

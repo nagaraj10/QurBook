@@ -216,7 +216,7 @@ class Field {
       if (json['provider_type'] != null) {
         providerType = <String>[];
         json['provider_type'].forEach((v) {
-          providerType.add(v);
+          providerType!.add(v);
         });
       }
       isDisable = json['isDisable']!=null?json['isDisable']:false;
