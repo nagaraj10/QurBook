@@ -116,7 +116,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
             val NS_ID = 9090
             var MEETING_ID = data[getString(R.string.meetid)]
-            val USER_NAME = data[getString(R.string.username)]
+            var USER_NAME = data["userName"]
+            if(USER_NAME==null||USER_NAME=="null"){
+                USER_NAME = data[getString(R.string.username)]
+            }
             val DOC_ID = data[getString(R.string.docId)]
             val DOC_PIC = data[getString(R.string.docPic)]
             val PAT_ID = data[getString(R.string.pat_id)]

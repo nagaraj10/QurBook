@@ -232,8 +232,11 @@ const String strIndianPhoneCode = 'IN';
 
 const String strContextId = 'contextId';
 const String strIsSkipMFA = 'isSkipMFA';
-const String strsupportEmail =
+const String strINsupportEmail =
     'If One Time Password is not received within 5mins, please contact support at support@qurhealth.in';
+
+const String strUSsupportEmail =
+    'If One Time Password is not received within 5mins, please contact support at support@qurhealth.com';
 
 const String strEmptyWebView = 'Plan summary will be available soon';
 
