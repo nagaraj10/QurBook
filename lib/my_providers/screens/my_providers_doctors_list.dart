@@ -46,7 +46,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = CommonWidgets();
   FlutterToast toast = FlutterToast();
-
+final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -77,11 +78,20 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
 
   @override
   Widget build(BuildContext context) {
+    
     return buildPlayersList();
   }
 
   Widget buildPlayersList() {
-    return ListView.separated(
+    return RefreshIndicator(
+                      key: _refreshIndicatorKey,
+                      onRefresh: () {
+                        _refreshIndicatorKey.currentState?.show(atTop: true);
+widget.refresh();                       
+ _refreshIndicatorKey.currentState?.show(atTop: false);
+
+              },
+                      child:ListView.separated(
       padding: EdgeInsets.only(bottom: 200),
       itemBuilder: (context, index) {
         var eachDoctorModel = doctorsModel[index];
@@ -253,7 +263,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
         );
       },
       itemCount: doctorsModel.length,
-    );
+    ));
   }
 
   callMethodToNavigate(Doctors eachDoctorModel, {bool isButton = false}) {

@@ -40,7 +40,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
   MyProviderState myProviderState;
   MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = CommonWidgets();
-
+final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -60,12 +61,21 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
 
   @override
   Widget build(BuildContext context) {
+    
     providerViewModel = MyProviderViewModel();
     return buildPlayersList();
   }
 
   Widget buildPlayersList() {
-    return ListView.separated(
+    return RefreshIndicator(
+                      key: _refreshIndicatorKey,
+                      onRefresh: () {
+                        _refreshIndicatorKey.currentState?.show(atTop: true);
+widget.isRefresh();                      
+  _refreshIndicatorKey.currentState?.show(atTop: false);
+
+              },
+                      child:ListView.separated(
       padding: EdgeInsets.only(bottom: 200),
       itemBuilder: (context, index) {
         var eachHospitalModel = widget.hospitalsModel[index];
@@ -215,7 +225,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
         );
       },
       itemCount: widget.hospitalsModel.length,
-    );
+    ));
   }
 
   String getHospitalName(Hospitals eachHospitalModel) {
