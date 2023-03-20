@@ -201,10 +201,10 @@ class _SplashScreenState extends State<SplashScreen> {
               children: <Widget>[
                 SizedBox(height: 10,),
                 Image.asset(
-                  variable.icon_lock,
+                  variable.lock_icon,
                   height: 20,
                   width: 20,
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: Color(0xff5f059b),
                 ),
                 SizedBox(height: 20,),
                 Text(variable.strQurbookLocked,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
@@ -212,7 +212,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 Text(variable.strQurbookLockDescription,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
                 SizedBox(height: 10,),
                 TextButton(
-                  child: Text('Unlock',style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor()),),),
+                  child: Text('Unlock',style: TextStyle(color: Color(0xff2a08c0),),),
                   onPressed: () {
                     Navigator.of(context).pop();
                     callAppLockFeatureMethod(false);
