@@ -544,11 +544,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.redirectTo,
                             );
-                          } else if (payload?.redirectTo ==
+                          } else if (payload?.templateName ==
                               parameters.strPatientReferralAcceptToPatient) {
                             notificationOnTapActions(
                               notification,
-                              payload?.redirectTo,
+                              payload?.templateName,
                             );
                           } else {
                             readUnreadAction(notification);
@@ -1273,8 +1273,9 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case strPatientReferralAcceptToPatient:
+        //if (CommonUtil.isUSRegion())
         Get.toNamed(router.rt_UserAccounts,
-                arguments: UserAccountsArguments(selectedIndex: 0))
+                arguments: UserAccountsArguments(selectedIndex: 2))
             .then((value) =>
                 PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
