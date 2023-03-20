@@ -852,6 +852,7 @@ const String strHomecareServices = "homecare services";
 const String strFoodDelivery = "food delivery";
 
 const String strGetCityList = 'Getting City List';
+const String strSelValidMsg = 'Please select a valid';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
