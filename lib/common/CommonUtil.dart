@@ -1900,9 +1900,6 @@ class CommonUtil {
       print("value:${value}");
       return value;
     } on PlatformException catch (e) {
-      print("fingerprint error");
-      print(e.message+" "+e.code.toString());
-
       if (e.code == auth_error.notAvailable) {
         print(e.message);
         return false;
