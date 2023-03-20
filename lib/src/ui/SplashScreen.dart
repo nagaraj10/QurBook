@@ -143,14 +143,18 @@ class _SplashScreenState extends State<SplashScreen> {
             Constants.KEY_AUTHTOKEN); // To check whether it's logged in or not
         if (PreferenceUtil.getEnableAppLock() && authToken != null) {
           _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
-          setState(() {});
-
-          if (Platform.isIOS) {
-            reponseToRemoteNotificationMethodChannel.invokeListMethod(
-              IsAppLockChecked,
-              {'status': _loaded},
-            );
+          if(_loaded){
+            setState(() {});
+            if (Platform.isIOS) {
+              reponseToRemoteNotificationMethodChannel.invokeListMethod(
+                IsAppLockChecked,
+                {'status': _loaded},
+              );
+            }
+          }else{
+            _showMyDialog();
           }
+
         } else {
           if (Platform.isIOS) {
             PreferenceUtil.setCallNotificationRecieved(isCalled: false);
@@ -179,6 +183,47 @@ class _SplashScreenState extends State<SplashScreen> {
     } catch (e) {
       if (kDebugMode) print(e.toString());
     }
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return WillPopScope( onWillPop: (){
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },child:AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                SizedBox(height: 10,),
+                Image.asset(
+                  variable.lock_icon,
+                  height: 20,
+                  width: 20,
+                  color: Color(0xff5f059b),
+                ),
+                SizedBox(height: 20,),
+                Text(variable.strQurbookLocked,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+                SizedBox(height: 10,),
+                Text(variable.strQurbookLockDescription,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                SizedBox(height: 10,),
+                TextButton(
+                  child: Text(variable.strUnlock,style: TextStyle(color: Color(0xff2a08c0),),),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    callAppLockFeatureMethod(false);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ));
+      },
+    );
   }
 
   @override
