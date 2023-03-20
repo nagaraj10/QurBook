@@ -75,6 +75,8 @@ class _MyFamilyState extends State<MyFamily> {
 
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   var dialogContext;
 
@@ -233,17 +235,26 @@ class _MyFamilyState extends State<MyFamily> {
         ? data.sharedByUsers.isNotEmpty
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(bottom: 20),
-                  itemBuilder: (c, i) => getCardWidgetForUser(
-                      data.sharedByUsers[i == 0 ? 0 : i - 1],
-                      i,
-                      data.sharedByUsers,
-                      userCollection: data),
-                  itemCount: data.sharedByUsers.length + 1,
-                ),
-              )
+                child: RefreshIndicator(
+                  key: _refreshIndicatorKey,
+                  onRefresh: () {
+                    _refreshIndicatorKey.currentState?.show(atTop: true);
+                    rebuildFamilyBlock();
+                    setState(() {});
+
+                    _refreshIndicatorKey.currentState?.show(atTop: false);
+                  },
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(bottom: 20),
+                    itemBuilder: (c, i) => getCardWidgetForUser(
+                        data.sharedByUsers[i == 0 ? 0 : i - 1],
+                        i,
+                        data.sharedByUsers,
+                        userCollection: data),
+                    itemCount: data.sharedByUsers.length + 1,
+                  ),
+                ))
             : Container(
                 color: Color(fhbColors.bgColorContainer),
                 child: Center(

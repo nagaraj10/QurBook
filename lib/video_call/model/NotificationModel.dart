@@ -402,7 +402,7 @@ class NotificationModel {
       callArguments = CallArguments(
         role: ClientRole.Broadcaster,
         channelName: meeting_id,
-        userName: username,
+        userName: username ?? doctorName,
         doctorId: doctorId,
         doctorName: doctorName,
         isWeb: isWeb ?? false,

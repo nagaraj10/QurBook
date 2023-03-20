@@ -5514,6 +5514,8 @@ class CommonUtil {
 
       Get.find<SheelaAIController>().getSheelaBadgeCount();
       await getMyProfilesetting();
+      var regController = CommonUtil().onInitQurhomeRegimenController();
+      regController.getRegimenList();
     } catch (e) {
       if (kDebugMode) print(e.toString());
     }
