@@ -2298,7 +2298,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               var current = format.parse(currTime);
               var start = format.parse(startTime);
               if (selDate == currDate && start.isBefore(current)) {
-                showAlertMsg("Please select a valid $displayName");
+                showAlertMsg("${variable.strSelValidMsg} $displayName");
                 return;
               }
               tckConstants.tckPrefTime = strTime;
