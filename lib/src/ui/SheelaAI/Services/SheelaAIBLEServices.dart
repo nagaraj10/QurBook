@@ -166,9 +166,9 @@ class SheelaBLEController extends GetxController {
               String deviceType =
                   hublistController.bleDeviceType?.toLowerCase() ?? '';
               if (deviceType.isNotEmpty &&
-                  (deviceType == "SPO2".toLowerCase() ||
-                      deviceType == "BP".toLowerCase() ||
-                      deviceType == "weight".toLowerCase())) {
+                  (deviceType == "spo2" ||
+                      deviceType == "bp" ||
+                      deviceType == "weight")) {
                 if (isFromVitals || isFromRegiment) {
                   Get.back();
                 }
@@ -201,9 +201,9 @@ class SheelaBLEController extends GetxController {
               String deviceType =
                   hublistController.bleDeviceType?.toLowerCase() ?? '';
               receivedData = true;
-              if (deviceType == "BP".toLowerCase() ||
-                  deviceType == "SPO2".toLowerCase() ||
-                  deviceType == "Weight".toLowerCase()) {
+              if (deviceType == "bp" ||
+                  deviceType == "spo2" ||
+                  deviceType == "weight") {
                 if (SheelaController.isSheelaScreenActive) {
                   updateUserData(
                     data: receivedValues.last,
