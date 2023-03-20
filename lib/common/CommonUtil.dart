@@ -1907,8 +1907,11 @@ class CommonUtil {
         // Add handling of no hardware here.
       } else if (e.code == auth_error.notEnrolled) {
       } else if (e.code == auth_error.passcodeNotSet) {
+        /// Indicates that the user has not yet configured a passcode (iOS) or
+        /// PIN/pattern/password (Android) on the device.
+        return true; // Nothing sets but app lock code called
       } else {}
-      return true;
+      return false;
     }
   }
 
