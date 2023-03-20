@@ -866,6 +866,14 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 1));
+        } else if (passedValArr[1] == strPatientReferralAcceptToPatient) {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myprovider_list',
+            'navigationPage': 'MyProvider List Screen',
+          });
+          Get.toNamed(router.rt_UserAccounts,
+              arguments: UserAccountsArguments(selectedIndex: 2));
         } else if (passedValArr[1] == 'myprovider_list') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -978,7 +986,7 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.to(ManageActivitiesScreen()).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
-        }  else if (passedValArr[1] == strAppointmentDetail) {
+        } else if (passedValArr[1] == strAppointmentDetail) {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'appointmentDetail',
@@ -1554,12 +1562,17 @@ class _MyFHBState extends State<MyFHB> {
                 return SplashScreen(
                     nsRoute: strAppointmentDetail, bundle: navRoute);
               }
+            } else if (parsedData[1] == strPatientReferralAcceptToPatient) {
+              //this need to be navigte to My Provider screen
+              return SplashScreen(
+                nsRoute: parsedData[1],
+              );
             } else {
               return SplashScreen(
                 nsRoute: '',
               );
             }
-          }else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
+          } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
             return SplashScreen(
                 nsRoute: 'DoctorRescheduling',
                 doctorID: navRoute.split('&')[1],
