@@ -251,6 +251,10 @@ const String font_roboto = 'Roboto';
 //for class bookmark_record
 const String strBookmarkRecord = 'bookmark record';
 
+//lockscreen
+const String strQurbookLocked = 'Qurbook is locked';
+const String strQurbookLockDescription = 'For your security, you can only use Qurbook when its unlocked';
+
 //for feedback
 const String strChat = 'Chats';
 const String strFeedBack = 'Feedback';
