@@ -254,6 +254,16 @@ class IosNotificationHandler {
           );
         }
       }
+    } else if (model.templateName == strPatientReferralAcceptToPatient) {
+      fbaLog(eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'ns_type': 'myprovider_list',
+        'navigationPage': 'MyProvider List Screen',
+      });
+      Get.toNamed(router.rt_UserAccounts,
+              arguments: UserAccountsArguments(selectedIndex: 2))
+          .then((value) => PageNavigator.goToPermanent(
+              Get.key.currentContext, router.rt_Landing));
     } else if (model.templateName == strNotifyPatientServiceTicketByCC &&
         (model.eventId ?? '').isNotEmpty) {
       fbaLog(eveParams: {
@@ -385,7 +395,7 @@ class IosNotificationHandler {
     } else if (model.redirect == parameters.strAppointmentDetail &&
         (model.appointmentId ?? '').isNotEmpty) {
       AppointmentDetailsController appointmentDetailsController =
-      CommonUtil().onInitAppointmentDetailsController();
+          CommonUtil().onInitAppointmentDetailsController();
       appointmentDetailsController.getAppointmentDetail(model.appointmentId);
       Get.to(() => AppointmentDetailScreen());
     } else if (model.redirect == parameters.chat) {
