@@ -254,6 +254,7 @@ const String strBookmarkRecord = 'bookmark record';
 
 //lockscreen
 const String strQurbookLocked = 'Qurbook is locked';
+const String strUnlock = 'Unlock';
 const String strQurbookLockDescription = 'For your security, you can only use Qurbook when its unlocked';
 
 //for feedback

@@ -212,7 +212,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 Text(variable.strQurbookLockDescription,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
                 SizedBox(height: 10,),
                 TextButton(
-                  child: Text('Unlock',style: TextStyle(color: Color(0xff2a08c0),),),
+                  child: Text(variable.strUnlock,style: TextStyle(color: Color(0xff2a08c0),),),
                   onPressed: () {
                     Navigator.of(context).pop();
                     callAppLockFeatureMethod(false);
