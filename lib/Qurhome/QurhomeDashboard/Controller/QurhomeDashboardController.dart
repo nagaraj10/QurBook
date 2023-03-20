@@ -40,7 +40,7 @@ class QurhomeDashboardController extends GetxController {
     }
     _sheelaBLEController = Get.find();
     getHubDetails();
-    updateBLETimer();
+    // updateBLETimer();
     super.onInit();
   }
 
