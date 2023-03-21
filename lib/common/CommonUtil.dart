@@ -4885,6 +4885,46 @@ class CommonUtil {
         });
   }
 
+  void showDialogForActivityConfirmation(BuildContext context, String name,
+      Function() onPressedYes, bool isQurhome) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Confirm',
+              style: TextStyle(
+                  color: isQurhome
+                      ? Color(CommonUtil().getQurhomePrimaryColor())
+                      : Color(CommonUtil().getMyPrimaryColor())),
+            ), // To display the title it is optional
+            content: Text(
+                'Record ' + name), // Message which will be pop up on the screen
+            // Action widget which will provide the user to acknowledge the choice
+            actions: [
+              FlatButton(
+                textColor: isQurhome
+                    ? Color(CommonUtil().getQurhomePrimaryColor())
+                    : Color(CommonUtil().getMyPrimaryColor()),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('No'),
+              ),
+              FlatButton(
+                // FlatButton widget is used to make a text to work like a button
+                textColor: isQurhome
+                    ? Color(CommonUtil().getQurhomePrimaryColor())
+                    : Color(CommonUtil().getMyPrimaryColor()),
+                onPressed:
+                    onPressedYes, // function used to perform after pressing the button
+                child: Text('Yes'),
+              ),
+            ],
+          );
+        });
+  }
+
   void showDialogForActivityStatus(String msg, BuildContext context,
       {Function() pressOk}) {
     // set up the buttons

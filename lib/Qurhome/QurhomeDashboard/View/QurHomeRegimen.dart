@@ -740,15 +740,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                               CommonUtil().isTablet ? 60 : 50,
                                         )
                                       : Obx(() {
-                                    return Icon(
-                                      (regimen.isPlaying.value ?? false)
-                                          ? Icons.stop_circle_outlined
-                                          : Icons.play_circle_fill_rounded,
-                                      size: 30.0,
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor()),
-                                    );
-                                  }),
+                                          return Icon(
+                                            (regimen.isPlaying.value ?? false)
+                                                ? Icons.stop_circle_outlined
+                                                : Icons
+                                                    .play_circle_fill_rounded,
+                                            size: 30.0,
+                                            color: Color(CommonUtil()
+                                                .getQurhomePrimaryColor()),
+                                          );
+                                        }),
                                 ),
                               ),
                             ),
@@ -776,7 +777,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                   formId: regimen.uformid,
                                   formName: regimen.uformname);
                             } else {
-                              callLogApi(regimen);
+                              CommonUtil().showDialogForActivityConfirmation(
+                                  context, regimen.title.toString().trim(), () {
+                                Navigator.pop(context);
+                                callLogApi(regimen);
+                              }, true);
                             }
                           },
                           child: Image.asset(
