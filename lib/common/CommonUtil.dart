@@ -5769,6 +5769,17 @@ class CommonUtil {
       ],
     );
   }
+
+  String getFormattedDate(String strDate, String format) {
+    try {
+      String formattedDate;
+      formattedDate =
+          DateFormat(format).format(DateTime.parse(strDate).toLocal());
+      return formattedDate;
+    } catch (e) {
+      return '';
+    }
+  }
 }
 
 extension CapExtension on String {

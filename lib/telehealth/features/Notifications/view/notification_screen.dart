@@ -544,6 +544,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.redirectTo,
                             );
+                          } else if (payload?.templateName ==
+                              parameters.strPatientReferralAcceptToPatient) {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.templateName,
+                            );
                           } else {
                             readUnreadAction(notification);
                           }
@@ -786,7 +792,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                                 .doctorId),
                                                         doctorSessionId:
                                                             notification
-                                                                .result[
+                                                
+                     .result[
                                                                     index]
                                                                 .messageDetails
                                                                 .payload
@@ -1258,11 +1265,19 @@ class _NotificationScreen extends State<NotificationScreen> {
       case strAppointmentDetail:
         if ((result?.messageDetails?.payload?.appointmentId ?? '').isNotEmpty) {
           AppointmentDetailsController appointmentDetailsController =
-          CommonUtil().onInitAppointmentDetailsController();
+              CommonUtil().onInitAppointmentDetailsController();
           appointmentDetailsController.getAppointmentDetail(
               result?.messageDetails?.payload?.appointmentId ?? '');
           Get.to(() => AppointmentDetailScreen());
         }
+        readUnreadAction(result);
+        break;
+      case strPatientReferralAcceptToPatient:
+        if (CommonUtil.isUSRegion())
+        Get.toNamed(router.rt_UserAccounts,
+                arguments: UserAccountsArguments(selectedIndex: 2))
+            .then((value) =>
+                PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       default:

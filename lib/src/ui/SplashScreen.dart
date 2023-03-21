@@ -648,6 +648,18 @@ class _SplashScreenState extends State<SplashScreen> {
                                   UserAccountsArguments(selectedIndex: 2))
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
+                    } else if (CommonUtil.isUSRegion() && widget.nsRoute ==
+                        strPatientReferralAcceptToPatient) {
+                      fbaLog(eveParams: {
+                        'eventTime': '${DateTime.now()}',
+                        'ns_type': 'myprovider_list',
+                        'navigationPage': 'MyProvider List Screen',
+                      });
+                      Get.toNamed(router.rt_UserAccounts,
+                              arguments:
+                                  UserAccountsArguments(selectedIndex: 2))
+                          .then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myplans') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
