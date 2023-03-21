@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
@@ -57,6 +58,7 @@ import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/search_providers/models/CityListModel.dart'as cityListModel;
+import '../../../../common/keysofmodel.dart';
 
 class CreateTicketScreen extends StatefulWidget {
   CreateTicketScreen(this.ticketList);
@@ -2283,6 +2285,22 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             String strTime =
                 CommonUtil().validString(preferredTimeController.text);
             if (strTime.isNotEmpty) {
+              DateTime currDateTime = DateTime.now();
+              String currTime = CommonUtil()
+                  .getFormattedDate(currDateTime.toString(), "HH:mm");
+              String currDate =
+                  CommonUtil().getFormattedDate(currDateTime.toString(), c_dMy);
+              String selDate =
+                  CommonUtil().getFormattedDate(dateTime.toString(), c_dMy);
+              DateTime date = DateFormat.jm().parse(strTime);
+              String startTime = DateFormat("HH:mm").format(date);
+              var format = DateFormat("HH:mm");
+              var current = format.parse(currTime);
+              var start = format.parse(startTime);
+              if (selDate == currDate && start.isBefore(current)) {
+                showAlertMsg("${variable.strSelValidMsg} $displayName");
+                return;
+              }
               tckConstants.tckPrefTime = strTime;
               controller.dynamicTextFiledObj[field.name] = strTime;
             } else if (field.isRequired) {
