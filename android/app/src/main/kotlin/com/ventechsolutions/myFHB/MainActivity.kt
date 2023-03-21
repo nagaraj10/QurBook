@@ -2494,7 +2494,11 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             } else if (redirect_to == Constants.MY_PLAN_DETAILS) {
                 sharedValue = "myplandetails&${planId}&${"$templateName"}&${userId}&${patName}"
             }
-        } else if (appLog != null && appLog == "FETCH_LOG") {
+        }else if(templateName == Constants.PATIENT_REFERRAL_ACCEPT){
+                       sharedValue = "${Constants.PROP_ACK}&${templateName!!}"
+ 
+        } 
+        else if (appLog != null && appLog == "FETCH_LOG") {
             sharedValue = appLog
         } else {
             if (HRMId != null && HRMId != "") {

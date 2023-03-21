@@ -154,6 +154,8 @@
         <receiver android:exported="false" android:name=".services.AppointmentPaymentNotification" />
         <receiver android:exported="false" android:name=".services.PlanPaymentNotification" />
         <receiver android:exported="false" android:name=".services.FamilyAdditionNotification" />
+        <receiver android:exported="false" android:name=".services.ReferrelPatientAccept" />
+
                 <receiver android:exported="false" android:name=".services.PartnerServiceTicket" />
         <receiver android:exported="false" android:name="androidx.media.session.MediaButtonReceiver" >
             <intent-filter>
