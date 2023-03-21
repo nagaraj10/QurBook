@@ -131,4 +131,6 @@ object Constants {
     val eidSheela = "eid"
     val sayTextSheela = "saytext"
 
+    val PATIENT_REFERRAL_ACCEPT="patientReferralAcceptToPatient"
+
 }
