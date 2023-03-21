@@ -648,7 +648,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                   UserAccountsArguments(selectedIndex: 2))
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
-                    } else if (widget.nsRoute ==
+                    } else if (CommonUtil.isUSRegion() && widget.nsRoute ==
                         strPatientReferralAcceptToPatient) {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

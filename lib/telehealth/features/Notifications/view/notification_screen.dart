@@ -1273,7 +1273,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case strPatientReferralAcceptToPatient:
-        //if (CommonUtil.isUSRegion())
+        if (CommonUtil.isUSRegion())
         Get.toNamed(router.rt_UserAccounts,
                 arguments: UserAccountsArguments(selectedIndex: 2))
             .then((value) =>

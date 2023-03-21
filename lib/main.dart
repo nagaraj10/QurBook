@@ -866,7 +866,7 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 1));
-        } else if (passedValArr[1] == strPatientReferralAcceptToPatient) {
+        } else if (CommonUtil.isUSRegion() && passedValArr[1] == strPatientReferralAcceptToPatient) {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'myprovider_list',

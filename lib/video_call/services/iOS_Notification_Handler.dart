@@ -254,7 +254,7 @@ class IosNotificationHandler {
           );
         }
       }
-    } else if (model.templateName == strPatientReferralAcceptToPatient) {
+    } else if (CommonUtil.isUSRegion() && model.templateName == strPatientReferralAcceptToPatient) {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': 'myprovider_list',
