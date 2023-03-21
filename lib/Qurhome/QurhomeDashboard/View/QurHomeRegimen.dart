@@ -68,7 +68,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   StreamController<int> _events = StreamController<int>();
   Timer _timer;
   bool appIsInBackground = false;
-
+  List<String> KeysForSPO2 = [
+    "spo2",
+    "pulse",
+    "oxygensaturation",
+  ];
+  List<String> KeysForBP = [
+    "bloodpressure",
+  ];
+  List<String> KeysForGlucose = [
+    "bloodsugar",
+    "randombloodsugar",
+    "fastingsugar",
+    "bloodglucose",
+    "bloodglucose",
+    "fastingbloodsugar"
+  ];
   @override
   void initState() {
     try {
@@ -740,15 +755,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                               CommonUtil().isTablet ? 60 : 50,
                                         )
                                       : Obx(() {
-                                    return Icon(
-                                      (regimen.isPlaying.value ?? false)
-                                          ? Icons.stop_circle_outlined
-                                          : Icons.play_circle_fill_rounded,
-                                      size: 30.0,
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor()),
-                                    );
-                                  }),
+                                          return Icon(
+                                            (regimen.isPlaying.value ?? false)
+                                                ? Icons.stop_circle_outlined
+                                                : Icons
+                                                    .play_circle_fill_rounded,
+                                            size: 30.0,
+                                            color: Color(CommonUtil()
+                                                .getQurhomePrimaryColor()),
+                                          );
+                                        }),
                                 ),
                               ),
                             ),
@@ -938,6 +954,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     return string.replaceAll(' ', '');
   }
 
+  String removeAllUnderscores(String string) {
+    return string.replaceAll('_', '');
+  }
+
   Future<void> onCardPressed(BuildContext context, RegimentDataModel regimen,
       {String eventIdReturn,
       String followEventContext,
@@ -974,9 +994,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         Get.put(SheelaBLEController());
       }
       _sheelaBLEController = Get.find();
-      if (((regimen.title ?? '').isNotEmpty) &&
-          ((removeAllWhitespaces(regimen.title).toLowerCase() == "spo2") ||
-              (removeAllWhitespaces(regimen.title).toLowerCase() == "pulse"))) {
+      String trimmedTitle = removeAllWhitespaces(regimen.title ?? '');
+      trimmedTitle = removeAllUnderscores(trimmedTitle ?? '');
+      trimmedTitle = trimmedTitle.toLowerCase();
+      if (trimmedTitle.isNotEmpty &&
+          KeysForSPO2.contains(
+            trimmedTitle,
+          )) {
         if (checkCanEdit(regimen)) {
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
@@ -1004,9 +1028,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         } else {
           onErrorMessage();
         }
-      } else if (((regimen.title ?? '').isNotEmpty) &&
-          (removeAllWhitespaces(regimen.title).toLowerCase() ==
-              "bloodpressure")) {
+      } else if (trimmedTitle.isNotEmpty &&
+          KeysForBP.contains(
+            trimmedTitle,
+          )) {
         if (checkCanEdit(regimen)) {
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
@@ -1034,8 +1059,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         } else {
           onErrorMessage();
         }
-      } else if (((regimen.title ?? '').isNotEmpty) &&
-          (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
+      } else if ((trimmedTitle.isNotEmpty) && (trimmedTitle == "weight")) {
         if (checkCanEdit(regimen)) {
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
@@ -1054,7 +1078,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               _sheelaBLEController.stopTTS();
               _sheelaBLEController.stopScanning();
             },
-            title: strConnectBpMeter,
+            title: strConnectWeighingScale,
             isFromVital: false,
           );
           _sheelaBLEController.isFromRegiment = true;
@@ -1063,16 +1087,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         } else {
           onErrorMessage();
         }
-      } else if (((regimen.title ?? '').isNotEmpty) &&
-          (removeAllWhitespaces(regimen.title).toLowerCase() == "bloodsugar")) {
+      } else if (trimmedTitle.isNotEmpty &&
+          KeysForGlucose.contains(
+            trimmedTitle,
+          )) {
         if (checkCanEdit(regimen)) {
           redirectToSheelaScreen(regimen);
         } else {
           onErrorMessage();
         }
-      } else if (((regimen.title ?? '').isNotEmpty) &&
-          (removeAllWhitespaces(regimen.title).toLowerCase() ==
-              "temperature")) {
+      } else if (trimmedTitle.isNotEmpty && (trimmedTitle == "temperature")) {
         if (checkCanEdit(regimen)) {
           redirectToSheelaScreen(regimen);
         } else {
