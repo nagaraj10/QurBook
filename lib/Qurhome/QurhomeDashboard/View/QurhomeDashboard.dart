@@ -32,6 +32,13 @@ import 'QurHomeRegimen.dart';
 import 'package:myfhb/main.dart';
 
 class QurhomeDashboard extends StatefulWidget {
+
+  String eventId='';
+  QurhomeDashboard({
+    this.eventId,
+  });
+
+
   @override
   _QurhomeDashboardState createState() => _QurhomeDashboardState();
 }
@@ -107,6 +114,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
+      controller.isActive.value = true;
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -131,6 +139,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
       CommonUtil().initPortraitMode();
       MyFHB.routeObserver.unsubscribe(this);
+      controller.isActive.value = false;
       super.dispose();
     } catch (e) {
       print(e);
@@ -172,7 +181,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       );
   @override
   Widget build(BuildContext context) {
-    return Obx(() => WillPopScope(
+    return Obx(() =>
+    controller.isLoading.isTrue
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : WillPopScope(
           child: Scaffold(
             drawerEnableOpenDragGesture: false,
             key: _scaffoldKey,
@@ -309,6 +323,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                           size: CommonUtil().isTablet ? 38.0 : 24.0,
                           onTap: () {
                             Get.back();
+                            controller.isActive.value = false;
                           },
                         )
                   : Container(
@@ -561,6 +576,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
           ),
           onWillPop: () async {
             Get.back();
+            controller.isActive.value = false;
             return true;
           },
         ));
@@ -570,7 +586,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     Widget landingTab;
     switch (controller.currentSelectedIndex.value) {
       case 1:
-        landingTab = QurHomeRegimenScreen();
+        landingTab = QurHomeRegimenScreen(eventId: widget.eventId != null &&
+            widget.eventId.trim().isNotEmpty?widget.eventId:null,);
         break;
       case 2:
         landingTab = VitalsList();
@@ -579,7 +596,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         landingTab = SymptomListScreen();
         break;
       default:
-        landingTab = QurHomeRegimenScreen();
+        landingTab = QurHomeRegimenScreen(eventId: widget.eventId != null &&
+            widget.eventId.trim().isNotEmpty?widget.eventId:null,);
         break;
     }
     return landingTab;

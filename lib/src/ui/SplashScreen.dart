@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:local_auth/auth_strings.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -34,7 +31,6 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -49,9 +45,6 @@ import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/p
 import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
@@ -59,12 +52,9 @@ import '../utils/PageNavigator.dart';
 import 'package:connectivity/connectivity.dart';
 import 'NetworkScreen.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 
 import 'SheelaAI/Models/sheela_arguments.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
-import 'package:local_auth/error_codes.dart' as auth_error;
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -603,17 +593,28 @@ class _SplashScreenState extends State<SplashScreen> {
                     } else if (widget.nsRoute == 'regiment_screen') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
-                        'ns_type': 'regiment_screen',
+                        'ns_type': CommonUtil.isUSRegion()?'QurHomeRegimenScreen':'regiment_screen',
                         'navigationPage': 'Regimen Screen',
                       });
-                      Provider.of<RegimentViewModel>(
-                        context,
-                        listen: false,
-                      )?.regimentMode = RegimentMode.Schedule;
-                      Provider.of<RegimentViewModel>(context, listen: false)
-                          ?.regimentFilter = RegimentFilter.Missed;
-                      PageNavigator.goToPermanent(context, router.rt_Regimen,
-                          arguments: RegimentArguments(eventId: widget.bundle));
+                      if (CommonUtil.isUSRegion()) {
+                        Get.to(() => QurhomeDashboard(
+                                  eventId: widget.bundle != null
+                                      ? widget.bundle
+                                      : "",
+                                ))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+                      } else {
+                        Provider.of<RegimentViewModel>(
+                          context,
+                          listen: false,
+                        )?.regimentMode = RegimentMode.Schedule;
+                        Provider.of<RegimentViewModel>(context, listen: false)
+                            ?.regimentFilter = RegimentFilter.Missed;
+                        PageNavigator.goToPermanent(context, router.rt_Regimen,
+                            arguments:
+                                RegimentArguments(eventId: widget.bundle));
+                      }
                     } else if (widget.nsRoute == 'th_provider_hospital') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

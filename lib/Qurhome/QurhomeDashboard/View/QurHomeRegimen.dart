@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -42,8 +44,10 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
+  String eventId='';
   QurHomeRegimenScreen({
     this.addAppBar = false,
+    this.eventId,
   });
 
   @override
@@ -84,6 +88,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     "bloodglucose",
     "fastingbloodsugar"
   ];
+
+  FlutterToast toast = FlutterToast();
+  FToast fToast = FToast();
+
+
   @override
   void initState() {
     try {
@@ -97,7 +106,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       chatGetXController = Get.find();
       controller.currLoggedEID.value = "";
       controller.isFirstTime.value = true;
-      controller.getRegimenList();
+      onInit();
       chatGetXController.getUnreadCountFamily().then(
         (value) {
           if (value != null) {
@@ -116,8 +125,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         },
       );
       initSocketCountUnread();
-      //initGeoLocation();
-      //checkMobileOrTablet();
       WidgetsBinding.instance.addObserver(this);
       controller.startTimer();
       super.initState();
@@ -126,25 +133,52 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-  /*void checkMobileOrTablet() async {
+
+  onInit() async {
     try {
-      if(CommonUtil().isTablet)
-      {
-        controller.isSIMInserted.value = false;
-      }else{
-        controller.isSIMInserted.value = true;
-        FHBUtils().check().then((intenet) {
-          if (intenet != null && intenet) {
-            controller.getSOSAgentNumber(false);
-          } else {
-            //FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
+      await controller.getRegimenList();
+      if (CommonUtil.isUSRegion()) {
+        if (widget.eventId != null &&
+            widget.eventId.trim().isNotEmpty &&
+            controller.qurHomeRegimenResponseModel?.regimentsList != null &&
+            (controller.qurHomeRegimenResponseModel?.regimentsList?.length ??
+                    0) >
+                0) {
+          RegimentDataModel currRegimen = null;
+          for (int i = 0;
+              i <
+                      controller
+                          .qurHomeRegimenResponseModel?.regimentsList?.length ??
+                  0;
+              i++) {
+            RegimentDataModel regimentDataModel =
+                controller.qurHomeRegimenResponseModel?.regimentsList[i];
+            if ((regimentDataModel?.eid ?? "").toString().toLowerCase() ==
+                widget.eventId) {
+              currRegimen = regimentDataModel;
+              if (regimentDataModel?.activityOrgin != strAppointmentRegimen &&
+                  regimentDataModel?.ack == null) {
+                showRegimenDialog(regimentDataModel, i);
+              } else if (regimentDataModel?.activityOrgin !=
+                      strAppointmentRegimen &&
+                  regimentDataModel?.ack != null) {
+                toast.getToastWithBuildContext(
+                    variable.strActivityCompleted, Colors.blue, context);
+              }
+              break;
+            }
           }
-        });
+          if (currRegimen == null) {
+            getPastActivityToast();
+          }
+        }
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
-  }*/
+  }
 
   initSocketCountUnread() {
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
@@ -736,7 +770,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         stopRegimenTTS();
                                         regimen.isPlaying.value = true;
                                         setState(() {});
-                                        final status = await sheelaController
+                                        await sheelaController
                                             .playTTS(regimen?.title ?? '', () {
                                           sheelaController.stopTTS();
                                           regimen.isPlaying.value = false;
@@ -1730,6 +1764,50 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         eId: regimen?.eid ?? "",
       ),
     ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+  }
+
+  getPastActivityToast() {
+    try {
+      fToast.init(context);
+      Widget toast = Wrap(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Colors.amber,
+            ),
+            child: RichText(
+                text: TextSpan(
+              children: [
+                TextSpan(
+                    text: variable.strPastActivityMsgOne,
+                    style: TextStyle(color: Colors.white)),
+                TextSpan(
+                    text: variable.strPastActivityMsgTwo,
+                    style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.black)),
+                TextSpan(
+                    text: variable.strPastActivityMsgThree,
+                    style: TextStyle(color: Colors.white)),
+              ],
+            )),
+          )
+        ],
+      );
+
+      fToast.showToast(
+        child: toast,
+        gravity: ToastGravity.BOTTOM,
+        toastDuration: Duration(seconds: 2),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
   }
 }
 

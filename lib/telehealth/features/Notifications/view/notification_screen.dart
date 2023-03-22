@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -8,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -31,28 +31,21 @@ import '../../../../myPlan/view/myPlanDetail.dart';
 import '../../../../regiment/models/regiment_arguments.dart';
 import '../../../../regiment/view_model/regiment_view_model.dart';
 import '../../../../src/utils/language/language_utils.dart';
-import '../../MyProvider/view/MyProvidersMain.dart';
 import '../constants/notification_constants.dart' as constants;
-import '../../../../common/common_circular_indicator.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
 import '../../../../constants/fhb_parameters.dart' as parameters;
 import '../model/notificationResult.dart';
 import '../model/notification_ontap_req.dart';
 import '../model/payload.dart';
 import '../services/notification_services.dart';
-import '../../appointments/constants/appointments_constants.dart'
-    as AppConstants;
 import '../model/messageContent.dart';
-import '../model/notification_model.dart';
 import '../viewModel/fetchNotificationViewModel.dart';
 import '../../appointments/model/cancelAppointments/cancelModel.dart';
 import '../../appointments/model/fetchAppointments/city.dart';
 import '../../appointments/model/fetchAppointments/doctor.dart' as doctorObj;
 import '../../appointments/model/fetchAppointments/past.dart';
-import '../../appointments/view/appointmentsMain.dart';
 import '../../appointments/view/resheduleMain.dart';
 import '../../appointments/viewModel/cancelAppointmentViewModel.dart';
-import '../../chat/view/home.dart';
 import '../../../../widgets/GradientAppBar.dart';
 import '../../../../widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
@@ -62,11 +55,7 @@ import '../../../../src/model/home_screen_arguments.dart';
 import '../../../../constants/router_variable.dart' as router;
 import '../../../../src/utils/PageNavigator.dart';
 import '../../../../src/model/user/user_accounts_arguments.dart';
-import '../../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../../src/ui/MyRecord.dart';
-import '../../../../src/ui/MyRecordsArguments.dart';
-import '../../../../src/model/Category/catergory_result.dart';
-import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/router_variable.dart' as routervariable;
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
 
@@ -1235,21 +1224,37 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "regiment_screen":
-        Provider.of<RegimentViewModel>(
-          context,
-          listen: false,
-        )?.regimentMode = RegimentMode.Schedule;
-        Provider.of<RegimentViewModel>(context, listen: false)?.regimentFilter =
-            RegimentFilter.Missed;
-        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments()).then(
-          (value) => PageNavigator.goToPermanent(
-            context,
-            router.rt_Landing,
-            arguments: LandingArguments(
-              needFreshLoad: false,
+        if (CommonUtil.isUSRegion()) {
+          Get.to(
+            () => QurhomeDashboard(
+              eventId: result?.messageDetails?.payload?.eventId ?? '',
             ),
-          ),
-        );
+          ).then(
+            (value) => PageNavigator.goToPermanent(
+              context,
+              router.rt_Landing,
+              arguments: LandingArguments(
+                needFreshLoad: false,
+              ),
+            ),
+          );
+        } else {
+          Provider.of<RegimentViewModel>(
+            context,
+            listen: false,
+          )?.regimentMode = RegimentMode.Schedule;
+          Provider.of<RegimentViewModel>(context, listen: false)
+              ?.regimentFilter = RegimentFilter.Missed;
+          Get.toNamed(router.rt_Regimen, arguments: RegimentArguments()).then(
+            (value) => PageNavigator.goToPermanent(
+              context,
+              router.rt_Landing,
+              arguments: LandingArguments(
+                needFreshLoad: false,
+              ),
+            ),
+          );
+        }
         readUnreadAction(result);
         break;
       case "claimList":
