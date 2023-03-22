@@ -4892,14 +4892,14 @@ class CommonUtil {
         builder: (context) {
           return AlertDialog(
             title: Text(
-              'Confirm',
+              variable.strConfirm,
               style: TextStyle(
                   color: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
                       : Color(CommonUtil().getMyPrimaryColor())),
             ), // To display the title it is optional
-            content: Text(
-                'Record ' + name), // Message which will be pop up on the screen
+            content: Text('Record ' + name ??
+                ''), // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
               FlatButton(
@@ -4909,17 +4909,16 @@ class CommonUtil {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('No'),
+                child: Text(variable.strNo),
               ),
               FlatButton(
-                // FlatButton widget is used to make a text to work like a button
-                textColor: isQurhome
-                    ? Color(CommonUtil().getQurhomePrimaryColor())
-                    : Color(CommonUtil().getMyPrimaryColor()),
-                onPressed:
-                    onPressedYes, // function used to perform after pressing the button
-                child: Text('Yes'),
-              ),
+                  // FlatButton widget is used to make a text to work like a button
+                  textColor: isQurhome
+                      ? Color(CommonUtil().getQurhomePrimaryColor())
+                      : Color(CommonUtil().getMyPrimaryColor()),
+                  onPressed:
+                      onPressedYes, // function used to perform after pressing the button
+                  child: Text(variable.strYes)),
             ],
           );
         });

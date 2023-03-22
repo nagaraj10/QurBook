@@ -793,7 +793,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                   formName: regimen.uformname);
                             } else {
                               CommonUtil().showDialogForActivityConfirmation(
-                                  context, regimen.title.toString().trim(), () {
+                                  context, regimen?.title?.toString()?.trim(),
+                                  () {
                                 Navigator.pop(context);
                                 callLogApi(regimen);
                               }, true);
