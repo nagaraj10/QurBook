@@ -339,38 +339,43 @@ class _AppointmentsState extends State<Appointments> {
                             : Container()
                       ],
                     )
-                  : Container(
-                      height: 1.sh / 2,
-                      alignment: Alignment.center,
-                      child: Center(
-                        child: Text(
-                          variable.strNoAppointments,
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
-                          ),
-                        ),
-                      ),
-                    );
+                  : refreshIndicatorWithEmptyContainer(
+                      variable.strNoAppointments);
             } else {
               return CommonCircularIndicator();
             }
           },
         );
       case LoadingStatus.empty:
+        return refreshIndicatorWithEmptyContainer(variable.strNoAppointments);
+        break;
       default:
-        return Container(
-          height: 1.sh / 2,
-          alignment: Alignment.center,
-          child: Center(
-            child: Text(
-              variable.strNoAppointments,
-              style: TextStyle(
-                fontSize: 16.0.sp,
-              ),
-            ),
-          ),
-        );
+        return refreshIndicatorWithEmptyContainer(variable.strNoAppointments);
     }
+  }
+
+  Widget refreshIndicatorWithEmptyContainer(String msg) {
+    return RefreshIndicator(
+        onRefresh: () {
+          return refreshPage();
+        },
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            Container(
+              height: 1.sh / 2,
+              alignment: Alignment.center,
+              child: Center(
+                child: Text(
+                  variable.strNoAppointments,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ));
   }
 
   Widget appBar() {
