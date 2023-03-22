@@ -795,13 +795,13 @@ class _MyFHBState extends State<MyFHB> {
           if (CommonUtil.isUSRegion()) {
             var qurhomeDashboardController =
                 CommonUtil().onInitQurhomeDashboardController();
-            if (qurhomeDashboardController.isActive.value) {
-              qurhomeDashboardController.isLoading.value = true;
-              Future.delayed(const Duration(milliseconds: 100)).then((value) =>
-                  qurhomeDashboardController.isLoading.value = false);
-            } else {
-              Get.to(QurhomeDashboard(eventId: passedValArr[2] ?? ''));
+            qurhomeDashboardController.eventId.value = passedValArr[2] ?? '';
+            if(!qurhomeDashboardController.isActive.value){
+              Get.to(QurhomeDashboard());
             }
+            qurhomeDashboardController.isLoading.value = true;
+            Future.delayed(Duration(milliseconds: 100)).then(
+                (value) => qurhomeDashboardController.isLoading.value = false);
           } else {
             Provider.of<RegimentViewModel>(
               context,

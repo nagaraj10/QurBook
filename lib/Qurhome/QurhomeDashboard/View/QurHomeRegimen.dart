@@ -44,10 +44,8 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
-  String eventId='';
   QurHomeRegimenScreen({
     this.addAppBar = false,
-    this.eventId,
   });
 
   @override
@@ -91,7 +89,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   FlutterToast toast = FlutterToast();
   FToast fToast = FToast();
-
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
 
   @override
   void initState() {
@@ -137,40 +136,46 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   onInit() async {
     try {
       await controller.getRegimenList();
+      bool isFirstTime = true;
       if (CommonUtil.isUSRegion()) {
-        if (widget.eventId != null &&
-            widget.eventId.trim().isNotEmpty &&
+        if (qurhomeDashboardController.eventId.value != null &&
+            qurhomeDashboardController.eventId.value.trim().isNotEmpty &&
             controller.qurHomeRegimenResponseModel?.regimentsList != null &&
             (controller.qurHomeRegimenResponseModel?.regimentsList?.length ??
                     0) >
                 0) {
-          RegimentDataModel currRegimen = null;
-          for (int i = 0;
-              i <
-                      controller
-                          .qurHomeRegimenResponseModel?.regimentsList?.length ??
-                  0;
-              i++) {
-            RegimentDataModel regimentDataModel =
-                controller.qurHomeRegimenResponseModel?.regimentsList[i];
-            if ((regimentDataModel?.eid ?? "").toString().toLowerCase() ==
-                widget.eventId) {
-              currRegimen = regimentDataModel;
-              if (regimentDataModel?.activityOrgin != strAppointmentRegimen &&
-                  regimentDataModel?.ack == null) {
-                showRegimenDialog(regimentDataModel, i);
-              } else if (regimentDataModel?.activityOrgin !=
-                      strAppointmentRegimen &&
-                  regimentDataModel?.ack != null) {
-                toast.getToastWithBuildContext(
-                    variable.strActivityCompleted, Colors.blue, context);
+          if (isFirstTime) {
+            isFirstTime = false;
+            RegimentDataModel currRegimen = null;
+            for (int i = 0;
+            i <
+                controller
+                    .qurHomeRegimenResponseModel?.regimentsList?.length ??
+                0;
+            i++) {
+              RegimentDataModel regimentDataModel =
+              controller.qurHomeRegimenResponseModel?.regimentsList[i];
+              if ((regimentDataModel?.eid ?? "").toString().toLowerCase() ==
+                  qurhomeDashboardController.eventId.value) {
+                currRegimen = regimentDataModel;
+                if (regimentDataModel?.activityOrgin != strAppointmentRegimen &&
+                    regimentDataModel?.ack == null) {
+                  showRegimenDialog(regimentDataModel, i);
+                  await Future.delayed(Duration(milliseconds: 50));
+                } else if (regimentDataModel?.activityOrgin !=
+                    strAppointmentRegimen &&
+                    regimentDataModel?.ack != null) {
+                  toast.getToastWithBuildContext(
+                      variable.strActivityCompleted, Colors.blue, context);
+                }
+                break;
               }
-              break;
+            }
+            if (currRegimen == null) {
+              getPastActivityToast();
             }
           }
-          if (currRegimen == null) {
-            getPastActivityToast();
-          }
+          qurhomeDashboardController.eventId.value = "";
         }
       }
     } catch (e) {

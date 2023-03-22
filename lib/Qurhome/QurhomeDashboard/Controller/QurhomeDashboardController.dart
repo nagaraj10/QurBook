@@ -26,8 +26,9 @@ class QurhomeDashboardController extends GetxController {
   SheelaBLEController _sheelaBLEController;
   Timer _bleTimer;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
-  var isActive = false.obs;
   var isLoading = false.obs;
+  var isActive = false.obs;
+  var eventId = ''.obs;
 
   @override
   void onInit() {

@@ -597,11 +597,12 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': 'Regimen Screen',
                       });
                       if (CommonUtil.isUSRegion()) {
-                        Get.to(() => QurhomeDashboard(
-                                  eventId: widget.bundle != null
-                                      ? widget.bundle
-                                      : "",
-                                ))
+                        var qurhomeDashboardController =
+                        CommonUtil().onInitQurhomeDashboardController();
+                        qurhomeDashboardController.eventId.value = widget.bundle != null
+                            ? widget.bundle
+                            : "";
+                        Get.to(() => QurhomeDashboard())
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       } else {

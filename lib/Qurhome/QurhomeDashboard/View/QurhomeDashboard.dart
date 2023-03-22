@@ -33,11 +33,6 @@ import 'package:myfhb/main.dart';
 
 class QurhomeDashboard extends StatefulWidget {
 
-  String eventId='';
-  QurhomeDashboard({
-    this.eventId,
-  });
-
 
   @override
   _QurhomeDashboardState createState() => _QurhomeDashboardState();
@@ -81,6 +76,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   void didChangeDependencies() {
     super.didChangeDependencies();
     MyFHB.routeObserver.subscribe(this, ModalRoute.of(context));
+    controller.isActive.value = true;
   }
 
   onInit() async {
@@ -586,8 +582,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     Widget landingTab;
     switch (controller.currentSelectedIndex.value) {
       case 1:
-        landingTab = QurHomeRegimenScreen(eventId: widget.eventId != null &&
-            widget.eventId.trim().isNotEmpty?widget.eventId:null,);
+        landingTab = QurHomeRegimenScreen();
         break;
       case 2:
         landingTab = VitalsList();
@@ -596,8 +591,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         landingTab = SymptomListScreen();
         break;
       default:
-        landingTab = QurHomeRegimenScreen(eventId: widget.eventId != null &&
-            widget.eventId.trim().isNotEmpty?widget.eventId:null,);
+        landingTab = QurHomeRegimenScreen();
         break;
     }
     return landingTab;

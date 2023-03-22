@@ -1225,10 +1225,11 @@ class _NotificationScreen extends State<NotificationScreen> {
         break;
       case "regiment_screen":
         if (CommonUtil.isUSRegion()) {
+          var qurhomeDashboardController =
+          CommonUtil().onInitQurhomeDashboardController();
+          qurhomeDashboardController.eventId.value = result?.messageDetails?.payload?.eventId ?? '';
           Get.to(
-            () => QurhomeDashboard(
-              eventId: result?.messageDetails?.payload?.eventId ?? '',
-            ),
+            () => QurhomeDashboard(),
           ).then(
             (value) => PageNavigator.goToPermanent(
               context,
