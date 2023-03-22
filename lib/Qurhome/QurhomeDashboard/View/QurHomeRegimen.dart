@@ -792,7 +792,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                   formId: regimen.uformid,
                                   formName: regimen.uformname);
                             } else {
-                              callLogApi(regimen);
+                              CommonUtil().showDialogForActivityConfirmation(
+                                  context, regimen?.title?.toString()?.trim(),
+                                  () {
+                                Navigator.pop(context);
+                                callLogApi(regimen);
+                              }, true);
                             }
                           },
                           child: Image.asset(
