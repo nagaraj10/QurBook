@@ -336,65 +336,76 @@ class SymptomItemCard extends StatelessWidget {
                                             color: Colors.transparent,
                                             child: InkWell(
                                               onTap: () async {
-                                                stopRegimenTTS();
-
-                                                final canEdit = startTime
-                                                            .difference(
-                                                                DateTime.now())
-                                                            .inMinutes <=
-                                                        15 &&
-                                                    Provider.of<RegimentViewModel>(
-                                                                context,
-                                                                listen: false)
-                                                            .regimentMode ==
-                                                        RegimentMode.Schedule;
-                                                if (canEdit ||
-                                                    isValidSymptom(context)) {
-                                                  LoaderQurHome
-                                                      .showLoadingDialog(
-                                                    Get.context,
-                                                    canDismiss: false,
-                                                  );
-                                                  var saveResponse =
-                                                      await _apiProvider
-                                                          .saveFormDataQurHome(
-                                                    eid: eid,
-                                                  );
-                                                  if (saveResponse?.isSuccess ??
-                                                      false) {
-                                                    Future.delayed(
-                                                        Duration(
-                                                            milliseconds: 300),
+                                                CommonUtil()
+                                                    .showDialogForActivityConfirmation(
+                                                        context, title,
                                                         () async {
-                                                      /*await Provider.of<RegimentViewModel>(context,
+                                                  Navigator.pop(context);
+
+                                                  stopRegimenTTS();
+
+                                                  final canEdit = startTime
+                                                              .difference(
+                                                                  DateTime
+                                                                      .now())
+                                                              .inMinutes <=
+                                                          15 &&
+                                                      Provider.of<RegimentViewModel>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .regimentMode ==
+                                                          RegimentMode.Schedule;
+                                                  if (canEdit ||
+                                                      isValidSymptom(context)) {
+                                                    LoaderQurHome
+                                                        .showLoadingDialog(
+                                                      Get.context,
+                                                      canDismiss: false,
+                                                    );
+                                                    var saveResponse =
+                                                        await _apiProvider
+                                                            .saveFormDataQurHome(
+                                                      eid: eid,
+                                                    );
+                                                    if (saveResponse
+                                                            ?.isSuccess ??
+                                                        false) {
+                                                      Future.delayed(
+                                                          Duration(
+                                                              milliseconds:
+                                                                  300),
+                                                          () async {
+                                                        /*await Provider.of<RegimentViewModel>(context,
                                       listen: false)
                                   .fetchRegimentData();*/
-                                                      await controller
-                                                          .getSymptomList(
-                                                              isLoading: false);
+                                                        await controller
+                                                            .getSymptomList(
+                                                                isLoading:
+                                                                    false);
+                                                        LoaderQurHome
+                                                            .hideLoadingDialog(
+                                                                Get.context);
+                                                      });
+                                                    } else {
                                                       LoaderQurHome
                                                           .hideLoadingDialog(
                                                               Get.context);
-                                                    });
+                                                    }
                                                   } else {
-                                                    LoaderQurHome
-                                                        .hideLoadingDialog(
-                                                            Get.context);
+                                                    FlutterToast().getToast(
+                                                      (Provider.of<RegimentViewModel>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .regimentMode ==
+                                                              RegimentMode
+                                                                  .Symptoms)
+                                                          ? symptomsError
+                                                          : activitiesError,
+                                                      Colors.red,
+                                                    );
                                                   }
-                                                } else {
-                                                  FlutterToast().getToast(
-                                                    (Provider.of<RegimentViewModel>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .regimentMode ==
-                                                            RegimentMode
-                                                                .Symptoms)
-                                                        ? symptomsError
-                                                        : activitiesError,
-                                                    Colors.red,
-                                                  );
-                                                }
+                                                }, true);
                                               },
                                               child: Icon(
                                                 regimentData.ack == null
@@ -981,50 +992,55 @@ class SymptomItemCard extends StatelessWidget {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () async {
-                              stopRegimenTTS();
+                              CommonUtil().showDialogForActivityConfirmation(
+                                  context, title, () async {
+                                Navigator.pop(context);
+                                stopRegimenTTS();
 
-                              final canEdit = startTime
-                                          .difference(DateTime.now())
-                                          .inMinutes <=
-                                      15 &&
-                                  Provider.of<RegimentViewModel>(context,
-                                              listen: false)
-                                          .regimentMode ==
-                                      RegimentMode.Schedule;
-                              if (canEdit || isValidSymptom(context)) {
-                                LoaderQurHome.showLoadingDialog(
-                                  Get.context,
-                                  canDismiss: false,
-                                );
-                                var saveResponse =
-                                    await _apiProvider.saveFormDataQurHome(
-                                  eid: eid,
-                                );
-                                if (saveResponse?.isSuccess ?? false) {
-                                  Future.delayed(Duration(milliseconds: 300),
-                                      () async {
-                                    /*await Provider.of<RegimentViewModel>(context,
+                                final canEdit = startTime
+                                            .difference(DateTime.now())
+                                            .inMinutes <=
+                                        15 &&
+                                    Provider.of<RegimentViewModel>(context,
+                                                listen: false)
+                                            .regimentMode ==
+                                        RegimentMode.Schedule;
+                                if (canEdit || isValidSymptom(context)) {
+                                  LoaderQurHome.showLoadingDialog(
+                                    Get.context,
+                                    canDismiss: false,
+                                  );
+                                  var saveResponse =
+                                      await _apiProvider.saveFormDataQurHome(
+                                    eid: eid,
+                                  );
+                                  if (saveResponse?.isSuccess ?? false) {
+                                    Future.delayed(Duration(milliseconds: 300),
+                                        () async {
+                                      /*await Provider.of<RegimentViewModel>(context,
                                       listen: false)
                                   .fetchRegimentData();*/
-                                    await controller.getSymptomList(
-                                        isLoading: false);
+                                      await controller.getSymptomList(
+                                          isLoading: false);
+                                      LoaderQurHome.hideLoadingDialog(
+                                          Get.context);
+                                    });
+                                  } else {
                                     LoaderQurHome.hideLoadingDialog(
                                         Get.context);
-                                  });
+                                  }
                                 } else {
-                                  LoaderQurHome.hideLoadingDialog(Get.context);
+                                  FlutterToast().getToast(
+                                    (Provider.of<RegimentViewModel>(context,
+                                                    listen: false)
+                                                .regimentMode ==
+                                            RegimentMode.Symptoms)
+                                        ? symptomsError
+                                        : activitiesError,
+                                    Colors.red,
+                                  );
                                 }
-                              } else {
-                                FlutterToast().getToast(
-                                  (Provider.of<RegimentViewModel>(context,
-                                                  listen: false)
-                                              .regimentMode ==
-                                          RegimentMode.Symptoms)
-                                      ? symptomsError
-                                      : activitiesError,
-                                  Colors.red,
-                                );
-                              }
+                              }, true);
                             },
                             child: Icon(
                               regimentData.ack == null
