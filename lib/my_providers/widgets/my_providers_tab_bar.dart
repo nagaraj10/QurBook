@@ -10,6 +10,7 @@ import '../screens/my_provider.dart';
 import '../screens/my_providers_doctors_list.dart';
 import '../screens/my_providers_hospitals_list.dart';
 import '../screens/my_providers_labs_list.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyProvidersTabBar extends StatefulWidget {
   MyProvidersResponseData data;
@@ -168,19 +169,8 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                     widget.refresh();
                   },
                 ))
-            : Container(
-                color: Color(fhbColors.bgColorContainer),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40),
-                    child: Text(
-                      Constants.NO_DATA_DOCTOR,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-        if (hospitalsModel!=null&&hospitalsModel.length > 0)
+            : refreshIndicatorWithEmptyContainer(Constants.NO_DATA_DOCTOR),
+        if (hospitalsModel != null && hospitalsModel.length > 0)
           Container(
               color: Color(fhbColors.bgColorContainer),
               child: MyProvidersHospitalsList(
@@ -192,19 +182,8 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                 },
               ))
         else
-          Container(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: Text(
-                  Constants.NO_DATA_HOSPITAL,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            color: Color(fhbColors.bgColorContainer),
-          ),
-        if (labsModel!=null&&labsModel.length > 0)
+          refreshIndicatorWithEmptyContainer(Constants.NO_DATA_HOSPITAL),
+        if (labsModel != null && labsModel.length > 0)
           Container(
               color: Color(fhbColors.bgColorContainer),
               child: MyProvidersLabsList(
@@ -216,19 +195,31 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                 },
               ))
         else
-          Container(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: Text(
-                  Constants.NO_DATA_LAB,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            color: Color(fhbColors.bgColorContainer),
-          ),
+          refreshIndicatorWithEmptyContainer(Constants.NO_DATA_LAB)
       ],
     );
+  }
+
+  refreshIndicatorWithEmptyContainer(String msg) {
+    return RefreshIndicator(
+        onRefresh: () {
+          widget.refresh();
+        },
+        child: ListView(
+          children: [
+            Container(
+              height: 1.sh / 2,
+              alignment: Alignment.center,
+              child: Center(
+                child: Text(
+                  msg,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ));
   }
 }

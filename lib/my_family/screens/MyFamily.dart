@@ -255,28 +255,8 @@ class _MyFamilyState extends State<MyFamily> {
                     itemCount: data.sharedByUsers.length + 1,
                   ),
                 ))
-            : Container(
-                color: Color(fhbColors.bgColorContainer),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40),
-                    child: Text(
-                      Constants.NO_DATA_FAMIY,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              )
-        : Container(
-            color: Color(fhbColors.bgColorContainer),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child:
-                    Text(Constants.NO_DATA_FAMIY, textAlign: TextAlign.center),
-              ),
-            ),
-          );
+            : refreshIndicatorWithEmptyContainer()
+        : refreshIndicatorWithEmptyContainer();
   }
 
   String capitalize(String string) {
@@ -1404,5 +1384,32 @@ class _MyFamilyState extends State<MyFamily> {
     }, onPressedCancel: () {
       Navigator.pop(context);
     });
+  }
+
+  refreshIndicatorWithEmptyContainer() {
+    return RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () {
+          _refreshIndicatorKey.currentState?.show(atTop: true);
+          rebuildFamilyBlock();
+          setState(() {});
+
+          _refreshIndicatorKey.currentState?.show(atTop: false);
+        },
+        child: ListView(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: Color(fhbColors.bgColorContainer),
+              child: Expanded(
+                child: Center(
+                  child: Text(Constants.NO_DATA_FAMIY,
+                      textAlign: TextAlign.center),
+                ),
+              ),
+            )
+          ],
+        ));
   }
 }
