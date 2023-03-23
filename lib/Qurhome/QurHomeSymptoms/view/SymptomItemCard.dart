@@ -1134,6 +1134,7 @@ class SymptomItemCard extends StatelessWidget {
       var value = await showDialog(
         context: context,
         builder: (context) => FormDataDialog(
+          introText: regimentData?.otherinfo?.introText ?? '',
           fieldsData: fieldsResponseModel.result.fields,
           eid: eventId,
           color: color,
