@@ -31,8 +31,8 @@ class QurhomeDashboardController extends GetxController {
   var isActive = false.obs;
   var eventId = ''.obs;
 
-  var isVitalModuleDisable = false.obs;
-  var isSymptomModuleDisable = false.obs;
+  var isVitalModuleDisable = true.obs;
+  var isSymptomModuleDisable = true.obs;
 
   @override
   void onInit() {
@@ -203,10 +203,10 @@ class QurhomeDashboardController extends GetxController {
                         .name ??
                     '';
                 if (isAccess == strVitalsModule) {
-                  isVitalModuleDisable.value = true;
+                  isVitalModuleDisable.value = false;
                 }
                 if (isAccess == strSymptomsModule) {
-                  isSymptomModuleDisable.value = true;
+                  isSymptomModuleDisable.value = false;
                 }
               }
             }

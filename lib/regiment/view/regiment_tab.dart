@@ -428,6 +428,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                               onTap: () {
                                 if ((_regimentViewModel.regimentMode ==
                                         RegimentMode.Schedule) &&
+                                    (CommonUtil.isUSRegion()) &&
                                     (qurhomeDashboardController
                                         .isSymptomModuleDisable.value)) {
                                   FlutterToast().getToast(
@@ -828,6 +829,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Color colors;
     try {
       if ((_regimentViewModel.regimentMode == RegimentMode.Schedule) &&
+          (CommonUtil.isUSRegion()) &&
           (qurhomeDashboardController.isSymptomModuleDisable.value)) {
         colors = Colors.grey;
       } else {
