@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
@@ -53,6 +55,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   BuildContext _myContext;
   ProfileResponseModel profileResponseModel;
+
+  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
 
   @override
   void initState() {
@@ -422,15 +426,23 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                _regimentViewModel.handleSearchField();
-                                _regimentViewModel.switchRegimentMode();
-                                if (_regimentViewModel.regimentMode ==
-                                        RegimentMode.Symptoms &&
-                                    !isFirstSymptom) {
-                                  Future.delayed(
-                                      Duration(milliseconds: 1000),
-                                      () => ShowCaseWidget.of(_myContext)
-                                          .startShowCase([_SymptomsCardKey]));
+                                if ((_regimentViewModel.regimentMode ==
+                                        RegimentMode.Schedule) &&
+                                    (qurhomeDashboardController
+                                        .isSymptomModuleDisable.value)) {
+                                  FlutterToast().getToast(
+                                      strFeatureNotEnable, Colors.black);
+                                } else {
+                                  _regimentViewModel.handleSearchField();
+                                  _regimentViewModel.switchRegimentMode();
+                                  if (_regimentViewModel.regimentMode ==
+                                          RegimentMode.Symptoms &&
+                                      !isFirstSymptom) {
+                                    Future.delayed(
+                                        Duration(milliseconds: 1000),
+                                        () => ShowCaseWidget.of(_myContext)
+                                            .startShowCase([_SymptomsCardKey]));
+                                  }
                                 }
                               },
                               child: Padding(
@@ -447,8 +459,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                     fontSize: 14.0.sp,
                                     fontWeight: FontWeight.w500,
                                     decoration: TextDecoration.underline,
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    color: getTextColor(),
                                   ),
                                 ),
                               ),
@@ -811,5 +822,20 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         }
       },
     );
+  }
+
+  getTextColor() {
+    Color colors;
+    try {
+      if ((_regimentViewModel.regimentMode == RegimentMode.Schedule) &&
+          (qurhomeDashboardController.isSymptomModuleDisable.value)) {
+        colors = Colors.grey;
+      } else {
+        colors = Color(CommonUtil().getMyPrimaryColor());
+      }
+    } catch (e) {
+      return colors = Color(CommonUtil().getMyPrimaryColor());
+    }
+    return colors;
   }
 }

@@ -813,7 +813,10 @@ const String strServiceType = 'serviceType';
 const String str_preferred_lab = 'preferred_lab';
 const String strHealthOrganizationId = 'healthOrganizationId';
 
-
+const String strVitalsModule = 'Vitals';
+const String strSymptomsModule = 'Symptoms';
+const String strFeatureNotEnable =
+    'This feature is not enabled for you by your primary provider';
 
 Future<void> fbaLog({String eveName, eveParams}) async {
   try {

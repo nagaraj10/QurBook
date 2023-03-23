@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 
 import '../../../QurHub/Controller/HubListViewController.dart';
 import '../../../common/CommonUtil.dart';
@@ -26,6 +27,9 @@ class QurhomeDashboardController extends GetxController {
   SheelaBLEController _sheelaBLEController;
   Timer _bleTimer;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
+
+  var isVitalModuleDisable = false.obs;
+  var isSymptomModuleDisable = false.obs;
 
   @override
   void onInit() {
@@ -171,5 +175,43 @@ class QurhomeDashboardController extends GetxController {
       rt_Sheela,
       arguments: SheelaArgument(scheduleAppointment: true),
     );
+  }
+
+  updateModuleAccess(List<SelectionResult> selectionResult) {
+    try {
+      for (var i = 0; i < selectionResult?.length; i++) {
+        if (selectionResult[i]?.primaryProvider != null) {
+          if (selectionResult[i]?.primaryProvider?.additionalInfo != null) {
+            if (selectionResult[i]
+                    ?.primaryProvider
+                    ?.additionalInfo
+                    ?.moduleAccess !=
+                null) {
+              for (var j = 0;
+                  j <
+                      selectionResult[i]
+                          ?.primaryProvider
+                          ?.additionalInfo
+                          ?.moduleAccess
+                          .length;
+                  j++) {
+                var isAccess = selectionResult[i]
+                        ?.primaryProvider
+                        ?.additionalInfo
+                        ?.moduleAccess[j]
+                        .name ??
+                    '';
+                if (isAccess == strVitalsModule) {
+                  isVitalModuleDisable.value = true;
+                }
+                if (isAccess == strSymptomsModule) {
+                  isSymptomModuleDisable.value = true;
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {}
   }
 }

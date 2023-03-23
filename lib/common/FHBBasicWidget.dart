@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'errors_widget.dart';
 import '../my_providers/models/Doctors.dart';
@@ -265,6 +266,13 @@ class FHBBasicWidget {
         child: Text(variable.strNoData),
       ),
     );
+  }
+
+  Widget getContainerFeatureDisableDataText() {
+    return Container(
+        child: Center(
+      child: Text(strFeatureNotEnable, textAlign: TextAlign.center),
+    ));
   }
 
   Widget getSnackBarWidget(BuildContext context, String msg) {

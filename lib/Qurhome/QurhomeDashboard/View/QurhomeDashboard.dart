@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
@@ -14,7 +15,9 @@ import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/landing/view/widgets/qurhome_nav_drawer.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -56,6 +59,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
+  HealthReportListForUserRepository healthReportListForUserRepository =
+      HealthReportListForUserRepository();
+
+  GetDeviceSelectionModel selectionResult;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -84,6 +92,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
+
+        enableModuleAccess();
+        getModuleAccess();
+
         await CommonUtil().getUserProfileData();
       }
       if (CommonUtil.REGION_CODE == "IN") {
@@ -170,6 +182,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
           ),
         ),
       );
+
   @override
   Widget build(BuildContext context) {
     return Obx(() => WillPopScope(
@@ -453,7 +466,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                     Flexible(
                       child: InkWell(
                         onTap: () {
-                          bottomTapped(2);
+                          if (controller.isVitalModuleDisable.value) {
+                            FlutterToast()
+                                .getToast(strFeatureNotEnable, Colors.black);
+                          } else {
+                            bottomTapped(2);
+                          }
                         },
                         child: Container(
                           color: controller.currentSelectedIndex == 2
@@ -475,8 +493,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                   Text(
                                     "Vitals",
                                     style: TextStyle(
-                                      color:
-                                          controller.currentSelectedIndex == 2
+                                      color: controller
+                                              .isVitalModuleDisable.value
+                                          ? Colors.grey
+                                          : controller.currentSelectedIndex == 2
                                               ? Colors.white
                                               : Color(
                                                   CommonUtil()
@@ -499,7 +519,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                     Flexible(
                       child: InkWell(
                         onTap: () {
-                          bottomTapped(3);
+                          if (controller.isSymptomModuleDisable.value) {
+                            FlutterToast()
+                                .getToast(strFeatureNotEnable, Colors.black);
+                          } else {
+                            bottomTapped(3);
+                          }
                         },
                         child: Container(
                           color: controller.currentSelectedIndex == 3
@@ -521,8 +546,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                   Text(
                                     "Symptoms",
                                     style: TextStyle(
-                                      color:
-                                          controller.currentSelectedIndex == 3
+                                      color: controller
+                                              .isSymptomModuleDisable.value
+                                          ? Colors.grey
+                                          : controller.currentSelectedIndex == 3
                                               ? Colors.white
                                               : Color(
                                                   CommonUtil()
@@ -653,5 +680,22 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     } else {
       return SizedBox(width: 70.w);
     }
+  }
+
+  Future<GetDeviceSelectionModel> getModuleAccess() async {
+    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+      selectionResult = value;
+      if (selectionResult?.isSuccess) {
+        if (selectionResult?.result != null) {
+          controller.updateModuleAccess(selectionResult?.result);
+        }
+      }
+    });
+    return selectionResult;
+  }
+
+  enableModuleAccess() {
+    controller.isVitalModuleDisable.value = false;
+    controller.isSymptomModuleDisable.value = false;
   }
 }
