@@ -1152,6 +1152,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         var value = await showDialog(
           context: context,
           builder: (_) => FormDataDialog(
+            introText: regimen?.otherinfo?.introText ?? '',
             fieldsData: fieldsResponseModel.result.fields,
             eid: eventId,
             color: Color(CommonUtil().getQurhomePrimaryColor()),
