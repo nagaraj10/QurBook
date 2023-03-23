@@ -5728,6 +5728,15 @@ class CommonUtil {
     return qurhomeRegimenController;
   }
 
+  QurhomeDashboardController onInitQurhomeDashboardController() {
+    QurhomeDashboardController qurhomeDashboardController;
+    if (!Get.isRegistered<QurhomeDashboardController>()) {
+      Get.put(QurhomeDashboardController());
+    }
+    qurhomeDashboardController = Get.find();
+    return qurhomeDashboardController;
+  }
+
   void goToAppointmentDetailScreen(String appointmentId) {
     if (!Get.isRegistered<AppointmentDetailsController>())
       Get.lazyPut(() => AppointmentDetailsController());
