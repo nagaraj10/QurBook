@@ -853,6 +853,10 @@ const String strFoodDelivery = "food delivery";
 
 const String strGetCityList = 'Getting City List';
 const String strSelValidMsg = 'Please select a valid';
+const String strActivityCompleted = 'The activity has been completed already.';
+const String strPastActivityMsgOne = 'To access past activities please use';
+const String strPastActivityMsgTwo = '\nGo to Qurbook';
+const String strPastActivityMsgThree = ' from menu.';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
