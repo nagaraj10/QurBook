@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
@@ -254,7 +255,8 @@ class IosNotificationHandler {
           );
         }
       }
-    } else if (CommonUtil.isUSRegion() && model.templateName == strPatientReferralAcceptToPatient) {
+    } else if (CommonUtil.isUSRegion() &&
+        model.templateName == strPatientReferralAcceptToPatient) {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': 'myprovider_list',
@@ -601,13 +603,24 @@ class IosNotificationHandler {
     } else if (model.redirect == 'regiment_screen') {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
-        'ns_type': 'regiment_screen',
+        'ns_type': CommonUtil.isUSRegion()
+            ? 'QurHomeRegimenScreen'
+            : 'regiment_screen',
         'navigationPage': 'Regimen Screen',
       });
       if (isAlreadyLoaded) {
         if (model.eventId != null) {
-          Get.toNamed(router.rt_Regimen,
-              arguments: RegimentArguments(eventId: model.eventId));
+          if (CommonUtil.isUSRegion()) {
+            var qurhomeDashboardController =
+                CommonUtil().onInitQurhomeDashboardController();
+            qurhomeDashboardController.eventId.value =
+                model.eventId;
+            Get.to(() => QurhomeDashboard()).then((value) =>
+                PageNavigator.goToPermanent(Get.context, router.rt_Landing));
+          } else {
+            Get.toNamed(router.rt_Regimen,
+                arguments: RegimentArguments(eventId: model.eventId));
+          }
         } else {
           Get.to(() => SplashScreen(
                 nsRoute: 'regiment_screen',
