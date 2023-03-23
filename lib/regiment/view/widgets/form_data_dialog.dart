@@ -41,6 +41,7 @@ class FormDataDialog extends StatefulWidget {
       @required this.formTitle,
       @required this.canEdit,
       @required this.triggerAction,
+      @required this.introText,
       this.isFollowEvent,
       this.followEventContext,
       this.isFromQurHomeSymptom = false,
@@ -60,6 +61,7 @@ class FormDataDialog extends StatefulWidget {
   final bool isFromQurHomeRegimen;
   final String followEventContext;
   final String providerId;
+  final String introText;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
@@ -1063,23 +1065,33 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   Widget getTitle() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Flexible(
-          child: Text(
-            widget.formTitle,
-            style: TextStyle(
-              fontSize: 16.0.sp,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Text(
+                widget.formTitle,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              ),
             ),
-          ),
+            IconButton(
+              icon: Icon(
+                Icons.close,
+                size: 24.0.sp,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
         ),
-        IconButton(
-          icon: Icon(
-            Icons.close,
-            size: 24.0.sp,
-          ),
-          onPressed: () => Navigator.pop(context),
+        Text(
+          widget.introText ?? '',
+          maxLines: 10,
+          style: TextStyle(color: Colors.black, fontSize: 16.h),
         ),
       ],
     );
