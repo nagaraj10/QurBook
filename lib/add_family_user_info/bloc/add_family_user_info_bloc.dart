@@ -260,14 +260,14 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       preferred_language = currentLanguage;
 
       updateAddFamilyInfo = await addFamilyUserInfoRepository.updateUserInfoNew(
-          userId!,
+          userId,
           name,
           phoneNo,
           email,
           gender,
           bloodGroup,
           dateOfBirth,
-          profilePic!,
+          profilePic,
           firstName,
           middleName,
           lastName,
@@ -279,7 +279,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           zipcode,
           fromFamily,
           myProfileModel,
-          relationship!);
+          relationship);
       //userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
 
       await updateDeviceSelectionModel(preferredLanguage: preferred_language);

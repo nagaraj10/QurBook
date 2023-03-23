@@ -251,15 +251,15 @@ class AdditionalInfo {
     try {
       height = json['height'];
       weight = json['weight'];
-      if (json.containsKey('language')) {
+      if (json.containsKey('language') && json['language'] != null) {
         language = json['language'].cast<String>();
       }
     } catch (e) {}
 
-    if (json.containsKey('mrdNumber')) mrdNumber = json['mrdNumber'];
-    if (json.containsKey('uhidNumber')) uhidNumber = json['uhidNumber'];
-    if (json.containsKey('visitReason')) visitReason = json['visitReason'];
-    if (json.containsKey('patientHistory')) {
+    if (json.containsKey('mrdNumber') && json['mrdNumber'] != null) mrdNumber = json['mrdNumber'];
+    if (json.containsKey('uhidNumber') && json['uhidNumber'] != null) uhidNumber = json['uhidNumber'];
+    if (json.containsKey('visitReason') && json['visitReason'] != null) visitReason = json['visitReason'];
+    if (json.containsKey('patientHistory') && json['patientHistory'] != null) {
       patientHistory = json['patientHistory'];
     }
   }

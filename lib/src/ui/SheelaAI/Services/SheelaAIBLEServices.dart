@@ -299,8 +299,8 @@ class SheelaBLEController extends GetxController {
       if (Platform.isAndroid) {
         bool serviceEnabled = await CommonUtil().checkGPSIsOn();
         bool? isBluetoothEnable = false;
-        isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn() as FutureOr<bool>);
-        if (!isBluetoothEnable) {
+        isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
+        if (!isBluetoothEnable!) {
           FlutterToast().getToast(
               'Please turn on your bluetooth and try again', Colors.red);
           return false;

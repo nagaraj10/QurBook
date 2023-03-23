@@ -505,7 +505,7 @@ class CheckoutPageWidgets {
             providerId: providerId,
             refresh: refresh,
             feeZero: feeZero,
-            context: context) as FutureOr<bool>);
+            context: context));
       } else {
         return mCustomAlertDialog(context,
             content: commonUtil.CONTENT_PROFILE_CHECK,

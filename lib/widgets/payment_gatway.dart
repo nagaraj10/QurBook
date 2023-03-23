@@ -1,4 +1,3 @@
-
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -287,34 +286,33 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(STR_ARE_SURE),
-            content: Text(STR_SURE_CANCEL_PAY),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Provider.of<CheckoutPageProvider>(context, listen: false)
-                      .loader(false, isNeedRelod: true);
-                  if (!isFromSubscribe) {
-                    widget.closePage!(STR_FAILED);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  } else {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text('Yes'),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(STR_ARE_SURE),
+        content: Text(STR_SURE_CANCEL_PAY),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('No'),
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+          FlatButton(
+            onPressed: () {
+              Provider.of<CheckoutPageProvider>(context, listen: false)
+                  .loader(false, isNeedRelod: true);
+              if (!isFromSubscribe) {
+                widget.closePage!(STR_FAILED);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
+            },
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? Future.value(false));
   }
 
   void gotoPaymentResultPage(bool status, String refNo,

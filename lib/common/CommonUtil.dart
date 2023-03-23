@@ -5362,11 +5362,11 @@ class CommonUtil {
       bool? serviceEnabled = false;
       if (Platform.isAndroid) {
         const platform = MethodChannel(IS_LOCATION_SERVICE_CHECK);
-        serviceEnabled = await (platform.invokeMethod(IS_LOCATION_SERVICE_CHECK) as FutureOr<bool>);
+        serviceEnabled = await (platform.invokeMethod(IS_LOCATION_SERVICE_CHECK));
       } else {
         serviceEnabled = await Geolocator.isLocationServiceEnabled();
       }
-      return serviceEnabled;
+      return serviceEnabled!;
     } catch (e) {
       return false;
     }

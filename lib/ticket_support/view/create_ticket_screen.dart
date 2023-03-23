@@ -213,7 +213,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   void dispose() {
     try {
       setDefaultValues();
-      controller = null as CreateTicketController;
+      // controller = null;
 
       //controller.dispose();
       textEditingControllers.forEach((_, v) {
