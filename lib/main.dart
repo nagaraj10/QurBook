@@ -794,14 +794,16 @@ class _MyFHBState extends State<MyFHB> {
           //this need to be navigte to Regiment screen
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
-            'ns_type': CommonUtil.isUSRegion()?'QurHomeRegimenScreen':'regiment_screen',
+            'ns_type': CommonUtil.isUSRegion()
+                ? 'QurHomeRegimenScreen'
+                : 'regiment_screen',
             'navigationPage': 'Regimen Screen',
           });
           if (CommonUtil.isUSRegion()) {
             var qurhomeDashboardController =
                 CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = passedValArr[2] ?? '';
-            if(!qurhomeDashboardController.isActive.value){
+            if (!qurhomeDashboardController.isActive.value) {
               Get.to(QurhomeDashboard());
             }
             qurhomeDashboardController.isLoading.value = true;
@@ -859,7 +861,8 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 1));
-        } else if (CommonUtil.isUSRegion() && passedValArr[1] == strPatientReferralAcceptToPatient) {
+        } else if (CommonUtil.isUSRegion() &&
+            passedValArr[1] == strPatientReferralAcceptToPatient) {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'myprovider_list',
