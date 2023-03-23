@@ -550,60 +550,65 @@ class RegimentDataCard extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () async {
-                        stopRegimenTTS();
-                        final canEdit =
-                            startTime.difference(DateTime.now()).inMinutes <=
-                                    15 &&
-                                Provider.of<RegimentViewModel>(context,
-                                            listen: false)
-                                        .regimentMode ==
-                                    RegimentMode.Schedule;
-                        if (canEdit || isValidSymptom(context)) {
-                          if (regimentData?.eid != null &&
-                              regimentData?.eid != '') {
-                            RegimentService.getActivityStatus(
-                                    eid: regimentData?.eid)
-                                .then((value) {
-                              if (value?.isSuccess ?? false) {
-                                if (value?.result != null) {
-                                  if (value?.result[0].planStatus ==
-                                          UnSubscribed ||
-                                      value?.result[0].planStatus == Expired) {
-                                    var message =
-                                        (value?.result[0].planStatus ==
-                                                UnSubscribed)
-                                            ? UnSubscribed
-                                            : Expired;
-                                    CommonUtil().showDialogForActivityStatus(
-                                        'Plan $message, $msgData', Get.context,
-                                        pressOk: () {
-                                      Get.back();
+                        CommonUtil().showDialogForActivityConfirmation(
+                            context, title, () async {
+                          Navigator.pop(context);
+                          stopRegimenTTS();
+                          final canEdit =
+                              startTime.difference(DateTime.now()).inMinutes <=
+                                      15 &&
+                                  Provider.of<RegimentViewModel>(context,
+                                              listen: false)
+                                          .regimentMode ==
+                                      RegimentMode.Schedule;
+                          if (canEdit || isValidSymptom(context)) {
+                            if (regimentData?.eid != null &&
+                                regimentData?.eid != '') {
+                              RegimentService.getActivityStatus(
+                                      eid: regimentData?.eid)
+                                  .then((value) {
+                                if (value?.isSuccess ?? false) {
+                                  if (value?.result != null) {
+                                    if (value?.result[0].planStatus ==
+                                            UnSubscribed ||
+                                        value?.result[0].planStatus ==
+                                            Expired) {
+                                      var message =
+                                          (value?.result[0].planStatus ==
+                                                  UnSubscribed)
+                                              ? UnSubscribed
+                                              : Expired;
+                                      CommonUtil().showDialogForActivityStatus(
+                                          'Plan $message, $msgData',
+                                          Get.context, pressOk: () {
+                                        Get.back();
+                                        logRegimenActivity(Get.context);
+                                      });
+                                    } else {
                                       logRegimenActivity(Get.context);
-                                    });
+                                    }
                                   } else {
                                     logRegimenActivity(Get.context);
                                   }
                                 } else {
                                   logRegimenActivity(Get.context);
                                 }
-                              } else {
-                                logRegimenActivity(Get.context);
-                              }
-                            });
+                              });
+                            } else {
+                              logRegimenActivity(Get.context);
+                            }
                           } else {
-                            logRegimenActivity(Get.context);
+                            FlutterToast().getToast(
+                              (Provider.of<RegimentViewModel>(context,
+                                              listen: false)
+                                          .regimentMode ==
+                                      RegimentMode.Symptoms)
+                                  ? symptomsError
+                                  : activitiesError,
+                              Colors.red,
+                            );
                           }
-                        } else {
-                          FlutterToast().getToast(
-                            (Provider.of<RegimentViewModel>(context,
-                                            listen: false)
-                                        .regimentMode ==
-                                    RegimentMode.Symptoms)
-                                ? symptomsError
-                                : activitiesError,
-                            Colors.red,
-                          );
-                        }
+                        }, false);
                       },
                       child: Icon(
                         regimentData.ack == null

@@ -185,6 +185,7 @@ const String icon_device_recon = 'assets/settings/device_recognition.png';
 const String icon_provider = 'assets/navicons/my_providers.png';
 const String icon_orderHistory = 'assets/navicons/orderHistory.png';
 const String icon_lock = 'assets/settings/unlock.png';
+const String lock_icon = 'assets/lock_icon.png';
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';
@@ -250,6 +251,11 @@ const String font_roboto = 'Roboto';
 
 //for class bookmark_record
 const String strBookmarkRecord = 'bookmark record';
+
+//lockscreen
+const String strQurbookLocked = 'Qurbook is locked';
+const String strUnlock = 'Unlock';
+const String strQurbookLockDescription = 'For your security, you can only use Qurbook when its unlocked';
 
 //for feedback
 const String strChat = 'Chats';
@@ -846,6 +852,11 @@ const String strHomecareServices = "homecare services";
 const String strFoodDelivery = "food delivery";
 
 const String strGetCityList = 'Getting City List';
+const String strSelValidMsg = 'Please select a valid';
+const String strActivityCompleted = 'The activity has been completed already.';
+const String strPastActivityMsgOne = 'To access past activities please use';
+const String strPastActivityMsgTwo = '\nGo to Qurbook';
+const String strPastActivityMsgThree = ' from menu.';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

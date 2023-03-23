@@ -1907,8 +1907,11 @@ class CommonUtil {
         // Add handling of no hardware here.
       } else if (e.code == auth_error.notEnrolled) {
       } else if (e.code == auth_error.passcodeNotSet) {
+        /// Indicates that the user has not yet configured a passcode (iOS) or
+        /// PIN/pattern/password (Android) on the device.
+        return true; // Nothing sets but app lock code called
       } else {}
-      return true;
+      return false;
     }
   }
 
@@ -4882,6 +4885,45 @@ class CommonUtil {
         });
   }
 
+  void showDialogForActivityConfirmation(BuildContext context, String name,
+      Function() onPressedYes, bool isQurhome) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              variable.strConfirm,
+              style: TextStyle(
+                  color: isQurhome
+                      ? Color(CommonUtil().getQurhomePrimaryColor())
+                      : Color(CommonUtil().getMyPrimaryColor())),
+            ), // To display the title it is optional
+            content: Text('Record ' + name ??
+                ''), // Message which will be pop up on the screen
+            // Action widget which will provide the user to acknowledge the choice
+            actions: [
+              FlatButton(
+                textColor: isQurhome
+                    ? Color(CommonUtil().getQurhomePrimaryColor())
+                    : Color(CommonUtil().getMyPrimaryColor()),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(variable.strNo),
+              ),
+              FlatButton(
+                  // FlatButton widget is used to make a text to work like a button
+                  textColor: isQurhome
+                      ? Color(CommonUtil().getQurhomePrimaryColor())
+                      : Color(CommonUtil().getMyPrimaryColor()),
+                  onPressed:
+                      onPressedYes, // function used to perform after pressing the button
+                  child: Text(variable.strYes)),
+            ],
+          );
+        });
+  }
+
   void showDialogForActivityStatus(String msg, BuildContext context,
       {Function() pressOk}) {
     // set up the buttons
@@ -5511,6 +5553,8 @@ class CommonUtil {
 
       Get.find<SheelaAIController>().getSheelaBadgeCount();
       await getMyProfilesetting();
+      var regController = CommonUtil().onInitQurhomeRegimenController();
+      regController.getRegimenList();
     } catch (e) {
       if (kDebugMode) print(e.toString());
     }
@@ -5684,6 +5728,15 @@ class CommonUtil {
     return qurhomeRegimenController;
   }
 
+  QurhomeDashboardController onInitQurhomeDashboardController() {
+    QurhomeDashboardController qurhomeDashboardController;
+    if (!Get.isRegistered<QurhomeDashboardController>()) {
+      Get.put(QurhomeDashboardController());
+    }
+    qurhomeDashboardController = Get.find();
+    return qurhomeDashboardController;
+  }
+
   void goToAppointmentDetailScreen(String appointmentId) {
     if (!Get.isRegistered<AppointmentDetailsController>())
       Get.lazyPut(() => AppointmentDetailsController());
@@ -5763,6 +5816,17 @@ class CommonUtil {
         ),
       ],
     );
+  }
+
+  String getFormattedDate(String strDate, String format) {
+    try {
+      String formattedDate;
+      formattedDate =
+          DateFormat(format).format(DateTime.parse(strDate).toLocal());
+      return formattedDate;
+    } catch (e) {
+      return '';
+    }
   }
 }
 

@@ -813,6 +813,9 @@ const String strServiceType = 'serviceType';
 const String str_preferred_lab = 'preferred_lab';
 const String strHealthOrganizationId = 'healthOrganizationId';
 
+const String strNoteChat = 'Note: ';
+const String strRRTAppointmentLabelChat =
+    'Please select up to 3 preferred dates/sessions. Your RCC will coordinate dates as per your preference (or) the first available date for the provider will be confirmed and notified to you.';
 const String strVitalsModule = 'Vitals';
 const String strSymptomsModule = 'Symptoms';
 const String strFeatureNotEnable =

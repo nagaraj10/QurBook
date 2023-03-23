@@ -371,7 +371,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
             contacts.add(Contacts(name: e.displayName, phoneNumber: mobileNo));
           } else {
             final mobileNo =
-                '+${_selectedDialogCountry.phoneCode}${element.value.replaceAll(RegExp(r'[^\s\w]'), '').replaceAll(' ', '')}';
+                '${_selectedDialogCountry.phoneCode}${element.value.replaceAll(RegExp(r'[^\s\w]'), '').replaceAll(' ', '')}';
             contacts.add(Contacts(name: e.displayName, phoneNumber: mobileNo));
           }
         }

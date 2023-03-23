@@ -35,6 +35,8 @@ import 'QurHomeRegimen.dart';
 import 'package:myfhb/main.dart';
 
 class QurhomeDashboard extends StatefulWidget {
+
+
   @override
   _QurhomeDashboardState createState() => _QurhomeDashboardState();
 }
@@ -82,6 +84,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   void didChangeDependencies() {
     super.didChangeDependencies();
     MyFHB.routeObserver.subscribe(this, ModalRoute.of(context));
+    controller.isActive.value = true;
   }
 
   onInit() async {
@@ -119,6 +122,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
+      controller.isActive.value = true;
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -143,6 +147,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
       CommonUtil().initPortraitMode();
       MyFHB.routeObserver.unsubscribe(this);
+      controller.isActive.value = false;
       super.dispose();
     } catch (e) {
       print(e);
@@ -185,7 +190,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => WillPopScope(
+    return Obx(() =>
+    controller.isLoading.isTrue
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : WillPopScope(
           child: Scaffold(
             drawerEnableOpenDragGesture: false,
             key: _scaffoldKey,
@@ -241,43 +251,47 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                           ))
                       : SizedBox.shrink(),
                   if (CommonUtil.isUSRegion()) SizedBox(width: 22.w),
-                  Column(
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          // Note: Styles for TextSpans must be explicitly defined.
-                          // Child text spans will inherit styles from parent
-                          style: TextStyle(
-                            fontSize: textFontSize,
-                            color: Colors.black,
-                          ),
-                          children: <TextSpan>[
-                            if (controller.currentSelectedIndex.value == 0 ||
-                                controller.currentSelectedIndex.value == 1) ...{
-                              TextSpan(text: 'Hello '),
-                            },
-                            TextSpan(
-                              text: controller.appBarTitle.value,
-                              style: TextStyle(
-                                  fontSize: textFontSize,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        RichText(
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          text: TextSpan(
+                            // Note: Styles for TextSpans must be explicitly defined.
+                            // Child text spans will inherit styles from parent
+                            style: TextStyle(
+                              fontSize: textFontSize,
+                              color: Colors.black,
                             ),
-                          ],
-                        ),
-                      ),
-                      if (controller.currentSelectedIndex.value == 0 ||
-                          controller.currentSelectedIndex.value == 1) ...{
-                        SizedBox(height: 3),
-                        Text(
-                          'Today, ' + qurHomeRegimenController.dateHeader.value,
-                          style: TextStyle(
-                            fontSize: 12.h,
-                            color: Colors.grey,
+                            children: <TextSpan>[
+                              if (controller.currentSelectedIndex.value == 0 ||
+                                  controller.currentSelectedIndex.value == 1) ...{
+                                TextSpan(text: 'Hello '),
+                              },
+                              TextSpan(
+                                text: controller.appBarTitle.value,
+                                style: TextStyle(
+                                    fontSize: textFontSize,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),
+                            ],
                           ),
                         ),
-                      },
-                    ],
+                        if (controller.currentSelectedIndex.value == 0 ||
+                            controller.currentSelectedIndex.value == 1) ...{
+                          SizedBox(height: 3),
+                          Text(
+                            'Today, ' + qurHomeRegimenController.dateHeader.value,
+                            style: TextStyle(
+                              fontSize: 12.h,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        },
+                      ],
+                    ),
                   ),
                   if (CommonUtil.isUSRegion() &&
                       controller.currentSelectedIndex == 0)
@@ -318,6 +332,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                           size: CommonUtil().isTablet ? 38.0 : 24.0,
                           onTap: () {
                             Get.back();
+                            controller.isActive.value = false;
                           },
                         )
                   : Container(
@@ -584,6 +599,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
           ),
           onWillPop: () async {
             Get.back();
+            controller.isActive.value = false;
             return true;
           },
         ));

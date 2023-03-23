@@ -55,6 +55,8 @@ class _AppointmentsState extends State<Appointments> {
   SharedPreferences prefs;
   Function(String) closePage;
   final GlobalKey<State> _key = new GlobalKey<State>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -85,7 +87,11 @@ class _AppointmentsState extends State<Appointments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body(),
+      body: RefreshIndicator(
+          onRefresh: () {
+            return refreshPage();
+          },
+          child: body()),
       appBar: widget.isHome ? null : appBar(),
       floatingActionButton: Visibility(
         visible: CommonUtil.REGION_CODE == 'IN',
@@ -333,38 +339,43 @@ class _AppointmentsState extends State<Appointments> {
                             : Container()
                       ],
                     )
-                  : Container(
-                      height: 1.sh / 2,
-                      alignment: Alignment.center,
-                      child: Center(
-                        child: Text(
-                          variable.strNoAppointments,
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
-                          ),
-                        ),
-                      ),
-                    );
+                  : refreshIndicatorWithEmptyContainer(
+                      variable.strNoAppointments);
             } else {
               return CommonCircularIndicator();
             }
           },
         );
       case LoadingStatus.empty:
+        return refreshIndicatorWithEmptyContainer(variable.strNoAppointments);
+        break;
       default:
-        return Container(
-          height: 1.sh / 2,
-          alignment: Alignment.center,
-          child: Center(
-            child: Text(
-              variable.strNoAppointments,
-              style: TextStyle(
-                fontSize: 16.0.sp,
-              ),
-            ),
-          ),
-        );
+        return refreshIndicatorWithEmptyContainer(variable.strNoAppointments);
     }
+  }
+
+  Widget refreshIndicatorWithEmptyContainer(String msg) {
+    return RefreshIndicator(
+        onRefresh: () {
+          return refreshPage();
+        },
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            Container(
+              height: 1.sh / 2,
+              alignment: Alignment.center,
+              child: Center(
+                child: Text(
+                  variable.strNoAppointments,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ));
   }
 
   Widget appBar() {
@@ -438,5 +449,11 @@ class _AppointmentsState extends State<Appointments> {
     Provider.of<AppointmentsListViewModel>(context, listen: false)
       ..clearAppointments()
       ..fetchAppointments();
+  }
+
+  Future<String> refreshPage() async {
+    await appointmentsViewModel.clearAppointments();
+    await appointmentsViewModel.fetchAppointments();
+    return 'success';
   }
 }

@@ -27,6 +27,9 @@ class QurhomeDashboardController extends GetxController {
   SheelaBLEController _sheelaBLEController;
   Timer _bleTimer;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
+  var isLoading = false.obs;
+  var isActive = false.obs;
+  var eventId = ''.obs;
 
   var isVitalModuleDisable = false.obs;
   var isSymptomModuleDisable = false.obs;
@@ -44,7 +47,7 @@ class QurhomeDashboardController extends GetxController {
     }
     _sheelaBLEController = Get.find();
     getHubDetails();
-    updateBLETimer();
+    // updateBLETimer();
     super.onInit();
   }
 
@@ -91,22 +94,20 @@ class QurhomeDashboardController extends GetxController {
   void updateTabIndex(int newIndex) {
     currentSelectedIndex.value = newIndex;
     MyProfileModel myProfile;
-    String fulName = '';
+    String firstName = '';
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      fulName = myProfile.result != null
-          ? myProfile.result.firstName.capitalizeFirstofEach +
-              ' ' +
-              myProfile.result.lastName.capitalizeFirstofEach
+      firstName = myProfile.result != null
+          ? myProfile.result.firstName.capitalizeFirstofEach
           : '';
     } catch (e) {}
     switch (currentSelectedIndex.value) {
       case 0:
-        appBarTitle = '$fulName'.obs;
+        appBarTitle = '$firstName'.obs;
         updateBLETimer();
         break;
       case 1:
-        appBarTitle = '$fulName'.obs;
+        appBarTitle = '$firstName'.obs;
         updateBLETimer();
         break;
       case 2:

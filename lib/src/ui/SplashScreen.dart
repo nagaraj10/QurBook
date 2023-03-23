@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:local_auth/auth_strings.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -34,7 +31,6 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -49,9 +45,6 @@ import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/p
 import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
@@ -59,12 +52,9 @@ import '../utils/PageNavigator.dart';
 import 'package:connectivity/connectivity.dart';
 import 'NetworkScreen.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 
 import 'SheelaAI/Models/sheela_arguments.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
-import 'package:local_auth/error_codes.dart' as auth_error;
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -143,14 +133,18 @@ class _SplashScreenState extends State<SplashScreen> {
             Constants.KEY_AUTHTOKEN); // To check whether it's logged in or not
         if (PreferenceUtil.getEnableAppLock() && authToken != null) {
           _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
-          setState(() {});
-
-          if (Platform.isIOS) {
-            reponseToRemoteNotificationMethodChannel.invokeListMethod(
-              IsAppLockChecked,
-              {'status': _loaded},
-            );
+          if(_loaded){
+            setState(() {});
+            if (Platform.isIOS) {
+              reponseToRemoteNotificationMethodChannel.invokeListMethod(
+                IsAppLockChecked,
+                {'status': _loaded},
+              );
+            }
+          }else{
+            _showMyDialog();
           }
+
         } else {
           if (Platform.isIOS) {
             PreferenceUtil.setCallNotificationRecieved(isCalled: false);
@@ -179,6 +173,47 @@ class _SplashScreenState extends State<SplashScreen> {
     } catch (e) {
       if (kDebugMode) print(e.toString());
     }
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return WillPopScope( onWillPop: (){
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },child:AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                SizedBox(height: 10,),
+                Image.asset(
+                  variable.lock_icon,
+                  height: 20,
+                  width: 20,
+                  color: Color(0xff5f059b),
+                ),
+                SizedBox(height: 20,),
+                Text(variable.strQurbookLocked,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+                SizedBox(height: 10,),
+                Text(variable.strQurbookLockDescription,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                SizedBox(height: 10,),
+                TextButton(
+                  child: Text(variable.strUnlock,style: TextStyle(color: Color(0xff2a08c0),),),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    callAppLockFeatureMethod(false);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ));
+      },
+    );
   }
 
   @override
@@ -558,17 +593,29 @@ class _SplashScreenState extends State<SplashScreen> {
                     } else if (widget.nsRoute == 'regiment_screen') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
-                        'ns_type': 'regiment_screen',
+                        'ns_type': CommonUtil.isUSRegion()?'QurHomeRegimenScreen':'regiment_screen',
                         'navigationPage': 'Regimen Screen',
                       });
-                      Provider.of<RegimentViewModel>(
-                        context,
-                        listen: false,
-                      )?.regimentMode = RegimentMode.Schedule;
-                      Provider.of<RegimentViewModel>(context, listen: false)
-                          ?.regimentFilter = RegimentFilter.Missed;
-                      PageNavigator.goToPermanent(context, router.rt_Regimen,
-                          arguments: RegimentArguments(eventId: widget.bundle));
+                      if (CommonUtil.isUSRegion()) {
+                        var qurhomeDashboardController =
+                        CommonUtil().onInitQurhomeDashboardController();
+                        qurhomeDashboardController.eventId.value = widget.bundle != null
+                            ? widget.bundle
+                            : "";
+                        Get.to(() => QurhomeDashboard())
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+                      } else {
+                        Provider.of<RegimentViewModel>(
+                          context,
+                          listen: false,
+                        )?.regimentMode = RegimentMode.Schedule;
+                        Provider.of<RegimentViewModel>(context, listen: false)
+                            ?.regimentFilter = RegimentFilter.Missed;
+                        PageNavigator.goToPermanent(context, router.rt_Regimen,
+                            arguments:
+                                RegimentArguments(eventId: widget.bundle));
+                      }
                     } else if (widget.nsRoute == 'th_provider_hospital') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -593,6 +640,18 @@ class _SplashScreenState extends State<SplashScreen> {
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myprovider_list') {
+                      fbaLog(eveParams: {
+                        'eventTime': '${DateTime.now()}',
+                        'ns_type': 'myprovider_list',
+                        'navigationPage': 'MyProvider List Screen',
+                      });
+                      Get.toNamed(router.rt_UserAccounts,
+                              arguments:
+                                  UserAccountsArguments(selectedIndex: 2))
+                          .then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
+                    } else if (CommonUtil.isUSRegion() && widget.nsRoute ==
+                        strPatientReferralAcceptToPatient) {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
                         'ns_type': 'myprovider_list',

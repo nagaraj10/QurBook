@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
-import 'dart:ui' as ui;
 
-import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,13 +9,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
-import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
@@ -25,6 +19,7 @@ import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScr
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
+import 'Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
 import 'caregiverAssosication/caregiverAPIProvider.dart';
 import 'chat_socket/view/ChatDetail.dart';
@@ -34,7 +29,6 @@ import 'claim/screen/ClaimRecordDisplay.dart';
 import 'common/firebase_analytics_service.dart';
 import 'constants/fhb_parameters.dart';
 import 'constants/router_variable.dart';
-import 'constants/variable_constant.dart';
 import 'device_integration/viewModel/Device_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
 import 'my_family_detail/models/my_family_detail_arguments.dart';
@@ -57,7 +51,6 @@ import 'widgets/checkout_page.dart';
 //import 'QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
-import 'constants/fhb_parameters.dart' as parameters;
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -68,7 +61,6 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'IntroScreens/IntroductionScreen.dart';
 import 'authentication/service/authservice.dart';
 import 'authentication/view_model/otp_view_model.dart';
 import 'common/DatabseUtil.dart';
@@ -91,7 +83,6 @@ import 'src/model/home_screen_arguments.dart';
 import 'src/model/user/user_accounts_arguments.dart';
 import 'src/resources/network/ApiBaseHelper.dart';
 import 'src/ui/MyRecord.dart';
-import 'src/ui/NetworkScreen.dart';
 import 'src/ui/SplashScreen.dart';
 import 'src/utils/FHBUtils.dart';
 import 'src/utils/PageNavigator.dart';
@@ -101,8 +92,6 @@ import 'telehealth/features/Notifications/services/notification_services.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'telehealth/features/appointments/view/resheduleMain.dart';
-import 'telehealth/features/chat/view/chat.dart';
-import 'telehealth/features/chat/view/home.dart';
 import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'video_call/pages/callmain.dart';
 import 'video_call/services/iOS_Notification_Handler.dart';
@@ -114,7 +103,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:provider/provider.dart';
 
-import 'authentication/service/authservice.dart';
 import 'common/DatabseUtil.dart';
 import 'common/PreferenceUtil.dart';
 import 'constants/fhb_constants.dart' as Constants;
@@ -124,34 +112,23 @@ import 'constants/router_variable.dart' as routervariable;
 import 'constants/variable_constant.dart' as variable;
 import 'schedules/add_reminders.dart';
 import 'src/blocs/Category/CategoryListBlock.dart';
-import 'src/model/Category/catergory_result.dart';
 import 'src/model/home_screen_arguments.dart';
 import 'src/resources/network/ApiBaseHelper.dart';
-import 'src/ui/Dashboard.dart';
 import 'src/ui/MyRecord.dart';
-import 'src/ui/MyRecordsArguments.dart';
 import 'src/ui/SplashScreen.dart';
-import 'src/ui/NetworkScreen.dart';
-import 'src/utils/FHBUtils.dart';
 import 'src/utils/PageNavigator.dart';
 import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'telehealth/features/Notifications/services/notification_services.dart';
-import 'telehealth/features/Notifications/view/notification_main.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'telehealth/features/appointments/view/resheduleMain.dart';
-import 'telehealth/features/chat/view/chat.dart';
-import 'telehealth/features/chat/view/home.dart';
 import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'telehealth/features/chat/viewModel/notificationController.dart';
 import 'video_call/pages/callmain.dart';
 import 'video_call/services/iOS_Notification_Handler.dart';
-import 'video_call/utils/callstatus.dart';
 import 'video_call/utils/hideprovider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'constants/router_variable.dart' as router;
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
@@ -812,18 +789,29 @@ class _MyFHBState extends State<MyFHB> {
           //this need to be navigte to Regiment screen
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
-            'ns_type': 'regiment_screen',
+            'ns_type': CommonUtil.isUSRegion()?'QurHomeRegimenScreen':'regiment_screen',
             'navigationPage': 'Regimen Screen',
           });
-          //PageNavigator.goToPermanent(context, router.rt_Landing);
-          Provider.of<RegimentViewModel>(
-            context,
-            listen: false,
-          )?.regimentMode = RegimentMode.Schedule;
-          Provider.of<RegimentViewModel>(context, listen: false)
-              ?.regimentFilter = RegimentFilter.Missed;
-          Get.toNamed(router.rt_Regimen,
-              arguments: RegimentArguments(eventId: passedValArr[2]));
+          if (CommonUtil.isUSRegion()) {
+            var qurhomeDashboardController =
+                CommonUtil().onInitQurhomeDashboardController();
+            qurhomeDashboardController.eventId.value = passedValArr[2] ?? '';
+            if(!qurhomeDashboardController.isActive.value){
+              Get.to(QurhomeDashboard());
+            }
+            qurhomeDashboardController.isLoading.value = true;
+            Future.delayed(Duration(milliseconds: 100)).then(
+                (value) => qurhomeDashboardController.isLoading.value = false);
+          } else {
+            Provider.of<RegimentViewModel>(
+              context,
+              listen: false,
+            )?.regimentMode = RegimentMode.Schedule;
+            Provider.of<RegimentViewModel>(context, listen: false)
+                ?.regimentFilter = RegimentFilter.Missed;
+            Get.toNamed(router.rt_Regimen,
+                arguments: RegimentArguments(eventId: passedValArr[2]));
+          }
         } else if (passedValArr[1] == 'dashboard') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -866,6 +854,14 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 1));
+        } else if (CommonUtil.isUSRegion() && passedValArr[1] == strPatientReferralAcceptToPatient) {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myprovider_list',
+            'navigationPage': 'MyProvider List Screen',
+          });
+          Get.toNamed(router.rt_UserAccounts,
+              arguments: UserAccountsArguments(selectedIndex: 2));
         } else if (passedValArr[1] == 'myprovider_list') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -978,7 +974,7 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.to(ManageActivitiesScreen()).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
-        }  else if (passedValArr[1] == strAppointmentDetail) {
+        } else if (passedValArr[1] == strAppointmentDetail) {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'appointmentDetail',
@@ -1554,12 +1550,17 @@ class _MyFHBState extends State<MyFHB> {
                 return SplashScreen(
                     nsRoute: strAppointmentDetail, bundle: navRoute);
               }
+            } else if (parsedData[1] == strPatientReferralAcceptToPatient) {
+              //this need to be navigte to My Provider screen
+              return SplashScreen(
+                nsRoute: parsedData[1],
+              );
             } else {
               return SplashScreen(
                 nsRoute: '',
               );
             }
-          }else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
+          } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
             return SplashScreen(
                 nsRoute: 'DoctorRescheduling',
                 doctorID: navRoute.split('&')[1],
