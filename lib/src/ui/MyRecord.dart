@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
@@ -714,6 +715,8 @@ class _CustomTabsState extends State<CustomTabView>
   HealthResult selectedResult;
   CommonUtil commonUtil;
 
+  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+
   @override
   void initState() {
     commonUtil = new CommonUtil();
@@ -1284,20 +1287,26 @@ class _CustomTabsState extends State<CustomTabView>
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionDevice) {
-        tabWidgetList.add(new DeviceListScreen(
-            completeData,
-            callBackToRefresh,
-            dataObj.categoryName,
-            dataObj.id,
-            getDataForParticularLabel,
-            addMediaRemoveMaster,
-            widget.allowSelect,
-            widget.selectedMedia,
-            widget.allowSelectNotes,
-            widget.allowSelectVoice,
-            widget.showDetails,
-            widget.isFromChat,
-            addHealthRecords));
+        if ((CommonUtil.isUSRegion()) &&
+            (qurhomeDashboardController.isVitalModuleDisable.value)) {
+          tabWidgetList
+              .add(new FHBBasicWidget().getContainerFeatureDisableDataText());
+        } else {
+          tabWidgetList.add(new DeviceListScreen(
+              completeData,
+              callBackToRefresh,
+              dataObj.categoryName,
+              dataObj.id,
+              getDataForParticularLabel,
+              addMediaRemoveMaster,
+              widget.allowSelect,
+              widget.selectedMedia,
+              widget.allowSelectNotes,
+              widget.allowSelectVoice,
+              widget.showDetails,
+              widget.isFromChat,
+              addHealthRecords));
+        }
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionLabReport) {
         tabWidgetList.add(new LabReportListScreen(
@@ -1514,8 +1523,7 @@ class _CustomTabsState extends State<CustomTabView>
                 width: 20.0.h,
                 height: 20.0.h,
                 color: Colors.white,
-                errorBuilder: (context, error, stackTrace) =>
-                    SizedBox())
+                errorBuilder: (context, error, stackTrace) => SizedBox())
             : Icon(Icons.calendar_today, size: 20.0.sp, color: Colors.white),
         Padding(padding: EdgeInsets.only(top: 10)),
         Container(
@@ -1587,7 +1595,8 @@ class _CustomTabsState extends State<CustomTabView>
     } else {
       saveCategoryToPrefernce();
       if (categoryName == AppConstants.voiceRecords ||
-          categoryName == (CommonUtil.isUSRegion()
+          categoryName ==
+              (CommonUtil.isUSRegion()
                   ? Constants.STR_PROVIDERDOCUMENTS
                   : Constants.STR_HOSPITALDOCUMENT)) {
         new FHBBasicWidget().showInSnackBar(
