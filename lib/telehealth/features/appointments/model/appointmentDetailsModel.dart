@@ -108,7 +108,7 @@ class AdditionalInfo {
   String addressLine2;
   Status modeOfService;
   String providerName;
-
+  bool isEndTimeOptional;
   AdditionalInfo(
       {this.to,
       this.from,
@@ -123,6 +123,7 @@ class AdditionalInfo {
       this.addressLine1,
       this.addressLine2,
       this.modeOfService,
+      this.isEndTimeOptional,
       this.providerName});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
@@ -151,6 +152,7 @@ class AdditionalInfo {
       title = json['title'];
       labName = json['lab_name'];
       pinCode = json['pin_code'];
+      isEndTimeOptional = json['isEndTimeOptional'];
 
       if (json['test_name'] != null && json['test_name'] is String) {
         testName = json['test_name'];
@@ -212,12 +214,14 @@ class Status {
 
 class ServiceCategory {
   String name;
+  String code;
   ServiceCategoryAdditionalInfo additionalInfo;
 
   ServiceCategory({this.name, this.additionalInfo});
 
   ServiceCategory.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    code = json['code'];
     additionalInfo = json['additionalInfo'] != null
         ? new ServiceCategoryAdditionalInfo.fromJson(json['additionalInfo'])
         : null;

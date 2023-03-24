@@ -62,6 +62,8 @@ class RegimentDataModel {
       this.doctorSessionId,
       this.serviceCategory,
       this.modeOfService,
+      this.isEndTimeOptional,
+      this.code,
       this.dayrepeat});
 
   final dynamic eid;
@@ -110,6 +112,8 @@ class RegimentDataModel {
   final bool isEventDisabled;
   final dynamic sayTextDynamic;
   final bool isSymptom;
+  final bool isEndTimeOptional;
+  final String code;
   final bool isMandatory;
   final bool isModifiedToday;
   final dynamic healthOrgName;
@@ -129,6 +133,8 @@ class RegimentDataModel {
         uid: json['uid'],
         title: json['title'],
         description: json['description'],
+        isEndTimeOptional: json['additionalInfo']!=null?json['additionalInfo']['isEndTimeOptional']:null,
+        code: json['serviceCategory']!=null?json['serviceCategory']['code']:null,
         tplanid: json['tplanid'],
         teidUser: json['teid_user'],
         aid: json['aid'],

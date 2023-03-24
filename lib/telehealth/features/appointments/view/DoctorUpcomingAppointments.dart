@@ -264,9 +264,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                 fontWeight: FontWeight.w600,
                                 colors: Color(new CommonUtil().getMyPrimaryColor()),
                               ),
-                              widget.doc.isEndTimeOptional == null || widget.doc.isEndTimeOptional
-                                  ? SizedBox.shrink()
-                                  : TextWidget(
+                              TextWidget(
                                 fontsize: 12.0.sp,
                                 text: DateFormat.yMMMEd()
                                     .format(DateTime.parse(

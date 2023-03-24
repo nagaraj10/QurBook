@@ -818,23 +818,29 @@ class RegimentDataCard extends StatelessWidget {
         regimentData?.estart != '' &&
         regimentData?.eend != null &&
         regimentData?.eend != '') {
+      bool showEndTime = true;
+      if (CommonUtil.REGION_CODE == 'US'&& regimentData?.code!='CONSLTN') {
+        showEndTime = !(regimentData?.isEndTimeOptional) ?? true;
+      }
       return Row(
         children: [
           Text(
             DateFormat('hh:mm a').format(regimentData?.estart),
             style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
           ),
-          Text(
-            ' - ' + DateFormat('hh:mm a').format(regimentData?.eend),
-            style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
-          ),
-          Text(
-            ' (' +
-                (CommonUtil.convertMinuteToHour(regimentData?.duration ?? 0))
-                    .toString() +
-                ')',
-            style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
-          ),
+          if (showEndTime) ...{
+            Text(
+              ' - ' + DateFormat('hh:mm a').format(regimentData?.eend),
+              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+            ),
+            Text(
+              ' (' +
+                  (CommonUtil.convertMinuteToHour(regimentData?.duration ?? 0))
+                      .toString() +
+                  ')',
+              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+            ),
+          }
         ],
       );
     } else {
