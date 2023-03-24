@@ -1402,13 +1402,11 @@ class _MyFamilyState extends State<MyFamily> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               color: Color(fhbColors.bgColorContainer),
-              child: Expanded(
-                child: Center(
-                  child: Text(Constants.NO_DATA_FAMIY,
-                      textAlign: TextAlign.center),
-                ),
+              child: Center(
+                child:
+                    Text(Constants.NO_DATA_FAMIY, textAlign: TextAlign.center),
               ),
-            )
+            ),
           ],
         ));
   }
