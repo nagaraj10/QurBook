@@ -51,6 +51,7 @@ class Past {
   int slotNumber;
   bool isHealthRecordShared;
   String plannedFollowupDate;
+  bool isEndTimeOptional;
   bool isRefunded;
   bool isFollowupFee;
   dynamic isFollowup;
@@ -89,6 +90,7 @@ class Past {
     isFollowup = json[parameters.strIsFollowup];
     isActive = json[parameters.strIsActive];
     createdOn = json[parameters.strCreatedOn];
+    isEndTimeOptional = json[parameters.strisEndTimeOptional];
     lastModifiedOn = json[parameters.strLastModifiedOn];
     bookedFor = json[parameters.strBookedFor] == null
         ? null
