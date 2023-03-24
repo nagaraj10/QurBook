@@ -90,7 +90,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   FlutterToast toast = FlutterToast();
   FToast fToast = FToast();
   var qurhomeDashboardController =
-  CommonUtil().onInitQurhomeDashboardController();
+      CommonUtil().onInitQurhomeDashboardController();
 
   @override
   void initState() {
@@ -132,7 +132,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-
   onInit() async {
     try {
       await controller.getRegimenList();
@@ -148,13 +147,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             isFirstTime = false;
             RegimentDataModel currRegimen = null;
             for (int i = 0;
-            i <
-                controller
-                    .qurHomeRegimenResponseModel?.regimentsList?.length ??
-                0;
-            i++) {
+                i <
+                        controller.qurHomeRegimenResponseModel?.regimentsList
+                            ?.length ??
+                    0;
+                i++) {
               RegimentDataModel regimentDataModel =
-              controller.qurHomeRegimenResponseModel?.regimentsList[i];
+                  controller.qurHomeRegimenResponseModel?.regimentsList[i];
               if ((regimentDataModel?.eid ?? "").toString().toLowerCase() ==
                   qurhomeDashboardController.eventId.value) {
                 currRegimen = regimentDataModel;
@@ -163,7 +162,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   showRegimenDialog(regimentDataModel, i);
                   await Future.delayed(Duration(milliseconds: 50));
                 } else if (regimentDataModel?.activityOrgin !=
-                    strAppointmentRegimen &&
+                        strAppointmentRegimen &&
                     regimentDataModel?.ack != null) {
                   toast.getToastWithBuildContext(
                       variable.strActivityCompleted, Colors.blue, context);
@@ -831,12 +830,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                   formId: regimen.uformid,
                                   formName: regimen.uformname);
                             } else {
-                              CommonUtil().showDialogForActivityConfirmation(
-                                  context, regimen?.title?.toString()?.trim(),
-                                  () {
-                                Navigator.pop(context);
-                                callLogApi(regimen);
-                              }, true);
+                              callLogApi(regimen);
                             }
                           },
                           child: Image.asset(
@@ -1152,6 +1146,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         var value = await showDialog(
           context: context,
           builder: (_) => FormDataDialog(
+            introText: regimen?.otherinfo?.introText ?? '',
             fieldsData: fieldsResponseModel.result.fields,
             eid: eventId,
             color: Color(CommonUtil().getQurhomePrimaryColor()),

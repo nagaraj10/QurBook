@@ -269,27 +269,32 @@ class Otherinfo {
       this.needAudio,
       this.needVideo,
       this.needFile,
-      this.snoozeText});
+      this.snoozeText,
+      this.introText});
 
   final String needPhoto;
   final String needAudio;
   final String needVideo;
   final String needFile;
   final String snoozeText;
+  final String introText;
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
-      needPhoto: (json['NeedPhoto'] ?? 0).toString(),
-      needAudio: (json['NeedAudio'] ?? 0).toString(),
-      needVideo: (json['NeedVideo'] ?? 0).toString(),
-      needFile: (json['NeedFile'] ?? 0).toString(),
-      snoozeText: json.containsKey('snoozeText') ? (json['snoozeText']) : '');
+        needPhoto: (json['NeedPhoto'] ?? 0).toString(),
+        needAudio: (json['NeedAudio'] ?? 0).toString(),
+        needVideo: (json['NeedVideo'] ?? 0).toString(),
+        needFile: (json['NeedFile'] ?? 0).toString(),
+        snoozeText: json.containsKey('snoozeText') ? (json['snoozeText']) : '',
+        introText: json.containsKey('introtext') ? (json['introtext']) : '',
+      );
 
   Map<String, dynamic> toJson() => {
         'NeedPhoto': needPhoto,
         'NeedAudio': needAudio,
         'NeedVideo': needVideo,
         'NeedFile': needFile,
-        'snoozeText': snoozeText
+        'snoozeText': snoozeText,
+        'introtext': introText
       };
 }
 

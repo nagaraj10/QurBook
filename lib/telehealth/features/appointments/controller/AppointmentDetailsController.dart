@@ -37,6 +37,7 @@ class AppointmentDetailsController extends GetxController {
   var addressLine2 = "";
   var city = "";
   var state = "";
+  var locationUrl = "";
 
   getAppointmentDetail(String appointmentId) async {
     try {
@@ -264,6 +265,9 @@ class AppointmentDetailsController extends GetxController {
 
       state = state +
           " ${appointmentDetailsModel.result?.additionalInfo?.pinCode ?? ""}";
+
+      locationUrl =
+          appointmentDetailsModel.result?.additionalInfo.locationUrl ?? "";
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());

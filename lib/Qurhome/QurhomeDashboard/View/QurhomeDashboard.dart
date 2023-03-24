@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
@@ -14,7 +15,9 @@ import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/landing/view/widgets/qurhome_nav_drawer.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -32,8 +35,6 @@ import 'QurHomeRegimen.dart';
 import 'package:myfhb/main.dart';
 
 class QurhomeDashboard extends StatefulWidget {
-
-
   @override
   _QurhomeDashboardState createState() => _QurhomeDashboardState();
 }
@@ -57,6 +58,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
+
+  HealthReportListForUserRepository healthReportListForUserRepository =
+      HealthReportListForUserRepository();
+
+  GetDeviceSelectionModel selectionResult;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -87,6 +93,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
+
+        enableModuleAccess();
+        getModuleAccess();
+
         await CommonUtil().getUserProfileData();
       }
       if (CommonUtil.REGION_CODE == "IN") {
@@ -175,407 +185,434 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
           ),
         ),
       );
+
   @override
   Widget build(BuildContext context) {
-    return Obx(() =>
-    controller.isLoading.isTrue
+    return Obx(() => controller.isLoading.isTrue
         ? Center(
             child: CircularProgressIndicator(),
           )
         : WillPopScope(
-          child: Scaffold(
-            drawerEnableOpenDragGesture: false,
-            key: _scaffoldKey,
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
-              elevation: 0,
-              centerTitle: true,
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: (CommonUtil.isUSRegion())
-                    ? controller.currentSelectedIndex == 0
-                        ? MainAxisAlignment.spaceBetween
-                        : MainAxisAlignment.center
-                    : MainAxisAlignment.center,
-                children: [
-                  (controller.currentSelectedIndex != 0 &&
-                          controller.currentSelectedIndex != 1)
-                      ? Container(
-                          margin: EdgeInsets.only(
-                            left: 8.h,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8.h,
-                              vertical: 4.h,
+            child: Scaffold(
+              drawerEnableOpenDragGesture: false,
+              key: _scaffoldKey,
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+                elevation: 0,
+                centerTitle: true,
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: (CommonUtil.isUSRegion())
+                      ? controller.currentSelectedIndex == 0
+                          ? MainAxisAlignment.spaceBetween
+                          : MainAxisAlignment.center
+                      : MainAxisAlignment.center,
+                  children: [
+                    (controller.currentSelectedIndex != 0 &&
+                            controller.currentSelectedIndex != 1)
+                        ? Container(
+                            margin: EdgeInsets.only(
+                              left: 8.h,
                             ),
-                            child: controller.currentSelectedIndex == 2
-                                ? CommonUtil().isTablet
-                                    ? AssetImageWidget(
-                                        icon: icon_vitals_qurhome,
-                                        height: 24.h,
-                                        width: 24.h,
-                                      )
-                                    : AssetImageWidget(
-                                        icon: icon_vitals_qurhome,
-                                        height: 22.h,
-                                        width: 22.h,
-                                      )
-                                : controller.currentSelectedIndex == 3
-                                    ? CommonUtil().isTablet
-                                        ? AssetImageWidget(
-                                            icon: icon_symptom_qurhome,
-                                            height: 24.h,
-                                            width: 24.h,
-                                          )
-                                        : AssetImageWidget(
-                                            icon: icon_symptom_qurhome,
-                                            height: 22.h,
-                                            width: 22.h,
-                                          )
-                                    : SizedBox.shrink(),
-                          ))
-                      : SizedBox.shrink(),
-                  if (CommonUtil.isUSRegion()) SizedBox(width: 22.w),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        RichText(
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          text: TextSpan(
-                            // Note: Styles for TextSpans must be explicitly defined.
-                            // Child text spans will inherit styles from parent
-                            style: TextStyle(
-                              fontSize: textFontSize,
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              if (controller.currentSelectedIndex.value == 0 ||
-                                  controller.currentSelectedIndex.value == 1) ...{
-                                TextSpan(text: 'Hello '),
-                              },
-                              TextSpan(
-                                text: controller.appBarTitle.value,
-                                style: TextStyle(
-                                    fontSize: textFontSize,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.h,
+                                vertical: 4.h,
                               ),
-                            ],
-                          ),
-                        ),
-                        if (controller.currentSelectedIndex.value == 0 ||
-                            controller.currentSelectedIndex.value == 1) ...{
-                          SizedBox(height: 3),
-                          Text(
-                            'Today, ' + qurHomeRegimenController.dateHeader.value,
-                            style: TextStyle(
-                              fontSize: 12.h,
-                              color: Colors.grey,
+                              child: controller.currentSelectedIndex == 2
+                                  ? CommonUtil().isTablet
+                                      ? AssetImageWidget(
+                                          icon: icon_vitals_qurhome,
+                                          height: 24.h,
+                                          width: 24.h,
+                                        )
+                                      : AssetImageWidget(
+                                          icon: icon_vitals_qurhome,
+                                          height: 22.h,
+                                          width: 22.h,
+                                        )
+                                  : controller.currentSelectedIndex == 3
+                                      ? CommonUtil().isTablet
+                                          ? AssetImageWidget(
+                                              icon: icon_symptom_qurhome,
+                                              height: 24.h,
+                                              width: 24.h,
+                                            )
+                                          : AssetImageWidget(
+                                              icon: icon_symptom_qurhome,
+                                              height: 22.h,
+                                              width: 22.h,
+                                            )
+                                      : SizedBox.shrink(),
+                            ))
+                        : SizedBox.shrink(),
+                    if (CommonUtil.isUSRegion()) SizedBox(width: 22.w),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          RichText(
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            text: TextSpan(
+                              // Note: Styles for TextSpans must be explicitly defined.
+                              // Child text spans will inherit styles from parent
+                              style: TextStyle(
+                                fontSize: textFontSize,
+                                color: Colors.black,
+                              ),
+                              children: <TextSpan>[
+                                if (controller.currentSelectedIndex.value ==
+                                        0 ||
+                                    controller.currentSelectedIndex.value ==
+                                        1) ...{
+                                  TextSpan(text: 'Hello '),
+                                },
+                                TextSpan(
+                                  text: controller.appBarTitle.value,
+                                  style: TextStyle(
+                                      fontSize: textFontSize,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ],
                             ),
                           ),
-                        },
-                      ],
-                    ),
-                  ),
-                  if (CommonUtil.isUSRegion() &&
-                      controller.currentSelectedIndex == 0)
-                    Container(
-                      child: Row(
-                        children: [
-                          SizedBox(width: 24.w),
-                          getChatSocketIcon(),
-                          SizedBox(width: 20.w),
-                          CommonUtil().getNotificationIcon(context,
-                              color:
-                                  Color(CommonUtil().getQurhomePrimaryColor()),
-                              isFromQurday: true),
+                          if (controller.currentSelectedIndex.value == 0 ||
+                              controller.currentSelectedIndex.value == 1) ...{
+                            SizedBox(height: 3),
+                            Text(
+                              'Today, ' +
+                                  qurHomeRegimenController.dateHeader.value,
+                              style: TextStyle(
+                                fontSize: 12.h,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          },
                         ],
                       ),
                     ),
-                  getSizedBoxIndReg(),
-                ],
-              ),
-              leading: controller.currentSelectedIndex == 0
-                  ? (CommonUtil.isUSRegion())
-                      ? Material(
-                          color: Colors.transparent,
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.menu_rounded,
-                            ),
-                            color: Color(CommonUtil().getQurhomePrimaryColor()),
-                            iconSize: CommonUtil().isTablet ? 34.0.sp : 24.0.sp,
-                            onPressed: () {
-                              _scaffoldKey.currentState.openDrawer();
-                            },
-                          ),
-                        )
-                      : IconWidget(
-                          icon: Icons.arrow_back_ios,
-                          colors: Colors.black,
-                          size: CommonUtil().isTablet ? 38.0 : 24.0,
-                          onTap: () {
-                            Get.back();
-                            controller.isActive.value = false;
-                          },
-                        )
-                  : Container(
-                      margin: EdgeInsets.only(
-                        left: 8.h,
-                      ),
-                      child: InkWell(
-                          onTap: () {
-                            bottomTapped(0);
-                            sheelBadgeController.getSheelaBadgeCount(
-                                isNeedSheelaDialog: true);
-                          },
-                          child: CommonUtil.isUSRegion()
-                              ? Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8.h,
-                                    vertical: 4.h,
-                                  ),
-                                  child: Icon(
-                                    Icons.home,
-                                    size: 32.sp,
-                                    color: Color(
-                                        CommonUtil().getQurhomePrimaryColor()),
-                                  ),
-                                )
-                              : CommonUtil().isTablet
-                                  ? AssetImageWidget(
-                                      icon: icon_qurhome,
-                                      height: 48.h,
-                                      width: 48.h,
-                                    )
-                                  : CommonUtil().qurHomeMainIcon())),
-              bottom: PreferredSize(
-                child: Container(
-                  color: Color(
-                    CommonUtil().getQurhomeGredientColor(),
-                  ),
-                  height: 1.0,
-                ),
-                preferredSize: Size.fromHeight(
-                  1.0,
-                ),
-              ),
-              // actions: [
-              //   InkWell(
-              //     onTap: () {
-              //       controller.checkForConnectedDevices();
-              //     },
-              //     child: Padding(
-              //       padding: EdgeInsets.symmetric(horizontal: 8),
-              //       child: AssetImageWidget(
-              //         icon: icon_vitals_qurhome,
-              //         height: 22.h,
-              //         width: 22.h,
-              //       ),
-              //     ),
-              //   )
-              // ],
-            ),
-            body: getCurrentTab(),
-            floatingActionButton: Stack(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: CommonUtil().isTablet ? 20.h : 20,
-                  ),
-                  child: SizedBox(
-                    height: buttonSize,
-                    width: buttonSize,
-                    child: FloatingActionButton(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      onPressed: () {
-                        if (sheelBadgeController?.sheelaIconBadgeCount?.value >
-                            0) {
-                          Get.toNamed(
-                            rt_Sheela,
-                            arguments: SheelaArgument(
-                              rawMessage: sheelaQueueShowRemind,
-                            ),
-                          ).then((value) {
-                            sheelBadgeController.getSheelaBadgeCount(
-                                isNeedSheelaDialog: true);
-                          });
-                        } else {
-                          String sheela_lang =
-                              PreferenceUtil.getStringValue(SHEELA_LANG);
-                          Get.toNamed(
-                            rt_Sheela,
-                            arguments: SheelaArgument(
-                              isSheelaAskForLang:
-                                  !((sheela_lang ?? '').isNotEmpty),
-                              langCode: (sheela_lang ?? ''),
-                            ),
-                          ).then((value) {
-                            sheelBadgeController.getSheelaBadgeCount(
-                                isNeedSheelaDialog: true);
-                          });
-                        }
-                      },
-                      child: Container(
-                        height: buttonSize,
-                        width: buttonSize,
-                        padding: const EdgeInsets.all(
-                          8,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Color(
-                              CommonUtil().getQurhomeGredientColor(),
-                            ),
-                            width: 1,
-                          ),
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: Image.asset(
-                          icon_mayaMain,
-                          height: buttonSize,
-                          width: buttonSize,
+                    if (CommonUtil.isUSRegion() &&
+                        controller.currentSelectedIndex == 0)
+                      Container(
+                        child: Row(
+                          children: [
+                            SizedBox(width: 24.w),
+                            getChatSocketIcon(),
+                            SizedBox(width: 20.w),
+                            CommonUtil().getNotificationIcon(context,
+                                color: Color(
+                                    CommonUtil().getQurhomePrimaryColor()),
+                                isFromQurday: true),
+                          ],
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                if ((sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0) >
-                    0)
-                  badge(
-                    sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0,
-                  ),
-              ],
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            bottomNavigationBar: SizedBox(
-              height: 45.h,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: getBorder(),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Flexible(
-                      child: InkWell(
-                        onTap: () {
-                          bottomTapped(2);
-                        },
-                        child: Container(
-                          color: controller.currentSelectedIndex == 2
-                              ? Color(
-                                  CommonUtil().getQurhomeGredientColor(),
-                                )
-                              : Colors.white,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Spacer(
-                                    flex: 1,
-                                  ),
-                                  Text(
-                                    "Vitals",
-                                    style: TextStyle(
-                                      color:
-                                          controller.currentSelectedIndex == 2
-                                              ? Colors.white
-                                              : Color(
-                                                  CommonUtil()
-                                                      .getQurhomeGredientColor(),
-                                                ),
-                                      fontSize: textFontSize,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Spacer(
-                                    flex: 2,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: InkWell(
-                        onTap: () {
-                          bottomTapped(3);
-                        },
-                        child: Container(
-                          color: controller.currentSelectedIndex == 3
-                              ? Color(
-                                  CommonUtil().getQurhomeGredientColor(),
-                                )
-                              : Colors.white,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Spacer(
-                                    flex: 2,
-                                  ),
-                                  Text(
-                                    "Symptoms",
-                                    style: TextStyle(
-                                      color:
-                                          controller.currentSelectedIndex == 3
-                                              ? Colors.white
-                                              : Color(
-                                                  CommonUtil()
-                                                      .getQurhomeGredientColor(),
-                                                ),
-                                      fontSize: textFontSize,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Spacer(
-                                    flex: 1,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    getSizedBoxIndReg(),
                   ],
                 ),
+                leading: controller.currentSelectedIndex == 0
+                    ? (CommonUtil.isUSRegion())
+                        ? Material(
+                            color: Colors.transparent,
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.menu_rounded,
+                              ),
+                              color:
+                                  Color(CommonUtil().getQurhomePrimaryColor()),
+                              iconSize:
+                                  CommonUtil().isTablet ? 34.0.sp : 24.0.sp,
+                              onPressed: () {
+                                _scaffoldKey.currentState.openDrawer();
+                              },
+                            ),
+                          )
+                        : IconWidget(
+                            icon: Icons.arrow_back_ios,
+                            colors: Colors.black,
+                            size: CommonUtil().isTablet ? 38.0 : 24.0,
+                            onTap: () {
+                              Get.back();
+                              controller.isActive.value = false;
+                            },
+                          )
+                    : Container(
+                        margin: EdgeInsets.only(
+                          left: 8.h,
+                        ),
+                        child: InkWell(
+                            onTap: () {
+                              bottomTapped(0);
+                              sheelBadgeController.getSheelaBadgeCount(
+                                  isNeedSheelaDialog: true);
+                            },
+                            child: CommonUtil.isUSRegion()
+                                ? Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.h,
+                                      vertical: 4.h,
+                                    ),
+                                    child: Icon(
+                                      Icons.home,
+                                      size: 32.sp,
+                                      color: Color(CommonUtil()
+                                          .getQurhomePrimaryColor()),
+                                    ),
+                                  )
+                                : CommonUtil().isTablet
+                                    ? AssetImageWidget(
+                                        icon: icon_qurhome,
+                                        height: 48.h,
+                                        width: 48.h,
+                                      )
+                                    : CommonUtil().qurHomeMainIcon())),
+                bottom: PreferredSize(
+                  child: Container(
+                    color: Color(
+                      CommonUtil().getQurhomeGredientColor(),
+                    ),
+                    height: 1.0,
+                  ),
+                  preferredSize: Size.fromHeight(
+                    1.0,
+                  ),
+                ),
+                // actions: [
+                //   InkWell(
+                //     onTap: () {
+                //       controller.checkForConnectedDevices();
+                //     },
+                //     child: Padding(
+                //       padding: EdgeInsets.symmetric(horizontal: 8),
+                //       child: AssetImageWidget(
+                //         icon: icon_vitals_qurhome,
+                //         height: 22.h,
+                //         width: 22.h,
+                //       ),
+                //     ),
+                //   )
+                // ],
+              ),
+              body: getCurrentTab(),
+              floatingActionButton: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: CommonUtil().isTablet ? 20.h : 20,
+                    ),
+                    child: SizedBox(
+                      height: buttonSize,
+                      width: buttonSize,
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        onPressed: () {
+                          if (sheelBadgeController
+                                  ?.sheelaIconBadgeCount?.value >
+                              0) {
+                            Get.toNamed(
+                              rt_Sheela,
+                              arguments: SheelaArgument(
+                                rawMessage: sheelaQueueShowRemind,
+                              ),
+                            ).then((value) {
+                              sheelBadgeController.getSheelaBadgeCount(
+                                  isNeedSheelaDialog: true);
+                            });
+                          } else {
+                            String sheela_lang =
+                                PreferenceUtil.getStringValue(SHEELA_LANG);
+                            Get.toNamed(
+                              rt_Sheela,
+                              arguments: SheelaArgument(
+                                isSheelaAskForLang:
+                                    !((sheela_lang ?? '').isNotEmpty),
+                                langCode: (sheela_lang ?? ''),
+                              ),
+                            ).then((value) {
+                              sheelBadgeController.getSheelaBadgeCount(
+                                  isNeedSheelaDialog: true);
+                            });
+                          }
+                        },
+                        child: Container(
+                          height: buttonSize,
+                          width: buttonSize,
+                          padding: const EdgeInsets.all(
+                            8,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Color(
+                                CommonUtil().getQurhomeGredientColor(),
+                              ),
+                              width: 1,
+                            ),
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: Image.asset(
+                            icon_mayaMain,
+                            height: buttonSize,
+                            width: buttonSize,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if ((sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0) >
+                      0)
+                    badge(
+                      sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0,
+                    ),
+                ],
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              bottomNavigationBar: SizedBox(
+                height: 45.h,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: getBorder(),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Flexible(
+                        child: InkWell(
+                          onTap: () {
+                            if (CommonUtil.isUSRegion() &&
+                                controller.isVitalModuleDisable.value) {
+                              FlutterToast()
+                                  .getToast(strFeatureNotEnable, Colors.black);
+                            } else {
+                              bottomTapped(2);
+                            }
+                          },
+                          child: Container(
+                            color: controller.currentSelectedIndex == 2
+                                ? Color(
+                                    CommonUtil().getQurhomeGredientColor(),
+                                  )
+                                : Colors.white,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Spacer(
+                                      flex: 1,
+                                    ),
+                                    Text(
+                                      "Vitals",
+                                      style: TextStyle(
+                                        color: (CommonUtil.isUSRegion() &&
+                                                controller
+                                                    .isVitalModuleDisable.value)
+                                            ? Colors.grey
+                                            : controller.currentSelectedIndex ==
+                                                    2
+                                                ? Colors.white
+                                                : Color(
+                                                    CommonUtil()
+                                                        .getQurhomeGredientColor(),
+                                                  ),
+                                        fontSize: textFontSize,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Spacer(
+                                      flex: 2,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        child: InkWell(
+                          onTap: () {
+                            if (CommonUtil.isUSRegion() &&
+                                controller.isSymptomModuleDisable.value) {
+                              FlutterToast()
+                                  .getToast(strFeatureNotEnable, Colors.black);
+                            } else {
+                              bottomTapped(3);
+                            }
+                          },
+                          child: Container(
+                            color: controller.currentSelectedIndex == 3
+                                ? Color(
+                                    CommonUtil().getQurhomeGredientColor(),
+                                  )
+                                : Colors.white,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Spacer(
+                                      flex: 2,
+                                    ),
+                                    Text(
+                                      "Symptoms",
+                                      style: TextStyle(
+                                        color: (CommonUtil.isUSRegion() &&
+                                                controller
+                                                    .isSymptomModuleDisable
+                                                    .value)
+                                            ? Colors.grey
+                                            : controller.currentSelectedIndex ==
+                                                    3
+                                                ? Colors.white
+                                                : Color(
+                                                    CommonUtil()
+                                                        .getQurhomeGredientColor(),
+                                                  ),
+                                        fontSize: textFontSize,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Spacer(
+                                      flex: 1,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              drawer: QurHomeNavigationDrawer(
+                myProfile: myProfile,
+                moveToLoginPage: moveToLoginPage,
+                userChangedbool: false,
+                refresh: (userChanged) => refresh(
+                  userChanged: userChanged,
+                ),
               ),
             ),
-            drawer: QurHomeNavigationDrawer(
-              myProfile: myProfile,
-              moveToLoginPage: moveToLoginPage,
-              userChangedbool: false,
-              refresh: (userChanged) => refresh(
-                userChanged: userChanged,
-              ),
-            ),
-          ),
-          onWillPop: () async {
-            Get.back();
-            controller.isActive.value = false;
-            return true;
-          },
-        ));
+            onWillPop: () async {
+              Get.back();
+              controller.isActive.value = false;
+              return true;
+            },
+          ));
   }
 
   Widget getCurrentTab() {
@@ -669,5 +706,22 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     } else {
       return SizedBox(width: 70.w);
     }
+  }
+
+  Future<GetDeviceSelectionModel> getModuleAccess() async {
+    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+      selectionResult = value;
+      if (selectionResult?.isSuccess) {
+        if (selectionResult?.result != null) {
+          controller.updateModuleAccess(selectionResult?.result);
+        }
+      }
+    });
+    return selectionResult;
+  }
+
+  enableModuleAccess() {
+    controller.isVitalModuleDisable.value = true;
+    controller.isSymptomModuleDisable.value = true;
   }
 }

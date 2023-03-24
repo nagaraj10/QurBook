@@ -106,6 +106,7 @@ class AdditionalInfo {
   String testName;
   String addressLine1;
   String addressLine2;
+  String locationUrl;
   Status modeOfService;
   String providerName;
   bool isEndTimeOptional;
@@ -122,6 +123,7 @@ class AdditionalInfo {
       this.testName,
       this.addressLine1,
       this.addressLine2,
+      this.locationUrl,
       this.modeOfService,
       this.isEndTimeOptional,
       this.providerName});
@@ -165,6 +167,7 @@ class AdditionalInfo {
 
       addressLine1 = json['address_line_1'];
       addressLine2 = json['address_line_2'];
+      locationUrl = json['location_url'] != null ? json['location_url'] : "";
       providerName = json['provider_name'];
       modeOfService = json['mode_of_service'] != null
           ? new Status.fromJson(json['mode_of_service'])
@@ -190,6 +193,7 @@ class AdditionalInfo {
     data['test_name'] = this.testName;
     data['address_line_1'] = this.addressLine1;
     data['address_line_2'] = this.addressLine2;
+    data['location_url'] = this.locationUrl;
     data['mode_of_service'] = this.modeOfService;
     data['provider_name'] = this.providerName;
     return data;
