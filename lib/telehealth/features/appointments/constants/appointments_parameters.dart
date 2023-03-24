@@ -24,6 +24,7 @@ const String strRoleName = 'roleName';
 const String strRoleDescription = 'roleDescription';
 const String strIsActive = 'isActive';
 const String strCreatedOn = 'createdOn';
+const String strisEndTimeOptional = 'isEndTimeOptional';
 const String strlastModifiedBy = 'lastModifiedBy';
 const String strLastModifiedOn = 'lastModifiedOn';
 
