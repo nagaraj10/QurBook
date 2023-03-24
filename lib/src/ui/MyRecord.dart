@@ -859,74 +859,77 @@ class _CustomTabsState extends State<CustomTabView>
     return Stack(alignment: Alignment.bottomRight, children: <Widget>[
       getAllTabsToDisplayInBody(data),
       Container(
-        margin: EdgeInsets.only(right: 10, bottom: 10),
-        constraints: BoxConstraints(maxHeight: 120.0.h),
-        decoration: BoxDecoration(
-            color: Color(new CommonUtil().getMyPrimaryColor()),
-            borderRadius: BorderRadius.circular(30)),
-        child: (widget.categoryData != null &&
-                widget.categoryData[controller.index].categoryName ==
-                    AppConstants.notes)
-            ? IconButton(
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  onCameraClicked();
-                },
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  FHBBasicWidget.customShowCase(
-                      widget.cameraKey,
-                      Constants.CAMERA_DESC,
-                      Tooltip(
-                        message: 'Camera disabled',
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.camera_alt,
-                            color: widget?.isFromVideoCall
-                                ? Colors.black38
-                                : Colors.white,
-                          ),
-                          onPressed: widget?.isFromVideoCall
-                              ? null
-                              : () {
-                                  onCameraClicked();
-                                },
-                        ),
-                      ),
-                      Constants.CAMERA_TITLE),
-                  Container(
-                    width: 20.0.w,
-                    height: 1.0.h,
+          margin: EdgeInsets.only(right: 10, bottom: 10),
+          constraints: BoxConstraints(maxHeight: 120.0.h),
+          decoration: BoxDecoration(
+              color: Color(new CommonUtil().getMyPrimaryColor()),
+              borderRadius: BorderRadius.circular(30)),
+          child: (widget.categoryData != null &&
+                  widget.categoryData[controller.index].categoryName ==
+                      AppConstants.notes)
+              ? IconButton(
+                  icon: Icon(
+                    Icons.add,
                     color: Colors.white,
                   ),
-                  FHBBasicWidget.customShowCase(
-                      widget.voiceKey,
-                      Constants.VOICE_DESC,
-                      Tooltip(
-                        message: 'Microphone disabled',
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.mic,
-                            color: widget?.isFromVideoCall
-                                ? Colors.black38
-                                : Colors.white,
-                          ),
-                          onPressed: widget?.isFromVideoCall
-                              ? null
-                              : () {
-                                  onVoiceRecordClicked();
-                                },
+                  onPressed: () {
+                    onCameraClicked();
+                  },
+                )
+              : ((CommonUtil.isUSRegion()) &&
+                      (controller.index == 1) &&
+                      (qurhomeDashboardController.isVitalModuleDisable.value))
+                  ? SizedBox.shrink()
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        FHBBasicWidget.customShowCase(
+                            widget.cameraKey,
+                            Constants.CAMERA_DESC,
+                            Tooltip(
+                              message: 'Camera disabled',
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.camera_alt,
+                                  color: widget?.isFromVideoCall
+                                      ? Colors.black38
+                                      : Colors.white,
+                                ),
+                                onPressed: widget?.isFromVideoCall
+                                    ? null
+                                    : () {
+                                        onCameraClicked();
+                                      },
+                              ),
+                            ),
+                            Constants.CAMERA_TITLE),
+                        Container(
+                          width: 20.0.w,
+                          height: 1.0.h,
+                          color: Colors.white,
                         ),
-                      ),
-                      Constants.VOICE_TITLE),
-                ],
-              ),
-      ),
+                        FHBBasicWidget.customShowCase(
+                            widget.voiceKey,
+                            Constants.VOICE_DESC,
+                            Tooltip(
+                              message: 'Microphone disabled',
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.mic,
+                                  color: widget?.isFromVideoCall
+                                      ? Colors.black38
+                                      : Colors.white,
+                                ),
+                                onPressed: widget?.isFromVideoCall
+                                    ? null
+                                    : () {
+                                        onVoiceRecordClicked();
+                                      },
+                              ),
+                            ),
+                            Constants.VOICE_TITLE),
+                      ],
+                    )),
       Align(
           alignment: Alignment.bottomCenter,
           child: widget.isAssociateOrChat
