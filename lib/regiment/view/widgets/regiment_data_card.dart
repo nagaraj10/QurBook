@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
@@ -743,6 +744,7 @@ class RegimentDataCard extends StatelessWidget {
         var value = await showDialog(
           context: context,
           builder: (context) => FormDataDialog(
+            introText: regimentData?.otherinfo?.introText ?? '',
             fieldsData: fieldsResponseModel.result.fields,
             eid: eventId,
             color: color,
