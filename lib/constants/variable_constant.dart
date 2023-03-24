@@ -857,6 +857,9 @@ const String strActivityCompleted = 'The activity has been completed already.';
 const String strPastActivityMsgOne = 'To access past activities please use';
 const String strPastActivityMsgTwo = '\nGo to Qurbook';
 const String strPastActivityMsgThree = ' from menu.';
+const String strLocationLink = "Location link";
+const String strCentreVisit = 'Centre Visit';
+const String strOnsite = 'Onsite';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
