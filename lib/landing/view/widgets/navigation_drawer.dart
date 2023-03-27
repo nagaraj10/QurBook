@@ -286,12 +286,12 @@ class NavigationDrawer extends StatelessWidget {
                           height: 24.sp,
                         ),
                         onPressed: () {
-                          try {
-                            Get.back();
-                            CommonUtil().accessContactsDialog();
-                          } catch (e) {
-                            //print(e);
-                          }
+                          // try {
+                          //   Get.back();
+                          //   CommonUtil().accessContactsDialog();
+                          // } catch (e) {
+                          //   //print(e);
+                          // }
                         },
                       ),
                       Visibility(

@@ -102,7 +102,7 @@ dependencies:
   scroll_to_index: ^2.0.0
   flutter_inappwebview: ^5.3.2
   flutter_downloader: ^1.5.2
-  contacts_service: ^0.6.1
+#  contacts_service: ^0.6.1
   group_list_view: ^1.0.5
   advance_pdf_viewer: ^2.0.0
   open_file:
