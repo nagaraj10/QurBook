@@ -274,26 +274,26 @@ class NavigationDrawer extends StatelessWidget {
                           }
                         },
                       ),
-                      // DrawerTile(
-                      //   title: variable.strRefer_friend,
-                      //   // iconWidget: SvgPicture.asset(
-                      //   //   variable.icon_logout,
-                      //   //   color: Colors.black54,
-                      //   // ),
-                      //   iconWidget: Image.asset(
-                      //     variable.icon_refer_friend_icon,
-                      //     width: 24.sp,
-                      //     height: 24.sp,
-                      //   ),
-                      //   onPressed: () {
-                      //     try {
-                      //       Get.back();
-                      //       CommonUtil().accessContactsDialog();
-                      //     } catch (e) {
-                      //       //print(e);
-                      //     }
-                      //   },
-                      // ),
+                      DrawerTile(
+                        title: variable.strRefer_friend,
+                        // iconWidget: SvgPicture.asset(
+                        //   variable.icon_logout,
+                        //   color: Colors.black54,
+                        // ),
+                        iconWidget: Image.asset(
+                          variable.icon_refer_friend_icon,
+                          width: 24.sp,
+                          height: 24.sp,
+                        ),
+                        onPressed: () {
+                          // try {
+                          //   Get.back();
+                          //   CommonUtil().accessContactsDialog();
+                          // } catch (e) {
+                          //   //print(e);
+                          // }
+                        },
+                      ),
                       Visibility(
                         visible: CommonUtil.REGION_CODE == 'IN',
                         child: DrawerTile(
