@@ -5692,6 +5692,15 @@ class CommonUtil {
     return qurhomeRegimenController;
   }
 
+  ChatUserListController onInitChatUserListController() {
+    ChatUserListController chatUserListController;
+    if (!Get.isRegistered<ChatUserListController>()) {
+      Get.put(ChatUserListController());
+    }
+    chatUserListController = Get.find();
+    return chatUserListController;
+  }
+
   void goToAppointmentDetailScreen(String appointmentId) {
     if (!Get.isRegistered<AppointmentDetailsController>())
       Get.lazyPut(() => AppointmentDetailsController());

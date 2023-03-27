@@ -54,17 +54,20 @@ class _ChooseUnitState extends State<ChooseUnit> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
+      onWillPop: () async {
         if (isTouched) {
           if (isSettingChanged) {
             _onWillPop();
+            return true;
           } else {
             Navigator.pop(context, false);
+            return false;
           }
         } else {
           Navigator.pop(context, false);
+          return false;
         }
-      } as Future<bool> Function()?,
+      },
       child: Scaffold(
         backgroundColor: const Color(fhbColors.bgColorContainer),
         appBar: AppBar(

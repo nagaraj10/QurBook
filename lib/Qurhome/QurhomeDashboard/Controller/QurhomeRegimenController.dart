@@ -85,7 +85,7 @@ class QurhomeRegimenController extends GetxController {
         loadingDataWithoutProgress.value = true;
       }
       loadingData.value = true;
-      qurHomeRegimenResponseModel = await (_apiProvider.getRegimenList("") as FutureOr<RegimentResponseModel?>);
+      qurHomeRegimenResponseModel = await (_apiProvider.getRegimenList(""));
 
       qurHomeRegimenResponseModel!.regimentsList!.removeWhere((element) =>
           element.isEventDisabled && !element.isSymptom ||
