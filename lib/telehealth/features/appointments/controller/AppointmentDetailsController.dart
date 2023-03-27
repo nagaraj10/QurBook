@@ -68,7 +68,7 @@ class AppointmentDetailsController extends GetxController {
         bool showEndTime=true;
 
         if(CommonUtil.REGION_CODE == 'US' && appointmentDetailsModel?.result?.serviceCategory?.code!='CONSLTN'){
-          showEndTime=!(appointmentDetailsModel.result?.additionalInfo?.isEndTimeOptional)??true;
+          showEndTime=!(appointmentDetailsModel.result?.additionalInfo?.isEndTimeOptional??false);
         }
 
         if (appointmentType.value.toLowerCase() != strTransportation) {

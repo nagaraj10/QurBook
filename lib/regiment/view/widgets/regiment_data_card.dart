@@ -822,7 +822,7 @@ class RegimentDataCard extends StatelessWidget {
         regimentData?.eend != '') {
       bool showEndTime = true;
       if (CommonUtil.REGION_CODE == 'US'&& regimentData?.code!='CONSLTN') {
-        showEndTime = !(regimentData?.isEndTimeOptional) ?? true;
+        showEndTime = !(regimentData?.isEndTimeOptional??false);
       }
       return Row(
         children: [
