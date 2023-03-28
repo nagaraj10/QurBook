@@ -5734,13 +5734,13 @@ class CommonUtil {
     return qurhomeRegimenController;
   }
 
-  QurhomeDashboardController onInitQurhomeDashboardController() {
-    QurhomeDashboardController qurhomeDashboardController;
-    if (!Get.isRegistered<QurhomeDashboardController>()) {
-      Get.put(QurhomeDashboardController());
+  ChatUserListController onInitChatUserListController() {
+    ChatUserListController chatUserListController;
+    if (!Get.isRegistered<ChatUserListController>()) {
+      Get.put(ChatUserListController());
     }
-    qurhomeDashboardController = Get.find();
-    return qurhomeDashboardController;
+    chatUserListController = Get.find();
+    return chatUserListController;
   }
 
   void goToAppointmentDetailScreen(String appointmentId) {
