@@ -2187,9 +2187,9 @@ class CommonUtil {
               return GestureDetector(
                 onTap: () {
                   try {
-                    if (Get.isRegistered<QurhomeDashboardController>())
-                      Get.find<QurhomeDashboardController>()
-                          .updateBLETimer(Enable: false);
+                    var qurhomeDashboardController =
+                        CommonUtil().onInitQurhomeDashboardController();
+                    qurhomeDashboardController.updateBLETimer(Enable: false);
 
                     navigateToNotificationScreen(isFromQurday);
                   } catch (e) {
