@@ -659,14 +659,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             fontWeight: FontWeight.w600));
 
     return WillPopScope(
-      onWillPop: () {
+      onWillPop: () async {
         if (widget.isFromPaymentNotification) {
           Get.offAll(NotificationMain());
+          return true;
         } else {
           Navigator.pop(context);
           if (widget.isFromPaymentNotification == false) widget.refresh!();
+          return true;
         }
-      } as Future<bool> Function()?,
+      },
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
