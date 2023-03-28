@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -69,7 +70,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         description: "Chat"),
   ];
 
-  Future<TicketDetailResponseModel>? future;
+ late Future<TicketDetailResponseModel?> future = ticketViewModel.getTicketDetail(widget.isFromNotification
+          ? widget.ticketId.toString()
+          : widget.ticket!.uid.toString());
   late TabController _controller;
   int selectedTab = 0;
   String? authToken = '';
@@ -79,9 +82,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   void initState() {
     try {
       super.initState();
+        callTicketDetailsApi();
       _controller = TabController(vsync: this, length: 3);
       _controller.addListener(_handleTabSelection);
-      callTicketDetailsApi();
+    
     } catch (e) {
       //print(e);
     }
@@ -94,7 +98,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       authToken = token;
       future = ticketViewModel.getTicketDetail(widget.isFromNotification
           ? widget.ticketId.toString()
-          : widget.ticket!.uid.toString()) as Future<TicketDetailResponseModel>?;
+          : widget.ticket!.uid.toString());
     });
   }
 
@@ -124,10 +128,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget getData() {
-    return FutureBuilder<TicketDetailResponseModel>(
+    return FutureBuilder<TicketDetailResponseModel?>(
       future: future,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.none && snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
@@ -142,16 +146,30 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();
-        } else {
-          if (snapshot?.data != null &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.ticket != null)
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          if ( snapshot.hasData &&
+              snapshot.data?.result != null &&
+              snapshot.data?.result?.ticket != null)
             return SingleChildScrollView(
                 child: detailView(snapshot.data!.result!.ticket!));
           else
             return ErrorsWidget();
+        
+        }else{
+           return SafeArea(
+            child: SizedBox(
+              height: 1.sh / 4.5,
+              child: Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: CommonCircularIndicator(),
+                ),
+              ),
+            ),
+          );
         }
-      },
+      }
     );
   }
 
@@ -196,10 +214,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                     (LabelName.contains("mode_of_service") ||
                         LabelName.contains("modeOfService"))) {
                   widgetForColumn.add(
-                      (ticket?.additionalInfo!.modeOfService != null &&
-                              ticket?.additionalInfo!.modeOfService!.name != "")
+                      (ticket.additionalInfo!.modeOfService != null &&
+                              ticket.additionalInfo!.modeOfService!.name != "")
                           ? commonWidgetForDropDownValue("Mode Of Service",
-                              ticket?.additionalInfo!.modeOfService!.name)
+                              ticket.additionalInfo?.modeOfService?.name)
                           : SizedBox.shrink());
                   break;
                 } else if ((fieldName.contains("preferredDate") ||
@@ -371,14 +389,14 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                           ),
-                                          (ticket?.additionalInfo
+                                          (ticket.additionalInfo
                                                           ?.preferredTime !=
                                                       null &&
-                                                  ticket?.additionalInfo
+                                                  ticket.additionalInfo
                                                           ?.preferredTime !=
                                                       "")
                                               ? Text(
-                                                  ", ${ticket?.additionalInfo!.preferredTime ?? ''}",
+                                                  ", ${ticket.additionalInfo!.preferredTime ?? ''}",
                                                   style: TextStyle(
                                                     fontSize: 16.0.sp,
                                                     fontWeight: FontWeight.w100,
@@ -392,23 +410,23 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                         ],
                                       )
                                     : SizedBox(),
-                                (ticket?.additionalInfo!.chooseCategory !=
+                                (ticket.additionalInfo?.chooseCategory !=
                                             null &&
-                                        ticket?.additionalInfo
+                                        ticket.additionalInfo
                                                 ?.chooseCategory !=
                                             "")
                                     ? commonWidgetForDropDownValue(
                                         "Category Name",
-                                        ticket?.additionalInfo
+                                        ticket.additionalInfo
                                                 ?.chooseCategory ??
                                             '')
                                     : SizedBox.shrink(),
-                                (ticket?.additionalInfo!.packageName != null &&
-                                        ticket?.additionalInfo!.packageName !=
+                                (ticket.additionalInfo?.packageName != null &&
+                                        ticket.additionalInfo!.packageName !=
                                             "")
                                     ? commonWidgetForDropDownValue(
                                         "Package Name",
-                                        ticket?.additionalInfo!.packageName ??
+                                        ticket.additionalInfo!.packageName ??
                                             '')
                                     : SizedBox.shrink(),
                               ],
@@ -435,7 +453,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget _tabWidget(BuildContext context, Ticket ticketList) {
-    for (var historyData in ticketList.history!) {
+    for (var historyData in ticketList.history??[]) {
       fullName = ticketList.assignee?.fullname ?? "N/A";
       date = historyData.date.toString();
       print('History fullname : $fullName & $date');
@@ -524,7 +542,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       Center(
                         child: Container(
                           padding: EdgeInsets.only(left: 80.w, right: 70.w),
-                          child: ListView.builder(
+                          child: ticketList.history != null &&
+                                    ticketList.history!.isNotEmpty? ListView.builder(
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
                               return new Stack(
@@ -556,7 +575,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 30, right: 30),
-                                    child: Column(
+                                    child:  Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       mainAxisAlignment:
@@ -617,13 +636,18 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                           ),
                                         ),
                                       ],
-                                    ),
+                                    )
                                   ),
                                 ],
                               );
                             },
                             itemCount: listOfEvents.length,
-                          ),
+                          ):Center(
+                                    child: Container(
+                                      child:
+                                          Text('No History available !!'),
+                                    ),
+                                  ),
                         ),
                       ),
                       Center(
@@ -1275,11 +1299,11 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   String? getStatusName(Ticket ticket) {
     String? statusName = '';
     if (widget.isFromNotification) {
-      if (ticket?.additionalInfo != null &&
-          ticket?.additionalInfo!.ticketStatus != null) {
-        if (ticket?.additionalInfo!.ticketStatus?.name != null &&
-            ticket?.additionalInfo!.ticketStatus?.name != '') {
-          statusName = ticket?.additionalInfo!.ticketStatus?.name;
+      if (ticket.additionalInfo != null &&
+          ticket.additionalInfo!.ticketStatus != null) {
+        if (ticket.additionalInfo!.ticketStatus?.name != null &&
+            ticket.additionalInfo!.ticketStatus?.name != '') {
+          statusName = ticket.additionalInfo!.ticketStatus?.name;
         }
       }
     } else {
