@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,28 +7,33 @@ import 'package:flutter_sound/public/flutter_sound_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
+import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
 import 'package:myfhb/chat_socket/model/EmitAckResponse.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/ChooseDateSlot.dart';
@@ -39,19 +43,10 @@ import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:open_filex/open_filex.dart';
-//import 'package:open_file/open_file.dart';FU2.5
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-//import 'package:scrollable_positioned_list/scrollable_positioned_list.dart'; FU2.5
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
-
-import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
-import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 
 class ChatDetail extends StatefulWidget {
   final String? patientId;
@@ -127,7 +122,7 @@ class ChatState extends State<ChatDetail> {
   var chatEnterMessageController = TextEditingController();
 
   /*final ScrollController listScrollController = ScrollController();*/
- // ItemScrollController listScrollController = ItemScrollController(); FU2.5
+  ItemScrollController listScrollController = ItemScrollController();
   final FocusNode focusNode = FocusNode();
   var healthRecordList;
   List<String> recordIds = [];
@@ -296,24 +291,29 @@ class ChatState extends State<ChatDetail> {
   }
 
   void scrollToPosiiton(int commonIndex) async {
-    // await listScrollController.scrollTo(
-    //     index: listIndex[commonIndex], duration: Duration(milliseconds: 100));//FU2.5
+    await listScrollController.scrollTo(
+        index: listIndex[commonIndex],
+        duration: Duration(milliseconds: 100)); //FU2.5
 
     //Scrollable.ensureVisible(context);
   }
 
   void getChatHistory() {
     chatHistoryModel = Provider.of<ChatSocketViewModel>(context, listen: false)
-        .getChatHistory(chatPeerId!, familyUserId, isFromCareCoordinator!,
-            carecoordinatorId!, isFromFamilyListChat) as Future<ChatHistoryModel?>;
+        .getChatHistory(
+            chatPeerId!,
+            familyUserId,
+            isFromCareCoordinator!,
+            carecoordinatorId!,
+            isFromFamilyListChat) as Future<ChatHistoryModel?>;
   }
 
   void getGroupId() {
     if (groupId == '' || groupId == null) {
       if (isFromFamilyListChat) {
         Provider.of<ChatSocketViewModel>(context, listen: false)
-            .initNewFamilyChat(
-                chatPeerId!, peerName!, isFromCareCoordinator!, carecoordinatorId!)
+            .initNewFamilyChat(chatPeerId!, peerName!, isFromCareCoordinator!,
+                carecoordinatorId!)
             .then((value) {
           if (value != null) {
             if (value?.result != null) {
@@ -440,85 +440,90 @@ class ChatState extends State<ChatDetail> {
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
-        if (mounted) setState(() { // FUcrash add mounted
-          isCareGiverApi = appointmentResult?.isCaregiver ?? false;
-          isFamilyPatientApi = appointmentResult?.isPatient ?? false;
-          isChatDisable = appointmentResult?.chatList?.isDisable ?? false;
-          isCallBackDisable = isChatDisable;
+        if (mounted)
+          setState(() {
+            // FUcrash add mounted
+            isCareGiverApi = appointmentResult?.isCaregiver ?? false;
+            isFamilyPatientApi = appointmentResult?.isPatient ?? false;
+            isChatDisable = appointmentResult?.chatList?.isDisable ?? false;
+            isCallBackDisable = isChatDisable;
 
-          if (appointmentResult?.upcoming != null) {
-            bookingId = appointmentResult?.upcoming?.bookingId;
-          } else {
-            if (appointmentResult?.past != null) {
-              bookingId = appointmentResult?.past?.bookingId;
+            if (appointmentResult?.upcoming != null) {
+              bookingId = appointmentResult?.upcoming?.bookingId;
             } else {
-              bookingId = '-';
-            }
-          }
-
-          lastAppointmentDate = appointmentResult?.past != null
-              ? appointmentResult?.past?.plannedStartDateTime
-              : '';
-          nextAppointmentDate = appointmentResult?.upcoming != null
-              ? appointmentResult?.upcoming?.plannedStartDateTime
-              : '';
-          doctorDeviceToken = appointmentResult?.deviceToken != null
-              ? appointmentResult?.deviceToken?.doctor != null
-                  ? appointmentResult!.deviceToken!.doctor!.payload!.isNotEmpty
-                      ? appointmentResult!
-                          .deviceToken!.doctor!.payload![0].deviceTokenId
-                      : ''
-                  : ''
-              : '';
-          patientDeviceToken = '';
-          if (appointmentResult!.deviceToken != null) {
-            if (appointmentResult!.deviceToken!.patient!.isSuccess! &&
-                appointmentResult!.deviceToken!.patient!.payload!.isNotEmpty &&
-                appointmentResult
-                        ?.deviceToken?.patient?.payload![0]?.deviceTokenId !=
-                    null) {
-              patientDeviceToken = appointmentResult
-                  ?.deviceToken?.patient?.payload![0]?.deviceTokenId;
-            } else if ((appointmentResult
-                        ?.deviceToken!.parentMember!.isSuccess! ??
-                    false) &&
-                appointmentResult
-                    !.deviceToken!.parentMember!.payload!.isNotEmpty &&
-                appointmentResult?.deviceToken?.parentMember?.payload![0]
-                        ?.deviceTokenId !=
-                    null) {
-              patientDeviceToken = appointmentResult
-                  ?.deviceToken?.parentMember?.payload![0]?.deviceTokenId;
-            }
-          }
-
-          if (appointmentResult?.doctorOrCarecoordinatorInfo != null) {
-            if (appointmentResult?.doctorOrCarecoordinatorInfo
-                        ?.carecoordinatorfirstName !=
-                    null &&
-                appointmentResult?.doctorOrCarecoordinatorInfo
-                        ?.carecoordinatorfirstName !=
-                    '') {
-              careCoordinatorName = appointmentResult
-                      ?.doctorOrCarecoordinatorInfo?.carecoordinatorfirstName ??
-                  '';
+              if (appointmentResult?.past != null) {
+                bookingId = appointmentResult?.past?.bookingId;
+              } else {
+                bookingId = '-';
+              }
             }
 
-            if (appointmentResult?.doctorOrCarecoordinatorInfo
-                        ?.carecoordinatorLastName !=
-                    null &&
-                appointmentResult?.doctorOrCarecoordinatorInfo
-                        ?.carecoordinatorLastName !=
-                    '') {
-              careCoordinatorName = careCoordinatorName +
-                  ' ' +
+            lastAppointmentDate = appointmentResult?.past != null
+                ? appointmentResult?.past?.plannedStartDateTime
+                : '';
+            nextAppointmentDate = appointmentResult?.upcoming != null
+                ? appointmentResult?.upcoming?.plannedStartDateTime
+                : '';
+            doctorDeviceToken = appointmentResult?.deviceToken != null
+                ? appointmentResult?.deviceToken?.doctor != null
+                    ? appointmentResult!
+                            .deviceToken!.doctor!.payload!.isNotEmpty
+                        ? appointmentResult!
+                            .deviceToken!.doctor!.payload![0].deviceTokenId
+                        : ''
+                    : ''
+                : '';
+            patientDeviceToken = '';
+            if (appointmentResult!.deviceToken != null) {
+              if (appointmentResult!.deviceToken!.patient!.isSuccess! &&
+                  appointmentResult!
+                      .deviceToken!.patient!.payload!.isNotEmpty &&
                   appointmentResult
-                      !.doctorOrCarecoordinatorInfo!.carecoordinatorLastName!;
-              isFromCareCoordinator = appointmentResult
-                  ?.doctorOrCarecoordinatorInfo?.isCareCoordinator;
+                          ?.deviceToken?.patient?.payload![0]?.deviceTokenId !=
+                      null) {
+                patientDeviceToken = appointmentResult
+                    ?.deviceToken?.patient?.payload![0]?.deviceTokenId;
+              } else if ((appointmentResult
+                          ?.deviceToken!.parentMember!.isSuccess! ??
+                      false) &&
+                  appointmentResult!
+                      .deviceToken!.parentMember!.payload!.isNotEmpty &&
+                  appointmentResult?.deviceToken?.parentMember?.payload![0]
+                          ?.deviceTokenId !=
+                      null) {
+                patientDeviceToken = appointmentResult
+                    ?.deviceToken?.parentMember?.payload![0]?.deviceTokenId;
+              }
             }
-          }
-        });
+
+            if (appointmentResult?.doctorOrCarecoordinatorInfo != null) {
+              if (appointmentResult?.doctorOrCarecoordinatorInfo
+                          ?.carecoordinatorfirstName !=
+                      null &&
+                  appointmentResult?.doctorOrCarecoordinatorInfo
+                          ?.carecoordinatorfirstName !=
+                      '') {
+                careCoordinatorName = appointmentResult
+                        ?.doctorOrCarecoordinatorInfo
+                        ?.carecoordinatorfirstName ??
+                    '';
+              }
+
+              if (appointmentResult?.doctorOrCarecoordinatorInfo
+                          ?.carecoordinatorLastName !=
+                      null &&
+                  appointmentResult?.doctorOrCarecoordinatorInfo
+                          ?.carecoordinatorLastName !=
+                      '') {
+                careCoordinatorName = careCoordinatorName +
+                    ' ' +
+                    appointmentResult!
+                        .doctorOrCarecoordinatorInfo!.carecoordinatorLastName!;
+                isFromCareCoordinator = appointmentResult
+                    ?.doctorOrCarecoordinatorInfo?.isCareCoordinator;
+              }
+            }
+          });
       } else {
         setState(() {
           isChatDisable = false;
@@ -584,8 +589,8 @@ class ChatState extends State<ChatDetail> {
     super.dispose();
   }
 
-  void onSendMessage(
-      String? content, int type, String? chatMessageId, bool isNotUpload) async {
+  void onSendMessage(String? content, int type, String? chatMessageId,
+      bool isNotUpload) async {
     if (content != null) {
       if (content.trim() != '') {
         textValue = textEditingController.text;
@@ -836,14 +841,15 @@ class ChatState extends State<ChatDetail> {
                                         .then((value) {
                                       chatHistoryModel =
                                           Provider.of<ChatSocketViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              .getChatHistory(
-                                                  chatPeerId!,
-                                                  familyUserId!,
-                                                  isFromCareCoordinator!,
-                                                  carecoordinatorId!,
-                                                  isFromFamilyListChat) as Future<ChatHistoryModel?>;
+                                                      context,
+                                                      listen: false)
+                                                  .getChatHistory(
+                                                      chatPeerId!,
+                                                      familyUserId!,
+                                                      isFromCareCoordinator!,
+                                                      carecoordinatorId!,
+                                                      isFromFamilyListChat)
+                                              as Future<ChatHistoryModel?>;
                                       setState(() {});
                                     });
                                   },
@@ -1078,7 +1084,8 @@ class ChatState extends State<ChatDetail> {
   }
 
   Widget getTopBookingDetail() {
-    if (isFromCareCoordinator! && (familyUserId != null && familyUserId != '')) {
+    if (isFromCareCoordinator! &&
+        (familyUserId != null && familyUserId != '')) {
       return Text('Name: ' + careCoordinatorName,
           textAlign: TextAlign.left,
           overflow: TextOverflow.ellipsis,
@@ -1137,48 +1144,44 @@ class ChatState extends State<ChatDetail> {
 
   Widget buildListMessage() {
     return Flexible(
-      child: Container(), // FU2.5
-      //FU2.5
-      //   child: ScrollablePositionedList.builder(
-      // padding: EdgeInsets.all(10.0),
-      // itemBuilder: (context, index) {
-      //   var chatList = Provider.of<ChatSocketViewModel>(Get.context)
-      //       ?.chatHistoryList
-      //       .reversed
-      //       .toList();
+        child: ScrollablePositionedList.builder(
+      padding: EdgeInsets.all(10.0),
+      itemBuilder: (context, index) {
+        var chatList = Provider.of<ChatSocketViewModel>(Get.context!)
+            .chatHistoryList!
+            .reversed
+            .toList();
+        searchIndexListAll = [];
+        searchIndexListAll.clear();
+        /*listIndex = [];
+         listIndex.clear();*/
+        for (int i = 0; i < chatList.length; i++) {
+          String? content = chatList[i]?.messages?.content;
 
-      //   searchIndexListAll = [];
-      //   searchIndexListAll.clear();
-      //   /*listIndex = [];
-      //   listIndex.clear();*/
-      //   for (int i = 0; i < chatList.length; i++) {
-      //     String content = chatList[i]?.messages?.content;
+          searchIndexListAll.add(content??'');
+        }
 
-      //     searchIndexListAll.add(content);
-      //   }
+        bool isIconNeed = false;
 
-      //   bool isIconNeed = false;
+        if (chatList[index]?.messages?.idFrom == patientId) {
+          isIconNeed = isLastMessageRight(index, chatList);
+        } else if (chatList[index]?.messages?.idFrom != patientId) {
+          isIconNeed = isLastMessageLeft(index, chatList);
+        } else {
+          isIconNeed = false;
+        }
 
-      //   if (chatList[index]?.messages?.idFrom == patientId) {
-      //     isIconNeed = isLastMessageRight(index, chatList);
-      //   } else if (chatList[index]?.messages?.idFrom != patientId) {
-      //     isIconNeed = isLastMessageLeft(index, chatList);
-      //   } else {
-      //     isIconNeed = false;
-      //   }
-
-      //   return buildItem(chatList[index], index, isIconNeed);
-      // },
-      // itemCount: Provider.of<ChatSocketViewModel>(Get.context)
-      //         ?.chatHistoryList
-      //         ?.reversed
-      //         ?.toList()
-      //         ?.length ??
-      //     0,
-      // reverse: true,
-      // itemScrollController: listScrollController,
-    //) FU2.5
-    );
+        return buildItem(chatList[index]!, index, isIconNeed);
+      },
+      itemCount: Provider.of<ChatSocketViewModel>(Get.context!)
+              .chatHistoryList
+              ?.reversed
+              .toList()
+              .length ??
+          0,
+      reverse: true,
+      itemScrollController: listScrollController,
+    ));
   }
 
   Widget buildInput() {
@@ -1555,7 +1558,7 @@ class ChatState extends State<ChatDetail> {
       // Left (peer message)
       return chatList.isCommonContent!
           ? Container(
-            child: Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Card(
@@ -1584,7 +1587,7 @@ class ChatState extends State<ChatDetail> {
                   ),
                 ],
               ),
-          )
+            )
           : Container(
               child: Column(
                 children: <Widget>[
@@ -1822,7 +1825,8 @@ class ChatState extends State<ChatDetail> {
                           child: Text(
                             getFormattedDateTime(
                                 DateTime.fromMillisecondsSinceEpoch(int.parse(
-                                        chatList!.messages!.timestamp!.sSeconds!))
+                                        chatList!
+                                            .messages!.timestamp!.sSeconds!))
                                     .toString()),
                             style: TextStyle(
                                 color: greyColor,
@@ -2231,7 +2235,7 @@ class ChatState extends State<ChatDetail> {
     Get.to(() => PDFView());
   }
 
-  bool isLastMessageRight(int index, List<ChatHistoryResult> list) {
+  bool isLastMessageRight(int index, List<ChatHistoryResult?> list) {
     if (index == 0 ||
         (index > 0 &&
             list != null &&
@@ -2242,7 +2246,7 @@ class ChatState extends State<ChatDetail> {
     }
   }
 
-  bool isLastMessageLeft(int index, List<ChatHistoryResult> list) {
+  bool isLastMessageLeft(int index, List<ChatHistoryResult?> list) {
     if (index == 0 ||
         (index > 0 &&
             list != null &&
@@ -2304,7 +2308,7 @@ class ChatState extends State<ChatDetail> {
             onPressed: () async {
               await OpenFilex.open(
                 file?.path,
-              );//FU2.5
+              ); //FU2.5
               final controller = Get.find<PDFViewController>();
               final data = OpenPDF(type: PDFLocation.Path, path: file?.path);
               controller.data = data;
@@ -2324,7 +2328,8 @@ class ChatState extends State<ChatDetail> {
     } else {
       _currentImage = fileUrl;
       try {
-        CommonUtil.downloadFile(_currentImage!, fileType).then((filePath) async {
+        CommonUtil.downloadFile(_currentImage!, fileType)
+            .then((filePath) async {
           if (Platform.isAndroid) {
             //Scaffold.of(contxt).showSnackBar();
 
@@ -2341,7 +2346,7 @@ class ChatState extends State<ChatDetail> {
                 onPressed: () async {
                   await OpenFilex.open(
                     filePath?.path,
-                  );//FU2.5
+                  ); //FU2.5
 
                   final controller = Get.find<PDFViewController>();
                   final data =
@@ -2371,8 +2376,8 @@ class ChatState extends State<ChatDetail> {
         if (value != null) {
           if (value.isSuccess!) {
             if (value.result != null) {
-              onSendMessage(value.result?.fileUrl, 3,
-                  value.result?.chatMessageId, true);
+              onSendMessage(
+                  value.result?.fileUrl, 3, value.result?.chatMessageId, true);
             } else {
               FlutterToast().getToast(upload_failed, Colors.red);
             }
@@ -2410,7 +2415,8 @@ class ChatState extends State<ChatDetail> {
       if (results != null) {
         if (results.containsKey(STR_META_ID)) {
           healthRecordList = results[STR_META_ID] as List?;
-          if (healthRecordList != null && healthRecordList?.length > 0 ?? 0 as bool) {
+          if (healthRecordList != null && healthRecordList?.length > 0 ??
+              0 as bool) {
             getAlertForFileSend(healthRecordList);
           }
           setState(() {});
@@ -2528,7 +2534,8 @@ class ChatState extends State<ChatDetail> {
         } else if (snapshot.hasData &&
             snapshot.data != '' &&
             snapshot.data != null) {
-          return getWidgetTextForLastReceivedDate(LAST_RECEIVED + lastReceived!);
+          return getWidgetTextForLastReceivedDate(
+              LAST_RECEIVED + lastReceived!);
         } else {
           return SizedBox.shrink();
         }
@@ -2586,7 +2593,7 @@ class TextFieldColorizer extends TextEditingController {
                     if (element.group(0) == match[0]) {
                       patternMatched = e;
                       ret = true;
-                      return ;
+                      return;
                     }
                   });
                 return ret;
