@@ -5734,6 +5734,15 @@ class CommonUtil {
     return qurhomeRegimenController;
   }
 
+  QurhomeDashboardController onInitQurhomeDashboardController() {
+    QurhomeDashboardController qurhomeDashboardController;
+    if (!Get.isRegistered<QurhomeDashboardController>()) {
+      Get.put(QurhomeDashboardController());
+    }
+    qurhomeDashboardController = Get.find();
+    return qurhomeDashboardController;
+  }
+
   ChatUserListController onInitChatUserListController() {
     ChatUserListController chatUserListController;
     if (!Get.isRegistered<ChatUserListController>()) {
