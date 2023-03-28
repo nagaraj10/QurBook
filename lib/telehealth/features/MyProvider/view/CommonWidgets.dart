@@ -248,7 +248,7 @@ class CommonWidgets {
     return address;
   }
 
-  String? getCityHospital(Hospitals hospital) {
+  String? getCityHospital(Hospitals? hospital) {
     String? city;
 
     if (hospital != null) {

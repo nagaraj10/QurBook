@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -9,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -32,28 +32,21 @@ import '../../../../myPlan/view/myPlanDetail.dart';
 import '../../../../regiment/models/regiment_arguments.dart';
 import '../../../../regiment/view_model/regiment_view_model.dart';
 import '../../../../src/utils/language/language_utils.dart';
-import '../../MyProvider/view/MyProvidersMain.dart';
 import '../constants/notification_constants.dart' as constants;
-import '../../../../common/common_circular_indicator.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
 import '../../../../constants/fhb_parameters.dart' as parameters;
 import '../model/notificationResult.dart';
 import '../model/notification_ontap_req.dart';
 import '../model/payload.dart';
 import '../services/notification_services.dart';
-import '../../appointments/constants/appointments_constants.dart'
-    as AppConstants;
 import '../model/messageContent.dart';
-import '../model/notification_model.dart';
 import '../viewModel/fetchNotificationViewModel.dart';
 import '../../appointments/model/cancelAppointments/cancelModel.dart';
 import '../../appointments/model/fetchAppointments/city.dart';
 import '../../appointments/model/fetchAppointments/doctor.dart' as doctorObj;
 import '../../appointments/model/fetchAppointments/past.dart';
-import '../../appointments/view/appointmentsMain.dart';
 import '../../appointments/view/resheduleMain.dart';
 import '../../appointments/viewModel/cancelAppointmentViewModel.dart';
-import '../../chat/view/home.dart';
 import '../../../../widgets/GradientAppBar.dart';
 import '../../../../widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
@@ -63,11 +56,7 @@ import '../../../../src/model/home_screen_arguments.dart';
 import '../../../../constants/router_variable.dart' as router;
 import '../../../../src/utils/PageNavigator.dart';
 import '../../../../src/model/user/user_accounts_arguments.dart';
-import '../../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../../src/ui/MyRecord.dart';
-import '../../../../src/ui/MyRecordsArguments.dart';
-import '../../../../src/model/Category/catergory_result.dart';
-import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/router_variable.dart' as routervariable;
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
 
@@ -436,7 +425,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                         notificationData!.addTheidToDelete(notification.id);
                       }
                     }
-                  : (notification?.isUnread ?? false)
+                  : (notification.isUnread ?? false)
                       ? () {
                           var tempRedirectTo = (payload?.redirectTo != null &&
                                   payload?.redirectTo != ''
@@ -464,13 +453,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   (id ?? '').isNotEmpty) {
                                 final userId =
                                     PreferenceUtil.getStringValue(KEY_USERID);
-                                if ((payload?.userId ?? '') == userId) {
+                                if ((payload.userId ?? '') == userId) {
                                   CommonUtil()
                                       .navigateToRecordDetailsScreen(id);
                                 } else {
                                   CommonUtil.showFamilyMemberPlanExpiryDialog(
-                                    (payload?.patientName ?? ''),
-                                    redirect: (payload?.redirectTo ?? ''),
+                                    (payload.patientName ?? ''),
+                                    redirect: (payload.redirectTo ?? ''),
                                   );
                                 }
                               }
@@ -546,6 +535,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
+                            );
+                          } else if (payload?.templateName ==
+                              parameters.strPatientReferralAcceptToPatient) {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.templateName,
                             );
                           } else {
                             readUnreadAction(notification);
@@ -789,7 +784,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                                 .doctorId),
                                                         doctorSessionId:
                                                             notification
-                                                                .result[
+                                                
+                     .result[
                                                                     index]
                                                                 .messageDetails
                                                                 .payload
@@ -1162,7 +1158,7 @@ class _NotificationScreen extends State<NotificationScreen> {
             });
 
             if (rawBody != null && rawBody != '') {
-              if (result?.messageDetails?.payload?.isSheela ?? false) {
+              if (result.messageDetails?.payload?.isSheela ?? false) {
                 Get.toNamed(
                   routervariable.rt_Sheela,
                   arguments: SheelaArgument(
@@ -1182,14 +1178,14 @@ class _NotificationScreen extends State<NotificationScreen> {
               }
 
               readUnreadAction(result);
-            } else if (result?.messageDetails?.payload?.sheelaAudioMsgUrl !=
+            } else if (result.messageDetails?.payload?.sheelaAudioMsgUrl !=
                     null &&
-                result?.messageDetails?.payload?.sheelaAudioMsgUrl != '') {
+                result.messageDetails?.payload?.sheelaAudioMsgUrl != '') {
               Get.toNamed(
                 routervariable.rt_Sheela,
                 arguments: SheelaArgument(
                   audioMessage:
-                      result?.messageDetails?.payload?.sheelaAudioMsgUrl,
+                      result.messageDetails?.payload?.sheelaAudioMsgUrl,
                 ),
               )!.then((value) {
                 readUnreadAction(result, isRead: true);
@@ -1231,21 +1227,38 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "regiment_screen":
-        Provider.of<RegimentViewModel>(
-          context,
-          listen: false,
-        )?.regimentMode = RegimentMode.Schedule;
-        Provider.of<RegimentViewModel>(context, listen: false)?.regimentFilter =
-            RegimentFilter.Missed;
-        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())!.then(
-          (value) => PageNavigator.goToPermanent(
-            context,
-            router.rt_Landing,
-            arguments: LandingArguments(
-              needFreshLoad: false,
+        if (CommonUtil.isUSRegion()) {
+          var qurhomeDashboardController =
+          CommonUtil().onInitQurhomeDashboardController();
+          qurhomeDashboardController.eventId.value = result?.messageDetails?.payload?.eventId ?? '';
+          Get.to(
+            () => QurhomeDashboard(),
+          )?.then(
+            (value) => PageNavigator.goToPermanent(
+              context,
+              router.rt_Landing,
+              arguments: LandingArguments(
+                needFreshLoad: false,
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          Provider.of<RegimentViewModel>(
+            context,
+            listen: false,
+          ).regimentMode = RegimentMode.Schedule;
+          Provider.of<RegimentViewModel>(context, listen: false)
+              .regimentFilter = RegimentFilter.Missed;
+          Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())?.then(
+            (value) => PageNavigator.goToPermanent(
+              context,
+              router.rt_Landing,
+              arguments: LandingArguments(
+                needFreshLoad: false,
+              ),
+            ),
+          );
+        }
         readUnreadAction(result);
         break;
       case "claimList":
@@ -1261,11 +1274,19 @@ class _NotificationScreen extends State<NotificationScreen> {
       case strAppointmentDetail:
         if ((result?.messageDetails?.payload?.appointmentId ?? '').isNotEmpty) {
           AppointmentDetailsController appointmentDetailsController =
-          CommonUtil().onInitAppointmentDetailsController();
+              CommonUtil().onInitAppointmentDetailsController();
           appointmentDetailsController.getAppointmentDetail(
               result?.messageDetails?.payload?.appointmentId ?? '');
           Get.to(() => AppointmentDetailScreen());
         }
+        readUnreadAction(result);
+        break;
+      case strPatientReferralAcceptToPatient:
+        if (CommonUtil.isUSRegion())
+        Get.toNamed(router.rt_UserAccounts,
+                arguments: UserAccountsArguments(selectedIndex: 2))
+            ?.then((value) =>
+                PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       default:
@@ -1342,7 +1363,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification.isUnread!) {
                             NotificationOntapRequest req =
                                 NotificationOntapRequest();
-                            req.logIds = [notification?.id];
+                            req.logIds = [notification.id];
                             final body = req.toJson();
                             FetchNotificationService()
                                 .updateNsOnTapAction(body)
@@ -1434,13 +1455,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                         final currentUserId =
                             PreferenceUtil.getStringValue(KEY_USERID);
                         if (currentUserId ==
-                            notification?.messageDetails?.payload?.userId) {
+                            notification.messageDetails?.payload?.userId) {
                           Get.to(
                             MyPlanDetail(
                               packageId:
-                                  notification?.messageDetails?.payload?.planId,
+                                  notification.messageDetails?.payload?.planId,
                               templateName: notification
-                                  ?.messageDetails?.payload?.templateName,
+                                  .messageDetails?.payload?.templateName,
                               showRenew: true,
                             ),
                           )!.then((value) => PageNavigator.goToPermanent(
@@ -1448,7 +1469,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                         } else {
                           CommonUtil.showFamilyMemberPlanExpiryDialog(
                               notification
-                                  ?.messageDetails?.payload?.patientName);
+                                  .messageDetails?.payload?.patientName);
                         }
                         //readUnreadAction(result);
 
@@ -1496,14 +1517,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                 onPressed: !notification.isActionDone!
                     ? () {
                         CommonUtil().CallbackAPI(
-                          notification?.messageDetails?.payload?.patientName,
-                          notification?.messageDetails?.payload?.planId,
-                          notification?.messageDetails?.payload?.userId,
+                          notification.messageDetails?.payload?.patientName,
+                          notification.messageDetails?.payload?.planId,
+                          notification.messageDetails?.payload?.userId,
                         );
                         var body = {};
                         body['templateName'] = payload?.templateName;
                         body['contextId'] =
-                            notification?.messageDetails?.payload?.planId;
+                            notification.messageDetails?.payload?.planId;
                         FetchNotificationService()
                             .updateNsActionStatus(body)
                             .then((data) {
@@ -1549,19 +1570,19 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  if ((notification?.messageDetails?.payload
+                  if ((notification.messageDetails?.payload
                                   ?.patientPhoneNumber ??
                               '')
                           .isNotEmpty &&
                       (notification
-                                  ?.messageDetails?.payload?.verificationCode ??
+                                  .messageDetails?.payload?.verificationCode ??
                               '')
                           .isNotEmpty) {
                     CaregiverAPIProvider().approveCareGiver(
                       phoneNumber: notification
-                          ?.messageDetails?.payload?.patientPhoneNumber,
+                          .messageDetails?.payload?.patientPhoneNumber,
                       code: notification
-                          ?.messageDetails?.payload?.verificationCode,
+                          .messageDetails?.payload?.verificationCode,
                     );
                   }
                   Provider.of<FetchNotificationViewModel>(context,
@@ -1586,19 +1607,19 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               OutlineButton(
                 onPressed: () async {
-                  if ((notification?.messageDetails?.payload
+                  if ((notification.messageDetails?.payload
                                   ?.caregiverReceiver ??
                               '')
                           .isNotEmpty &&
-                      (notification?.messageDetails?.payload
+                      (notification.messageDetails?.payload
                                   ?.caregiverRequestor ??
                               '')
                           .isNotEmpty) {
                     CaregiverAPIProvider().rejectCareGiver(
                       receiver: notification
-                          ?.messageDetails?.payload?.caregiverReceiver,
+                          .messageDetails?.payload?.caregiverReceiver,
                       requestor: notification
-                          ?.messageDetails?.payload?.caregiverRequestor,
+                          .messageDetails?.payload?.caregiverRequestor,
                     );
                   }
                   Provider.of<FetchNotificationViewModel>(context,
@@ -1632,14 +1653,14 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlineButton(
                 onPressed: () async {
                   if ((notification
-                              ?.messageDetails?.payload?.caregiverRequestor ??
+                              .messageDetails?.payload?.caregiverRequestor ??
                           '')
                       .isNotEmpty) {
                     Navigator.pushNamed(
                       context,
                       router.rt_FamilyDetailScreen,
                       arguments: MyFamilyDetailArguments(
-                          caregiverRequestor: notification?.messageDetails
+                          caregiverRequestor: notification.messageDetails
                                   ?.payload?.caregiverRequestor ??
                               ''),
                     );
@@ -1702,7 +1723,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   nsBody['templateName'] =
                       parameters.strCaregiverAppointmentPayment;
                   nsBody['contextId'] =
-                      notification?.messageDetails?.payload?.bookingId;
+                      notification.messageDetails?.payload?.bookingId;
                   FetchNotificationService()
                       .updateNsActionStatus(nsBody)
                       .then((data) {
@@ -1717,7 +1738,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                       Get.to(BookingConfirmation(
                           isFromPaymentNotification: true,
                           appointmentId: notification
-                              ?.messageDetails?.payload?.appointmentId));
+                              .messageDetails?.payload?.appointmentId));
                     } else {
                       toast.getToastWithBuildContext(
                           'Payment Link Expired', Colors.red, context);
@@ -1758,7 +1779,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   nsBody['templateName'] =
                       parameters.strCaregiverNotifyPlanSubscription;
                   nsBody['contextId'] =
-                      notification?.messageDetails?.payload?.bookingId;
+                      notification.messageDetails?.payload?.bookingId;
                   FetchNotificationService()
                       .updateNsActionStatus(nsBody)
                       .then((data) {
@@ -1768,13 +1789,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                   });
                   Get.to(CheckoutPage(
                     isFromNotification: true,
-                    bookingId: notification?.messageDetails?.payload?.bookingId,
-                    cartUserId: notification?.messageDetails?.payload?.userId,
+                    bookingId: notification.messageDetails?.payload?.bookingId,
+                    cartUserId: notification.messageDetails?.payload?.userId,
                     notificationListId:
-                        notification?.messageDetails?.payload?.createdBy,
-                    cartId: notification?.messageDetails?.payload?.bookingId,
+                        notification.messageDetails?.payload?.createdBy,
+                    cartId: notification.messageDetails?.payload?.bookingId,
                     patientName:
-                        notification?.messageDetails?.payload?.patientName,
+                        notification.messageDetails?.payload?.patientName,
                   ))!.then((value) {});
                 },
                 borderSide: !notification.isActionDone!
@@ -1856,12 +1877,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                   var id = redirectData[2];
                   if (id.runtimeType == String && (id ?? '').isNotEmpty) {
                     final userId = PreferenceUtil.getStringValue(KEY_USERID);
-                    if ((payload?.userId ?? '') == userId) {
+                    if ((payload.userId ?? '') == userId) {
                       CommonUtil().navigateToRecordDetailsScreen(id);
                     } else {
                       CommonUtil.showFamilyMemberPlanExpiryDialog(
-                        (payload?.patientName ?? ''),
-                        redirect: (payload?.redirectTo ?? ''),
+                        (payload.patientName ?? ''),
+                        redirect: (payload.redirectTo ?? ''),
                       );
                     }
                   }
@@ -1930,8 +1951,8 @@ class _NotificationScreen extends State<NotificationScreen> {
         await createAppointMentViewModel
             .getAppointmentDetailsUsingId(appointmentId);
     if (appointmentNotificationPayment != null) {
-      if (appointmentNotificationPayment?.result?.appointment?.status != null) {
-        if (appointmentNotificationPayment?.result?.appointment?.status!.code ==
+      if (appointmentNotificationPayment.result?.appointment?.status != null) {
+        if (appointmentNotificationPayment.result?.appointment?.status!.code ==
             "BOOKIP") {
           paymentStatus = true;
         } else {

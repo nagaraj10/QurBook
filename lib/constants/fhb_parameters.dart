@@ -794,6 +794,8 @@ const String myCartDetails = 'mycartdetails';
 const String myPlanDetails = 'myplandetails';
 const String claimList = 'claimList';
 const String claimId = 'claimId';
+const String strPatientReferralAcceptToPatient =
+    'patientReferralAcceptToPatient';
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
 const String strDoctorSession = 'doctorSession';

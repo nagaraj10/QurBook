@@ -501,6 +501,13 @@ import LS202_DeviceManager
         self.recognitionRequest?.endAudio()
         self.recognitionRequest = nil
         self.recognitionTask = nil
+        do{
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playAndRecord, mode: .default, options: .defaultToSpeaker)
+            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+            
+        }catch(let error){
+            print("\(Constants.errorIs) \(error.localizedDescription)")
+        }
     }
     
     func setUpReminders(messanger:FlutterBinaryMessenger){

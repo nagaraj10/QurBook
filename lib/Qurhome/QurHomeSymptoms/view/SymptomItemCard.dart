@@ -62,7 +62,7 @@ class SymptomItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    regimentData?.uformdata?.vitalsData?.forEach((vital) {
+    regimentData.uformdata?.vitalsData?.forEach((vital) {
       if ((vital.photo?.url ?? "").isNotEmpty) {
         imageUrl = vital.photo?.url;
       }
@@ -187,9 +187,9 @@ class SymptomItemCard extends StatelessWidget {
                                     } else {
                                       controller.startSymptomTTS(
                                         index,
-                                        staticText: regimentData?.title ?? '',
+                                        staticText: regimentData.title ?? '',
                                         dynamicText:
-                                            regimentData?.sayTextDynamic ?? '',
+                                            regimentData.sayTextDynamic ?? '',
                                       );
                                     }
                                   },
@@ -250,7 +250,7 @@ class SymptomItemCard extends StatelessWidget {
                         )*/
                             ,
                           ),
-                          mediaData != null || (regimentData?.hashtml ?? false)
+                          mediaData != null || (regimentData.hashtml ?? false)
                               ? Padding(
                                   padding: EdgeInsets.only(
                                     left: 15.0.w,
@@ -275,7 +275,7 @@ class SymptomItemCard extends StatelessWidget {
                                                         imageUrl,
                                                         eid,
                                                         regimentData
-                                                            ?.providerid),
+                                                            .providerid),
                                                   );
                                                 }
                                               : null,
@@ -316,7 +316,7 @@ class SymptomItemCard extends StatelessWidget {
                                               RegimentWebView(
                                                 title: title,
                                                 selectedUrl:
-                                                    regimentData?.htmltemplate,
+                                                    regimentData.htmltemplate,
                                               ),
                                             );
                                             // CommonUtil().openWebViewNew(
@@ -337,65 +337,76 @@ class SymptomItemCard extends StatelessWidget {
                                             color: Colors.transparent,
                                             child: InkWell(
                                               onTap: () async {
-                                                stopRegimenTTS();
-
-                                                final canEdit = startTime!
-                                                            .difference(
-                                                                DateTime.now())
-                                                            .inMinutes <=
-                                                        15 &&
-                                                    Provider.of<RegimentViewModel>(
-                                                                context,
-                                                                listen: false)
-                                                            .regimentMode ==
-                                                        RegimentMode.Schedule;
-                                                if (canEdit ||
-                                                    isValidSymptom(context)) {
-                                                  LoaderQurHome
-                                                      .showLoadingDialog(
-                                                    Get.context!,
-                                                    canDismiss: false,
-                                                  );
-                                                  var saveResponse =
-                                                      await _apiProvider
-                                                          .saveFormDataQurHome(
-                                                    eid: eid,
-                                                  );
-                                                  if (saveResponse?.isSuccess ??
-                                                      false) {
-                                                    Future.delayed(
-                                                        Duration(
-                                                            milliseconds: 300),
+                                                CommonUtil()
+                                                    .showDialogForActivityConfirmation(
+                                                        context, title,
                                                         () async {
-                                                      /*await Provider.of<RegimentViewModel>(context,
+                                                  Navigator.pop(context);
+
+                                                  stopRegimenTTS();
+
+                                                  final canEdit = startTime!
+                                                              .difference(
+                                                                  DateTime
+                                                                      .now())
+                                                              .inMinutes <=
+                                                          15 &&
+                                                      Provider.of<RegimentViewModel>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .regimentMode ==
+                                                          RegimentMode.Schedule;
+                                                  if (canEdit ||
+                                                      isValidSymptom(context)) {
+                                                    LoaderQurHome
+                                                        .showLoadingDialog(
+                                                      Get.context!,
+                                                      canDismiss: false,
+                                                    );
+                                                    var saveResponse =
+                                                        await _apiProvider
+                                                            .saveFormDataQurHome(
+                                                      eid: eid,
+                                                    );
+                                                    if (saveResponse
+                                                            .isSuccess ??
+                                                        false) {
+                                                      Future.delayed(
+                                                          Duration(
+                                                              milliseconds:
+                                                                  300),
+                                                          () async {
+                                                        /*await Provider.of<RegimentViewModel>(context,
                                       listen: false)
                                   .fetchRegimentData();*/
-                                                      await controller
-                                                          .getSymptomList(
-                                                              isLoading: false);
+                                                        await controller
+                                                            .getSymptomList(
+                                                                isLoading:
+                                                                    false);
+                                                        LoaderQurHome
+                                                            .hideLoadingDialog(
+                                                                Get.context!);
+                                                      });
+                                                    } else {
                                                       LoaderQurHome
                                                           .hideLoadingDialog(
                                                               Get.context!);
-                                                    });
+                                                    }
                                                   } else {
-                                                    LoaderQurHome
-                                                        .hideLoadingDialog(
-                                                            Get.context!);
+                                                    FlutterToast().getToast(
+                                                      (Provider.of<RegimentViewModel>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .regimentMode ==
+                                                              RegimentMode
+                                                                  .Symptoms)
+                                                          ? symptomsError
+                                                          : activitiesError,
+                                                      Colors.red,
+                                                    );
                                                   }
-                                                } else {
-                                                  FlutterToast().getToast(
-                                                    (Provider.of<RegimentViewModel>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .regimentMode ==
-                                                            RegimentMode
-                                                                .Symptoms)
-                                                        ? symptomsError
-                                                        : activitiesError,
-                                                    Colors.red,
-                                                  );
-                                                }
+                                                }, true);
                                               },
                                               child: Icon(
                                                 regimentData.ack == null
@@ -416,7 +427,7 @@ class SymptomItemCard extends StatelessWidget {
                               : Container(),
                           Expanded(child: Container()),
                           Visibility(
-                            visible: (regimentData?.isModifiedToday ?? false) ||
+                            visible: (regimentData.isModifiedToday ?? false) ||
                                 regimentData.ack_local != null,
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -431,7 +442,7 @@ class SymptomItemCard extends StatelessWidget {
                                     children: [
                                       Visibility(
                                         visible:
-                                            regimentData?.isModifiedToday ??
+                                            regimentData.isModifiedToday ??
                                                 false,
                                         child: SvgPicture.asset(
                                           icon_modified,
@@ -449,9 +460,9 @@ class SymptomItemCard extends StatelessWidget {
                                           child: Text(
                                             '${CommonUtil().regimentDateFormat(
                                               regimentData.asNeeded
-                                                  ? regimentData?.ack_local ??
+                                                  ? regimentData.ack_local ??
                                                       DateTime.now()
-                                                  : regimentData?.ack_local ??
+                                                  : regimentData.ack_local ??
                                                       DateTime.now(),
                                               isAck: true,
                                             )}',
@@ -486,7 +497,7 @@ class SymptomItemCard extends StatelessWidget {
                                                   .undoSaveFormData(
                                                 eid: eid,
                                               );
-                                              if (saveResponse?.isSuccess ??
+                                              if (saveResponse.isSuccess ??
                                                   false) {
                                                 Future.delayed(
                                                     Duration(milliseconds: 300),
@@ -587,7 +598,7 @@ class SymptomItemCard extends StatelessWidget {
                                                       listen: false)
                                                   .regimentMode ==
                                               RegimentMode.Schedule &&
-                                          !(regimentData?.asNeeded ?? false),
+                                          !(regimentData.asNeeded ?? false),
                                       child: Padding(
                                         padding: EdgeInsets.only(
                                           top: 2.0.h,
@@ -631,7 +642,7 @@ class SymptomItemCard extends StatelessWidget {
                                   ],
                                 ),
                                 Visibility(
-                                  visible: (regimentData?.isModifiedToday ??
+                                  visible: (regimentData.isModifiedToday ??
                                           false) ||
                                       regimentData.ack_local != null,
                                   child: Padding(
@@ -645,7 +656,7 @@ class SymptomItemCard extends StatelessWidget {
                                       children: [
                                         Visibility(
                                           visible:
-                                              regimentData?.isModifiedToday ??
+                                              regimentData.isModifiedToday ??
                                                   false,
                                           child: SvgPicture.asset(
                                             icon_modified,
@@ -664,10 +675,10 @@ class SymptomItemCard extends StatelessWidget {
                                                 '${CommonUtil().regimentDateFormat(
                                                   regimentData.asNeeded
                                                       ? regimentData
-                                                              ?.ack_local ??
+                                                              .ack_local ??
                                                           DateTime.now()
                                                       : regimentData
-                                                              ?.ack_local ??
+                                                              .ack_local ??
                                                           DateTime.now(),
                                                   isAck: true,
                                                 )}',
@@ -694,7 +705,7 @@ class SymptomItemCard extends StatelessWidget {
                                                       eid: eid,
                                                     );
                                                     if (saveResponse
-                                                            ?.isSuccess ??
+                                                            .isSuccess ??
                                                         false) {
                                                       Future.delayed(
                                                           Duration(
@@ -777,7 +788,7 @@ class SymptomItemCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Visibility(
-                          visible: regimentData?.isMandatory ?? false,
+                          visible: regimentData.isMandatory ?? false,
                           child: Padding(
                             padding: EdgeInsets.only(
                               right: 5.0.w,
@@ -822,8 +833,8 @@ class SymptomItemCard extends StatelessWidget {
                           } else {
                             controller.startSymptomTTS(
                               index,
-                              staticText: regimentData?.title ?? '',
-                              dynamicText: regimentData?.sayTextDynamic ?? '',
+                              staticText: regimentData.title ?? '',
+                              dynamicText: regimentData.sayTextDynamic ?? '',
                             );
                           }
                         },
@@ -900,7 +911,7 @@ class SymptomItemCard extends StatelessWidget {
         );
       }
     });
-    if (mediaData != null || (regimentData?.hashtml ?? false)) {
+    if (mediaData != null || (regimentData.hashtml ?? false)) {
       fieldWidgets.add(
         Padding(
           padding: EdgeInsets.symmetric(
@@ -925,7 +936,7 @@ class SymptomItemCard extends StatelessWidget {
                             ? () {
                                 Get.to(
                                   () => ImageViewer(
-                                      imageUrl, eid, regimentData?.providerid),
+                                      imageUrl, eid, regimentData.providerid),
                                 );
                               }
                             : null,
@@ -961,7 +972,7 @@ class SymptomItemCard extends StatelessWidget {
                           Get.to(
                             RegimentWebView(
                               title: title,
-                              selectedUrl: regimentData?.htmltemplate,
+                              selectedUrl: regimentData.htmltemplate,
                             ),
                           );
                           // CommonUtil().openWebViewNew(
@@ -982,50 +993,55 @@ class SymptomItemCard extends StatelessWidget {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () async {
-                              stopRegimenTTS();
+                              CommonUtil().showDialogForActivityConfirmation(
+                                  context, title, () async {
+                                Navigator.pop(context);
+                                stopRegimenTTS();
 
-                              final canEdit = startTime!
-                                          .difference(DateTime.now())
-                                          .inMinutes <=
-                                      15 &&
-                                  Provider.of<RegimentViewModel>(context,
-                                              listen: false)
-                                          .regimentMode ==
-                                      RegimentMode.Schedule;
-                              if (canEdit || isValidSymptom(context)) {
-                                LoaderQurHome.showLoadingDialog(
-                                  Get.context!,
-                                  canDismiss: false,
-                                );
-                                var saveResponse =
-                                    await _apiProvider.saveFormDataQurHome(
-                                  eid: eid,
-                                );
-                                if (saveResponse?.isSuccess ?? false) {
-                                  Future.delayed(Duration(milliseconds: 300),
-                                      () async {
-                                    /*await Provider.of<RegimentViewModel>(context,
+                                final canEdit = startTime!
+                                            .difference(DateTime.now())
+                                            .inMinutes <=
+                                        15 &&
+                                    Provider.of<RegimentViewModel>(context,
+                                                listen: false)
+                                            .regimentMode ==
+                                        RegimentMode.Schedule;
+                                if (canEdit || isValidSymptom(context)) {
+                                  LoaderQurHome.showLoadingDialog(
+                                    Get.context!,
+                                    canDismiss: false,
+                                  );
+                                  var saveResponse =
+                                      await _apiProvider.saveFormDataQurHome(
+                                    eid: eid,
+                                  );
+                                  if (saveResponse.isSuccess ?? false) {
+                                    Future.delayed(Duration(milliseconds: 300),
+                                        () async {
+                                      /*await Provider.of<RegimentViewModel>(context,
                                       listen: false)
                                   .fetchRegimentData();*/
-                                    await controller.getSymptomList(
-                                        isLoading: false);
+                                      await controller.getSymptomList(
+                                          isLoading: false);
+                                      LoaderQurHome.hideLoadingDialog(
+                                          Get.context!);
+                                    });
+                                  } else {
                                     LoaderQurHome.hideLoadingDialog(
                                         Get.context!);
-                                  });
+                                  }
                                 } else {
-                                  LoaderQurHome.hideLoadingDialog(Get.context!);
+                                  FlutterToast().getToast(
+                                    (Provider.of<RegimentViewModel>(context,
+                                                    listen: false)
+                                                .regimentMode ==
+                                            RegimentMode.Symptoms)
+                                        ? symptomsError
+                                        : activitiesError,
+                                    Colors.red,
+                                  );
                                 }
-                              } else {
-                                FlutterToast().getToast(
-                                  (Provider.of<RegimentViewModel>(context,
-                                                  listen: false)
-                                              .regimentMode ==
-                                          RegimentMode.Symptoms)
-                                      ? symptomsError
-                                      : activitiesError,
-                                  Colors.red,
-                                );
-                              }
+                              }, true);
                             },
                             child: Icon(
                               regimentData.ack == null
@@ -1063,18 +1079,18 @@ class SymptomItemCard extends StatelessWidget {
 
   String? getDialogTitle(BuildContext context, String? activityName) {
     String? title = '';
-    if (!(regimentData?.asNeeded ?? false) &&
+    if (!(regimentData.asNeeded ?? false) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule) {
       if (activityName != null && activityName != '') {
-        title = activityName?.capitalizeFirstofEach;
+        title = activityName.capitalizeFirstofEach;
       } else {
         title =
-            '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart!) : ''},${regimentData.title}';
+            '${regimentData.estart != null ? DateFormat('hh:mm a').format(regimentData.estart!) : ''},${regimentData.title}';
       }
     } else {
       if (activityName != null && activityName != '') {
-        title = activityName?.capitalizeFirstofEach;
+        title = activityName.capitalizeFirstofEach;
       } else {
         title = regimentData.title;
       }
@@ -1097,9 +1113,9 @@ class SymptomItemCard extends StatelessWidget {
     if (eventId == null || eventId == '' || eventId == 0) {
       final response = await _apiProvider.getEventIdQurHome(
           uid: uid, aid: aid, formId: formId, formName: formName);
-      if (response != null && response.isSuccess! && response?.result != null) {
+      if (response != null && response.isSuccess! && response.result != null) {
         print('forEventId: ' + response.toJson().toString());
-        eventId = response?.result?.eid.toString();
+        eventId = response.result?.eid.toString();
       }
     }
     var canEdit = startTime!.difference(DateTime.now()).inMinutes <= 15 &&
@@ -1119,6 +1135,7 @@ class SymptomItemCard extends StatelessWidget {
       var value = await showDialog(
         context: context,
         builder: (context) => FormDataDialog(
+          introText: regimentData.otherinfo?.introText ?? '',
           fieldsData: fieldsResponseModel.result!.fields,
           eid: eventId,
           color: color,
@@ -1135,7 +1152,7 @@ class SymptomItemCard extends StatelessWidget {
                 followEventContext: followContext,
                 activityName: activityName);
           },
-          followEventContext: followEventContext,
+          followEventContext: followEventContext!,
           isFollowEvent: eventIdReturn != null,
           isFromQurHomeSymptom: true,
         ),
@@ -1165,10 +1182,10 @@ class SymptomItemCard extends StatelessWidget {
   }
 
   getHealthOrgName(RegimentDataModel regimen) {
-    if (regimentData?.healthOrgName != null &&
-        regimentData?.healthOrgName != '') {
+    if (regimentData.healthOrgName != null &&
+        regimentData.healthOrgName != '') {
       return Text(
-        regimentData?.healthOrgName?.trim(),
+        regimentData.healthOrgName?.trim(),
         style: TextStyle(
             fontSize: 16.0.sp,
             fontWeight: FontWeight.w500,
@@ -1180,10 +1197,10 @@ class SymptomItemCard extends StatelessWidget {
   }
 
   getStartEndTime(RegimentDataModel regimen) {
-    if (regimentData?.estart != null &&
-        regimentData?.estart != '' &&
-        regimentData?.eend != null &&
-        regimentData?.eend != '') {
+    if (regimentData.estart != null &&
+        regimentData.estart != '' &&
+        regimentData.eend != null &&
+        regimentData.eend != '') {
       return Row(
         children: [
           Text(
@@ -1196,7 +1213,7 @@ class SymptomItemCard extends StatelessWidget {
           ),
           Text(
             ' (' +
-                (CommonUtil.convertMinuteToHour(regimentData?.duration ?? 0))
+                (CommonUtil.convertMinuteToHour(regimentData.duration ?? 0))
                     .toString() +
                 ')',
             style: TextStyle(fontSize: 16.0.sp, color: Colors.white),

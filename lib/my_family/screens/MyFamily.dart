@@ -77,6 +77,8 @@ class _MyFamilyState extends State<MyFamily> {
 
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   late var dialogContext;
 
@@ -235,39 +237,28 @@ class _MyFamilyState extends State<MyFamily> {
         ? data.sharedByUsers!.isNotEmpty
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(bottom: 20),
-                  itemBuilder: (c, i) => getCardWidgetForUser(
-                      data.sharedByUsers![i == 0 ? 0 : i - 1],
-                      i,
-                      data.sharedByUsers,
-                      userCollection: data),
-                  itemCount: data.sharedByUsers!.length + 1,
-                ),
-              )
-            : Container(
-                color: Color(fhbColors.bgColorContainer),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40),
-                    child: Text(
-                      Constants.NO_DATA_FAMIY,
-                      textAlign: TextAlign.center,
-                    ),
+                child: RefreshIndicator(
+                  key: _refreshIndicatorKey,
+                  onRefresh: () async {
+                    _refreshIndicatorKey.currentState?.show(atTop: true);
+                    rebuildFamilyBlock();
+                    setState(() {});
+
+                    _refreshIndicatorKey.currentState?.show(atTop: false);
+                  },
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(bottom: 20),
+                    itemBuilder: (c, i) => getCardWidgetForUser(
+                        data.sharedByUsers![i == 0 ? 0 : i - 1],
+                        i,
+                        data.sharedByUsers,
+                        userCollection: data),
+                    itemCount: data.sharedByUsers!.length + 1,
                   ),
-                ),
-              )
-        : Container(
-            color: Color(fhbColors.bgColorContainer),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child:
-                    Text(Constants.NO_DATA_FAMIY, textAlign: TextAlign.center),
-              ),
-            ),
-          );
+                ))
+            : refreshIndicatorWithEmptyContainer()
+        : refreshIndicatorWithEmptyContainer();
   }
 
   String capitalize(String string) {
@@ -1395,5 +1386,30 @@ class _MyFamilyState extends State<MyFamily> {
     }, onPressedCancel: () {
       Navigator.pop(context);
     });
+  }
+
+  refreshIndicatorWithEmptyContainer() {
+    return RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () async{
+          _refreshIndicatorKey.currentState?.show(atTop: true);
+          rebuildFamilyBlock();
+          setState(() {});
+
+          _refreshIndicatorKey.currentState?.show(atTop: false);
+        },
+        child: ListView(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: Color(fhbColors.bgColorContainer),
+              child: Center(
+                child:
+                    Text(Constants.NO_DATA_FAMIY, textAlign: TextAlign.center),
+              ),
+            ),
+          ],
+        ));
   }
 }

@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/divider_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:url_launcher/url_launcher.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
   @override
@@ -344,9 +346,34 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ),
             SizedBox(height: 10.h),
             showWidget(),
+            showLocationField(),
             SizedBox(height: 20.h),
           ],
         ));
+  }
+
+  showLocationField() {
+    if (CommonUtil.isUSRegion()) {
+      var modeOfServiceType =
+          appointmentDetailsController.appointmentModeOfService.value.trim();
+      var locationUrl = appointmentDetailsController.locationUrl;
+      if (modeOfServiceType.isNotEmpty &&
+          locationUrl.isNotEmpty &&
+          ((modeOfServiceType.toLowerCase() == strCentreVisit.toLowerCase()) ||
+              (modeOfServiceType.toLowerCase() == strOnsite.toLowerCase()))) {
+        return Column(
+          children: [
+            SizedBox(height: 5.h),
+            commonWidgetForTitleValue(strLocationLink, locationUrl,
+                isLocationLink: true),
+          ],
+        );
+      } else {
+        return Container();
+      }
+    } else {
+      return Container();
+    }
   }
 
   showWidget() {
@@ -418,7 +445,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
   }
 
-  commonWidgetForTitleValue(String header, String value) {
+  commonWidgetForTitleValue(String header, String value,
+      {bool isLocationLink = false}) {
     return Row(
       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,24 +473,45 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             color: Colors.black.withOpacity(0.7),
           ),
         ),
-        Expanded(
-          flex: 2,
-          child: Text(
-            appointmentDetailsController.checkIfEmptyString(value),
-            textAlign: TextAlign.start,
-            overflow: TextOverflow.visible,
-            softWrap: true,
-            //maxLines: 3,
-            style: TextStyle(
-              fontSize: 13.0.sp,
-              fontWeight: FontWeight.w600,
-              color:
-                  appointmentDetailsController.checkIfEmptyString(value) == "--"
-                      ? Colors.grey
-                      : Colors.black.withOpacity(0.7),
-            ),
-          ),
-        ),
+        isLocationLink
+            ? Expanded(
+                flex: 2,
+                child: InkWell(
+                  onTap: () async {
+                    try {
+                      if (await canLaunch(value)) {
+                        await launch(value);
+                      }
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
+                  child: Text(
+                    appointmentDetailsController.checkIfEmptyString(value),
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue),
+                  ),
+                ))
+            : Expanded(
+                flex: 2,
+                child: Text(
+                  appointmentDetailsController.checkIfEmptyString(value),
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.visible,
+                  softWrap: true,
+                  //maxLines: 3,
+                  style: TextStyle(
+                    fontSize: 13.0.sp,
+                    fontWeight: FontWeight.w600,
+                    color: appointmentDetailsController
+                                .checkIfEmptyString(value) ==
+                            "--"
+                        ? Colors.grey
+                        : Colors.black.withOpacity(0.7),
+                  ),
+                ),
+              ),
       ],
     );
   }

@@ -167,12 +167,13 @@ class SheelaBLEController extends GetxController {
               String deviceType =
                   hublistController.bleDeviceType!.toLowerCase() ?? '';
               if (deviceType.isNotEmpty &&
-                  (deviceType == "SPO2".toLowerCase() ||
-                      deviceType == "BP".toLowerCase() ||
-                      deviceType == "weight".toLowerCase())) {
+                  (deviceType == "spo2" ||
+                      deviceType == "bp" ||
+                      deviceType == "weight")) {
                 if (isFromVitals || isFromRegiment) {
                   Get.back();
                 }
+                if (SheelaController.isSheelaScreenActive) return;
                 Get.to(
                   SheelaAIMainScreen(
                     arguments: SheelaArgument(
@@ -200,13 +201,10 @@ class SheelaBLEController extends GetxController {
               if (!checkForParedDevice()) return;
               String deviceType =
                   hublistController.bleDeviceType?.toLowerCase() ?? '';
-              if (!checkForParedDevice()) {
-                return;
-              }
               receivedData = true;
-              if (deviceType == "BP".toLowerCase() ||
-                  deviceType == "SPO2".toLowerCase() ||
-                  deviceType == "Weight".toLowerCase()) {
+              if (deviceType == "bp" ||
+                  deviceType == "spo2" ||
+                  deviceType == "weight") {
                 if (SheelaController.isSheelaScreenActive) {
                   updateUserData(
                     data: receivedValues.last,
@@ -369,7 +367,9 @@ class SheelaBLEController extends GetxController {
         seconds: 2,
       ),
     );
-    if ((data ?? '').isNotEmpty && SheelaController.canSpeak) {
+    if ((data ?? '').isNotEmpty &&
+        SheelaController.canSpeak &&
+        (SheelaController.arguments?.takeActiveDeviceReadings ?? false)) {
       // _disableTimer();
       try {
         final model = BleDataModel.fromJson(
@@ -405,7 +405,6 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
-
         final bool response =
             await BleConnectApiProvider().uploadBleDataReadings(
           model,

@@ -37,6 +37,7 @@ class AppointmentDetailsController extends GetxController {
   var addressLine2 = "";
   var city = "";
   var state = "";
+  var locationUrl = "";
 
   getAppointmentDetail(String appointmentId) async {
     try {
@@ -47,17 +48,15 @@ class AppointmentDetailsController extends GetxController {
           await fetchAppointmentsService.getAppointmentDetail(appointmentId);
 
       if (appointmentDetailsModel != null &&
-          appointmentDetailsModel!.result != null) {
-        appointmentType.value =
-            appointmentDetailsModel!.result?.serviceCategory?.name ?? "";
+          appointmentDetailsModel?.result != null) {
+
+          appointmentType.value = appointmentDetailsModel?.result?.serviceCategory?.name ?? "";
 
         appointmentIconUrl.value = appointmentDetailsModel!
                 .result?.serviceCategory?.additionalInfo?.iconUrl ??
             "";
 
-        appointmentModeOfService.value = appointmentDetailsModel!
-                .result?.modeOfService?.name ??
-            "${appointmentDetailsModel!.result?.additionalInfo?.modeOfService?.name ?? ""}";
+        appointmentModeOfService.value =appointmentDetailsModel?.result?.modeOfService?.name ?? "${appointmentDetailsModel?.result?.additionalInfo?.modeOfService?.name??""}";
 
         scheduleDateTime.value =
             "${constants.changeDateFormat(CommonUtil().validString(appointmentDetailsModel!.result?.plannedStartDateTime ?? ""))}";
@@ -66,10 +65,23 @@ class AppointmentDetailsController extends GetxController {
             ? "${scheduleDateTime.value}, ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel!.result?.plannedStartDateTime ?? "")).toString() ?? ''}"
             : "";
 
+        bool showEndTime=true;
+
+        if(CommonUtil.REGION_CODE == 'US' && appointmentDetailsModel?.result?.serviceCategory?.code!='CONSLTN'){
+          showEndTime=!(appointmentDetailsModel?.result?.additionalInfo?.isEndTimeOptional??false);
+        }
+
         if (appointmentType.value.toLowerCase() != strTransportation) {
-          scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
-              ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel!.result?.plannedEndDateTime ?? "")).toString() ?? ''}"
-              : "";
+          if(showEndTime){
+            scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
+                ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel?.result?.plannedEndDateTime ?? "")).toString() ?? ''}"
+                : "";
+          }else{
+            scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
+                ? "${scheduleDateTime.value}"
+                : "";
+          }
+
         }
 
         if (appointmentDetailsModel!.result?.healthOrganization != null) {
@@ -95,24 +107,24 @@ class AppointmentDetailsController extends GetxController {
                   0) {
             if (appointmentType.value.toLowerCase() == strLabAppointment ||
                 appointmentType.value.toLowerCase() == strDoctorAppointment) {
-              addressLine1 = appointmentDetailsModel!.result!.healthOrganization
+              addressLine1 = appointmentDetailsModel?.result?.healthOrganization
                       ?.healthOrganizationAddressCollection![0].addressLine1 ??
                   "";
 
-              addressLine2 = appointmentDetailsModel!.result!.healthOrganization
+              addressLine2 = appointmentDetailsModel?.result?.healthOrganization
                       ?.healthOrganizationAddressCollection![0].addressLine2 ??
                   "";
 
-              city = appointmentDetailsModel!.result!.healthOrganization
-                      ?.healthOrganizationAddressCollection![0].city!.name ??
+              city = appointmentDetailsModel?.result?.healthOrganization
+                      ?.healthOrganizationAddressCollection![0].city?.name ??
                   "";
 
-              state = appointmentDetailsModel!.result!.healthOrganization
-                      ?.healthOrganizationAddressCollection![0].state!.name ??
+              state = appointmentDetailsModel?.result?.healthOrganization
+                      ?.healthOrganizationAddressCollection![0].state?.name ??
                   "";
 
               state = state +
-                  " ${appointmentDetailsModel!.result!.healthOrganization?.healthOrganizationAddressCollection![0]?.pincode ?? ""}";
+                  " ${appointmentDetailsModel!.result!.healthOrganization?.healthOrganizationAddressCollection![0].pincode ?? ""}";
             } else {
               getAddress();
             }
@@ -145,7 +157,7 @@ class AppointmentDetailsController extends GetxController {
                             "") ==
                         (element.id ?? "")));
                 if (index! >= 0) {
-                  testName.value = field.data![index!]?.name ?? "";
+                  testName.value = field.data![index!].name ?? "";
                   break;
                 }
               }
@@ -195,7 +207,7 @@ class AppointmentDetailsController extends GetxController {
       loadingData.value = false;
     } catch (e) {
       if (kDebugMode) {
-        printError(info: e.toString());
+        printError(info: "error in try: "+e.toString());
       }
     }
   }
@@ -253,6 +265,9 @@ class AppointmentDetailsController extends GetxController {
 
       state = state +
           " ${appointmentDetailsModel!.result?.additionalInfo?.pinCode ?? ""}";
+
+      locationUrl =
+          appointmentDetailsModel!.result?.additionalInfo?.locationUrl ?? "";
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());

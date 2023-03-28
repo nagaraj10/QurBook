@@ -218,12 +218,14 @@ class SheelaAIController extends GetxController {
       bleController!.startSheelaBLEDeviceReadings();
       isLoading(true);
     } else {
-      String? msg = strhiMaya;
+      if (Get.isRegistered<SheelaBLEController>())
+        Get.find<SheelaBLEController>().stopScanning();
+      var msg = strhiMaya;
       if ((arguments?.rawMessage ?? '').isNotEmpty) {
-        msg = arguments!.rawMessage;
+        msg = arguments!.rawMessage!;
         getAIAPIResponseFor(msg, null);
       } else if ((arguments?.sheelaInputs ?? '').isNotEmpty) {
-        msg = arguments!.sheelaInputs;
+        msg = arguments!.sheelaInputs!;
         conversations.add(SheelaResponse(text: msg));
         getAIAPIResponseFor(msg, null);
       } else if ((arguments?.eId ?? '').isNotEmpty ||
@@ -238,7 +240,7 @@ class SheelaAIController extends GetxController {
         audioResponse.audioFile = arguments!.audioMessage;
         conversations.add(audioResponse);
       } else if ((arguments?.textSpeechSheela ?? '').isNotEmpty) {
-        msg = arguments?.textSpeechSheela;
+        msg = arguments!.textSpeechSheela!;
         var currentCon = SheelaResponse(text: msg, recipientId: sheelaRecepId);
         conversations.add(currentCon);
         currentPlayingConversation = currentCon;
@@ -376,13 +378,17 @@ class SheelaAIController extends GetxController {
       } else {
         // Failed to get Sheela Response
         conversations.removeLast();
+        if (kDebugMode) print(response?.body);
+        FlutterToast().getToast(
+            'There is some issue with sheela,\n Please try after some time',
+            Colors.black54);
       }
       isLoading.value = false;
     } catch (e) {
       //need to handle errors
       isLoading.value = false;
       conversations.removeLast();
-      print(e.toString());
+      if (kDebugMode) print(e.toString());
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);

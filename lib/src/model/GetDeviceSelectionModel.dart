@@ -36,6 +36,7 @@ class SelectionResult {
   String? createdOn;
   String? lastModifiedOn;
   List<Tags>? tags;
+  PrimaryProvider? primaryProvider;
 
   SelectionResult(
       {this.id,
@@ -44,7 +45,8 @@ class SelectionResult {
       this.isActive,
       this.createdOn,
       this.lastModifiedOn,
-      this.tags});
+      this.tags,
+      this.primaryProvider});
 
   SelectionResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -61,6 +63,9 @@ class SelectionResult {
         tags!.add(new Tags.fromJson(v));
       });
     }
+    primaryProvider = json['primaryProvider'] != null
+        ? new PrimaryProvider.fromJson(json['primaryProvider'])
+        : null;
   }
 
   Map<String, dynamic> toProfileSettingJson() {
@@ -84,6 +89,9 @@ class SelectionResult {
     data['lastModifiedOn'] = lastModifiedOn;
     if (this.tags != null) {
       data['tags'] = this.tags!.map((v) => v.toJson()).toList();
+    }
+    if (this.primaryProvider != null) {
+      data['primaryProvider'] = this.primaryProvider?.toJson();
     }
     return data;
   }
@@ -233,6 +241,74 @@ class Height {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['unitCode'] = this.unitCode;
     data['unitName'] = this.unitName;
+    return data;
+  }
+}
+
+class PrimaryProvider {
+  String? healthorganizationid;
+  AdditionalInfoModuleAccess? additionalInfo;
+
+  PrimaryProvider({this.healthorganizationid, this.additionalInfo});
+
+  PrimaryProvider.fromJson(Map<String, dynamic> json) {
+    healthorganizationid = json['healthorganizationid'];
+    additionalInfo = json['additionalInfo'] != null
+        ? new AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['healthorganizationid'] = this.healthorganizationid;
+    if (this.additionalInfo != null) {
+      data['additionalInfo'] = this.additionalInfo?.toJson();
+    }
+    return data;
+  }
+}
+
+class AdditionalInfoModuleAccess {
+  List<ModuleAccess>? moduleAccess;
+
+  AdditionalInfoModuleAccess({this.moduleAccess});
+
+  AdditionalInfoModuleAccess.fromJson(Map<String, dynamic> json) {
+    if (json['module-access'] != null) {
+      moduleAccess = <ModuleAccess>[];
+      json['module-access'].forEach((v) {
+        moduleAccess?.add(new ModuleAccess.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.moduleAccess != null) {
+      data['module-access'] = this.moduleAccess?.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class ModuleAccess {
+  String? id;
+  String? name;
+  String? access;
+
+  ModuleAccess({this.id, this.name, this.access});
+
+  ModuleAccess.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    access = json['access'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['access'] = this.access;
     return data;
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 
 import '../../../QurHub/Controller/HubListViewController.dart';
 import '../../../common/CommonUtil.dart';
@@ -27,6 +28,12 @@ class QurhomeDashboardController extends GetxController {
   late SheelaBLEController _sheelaBLEController;
   Timer? _bleTimer;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
+  var isLoading = false.obs;
+  var isActive = false.obs;
+  var eventId = ''.obs;
+
+  var isVitalModuleDisable = true.obs;
+  var isSymptomModuleDisable = true.obs;
 
   @override
   void onInit() {
@@ -41,7 +48,7 @@ class QurhomeDashboardController extends GetxController {
     }
     _sheelaBLEController = Get.find();
     getHubDetails();
-    updateBLETimer();
+    // updateBLETimer();
     super.onInit();
   }
 
@@ -170,5 +177,43 @@ class QurhomeDashboardController extends GetxController {
       rt_Sheela,
       arguments: SheelaArgument(scheduleAppointment: true),
     );
+  }
+
+  updateModuleAccess(List<SelectionResult> selectionResult) {
+    try {
+      for (var i = 0; i < selectionResult.length; i++) {
+        if (selectionResult[i]?.primaryProvider != null) {
+          if (selectionResult[i]?.primaryProvider?.additionalInfo != null) {
+            if (selectionResult[i]
+                    ?.primaryProvider
+                    ?.additionalInfo
+                    ?.moduleAccess !=
+                null) {
+              for (var j = 0;
+                  j <
+                      selectionResult[i]
+                          !.primaryProvider
+                          !.additionalInfo
+                          !.moduleAccess!
+                          .length;
+                  j++) {
+                var isAccess = selectionResult[i]
+                        !.primaryProvider
+                        !.additionalInfo
+                        !.moduleAccess![j]
+                        .name ??
+                    '';
+                if (isAccess == strVitalsModule) {
+                  isVitalModuleDisable.value = false;
+                }
+                if (isAccess == strSymptomsModule) {
+                  isSymptomModuleDisable.value = false;
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {}
   }
 }

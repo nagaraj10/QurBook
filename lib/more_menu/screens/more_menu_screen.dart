@@ -7,9 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -127,6 +129,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool loading = false;
   PreferredMeasurement? preferredMeasurement;
 
+  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -211,13 +215,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             title: Text('Are you sure?'),
             content: Text('Do you want to update the changes'),
             actions: <Widget>[
-              FlatButton(
+            TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
                 child: Text('No'),
               ),
-              FlatButton(
+              TextButton(
                 onPressed: () => createAppColorSelection(preColor, greColor),
                 child: Text('Yes'),
               ),
@@ -1186,190 +1190,208 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 ))
             : Container(),
         isCareGiver ? Divider() : Container(),
-        Theme(
-            data: theme,
-            child: ExpansionTile(
-              iconColor: Colors.black,
-              backgroundColor: const Color(fhbColors.bgColorContainer),
-              initiallyExpanded: isVitalPreferences,
-              title: Text(variable.strVitalsPreferences,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.black)),
-              children: [
-                Theme(
-                  data: theme,
-                  child: ExpansionTile(
-                    leading: ImageIcon(
-                      AssetImage(variable.display_devices),
-                      //size: 30,
-                    ),
-                    iconColor: Colors.black,
-                    initiallyExpanded: isDisplayDevices,
-                    onExpansionChanged: (value) {
-                      isDisplayDevices = value;
-                    },
-                    title: Text(variable.strDisplayDevices,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, color: Colors.black)),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16.0.sp,
-                    ),
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Text(
-                              variable.strAddDevice,
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 14.0.sp),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            FutureBuilder<List<DeviceData>?>(
-                              future: _deviceModel.getDevices(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  for (int i = 0;
-                                      i <= snapshot.data!.length;
-                                      i++) {
-                                    switch (i) {
-                                      case 0:
-                                        snapshot.data![i].isSelected =
-                                            _isBPActive;
-                                        break;
-                                      case 1:
-                                        snapshot.data![i].isSelected =
-                                            _isGLActive;
-                                        break;
-                                      case 2:
-                                        snapshot.data![i].isSelected =
-                                            _isOxyActive;
-                                        break;
-                                      case 3:
-                                        snapshot.data![i].isSelected =
-                                            _isTHActive;
-                                        break;
-                                      case 4:
-                                        snapshot.data![i].isSelected =
-                                            _isWSActive;
-                                        break;
+        (CommonUtil.isUSRegion() &&
+                qurhomeDashboardController.isVitalModuleDisable.value)
+            ? Theme(
+                data: theme,
+                child: ListTile(
+                  onTap: () {
+                    FlutterToast().getToast(strFeatureNotEnable, Colors.black);
+                  },
+                  title: Text(variable.strVitalsPreferences,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.grey)),
+                ),
+              )
+            : Theme(
+                data: theme,
+                child: ExpansionTile(
+                  iconColor: Colors.black,
+                  backgroundColor: const Color(fhbColors.bgColorContainer),
+                  initiallyExpanded: isVitalPreferences,
+                  title: Text(variable.strVitalsPreferences,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.black)),
+                  children: [
+                    Theme(
+                      data: theme,
+                      child: ExpansionTile(
+                        leading: ImageIcon(
+                          AssetImage(variable.display_devices),
+                          //size: 30,
+                        ),
+                        iconColor: Colors.black,
+                        initiallyExpanded: isDisplayDevices,
+                        onExpansionChanged: (value) {
+                          isDisplayDevices = value;
+                        },
+                        title: Text(variable.strDisplayDevices,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black)),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16.0.sp,
+                        ),
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  variable.strAddDevice,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 14.0.sp),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                FutureBuilder<List<DeviceData>?>(
+                                  future: _deviceModel.getDevices(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      for (int i = 0;
+                                          i <= snapshot.data!.length;
+                                          i++) {
+                                        switch (i) {
+                                          case 0:
+                                            snapshot.data![i].isSelected =
+                                                _isBPActive;
+                                            break;
+                                          case 1:
+                                            snapshot.data![i].isSelected =
+                                                _isGLActive;
+                                            break;
+                                          case 2:
+                                            snapshot.data![i].isSelected =
+                                                _isOxyActive;
+                                            break;
+                                          case 3:
+                                            snapshot.data![i].isSelected =
+                                                _isTHActive;
+                                            break;
+                                          case 4:
+                                            snapshot.data![i].isSelected =
+                                                _isWSActive;
+                                            break;
 
-                                      default:
+                                          default:
+                                        }
+                                      }
                                     }
-                                  }
-                                }
-                                return snapshot.hasData
-                                    ? Container(
-                                        height: 75,
-                                        color: Colors.white,
-                                        child: new ListView.builder(
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: snapshot.data!.length,
-                                          itemBuilder: (context, i) {
-                                            return DeviceCard(
-                                                deviceData: snapshot.data![i],
-                                                isSelected: (bool? value) {
-                                                  isTouched = true;
-                                                  switch (i) {
-                                                    case 0:
-                                                      _isBPActive = value;
-                                                      /* PreferenceUtil.saveString(
+                                    return snapshot.hasData
+                                        ? Container(
+                                            height: 75,
+                                            color: Colors.white,
+                                            child: new ListView.builder(
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: snapshot.data!.length,
+                                              itemBuilder: (context, i) {
+                                                return DeviceCard(
+                                                    deviceData:
+                                                        snapshot.data![i],
+                                                    isSelected: (bool? value) {
+                                                      isTouched = true;
+                                                      switch (i) {
+                                                        case 0:
+                                                          _isBPActive = value;
+                                                          /* PreferenceUtil.saveString(
                                                   Constants.bpMon,
                                                   _isBPActive.toString());*/
-                                                      break;
-                                                    case 1:
-                                                      _isGLActive = value;
-                                                      /*PreferenceUtil.saveString(
+                                                          break;
+                                                        case 1:
+                                                          _isGLActive = value;
+                                                          /*PreferenceUtil.saveString(
                                                   Constants.glMon,
                                                   _isGLActive.toString());*/
 
-                                                      break;
-                                                    case 2:
-                                                      _isOxyActive = value;
-                                                      /*PreferenceUtil.saveString(
+                                                          break;
+                                                        case 2:
+                                                          _isOxyActive = value;
+                                                          /*PreferenceUtil.saveString(
                                                   Constants.oxyMon,
                                                   _isOxyActive.toString());*/
-                                                      break;
-                                                    case 3:
-                                                      _isTHActive = value;
-                                                      /*PreferenceUtil.saveString(
+                                                          break;
+                                                        case 3:
+                                                          _isTHActive = value;
+                                                          /*PreferenceUtil.saveString(
                                                   Constants.thMon,
                                                   _isTHActive.toString());*/
-                                                      break;
-                                                    case 4:
-                                                      _isWSActive = value;
-                                                      /*PreferenceUtil.saveString(
+                                                          break;
+                                                        case 4:
+                                                          _isWSActive = value;
+                                                          /*PreferenceUtil.saveString(
                                                   Constants.wsMon,
                                                   _isWSActive.toString());*/
-                                                      break;
-                                                    default:
-                                                  }
-                                                  setState(() {
-                                                    if (value!) {
-                                                      selectedList.add(
-                                                          snapshot.data![i]);
-                                                    } else {
-                                                      selectedList.remove(
-                                                          snapshot.data![i]);
-                                                    }
-                                                  });
+                                                          break;
+                                                        default:
+                                                      }
+                                                      setState(() {
+                                                        if (value!) {
+                                                          selectedList.add(
+                                                              snapshot.data![i]);
+                                                        } else {
+                                                          selectedList.remove(
+                                                              snapshot.data![i]);
+                                                        }
+                                                      });
 
-                                                  isSkillIntegration = false;
-                                                  isCareGiverCommunication =
-                                                      false;
-                                                  isVitalPreferences = true;
-                                                  isDisplayDevices = true;
-                                                  isDisplayPreference = false;
+                                                      isSkillIntegration =
+                                                          false;
+                                                      isCareGiverCommunication =
+                                                          false;
+                                                      isVitalPreferences = true;
+                                                      isDisplayDevices = true;
+                                                      isDisplayPreference =
+                                                          false;
 
-                                                  createAppColorSelection(
-                                                      preColor, greColor);
-                                                },
-                                                key: Key(snapshot.data![i].status
-                                                    .toString()));
-                                          },
-                                        ),
-                                      )
-                                    : CommonCircularIndicator();
-                              },
+                                                      createAppColorSelection(
+                                                          preColor, greColor);
+                                                    },
+                                                    key: Key(snapshot
+                                                        .data![i].status
+                                                        .toString()));
+                                              },
+                                            ),
+                                          )
+                                        : CommonCircularIndicator();
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                Divider(),
-                ListTile(
-                  leading: ImageIcon(
-                    AssetImage(variable.unit_preference),
-                    //size: 30,
-                  ),
-                  title: Text('Unit Preferences',
-                      style: TextStyle(fontWeight: FontWeight.w500)),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16.0.sp,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChooseUnit(),
+                    ),
+                    Divider(),
+                    ListTile(
+                      leading: ImageIcon(
+                        AssetImage(variable.unit_preference),
+                        //size: 30,
                       ),
-                    ).then((value) {
-                      if (value) {
-                        setState(() {});
-                      }
-                    });
-                    //PageNavigator.goTo(context, router.rt_AppSettings);
-                  },
-                ),
-              ],
-            )),
+                      title: Text('Unit Preferences',
+                          style: TextStyle(fontWeight: FontWeight.w500)),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16.0.sp,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChooseUnit(),
+                          ),
+                        ).then((value) {
+                          if (value) {
+                            setState(() {});
+                          }
+                        });
+                        //PageNavigator.goTo(context, router.rt_AppSettings);
+                      },
+                    ),
+                  ],
+                )),
         Divider(),
         Theme(
           data: theme,
@@ -1595,5 +1617,4 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
     return ret;
   }
-
 }

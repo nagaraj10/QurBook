@@ -2,12 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ChooseDateSlot extends StatefulWidget {
-  ChooseDateSlot({Key? key,this.messageContent='',this.getRefNumber}) : super(key: key);
+  ChooseDateSlot({Key? key, this.messageContent = '', this.getRefNumber})
+      : super(key: key);
 
   var messageContent;
   Function(String)? getRefNumber;
@@ -57,6 +59,38 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
               monthCellStyle: DateRangePickerMonthCellStyle(
                   todayTextStyle: TextStyle(color: Colors.black)),
             )),
+            if (CommonUtil.isUSRegion())
+              Container(
+                padding: new EdgeInsets.all(10.sp),
+                margin: EdgeInsets.only(
+                    top: 15.sp, bottom: 15.sp, left: 12.sp, right: 12.sp),
+                decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    side: BorderSide(color: Colors.grey),
+                  ),
+                ),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: strNoteChat,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15.sp),
+                          ),
+                          TextSpan(
+                            text: strRRTAppointmentLabelChat,
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 14.sp,height: 1.2.h),
+                          ),
+                        ],
+                      ),
+                    )),
+              ),
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
@@ -150,8 +184,8 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 120, vertical: 5),
                 width: double.infinity,
-                child: FlatButton(
-                  child: Text('Ok', style: TextStyle(fontSize: 20)),
+                child: ElevatedButton(
+                  child: Text('Ok', style: TextStyle(fontSize: 20,color: Colors.white)),
                   onPressed: () {
                     try {
                       if (finalList.length > 0) {
@@ -163,15 +197,15 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                               ' - ' +
                               array['selectedSession'].toString());
                         }
-                        widget.getRefNumber!(widget.messageContent??'');
+                        widget.getRefNumber!(widget.messageContent ?? '');
                         Navigator.pop(context, appendedList.toString());
                       } else {
                         Navigator.pop(context);
                       }
                     } catch (e) {}
                   },
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  textColor: Colors.white,
+                  // color: Color(CommonUtil().getMyPrimaryColor()),
+                 // textColor: Colors.white,
                 ),
               ),
             ),
