@@ -632,7 +632,7 @@ class ApiBaseHelper {
         print(response!.body.toString());
 
         try {
-          if (forDoctorSearch!) {
+          if (forDoctorSearch != null) {
             final responseJson = convert.jsonDecode(response.body.toString());
             return responseJson;
           } else {

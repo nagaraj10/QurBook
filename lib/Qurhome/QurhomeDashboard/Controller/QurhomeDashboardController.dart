@@ -26,7 +26,7 @@ class QurhomeDashboardController extends GetxController {
   StreamSubscription? _appointmentSubscription;
   late HubListViewController hubController;
   late SheelaBLEController _sheelaBLEController;
-  Timer? _bleTimer;
+  Timer? _bleTimer=null;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
   var isLoading = false.obs;
   var isActive = false.obs;
@@ -81,7 +81,7 @@ class QurhomeDashboardController extends GetxController {
     } else {
       _sheelaBLEController.stopScanning();
       _sheelaBLEController.stopTTS();
-      _bleTimer!.cancel();
+      _bleTimer?.cancel();
       _bleTimer = null;
     }
   }
