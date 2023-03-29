@@ -1,4 +1,3 @@
-
 // ignore: file_names
 import 'dart:async';
 import 'dart:convert' as convert;
@@ -360,7 +359,8 @@ class ApiBaseHelper {
   /// it contains one parameter which describ ethe URL  type
   /// Created by Parvathi M on 7th Jan 2020
 
-  Future<dynamic> getHealthRecordList(String url, {required bool condition}) async {
+  Future<dynamic> getHealthRecordList(String url,
+      {required bool condition}) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
@@ -646,7 +646,7 @@ class ApiBaseHelper {
         break;
       default:
         throw FetchDataException(
-            variable.strErrComm + '${response?.statusCode??"0"}');
+            variable.strErrComm + '${response?.statusCode ?? "0"}');
     }
   }
 
@@ -962,8 +962,12 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveImageAndGetDeviceInfo(String url, List<String?> imagePaths,
-      String payload, String jsonBody, String? userId) async {
+  Future<dynamic> saveImageAndGetDeviceInfo(
+      String url,
+      List<String?> imagePaths,
+      String payload,
+      String jsonBody,
+      String? userId) async {
     var response;
     try {
       final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1184,7 +1188,8 @@ class ApiBaseHelper {
 
   Future<dynamic> postDeviceId(
       String url, String jsonBody, bool isActive) async {
-    final Map<String, String> requestHeadersAuthAccept = {}; // FUcrash Map<String, String?>  to Map<String, String> 
+    final Map<String, String> requestHeadersAuthAccept =
+        {}; // FUcrash Map<String, String?>  to Map<String, String>
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Content-type'] = 'application/json';
 
@@ -1255,7 +1260,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getMetaIdURL(List<String?> recordIds, String? patientId) async {
+  Future<dynamic> getMetaIdURL(
+      List<String?> recordIds, String? patientId) async {
     final inputBody = {};
     inputBody[strUserId] = patientId;
     inputBody[HEALTH_RECORDMETAIDS] = recordIds;
@@ -1681,7 +1687,8 @@ class ApiBaseHelper {
     }
   }
 
-  Future<bool?> uploadAttachment(String url, String ticketId, File image) async {
+  Future<bool?> uploadAttachment(
+      String url, String ticketId, File image) async {
     var authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!;
     String? userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -2094,7 +2101,8 @@ class ApiBaseHelper {
       bool isPaymentLinkViaPush = false,
       String? cartId = ""}) async {
     try {
-      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? userID =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
@@ -2131,7 +2139,8 @@ class ApiBaseHelper {
 
   Future<FetchingCartItemsModel?> clearCartItems() async {
     try {
-      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? userID =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
@@ -2158,7 +2167,8 @@ class ApiBaseHelper {
 
   Future<CartGenricResponse?> removeCartItems(dynamic body) async {
     try {
-      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? userID =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
@@ -2185,7 +2195,8 @@ class ApiBaseHelper {
 
   Future<MakePaymentResponse?> makePayment(dynamic body) async {
     try {
-      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? userID =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
@@ -2197,8 +2208,8 @@ class ApiBaseHelper {
             body: json.encode(body),
             headers: await headerRequest.getRequestHeadersAuthContent());
         //responseJson = _returnResponse(response);
-        responseJson =
-            MakePaymentResponse.fromJson(json.decode(response!.body.toString()));
+        responseJson = MakePaymentResponse.fromJson(
+            json.decode(response!.body.toString()));
       } on SocketException {
         throw FetchDataException(variable.strNoInternet);
       }
@@ -2210,7 +2221,8 @@ class ApiBaseHelper {
 
   Future<dynamic> updateCartIcon(dynamic body) async {
     try {
-      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? userID =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
@@ -2259,7 +2271,8 @@ class ApiBaseHelper {
 
   Future<UpdatePaymentResponse?> updatePaymentStatus(dynamic body) async {
     try {
-      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? userID =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
@@ -2778,8 +2791,8 @@ class ApiBaseHelper {
     //   }
     // });
 
-       for (var element in formData){
-          if (responses.length != formData.length) {
+    for (var element in formData) {
+      if (responses.length != formData.length) {
         try {
           response = await dio.post(url, data: element);
 
@@ -2795,8 +2808,8 @@ class ApiBaseHelper {
           responses.add(response);
         }
       }
-       }
-         return responses;
+    }
+    return responses;
   }
 
   Future<UnitConfiguration> getUnitConfiguration(String url) async {
@@ -2866,7 +2879,8 @@ class ApiBaseHelper {
   Future<dynamic> getProviderList(type) async {
     var responseJson;
     try {
-      var response = await ApiServices.get(_baseUrl + CommonUtil.getProviderType(type),
+      var response = await ApiServices.get(
+          _baseUrl + CommonUtil.getProviderType(type),
           headers: await headerRequest.getAuth());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -2878,7 +2892,7 @@ class ApiBaseHelper {
   Future<dynamic> getCityList(String param) async {
     var responseJson;
     try {
-      var response = await ApiServices.get(_baseUrl +param,
+      var response = await ApiServices.get(_baseUrl + param,
           headers: await headerRequest.getRequestHeadersTimeSlot());
 
       responseJson = _returnResponse(response);
@@ -2887,7 +2901,6 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-
 }
 
 void exitFromApp() async {

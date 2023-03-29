@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
@@ -188,7 +187,7 @@ class CommonDialogBox {
     }
 
     imagePathMain.addAll(imagePath);
-    setFileName(fileNameClone.text, mediaMetaInfo!);
+    setFileName(fileNameClone.text, mediaMetaInfo);
     final dialog = StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -451,9 +450,9 @@ class CommonDialogBox {
     }
 
     imagePathMain.addAll(imagePath);
-    setFileName(fileNameClone.text, mediaMetaInfo!);
+    setFileName(fileNameClone.text, mediaMetaInfo);
     if (modeOfSave!) {
-      loadMemoText(mediaMetaInfo.metadata!.memoText ?? '');
+      loadMemoText(mediaMetaInfo?.metadata?.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1943,7 +1942,8 @@ class CommonDialogBox {
           categoryDataObj.toJson();
       var _mediaTypeBlock = MediaTypeBlock();
 
-      var mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
+      var mediaTypesResponse =
+          await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
 
       final metaDataFromSharedPrefernce = mediaTypesResponse.result;
       if (categoryName != Constants.STR_DEVICES) {
@@ -2164,7 +2164,7 @@ class CommonDialogBox {
                           allowSelect: false,
                           isAudioSelect: true,
                           isNotesSelect: false,
-                          selectedMedias:[],
+                          selectedMedias: [],
                           isFromChat: false,
                           showDetails: true,
                           isAssociateOrChat: false,
@@ -2952,7 +2952,8 @@ class CommonDialogBox {
                   snapshot.data!.data!.result != null &&
                   snapshot.data!.data!.result!.hospitals != null &&
                   snapshot.data!.data!.result!.hospitals!.isNotEmpty) {
-                hospitalListFromProvider = snapshot.data!.data!.result!.hospitals;
+                hospitalListFromProvider =
+                    snapshot.data!.data!.result!.hospitals;
                 filterDuplicateHospital();
                 familyWidget = getHospitalDropDown(
                   hospitalListFromProvider,
@@ -2960,7 +2961,7 @@ class CommonDialogBox {
                   onAdd,
                 );
               } else {
-                hospitalListFromProvider =[];
+                hospitalListFromProvider = [];
                 familyWidget = getHospitalsDropDownWhenNoList(
                     hospitalListFromProvider, null, onAdd);
               }
@@ -3008,7 +3009,8 @@ class CommonDialogBox {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
                               child: Text(element!.user != null
-                                  ? new CommonUtil().getDoctorName(element.user!)!
+                                  ? new CommonUtil()
+                                      .getDoctorName(element.user!)!
                                   : ''),
                             ),
                             SizedBox(height: 10),
@@ -3311,7 +3313,7 @@ class CommonDialogBox {
       icon: Icon(Icons.arrow_drop_down),
       color: Color(CommonUtil().getMyPrimaryColor()),
       iconSize: 40,
-      onPressed: (){},
+      onPressed: () {},
     );
   }
 
@@ -3333,8 +3335,8 @@ class CommonDialogBox {
     }
   }
 
-  getHospitalDropDown(List<Hospitals>? hospitallist, Hospitals? hospitalObjSample,
-      Function onAddClick,
+  getHospitalDropDown(List<Hospitals>? hospitallist,
+      Hospitals? hospitalObjSample, Function onAddClick,
       {Widget? child}) {
     if (hospitalObjSample != null) {
       for (var hospitalObjS in hospitallist!) {
@@ -3375,7 +3377,8 @@ class CommonDialogBox {
                         value: element,
                         child: Container(
                           width: 0.5.sw,
-                          child: Text(element.name != null ? element.name! : ''),
+                          child:
+                              Text(element.name != null ? element.name! : ''),
                         ),
                       ))
                 .toList()
@@ -3435,7 +3438,8 @@ class CommonDialogBox {
                   snapshot.data!.data!.result != null &&
                   snapshot.data!.data!.result!.hospitals != null &&
                   snapshot.data!.data!.result!.hospitals!.isNotEmpty) {
-                hospitalListFromProvider = snapshot.data!.data!.result!.hospitals;
+                hospitalListFromProvider =
+                    snapshot.data!.data!.result!.hospitals;
                 //filterDuplicateHospital();
                 familyWidget = getHospitalDropDown(
                   hospitalListFromProvider,

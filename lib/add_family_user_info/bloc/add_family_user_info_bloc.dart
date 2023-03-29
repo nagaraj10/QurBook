@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 
@@ -35,10 +34,12 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   late StreamController _relationshipListController;
 
   StreamSink<ApiResponse<RelationShipResponseList>> get relationShipListSink =>
-      _relationshipListController.sink as StreamSink<ApiResponse<RelationShipResponseList>>;
+      _relationshipListController.sink
+          as StreamSink<ApiResponse<RelationShipResponseList>>;
 
   Stream<ApiResponse<RelationShipResponseList>> get relationShipStream =>
-      _relationshipListController.stream as Stream<ApiResponse<RelationShipResponseList>>;
+      _relationshipListController.stream
+          as Stream<ApiResponse<RelationShipResponseList>>;
 
   // 2
   late StreamController _myProfileController;
@@ -53,7 +54,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   late StreamController _userProfileController;
 
   StreamSink<ApiResponse<UpdateAddFamilyInfo>> get userProfileSink =>
-      _userProfileController.sink as StreamSink<ApiResponse<UpdateAddFamilyInfo>>;
+      _userProfileController.sink
+          as StreamSink<ApiResponse<UpdateAddFamilyInfo>>;
 
   Stream<ApiResponse<UpdateAddFamilyInfo>> get userProfileStream =>
       _userProfileController.stream as Stream<ApiResponse<UpdateAddFamilyInfo>>;
@@ -62,15 +64,18 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   late StreamController _updatedRelationShipController;
 
   StreamSink<ApiResponse<UpdateAddFamilyRelationInfo>>
-      get updateRelationshipSink => _updatedRelationShipController.sink as StreamSink<ApiResponse<UpdateAddFamilyRelationInfo>>;
+      get updateRelationshipSink => _updatedRelationShipController.sink
+          as StreamSink<ApiResponse<UpdateAddFamilyRelationInfo>>;
 
   Stream<ApiResponse<UpdateAddFamilyRelationInfo>>
-      get updateRelationshipStream => _updatedRelationShipController.stream as Stream<ApiResponse<UpdateAddFamilyRelationInfo>>;
+      get updateRelationshipStream => _updatedRelationShipController.stream
+          as Stream<ApiResponse<UpdateAddFamilyRelationInfo>>;
 
 //5
   late StreamController _verifyEmailController;
   StreamSink<ApiResponse<VerifyEmailResponse>> get verifyEmailSink =>
-      _verifyEmailController.sink as StreamSink<ApiResponse<VerifyEmailResponse>>;
+      _verifyEmailController.sink
+          as StreamSink<ApiResponse<VerifyEmailResponse>>;
 
   Stream<ApiResponse<VerifyEmailResponse>> get verifyEmailStream =>
       _verifyEmailController.stream as Stream<ApiResponse<VerifyEmailResponse>>;
@@ -183,7 +188,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     MyProfileModel? myProfile;
 
     try {
-      myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userId!);
+      myProfile =
+          await addFamilyUserInfoRepository.getMyProfileInfoNew(userId!);
       myprofileObject = myProfile;
     } catch (e) {
       myProfileSink.add(ApiResponse.error(e.toString()));
@@ -427,12 +433,12 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
     preColor = getDeviceSelectionModel.result![0].profileSetting!.preColor;
     greColor = getDeviceSelectionModel.result![0].profileSetting!.greColor;
-    _isdeviceRecognition =
-        getDeviceSelectionModel.result![0].profileSetting!.allowDevice != null &&
-                getDeviceSelectionModel.result![0].profileSetting!.allowDevice !=
-                    ''
-            ? getDeviceSelectionModel.result![0].profileSetting!.allowDevice
-            : true;
+    _isdeviceRecognition = getDeviceSelectionModel
+                    .result![0].profileSetting!.allowDevice !=
+                null &&
+            getDeviceSelectionModel.result![0].profileSetting!.allowDevice != ''
+        ? getDeviceSelectionModel.result![0].profileSetting!.allowDevice
+        : true;
     _isdigitRecognition =
         getDeviceSelectionModel.result![0].profileSetting!.allowDigit != null &&
                 getDeviceSelectionModel.result![0].profileSetting!.allowDigit !=
@@ -441,36 +447,41 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             : true;
     _isHKActive =
         getDeviceSelectionModel.result![0].profileSetting!.healthFit != null &&
-                getDeviceSelectionModel.result![0].profileSetting!.healthFit != ''
+                getDeviceSelectionModel.result![0].profileSetting!.healthFit !=
+                    ''
             ? getDeviceSelectionModel.result![0].profileSetting!.healthFit
             : false;
     _isBPActive =
         getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != null &&
-                getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != ''
+                getDeviceSelectionModel.result![0].profileSetting!.bpMonitor !=
+                    ''
             ? getDeviceSelectionModel.result![0].profileSetting!.bpMonitor
             : true;
-    _isGLActive = getDeviceSelectionModel.result![0].profileSetting!.glucoMeter !=
-                null &&
-            getDeviceSelectionModel.result![0].profileSetting!.glucoMeter != ''
-        ? getDeviceSelectionModel.result![0].profileSetting!.glucoMeter
-        : true;
+    _isGLActive =
+        getDeviceSelectionModel.result![0].profileSetting!.glucoMeter != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.glucoMeter !=
+                    ''
+            ? getDeviceSelectionModel.result![0].profileSetting!.glucoMeter
+            : true;
     _isOxyActive = getDeviceSelectionModel
                     .result![0].profileSetting!.pulseOximeter !=
                 null &&
-            getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter != ''
+            getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter !=
+                ''
         ? getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter
         : true;
-    _isWSActive = getDeviceSelectionModel.result![0].profileSetting!.weighScale !=
-                null &&
-            getDeviceSelectionModel.result![0].profileSetting!.weighScale != ''
-        ? getDeviceSelectionModel.result![0].profileSetting!.weighScale
-        : true;
-    _isTHActive =
-        getDeviceSelectionModel.result![0].profileSetting!.thermoMeter != null &&
-                getDeviceSelectionModel.result![0].profileSetting!.thermoMeter !=
+    _isWSActive =
+        getDeviceSelectionModel.result![0].profileSetting!.weighScale != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.weighScale !=
                     ''
-            ? getDeviceSelectionModel.result![0].profileSetting!.thermoMeter
+            ? getDeviceSelectionModel.result![0].profileSetting!.weighScale
             : true;
+    _isTHActive = getDeviceSelectionModel
+                    .result![0].profileSetting!.thermoMeter !=
+                null &&
+            getDeviceSelectionModel.result![0].profileSetting!.thermoMeter != ''
+        ? getDeviceSelectionModel.result![0].profileSetting!.thermoMeter
+        : true;
 
     preferred_language = getDeviceSelectionModel
                     .result![0].profileSetting!.preferred_language !=
@@ -481,13 +492,14 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         ? getDeviceSelectionModel.result![0].profileSetting!.preferred_language
         : 'undef';
 
-    qa_subscription = getDeviceSelectionModel
-                    .result![0].profileSetting!.qa_subscription !=
-                null &&
-            getDeviceSelectionModel.result![0].profileSetting!.qa_subscription !=
-                ''
-        ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
-        : 'Y';
+    qa_subscription =
+        getDeviceSelectionModel.result![0].profileSetting!.qa_subscription !=
+                    null &&
+                getDeviceSelectionModel
+                        .result![0].profileSetting!.qa_subscription !=
+                    ''
+            ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
+            : 'Y';
 
     tagsList = getDeviceSelectionModel.result![0].tags != null &&
             getDeviceSelectionModel.result![0].tags!.length > 0
@@ -530,10 +542,11 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             .result![0].profileSetting!.caregiverCommunicationSetting?.symptoms
         : true;
 
-    preferredMeasurement = getDeviceSelectionModel.result![0].profileSetting !=
-            null
-        ? getDeviceSelectionModel.result![0].profileSetting!.preferredMeasurement
-        : null;
+    preferredMeasurement =
+        getDeviceSelectionModel.result![0].profileSetting != null
+            ? getDeviceSelectionModel
+                .result![0].profileSetting!.preferredMeasurement
+            : null;
   }
 
   Future<UpdateDeviceModel?> updateDeviceSelectionModel(

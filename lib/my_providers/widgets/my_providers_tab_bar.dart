@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:myfhb/my_providers/models/ProviderRequestCollection3.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
@@ -63,13 +62,13 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
           doctorsModelPatientAssociated.length > 0) {
         doctorsModel!.addAll(doctorsModelPatientAssociated);
       }
-      labsModel = widget.dataHospitalLab!.labs;
+      labsModel = widget.dataHospitalLab?.labs;
       if (widget.data!.clinics != null) {
         hospitalsModel!.addAll(widget.dataHospitalLab!.clinics!);
       }
     }
 
-     doctorsModel?.sort((a, b) => a!.user!.name
+    doctorsModel?.sort((a, b) => a!.user!.name
         .toString()
         .toLowerCase()
         .compareTo(b!.user!.name.toString().toLowerCase()));
@@ -128,7 +127,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
 
     // 3
     // Labs
-    labsModel!.sort((a, b) => a.name
+    labsModel?.sort((a, b) => a.name
         .toString()
         .toLowerCase()
         .compareTo(b.name.toString().toLowerCase()));
@@ -203,7 +202,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
 
   refreshIndicatorWithEmptyContainer(String msg) {
     return RefreshIndicator(
-        onRefresh: () async{
+        onRefresh: () async {
           widget.refresh!();
         },
         child: ListView(

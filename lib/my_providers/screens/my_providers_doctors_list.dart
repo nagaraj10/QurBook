@@ -1,10 +1,10 @@
-
 //import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -22,6 +22,7 @@ import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
 import '../../telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 
 import 'my_provider.dart';
 
@@ -50,10 +51,12 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   FlutterToast toast = FlutterToast();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+  var authtoken;
   @override
   void initState() {
     mInitialTime = DateTime.now();
     providerViewModel = MyProviderViewModel();
+    setAuthToken();
     super.initState();
     filterDuplicateDoctor();
   }
@@ -86,7 +89,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   Widget buildPlayersList() {
     return RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () async{
+        onRefresh: () async {
           _refreshIndicatorKey.currentState?.show(atTop: true);
           widget.refresh!();
           _refreshIndicatorKey.currentState?.show(atTop: false);
@@ -98,12 +101,15 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
             var specialization = eachDoctorModel
                         ?.doctorProfessionalDetailCollection !=
                     null
-                ? eachDoctorModel!.doctorProfessionalDetailCollection!.isNotEmpty
+                ? eachDoctorModel!
+                        .doctorProfessionalDetailCollection!.isNotEmpty
                     ? eachDoctorModel.doctorProfessionalDetailCollection![0]
                                 .specialty !=
                             null
-                        ? (eachDoctorModel.doctorProfessionalDetailCollection![0]
-                                        .specialty!.name !=
+                        ? (eachDoctorModel
+                                        .doctorProfessionalDetailCollection![0]
+                                        .specialty!
+                                        .name !=
                                     null &&
                                 eachDoctorModel
                                         .doctorProfessionalDetailCollection![0]
@@ -141,19 +147,21 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                       children: <Widget>[
                         ClipOval(
                             child: eachDoctorModel?.user != null
-                                ? (eachDoctorModel
-                                                ?.user?.profilePicThumbnailUrl !=
+                                ? (eachDoctorModel?.user
+                                                ?.profilePicThumbnailUrl !=
                                             null ||
                                         (eachDoctorModel?.user?.firstName !=
                                                 null &&
-                                            eachDoctorModel?.user?.lastName !=
+                                            eachDoctorModel
+                                                    ?.user?.lastName !=
                                                 null))
                                     ? getProfilePicWidget(
-                                        eachDoctorModel
-                                            !.user!.profilePicThumbnailUrl!,
+                                        eachDoctorModel!
+                                            .user!.profilePicThumbnailUrl!,
                                         eachDoctorModel.user!.firstName!,
                                         eachDoctorModel.user!.lastName!,
-                                        Color(CommonUtil().getMyPrimaryColor()))
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        authtoken: authtoken)
                                     : Container(
                                         width: 50.0.h,
                                         height: 50.0.h,
@@ -292,5 +300,9 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
         myProviderState.refreshPage();
       });
     }
+  }
+
+  void setAuthToken() async {
+    authtoken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 }
