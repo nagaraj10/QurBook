@@ -304,7 +304,7 @@ class ChatState extends State<ChatDetail> {
             chatPeerId!,
             familyUserId,
             isFromCareCoordinator!,
-            carecoordinatorId!,
+            carecoordinatorId??'',
             isFromFamilyListChat) as Future<ChatHistoryModel?>;
   }
 
@@ -312,8 +312,8 @@ class ChatState extends State<ChatDetail> {
     if (groupId == '' || groupId == null) {
       if (isFromFamilyListChat) {
         Provider.of<ChatSocketViewModel>(context, listen: false)
-            .initNewFamilyChat(chatPeerId!, peerName!, isFromCareCoordinator!,
-                carecoordinatorId!)
+            .initNewFamilyChat(chatPeerId??'', peerName??'', isFromCareCoordinator??false,
+                carecoordinatorId??'')
             .then((value) {
           if (value != null) {
             if (value?.result != null) {
@@ -395,12 +395,12 @@ class ChatState extends State<ChatDetail> {
 
   void initSocket() {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket!
-        .off(message);
+        .socket
+        ?.off(message);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket!
-        .on(message, (data) {
+        .socket
+        ?.on(message, (data) {
       if (data != null) {
         //print('OnMessageack$data');
         ChatHistoryResult emitAckResponse = ChatHistoryResult.fromJson(data);
@@ -427,8 +427,8 @@ class ChatState extends State<ChatDetail> {
     var data = {"chatListId": groupId, "userId": userId};
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket!
-        .emitWithAck(unreadNotification, data, ack: (res) {
+        ?.socket
+        ?.emitWithAck(unreadNotification, data, ack: (res) {
       //print('emitWithackCount$res');
     });
   }
@@ -610,8 +610,8 @@ class ChatState extends State<ChatDetail> {
 
         try {
           Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              ?.socket!
-              .emitWithAck(message, data, ack: (res) {
+              ?.socket
+              ?.emitWithAck(message, data, ack: (res) {
             //print('emitWithack$res');
             if (res != null) {
               EmitAckResponse emitAckResponse = EmitAckResponse.fromJson(res);

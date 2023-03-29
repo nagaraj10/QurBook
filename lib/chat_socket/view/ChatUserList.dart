@@ -370,33 +370,33 @@ class _ChatUserListState extends State<ChatUserList> {
       child: InkWell(
           onTap: () {
             try {
-              String strLastDate = data.chatListItem!.deliveredOn != null &&
-                      data?.chatListItem!.deliveredOn != ''
+              String strLastDate = (data.chatListItem?.deliveredOn != null &&
+                  data.chatListItem?.deliveredOn != '')
                   ? CommonUtil()
-                      .getFormattedDateTime(data.chatListItem!.deliveredOn!)
+                      .getFormattedDateTime(data.chatListItem?.deliveredOn??'')
                   : '';
               Get.back();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChatDetail(
-                          peerId: data?.id,
-                          peerAvatar: data?.profilePicThumbnailUrl,
+                          peerId: data.id,
+                          peerAvatar: data.profilePicThumbnailUrl,
                           peerName: getFamilyName(data),
                           patientId: '',
                           patientName: '',
                           patientPicture: '',
                           isFromVideoCall: false,
-                          familyUserId: data?.id,
+                          familyUserId: data.id,
                           isFromFamilyListChat: true,
-                          isFromCareCoordinator: data?.isCarecoordinator,
-                          carecoordinatorId: data?.carecoordinatorId,
-                          isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
+                          isFromCareCoordinator: data.isCarecoordinator,
+                          carecoordinatorId: data.carecoordinatorId,
+                          isCareGiver: (widget.careGiversList?.length ?? 0) > 0
                               ? true
                               : false,
-                          groupId: data?.chatListItem?.id ?? '',
+                          groupId: data.chatListItem?.id ?? '',
                           lastDate: strLastDate))).then((value) {
-                if (value) {
+                if (value??false) {
                   initSocket(true);
                 } else {
                   initSocket(false);
