@@ -872,7 +872,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     ? passHospitalValue(hospitalData, context)
                     : passLaboratoryValue(labData, context);
           } else {
-            passdataToNextScreen(data.name!.capitalizeFirstofEach, context,
+            passdataToNextScreen(data.name, context,
                 data, hospitalData, labData);
           }
         });
