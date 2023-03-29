@@ -181,6 +181,19 @@ class ChatSocketViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
+  initRRTNotificaiton({String peerId, String selectedDate}) {
+    try {
+      var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+      chocketService.initRRTNotification(
+        userId: userId,
+        peerId: peerId,
+        selectedDate: selectedDate,
+      );
+    } catch (e) {
+      if (kDebugMode) print(e.toString());
+    }
+  }
+
   Future<GetUserIdModel> getUserIdFromDocId(String docId) async {
     try {
       GetUserIdModel getUserIdModel =
