@@ -340,7 +340,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         },
                       ),
                       DrawerTile(
-                        title: variable.strGoToQurbook,
+                        title: variable.strAdvancedRegimen,
                         iconWidget: SvgPicture.asset(
                           variable.icon_my_family_menu,
                           color: Colors.black54,
