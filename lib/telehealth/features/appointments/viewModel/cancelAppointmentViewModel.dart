@@ -12,9 +12,11 @@ class CancelAppointmentViewModel extends ChangeNotifier {
       List<String?> bookingId,List<String?> date) async {
     try {
       CancelAppointmentModel cancelAppointment =
-      await cancelAppointmentsService.getCancelAppointment(bookingId as List<String>,date as List<String>);
+      await cancelAppointmentsService.getCancelAppointment(bookingId,date);
       cancelAppointmentModel = cancelAppointment;
       return cancelAppointmentModel;
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 }
