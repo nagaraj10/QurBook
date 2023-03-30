@@ -17,8 +17,10 @@ class FeedbackController extends GetxController {
   getFeedbacktypes() async {
     try {
       loadingData.value = true;
-      Response? responseCat = await (_apiProvider.getFeedbackCat() as FutureOr<Response?>);
-      Response? response = await (_apiProvider.getFeedbacktypes() as FutureOr<Response?>);
+      // Response responseCat = await (_apiProvider.getFeedbackCat() );
+      // Response response = await (_apiProvider.getFeedbacktypes() );
+       http.Response responseCat = await _apiProvider.getFeedbackCat();
+      http.Response response = await _apiProvider.getFeedbacktypes();
       if (response == null || responseCat == null) {
         // failed to get the data, we are showing the error on UI
       } else {

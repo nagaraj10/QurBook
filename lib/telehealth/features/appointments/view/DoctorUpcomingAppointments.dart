@@ -505,29 +505,37 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   }
 
   getCancelAppoitment(List<Past?> appointments) {
-    cancelAppointment(appointments).then((value) {
-      if (value == null) {
-        toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
-      } else if (value.isSuccess == true) {
-        widget.onChanged!(TranslationConstants.callback.t());
-        toast.getToast(
-            TranslationConstants.yourBookingSuccess.t(), Colors.green);
-      } else {
-        toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
-      }
-    });
+    try {
+      cancelAppointment(appointments).then((value) {
+            if (value == null) {
+              toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
+            } else if (value.isSuccess == true) {
+              widget.onChanged!(TranslationConstants.callback.t());
+              toast.getToast(
+                  TranslationConstants.yourBookingSuccess.t(), Colors.green);
+            } else {
+              toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
+            }
+          });
+    } catch (e) {
+      print(e);
+    }
   }
 
-  Future<CancelAppointmentModel> cancelAppointment(
+  Future<CancelAppointmentModel?> cancelAppointment(
       List<Past?> appointments) async {
-    for (int i = 0; i < appointments.length; i++) {
-      bookingIds.add(appointments[i]!.bookingId);
-      dates.add(appointments[i]!.plannedStartDateTime);
-    }
-    CancelAppointmentModel? cancelAppointment = await cancelAppointmentViewModel
-        .fetchCancelAppointment(bookingIds, dates);
+    try {
+      for (int i = 0; i < appointments.length; i++) {
+            bookingIds.add(appointments[i]!.bookingId);
+            dates.add(appointments[i]!.plannedStartDateTime);
+          }
+      CancelAppointmentModel? cancelAppointment = await cancelAppointmentViewModel
+              .fetchCancelAppointment(bookingIds, dates);
 
-    return cancelAppointment!;
+      return cancelAppointment??CancelAppointmentModel();
+    } catch (e) {
+      print(e);
+    }
   }
 
   void moveToBilsPage(HealthRecord? healthRecord) async {

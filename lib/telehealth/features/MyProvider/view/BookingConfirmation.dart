@@ -1552,7 +1552,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       ),
     ))
         .then((results) {
-      if (results.containsKey(STR_META_ID)) {
+      if (results?.containsKey(STR_META_ID)) {
         var metaIds = results[STR_META_ID];
         print(metaIds.toString());
 

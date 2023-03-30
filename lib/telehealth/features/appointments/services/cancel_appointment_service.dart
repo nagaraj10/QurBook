@@ -22,7 +22,7 @@ class CancelAppointmentsService {
   HeaderRequest headerRequest = new HeaderRequest();
 
   Future<CancelAppointmentModel> getCancelAppointment(
-      List<String> doctorIds, List<String> dates) async {
+      List<String?> doctorIds, List<String?> dates) async {
     var inputBody = {};
     inputBody[CANCEL_SOURCE] = PATIENT;
     inputBody[BOOKING_IDS] = doctorIds;
