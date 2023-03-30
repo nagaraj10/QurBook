@@ -795,6 +795,8 @@ const String claimList = 'claimList';
 const String claimId = 'claimId';
 const String strPatientReferralAcceptToPatient =
     'patientReferralAcceptToPatient';
+const String strNotificationChat =
+    'chat';
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
 const String strDoctorSession = 'doctorSession';

@@ -539,6 +539,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.templateName,
                             );
+                          }else if (payload?.templateName ==
+                              parameters.strNotificationChat) {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.templateName,
+                            );
                           } else {
                             readUnreadAction(notification);
                           }
@@ -1284,6 +1290,30 @@ class _NotificationScreen extends State<NotificationScreen> {
                 arguments: UserAccountsArguments(selectedIndex: 2))
             .then((value) =>
                 PageNavigator.goToPermanent(context, router.rt_Landing));
+        readUnreadAction(result);
+        break;
+      case strNotificationChat:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatDetail(
+                  peerId: result?.messageDetails?.payload?.userId,
+                  peerAvatar: result?.messageDetails?.payload?.senderProfilePic,
+                  peerName: result?.messageDetails?.payload?.patientName,
+                  patientId: '',
+                  patientName: '',
+                  patientPicture: '',
+                  isFromVideoCall: false,
+                  isFromFamilyListChat: true,
+                  isFromCareCoordinator:
+                  result?.messageDetails?.payload?.isFromCareCoordinator.toLowerCase() ==
+                      'true',
+                  carecoordinatorId: result?.messageDetails?.payload?.careCoordinatorUserId,
+                  isCareGiver:
+                  result?.messageDetails?.payload?.isCareGiver.toLowerCase() == 'true',
+                  groupId: '',
+                  lastDate: result?.messageDetails?.payload?.deliveredDateTime)),
+        ).then((value) {});
         readUnreadAction(result);
         break;
       default:
