@@ -35,14 +35,14 @@ class FetchAppointmentsService {
       headers: await headerRequest.getRequestHeadersAuthContent(),
     ).then((http.Response? response) {
 //          print(response.body);
-      if (response!.statusCode == 200) {
+      if (response?.statusCode == 200) {
         var resReturnCode =
-            AppointmentsModel.fromJson(jsonDecode(response.body));
+            AppointmentsModel.fromJson(jsonDecode(response?.body??''));
 //        print(response.body);
         if (resReturnCode.isSuccess == true) {
-          print('=======response_appointment' + response.body);
-          print(response.body);
-          return AppointmentsModel.fromJson(jsonDecode(response.body));
+          print('=======response_appointment' + (response?.body??''));
+          print(response?.body??'');
+          return AppointmentsModel.fromJson(jsonDecode(response?.body??''));
         } else {
           throw Exception(TranslationConstants.failedToInvoke.t());
         }

@@ -25,9 +25,9 @@ class HealthRecord {
         ? null
         : List<dynamic>.from(
             json[parameters.strAssociatedRecords].map((x) => x));
-    bills = json[parameters.strBills] == null
-        ? null
-        : List<String>.from(json[parameters.strBills].map((x) => x));
+    bills = (json[parameters.strBills] == null
+        ?  null
+        : List<String>.from(json[parameters.strBills].map((x) => x??'')));
     others = json[parameters.strothers] == null
         ? null
         : List<String>.from(json[parameters.strothers].map((x) => x));
