@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -283,24 +282,23 @@ class DevicesViewModel with ChangeNotifier {
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<TMPResult> ret = [];
       List<dynamic> finalResult;
-      deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bodyTemperatureCollection!.isEmpty) {
+      deviceIntervalData?.forEach((dataElement) {
+        if (dataElement?.bodyTemperatureCollection?.isEmpty) {
           return [];
         }
-        dataElement.bodyTemperatureCollection!.forEach((tempValue) {
+        dataElement?.bodyTemperatureCollection?.forEach((tempValue) {
           var tempList = TMPResult(
-              sourceType: dataElement.sourceType!.description,
-              startDateTime: tempValue.startDateTime!.toIso8601String(),
-              endDateTime: tempValue.endDateTime!.toIso8601String(),
-              temperature: tempValue.temperature,
-              temperatureUnit:
-                  tempValue.temperatureUnit!.code!.capitalizeFirstofEach,
-              deviceId: dataElement.deviceId,
-              dateTimeValue: tempValue.startDateTime);
+              sourceType: dataElement?.sourceType?.description ?? '',
+              startDateTime: tempValue?.startDateTime?.toIso8601String() ?? '',
+              endDateTime: tempValue?.endDateTime?.toIso8601String() ?? '',
+              temperature: tempValue?.temperature ?? '',
+              temperatureUnit: getUnit(tempValue?.temperatureUnit?.code),
+              deviceId: dataElement?.deviceId ?? '',
+              dateTimeValue: tempValue?.startDateTime ?? '');
           ret.add(tempList);
         });
       });
-      if (deviceIntervalData.isEmpty || deviceIntervalData == null) {
+      if (deviceIntervalData?.isEmpty || deviceIntervalData == null) {
         deviceIntervalData = [];
       }
 
@@ -342,7 +340,7 @@ class DevicesViewModel with ChangeNotifier {
               endDateTime: weightValue.endDateTime!.toIso8601String(),
               weight: weightValue.weight.toString(),
               weightUnit: weightValue.weightUnit != null
-                  ? weightValue.weightUnit!.code
+                  ? getUnit(weightValue.weightUnit!.code)
                   : 'kg',
               deviceId: dataElement.deviceId,
               dateTimeValue: weightValue.startDateTime);
@@ -395,5 +393,15 @@ class DevicesViewModel with ChangeNotifier {
       });
       return ret;
     } catch (e) {}
+  }
+
+  getUnit(String unit) {
+    if (unit != null && unit != '') {
+      if (unit.length == 1) {
+        return unit.toUpperCase() ?? '';
+      } else {
+        return unit.capitalizeFirstofEach ?? '';
+      }
+    }
   }
 }
