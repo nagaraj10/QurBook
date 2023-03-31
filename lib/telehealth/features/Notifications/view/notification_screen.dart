@@ -539,12 +539,15 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.templateName,
                             );
-                          }else if (payload?.templateName ==
+                          } else if (payload?.redirectTo ==
                               parameters.strNotificationChat) {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.templateName,
-                            );
+                            if(payload?.templateName ==
+                                parameters.strChoosePrefDate){
+                              notificationOnTapActions(
+                                notification,
+                                payload?.templateName,
+                              );
+                            }
                           } else {
                             readUnreadAction(notification);
                           }
@@ -787,7 +790,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                                 .doctorId),
                                                         doctorSessionId:
                                                             notification
-                                                
+
                      .result[
                                                                     index]
                                                                 .messageDetails
@@ -1232,8 +1235,9 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "regiment_screen":
         if (CommonUtil.isUSRegion()) {
           var qurhomeDashboardController =
-          CommonUtil().onInitQurhomeDashboardController();
-          qurhomeDashboardController.eventId.value = result?.messageDetails?.payload?.eventId ?? '';
+              CommonUtil().onInitQurhomeDashboardController();
+          qurhomeDashboardController.eventId.value =
+              result?.messageDetails?.payload?.eventId ?? '';
           Get.to(
             () => QurhomeDashboard(),
           ).then(
@@ -1286,35 +1290,42 @@ class _NotificationScreen extends State<NotificationScreen> {
         break;
       case strPatientReferralAcceptToPatient:
         if (CommonUtil.isUSRegion())
-        Get.toNamed(router.rt_UserAccounts,
-                arguments: UserAccountsArguments(selectedIndex: 2))
-            .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+          Get.toNamed(router.rt_UserAccounts,
+                  arguments: UserAccountsArguments(selectedIndex: 2))
+              .then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
-      case strNotificationChat:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ChatDetail(
-                  peerId: result?.messageDetails?.payload?.userId,
-                  peerAvatar: result?.messageDetails?.payload?.senderProfilePic,
-                  peerName: result?.messageDetails?.payload?.patientName,
-                  patientId: '',
-                  patientName: '',
-                  patientPicture: '',
-                  isFromVideoCall: false,
-                  isFromFamilyListChat: true,
-                  isFromCareCoordinator:
-                  result?.messageDetails?.payload?.isFromCareCoordinator.toLowerCase() ==
-                      'true',
-                  carecoordinatorId: result?.messageDetails?.payload?.careCoordinatorUserId,
-                  isCareGiver:
-                  result?.messageDetails?.payload?.isCareGiver.toLowerCase() == 'true',
-                  groupId: '',
-                  lastDate: result?.messageDetails?.payload?.deliveredDateTime)),
-        ).then((value) {});
-        readUnreadAction(result);
+      case strChoosePrefDate:
+        if (result?.messageDetails?.payload?.careCoordinatorUserId != null &&
+            result?.messageDetails?.payload?.careCoordinatorUserId != '') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatDetail(
+                    peerId: result?.messageDetails?.payload?.careCoordinatorUserId,
+                    peerAvatar:
+                        result?.messageDetails?.payload?.senderProfilePic,
+                    peerName: result?.messageDetails?.payload?.patientName,
+                    patientId: '',
+                    patientName: '',
+                    patientPicture: '',
+                    isFromVideoCall: false,
+                    isFromCareCoordinator: result
+                            ?.messageDetails?.payload?.isFromCareCoordinator
+                            .toLowerCase() ==
+                        'true',
+                    carecoordinatorId:
+                        result?.messageDetails?.payload?.careCoordinatorUserId,
+                    isCareGiver: result?.messageDetails?.payload?.isCareGiver
+                            .toLowerCase() ==
+                        'true',
+                    groupId: '',
+                    lastDate:
+                        result?.messageDetails?.payload?.deliveredDateTime)),
+          ).then((value) {});
+          readUnreadAction(result);
+        }
         break;
       default:
         readUnreadAction(result);
