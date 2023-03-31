@@ -45,7 +45,7 @@ class HubListViewController extends GetxController {
     try {
       loadingData.value = true;
       hubListResponse = null;
-      http.Response response = (await (_apiProvider.getHubList() as FutureOr<Response>)) as http.Response;
+      http.Response response = await (_apiProvider.getHubList());
       if (response.statusCode != 200 || (response.body ?? "").isEmpty) {
         hubListResponse = null;
         return;
@@ -109,8 +109,8 @@ class HubListViewController extends GetxController {
           return;
         }
         bool? isBluetoothEnable = false;
-        isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn() as FutureOr<bool>);
-        if (!isBluetoothEnable) {
+        isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
+        if (!(isBluetoothEnable??false)) {
           FlutterToast().getToast(
             'Please turn on your bluetooth and try again',
             Colors.red,
