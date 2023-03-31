@@ -76,7 +76,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           : widget.ticket!.uid.toString());
   late TabController _controller;
   int selectedTab = 0;
-  String? authToken = '';
+  String authToken = '';
   bool isHideInputTextBox = false;
 
   @override
@@ -96,7 +96,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   callTicketDetailsApi() async {
     var token = await PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     setState(() {
-      authToken = token;
+      authToken = token??"";
       future = ticketViewModel.getTicketDetail(widget.isFromNotification
           ? widget.ticketId.toString()
           : widget.ticket!.uid.toString());
@@ -1239,7 +1239,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
 
   Future<String> downloadFileOpen(
       Attachments attachments, String? ticketUId) async {
-    String nameWithoutExtension = p.basenameWithoutExtension(attachments.path!);
+    //String nameWithoutExtension = p.basenameWithoutExtension(attachments.path);
     String filePath = await FHBUtils.createFolderInAppDocDirClone(
         variable.stAudioPath, attachments.name);
     var file = File('$filePath' /*+ fileType*/);
