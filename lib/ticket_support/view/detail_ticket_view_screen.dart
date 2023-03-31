@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import 'package:path/path.dart' as p;
-//import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';  FU2.5
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
 import '../../widgets/GradientAppBar.dart';
@@ -52,7 +53,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     with SingleTickerProviderStateMixin {
   TicketViewModel ticketViewModel = TicketViewModel();
   final FocusNode focusNode = FocusNode();
-  //final ItemScrollController listScrollController = ItemScrollController();  FU2.5
+  final ItemScrollController listScrollController = ItemScrollController();
   final addCommentController = TextEditingController();
 
   final List<Events> listOfEvents = [
@@ -199,7 +200,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         if (ticket.type!.additionalInfo != null && dataFields != null) {
           for (int i = 0; i < ticket.type!.additionalInfo!.field!.length; i++) {
             Field field = ticket.type!.additionalInfo!.field![i];
-            List<FieldData> fieldData = field.fieldData!;
+            List<FieldData> fieldData = field.fieldData??[];
             String fieldName = CommonUtil().validString(field.name ?? "");
             String displayName = CommonUtil().validString(field.displayName);
             displayName = displayName.trim().isNotEmpty
@@ -282,7 +283,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         }
       }
     } catch (e) {
-      //print(e);
+      if(kDebugMode){
+        print(e);
+      }
     }
     return Container(
       child: Padding(
@@ -757,9 +760,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                         child: new Container(
                                           child: RawMaterialButton(
                                             onPressed: () {
-                                              // onSendMessage(
-                                              //     addCommentController.text,
-                                              //     widget.ticket ?? ticketList);  FU2.5
+                                               onSendMessage(
+                                                   addCommentController.text,
+                                                   widget.ticket ?? ticketList);
                                             },
                                             elevation: 2.0,
                                             fillColor: Colors.white,
@@ -921,254 +924,248 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
 
   Widget? _getChatWidget(BuildContext context, Ticket ticketList) {
     print('comments length=======');
-    print(ticketList.comments!.length);
-    // FU2.5
-  //   return ScrollablePositionedList.builder(
-  //     physics: BouncingScrollPhysics(),
-  //     itemCount: ticketList.comments.length,
-  //     reverse: true,
-  //     itemScrollController: listScrollController,
-  //     itemBuilder: (context, i) {
-  //       return Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         children: [
-  //           ticketList.comments[ticketList.comments.length - 1 - i].owner.role
-  //                           .isAgent !=
-  //                       null &&
-  //                   ticketList.comments[ticketList.comments.length - 1 - i]
-  //                           .owner.role.isAgent ==
-  //                       false
-  //               ? Container(
-  //                   alignment: Alignment.bottomRight,
-  //                   child: Row(
-  //                     crossAxisAlignment: CrossAxisAlignment.end,
-  //                     mainAxisAlignment: MainAxisAlignment.end,
-  //                     children: [
-  //                       Card(
-  //                           color: Color(CommonUtil().getMyPrimaryColor()),
-  //                           shape: RoundedRectangleBorder(
-  //                               borderRadius: BorderRadius.only(
-  //                                   topRight: Radius.circular(16),
-  //                                   topLeft: Radius.circular(16),
-  //                                   bottomLeft: Radius.circular(16),
-  //                                   bottomRight: Radius.circular(16))),
-  //                           child: Container(
-  //                             constraints: BoxConstraints(
-  //                               maxWidth: 1.sw * .6,
-  //                             ),
-  //                             padding: const EdgeInsets.all(15.0),
-  //                             decoration: BoxDecoration(
-  //                               color: Color(CommonUtil().getMyPrimaryColor()),
-  //                               borderRadius: BorderRadius.only(
-  //                                 topRight: Radius.circular(16),
-  //                                 topLeft: Radius.circular(16),
-  //                                 bottomLeft: Radius.circular(16),
-  //                                 bottomRight: Radius.circular(16),
-  //                               ),
-  //                             ),
-  //                             /*child: Text(
-  //                               document[STR_CONTENT],
-  //                               style: TextStyle(
-  //                                   color: Color(CommonUtil().getMyPrimaryColor())),
-  //                             ),*/
-  //                             child: ticketList
-  //                                         .comments[ticketList.comments.length -
-  //                                             1 -
-  //                                             i]
-  //                                         .comment !=
-  //                                     null
-  //                                 ? Text(
-  //                                     '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
-  //                                     style: TextStyle(color: Colors.white))
-  //                                 : Text('Hi I have a query !!',
-  //                                     style: TextStyle(color: Colors.white)),
-  //                           )),
-  //                       Flexible(
-  //                         flex: 1,
-  //                         child: new Container(
-  //                           child: RawMaterialButton(
-  //                             onPressed: () {
-  //                               // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-  //                             },
-  //                             elevation: 2.0,
-  //                             fillColor:
-  //                                 Color(CommonUtil().getMyPrimaryColor()),
-  //                             child: CachedNetworkImage(
-  //                               placeholder: (context, url) => Container(
-  //                                 child: CommonCircularIndicator(),
-  //                                 width: 30.w,
-  //                                 height: 30.h,
-  //                                 padding: EdgeInsets.all(10.0),
-  //                                 decoration: BoxDecoration(
-  //                                   color:
-  //                                       Color(CommonUtil().getMyPrimaryColor()),
-  //                                   borderRadius: BorderRadius.all(
-  //                                     Radius.circular(8.0),
-  //                                   ),
-  //                                 ),
-  //                               ),
-  //                               errorWidget: (context, url, error) => Material(
-  //                                 child: Image.asset(
-  //                                   'assets/maya/maya_india_main.png',
-  //                                   width: 30.w,
-  //                                   height: 30.h,
-  //                                   fit: BoxFit.cover,
-  //                                 ),
-  //                                 borderRadius: BorderRadius.all(
-  //                                   Radius.circular(8.0),
-  //                                 ),
-  //                                 clipBehavior: Clip.hardEdge,
-  //                               ),
-  //                               imageUrl: '',
-  //                               width: 30.w,
-  //                               height: 30.h,
-  //                               fit: BoxFit.cover,
-  //                             ),
-  //                             padding: EdgeInsets.all(12.0),
-  //                             shape: CircleBorder(),
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 )
-  //               : Container(),
-  //           SizedBox(height: 15.h),
-  //           ticketList.comments[ticketList.comments.length - 1 - i].owner.role
-  //                           .isAgent !=
-  //                       null &&
-  //                   ticketList.comments[ticketList.comments.length - 1 - i]
-  //                       .owner.role.isAgent
-  //               ? Container(
-  //                   alignment: Alignment.bottomLeft,
-  //                   child: Row(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     mainAxisAlignment: MainAxisAlignment.start,
-  //                     children: [
-  //                       Flexible(
-  //                         flex: 1,
-  //                         child: new Container(
-  //                           child: RawMaterialButton(
-  //                             onPressed: () {
-  //                               // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-  //                             },
-  //                             elevation: 2.0,
-  //                             fillColor:
-  //                                 Color(CommonUtil().getMyPrimaryColor()),
-  //                             child: CachedNetworkImage(
-  //                               placeholder: (context, url) => Container(
-  //                                 child: CommonCircularIndicator(),
-  //                                 width: 30.w,
-  //                                 height: 30.h,
-  //                                 padding: EdgeInsets.all(10.0),
-  //                                 decoration: BoxDecoration(
-  //                                   color:
-  //                                       Color(CommonUtil().getMyPrimaryColor()),
-  //                                   borderRadius: BorderRadius.all(
-  //                                     Radius.circular(8.0),
-  //                                   ),
-  //                                 ),
-  //                               ),
-  //                               errorWidget: (context, url, error) => Material(
-  //                                 child: Image.asset(
-  //                                   'assets/user/profile_pic_ph.png',
-  //                                   width: 30.w,
-  //                                   height: 30.h,
-  //                                   fit: BoxFit.cover,
-  //                                 ),
-  //                                 borderRadius: BorderRadius.all(
-  //                                   Radius.circular(8.0),
-  //                                 ),
-  //                                 clipBehavior: Clip.hardEdge,
-  //                               ),
-  //                               imageUrl: '',
-  //                               width: 30.w,
-  //                               height: 30.h,
-  //                               fit: BoxFit.cover,
-  //                             ),
-  //                             padding: EdgeInsets.all(12.0),
-  //                             shape: CircleBorder(),
-  //                           ),
-  //                         ),
-  //                       ),
-  //                       Card(
-  //                           color: Colors.grey[200],
-  //                           shape: RoundedRectangleBorder(
-  //                               borderRadius: BorderRadius.only(
-  //                                   topRight: Radius.circular(16),
-  //                                   topLeft: Radius.circular(16),
-  //                                   bottomLeft: Radius.circular(16),
-  //                                   bottomRight: Radius.circular(16))),
-  //                           child: Container(
-  //                             constraints: BoxConstraints(
-  //                               maxWidth: 1.sw * .6,
-  //                             ),
-  //                             padding: const EdgeInsets.all(15.0),
-  //                             decoration: BoxDecoration(
-  //                               color: Colors.grey[200],
-  //                               borderRadius: BorderRadius.only(
-  //                                 topRight: Radius.circular(16),
-  //                                 topLeft: Radius.circular(16),
-  //                                 bottomLeft: Radius.circular(16),
-  //                                 bottomRight: Radius.circular(16),
-  //                               ),
-  //                             ),
-  //                             /*child: Text(
-  //                               document[STR_CONTENT],
-  //                               style: TextStyle(
-  //                                   color: Color(CommonUtil().getMyPrimaryColor())),
-  //                             ),*/
-  //                             child: ticketList
-  //                                         .comments[ticketList.comments.length -
-  //                                             1 -
-  //                                             i]
-  //                                         .comment !=
-  //                                     null
-  //                                 ? Text(
-  //                                     '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
-  //                                     style: TextStyle(color: Colors.black))
-  //                                 : Text('Hi !!',
-  //                                     style: TextStyle(color: Colors.black)),
-  //                           )),
-  //                     ],
-  //                   ),
-  //                 )
-  //               : Container(),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+    print(ticketList?.comments?.length??0);
+    return ScrollablePositionedList.builder(
+      physics: BouncingScrollPhysics(),
+      itemCount: ticketList?.comments?.length??0,
+      reverse: true,
+      itemScrollController: listScrollController,
+      itemBuilder: (context, i) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ticketList?.comments![(ticketList.comments?.length??0) - 1 - i]?.owner?.role?.isAgent !=
+                null &&
+                ticketList?.comments![(ticketList.comments?.length??0) - 1 - i]?.owner?.role?.isAgent ==
+                    false
+                ? Container(
+              alignment: Alignment.bottomRight,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Card(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(16),
+                              topLeft: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16))),
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 1.sw * .6,
+                        ),
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(16),
+                            topLeft: Radius.circular(16),
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(16),
+                          ),
+                        ),
+                        /*child: Text(
+                                document[STR_CONTENT],
+                                style: TextStyle(
+                                    color: Color(CommonUtil().getMyPrimaryColor())),
+                              ),*/
+                        child: ticketList?.comments![(ticketList?.comments?.length??0) -
+                            1 -
+                            i]
+                            .comment !=
+                            null
+                            ? Text(
+                            '${_parseHtmlString(ticketList.comments![(ticketList.comments?.length??0) - 1 - i].comment)}',
+                            style: TextStyle(color: Colors.white))
+                            : Text('Hi I have a query !!',
+                            style: TextStyle(color: Colors.white)),
+                      )),
+                  Flexible(
+                    flex: 1,
+                    child: new Container(
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                        },
+                        elevation: 2.0,
+                        fillColor:
+                        Color(CommonUtil().getMyPrimaryColor()),
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => Container(
+                            child: CommonCircularIndicator(),
+                            width: 30.w,
+                            height: 30.h,
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color:
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Material(
+                            child: Image.asset(
+                              'assets/maya/maya_india_main.png',
+                              width: 30.w,
+                              height: 30.h,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                          imageUrl: '',
+                          width: 30.w,
+                          height: 30.h,
+                          fit: BoxFit.cover,
+                        ),
+                        padding: EdgeInsets.all(12.0),
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+                : Container(),
+            SizedBox(height: 15.h),
+            ticketList.comments![(ticketList.comments?.length??0) - 1 - i].owner?.role?.isAgent !=
+                null &&
+                (ticketList.comments![(ticketList.comments?.length??0) - 1 - i].owner?.role?.isAgent??false)
+                ? Container(
+              alignment: Alignment.bottomLeft,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: new Container(
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                        },
+                        elevation: 2.0,
+                        fillColor:
+                        Color(CommonUtil().getMyPrimaryColor()),
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => Container(
+                            child: CommonCircularIndicator(),
+                            width: 30.w,
+                            height: 30.h,
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color:
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Material(
+                            child: Image.asset(
+                              'assets/user/profile_pic_ph.png',
+                              width: 30.w,
+                              height: 30.h,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                          imageUrl: '',
+                          width: 30.w,
+                          height: 30.h,
+                          fit: BoxFit.cover,
+                        ),
+                        padding: EdgeInsets.all(12.0),
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                  ),
+                  Card(
+                      color: Colors.grey[200],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(16),
+                              topLeft: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16))),
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 1.sw * .6,
+                        ),
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(16),
+                            topLeft: Radius.circular(16),
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(16),
+                          ),
+                        ),
+                        /*child: Text(
+                                document[STR_CONTENT],
+                                style: TextStyle(
+                                    color: Color(CommonUtil().getMyPrimaryColor())),
+                              ),*/
+                        child: ticketList
+                            .comments![(ticketList.comments?.length??0) -
+                            1 -
+                            i]
+                            .comment !=
+                            null
+                            ? Text(
+                            '${_parseHtmlString(ticketList.comments![(ticketList.comments?.length??0) - 1 - i]?.comment)}',
+                            style: TextStyle(color: Colors.black))
+                            : Text('Hi !!',
+                            style: TextStyle(color: Colors.black)),
+                      )),
+                ],
+              ),
+            )
+                : Container(),
+          ],
+        );
+      },
+    );
+  }
 
-  // String _parseHtmlString(String htmlString) {
-  //   RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+  String? _parseHtmlString(String? htmlString) {
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
 
-  //   return htmlString.replaceAll(exp, '');
-  // }
+    return htmlString?.replaceAll(exp, '');
+  }
 
-  // void onSendMessage(var comment, var ticketList) {
-  //   try {
-  //     strConstants.tckComment = comment;
-  //     strConstants.tckID = ticketList.sId; //1038
-  //     print(
-  //         'Values for comment : ${strConstants.tckComment}\n${strConstants.tckID}');
-  //     ticketViewModel.userTicketService.commentTicket().then((value) {
-  //       if (value != null) {
-  //         addCommentController.clear();
-  //         callTicketDetailsApi();
-  //         print('Hitting Send Comments API .. : ${value.toJson()}');
-  //       } else {
-  //         print('Failed Sending Comments ..');
-  //         return null;
-  //       }
-  //     }).catchError((e) {
-  //       print('Comment ticket exception in catch error: ${e.toString()}');
-  //       return null;
-  //     });
-  //   } catch (e) {
-  //     print('Comment ticket exception : ${e.toString()}');
-  //     return null;
-  //   }  FU2.5
+  void onSendMessage(var comment, var ticketList) {
+    try {
+      strConstants.tckComment = comment;
+      strConstants.tckID = ticketList.sId; //1038
+      print(
+          'Values for comment : ${strConstants.tckComment}\n${strConstants.tckID}');
+      ticketViewModel.userTicketService.commentTicket().then((value) {
+        if (value != null) {
+          addCommentController.clear();
+          callTicketDetailsApi();
+          print('Hitting Send Comments API .. : ${value.toJson()}');
+        } else {
+          print('Failed Sending Comments ..');
+          return null;
+        }
+      }).catchError((e) {
+        print('Comment ticket exception in catch error: ${e.toString()}');
+        return null;
+      });
+    } catch (e) {
+      print('Comment ticket exception : ${e.toString()}');
+      return null;
+    }
   }
 
   void uploadFile(String ticketId, file) {

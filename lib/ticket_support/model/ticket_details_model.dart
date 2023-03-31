@@ -142,7 +142,7 @@ class Ticket {
         });
       }
       if (json['notes'] != null) {
-            notes = <Null>[] as List<Notes>?;
+        notes = <Notes>[];
         json['notes'].forEach((v) {
           notes!.add(new Notes.fromJson(v));
         });
