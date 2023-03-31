@@ -3309,12 +3309,7 @@ class CommonDialogBox {
   }
 
   Widget getIconButton() {
-    return IconButton(
-      icon: Icon(Icons.arrow_drop_down),
-      color: Color(CommonUtil().getMyPrimaryColor()),
-      iconSize: 40,
-      onPressed: () {},
-    );
+    return Icon(Icons.arrow_drop_down,color: Color(CommonUtil().getMyPrimaryColor()),size: 40,);
   }
 
   void filterDuplicateDoctor() {
