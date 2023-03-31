@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
@@ -126,7 +127,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   var healthRecordList;
   String? authToken;
   MenuItem? dropdownValue;
-  Future<Map<String?, List<MenuItem>>>? healthConditions;
+  Future<Map<String?, List<MenuItem>>?>? healthConditions;
   Map<String?, List<MenuItem>>? healthConditionsResult;
   var packageName;
   var package_title_ctrl = TextEditingController(text: '');
@@ -202,11 +203,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           _providersBloc!.getMedicalPreferencesForHospital();
       healthConditions =
           Provider.of<PlanWizardViewModel>(context, listen: false)
-              .getHealthConditions() as Future<Map<String?, List<MenuItem>>>?;
+              ?.getHealthConditions();
 
       setBooleanValues();
     } catch (e) {
-      //print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -2861,7 +2864,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   Widget getExpandedDropdownForCategory() {
-    return FutureBuilder<Map<String?, List<MenuItem>>>(
+    return FutureBuilder<Map<String?, List<MenuItem>>?>(
       future: healthConditions,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -3075,8 +3078,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         }
       }
       setState(() {
-        textEditingControllers[CommonUtil().getFieldName(field.name)]!.text =
-            field.selValueDD!.name! != null ? field.selValueDD!.name! : '';
+        textEditingControllers[CommonUtil().getFieldName(field.name)]?.text =
+            field.selValueDD!.name! ?? '';
       });
       onRefreshWidget();
     } catch (e) {}
