@@ -20,6 +20,7 @@ import 'package:myfhb/language/model/Language.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/model/TagsResult.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
@@ -879,19 +880,16 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  Widget getDropDownWithTagsdrop() {
-    return FutureBuilder(
+ Widget getDropDownWithTagsdrop() {
+    return FutureBuilder<TagsResult>(
         future: _healthReportListForUserRepository.getTags(),
         builder: (context, snapshot) {
           if (!snapshot.hasData ) {
             return CommonCircularIndicator();
           }
         
-        
-          final List<Tags> tagslist = snapshot.data as List<Tags>; // snapshot.data.result to snapshot.data
-
+          final List<Tags>? tagslist = snapshot.data!.result; // snapshot.data.result to snapshot.data
           //  final mediaResultFiltered = removeUnwantedCategories(tagslist);
-
           setTheValuesForDropdown(tagslist);
           return Taglist(
             isClickable: true,
