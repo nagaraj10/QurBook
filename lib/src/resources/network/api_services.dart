@@ -53,7 +53,7 @@ class ApiServices {
 
   static Future<Response?> post(
     String path, {
-    Map<String, String?>? headers,
+    Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
     timeOutSeconds = 20,
@@ -68,7 +68,7 @@ class ApiServices {
           .post(
             Uri.parse(_baseUrl + path),
             body: body,
-            headers: headers as Map<String, String>?,
+            headers: headers,
             encoding: encoding,
           )
           .timeout(
