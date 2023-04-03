@@ -5892,101 +5892,110 @@ class VideoCallCommonUtils {
       String? patientPrescriptionId,
       required String callType,
       required String isFrom}) async {
-    //bool isCallSent = false;
-    final apiResponse = QurHomeApiProvider();
-    await PreferenceUtil.init();
-    //var regController = Get.put<QurhomeRegimenController>();
-    var regController = CommonUtil().onInitQurhomeRegimenController();
-    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    var docName = regController.userName.value;
-    var randomMID = getMyMeetingID();
-    var mID = (bookId.isNotEmpty || bookId != null) ? bookId : randomMID;
-    vsPayLoad.Payload payLoad = vsPayLoad.Payload(
-        type:
-            regController.isFromSOS.value ? "sos" : keysConstant.c_ns_type_call,
-        //type: keysConstant.c_ns_type_call,
-        priority: regController.isFromSOS.value ? "high" : "",
-        userId: regController.careCoordinatorId.value,
-        meetingId: mID as String?,
-        patientId: patChatId != null ? patChatId : '',
-        patientName: patName != null ? patName : '',
-        patientPicture: patientPicUrl != null ? patientPicUrl : '',
-        userName: regController.userName.value,
-        callType: callType,
-        isWeb: 'false',
-        // this will be always false when sent from mobile
-        patientPhoneNumber: regController.userMobNo.value);
 
-    Content _content = Content(
-      messageTitle: docName != null ? /*jsonDecode(docName)*/ docName : null,
-      messageBody: callType == 'video'
-          ? keysConstant.c_ns_msg_video
-          : keysConstant.c_ns_msg_audio,
-    );
 
-    MessageDetails msg =
-        new MessageDetails(content: _content, payload: payLoad);
+    try {
+      //bool isCallSent = false;
+      final apiResponse = QurHomeApiProvider();
+      await PreferenceUtil.init();
+      //var regController = Get.put<QurhomeRegimenController>();
+      var regController = CommonUtil().onInitQurhomeRegimenController();
+      var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      var docName = regController.userName.value;
+      var randomMID = getMyMeetingID();
+      var mID = (bookId.isNotEmpty || bookId != null) ? bookId : randomMID;
+      vsPayLoad.Payload payLoad = vsPayLoad.Payload(
+          type:
+          regController.isFromSOS.value ? "sos" : keysConstant.c_ns_type_call,
+          //type: keysConstant.c_ns_type_call,
+          priority: regController.isFromSOS.value ? "high" : "",
+          userId: regController.careCoordinatorId.value,
+          meetingId: mID as String?,
+          patientId: patChatId != null ? patChatId : '',
+          patientName: patName != null ? patName : '',
+          patientPicture: patientPicUrl != null ? patientPicUrl : '',
+          userName: regController.userName.value,
+          callType: callType,
+          isWeb: 'false',
+          // this will be always false when sent from mobile
+          patientPhoneNumber: regController.userMobNo.value);
 
-    CallPushNSModel callModel = CallPushNSModel(
-        recipients: [
-          (regController.careCoordinatorId.value != null
-              ? regController.careCoordinatorId.value
-              : null)!
-        ],
-        messageDetails: msg,
-        transportMedium: [keysConstant.c_trans_medium_push],
-        saveMessage: false);
+      Content _content = Content(
+        messageTitle: docName != null ? /*jsonDecode(docName)*/ docName : null,
+        messageBody: callType == 'video'
+            ? keysConstant.c_ns_msg_video
+            : keysConstant.c_ns_msg_audio,
+      );
 
-    authToken = authToken != null ? /*jsonDecode(authToken)*/ authToken : '';
+      MessageDetails msg =
+      new MessageDetails(content: _content, payload: payLoad);
 
-    var isCallSent = await apiResponse.callMessagingAPI(
-        token: authToken, callModel: callModel);
+      CallPushNSModel callModel = CallPushNSModel(
+          recipients: [
+            (regController.careCoordinatorId.value != null
+                ? regController.careCoordinatorId.value
+                : null)!
+          ],
+          messageDetails: msg,
+          transportMedium: [keysConstant.c_trans_medium_push],
+          saveMessage: false);
 
-    CallMetaData callMeta;
-    if (isCallSent) {
-      //call has been sent to patient
-      if (isFromAppointment!) {
-        callMeta = CallMetaData(
-          mID as String,
-          appointmentId!,
-          patName!,
-          patId!,
-          patientDOB!,
-          patientPicUrl!,
-          gender!,
-          docName,
-          healthRecord!,
-          patientPrescriptionId!,
-          slotDuration: slotDuration,
+      authToken = authToken != null ? /*jsonDecode(authToken)*/ authToken : '';
+
+      var isCallSent = await apiResponse.callMessagingAPI(
+          token: authToken, callModel: callModel);
+
+      CallMetaData callMeta;
+      if (isCallSent) {
+        //call has been sent to patient
+        if (isFromAppointment!) {
+          callMeta = CallMetaData(
+            mID as String,
+            appointmentId!,
+            patName!,
+            patId!,
+            patientDOB!,
+            patientPicUrl!,
+            gender!,
+            docName,
+            healthRecord!,
+            patientPrescriptionId!,
+            slotDuration: slotDuration,
+          );
+        } else {
+          callMeta = CallMetaData(mID as String, '', patName??"", patId??"", patientDOB ?? '',
+              patientPicUrl??"", '', docName??"", healthRecord!=null?healthRecord:null, patientPrescriptionId??"");
+        }
+        regController.loadingData.value = false;
+        regController.meetingId.value = CommonUtil().validString(mID.toString());
+        Navigator.push(
+          context!,
+          MaterialPageRoute(
+            builder: (context) => CallingPage(
+              id: mID,
+              name: regController.isFromSOS.value
+                  ? emergencyServices
+                  : regController.careCoordinatorName.value,
+              callMetaData: callMeta,
+              healthOrganizationId: healthOrganizationId,
+              isCallActualTime: isCallActualTime,
+              patienInfo: patienInfo,
+              isFromAppointment: isFromAppointment,
+            ),
+          ),
         );
       } else {
-        callMeta = CallMetaData(mID as String, '', patName!, patId!, patientDOB ?? '',
-            patientPicUrl!, '', docName, healthRecord!, patientPrescriptionId!);
+        // FlutterToast()
+        //     .getToast('could not start call,please try again!', Colors.red);
       }
-      regController.loadingData.value = false;
-      regController.meetingId.value = CommonUtil().validString(mID.toString());
-      Navigator.push(
-        context!,
-        MaterialPageRoute(
-          builder: (context) => CallingPage(
-            id: mID,
-            name: regController.isFromSOS.value
-                ? emergencyServices
-                : regController.careCoordinatorName.value,
-            callMetaData: callMeta,
-            healthOrganizationId: healthOrganizationId,
-            isCallActualTime: isCallActualTime,
-            patienInfo: patienInfo,
-            isFromAppointment: isFromAppointment,
-          ),
-        ),
-      );
-    } else {
-      // FlutterToast()
-      //     .getToast('could not start call,please try again!', Colors.red);
+
+      //return isCallSent;
+    } catch (e) {
+      if(kDebugMode){
+      print(e);
+      }
     }
 
-    //return isCallSent;
   }
 
   String capitalizeFirstofEach(String data) {
