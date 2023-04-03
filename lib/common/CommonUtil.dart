@@ -1976,11 +1976,13 @@ class CommonUtil {
     var jsonParam;
     final _firebaseMessaging = FirebaseMessaging.instance;
     final apiBaseHelper = ApiBaseHelper();
-    var token = '';
+    String? token = '';
     try {
-      token = await (_firebaseMessaging.getToken() as FutureOr<String>);
-    } catch (e) {}
-    await PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token!);
+      token = await _firebaseMessaging.getToken();
+    } catch (e) {
+
+    }
+    await PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token??'not available');
     var deviceInfo = Map<String, dynamic>();
     var user = Map<String, dynamic>();
     var jsonData = Map<String, dynamic>();
@@ -1990,7 +1992,7 @@ class CommonUtil {
     deviceInfo['phoneNumber'] = userMobileNo;
     deviceInfo['email'] = email;
     deviceInfo['isActive'] = isActive;
-    deviceInfo['deviceTokenId'] = token;
+    deviceInfo['deviceTokenId'] = token??'NOT AVAILABLE';
 
     jsonData['deviceInfo'] = deviceInfo;
     if (Platform.isIOS) {
