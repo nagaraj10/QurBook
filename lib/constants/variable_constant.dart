@@ -663,7 +663,7 @@ const String strDefaultUI = 'Set Qurhome as default UI';
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
-const String strGoToQurbook = 'Go to Qurbook';
+const String strAdvancedRegimen = 'Advanced Regimen';
 const String strConnectedDevices = 'Connected Devices';
 const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
@@ -855,7 +855,7 @@ const String strGetCityList = 'Getting City List';
 const String strSelValidMsg = 'Please select a valid';
 const String strActivityCompleted = 'The activity has been completed already.';
 const String strPastActivityMsgOne = 'To access past activities please use';
-const String strPastActivityMsgTwo = '\nGo to Qurbook';
+const String strPastActivityMsgTwo = '\n$strAdvancedRegimen';
 const String strPastActivityMsgThree = ' from menu.';
 const String strLocationLink = "Location link";
 const String strCentreVisit = 'Centre Visit';
