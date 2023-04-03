@@ -394,18 +394,18 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
       decodesstring = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
       saveuser.auth_token = decodesstring;
       final bool isSkipMFA =
-          parseJwtPayLoad(decodesstring!)[strToken][strIsSkipMFA];
+          parseJwtPayLoad(decodesstring??'')[strToken][strIsSkipMFA];
       isVirtualNumber =
           parseJwtPayLoad(decodesstring!)[strToken][strIsVirtualNumberUser];
       print(isSkipMFA);
       if (isSkipMFA) {
         final String userId =
-            parseJwtPayLoad(decodesstring!)[strToken][strUserId];
+            parseJwtPayLoad(decodesstring??'')[strToken][strUserId];
 
         saveuser.userId = userId;
-        id_token_string = parseJwtPayLoad(decodesstring!)[strToken]
+        id_token_string = parseJwtPayLoad(decodesstring??'')[strToken]
             [strProviderPayLoad][strIdToken];
-        final idTokens = parseJwtPayLoad(id_token_string!);
+        final idTokens = parseJwtPayLoad(id_token_string??'');
         print(idTokens);
         user_mobile_no = idTokens[strphonenumber];
         print(idTokens[strphonenumber]);
@@ -434,9 +434,10 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
         authToken = decodesstring;
         final _firebaseMessaging = FirebaseMessaging.instance;
         var token = await _firebaseMessaging.getToken();
+        print('tokenavailable: '+token.toString());
         await CommonUtil()
             .sendDeviceToken(
-                userId, saveuser.email, user_mobile_no, token, true)
+                userId, saveuser.email, user_mobile_no, token??'NOT AVAILABLE', true)
             .then((value) {
           LoaderClass.hideLoadingDialog(context);
           if (value != null) {
