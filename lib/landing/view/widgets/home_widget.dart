@@ -49,7 +49,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     try {
       getConfiguration();
       super.initState();
-      initilizeViewModel();
+      //initilizeViewModel();
     } catch (e) {
       print(e);
     }
@@ -79,7 +79,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    initilizeViewModel();
+    //initilizeViewModel();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

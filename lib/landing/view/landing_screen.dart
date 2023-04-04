@@ -113,7 +113,7 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     try {
       super.initState();
-
+      onInit();
       SystemChannels.lifecycle.setMessageHandler((msg) {
         if (msg == AppLifecycleState.resumed.toString()) {
           imageCache!.clear();
@@ -121,13 +121,13 @@ class _LandingScreenState extends State<LandingScreen> {
           profileData = getMyProfile();
         }
       } as Future<String?> Function(String?)?);
-      onInit();
+
     } catch (e) {
       //print(e);
     }
   }
 
-   Future onInit() async {
+   onInit() async {
     try {
       controller.updateNewChatFloatShown(false);
       mInitialTime = DateTime.now();
@@ -660,7 +660,13 @@ class _LandingScreenState extends State<LandingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  CommonUtil().getUserName(),
+                  /*CommonUtil().getUserName()*/myProfile?.result != null &&
+                    myProfile?.result?.firstName != null &&
+                    myProfile?.result?.firstName != ''
+                    ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
+                    : myProfile != null
+                    ? 'Hey User'
+                    : '',
                   style: TextStyle(
                     fontSize: CommonUtil().isTablet! ? 20.0.sp : 18.0.sp,
                     color: Colors.white,
