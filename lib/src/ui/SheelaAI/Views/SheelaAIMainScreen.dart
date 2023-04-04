@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -43,6 +42,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.arguments = widget.arguments;
     controller.setDefaultValues();
     controller.bleController = null;
+    controller.bleController = CommonUtil().onInitSheelaBLEController();
+
     controller.startSheelaConversation();
     controller.isSheelaScreenActive = true;
     animationController = AnimationController(

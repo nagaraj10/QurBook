@@ -24,6 +24,7 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
@@ -5734,6 +5735,15 @@ class CommonUtil {
     }
     qurhomeRegimenController = Get.find();
     return qurhomeRegimenController;
+  }
+
+  SheelaBLEController onInitSheelaBLEController() {
+    SheelaBLEController sheelaBLEController;
+    if (!Get.isRegistered<SheelaBLEController>()) {
+      Get.put(SheelaBLEController());
+    }
+    sheelaBLEController = Get.find();
+    return sheelaBLEController;
   }
 
   QurhomeDashboardController onInitQurhomeDashboardController() {
