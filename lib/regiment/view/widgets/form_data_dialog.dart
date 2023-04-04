@@ -245,6 +245,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                   child: FormFieldWidget(
                     canEdit: widget.canEdit ?? false,
                     fieldData: fieldsData[index],
+                    isFromQurHomeRegimen:widget.isFromQurHomeRegimen,
                     isFromQurHomeSymptom: widget.isFromQurHomeSymptom ||
                         widget.isFromQurHomeRegimen,
                     updateValue: (
