@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
-import 'package:myfhb/Qurhome/QurHomeSymptoms/services/SymptomService.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
@@ -93,7 +93,6 @@ class FormDataDialogState extends State<FormDataDialog> {
 
   var saveResponse;
 
-  final _apiProvider = SymptomService();
 
   var actvityStatus = '';
 
@@ -128,475 +127,87 @@ class FormDataDialogState extends State<FormDataDialog> {
     initDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     setCurrentTime();
-    /*return AlertDialog(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Text(
-              widget.formTitle,
-              style: TextStyle(
-                fontSize: 16.0.sp,
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.close,
-              size: 24.0.sp,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-      ),
-      titlePadding: EdgeInsets.only(
-        top: 10.0.h,
-        right: 5.0.w,
-        left: 15.0.w,
-        bottom: 10.0.h,
-      ),
-      content: Container(
-        width: 0.75.sw,
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Container(
-              width: 0.75.sw,
-              padding: EdgeInsets.only(
-                bottom: 10.0.h,
-                left: 10.0.w,
-                right: 10.0.w,
-              ),
-              child: Form(
-                key: _formKey,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(
-                    bottom: 10.0.h,
-                    top: 0.0.h,
+    return widget.isFromQurHomeRegimen ?? false
+        ? Scaffold(
+            appBar: AppBar(
+              backgroundColor: Color(CommonUtil().getQurhomePrimaryColor()),
+              toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+              elevation: 0,
+              centerTitle: false,
+              titleSpacing: 0,
+              title: Flexible(
+                child: Text(
+                  widget.formTitle,
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: fieldsData.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom: 10.0.h,
-                      ),
-                      child: FormFieldWidget(
-                        canEdit: widget.canEdit ?? false,
-                        fieldData: fieldsData[index],
-                        updateValue: (
-                          updatedFieldData, {
-                          isAdd,
-                          title,
-                        }) {
-                          if (isAdd == null || isAdd) {
-                            isAdd = isAdd ?? false;
-                            final oldValue = saveMap.putIfAbsent(
-                              isAdd
-                                  ? 'pf_$title'
-                                  : 'pf_${updatedFieldData.title}',
-                              () => updatedFieldData.value,
-                            );
-                            if (oldValue != null) {
-                              saveMap[isAdd
-                                      ? 'pf_$title'
-                                      : 'pf_${updatedFieldData.title}'] =
-                                  updatedFieldData.value;
-                            }
-                          } else {
-                            saveMap.remove('pf_$title');
-                          }
-                        },
-                      ),
-                    );
-                  },
+                  textAlign: TextAlign.start,
                 ),
               ),
+              leading: IconWidget(
+                icon: Icons.arrow_back_ios,
+                colors: Colors.white,
+                size: CommonUtil().isTablet ? 38.0 : 24.0,
+                onTap: () {
+                  Get.back(result: false);
+                },
+              ),
             ),
-            Container(
-              width: 0.75.sw,
+            body: Container(
+              padding: EdgeInsets.only(
+                top: 5.0.h,
+                left: 15.0.w,
+                right: 15.0.w,
+                //bottom: 15.0.w,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Visibility(
-                    visible: mediaData.needPhoto == '1',
-                    child: InkWell(
-                      onTap: widget.canEdit
-                          ? () {
-                              _showSelectionDialog(context);
-                            }
-                          : null,
-                      child: ValueListenableBuilder(
-                        valueListenable: isUploading,
-                        builder: (contxt, val, child) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              MediaIconWidget(
-                                color: color,
-                                icon: Icons.camera_alt,
-                                padding: 10.0.sp,
-                              ),
-                              Expanded(
-                                child: SizedBox(
-                                  //width: 250.0.w,
-                                  child: Text(
-                                    imageFileName,
-                                    style: TextStyle(
-                                      fontSize: 14.0.sp,
-                                      color: Colors.grey[500],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              val
-                                  ? SizedBox(
-                                      width: 20.0.w,
-                                      height: 18.0.h,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                width: 5,
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: mediaData.needAudio == '1',
-                    child: InkWell(
-                      onTap: widget.canEdit
-                          ? () {
-                              Navigator.of(context)
-                                  .push(
-                                MaterialPageRoute(
-                                  builder: (context) => AudioRecorder(
-                                    arguments: AudioScreenArguments(
-                                      fromVoice: false,
-                                    ),
-                                  ),
-                                ),
-                              )
-                                  .then((results) {
-                                final String audioPath =
-                                    results[Constants.keyAudioFile];
-                                if (audioPath != null && audioPath != '') {
-                                  imagePaths = audioPath;
-                                  setState(() {
-                                    audioFileName = strUploading;
-                                  });
-                                  if (imagePaths != null && imagePaths != '') {
-                                    saveMediaRegiment(imagePaths).then((value) {
-                                      if (value.isSuccess) {
-                                        setState(() {
-                                          audioFileName =
-                                              audioPath.split('/').last;
-                                        });
-                                        final oldValue = saveMap.putIfAbsent(
-                                          'audio',
-                                          () => value.result.accessUrl,
-                                        );
-                                        if (oldValue != null) {
-                                          saveMap['audio'] =
-                                              value.result.accessUrl;
-                                        }
-                                      } else {
-                                        setState(() {
-                                          audioFileName = 'Add Audio';
-                                        });
-                                      }
-                                    });
-                                  }
-                                }
-                              });
-                            }
-                          : null,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          MediaIconWidget(
-                            color: color,
-                            icon: Icons.mic,
-                            padding: 10.0.sp,
-                          ),
-                          SizedBox(
-                            width: 250.0.w,
-                            child: Text(
-                              audioFileName,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: mediaData.needVideo == '1',
-                    child: InkWell(
-                      onTap: widget.canEdit
-                          ? () {
-                              getOpenGallery(strVideo);
-                            }
-                          : null,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          MediaIconWidget(
-                            color: color,
-                            icon: Icons.videocam,
-                            padding: 10.0.sp,
-                          ),
-                          SizedBox(
-                            width: 250.0.w,
-                            child: Text(
-                              videoFileName,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: mediaData.needFile == '1',
-                    child: InkWell(
-                      onTap: widget.canEdit
-                          ? () {
-                              getOpenGallery(strFiles);
-                            }
-                          : null,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          MediaIconWidget(
-                            color: color,
-                            icon: Icons.attach_file,
-                            padding: 10.0.sp,
-                          ),
-                          SizedBox(
-                            width: 250.0.w,
-                            child: Text(
-                              docFileName,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-                width: 0.75.sw,
-                padding: EdgeInsets.only(
-                  bottom: 4.0.h,
-                  left: 10.0.w,
-                  right: 10.0.w,
-                ),
-                child: Visibility(
-                  child: Text(
-                    (Provider.of<RegimentViewModel>(context, listen: false)
-                                .regimentMode ==
-                            RegimentMode.Symptoms)
-                        ? symptomsError
-                        : activitiesError,
+                  Text(
+                    widget.introText ?? '',
+                    maxLines: 10,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.fade,
                     style: TextStyle(
-                      fontSize: 14.0.sp,
-                      color: Colors.red[500],
-                    ),
+                        color: Color(CommonUtil().getQurhomePrimaryColor()),
+                        fontSize: 18.h),
                   ),
-                  visible: widget.canEdit ? false : true,
-                )),
-            Container(
-              child: Column(
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      initDate = await selectDate(context, initDate);
-                      setState(() {});
-                    },
-                    child: Container(
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 4.w),
-                          Text(
-                            'Select Date:',
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.calendar_today, size: 16.sp),
-                            onPressed: () async {
-                              initDate = await selectDate(context, initDate);
-                              setState(() {});
-                            },
-                          ),
-                          Text(
-                            '${CommonUtil.dateConversionToApiFormat(initDate)}',
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      timeText = await selectTime(context);
-                      setState(() {});
-                    },
-                    child: Container(
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 4.w),
-                          Text(
-                            'Select Time:',
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.access_time, size: 16.sp),
-                            onPressed: () async {
-                              timeText = await selectTime(context);
-                              setState(() {});
-                            },
-                          ),
-                          Text(
-                            '${timeText}',
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  if ((widget.introText ?? '').trim().isNotEmpty)
+                    SizedBox(height: 5.0)
+                  else
+                    SizedBox.shrink(),
+                  Expanded(child: getBody()),
                 ],
               ),
             ),
-            Container(
-              width: 0.75.sw,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ValueListenableBuilder(
-                      valueListenable: isUploading,
-                      builder: (contxt, val, child) {
-                        return RaisedButton(
-                            onPressed: (!val)
-                                ? () async {
-                                    if (widget.canEdit) {
-                                      if (_formKey.currentState.validate()) {
-                                        var events = '';
-                                        saveMap.forEach((key, value) {
-                                          events += '&$key=$value';
-                                        });
-                                        LoaderClass.showLoadingDialog(
-                                          Get.context,
-                                          canDismiss: false,
-                                        );
-                                        final saveResponse = await Provider.of<
-                                                    RegimentViewModel>(context,
-                                                listen: false)
-                                            .saveFormData(
-                                          eid: eid,
-                                          events: events,
-                                          isFollowEvent: widget.isFollowEvent,
-                                          followEventContext:
-                                              widget.followEventContext,
-                                        );
-                                        if (saveResponse?.isSuccess ?? false) {
-                                          LoaderClass.hideLoadingDialog(
-                                              Get.context);
-                                          if (Provider.of<RegimentViewModel>(
-                                                      context,
-                                                      listen: false)
-                                                  .regimentStatus ==
-                                              RegimentStatus.DialogOpened) {
-                                            Navigator.pop(context, true);
-                                          }
-                                          checkForReturnActions(
-                                            returnAction: saveResponse
-                                                ?.result?.actions?.returnData,
-                                          );
-                                        }
-                                      }
-                                    } else {
-                                      FlutterToast().getToast(
-                                        (Provider.of<RegimentViewModel>(context,
-                                                        listen: false)
-                                                    .regimentMode ==
-                                                RegimentMode.Symptoms)
-                                            ? symptomsError
-                                            : activitiesError,
-                                        Colors.red,
-                                      );
-                                    }
-                                  }
-                                : null,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                5.0.sp,
-                              )),
-                            ),
-                            child: Text(
-                              saveButton,
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
-                                color: Colors.white,
-                              ),
-                            ));
-                      }),
-                ],
-              ),
+            floatingActionButton: onSaveBtn(),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+          )
+        : AlertDialog(
+            title: getTitle(),
+            titlePadding: EdgeInsets.only(
+              top: 10.0.h,
+              right: 5.0.w,
+              left: 15.0.w,
+              bottom: 10.0.h,
             ),
-          ],
-        ),
-      ),
-      contentPadding: EdgeInsets.only(
-        top: 0.0.h,
-        left: 10.0.w,
-        right: 10.0.w,
-        bottom: 10.0.w,
-      ),
-    );*/
-    return AlertDialog(
-      title: getTitle(),
-      titlePadding: EdgeInsets.only(
-        top: 10.0.h,
-        right: 5.0.w,
-        left: 15.0.w,
-        bottom: 10.0.h,
-      ),
-      content: getBody(),
-      contentPadding: EdgeInsets.only(
-        top: 0.0.h,
-        left: 10.0.w,
-        right: 10.0.w,
-        bottom: 10.0.w,
-      ),
-    );
+            content: getBody(),
+            contentPadding: EdgeInsets.only(
+              top: 0.0.h,
+              left: 10.0.w,
+              right: 10.0.w,
+              bottom: 10.0.w,
+            ),
+          );
   }
 
   getBody() {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Container(
-        width: 0.75.sw,
+        width: widget.isFromQurHomeRegimen??false
+            ? double.infinity:0.75.sw,
         child: getListView(),
       );
     });
@@ -605,9 +216,12 @@ class FormDataDialogState extends State<FormDataDialog> {
   getListView() {
     return ListView(
       shrinkWrap: true,
+      padding: EdgeInsets.only(bottom: widget.isFromQurHomeRegimen??false
+          ? 100:0),
       children: [
         Container(
-          width: 0.75.sw,
+          width: widget.isFromQurHomeRegimen??false
+              ? double.infinity:0.75.sw,
           padding: EdgeInsets.only(
             bottom: 10.0.h,
             left: 10.0.w,
@@ -661,7 +275,8 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
         ),
         Container(
-          width: 0.75.sw,
+          width: widget.isFromQurHomeRegimen??false
+              ? double.infinity:0.75.sw,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -854,7 +469,8 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
         ),
         Container(
-            width: 0.75.sw,
+            width: widget.isFromQurHomeRegimen??false
+                ? double.infinity:0.75.sw,
             padding: EdgeInsets.only(
               bottom: 4.0.h,
               left: 10.0.w,
@@ -950,69 +566,76 @@ class FormDataDialogState extends State<FormDataDialog> {
               ],
             ),
           ),
-        Container(
-          width: 0.75.sw,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ValueListenableBuilder(
-                  valueListenable: isUploading,
-                  builder: (contxt, val, child) {
-                    return RaisedButton(
-                        onPressed: (!val)
-                            ? () async {
-                                if (widget.canEdit) {
-                                  if (_formKey.currentState.validate()) {
-                                    if (actvityStatus == UnSubscribed ||
-                                        actvityStatus == Expired) {
-                                      var message =
-                                          (actvityStatus == UnSubscribed)
-                                              ? UnSubscribed
-                                              : Expired;
-                                      CommonUtil().showDialogForActivityStatus(
-                                          'Plan $message, $msgData', context,
-                                          pressOk: () {
-                                        Get.back();
-                                        clickSaveButton();
-                                      });
-                                    } else {
-                                      clickSaveButton();
-                                    }
-                                  }
+        widget.isFromQurHomeRegimen??false
+            ? SizedBox.shrink():onSaveBtn(),
+      ],
+    );
+  }
+
+  Widget onSaveBtn() {
+    return Container(
+      width: widget.isFromQurHomeRegimen ?? false ? double.infinity : 0.75.sw,
+      margin: EdgeInsets.only(
+        bottom: widget.isFromQurHomeRegimen ?? false ? 5.0.h : 0.0,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ValueListenableBuilder(
+              valueListenable: isUploading,
+              builder: (contxt, val, child) {
+                return RaisedButton(
+                    onPressed: (!val)
+                        ? () async {
+                            if (widget.canEdit) {
+                              if (_formKey.currentState.validate()) {
+                                if (actvityStatus == UnSubscribed ||
+                                    actvityStatus == Expired) {
+                                  var message = (actvityStatus == UnSubscribed)
+                                      ? UnSubscribed
+                                      : Expired;
+                                  CommonUtil().showDialogForActivityStatus(
+                                      'Plan $message, $msgData', context,
+                                      pressOk: () {
+                                    Get.back();
+                                    clickSaveButton();
+                                  });
                                 } else {
-                                  FlutterToast().getToast(
-                                    (Provider.of<RegimentViewModel>(context,
-                                                    listen: false)
-                                                .regimentMode ==
-                                            RegimentMode.Symptoms)
-                                        ? symptomsError
-                                        : activitiesError,
-                                    Colors.red,
-                                  );
+                                  clickSaveButton();
                                 }
                               }
-                            : null,
-                        color: widget.isFromQurHomeSymptom ||
-                                widget.isFromQurHomeRegimen
-                            ? Color(CommonUtil().getQurhomePrimaryColor())
-                            : Color(CommonUtil().getMyPrimaryColor()),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(
-                            5.0.sp,
-                          )),
-                        ),
-                        child: Text(
-                          saveButton,
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
-                            color: Colors.white,
-                          ),
-                        ));
-                  }),
-            ],
-          ),
-        ),
-      ],
+                            } else {
+                              FlutterToast().getToast(
+                                (Provider.of<RegimentViewModel>(context,
+                                                listen: false)
+                                            .regimentMode ==
+                                        RegimentMode.Symptoms)
+                                    ? symptomsError
+                                    : activitiesError,
+                                Colors.red,
+                              );
+                            }
+                          }
+                        : null,
+                    color: widget.isFromQurHomeSymptom ||
+                            widget.isFromQurHomeRegimen
+                        ? Color(CommonUtil().getQurhomePrimaryColor())
+                        : Color(CommonUtil().getMyPrimaryColor()),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(
+                        5.0.sp,
+                      )),
+                    ),
+                    child: Text(
+                      saveButton,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                        color: Colors.white,
+                      ),
+                    ));
+              }),
+        ],
+      ),
     );
   }
 
@@ -1057,6 +680,8 @@ class FormDataDialogState extends State<FormDataDialog> {
               .regimentStatus ==
           RegimentStatus.DialogOpened) {
         Navigator.pop(context, true);
+      } else if (widget.isFromQurHomeRegimen ?? false) {
+        Get.back(result: true);
       }
       checkForReturnActions(
         returnAction: saveResponse?.result?.actions?.returnData,
@@ -1135,7 +760,8 @@ class FormDataDialogState extends State<FormDataDialog> {
                   left: 15.0.w,
                 ),
                 content: Container(
-                  width: 0.75.sw,
+                  width: widget.isFromQurHomeRegimen??false
+                      ? double.infinity:0.75.sw,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
