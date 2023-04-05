@@ -1,21 +1,19 @@
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
-
 class CalendarMonth extends StatefulWidget {
-  CalendarMonth({
-    this.regimentsList,
-  });
 
-  final List<RegimentDataModel> regimentsList;
+
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -24,48 +22,47 @@ class CalendarMonth extends StatefulWidget {
 class _HomePageState extends State<CalendarMonth> {
   Map<DateTime, List<dynamic>> _events;
 
-  // List<EventNewModel> eventNewModel = new List<EventNewModel>();
-  // List<MonthlyAppointmentModel> appointmentModel = new List<MonthlyAppointmentModel>();
   DateTime monthToday = DateTime.now();
   var str_doctorId;
-  List<DateTime> nextMonths = new List();
+  final controller = CommonUtil().onInitQurhomeRegimenController();
 
   @override
   void initState() {
     super.initState();
     _events = {};
-    getNextSixMonth();
-    // createMockDatas();
+    getMonthList();
   }
 
   @override
   void dispose() {
     super.dispose();
-
   }
 
-  getNextSixMonth() {
-    for (int i = 0; i < 6; i++) {
-      nextMonths.add(new DateTime(monthToday.year, (monthToday.month + i), 01));
-    }
+  getMonthList() {
+    controller.getCalendarRegimenList();
   }
 
   Widget getEventList(List<RegimentDataModel> data) {
     try {
       try {
         data = data.toList();
-        // _events = _groupEvents(data);
+        _events = _groupEvents(data);
       } catch (e) {}
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TableCalendar(
-            eventLoader: (DateTime dateTime) => _events[
-            DateTime(dateTime.year, dateTime.month, dateTime.day, 12)],
+            onPageChanged: (dateTime) {
+              controller.getCalendarRegimenList(nextPreviousDate: dateTime);
+            },
+            eventLoader: (DateTime dateTime) {
+              return _events[
+                  DateTime(dateTime.year, dateTime.month, dateTime.day, 12)];
+            },
             calendarFormat: CalendarFormat.month,
-            firstDay: DateTime.now(),
-            focusedDay: DateTime.now(),
+            firstDay: DateTime(2010),
+            focusedDay: controller.selectedDate.value,
             lastDay: DateTime(2200),
             daysOfWeekHeight: 50.0.h,
             calendarStyle: CalendarStyle(
@@ -79,9 +76,9 @@ class _HomePageState extends State<CalendarMonth> {
                 fontSize: 16.0.sp,
               ),
               weekendTextStyle: DaysOfWeekStyle().weekendStyle.copyWith(
-                fontSize: 16.0.sp,
-                color: Colors.red,
-              ),
+                    fontSize: 16.0.sp,
+                    color: Colors.red,
+                  ),
               disabledTextStyle: TextStyle(
                 color: const Color(0xFFBFBFBF),
                 fontSize: 16.0.sp,
@@ -103,9 +100,9 @@ class _HomePageState extends State<CalendarMonth> {
                 fontSize: 16.0.sp,
               ),
               weekendStyle: DaysOfWeekStyle().weekendStyle.copyWith(
-                fontSize: 16.0.sp,
-                color: Colors.red,
-              ),
+                    fontSize: 16.0.sp,
+                    color: Colors.red,
+                  ),
             ),
             headerStyle: HeaderStyle(
               titleCentered: true,
@@ -136,17 +133,9 @@ class _HomePageState extends State<CalendarMonth> {
               formatButtonShowsNext: false,
             ),
             startingDayOfWeek: StartingDayOfWeek.sunday,
-            /* onDaySelected: (date, events) {
-                setState(() {
-                  _selectedEvents = events;
-                });
-              },*/
-            /*onDayLongPressed: (day, events) => {
-                Navigator.pop(context)
-              },*/
-
-            onDaySelected: (day, events) => {
-              Navigator.pop(context, day.toString()),
+            onDaySelected: (day, events) {
+              controller.selectedDate.value = day;
+              Get.back(result: day.toString());
             },
             calendarBuilders: CalendarBuilders(
               selectedBuilder: (context, date, events) => Container(
@@ -172,8 +161,8 @@ class _HomePageState extends State<CalendarMonth> {
                   margin: const EdgeInsets.all(9.0),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(16.0)),
+                      color: Color(CommonUtil().getQurhomePrimaryColor()),
+                      borderRadius: BorderRadius.circular(20.0)),
                   child: Text(
                     date.day.toString(),
                     style: TextStyle(color: Colors.black),
@@ -181,49 +170,15 @@ class _HomePageState extends State<CalendarMonth> {
               markerBuilder: (context, date, events) {
                 final children = <Widget>[];
                 if (events.isNotEmpty) {
-                  children.add(
-                    Container(
-                        margin: EdgeInsets.all(
-                          9.0.sp,
-                        ),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          borderRadius: BorderRadius.circular(
-                            16.0.sp,
-                          ),
-                        ),
-                        child: Text(
-                          date.day.toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0.sp,
-                          ),
-                        )),
-                  );
-
-                  // if (events.isNotEmpty) {
-                  children.add(
-                    Positioned(
-                      right: 4.0.w,
-                      top: 4.0.h,
-                      child: _buildEventsMarker(date),
-                    ),
-                  );
+                  children.add(Container(
+                    height: 7,
+                    width: 7,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.grey),
+                  ));
                 }
-//                      if (holidays.isNotEmpty) {
-//                        children.add(
-//                          Positioned(
-//                            right: -2,
-//                            top: -2,
-//                            child: _buildHolidaysMarker(),
-//                          ),
-//                        );
-//                      }
                 return Stack(
-                  children: [
-                    Container(height: 10,width: 10,color: Colors.orange,)
-                  ],
+                  children: children,
                 );
               },
               // dowBuilder:
@@ -234,60 +189,62 @@ class _HomePageState extends State<CalendarMonth> {
     } catch (e) {}
   }
 
-  Map<DateTime, bool> _groupEvents(List<RegimentDataModel> dataMonthly) {
-    Map<DateTime, bool> data = {};
+  Map<DateTime, List<dynamic>> _groupEvents(
+      List<RegimentDataModel> dataMonthly) {
+    Map<DateTime, List<dynamic>> data = {};
 
     if (dataMonthly.length > 0) {
       for (int j = 0; j < dataMonthly.length; j++) {
         DateTime dateFrmModel = dataMonthly[j].estart;
-        DateTime date = DateTime(dateFrmModel.year, dateFrmModel.month, dateFrmModel.day, 12);
-        //data[date][true];
+        DateTime date = DateTime(
+            dateFrmModel.year, dateFrmModel.month, dateFrmModel.day, 12);
+        List<bool> boolList = [];
+        try {
+          boolList.add(true);
+          data[date] = boolList;
+        } catch (e) {
+          print(e);
+        }
       }
     }
     return data;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Date Picker',
-          style: TextStyle(
-            fontSize: 16.0.sp,
+        appBar: AppBar(
+          backgroundColor: Color(CommonUtil().getQurhomePrimaryColor()),
+          title: Text(
+            CommonUtil().CHOOSE_DATE,
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+          ),
+          leading: IconWidget(
+            icon: Icons.arrow_back_ios,
+            colors: Colors.white,
+            size: 24.0.sp,
+            onTap: () {
+              Navigator.pop(context);
+            },
           ),
         ),
-        leading: IconWidget(
-          icon: Icons.arrow_back_ios,
-          colors: Colors.white,
-          size: 24.0.sp,
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: getEventList([]),
-    );
-  }
-
-
-  Widget _buildEventsMarker(DateTime date) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          border: Border.all(color: Color(CommonUtil().getMyPrimaryColor()))),
-      width: 16.0.h,
-      height: 16.0.h,
-      child: Center(
-        child: TextWidget(
-          text: 'd',
-          colors: Color(CommonUtil().getMyPrimaryColor()),
-          fontsize: 10.0.sp,
-        ),
-      ),
-    );
+        body: Container(
+          child: Obx(
+            () => controller.loadingCalendar.value
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : GetBuilder<QurhomeRegimenController>(
+                    id: "refreshCalendar",
+                    builder: (val) {
+                      return getEventList(controller
+                              .qurHomeRegimenCalendarResponseModel
+                              ?.regimentsList ??
+                          []);
+                    }),
+          ),
+        ));
   }
 }

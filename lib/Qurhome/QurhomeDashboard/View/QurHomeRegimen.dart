@@ -341,9 +341,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: const EdgeInsets.only(left: 16.0),
-                child: IconButton(onPressed: (){
-                  Get.to(CalendarMonth(regimentsList : controller.qurHomeRegimenCalendarResponseModel.regimentsList));
-                }, icon: Icon(Icons.calendar_today)),
+                child: InkWell(onTap: (){
+                  Get.to(CalendarMonth()).then((value){
+                    controller.getRegimenList(isLoading : true,date:value);
+                  });
+                }, child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(icon_calendar,height: 25,width: 25,),
+                )),
               ),
             ),
           ),

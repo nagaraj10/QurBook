@@ -38,10 +38,18 @@ class QurHomeApiProvider {
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
     try {
       RegimentResponseModel regimentsData;
-
+      String selectedDate='';
+      if(date!=null){
+        selectedDate=date;
+      }else{
+        selectedDate=CommonUtil.dateConversionToApiFormat(
+          date!=null?DateTime.now():DateTime.parse(date),
+          isIndianTime: true,
+        );
+      }
       regimentsData = await RegimentService.getRegimentData(
         dateSelected: CommonUtil.dateConversionToApiFormat(
-          DateTime.now(),
+            (date.length==0)?DateTime.now():DateTime.parse(date),
           isIndianTime: true,
         ),
         isSymptoms: 0,
@@ -65,7 +73,7 @@ class QurHomeApiProvider {
     }
   }
 
-  Future<dynamic> getRegimenListCalendar(String date) async {
+  Future<dynamic> getRegimenListCalendar(DateTime startDate,DateTime endDate) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
@@ -74,24 +82,28 @@ class QurHomeApiProvider {
       RegimentResponseModel regimentsData;
 
       regimentsData = await RegimentService.getRegimentDataCalendar(
-        dateSelected: CommonUtil.dateConversionToApiFormat(
-          DateTime.now(),
+        startDate: CommonUtil.dateConversionToApiFormat(
+          startDate,
+          isIndianTime: true,
+        ),
+        endDate: CommonUtil.dateConversionToApiFormat(
+          endDate,
           isIndianTime: true,
         ),
         isSymptoms: 0,
       );
       return regimentsData;
 
-      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.get(
-        '${CommonUtil.BASE_URL_FROM_RES}kiosk/$userId?date=$date',
-        headers: header,
-      );
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return null;
-      }
+      // var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      // responseJson = await ApiServices.get(
+      //   '${CommonUtil.BASE_URL_FROM_RES}kiosk/$userId?date=$date',
+      //   headers: header,
+      // );
+      // if (responseJson.statusCode == 200) {
+      //   return responseJson;
+      // } else {
+      //   return null;
+      // }
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
