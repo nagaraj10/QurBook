@@ -208,52 +208,15 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(height: 8.0.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            appointmentDetailsController.appointmentType.value,
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                          appointmentDetailsController
-                                  .appointmentModeOfService.value
-                                  .trim()
-                                  .isNotEmpty
-                              ? Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      10.0,
-                                    ),
-                                  ),
-                                  color: Color(
-                                    CommonUtil().getMyPrimaryColor(),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 5.0,
-                                      bottom: 5.0,
-                                      left: 8.0,
-                                      right: 8.0,
-                                    ),
-                                    child: Text(
-                                      appointmentDetailsController
-                                          .appointmentModeOfService.value,
-                                      style: TextStyle(
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : SizedBox.shrink(),
-                        ],
+                      Text(
+                        appointmentDetailsController.appointmentType.value,
+                        style: TextStyle(
+                          fontSize: 16.0.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.fade,
+                        maxLines: 2,
                       ),
                       SizedBox(height: 8.0.h),
                       appointmentDetailsController.providerName.value.isNotEmpty
@@ -271,7 +234,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                     fontWeight: FontWeight.w600,
                                   ),
                                   textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 2,
                                 ),
                               ],
@@ -310,15 +273,45 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: 10.h),
-            Text(
-              appointmentSchedule,
-              style: TextStyle(
-                fontSize: 17.0.sp,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.start,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  appointmentSchedule,
+                  style: TextStyle(
+                    fontSize: 17.0.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      10.0,
+                    ),
+                  ),
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: 5.0,
+                      bottom: 5.0,
+                      left: 8.0,
+                      right: 8.0,
+                    ),
+                    child: Text(
+                      appointmentDetailsController
+                          .appointmentModeOfService.value,
+                      style: TextStyle(
+                        fontSize: 12.0.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 10.h),
             commonWidgetForTitleValue(parameters.dateAndTime,
@@ -341,8 +334,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.start,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
             ),
             SizedBox(height: 10.h),
             showWidget(),

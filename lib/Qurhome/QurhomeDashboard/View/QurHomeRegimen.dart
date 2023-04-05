@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -63,7 +62,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   HubListViewController hubController = Get.find();
   late SheelaBLEController _sheelaBLEController;
-  ChatUserListController? chatGetXController  = CommonUtil().onInitChatUserListController();
+  ChatUserListController? chatGetXController =
+      CommonUtil().onInitChatUserListController();
 
   AnimationController? animationController;
 
@@ -99,7 +99,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         controller.dateHeader.value = controller.getFormatedDate();
       });
-
 
       controller.currLoggedEID.value = "";
       controller.isFirstTime.value = true;
@@ -146,8 +145,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             RegimentDataModel? currRegimen = null;
             for (int i = 0;
                 i <
-                        controller.qurHomeRegimenResponseModel!.regimentsList!
-                            .length ;
+                    controller
+                        .qurHomeRegimenResponseModel!.regimentsList!.length;
                 i++) {
               RegimentDataModel regimentDataModel =
                   controller.qurHomeRegimenResponseModel!.regimentsList![i];
@@ -993,7 +992,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     return string.replaceAll('_', '');
   }
 
-  Future<void> onCardPressed(BuildContext context, RegimentDataModel regimen,
+  Future<void> onCardPressed(BuildContext? context, RegimentDataModel? regimen,
       {String? eventIdReturn,
       String? followEventContext,
       String? activityName,
@@ -1002,9 +1001,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       dynamic formId,
       dynamic formName}) async {
     stopRegimenTTS();
-    var eventId = eventIdReturn ?? regimen.eid;
+    var eventId = eventIdReturn ?? regimen!.eid;
     if (eventId == null || eventId == '' || eventId == 0) {
-      final response = await Provider.of<RegimentViewModel>(context,
+      final response = await Provider.of<RegimentViewModel>(context!,
               listen: false)
           .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
       if (response != null && response.isSuccess! && response.result != null) {
@@ -1012,18 +1011,19 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         eventId = response.result?.eid.toString();
       }
     }
-    var canEdit = regimen.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+    var canEdit = regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
+        Provider.of<RegimentViewModel>(context!, listen: false).regimentMode ==
             RegimentMode.Schedule;
     // if (canEdit || isValidSymptom(context)) {
     final fieldsResponseModel =
-        await Provider.of<RegimentViewModel>(context, listen: false)
+        await Provider.of<RegimentViewModel>(context!, listen: false)
             .getFormData(eid: eventId);
 
     if (fieldsResponseModel.isSuccess! &&
         (fieldsResponseModel.result!.fields!.isNotEmpty ||
             regimen.otherinfo!.toJson().toString().contains('1')) &&
-        Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
+        Provider.of<RegimentViewModel>(context!, listen: false)
+                .regimentStatus !=
             RegimentStatus.DialogOpened) {
       if (!Get.isRegistered<SheelaBLEController>()) {
         Get.put(SheelaBLEController());
@@ -1140,7 +1140,40 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);
-        var value = await showDialog(
+
+        Get.to(FormDataDialog(
+          introText: regimen?.otherinfo?.introText ?? '',
+          fieldsData: fieldsResponseModel.result!.fields,
+          eid: eventId,
+          color: Color(CommonUtil().getQurhomePrimaryColor()),
+          mediaData: regimen.otherinfo,
+          formTitle: getDialogTitle(context, regimen, activityName),
+          canEdit: canEdit || isValidSymptom(context),
+          isFromQurHomeSymptom: false,
+          isFromQurHomeRegimen: true,
+          triggerAction: (String? triggerEventId, String? followContext,
+              String? activityName) {
+            Provider.of<RegimentViewModel>(Get.context!, listen: false)
+                .updateRegimentStatus(RegimentStatus.DialogClosed);
+            Get.back();
+            onCardPressed(Get.context, regimen,
+                eventIdReturn: triggerEventId,
+                followEventContext: followContext,
+                activityName: activityName);
+          },
+          followEventContext: followEventContext,
+          isFollowEvent: eventIdReturn != null,
+        ))?.then((value) {
+          if (value != null && (value ?? false)) {
+            FlutterToast().getToast(
+              'Logged Successfully',
+              Colors.red,
+            );
+            controller.showCurrLoggedRegimen(regimen);
+          }
+        });
+
+        /*var value = await showDialog(
           context: context,
           builder: (_) => FormDataDialog(
             introText: regimen.otherinfo?.introText ?? '',
@@ -1165,23 +1198,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             followEventContext: followEventContext!,
             isFollowEvent: eventIdReturn != null,
           ),
-        );
-        if (value != null && (value ?? false)) {
-          // LoaderClass.showLoadingDialog(
-          //   Get.context,
-          //   canDismiss: false,
-          // );
-          // Future.delayed(Duration(milliseconds: 300), () async {
-          //   await Provider.of<RegimentViewModel>(context, listen: false)
-          //       .fetchRegimentData();
-          //   LoaderClass.hideLoadingDialog(Get.context);
-          // });
-          FlutterToast().getToast(
-            'Logged Successfully',
-            Colors.red,
-          );
-          controller.showCurrLoggedRegimen(regimen);
-        }
+        );*/
+
         QurPlanReminders.getTheRemindersFromAPI();
 
         Provider.of<RegimentViewModel>(context, listen: false)
@@ -1530,8 +1548,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   showSOSTimerDialog(BuildContext context) {
     try {
       animationController!.reverse(
-          from:
-              animationController!.value == 0 ? 1.0 : animationController!.value);
+          from: animationController!.value == 0
+              ? 1.0
+              : animationController!.value);
     } catch (e) {
       print(e);
     }
@@ -1739,7 +1758,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     Get.toNamed(
       rt_Sheela,
       arguments: SheelaArgument(showUnreadMessage: true),
-    )!.then((value) {
+    )!
+        .then((value) {
       initSocketCountUnread();
     });
   }

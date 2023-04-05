@@ -1,23 +1,12 @@
 import 'dart:convert' as convert;
-import 'package:get/get.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
-import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
-import 'package:myfhb/chat_socket/model/GetUnreadCountFamily.dart';
-import 'package:myfhb/chat_socket/model/GetUserIdModel.dart';
-import 'package:myfhb/chat_socket/model/InitChatFamilyModel.dart';
-import 'package:myfhb/chat_socket/model/InitChatModel.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_wizard/model/AddToCartModel.dart';
-import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
-import 'package:provider/provider.dart';
+import '../model/CaregiverPatientChatModel.dart';
+import '../model/ChatHistoryModel.dart';
+import '../model/GetUnreadCountFamily.dart';
+import '../model/GetUserIdModel.dart';
+import '../model/InitChatFamilyModel.dart';
+import '../model/InitChatModel.dart';
+import '../../constants/fhb_query.dart';
+import '../../src/resources/network/ApiBaseHelper.dart';
 
 class ChatSocketService {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -59,6 +48,23 @@ class ChatSocketService {
     return InitChatModel.fromJson(response);
   }
 
+  initRRTNotification({
+    String? userId,
+    String? peerId,
+    String? selectedDate,
+  }) async {
+    final body = {
+      "ccId": peerId,
+      "userId": userId,
+      "preferredDate": selectedDate,
+    };
+    var jsonString = convert.jsonEncode(body);
+    await _helper.initRRTNotification(
+      url: qr_init_rrt_notification,
+      jsonString: jsonString,
+    );
+  }
+
   Future<InitChatFamilyModel> initNewFamilyChat(String userId, String peerId,
       String familyName, bool isCareCoordinator, String careCooId) async {
     var body = {
@@ -85,7 +91,7 @@ class ChatSocketService {
     var body = {
       "id": "${userId}",
     };
-    var jsonString = convert.jsonEncode(body);
+    final jsonString = convert.jsonEncode(body);
     final response =
         await _helper.getChatHistory(qr_chat_family_mapping, jsonString);
     return CaregiverPatientChatModel.fromJson(response);

@@ -39,6 +39,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
+    CommonUtil().handleCameraAndMic(onlyMic: true);
     controller.arguments = widget.arguments;
     controller.setDefaultValues();
     controller.bleController = null;

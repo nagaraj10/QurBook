@@ -1936,6 +1936,14 @@ class ChatState extends State<ChatDetail> {
                                     .toString()
                                     .substring(2, result.toString().length - 2);
                                 if (removedBrackets.length > 0) {
+                                  Provider.of<ChatSocketViewModel>(
+                                    Get.context!,
+                                    listen: false,
+                                  )?.initRRTNotificaiton(
+                                    peerId: peerId,
+                                    selectedDate: removedBrackets.toString() +
+                                        getRefText(),
+                                  );
                                   onSendMessage(
                                       removedBrackets.toString() + getRefText(),
                                       0,

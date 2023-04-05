@@ -14,7 +14,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatSocketViewModel extends ChangeNotifier {
-  ChatSocketService chocketService = new ChatSocketService();
+  ChatSocketService? chocketService = new ChatSocketService();
 
   final String _baseUrl = BASE_URL;
 
@@ -146,7 +146,7 @@ class ChatSocketViewModel extends ChangeNotifier {
     try {
       var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
-      ChatHistoryModel? chatHistoryModel = await chocketService.getChatHistory(
+      ChatHistoryModel? chatHistoryModel = await chocketService!.getChatHistory(
           userId??'',
           peerId??'',
           familyUserId??'',
@@ -165,7 +165,7 @@ class ChatSocketViewModel extends ChangeNotifier {
       var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
       InitChatModel chatHistoryModel =
-          await chocketService.initNewChat(userId, peerId);
+          await chocketService!.initNewChat(userId, peerId);
 
       return chatHistoryModel;
     } catch (e) {}
@@ -177,17 +177,30 @@ class ChatSocketViewModel extends ChangeNotifier {
       var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN)!;
 
       InitChatFamilyModel chatHistoryModel =
-          await chocketService.initNewFamilyChat(
+          await chocketService!.initNewFamilyChat(
               userId, peerId, familyName, isCareCoordinator, careCooId);
 
       return chatHistoryModel;
     } catch (e) {}
   }
 
-  Future<GetUserIdModel?> getUserIdFromDocId(String docId) async {
+  initRRTNotificaiton({String? peerId, String? selectedDate}) {
+    try {
+      var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+      chocketService!.initRRTNotification(
+        userId: userId!,
+        peerId: peerId!,
+        selectedDate: selectedDate!,
+      );
+    } catch (e) {
+      if (kDebugMode) print(e.toString());
+    }
+  }
+
+  Future<GetUserIdModel?> getUserIdFromDocId(String? docId) async {
     try {
       GetUserIdModel getUserIdModel =
-          await chocketService.getUserIdFromDocId(docId);
+          await chocketService!.getUserIdFromDocId(docId!);
 
       return getUserIdModel;
     } catch (e) {}

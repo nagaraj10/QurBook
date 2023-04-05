@@ -370,7 +370,8 @@ const String qr_healthRecordMetaIds = 'healthRecordMetaIds';
 //chat
 
 const String qr_chat_socket_history = 'chat/get-message-history';
-
+const String qr_init_rrt_notification =
+    "appointment-pending-schedule/confirm-preferred-date";
 //sheela bagde
 
 const String qr_sheela_badge_icon_count =
@@ -412,7 +413,6 @@ const String qr_delink_check = "user-relationship/check-caregiver-association";
 const String qr_sheela_post_queue = 'notification-log/sheela-queue-insert';
 const String qurPlanNode = 'qurplan-node-mysql';
 const String updateSnoozeEvent = '/update-snoozed-event';
-
 
 // activity status our api
 

@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import '../../models/regiment_data_model.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 import '../../models/field_response_model.dart';
@@ -12,6 +11,7 @@ class FormDataCheckbox extends StatefulWidget {
     required this.updateValue,
     required this.canEdit,
     this.isFromQurHomeSymptom = false,
+    this.isFromQurHomeRegimen = false,
   });
 
   final FieldModel fieldData;
@@ -22,6 +22,7 @@ class FormDataCheckbox extends StatefulWidget {
   }) updateValue;
   final bool canEdit;
   final bool isFromQurHomeSymptom;
+  final bool isFromQurHomeRegimen;
 
   @override
   _FormDataCheckboxState createState() => _FormDataCheckboxState();
@@ -71,19 +72,27 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget?.fieldData!=null) Text(
-            CommonUtil().showDescriptionTextForm(widget.fieldData),
-            style: TextStyle(
-              fontSize: 14.0.sp,
-              fontWeight: FontWeight.w600,
-              color: widget.isFromQurHomeSymptom
-                  ? Color(CommonUtil().getQurhomePrimaryColor())
-                  : Color(CommonUtil().getMyPrimaryColor()),
-            ),
-          ),
-          SizedBox(
-            height: 5.0.h,
-          ),
+          widget.isFromQurHomeRegimen ?? false
+              ? SizedBox.shrink()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget?.fieldData != null)
+                      Text(
+                        CommonUtil().showDescriptionTextForm(widget.fieldData),
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                          fontWeight: FontWeight.w600,
+                          color: widget.isFromQurHomeSymptom
+                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              : Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                      ),
+                    SizedBox(
+                      height: 5.0.h,
+                    ),
+                  ],
+                ),
           Column(
             children: loadCheckboxItems(),
           ),

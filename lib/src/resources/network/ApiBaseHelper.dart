@@ -2654,6 +2654,23 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> initRRTNotification({
+    String? url,
+    String? jsonString,
+  }) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.put(_baseUrl + url!,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> getUserIdFromDocId(String url) async {
     var responseJson;
 

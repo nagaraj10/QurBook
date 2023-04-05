@@ -1639,7 +1639,7 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
     if (!status) {
       FlutterToast toastToShow = FlutterToast();
       toastToShow.getToast(
-        "Failed to get the camera permission",
+        strCameraPermission,
         Colors.red,
       );
     }
