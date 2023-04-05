@@ -4897,9 +4897,10 @@ class CommonUtil {
                   color: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
                       : Color(CommonUtil().getMyPrimaryColor())),
-            ), // To display the title it is optional
-            content: Text('Record ' + name ??
-                ''), // Message which will be pop up on the screen
+            ),
+            // To display the title it is optional
+            content: Text('Record ' + name ?? ''),
+            // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
               FlatButton(
@@ -4916,8 +4917,8 @@ class CommonUtil {
                   textColor: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
                       : Color(CommonUtil().getMyPrimaryColor()),
-                  onPressed:
-                      onPressedYes, // function used to perform after pressing the button
+                  onPressed: onPressedYes,
+                  // function used to perform after pressing the button
                   child: Text(variable.strYes)),
             ],
           );
@@ -5826,6 +5827,25 @@ class CommonUtil {
       return formattedDate;
     } catch (e) {
       return '';
+    }
+  }
+
+  Future<void> handleCameraAndMic({bool onlyMic = false}) async {
+    final status = await askPermissionForCameraAndMic(isAudioCall: onlyMic);
+    if (!status) {
+      if (onlyMic) {
+        FlutterToast toastToShow = FlutterToast();
+        toastToShow.getToast(
+          strMicPermission,
+          Colors.red,
+        );
+      } else {
+        FlutterToast toastToShow = FlutterToast();
+        toastToShow.getToast(
+          strCameraPermission,
+          Colors.red,
+        );
+      }
     }
   }
 }
