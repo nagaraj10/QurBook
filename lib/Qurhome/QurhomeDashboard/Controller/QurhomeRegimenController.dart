@@ -35,6 +35,7 @@ class QurhomeRegimenController extends GetxController {
 
   // QurHomeRegimenResponseModel qurHomeRegimenResponseModel;
   RegimentResponseModel qurHomeRegimenResponseModel;
+  RegimentResponseModel qurHomeRegimenCalendarResponseModel;
   int nextRegimenPosition = 0;
   int currentIndex = 0;
 
@@ -84,6 +85,7 @@ class QurhomeRegimenController extends GetxController {
       }
       loadingData.value = true;
       qurHomeRegimenResponseModel = await _apiProvider.getRegimenList("");
+      qurHomeRegimenCalendarResponseModel = await _apiProvider.getRegimenListCalendar("");
 
       qurHomeRegimenResponseModel.regimentsList.removeWhere((element) =>
           element?.isEventDisabled && !element?.isSymptom ||
@@ -180,6 +182,10 @@ class QurhomeRegimenController extends GetxController {
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
     }
+  }
+
+  getCalendarRegimenList() async {
+    qurHomeRegimenResponseModel = await _apiProvider.getRegimenListCalendar("");
   }
 
   @override

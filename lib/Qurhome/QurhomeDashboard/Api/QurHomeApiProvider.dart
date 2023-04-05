@@ -65,6 +65,40 @@ class QurHomeApiProvider {
     }
   }
 
+  Future<dynamic> getRegimenListCalendar(String date) async {
+    http.Response responseJson;
+    final url = qr_hub + '/';
+    await PreferenceUtil.init();
+    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    try {
+      RegimentResponseModel regimentsData;
+
+      regimentsData = await RegimentService.getRegimentDataCalendar(
+        dateSelected: CommonUtil.dateConversionToApiFormat(
+          DateTime.now(),
+          isIndianTime: true,
+        ),
+        isSymptoms: 0,
+      );
+      return regimentsData;
+
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      responseJson = await ApiServices.get(
+        '${CommonUtil.BASE_URL_FROM_RES}kiosk/$userId?date=$date',
+        headers: header,
+      );
+      if (responseJson.statusCode == 200) {
+        return responseJson;
+      } else {
+        return null;
+      }
+    } on SocketException {
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<dynamic> unPairHub(String hubId) async {
     http.Response responseJson;
     final url = qr_hub + '/';
