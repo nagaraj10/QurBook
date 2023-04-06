@@ -316,42 +316,27 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 ),
               ),
             ),
-          GestureDetector(
-            onTap: () {
-              try {
-                FHBUtils().check().then((intenet) async {
-                  if (intenet != null && intenet) {
-                    if (CommonUtil().isTablet &&
-                        controller.careCoordinatorId.value.trim().isEmpty) {
-                      await controller.getCareCoordinatorId();
-                    }
-                    initSOSCall();
-                  } else {
-                    FlutterToast().getToast(
-                      STR_NO_CONNECTIVITY,
-                      Colors.red,
-                    );
-                  }
-                });
-              } catch (e) {
-                print(e);
-              }
-            },
-            child: Align(
+          if (CommonUtil.isUSRegion())
+            Align(
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: const EdgeInsets.only(left: 16.0),
-                child: InkWell(onTap: (){
-                  Get.to(CalendarMonth()).then((value){
-                    controller.getRegimenList(isLoading : true,date:value);
-                  });
-                }, child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(icon_calendar,height: 25,width: 25,),
-                )),
+                child: InkWell(
+                    onTap: () {
+                      Get.to(CalendarMonth()).then((value) {
+                        controller.getRegimenList(isLoading: true, date: value);
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        icon_calendar,
+                        height: 25,
+                        width: 25,
+                      ),
+                    )),
               ),
             ),
-          ),
           Obx(() => controller.loadingData.isTrue
               ? controller.loadingDataWithoutProgress.isTrue
                   ? getDataFromAPI(controller, isPortrait)
