@@ -1942,10 +1942,9 @@ class CommonDialogBox {
           categoryDataObj.toJson();
       var _mediaTypeBlock = MediaTypeBlock();
 
-      var mediaTypesResponse =
-          await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
+      var mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
 
-      final metaDataFromSharedPrefernce = mediaTypesResponse.result;
+      final metaDataFromSharedPrefernce = mediaTypesResponse?.result;
       if (categoryName != Constants.STR_DEVICES) {
         mediaDataObj = CommonUtil().getMediaTypeInfoForParticularLabel(
             categoryID, metaDataFromSharedPrefernce!, categoryName);
@@ -3309,7 +3308,11 @@ class CommonDialogBox {
   }
 
   Widget getIconButton() {
-    return Icon(Icons.arrow_drop_down,color: Color(CommonUtil().getMyPrimaryColor()),size: 40,);
+    return Icon(
+      Icons.arrow_drop_down,
+      color: Color(CommonUtil().getMyPrimaryColor()),
+      size: 40,
+    );
   }
 
   void filterDuplicateDoctor() {
