@@ -1165,7 +1165,40 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);
-        var value = await showDialog(
+
+        Get.to(FormDataDialog(
+          introText: regimen?.otherinfo?.introText ?? '',
+          fieldsData: fieldsResponseModel.result.fields,
+          eid: eventId,
+          color: Color(CommonUtil().getQurhomePrimaryColor()),
+          mediaData: regimen.otherinfo,
+          formTitle: getDialogTitle(context, regimen, activityName),
+          canEdit: canEdit || isValidSymptom(context),
+          isFromQurHomeSymptom: false,
+          isFromQurHomeRegimen: true,
+          triggerAction: (String triggerEventId, String followContext,
+              String activityName) {
+            Provider.of<RegimentViewModel>(Get.context, listen: false)
+                .updateRegimentStatus(RegimentStatus.DialogClosed);
+            Get.back();
+            onCardPressed(Get.context, regimen,
+                eventIdReturn: triggerEventId,
+                followEventContext: followContext,
+                activityName: activityName);
+          },
+          followEventContext: followEventContext,
+          isFollowEvent: eventIdReturn != null,
+        )).then((value) {
+          if (value != null && (value ?? false)) {
+            FlutterToast().getToast(
+              'Logged Successfully',
+              Colors.red,
+            );
+            controller.showCurrLoggedRegimen(regimen);
+          }
+        });
+
+        /*var value = await showDialog(
           context: context,
           builder: (_) => FormDataDialog(
             introText: regimen?.otherinfo?.introText ?? '',
@@ -1190,23 +1223,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             followEventContext: followEventContext,
             isFollowEvent: eventIdReturn != null,
           ),
-        );
-        if (value != null && (value ?? false)) {
-          // LoaderClass.showLoadingDialog(
-          //   Get.context,
-          //   canDismiss: false,
-          // );
-          // Future.delayed(Duration(milliseconds: 300), () async {
-          //   await Provider.of<RegimentViewModel>(context, listen: false)
-          //       .fetchRegimentData();
-          //   LoaderClass.hideLoadingDialog(Get.context);
-          // });
-          FlutterToast().getToast(
-            'Logged Successfully',
-            Colors.red,
-          );
-          controller.showCurrLoggedRegimen(regimen);
-        }
+        );*/
+
         QurPlanReminders.getTheRemindersFromAPI();
 
         Provider.of<RegimentViewModel>(context, listen: false)

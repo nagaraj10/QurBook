@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 import 'package:flutter/services.dart';
-import '../../models/regiment_data_model.dart';
 import '../../models/field_response_model.dart';
 
 class FormDataTextField extends StatelessWidget {
@@ -10,6 +9,7 @@ class FormDataTextField extends StatelessWidget {
     @required this.fieldData,
     this.isNumberOnly = false,
     this.isFromQurHomeSymptom = false,
+    this.isFromQurHomeRegimen = false,
     @required this.updateValue,
     @required this.canEdit,
   });
@@ -19,25 +19,33 @@ class FormDataTextField extends StatelessWidget {
   final Function(FieldModel updatedFieldData) updateValue;
   final bool canEdit;
   final bool isFromQurHomeSymptom;
+  final bool isFromQurHomeRegimen;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '${CommonUtil().showDescriptionTextForm(fieldData)}',
-          style: TextStyle(
-            fontSize: 14.0.sp,
-            fontWeight: FontWeight.w600,
-            color: isFromQurHomeSymptom
-                ? Color(CommonUtil().getQurhomePrimaryColor())
-                : Color(CommonUtil().getMyPrimaryColor()),
-          ),
-        ),
-        SizedBox(
-          height: 10.0.h,
-        ),
+        isFromQurHomeRegimen ?? false
+            ? SizedBox.shrink()
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${CommonUtil().showDescriptionTextForm(fieldData)}',
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                      fontWeight: FontWeight.w600,
+                      color: isFromQurHomeSymptom
+                          ? Color(CommonUtil().getQurhomePrimaryColor())
+                          : Color(CommonUtil().getMyPrimaryColor()),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0.h,
+                  ),
+                ],
+              ),
         TextFormField(
           textCapitalization: TextCapitalization.sentences,
           enabled: canEdit,

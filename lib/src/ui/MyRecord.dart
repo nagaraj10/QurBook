@@ -1637,7 +1637,7 @@ class _CustomTabsState extends State<CustomTabView>
     if (!status) {
       FlutterToast toastToShow = FlutterToast();
       toastToShow.getToast(
-        "Failed to get the camera permission",
+        strCameraPermission,
         Colors.red,
       );
     }

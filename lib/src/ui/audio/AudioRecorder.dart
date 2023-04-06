@@ -53,6 +53,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   @override
   void initState() {
+    CommonUtil().handleCameraAndMic(onlyMic: true);
     set_up_audios();
     super.initState();
   }

@@ -775,6 +775,10 @@ const String strWrapperCall = 'wrapperCall';
 
 const String IND_REG = 'IN';
 
+String strMicPermission =  'Microphone permission is required';
+String strCameraPermission =   'Camera permission is required';
+String strCallPermission =   'Camera or Microphone permission is required';
+
 double height = 0.0;
 double width = 0.0;
 double kToolbarHeight = 56.0;
