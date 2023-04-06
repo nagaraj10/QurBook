@@ -54,7 +54,8 @@ class _HomePageState extends State<CalendarMonth> {
         children: <Widget>[
           TableCalendar(
             onPageChanged: (dateTime) {
-              controller.getCalendarRegimenList(nextPreviousDate: dateTime);
+              controller.selectedDate.value=dateTime;
+              controller.getCalendarRegimenList();
             },
             eventLoader: (DateTime dateTime) {
               return _events[
