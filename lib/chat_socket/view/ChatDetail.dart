@@ -394,6 +394,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   void initSocket() {
+
     Provider
         .of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket
