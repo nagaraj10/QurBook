@@ -405,7 +405,7 @@ class ChatState extends State<ChatDetail> {
         //print('OnMessageack$data');
         ChatHistoryResult emitAckResponse = ChatHistoryResult.fromJson(data);
         if (emitAckResponse != null) {
-          if (isFromCareCoordinator!) {
+          if (isFromCareCoordinator??false) {
             if (carecoordinatorId == emitAckResponse.messages!.idFrom) {
               Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
                   ?.onReceiveMessage(emitAckResponse);
