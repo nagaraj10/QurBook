@@ -32,9 +32,11 @@ class QurhomeRegimenController extends GetxController {
   final _apiProvider = QurHomeApiProvider();
   var loadingData = false.obs;
   var loadingDataWithoutProgress = false.obs;
+  var loadingCalendar = false.obs;
 
   // QurHomeRegimenResponseModel qurHomeRegimenResponseModel;
   RegimentResponseModel qurHomeRegimenResponseModel;
+  RegimentResponseModel qurHomeRegimenCalendarResponseModel;
   int nextRegimenPosition = 0;
   int currentIndex = 0;
 
@@ -64,7 +66,7 @@ class QurhomeRegimenController extends GetxController {
   var currLoggedEID = "".obs;
 
   var dateHeader = "".obs;
-
+  var selectedDate=DateTime.now().obs;
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
 
@@ -77,15 +79,19 @@ class QurhomeRegimenController extends GetxController {
 
   var isFirstTime = true.obs;
 
-  getRegimenList({bool isLoading = true}) async {
+  getRegimenList({bool isLoading = true,String date=null}) async {
     try {
       if (!isLoading) {
         loadingDataWithoutProgress.value = true;
       }
+      if(date!=null){
+        dateHeader.value = getFormatedDate(date: date);
+      }else{
+        date='';
+      }
       loadingData.value = true;
-      qurHomeRegimenResponseModel = await _apiProvider.getRegimenList("");
-
-      qurHomeRegimenResponseModel.regimentsList.removeWhere((element) =>
+      qurHomeRegimenResponseModel = await _apiProvider.getRegimenList(date);
+      qurHomeRegimenResponseModel.regimentsList?.removeWhere((element) =>
           element?.isEventDisabled && !element?.isSymptom ||
           !element?.scheduled &&
               !(element?.dayrepeat?.trim().toLowerCase() ==
@@ -180,6 +186,16 @@ class QurhomeRegimenController extends GetxController {
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
     }
+  }
+
+  getCalendarRegimenList({DateTime nextPreviousDate=null}) async {
+    DateTime startDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month,1).subtract(Duration(days: 7));
+    DateTime endDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month+1,0).add(Duration(days: 7));
+    loadingCalendar.value=true;
+    qurHomeRegimenCalendarResponseModel = await _apiProvider.getRegimenListCalendar(startDate,endDate);
+    loadingCalendar.value=false;
+    update(["refreshCalendar"]);
+
   }
 
   @override
@@ -455,9 +471,22 @@ class QurhomeRegimenController extends GetxController {
     getRegimenList();
   }
 
-  String getFormatedDate() {
+  String getFormatedDate({String date=null}) {
+    DateTime now = date==null?DateTime.now():DateTime.parse(date);
+    selectedDate.value=now;
+    String prefix='';
+    if(calculateDifference(now)==0){
+      prefix='Today, ';
+    }else{
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix=formattedDate+', ';
+    }
+    String formattedDate = DateFormat('dd MMM').format(now);
+    return prefix+formattedDate;
+  }
+
+  int calculateDifference(DateTime date) {
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('dd MMM yyyy').format(now);
-    return formattedDate;
+    return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
   }
 }

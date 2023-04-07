@@ -151,6 +151,7 @@ const String icon_photo_image = 'assets/icons/photo_image.png';
 const String icon_save_image = 'assets/icons/save_image.png';
 const String icon_qurplan = 'assets/launcher/qurplan.png';
 const String icon_qurhome = 'assets/Qurhome/Qurhome.png';
+const String icon_calendar = 'assets/Qurhome/calendar.png';
 const String icon_device_scan_measure = 'assets/Qurhome/scan_search_device.gif';
 const String icon_vitals_qurhome = 'assets/dashboard/vitals_qurhome.png';
 const String icon_symptom_qurhome = 'assets/dashboard/symptom_qurhome.png';

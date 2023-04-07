@@ -287,6 +287,7 @@ const String qr_subscribePlan = 'Action=Subscribe&packageid=';
 const String qr_UnsubscribePlan = 'Action=UnSubscribe&packageid=';
 const String qr_get = 'get';
 const String regiment = 'plan-package-master/wrapperApi';
+const String regimentCalendar = 'qurplan-node-mysql/regimen-calendar-filter/363ba935-3e4d-4024-b81c-bfd04fdc1ef4?startDate=2023-03-01%2000%3A00%3A00&endDate=2023-05-31%2000%3A00%3A00';
 const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
 const String getEventId = 'activity-master/save-personal-plan-symptom';

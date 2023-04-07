@@ -194,6 +194,7 @@ class CommonUtil {
   final String CONTENT_UNSUBSCRIBE_PACKAGE =
       'Are you sure you want to unsubscribe?';
   final String CONTENT_RENEW_PACKAGE = 'Are you sure you want to renew?';
+  final String CHOOSE_DATE = 'Choose Date';
 
   final String CONTENT_NO_REFUND =
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';

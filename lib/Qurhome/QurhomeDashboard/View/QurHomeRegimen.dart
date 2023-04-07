@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/CalendarMonth.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/UnreadChatSocketNotify.dart';
@@ -313,6 +314,27 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                     ),
                   ),
                 ),
+              ),
+            ),
+          if (CommonUtil.isUSRegion())
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: InkWell(
+                    onTap: () {
+                      Get.to(CalendarMonth()).then((value) {
+                        controller.getRegimenList(isLoading: true, date: value);
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        icon_calendar,
+                        height: 25,
+                        width: 25,
+                      ),
+                    )),
               ),
             ),
           Obx(() => controller.loadingData.isTrue
