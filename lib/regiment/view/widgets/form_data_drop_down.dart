@@ -10,14 +10,12 @@ class FormDataDropDown extends StatefulWidget {
     @required this.updateValue,
     @required this.canEdit,
     this.isFromQurHomeSymptom = false,
-    this.isFromQurHomeRegimen = false,
   });
 
   final FieldModel fieldData;
   final Function(FieldModel updatedfieldData) updateValue;
   final bool canEdit;
   final bool isFromQurHomeSymptom;
-  final bool isFromQurHomeRegimen;
 
   @override
   _FormDataDropDownState createState() => _FormDataDropDownState();
@@ -62,26 +60,19 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        widget.isFromQurHomeRegimen ?? false
-            ? SizedBox.shrink()
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    CommonUtil().showDescriptionTextForm(widget.fieldData),
-                    style: TextStyle(
-                      fontSize: 14.0.sp,
-                      fontWeight: FontWeight.w600,
-                      color: widget.isFromQurHomeSymptom
-                          ? Color(CommonUtil().getQurhomePrimaryColor())
-                          : Color(CommonUtil().getMyPrimaryColor()),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.0.h,
-                  ),
-                ],
-              ),
+        Text(
+          CommonUtil().showDescriptionTextForm(widget.fieldData),
+          style: TextStyle(
+            fontSize: 14.0.sp,
+            fontWeight: FontWeight.w600,
+            color: widget.isFromQurHomeSymptom
+                ? Color(CommonUtil().getQurhomePrimaryColor())
+                : Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        SizedBox(
+          height: 10.0.h,
+        ),
         DropdownButton<dynamic>(
           style: TextStyle(
             fontSize: 16.0.sp,
