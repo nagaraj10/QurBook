@@ -17,6 +17,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/soscallagentnumberdata.dart
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -61,7 +62,9 @@ class QurhomeRegimenController extends GetxController {
   var sid = "".obs;
   //var isSIMInserted = false.obs;
   var isSOSAgentCallDialogOpen = false.obs;
+  var isTodaySelected = false.obs;
   var SOSAgentNumber = "".obs;
+  var statusText = "".obs;
   var SOSAgentNumberEmptyMsg = "".obs;
   var currLoggedEID = "".obs;
 
@@ -78,6 +81,7 @@ class QurhomeRegimenController extends GetxController {
   Timer timer;
 
   var isFirstTime = true.obs;
+  int _start = CommonUtil.isUSRegion()?120:30;
 
   getRegimenList({bool isLoading = true,String date=null}) async {
     try {
@@ -443,11 +447,38 @@ class QurhomeRegimenController extends GetxController {
 
   void startTimer() {
     try {
-      //30 seconds API calling
-      timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
-        dateHeader.value = getFormatedDate();
-        getRegimenList(isLoading: false);
-      });
+      const oneSec = const Duration(seconds: 1);
+        timer = new Timer.periodic(
+          oneSec,
+              (Timer timer) {
+            if (_start == 0) {
+              this.timer?.cancel();
+              this.timer=null;
+              dateHeader.value = getFormatedDate();
+              getRegimenList(isLoading: false);
+              _start=CommonUtil.isUSRegion()?120:30;
+            }else if(_start<11){
+              if(!isTodaySelected.value){
+                statusText.value='${strRegimenRedirection} ${_start.toString()}';
+                update(["refershStatusText"]);
+              }
+              _start=_start-1;
+            } else {
+              if(!isTodaySelected.value){
+                if(calculateDifference(selectedDate.value)<0){//past
+                  isTodaySelected.value=false;
+                  statusText.value=strViewPastDateRegimen;
+                }else if(calculateDifference(selectedDate.value)>0){//future
+                  isTodaySelected.value=false;
+                  statusText.value=strViewFutureDateRegimen;
+                }
+                update(["refershStatusText"]);
+              }
+              _start=_start-1;
+            }
+          },
+        );
+
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -458,6 +489,9 @@ class QurhomeRegimenController extends GetxController {
   void restartTimer() {
     try {
       timer?.cancel();
+      this.timer=null;
+      _start=CommonUtil.isUSRegion()?120:30;
+
       startTimer();
     } catch (e) {
       if (kDebugMode) {
@@ -475,12 +509,27 @@ class QurhomeRegimenController extends GetxController {
     DateTime now = date==null?DateTime.now():DateTime.parse(date);
     selectedDate.value=now;
     String prefix='';
-    if(calculateDifference(now)==0){
+    if(calculateDifference(now)==0){//today
+      isTodaySelected.value=true;
+      statusText.value='';
       prefix='Today, ';
+    }else if(calculateDifference(now)<0){//past
+      isTodaySelected.value=false;
+      statusText.value=strViewPastDateRegimen;
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix=formattedDate+', ';
+    }else if(calculateDifference(now)>0){//future
+      isTodaySelected.value=false;
+      statusText.value=strViewFutureDateRegimen;
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix=formattedDate+', ';
     }else{
+      isTodaySelected.value=false;
       String formattedDate = DateFormat('EEEE').format(now);
       prefix=formattedDate+', ';
     }
+    update(["refershStatusText"]);
+
     String formattedDate = DateFormat('dd MMM').format(now);
     return prefix+formattedDate;
   }
