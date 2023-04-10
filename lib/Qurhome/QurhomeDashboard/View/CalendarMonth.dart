@@ -55,6 +55,7 @@ class _HomePageState extends State<CalendarMonth> {
           TableCalendar(
             onPageChanged: (dateTime) {
               controller.selectedDate.value=dateTime;
+              controller.selectedCalendar.value=dateTime;
               controller.getCalendarRegimenList();
             },
             eventLoader: (DateTime dateTime) {
@@ -63,8 +64,9 @@ class _HomePageState extends State<CalendarMonth> {
             },
             calendarFormat: CalendarFormat.month,
             firstDay: DateTime(2010),
-            focusedDay: controller.selectedDate.value,
+            focusedDay: controller.selectedCalendar.value,
             lastDay: DateTime(2200),
+            // currentDay: controller.selectedCalendar.value,
             daysOfWeekHeight: 50.0.h,
             calendarStyle: CalendarStyle(
               canMarkersOverflow: true,
@@ -136,6 +138,8 @@ class _HomePageState extends State<CalendarMonth> {
             startingDayOfWeek: StartingDayOfWeek.sunday,
             onDaySelected: (day, events) {
               controller.selectedDate.value = day;
+              controller.selectedCalendar.value=DateTime.now();
+              // controller.selectedCalendar.value = day;
               Get.back(result: day.toString());
             },
             calendarBuilders: CalendarBuilders(
