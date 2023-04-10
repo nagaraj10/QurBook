@@ -126,6 +126,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       );
       initSocketCountUnread();
       WidgetsBinding.instance.addObserver(this);
+      controller.timer?.cancel();
+      controller.timer=null;
       controller.startTimer();
       super.initState();
     } catch (e) {
@@ -298,6 +300,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 padding: const EdgeInsets.only(left: 16.0),
                                 child: InkWell(
                                     onTap: () {
+                                      controller.cancelTimer();
                                       Get.to(CalendarMonth()).then((value) {
                                         controller.restartTimer();
                                         controller.getRegimenList(
@@ -1238,7 +1241,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);
-
+        controller.cancelTimer();
         Get.to(FormDataDialog(
           introText: regimen?.otherinfo?.introText ?? '',
           fieldsData: fieldsResponseModel.result.fields,

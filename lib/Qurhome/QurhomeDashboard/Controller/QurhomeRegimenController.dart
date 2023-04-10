@@ -70,6 +70,7 @@ class QurhomeRegimenController extends GetxController {
 
   var dateHeader = "".obs;
   var selectedDate=DateTime.now().obs;
+  var selectedCalendar=DateTime.now().obs;
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
 
@@ -77,7 +78,7 @@ class QurhomeRegimenController extends GetxController {
 
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
   var qurhomeDashboardController = Get.put(QurhomeDashboardController());
-
+  Duration duration = CommonUtil.isUSRegion()?Duration(minutes: 2):Duration(seconds: 30);
   Timer timer;
 
   var isFirstTime = true.obs;
@@ -447,22 +448,29 @@ class QurhomeRegimenController extends GetxController {
 
   void startTimer() {
     try {
-      const oneSec = const Duration(seconds: 1);
         timer = new Timer.periodic(
-          oneSec,
+          Duration(seconds: 1),
               (Timer timer) {
-            if (_start == 0) {
+                final addSeconds =  -1 ;
+                final seconds = duration.inSeconds + addSeconds;
+                print("seconds: "+seconds.toString());
+            if (seconds == 0) {
               this.timer?.cancel();
               this.timer=null;
               dateHeader.value = getFormatedDate();
+              //selectedCalendar.value = DateTime.now();
               getRegimenList(isLoading: false);
-              _start=CommonUtil.isUSRegion()?120:30;
-            }else if(_start<11){
+              if(CommonUtil.isUSRegion()){
+                duration = Duration(minutes: 2);
+              }else{
+                duration = Duration(seconds: 30);
+              }
+            }else if(seconds<11){
               if(!isTodaySelected.value){
-                statusText.value='${strRegimenRedirection} ${_start.toString()}';
+                statusText.value='${strRegimenRedirection} ${seconds.toString()}';
                 update(["refershStatusText"]);
               }
-              _start=_start-1;
+              duration = Duration(seconds: seconds);
             } else {
               if(!isTodaySelected.value){
                 if(calculateDifference(selectedDate.value)<0){//past
@@ -474,7 +482,7 @@ class QurhomeRegimenController extends GetxController {
                 }
                 update(["refershStatusText"]);
               }
-              _start=_start-1;
+              duration = Duration(seconds: seconds);
             }
           },
         );
@@ -490,7 +498,11 @@ class QurhomeRegimenController extends GetxController {
     try {
       timer?.cancel();
       this.timer=null;
-      _start=CommonUtil.isUSRegion()?120:30;
+      if(CommonUtil.isUSRegion()){
+        duration = Duration(minutes: 2);
+      }else{
+        duration = Duration(seconds: 30);
+      }
 
       startTimer();
     } catch (e) {
@@ -501,8 +513,15 @@ class QurhomeRegimenController extends GetxController {
   }
 
   showCurrLoggedRegimen(RegimentDataModel regimen) {
+    cancelTimer();
+    restartTimer();
     currLoggedEID.value = CommonUtil().validString(regimen?.eid?.toString());
-    getRegimenList();
+    getRegimenList(date: selectedDate.value.toString());
+  }
+
+  cancelTimer(){
+    timer?.cancel();
+    timer=null;
   }
 
   String getFormatedDate({String date=null}) {
