@@ -114,22 +114,22 @@ class PlanDetail extends State<MyPlanDetail> {
   }
 
   void setValues(MyPlanListResult planList) {
-    title = planList?.title ?? '';
-    tags = planList?.tags ?? '';
-    providerName = planList?.providerName ?? '';
-    docName = planList?.metadata?.doctorName ?? '';
-    startDate = planList?.startdate ?? '';
-    endDate = planList?.enddate ?? '';
-    endDate = planList?.enddate ?? '';
-    packageId = planList?.packageid ?? '';
-    isExpired = planList?.isexpired ?? '';
-    icon = planList?.metadata?.icon ?? '';
-    catIcon = planList?.catmetadata?.icon ?? '';
-    providerIcon = planList?.providermetadata?.icon ?? '';
-    descriptionURL = planList?.metadata?.descriptionURL ?? '';
-    price = planList?.price ?? '';
-    isExtendable = planList?.isExtendable ?? '';
-    packageDuration = planList?.duration;
+    title = planList.title;
+    tags = planList.tags;
+    providerName = planList.providerName;
+    docName = planList.metadata?.doctorName;
+    startDate = planList.startdate;
+    endDate = planList.enddate;
+    endDate = planList.enddate;
+    packageId = planList.packageid;
+    isExpired = planList.isexpired;
+    icon = planList.metadata?.icon ?? '';
+    catIcon = planList.catmetadata?.icon ?? '';
+    providerIcon = planList.providermetadata?.icon ?? '';
+    descriptionURL = planList.metadata?.descriptionURL ?? '';
+    price = planList.price ?? '';
+    isExtendable = planList.isExtendable ?? '';
+    packageDuration = planList.duration;
   }
 
   @override
@@ -176,7 +176,7 @@ class PlanDetail extends State<MyPlanDetail> {
                 snapshot.data!.result != null &&
                 snapshot.data!.result!.isNotEmpty) {
               MyPlanListResult planList =
-                  snapshot?.data?.result![0] as MyPlanListResult;
+                  snapshot.data?.result![0] as MyPlanListResult;
               setValues(planList);
               return getMainWidget();
             } else {
@@ -197,7 +197,7 @@ class PlanDetail extends State<MyPlanDetail> {
     if (CommonUtil.isRenewDialogOpened) return;
     CommonUtil.isRenewDialogOpened = true;
     CommonUtil().renewAlertDialog(context,
-        packageId: widget?.packageId,
+        packageId: widget.packageId,
         price: price,
         startDate: startDate,
         endDate: endDate,
@@ -207,7 +207,7 @@ class PlanDetail extends State<MyPlanDetail> {
         IsExtendable: isExtendable == '1' ? true : false,
         moveToCart: true,
         nsBody: {
-          "templateName": "${widget?.templateName}",
+          "templateName": "${widget.templateName}",
           "contextId": "${widget.packageId}"
         },
         packageDuration: packageDuration);
@@ -216,7 +216,7 @@ class PlanDetail extends State<MyPlanDetail> {
   Widget getMainWidget() {
     if (widget.showRenew) {
       showRenewAlert();
-      widget?.showRenew = false;
+      widget.showRenew = false;
     }
     return Builder(
       builder: (contxt) => Container(

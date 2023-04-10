@@ -447,9 +447,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
           ? myProfile.result!.name!.capitalizeFirstofEach
           : myProfile.result!.firstName != null &&
                   myProfile.result!.lastName != null
-              ? ('${myProfile.result!.firstName!.capitalizeFirstofEach ?? ''} ${myProfile.result!.lastName!.capitalizeFirstofEach}')
+              ? ('${myProfile.result!.firstName!.capitalizeFirstofEach} ${myProfile.result!.lastName!.capitalizeFirstofEach}')
               : '');
-      phoneNumber = (myProfile.result!.userContactCollection3!.length ?? 0) > 0
+      phoneNumber = (myProfile.result!.userContactCollection3!.length) > 0
           ? myProfile.result!.userContactCollection3![0]!.phoneNumber!
           : '';
     } catch (e) {

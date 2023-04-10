@@ -395,7 +395,7 @@ class AddProvidersState extends State<AddProviders> {
         } else if (widget.arguments!.searchKeyWord ==
             CommonConstants.hospitals) {
           doctorController.text = (widget.arguments!.hospitalData!.name != null
-              ? widget?.arguments?.hospitalData?.name
+              ? widget.arguments?.hospitalData?.name
                   ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.hospitalData.healthOrganizationName)
               : widget.arguments!.hospitalData!.healthOrganizationName!)!;
 //          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
@@ -456,7 +456,7 @@ class AddProvidersState extends State<AddProviders> {
     } else {
       if (widget.arguments!.searchKeyWord == CommonConstants.doctors) {
         doctorController.text = (widget.arguments!.doctorsModel!.user!.name != null
-            ? widget?.arguments?.doctorsModel?.user?.name
+            ? widget.arguments?.doctorsModel?.user?.name
                 ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.doctorsModel.user.name)
             : '')!;
         isPreferred = widget.arguments!.doctorsModel!.isDefault;
@@ -479,7 +479,7 @@ class AddProvidersState extends State<AddProviders> {
             widget.arguments!.hospitalsModel, 'address2');
       } else {
         doctorController.text = (widget.arguments!.labsModel!.name != null
-            ? widget?.arguments?.labsModel?.name
+            ? widget.arguments?.labsModel?.name
                 ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.labsModel.name)
             : '')!;
         isPreferred = widget.arguments!.labsModel!.isDefault;
@@ -1351,7 +1351,7 @@ class AddProvidersState extends State<AddProviders> {
               widget.arguments!.placeDetail!.lng ?? 0.0;
           signInData[variable.strwebsite] = widget.arguments!.placeDetail == null
               ? ''
-              : widget.arguments!.placeDetail!.website ?? '';
+              : widget.arguments!.placeDetail!.website;
 
           final jsonString = convert.jsonEncode(signInData);
           addProvidersBloc!.labsJsonString = jsonString;

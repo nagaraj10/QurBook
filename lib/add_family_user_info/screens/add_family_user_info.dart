@@ -1845,7 +1845,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     if (picked != null) {
       setState(() {
-        dateTime = picked ?? dateTime;
+        dateTime = picked;
 
         dateofBirthStr =
             FHBUtils().getFormattedDateForUserBirth(dateTime.toString());

@@ -338,7 +338,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
           onTap: () {
             AuthenticationValidator().checkNetwork().then((intenet) {
               if (intenet != null && intenet) {
-                checkedValue!
+                checkedValue
                     ? null
                     : FlutterToast().getToast(
                         'Please accept terms and conditions', Colors.black54);
@@ -383,7 +383,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     FocusScope.of(context).unfocus();
     userCollection!.clear();
     userCollection = [];
-    if (_SignupKey.currentState!.validate() && checkedValue!) {
+    if (_SignupKey.currentState!.validate() && checkedValue) {
       _SignupKey.currentState!.save();
       LoaderClass.showLoadingDialog(context);
       var user3 = UserContactCollection3();

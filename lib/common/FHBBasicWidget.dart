@@ -232,7 +232,7 @@ class FHBBasicWidget {
         lastDate: DateTime(2101));
 
     if (picked != null && picked != dateTime) {
-      dateTime = picked ?? dateTime;
+      dateTime = picked;
 
       return onDateSelected(
           dateTime,
@@ -586,8 +586,7 @@ class FHBBasicWidget {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   static customShowCaseNew(
@@ -802,8 +801,7 @@ class FHBBasicWidget {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   Widget getRichTextFieldWithNoCallbacks(

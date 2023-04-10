@@ -237,7 +237,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       UserAddressCollection3 userAddressCollection3) {
     var addrLine1 = userAddressCollection3.addressLine1;
     var city = userAddressCollection3.city?.name;
-    var state = userAddressCollection3?.state?.name;
+    var state = userAddressCollection3.state?.name;
     if (addrLine1 != '' && city != '' && state != '') {
       return true;
     } else {
@@ -763,7 +763,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     if (picked != null) {
       setState(() {
-        dateTime = picked ?? dateTime;
+        dateTime = picked;
 
         dateofBirthStr =
             FHBUtils().getFormattedDateForUserBirth(dateTime.toString());

@@ -398,9 +398,9 @@ class DevicesViewModel with ChangeNotifier {
   getUnit(String unit) {
     if (unit != null && unit != '') {
       if (unit.length == 1) {
-        return unit.toUpperCase() ?? '';
+        return unit.toUpperCase();
       } else {
-        return unit.capitalizeFirstofEach ?? '';
+        return unit.capitalizeFirstofEach;
       }
     }
   }

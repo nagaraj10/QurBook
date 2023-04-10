@@ -67,12 +67,12 @@ class ConfirmViaCallWidget extends StatelessWidget {
     primaryNumber;
     var index = 0;
     for (final ivrNumber in ivrNumbersList!) {
-      phoneWidgets.add((ivrNumber ?? '').isNotEmpty
+      phoneWidgets.add((ivrNumber).isNotEmpty
           ? Column(
               children: [
                 if (index != 0) OrDivider(),
                 CallDialWidget(
-                  phoneNumber: ivrNumber ?? '',
+                  phoneNumber: ivrNumber,
                   phoneNumberName:
                       index == 0 ? primaryNumber : '$alternateNumber $index',
                 ),

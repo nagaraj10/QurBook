@@ -956,9 +956,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    myProfile != null ??
-                            myProfile!.result!.firstName != null &&
-                                myProfile!.result!.firstName != ''
+                    myProfile != null
                         ? 'Hey ' +
                             toBeginningOfSentenceCase(
                                 myProfile!.result!.firstName)!

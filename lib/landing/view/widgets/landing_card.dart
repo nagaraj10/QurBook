@@ -76,7 +76,7 @@ class LandingCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        title ?? '',
+                        title,
                         style: TextStyle(
                           fontSize: 18.0.sp,
                           color: color,

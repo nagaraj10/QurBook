@@ -462,7 +462,7 @@ class PreferenceUtil {
     final instance = await _prefs!;
     return instance.setBool(
       Constants.KEY_IS_Active_Membership_SELECTED,
-      membershipStatus ?? false,
+      membershipStatus,
     );
   }
 

@@ -34,7 +34,7 @@ class ClaimListBloc implements BaseBloc {
     try {
       claimExpiryResponse = await claimLosRepository
           .getClaimExpiryResponseList();
-      claimExpiryResult = claimExpiryResponse?.result;
+      claimExpiryResult = claimExpiryResponse.result;
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
     } catch (e) {

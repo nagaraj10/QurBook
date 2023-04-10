@@ -119,10 +119,10 @@ class LandingViewModel extends ChangeNotifier {
       }
       final dashboardResponse = await LandingService.getQurPlanDashBoard();
       isLoadDone = true;
-      if (dashboardResponse?.isSuccess ?? false) {
+      if (dashboardResponse.isSuccess ?? false) {
         dashboardData = dashboardResponse.dashboardData;
       } else {
-        dashboardData = dashboardResponse?.dashboardData;
+        dashboardData = dashboardResponse.dashboardData;
       }
       if (needNotify) {
         updateStatus(LandingScreenStatus.Loaded, needNotify: needNotify);
@@ -143,10 +143,10 @@ class LandingViewModel extends ChangeNotifier {
     final dashboardResponse = await LandingService.getQurPlanDashBoard(
       includeText: includeText,
     );
-    if (dashboardResponse?.isSuccess ?? false) {
+    if (dashboardResponse.isSuccess ?? false) {
       widgetsData = dashboardResponse.dashboardData;
     } else {
-      widgetsData = dashboardResponse?.dashboardData;
+      widgetsData = dashboardResponse.dashboardData;
     }
     if (needNotify) {
       widgetScreenStatus = LandingScreenStatus.Loaded;

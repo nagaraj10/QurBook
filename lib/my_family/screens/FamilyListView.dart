@@ -285,7 +285,7 @@ class FamilyListView {
                                                 : 'Self'
                                             : (sharedByMe[index].nickName != null
                                                 ? sharedByMe[index]
-                                                    ?.nickName
+                                                    .nickName
                                                     ?.capitalizeFirstofEach
                                                 /* toBeginningOfSentenceCase(
                                                     sharedByMe[index]
@@ -380,7 +380,7 @@ class FamilyListView {
           if (SharedbymeList[i].nickName == variable.Self) {
             familyID = SharedbymeList[i].id;
           } else {
-            familyID = SharedbymeList[i]?.child?.id;
+            familyID = SharedbymeList[i].child?.id;
           }
           if (!sharedByMeClone.contains(SharedbymeList[i]) &&
               (userId != familyID)) {
@@ -397,8 +397,8 @@ class FamilyListView {
     if (condition) {
       List<SharedByUsers> copyOfSharedByMeClone = [];
       copyOfSharedByMeClone = sharedByMeClone;
-      var ids = copyOfSharedByMeClone.map((e) => e?.child?.id).toSet();
-      copyOfSharedByMeClone.retainWhere((x) => ids.remove(x?.child?.id));
+      var ids = copyOfSharedByMeClone.map((e) => e.child?.id).toSet();
+      copyOfSharedByMeClone.retainWhere((x) => ids.remove(x.child?.id));
       sharedByMeClone = copyOfSharedByMeClone;
     }
     return sharedByMeClone;

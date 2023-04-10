@@ -45,7 +45,7 @@ class DrawerTile extends StatelessWidget {
                     ),
               ),
               title: Text(
-                title ?? '',
+                title,
                 style: TextStyle(
                   fontSize: CommonUtil().isTablet! ? 18.0.sp : 16.0.sp,
                   color: isGreyout ? Colors.grey : Colors.black54,

@@ -161,9 +161,9 @@ class CommonDialogBox {
         /* labData = mediaMetaInfo.metaInfo.laboratory != null
             ? mediaMetaInfo.metaInfo.laboratory
             : null;*/
-        mediaMetaInfo = mediaMetaInfo ?? null;
+        mediaMetaInfo = mediaMetaInfo;
 
-        setDoctorValueFromResponse(mediaMetaInfo!);
+        setDoctorValueFromResponse(mediaMetaInfo);
 
         if (mediaMetaInfo != null) {
           metaInfoId = mediaMetaInfo.id;
@@ -425,10 +425,10 @@ class CommonDialogBox {
       containsAudioMain = containsAudio;
       _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
       if (mediaMetaInfo != null) {
-        mediaMetaInfo = mediaMetaInfo ?? null;
+        mediaMetaInfo = mediaMetaInfo;
         deviceHealthResult = mediaMetaInfo;
 
-        doctorsData = mediaMetaInfo!.metadata!.doctor;
+        doctorsData = mediaMetaInfo.metadata!.doctor;
         setDoctorValueFromResponse(mediaMetaInfo);
 
         labData = mediaMetaInfo.metadata!.laboratory ?? null;
@@ -1265,8 +1265,8 @@ class CommonDialogBox {
       {String? voiceRecord}) async {
     try {
       categoryName = healthResult!.metadata!.healthRecordCategory!.categoryName;
-      deviceName = healthResult!.metadata!.healthRecordType!.name;
-      categoryID = healthResult!.metadata!.healthRecordCategory!.id;
+      deviceName = healthResult.metadata!.healthRecordType!.name;
+      categoryID = healthResult.metadata!.healthRecordCategory!.id;
     } catch (e) {
       categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
@@ -1793,7 +1793,7 @@ class CommonDialogBox {
         lastDate: DateTime.now());
 
     if (picked != null) {
-      dateTime = picked ?? dateTime;
+      dateTime = picked;
       dateOfVisit.text = FHBUtils().getFormattedDateOnly(dateTime.toString());
     }
   }
@@ -1809,7 +1809,7 @@ class CommonDialogBox {
         lastDate: DateTime(2100));
 
     if (picked != null) {
-      dateTime = picked ?? dateTime;
+      dateTime = picked;
       dateOfVisit.text = FHBUtils().getFormattedDateOnly(dateTime.toString());
     }
   }
@@ -3241,11 +3241,11 @@ class CommonDialogBox {
       healthOrganizationId: newValue.id,
       healthOrganizationName: newValue.name,
       addressLine1:
-          newValue.healthOrganizationAddressCollection![0]?.addressLine1,
+          newValue.healthOrganizationAddressCollection![0].addressLine1,
       addressLine2:
-          newValue.healthOrganizationAddressCollection![0]?.addressLine2,
-      cityName: newValue.healthOrganizationAddressCollection![0]?.city?.name,
-      stateName: newValue.healthOrganizationAddressCollection![0]?.state?.name,
+          newValue.healthOrganizationAddressCollection![0].addressLine2,
+      cityName: newValue.healthOrganizationAddressCollection![0].city?.name,
+      stateName: newValue.healthOrganizationAddressCollection![0].state?.name,
       /*healthOrganizationTypeName: newValue.healthOrganizationType?.name,
       healthOrganizationTypeId: newValue.healthOrganizationType?.id,
       phoneNumber: newValue.healthOrganizationContactCollection[0]?.phoneNumber,
@@ -3327,8 +3327,8 @@ class CommonDialogBox {
   void filterDuplicateHospital() {
     if (hospitalListFromProvider!.isNotEmpty) {
       copyOfhospitalModel = hospitalListFromProvider;
-      var ids = copyOfhospitalModel!.map((e) => e?.id).toSet();
-      copyOfhospitalModel!.retainWhere((x) => ids.remove(x?.id));
+      var ids = copyOfhospitalModel!.map((e) => e.id).toSet();
+      copyOfhospitalModel!.retainWhere((x) => ids.remove(x.id));
       hospitalListFromProvider = copyOfhospitalModel;
     }
   }

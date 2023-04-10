@@ -32,7 +32,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/errors_widget.dart';
-import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart' as Constants; 
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
@@ -227,8 +227,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   void openWebView(String title, String url, bool isLocal) {
@@ -263,8 +262,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               myProfile.result.lastName ?? '') */
                       myProfile?.result?.firstName?.capitalizeFirstofEach ??
                           '' ' ' +
-                              myProfile!.result!.lastName!.capitalizeFirstofEach ??
-                          ''
+                              myProfile!.result!.lastName!.capitalizeFirstofEach
                       : '',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
@@ -850,8 +848,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               myProfile.result.lastName ?? '') */
                       myProfile?.result?.firstName?.capitalizeFirstofEach ??
                           '' ' ' +
-                              myProfile!.result!.lastName!.capitalizeFirstofEach ??
-                          ''
+                              myProfile!.result!.lastName!.capitalizeFirstofEach
                       : '',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),

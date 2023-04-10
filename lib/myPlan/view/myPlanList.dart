@@ -61,10 +61,10 @@ class _MyPlanState extends State<MyPlanList> {
       ).updateTabIndex(currentIndex: 3);
     }
     Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.getCreditBalance();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateCareCount();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateDietCount();
+        .getCreditBalance();
+    Provider.of<PlanWizardViewModel>(context, listen: false).fetchCartItem();
+    Provider.of<PlanWizardViewModel>(context, listen: false).updateCareCount();
+    Provider.of<PlanWizardViewModel>(context, listen: false).updateDietCount();
 
     PreferenceUtil.init();
 
@@ -111,7 +111,7 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          floatingActionButton: addplanbutton??false
+          floatingActionButton: addplanbutton
               ? FloatingActionButton.extended(
                   onPressed: () async {
                     var firebase = FirebaseAnalyticsService();
@@ -158,7 +158,7 @@ class _MyPlanState extends State<MyPlanList> {
                     height: 5.0.h,
                   ),
                   Expanded(
-                    child: myPlanListModel != null ?? myPlanListModel!.isSuccess!
+                    child: myPlanListModel != null 
                         ? hospitalList(myPlanListModel!.result)
                         : getPlanList(),
                   )
@@ -372,7 +372,7 @@ class _MyPlanState extends State<MyPlanList> {
                     radius: 20.h,
                     child: CommonUtil().customImage(
                       getImage(i, planList),
-                      planInitial: planList[i]?.providerName ?? '',
+                      planInitial: planList[i].providerName ?? '',
                     ),
                   ),
                   SizedBox(
@@ -438,7 +438,7 @@ class _MyPlanState extends State<MyPlanList> {
                       ],
                     ),
                   ),
-                  if (planList[i]?.tags != strMemb)
+                  if (planList[i].tags != strMemb)
                     Row(
                       children: [
                         showRenewOrSubscribeButton
@@ -470,16 +470,16 @@ class _MyPlanState extends State<MyPlanList> {
                                             await CommonUtil().renewAlertDialog(
                                                 context,
                                                 packageId:
-                                                    planList[i]?.packageid,
-                                                price: planList[i]?.price,
+                                                    planList[i].packageid,
+                                                price: planList[i].price,
                                                 startDate:
-                                                    planList[i]?.startdate,
-                                                endDate: planList[i]?.enddate,
+                                                    planList[i].startdate,
+                                                endDate: planList[i].enddate,
                                                 isExpired: true,
                                                 packageDuration:
-                                                    planList[i]?.duration,
+                                                    planList[i].duration,
                                                 IsExtendable:
-                                                    planList[i]?.isExtendable ==
+                                                    planList[i].isExtendable ==
                                                             '1'
                                                         ? true
                                                         : false, refresh: () {

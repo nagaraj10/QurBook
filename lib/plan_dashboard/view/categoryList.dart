@@ -124,7 +124,7 @@ class _CategoryState extends State<CategoryList> {
                 height: 10.0.h,
               ),
               Expanded(
-                child: myPlanListModel != null ?? myPlanListModel!.isSuccess!
+                child: myPlanListModel != null
                     ? categoryList(myPlanListModel!.result)
                     : getCategoryList(providerId),
               ),
@@ -151,10 +151,10 @@ class _CategoryState extends State<CategoryList> {
     isSelectedMap = {};
     if (planList != null && planList.isNotEmpty) {
       planList.forEach((element) {
-        if (element?.metadata?.diseases == diseases) {
+        if (element.metadata?.diseases == diseases) {
           var keysUniq = true;
           categoryListUniq.forEach((catElement) {
-            if (catElement?.packcatid == element?.packcatid) {
+            if (catElement.packcatid == element.packcatid) {
               keysUniq = false;
             }
           });
@@ -181,10 +181,10 @@ class _CategoryState extends State<CategoryList> {
           () => false,
         );
         planList.where((elementWhere) {
-          return (elementWhere?.metadata?.diseases == diseases) &&
-              (elementNew?.packcatid == elementWhere?.packcatid);
+          return (elementWhere.metadata?.diseases == diseases) &&
+              (elementNew.packcatid == elementWhere.packcatid);
         }).forEach((elementLast) {
-          if (elementLast?.isSubscribed == '1') {
+          if (elementLast.isSubscribed == '1') {
             isSelectedMap[elementLast.packcatid] = true;
             isSubscribedOne = true;
             //selectedTitle[elementLast.packcatid].add(elementLast.title);
@@ -228,16 +228,16 @@ class _CategoryState extends State<CategoryList> {
                 isSearch ? myPLanListResult.length : categoryListUniq.length,
             countOfItemInSection: (section) {
               return planListResultMap![isSearch
-                          ? myPLanListResult[section]?.packcatid
-                          : categoryListUniq[section]?.packcatid]
+                          ? myPLanListResult[section].packcatid
+                          : categoryListUniq[section].packcatid]
                       ?.length ??
                   0;
             },
             itemBuilder: _itemBuilder,
             groupHeaderBuilder: (context, section) {
               final catName = isSearch
-                  ? myPLanListResult[section]?.catname
-                  : categoryListUniq[section]?.catname;
+                  ? myPLanListResult[section].catname
+                  : categoryListUniq[section].catname;
               return Column(
                 children: [
                   SizedBox(height: 8.0.h),
@@ -324,8 +324,8 @@ class _CategoryState extends State<CategoryList> {
                   planList[i].packcatid,
                   planListFull,
                   icon,
-                  planList[i]?.catmetadata?.icon,
-                  planList[i]?.metadata?.diseases)),
+                  planList[i].catmetadata?.icon,
+                  planList[i].metadata?.diseases)),
         ).then((value) {
           setState(() {
             planListModel = myPlanViewModel.getPlanList(providerId!) as Future<PlanListModel>?;
@@ -361,10 +361,10 @@ class _CategoryState extends State<CategoryList> {
                       backgroundColor: Colors.grey[200],
                       radius: 20,
                       child: CommonUtil().customImage(
-                        (planList[i]?.catmetadata?.icon ?? '').isNotEmpty
-                            ? planList[i]?.catmetadata?.icon
+                        (planList[i].catmetadata?.icon ?? '').isNotEmpty
+                            ? planList[i].catmetadata?.icon
                             : icon,
-                        planInitial: planList[i]?.providerName,
+                        planInitial: planList[i].providerName,
                       )),
                   SizedBox(
                     width: 20.0.w,
@@ -432,8 +432,8 @@ class _CategoryState extends State<CategoryList> {
   }
 
   Widget _itemBuilder(BuildContext context, IndexPath inx) {
-    if ((planListResultMap!.length ?? 0) > 0 &&
-        (categoryListUniq.length ?? 0) > 0) {
+    if ((planListResultMap!.length) > 0 &&
+        (categoryListUniq.length) > 0) {
       final planListResult = planListResultMap![isSearch
           ? myPLanListResult[inx.section].packcatid
           : categoryListUniq[inx.section].packcatid]!;
@@ -500,7 +500,7 @@ class _CategoryState extends State<CategoryList> {
                       radius: 20,
                       child: CommonUtil().customImage(
                         getImage(inx.index, planListResult),
-                        planInitial: planListResult[inx.index]?.providerName,
+                        planInitial: planListResult[inx.index].providerName,
                       ),
                     ),
                     SizedBox(
@@ -512,9 +512,9 @@ class _CategoryState extends State<CategoryList> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            planListResult[inx.index]?.title != null
+                            planListResult[inx.index].title != null
                                 ? toBeginningOfSentenceCase(
-                                    planListResult[inx.index]?.title)!
+                                    planListResult[inx.index].title)!
                                 : '',
                             style: TextStyle(
                               fontSize: 15.0.sp,
@@ -525,9 +525,9 @@ class _CategoryState extends State<CategoryList> {
                             maxLines: 2,
                           ),
                           Text(
-                            planListResult[inx.index]?.providerName != null
+                            planListResult[inx.index].providerName != null
                                 ? toBeginningOfSentenceCase(
-                                    planListResult[inx.index]?.providerName)!
+                                    planListResult[inx.index].providerName)!
                                 : '',
                             style: TextStyle(
                                 fontSize: 14.0.sp,
@@ -566,7 +566,7 @@ class _CategoryState extends State<CategoryList> {
                             children: [
                               Row(
                                 children: [
-                                  if (planListResult[inx.index]?.isSubscribed ==
+                                  if (planListResult[inx.index].isSubscribed ==
                                       '1')
                                     Text(
                                       'Start Date: ',
@@ -576,18 +576,18 @@ class _CategoryState extends State<CategoryList> {
                                     )
                                   else
                                     SizedBox(width: 55.w),
-                                  planListResult[inx.index]?.isSubscribed == '1'
+                                  planListResult[inx.index].isSubscribed == '1'
                                       ? Text(
                                           CommonUtil().dateFormatConversion(
                                               planListResult[inx.index]
-                                                  ?.startDate),
+                                                  .startDate),
                                           maxLines: 1,
                                           style: TextStyle(
                                               fontSize: 10.0.sp,
                                               fontWeight: FontWeight.w600),
                                         )
                                       : SizedBox(width: 55.w),
-                                  if (planListResult[inx.index]?.isSubscribed ==
+                                  if (planListResult[inx.index].isSubscribed ==
                                       '0')
                                     SizedBox(width: 60.w)
                                   else
@@ -608,7 +608,7 @@ class _CategoryState extends State<CategoryList> {
                                     visible: planListResult[inx.index]
                                             .price!
                                             .isNotEmpty &&
-                                        planListResult[inx.index]?.price != '0',
+                                        planListResult[inx.index].price != '0',
                                     replacement: TextWidget(
                                         text: FREE,
                                         fontsize: 16.0.sp,
@@ -637,7 +637,7 @@ class _CategoryState extends State<CategoryList> {
                                             inx.index, planListResult))),
                                 color: Colors.transparent,
                                 textColor: planListResult[inx.index]
-                                            ?.isSubscribed ==
+                                            .isSubscribed ==
                                         '0'
                                     ? Color(CommonUtil().getMyPrimaryColor())
                                     : Colors.grey,
@@ -645,17 +645,17 @@ class _CategoryState extends State<CategoryList> {
                                   8.0.sp,
                                 ),
                                 onPressed: (planListResult[inx.index]
-                                                ?.catselecttype ==
+                                                .catselecttype ==
                                             '1'
                                         ? (planListResult[inx.index]
-                                                    ?.isSubscribed ==
+                                                    .isSubscribed ==
                                                 '1' ||
                                             (isSelectedMap[
                                                     planListResult[inx.index]
-                                                        ?.packcatid] ??
+                                                        .packcatid] ??
                                                 false))
                                         : (planListResult[inx.index]
-                                                ?.isSubscribed ==
+                                                .isSubscribed ==
                                             '1'))
                                     ? null
                                     : () async {

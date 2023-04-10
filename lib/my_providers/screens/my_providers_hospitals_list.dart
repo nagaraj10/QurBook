@@ -238,7 +238,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
     if (eachHospitalModel.name != null) {
       if (eachHospitalModel.name != "Self" &&
           eachHospitalModel.name != "self") {
-        name = eachHospitalModel?.name?.capitalizeFirstofEach;
+        name = eachHospitalModel.name?.capitalizeFirstofEach;
       } else {
         if (eachHospitalModel.createdBy != null) {
           if (eachHospitalModel.createdBy!.firstName != "" &&

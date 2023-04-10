@@ -100,7 +100,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                       height: 10.0.h,
                     ),
                     Text(
-                      (widget.isVirtualNumber ?? false)
+                      (widget.isVirtualNumber)
                           ? strChangePasswordTextVirtual
                           : strChangePasswordText,
                       textAlign: TextAlign.center,

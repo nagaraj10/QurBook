@@ -553,7 +553,7 @@ class _MyFHBState extends State<MyFHB> {
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
         if (sheelaAIController.isSheelaScreenActive) {
-          if (((passedValArr[3].toString() ?? '').isNotEmpty) &&
+          if (((passedValArr[3].toString()).isNotEmpty) &&
               (passedValArr[3] != 'null')) {
             var reqJsonAudio = {
               KIOSK_task: KIOSK_audio,
@@ -568,7 +568,7 @@ class _MyFHBState extends State<MyFHB> {
             CommonUtil().callQueueNotificationPostApi(reqJsonText);
           }
         } else {
-          if (((passedValArr[3].toString() ?? '').isNotEmpty) &&
+          if (((passedValArr[3].toString()).isNotEmpty) &&
               (passedValArr[3] != 'null')) {
             Get.toNamed(
               router.rt_Sheela,
@@ -597,20 +597,20 @@ class _MyFHBState extends State<MyFHB> {
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
         if (temp[0] == 'myRecords') {
-          final dataOne = temp[1] ?? '';
+          final dataOne = temp[1];
           final dataTwo = temp[2];
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'myRecords',
             'navigationPage': temp[1],
           });
-          if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
+          if (dataTwo.runtimeType == String && (dataTwo).isNotEmpty) {
             final userId = PreferenceUtil.getStringValue(KEY_USERID);
-            if ((passedValArr[2] ?? '') == userId) {
+            if ((passedValArr[2]) == userId) {
               CommonUtil().navigateToRecordDetailsScreen(dataTwo);
             } else {
               CommonUtil.showFamilyMemberPlanExpiryDialog(
-                passedValArr[3] ?? '',
+                passedValArr[3],
                 redirect: temp[0],
               );
             }
@@ -796,7 +796,7 @@ class _MyFHBState extends State<MyFHB> {
           if (CommonUtil.isUSRegion()) {
             var qurhomeDashboardController =
                 CommonUtil().onInitQurhomeDashboardController();
-            qurhomeDashboardController.eventId.value = passedValArr[2] ?? '';
+            qurhomeDashboardController.eventId.value = passedValArr[2];
             if(!qurhomeDashboardController.isActive.value){
               Get.to(QurhomeDashboard());
             }
@@ -807,9 +807,9 @@ class _MyFHBState extends State<MyFHB> {
             Provider.of<RegimentViewModel>(
               context,
               listen: false,
-            )?.regimentMode = RegimentMode.Schedule;
+            ).regimentMode = RegimentMode.Schedule;
             Provider.of<RegimentViewModel>(context, listen: false)
-                ?.regimentFilter = RegimentFilter.Missed;
+                .regimentFilter = RegimentFilter.Missed;
             Get.toNamed(router.rt_Regimen,
                 arguments: RegimentArguments(eventId: passedValArr[2]));
           }
@@ -1021,8 +1021,8 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Reschedule screen',
         });
         final body = {};
-        body['templateName'] = passedValArr[5] ?? '';
-        body['contextId'] = passedValArr[2] ?? '';
+        body['templateName'] = passedValArr[5];
+        body['contextId'] = passedValArr[2];
         Get.to(ResheduleMain(
           isFromNotification: true,
           isReshedule: true,
@@ -1047,9 +1047,9 @@ class _MyFHBState extends State<MyFHB> {
               selectedIndex: 0,
               dialogType: 'CANCEL',
               isCancelDialogShouldShow: true,
-              bookingId: passedValArr[1] ?? '',
-              date: passedValArr[2] ?? '',
-              templateName: passedValArr[3] ?? ''),
+              bookingId: passedValArr[1],
+              date: passedValArr[2],
+              templateName: passedValArr[3]),
         ));
       } else if (passedValArr[0] == 'accept' || passedValArr[0] == 'decline') {
         final jsonInput = {};
@@ -1344,7 +1344,7 @@ class _MyFHBState extends State<MyFHB> {
         }
         if (parsedData != null && parsedData.length > 0) {
           if (parsedData[0] == 'isSheelaFollowup') {
-            if ((parsedData[3].toString() ?? '').isNotEmpty) {
+            if ((parsedData[3].toString()).isNotEmpty) {
               return SplashScreen(
                 nsRoute: 'isSheelaFollowup',
                 bundle: 'isSheelaFollowup' + '|' + parsedData[3],

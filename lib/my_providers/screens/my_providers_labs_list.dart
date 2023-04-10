@@ -211,8 +211,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                           ],
                         ),
                         if (CommonUtil.isUSRegion() &&
-                                eachLabModel.isPrimaryProvider! ??
-                            false)
+                                eachLabModel.isPrimaryProvider!)
                           CommonUtil().primaryProviderIndication(),
                       ],
                     )));

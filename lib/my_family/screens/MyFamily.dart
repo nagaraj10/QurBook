@@ -302,11 +302,11 @@ class _MyFamilyState extends State<MyFamily> {
     }
 
     if (position != 0) {
-      if (data?.child?.firstName != null && data?.child?.firstName != '') {
-        fulName = data?.child?.firstName;
+      if (data.child?.firstName != null && data.child?.firstName != '') {
+        fulName = data.child?.firstName;
       }
-      if (data?.child?.lastName != null && data?.child?.lastName != '') {
-        fulName = fulName! + ' ' + data!.child!.lastName!;
+      if (data.child?.lastName != null && data.child?.lastName != '') {
+        fulName = fulName! + ' ' + data.child!.lastName!;
       }
     }
 
@@ -352,7 +352,7 @@ class _MyFamilyState extends State<MyFamily> {
             children: <Widget>[
               ClipOval(
                 child: position != 0
-                    ? data?.child?.profilePicThumbnailUrl == null
+                    ? data.child?.profilePicThumbnailUrl == null
                         ? Container(
                             width: 60.0.h,
                             height: 60.0.h,
@@ -488,24 +488,24 @@ class _MyFamilyState extends State<MyFamily> {
                     ),
                     Text(
                       position == 0 //this is checking self
-                          ? ((myProfile?.result?.userContactCollection3 !=
+                          ? ((myProfile.result?.userContactCollection3 !=
                                       null &&
-                                  myProfile!.result!.userContactCollection3!
+                                  myProfile.result!.userContactCollection3!
                                       .isNotEmpty)
-                              ? myProfile?.result?.userContactCollection3![0]!
+                              ? myProfile.result?.userContactCollection3![0]!
                                   .phoneNumber!
                               : '')!
-                          : (data?.child?.isVirtualUser != null &&
-                                  data!.child!.isVirtualUser!)
+                          : (data.child?.isVirtualUser != null &&
+                                  data.child!.isVirtualUser!)
                               /*? data?.child?.isVirtualUser
                                 */
                               ? userCollection
                                       ?.virtualUserParent?.phoneNumber ??
                                   ''
-                              : ((data?.child?.userContactCollection3 != null &&
-                                      data!.child!.userContactCollection3!
+                              : ((data.child?.userContactCollection3 != null &&
+                                      data.child!.userContactCollection3!
                                           .isNotEmpty)
-                                  ? data?.child?.userContactCollection3![0]
+                                  ? data.child?.userContactCollection3![0]
                                       .phoneNumber!
                                   : '')!,
                       style: TextStyle(
@@ -847,11 +847,11 @@ class _MyFamilyState extends State<MyFamily> {
               isCalled = true;
               if (snapshot.data!.data!.result![0] != null) {
                 PreferenceUtil.saveRelationshipArray(Constants.KEY_FAMILYREL,
-                    snapshot?.data?.data?.result![0]?.referenceValueCollection);
+                    snapshot.data?.data?.result![0].referenceValueCollection);
                 relationShipResponseList = snapshot.data!.data;
 
                 familyWidget = getRelationshipDetails(
-                    snapshot?.data!.data?.result![0]?.referenceValueCollection);
+                    snapshot.data!.data?.result![0].referenceValueCollection);
               }
               break;
           }
@@ -1162,7 +1162,7 @@ class _MyFamilyState extends State<MyFamily> {
                           .pop();
 
                       Alert.displayAlertPlain(context,
-                          title: variable.Error, content: value?.message);
+                          title: variable.Error, content: value.message);
                     }
                   });
                 } else {
@@ -1321,7 +1321,7 @@ class _MyFamilyState extends State<MyFamily> {
                 Navigator.pop(_keyLoader.currentContext!);
 
                 Alert.displayAlertPlain(context,
-                    title: variable.Error, content: userLinking?.message);
+                    title: variable.Error, content: userLinking.message);
               }
             });
           }

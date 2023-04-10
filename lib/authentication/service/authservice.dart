@@ -333,7 +333,7 @@ class AuthService {
     try {
       var response = await ApiServices.get(
         Constants.BASE_URL +
-            'authentication-log/polling/?phone=${phoneNumber ?? ''}&source=myFHB',
+            'authentication-log/polling/?phone=${phoneNumber}&source=myFHB',
         headers: headerRequest,
       );
       if (response != null) {

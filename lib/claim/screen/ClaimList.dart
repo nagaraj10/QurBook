@@ -262,8 +262,8 @@ class _ClaimListState extends State<ClaimList> {
       future: claimListRepository.getMemberShip(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
             if (snapshot.data!.isSuccess!) {
               memberShipType = snapshot.data!.result![0].planName;
               memberShipName = snapshot.data!.result![0].healthOrganizationName;
@@ -299,8 +299,8 @@ class _ClaimListState extends State<ClaimList> {
       future: claimListRepository.getCreditBalance(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
             if (snapshot.data!.isSuccess!) {
               ClaimAmount = snapshot.data!.result?.balanceAmount;
               PreferenceUtil.save(Constants.keyClaimAmount, ClaimAmount);
@@ -357,8 +357,8 @@ class _ClaimListState extends State<ClaimList> {
       future: claimListRepository.getClaimList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
             if (snapshot.data!.isSuccess!) {
               claimListResponse = snapshot.data;
               return getCliamList();
@@ -382,10 +382,10 @@ class _ClaimListState extends State<ClaimList> {
       future: claimListRepository.getClaimExpiryResponseList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
             if (snapshot.data!.isSuccess!) {
-              claimExpiryList = snapshot?.data?.result;
+              claimExpiryList = snapshot.data?.result;
               return getWidgetForMemberShipList();
             } else {
               return getWidgetForMemberShipList();
@@ -464,7 +464,7 @@ class _ClaimListState extends State<ClaimList> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ClaimRecordDisplay(
-                    claimID: claimResultList[index]?.id,
+                    claimID: claimResultList[index].id,
                     closePage: (value) {},
                   ),
                 ));
@@ -501,13 +501,13 @@ class _ClaimListState extends State<ClaimList> {
                                 Text(
                                     toBeginningOfSentenceCase(
                                             claimResultList[index]
-                                                    ?.submittedFor
+                                                    .submittedFor
                                                     ?.firstName ??
                                                 '')! +
                                         " " +
                                         toBeginningOfSentenceCase(
                                             claimResultList[index]
-                                                    ?.submittedFor
+                                                    .submittedFor
                                                     ?.lastName ??
                                                 '')!,
                                     style: TextStyle(
@@ -521,8 +521,7 @@ class _ClaimListState extends State<ClaimList> {
                                   Text(
                                       " " +
                                               claimResultList[index]
-                                                  !.claimNumber! ??
-                                          '',
+                                                  .claimNumber!,
                                       style: getTextStyleForValue())
                                 ],
                               ),
@@ -548,9 +547,8 @@ class _ClaimListState extends State<ClaimList> {
                                   Text(
                                       " " +
                                               claimResultList[index]
-                                                  ?.documentMetadata![0]
-                                                  ?.billName ??
-                                          '',
+                                                  .documentMetadata![0]
+                                                  .billName,
                                       style: getTextStyleForValue())
                                 ],
                               ),
@@ -564,22 +562,21 @@ class _ClaimListState extends State<ClaimList> {
                             children: [
                               Text(
                                    CommonUtil.getDateStringFromDateTime(claimResultList[index]
-                                          ?.documentMetadata![0]
-                                          ?.billDate ??
-                                      ''),
+                                          .documentMetadata![0]
+                                          .billDate),
                                   style: getTextStyleForTags()),
                               Text("status",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: fhbStyles.fnt_day,
                                       color: Colors.grey[600])),
-                              Text(claimResultList[index]?.status?.name ?? '',
+                              Text(claimResultList[index].status?.name ?? '',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: fhbStyles.fnt_day,
                                       color: getColorBasedOnSatus(
                                           claimResultList[index]
-                                                  ?.status
+                                                  .status
                                                   ?.code ??
                                               ''))),
                             ],
@@ -724,18 +721,18 @@ class _ClaimListState extends State<ClaimList> {
   void convertStringToInt(String balanceAmt, int index) {
     if (int.parse(balanceAmt) > 0) {
       PreferenceUtil.save(
-          Constants.keyMembeShipID, claimExpiryList![index]?.membershipId);
+          Constants.keyMembeShipID, claimExpiryList![index].membershipId);
       PreferenceUtil.save(Constants.keyHealthOrganizationId,
-          claimExpiryList![index]?.healthOrganizationId);
+          claimExpiryList![index].healthOrganizationId);
       PreferenceUtil.save(Constants.keyPlanSubscriptionInfoId,
-          claimExpiryList![index]?.planSubscriptionInfoId);
+          claimExpiryList![index].planSubscriptionInfoId);
       PreferenceUtil.save(Constants.keyMembershipStartDate,
-          claimExpiryList![index]?.additionalInfo?.planStartDate);
+          claimExpiryList![index].additionalInfo?.planStartDate);
       PreferenceUtil.save(Constants.keyMembershipEndDate,
-          claimExpiryList![index]?.additionalInfo?.planEndDate);
+          claimExpiryList![index].additionalInfo?.planEndDate);
       PreferenceUtil.save(
-          Constants.keyClaimAmount, claimExpiryList![index]?.balanceAmount);
-      if (claimExpiryList![index]?.membershipStatus!.toLowerCase() == "active") {
+          Constants.keyClaimAmount, claimExpiryList![index].balanceAmount);
+      if (claimExpiryList![index].membershipStatus!.toLowerCase() == "active") {
         PreferenceUtil.saveIfMemberShipIsActive(true);
       } else {
         PreferenceUtil.saveIfMemberShipIsActive(false);

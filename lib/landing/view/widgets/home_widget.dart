@@ -129,7 +129,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                   LandingScreenStatus.Loading) {
                 return CommonCircularIndicator();
               } else {
-                final dashboardData = landingViewModel?.dashboardData;
+                final dashboardData = landingViewModel.dashboardData;
                 final activePlanCount =
                     dashboardData?.activePlans?.activePlanCount ?? 0;
                 final activeDevices =
@@ -144,7 +144,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
                 Future.delayed(Duration(milliseconds: 100), () {
                   Provider.of<PlanWizardViewModel>(context, listen: false)
-                      ?.updateProviderHosCount(
+                      .updateProviderHosCount(
                           dashboardData?.providers?.hospital ?? 0);
                 });
 

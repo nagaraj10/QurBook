@@ -141,7 +141,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 ? getWidgetForImages(
                     getRecordIdsFilter!.result![0].healthRecordCollection)
                 : getImageFromMetaId(claimRecordDetails
-                    ?.result?.documentMetadata![0]?.healthRecordId)),
+                    ?.result?.documentMetadata![0].healthRecordId)),
         Padding(
           padding: EdgeInsets.all(5),
           child: Builder(
@@ -162,7 +162,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + billName! ?? "",
+                    child: Text("   " + billName!,
                         style: getTextStyleForValue()))
               ],
             )),
@@ -177,7 +177,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + claimNo! ?? "",
+                    child: Text("   " + claimNo!,
                         style: getTextStyleForValue()))
               ],
             )),
@@ -193,7 +193,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + submittedDate! ?? "",
+                    child: Text("   " + submittedDate!,
                         style: getTextStyleForValue()))
               ],
             )),
@@ -208,7 +208,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + amount! ?? "",
+                    child: Text("   " + amount!,
                         style: getTextStyleForValue()))
               ],
             )),
@@ -225,7 +225,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                   Text(":"),
                   Expanded(
                       flex: 2,
-                      child: Text("   " + approvedAmount! ?? "",
+                      child: Text("   " + approvedAmount!,
                           style: getTextStyleForValue()))
                 ],
               )),
@@ -255,7 +255,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                   flex: 2,
-                  child: Text("   " + familyMember! ?? "",
+                  child: Text("   " + familyMember!,
                       style: getTextStyleForValue()),
                 )
               ],
@@ -271,7 +271,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + status! ?? "",
+                    child: Text("   " + status!,
                         style: getTextStyleForValue()))
               ],
             )),
@@ -294,7 +294,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(" :   "),
                 Expanded(
                     flex: 2,
-                    child: Text(remark.toString() ?? '',
+                    child: Text(remark.toString(),
                         style: getTextStyleForValue()))
               ],
             )),
@@ -391,8 +391,8 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       future: claimListRepository.getHealthRecordDetailViaId(healthRecordID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
             if (snapshot.data!.isSuccess!) {
               getRecordIdsFilter = snapshot.data;
               final getMediaMasterIDForPdfTypeStr = CommonUtil()
@@ -407,7 +407,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 ispdfPresent = false;
               }
               return getWidgetForImages(
-                  getRecordIdsFilter?.result![0]?.healthRecordCollection);
+                  getRecordIdsFilter?.result![0].healthRecordCollection);
             } else {
               return Container(child: Center(child: Text("Error In Loading")));
             }
@@ -452,7 +452,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                         ? getPDFFile(
                             pdfId,
                             getRecordIdsFilter?.result![0]
-                                ?.healthRecordCollection![0]?.fileType,
+                                .healthRecordCollection![0].fileType,
                             fileName)
                         : getViewPDF()
                     : getCarousalImage(healthRecordCollection!))),
@@ -519,8 +519,8 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       future: claimListRepository.getClaimRecordDetails(widget.claimID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
             if (snapshot.data!.isSuccess!) {
               claimRecordDetails = snapshot.data;
               return getClaimDetails();

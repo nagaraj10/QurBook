@@ -474,7 +474,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         lastDate: isActiveMemberShipSelected! ? dateTime : endDate);
 
     if (picked != null) {
-      dateTime = picked ?? dateTime;
+      dateTime = picked;
       dateOfVisitSample.text = dateTime.toString();
       selectedDate = dateTime.toString();
     }
@@ -869,11 +869,10 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                           child: Text(
                               user.child == null
                                   ? 'Self'
-                                  : ((user?.child?.firstName ?? '') +
+                                  : ((user.child?.firstName ?? '') +
                                               ' ' +
-                                              (user?.child?.lastName ?? ''))
-                                          ?.capitalizeFirstofEach ??
-                                      '',
+                                              (user.child?.lastName ?? ''))
+                                          .capitalizeFirstofEach,
                               style: fhbBasicWidget.getTextStyleForValue()),
                           padding: EdgeInsets.only(
                               left: 20,

@@ -768,7 +768,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     commonConstants.bpDPUNIT,
                                     deviceController, (errorValue) {
                                   setState(() {
-                                    errorMsgSys = errorValue ?? "";
+                                    errorMsgSys = errorValue;
                                     errorMsg = errorMsgSys;
                                   });
                                 }, errorMsgSys, variable.strbpunit, deviceName,
@@ -1502,7 +1502,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     ? GroupedListView<BPResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime!),
-                        elements: bpResult!,
+                        elements: bpResult,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -1576,7 +1576,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     ? GroupedListView<GVResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime!),
-                        elements: translist!,
+                        elements: translist,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -1724,7 +1724,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     ? GroupedListView<WVResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime!),
-                        elements: translist!,
+                        elements: translist,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -1785,7 +1785,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
                 final List<TMPResult>? translistNew = translis!.isNotEmpty
-                    ? translis!.isNotEmpty
+                    ? translis.isNotEmpty
                         ? translis.first
                         : []
                     : [];
@@ -1799,7 +1799,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     ? GroupedListView<TMPResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime!),
-                        elements: translist!,
+                        elements: translist,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -2704,7 +2704,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     var unitConfiguration = await apiBaseHelper
         .getUnitConfiguration(CommonUtil.UNIT_CONFIGURATION_URL);
 
-    if (unitConfiguration!.isSuccess!) {
+    if (unitConfiguration.isSuccess!) {
       if (unitConfiguration.result != null) {
         var configurationData = unitConfiguration.result![0].configurationData;
         if (configurationData != null) {
@@ -2898,7 +2898,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     saveMap.forEach((key, value) {
       events += '&$key=$value';
       var provider = Provider.of<RegimentViewModel>(context, listen: false);
-      provider.cachedEvents?.removeWhere((element) => element.contains(key));
+      provider.cachedEvents.removeWhere((element) => element.contains(key));
       provider.cachedEvents.add('&$key=$value'.toString());
     });
     final saveResponse =
@@ -2911,7 +2911,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 selectedDate: initDate,
                 selectedTime: _currentTime,
                 isVitals: true);
-    if (saveResponse?.isSuccess ?? false) {
+    if (saveResponse.isSuccess ?? false) {
       refreshData();
     }
   }

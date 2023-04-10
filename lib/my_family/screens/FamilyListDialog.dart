@@ -210,7 +210,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  sharedByMe[index]!.profileData!.name!.capitalizeFirstofEach,
+                                  sharedByMe[index].profileData!.name!.capitalizeFirstofEach,
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(

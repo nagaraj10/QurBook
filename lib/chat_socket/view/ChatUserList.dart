@@ -209,7 +209,7 @@ class _ChatUserListState extends State<ChatUserList> {
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
                 title: Text(
-                  ((widget?.careGiversList?.length ?? 0) > 0 ||
+                  ((widget.careGiversList?.length ?? 0) > 0 ||
                           widget.isDynamicLink)
                       ? CAREPROVIDERS
                       : CHAT,
@@ -234,7 +234,7 @@ class _ChatUserListState extends State<ChatUserList> {
                 child: checkIfDoctorIdExist(),
                 onWillPop: onBackPress,
               ),
-        floatingActionButton: (widget?.careGiversList?.length ?? 0) > 0
+        floatingActionButton: (widget.careGiversList?.length ?? 0) > 0
             ? null
             : Obx(() => controller.shownNewChatFloat.isTrue &&
                     controller.isSelfUser()
@@ -414,7 +414,7 @@ class _ChatUserListState extends State<ChatUserList> {
               child: Row(
                 children: <Widget>[
                   ClipOval(
-                      child: data?.profilePicThumbnailUrl == null
+                      child: data.profilePicThumbnailUrl == null
                           ? Container(
                               width: 45.0.h,
                               height: 45.0.h,
@@ -484,7 +484,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 fulName != null
                                     ? CommonUtil()
                                             .titleCase(fulName.toLowerCase()) +
-                                        (data!.isCarecoordinator!
+                                        (data.isCarecoordinator!
                                             ? CARE_COORDINATOR_STRING
                                             : '')
                                     : '',
@@ -530,9 +530,9 @@ class _ChatUserListState extends State<ChatUserList> {
                                 // overflow: TextOverflow.ellipsis,
                               )
                             : Text(
-                                (data?.relationshipName != null &&
-                                        data?.relationshipName != '')
-                                    ? data?.relationshipName ?? ''
+                                (data.relationshipName != null &&
+                                        data.relationshipName != '')
+                                    ? data.relationshipName ?? ''
                                     : '',
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: false,
@@ -573,7 +573,7 @@ class _ChatUserListState extends State<ChatUserList> {
         // List
         Container(
             child: (Provider.of<ChatSocketViewModel>(Get.context!)
-                            ?.userChatList
+                            .userChatList
                             ?.length ??
                         0) >
                     0
@@ -584,7 +584,7 @@ class _ChatUserListState extends State<ChatUserList> {
                         Provider.of<ChatSocketViewModel>(Get.context!)
                             .userChatList![index]),
                     itemCount: Provider.of<ChatSocketViewModel>(Get.context!)
-                        ?.userChatList!
+                        .userChatList!
                         .length,
                   )
                 : Container(
@@ -614,10 +614,10 @@ class _ChatUserListState extends State<ChatUserList> {
     String? ccName = '';
     if (userChatList.isFamilyUserCareCoordinator!) {
       try {
-        if (userChatList?.firstName != null && userChatList?.firstName != '') {
-          ccName = userChatList?.firstName;
+        if (userChatList.firstName != null && userChatList.firstName != '') {
+          ccName = userChatList.firstName;
         }
-        if (userChatList?.lastName != null && userChatList?.lastName != '') {
+        if (userChatList.lastName != null && userChatList.lastName != '') {
           ccName = ccName! + ' ' + userChatList.lastName!;
         }
       } catch (e) {}
@@ -630,8 +630,8 @@ class _ChatUserListState extends State<ChatUserList> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ChatDetail(
-                        peerId: userChatList?.peerId,
-                        peerAvatar: userChatList?.profilePicThumbnailURL,
+                        peerId: userChatList.peerId,
+                        peerAvatar: userChatList.profilePicThumbnailURL,
                         peerName: getDocName(userChatList),
                         patientId: '',
                         patientName: '',
@@ -640,17 +640,17 @@ class _ChatUserListState extends State<ChatUserList> {
                         isNormalChatUserList: 'true',
                         carecoordinatorId:
                             userChatList.isFamilyUserCareCoordinator!
-                                ? userChatList?.peerId
+                                ? userChatList.peerId
                                 : '',
                         familyUserId: userChatList.familyUserId,
                         isFromCareCoordinator:
                             userChatList.isFamilyUserCareCoordinator,
-                        isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
+                        isCareGiver: (widget.careGiversList?.length ?? 0) > 0
                             ? true
                             : false,
-                        groupId: userChatList?.id,
-                        lastDate: userChatList?.deliveredTimeStamp != null &&
-                                userChatList?.deliveredTimeStamp != ''
+                        groupId: userChatList.id,
+                        lastDate: userChatList.deliveredTimeStamp != null &&
+                                userChatList.deliveredTimeStamp != ''
                             ? getFormattedDateTime(
                                 DateTime.fromMillisecondsSinceEpoch(int.parse(
                                         userChatList.deliveredTimeStamp!))
@@ -674,7 +674,7 @@ class _ChatUserListState extends State<ChatUserList> {
                     children: [
                       Expanded(
                         child: ClipOval(
-                          child: userChatList?.profilePicThumbnailURL != null
+                          child: userChatList.profilePicThumbnailURL != null
                               ? CachedNetworkImage(
                                   placeholder: (context, url) => Container(
                                         child: CommonCircularIndicator(),
@@ -794,7 +794,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                             ],
                                           )
                                         : Text(
-                                            userChatList?.messages?.content ??
+                                            userChatList.messages?.content ??
                                                 '',
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
@@ -812,8 +812,8 @@ class _ChatUserListState extends State<ChatUserList> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Text(
-                            userChatList?.deliveredTimeStamp != null &&
-                                    userChatList?.deliveredTimeStamp != ''
+                            userChatList.deliveredTimeStamp != null &&
+                                    userChatList.deliveredTimeStamp != ''
                                 ? LAST_RECEIVED +
                                     getFormattedDateTime(
                                         (DateTime.fromMillisecondsSinceEpoch(
@@ -828,9 +828,9 @@ class _ChatUserListState extends State<ChatUserList> {
                                 fontFamily: variable.font_poppins),
                           ),
                         ),
-                        if ((widget?.careGiversList?.length ?? 0) > 0 &&
-                            userChatList?.isDisable != null &&
-                            userChatList?.isDisable == true)
+                        if ((widget.careGiversList?.length ?? 0) > 0 &&
+                            userChatList.isDisable != null &&
+                            userChatList.isDisable == true)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Text(
@@ -867,7 +867,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                           child: CircleAvatar(
                                             radius: 10,
                                             child: Text(
-                                              userChatList?.unReadCount ?? '',
+                                              userChatList.unReadCount ?? '',
                                               style: TextStyle(
                                                 fontSize: 12.0.sp,
                                               ),
@@ -881,8 +881,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 )
                               : Text('')),
                       if (CommonUtil.isUSRegion() &&
-                              userChatList.isPrimaryCareCoordinator! ??
-                          false)
+                              userChatList.isPrimaryCareCoordinator!)
                         Container(
                           child: Text(primary_chat,
                               style: TextStyle(
@@ -952,10 +951,9 @@ class _ChatUserListState extends State<ChatUserList> {
               userChatList.familyUserLastName != '') {
             name = userChatList.familyUserFirstName! +
                     ' ' +
-                    userChatList.familyUserLastName! ??
-                '';
+                    userChatList.familyUserLastName!;
           } else {
-            name = (userChatList?.familyUserFirstName ?? '').toString();
+            name = (userChatList.familyUserFirstName ?? '').toString();
           }
         } else {
           name = '';
@@ -965,9 +963,9 @@ class _ChatUserListState extends State<ChatUserList> {
           if (userChatList.firstName != null && userChatList.firstName != '') {
             if (userChatList.lastName != null && userChatList.lastName != '') {
               name =
-                  userChatList.firstName! + ' ' + userChatList.lastName! ?? '';
+                  userChatList.firstName! + ' ' + userChatList.lastName!;
             } else {
-              name = (userChatList?.firstName ?? '').toString();
+              name = (userChatList.firstName ?? '').toString();
             }
           } else {
             name = '';
@@ -988,7 +986,7 @@ class _ChatUserListState extends State<ChatUserList> {
     if (users != null) {
       if (users.firstName != null && users.firstName != '') {
         if (users.lastName != null && users.lastName != '') {
-          name = users.firstName! + ' ' + users.lastName! ?? '';
+          name = users.firstName! + ' ' + users.lastName!;
         } else {
           name = (users.firstName ?? '').toString();
         }

@@ -134,7 +134,7 @@ class _LandingScreenState extends State<LandingScreen> {
       // dbInitialize();
       userId = PreferenceUtil.getStringValue(KEY_USERID);
       // QurPlanReminders.getTheRemindersFromAPI();
-      Provider.of<ChatSocketViewModel>(Get.context!)?.initSocket();
+      Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
       await callImportantsMethod();
       moveToQurhome();
       callGetFamiltMappingCaregiver();
@@ -302,8 +302,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 ],
               );
             },
-          ).then((value) => value as bool) ??
-          false as Future<bool>;
+          ).then((value) => value as bool);
     }
   }
 
@@ -314,7 +313,7 @@ class _LandingScreenState extends State<LandingScreen> {
     if (landingViewModel!.isURLCome) {
       landingViewModel!.isURLCome = false;
       Future.delayed(Duration(seconds: 2), () {
-        if (widget?.landingArguments?.url != null &&
+        if (widget.landingArguments?.url != null &&
             widget.landingArguments!.url!.isNotEmpty) {
           CommonUtil().launchURL(widget.landingArguments!.url!);
         }
@@ -712,7 +711,7 @@ class _LandingScreenState extends State<LandingScreen> {
         ),
       ),
       badgeColor: ColorUtils.countColor,
-      badgeCount: Provider.of<ChatSocketViewModel>(Get.context!)?.chatTotalCount,
+      badgeCount: Provider.of<ChatSocketViewModel>(Get.context!).chatTotalCount,
     );
   }
 
@@ -829,11 +828,11 @@ class _LandingScreenState extends State<LandingScreen> {
           QurhomeDefaultUI,
           {
             'status':
-                (result.result!.first?.profileSetting?.qurhomeDefaultUI ?? false)
+                (result.result!.first.profileSetting?.qurhomeDefaultUI ?? false)
           },
         );
       }
-      if (result.result!.first?.profileSetting?.qurhomeDefaultUI ?? false) {
+      if (result.result!.first.profileSetting?.qurhomeDefaultUI ?? false) {
         if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
           PreferenceUtil.saveQurhomeAsDefaultUI(
             qurhomeStatus: true,
@@ -870,7 +869,7 @@ class _LandingScreenState extends State<LandingScreen> {
     );
     await CommonUtil().validateToken();
     await Provider.of<UserPlansViewModel>(context, listen: false)
-        ?.getUserPlanInfoLocal();
+        .getUserPlanInfoLocal();
 
     try {
       getFamilyRelationAndMediaType();
@@ -898,7 +897,7 @@ class _LandingScreenState extends State<LandingScreen> {
       await addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
     } catch (e) {}
     var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
-    if (url?.isNotEmpty ?? false) {
+    if (url.isNotEmpty) {
       try {
         Uri deepLink = Uri.parse(jsonDecode(url));
         DynamicLinks.processDynamicLink(deepLink);

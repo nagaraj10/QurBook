@@ -797,7 +797,7 @@ class CommonUtil {
     final profileData = ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
-        name: fullName ?? '',
+        name: fullName,
         email: myProfileResult.userContactCollection3!.isNotEmpty
             ? myProfileResult.userContactCollection3![0]!.email
             : '',
@@ -1616,7 +1616,7 @@ class CommonUtil {
   }
 
   dateTimeString(DateTime dateTime) {
-    if (dateTime != null && (dateTime?.toString()?.isNotEmpty ?? false)) {
+    if (dateTime != null && (dateTime.toString().isNotEmpty)) {
       final newFormat = DateFormat('MMM d, yyyy hh:mm a');
       final updatedDate = newFormat.format(dateTime);
       return updatedDate;
@@ -1669,7 +1669,7 @@ class CommonUtil {
         final df = new DateFormat(
             CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
-        return df.format(now) ?? '';
+        return df.format(now);
       }
     } catch (e) {
       DateFormat format = DateFormat(
@@ -1679,7 +1679,7 @@ class CommonUtil {
       final df = new DateFormat(
           CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
-      return df.format(now) ?? '';
+      return df.format(now);
     }
   }
 
@@ -1817,9 +1817,7 @@ class CommonUtil {
   }
 
   getDoctorProfileImageWidget(String? doctorUrl, Doctor? doctor) {
-    String name = doctor!.firstName!.capitalizeFirstofEach ??
-        " " + doctor.lastName!.capitalizeFirstofEach ??
-        " ";
+    String name = doctor!.firstName!.capitalizeFirstofEach;
     if (doctorUrl != null && doctorUrl != '') {
       return Image.network(
         doctorUrl,
@@ -2112,10 +2110,10 @@ class CommonUtil {
             label: actionName,
             onPressed: () async {
               final myProfile = await fetchUserProfileInfo();
-              if (myProfile?.result != null) {
+              if (myProfile.result != null) {
                 await Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                     arguments: AddFamilyUserInfoArguments(
-                      myProfileResult: myProfile?.result,
+                      myProfileResult: myProfile.result,
                       fromClass: CommonConstants.user_update,
                       isFromAppointmentOrSlotPage: true,
                       isForFamilyAddition: false,
@@ -2295,8 +2293,8 @@ class CommonUtil {
 
   static updateDefaultUIStatus(bool status) {
     HealthReportListForUserRepository().getDeviceSelection().then((result) {
-      if (result.isSuccess! && (result.result!.first?.profileSetting != null)) {
-        result.result!.first?.profileSetting!.qurhomeDefaultUI = status;
+      if (result.isSuccess! && (result.result!.first.profileSetting != null)) {
+        result.result!.first.profileSetting!.qurhomeDefaultUI = status;
         var body = jsonEncode(result.result!.first.toProfileSettingJson());
         ApiBaseHelper().updateDeviceSelection(qr_user_profile_no_slash, body);
       }
@@ -3037,7 +3035,7 @@ class CommonUtil {
                             var myProfile = await fetchUserProfileInfo();
                             await Get.toNamed(router.rt_AddFamilyUserInfo,
                                 arguments: AddFamilyUserInfoArguments(
-                                  myProfileResult: myProfile?.result,
+                                  myProfileResult: myProfile.result,
                                   fromClass: CommonConstants.user_update,
                                   isFromCSIR: true,
                                   packageId: packageId,
@@ -3580,7 +3578,7 @@ class CommonUtil {
                                     await Provider.of<PlanWizardViewModel>(
                                             context,
                                             listen: false)
-                                        ?.addToCartItem(
+                                        .addToCartItem(
                                             packageId: packageId,
                                             price: price,
                                             isRenew: true,
@@ -3771,14 +3769,14 @@ class CommonUtil {
       }
     }
 
-    if ((defaultInitial ?? '').isNotEmpty) {
+    if ((defaultInitial).isNotEmpty) {
       defaultWidget = ClipOval(
         child: CircleAvatar(
           radius: 32.h,
           backgroundColor: Colors.grey[200],
           child: Center(
             child: Text(
-              defaultInitial?.toUpperCase() ?? '',
+              defaultInitial.toUpperCase(),
               style: TextStyle(
                 fontSize: 25.0.sp,
                 color: Color(CommonUtil().getMyPrimaryColor()),
@@ -4331,7 +4329,7 @@ class CommonUtil {
                                                     if (value.result?.payment
                                                             ?.status ==
                                                         'PAYITA') {
-                                                      if (value?.result
+                                                      if (value.result
                                                               ?.paymentGatewayDetail !=
                                                           null) {
                                                         if (value
@@ -4346,7 +4344,7 @@ class CommonUtil {
                                                                   .paymentGateWay ==
                                                               STR_RAZOPAY) {
                                                             if (value
-                                                                    ?.result
+                                                                    .result
                                                                     ?.paymentGatewayDetail
                                                                     ?.metadata!
                                                                     .shorturl !=
@@ -4394,13 +4392,13 @@ class CommonUtil {
                                                             }
                                                           } else {
                                                             if (value
-                                                                        ?.result
+                                                                        .result
                                                                         ?.paymentGatewayDetail
                                                                         ?.metadata
                                                                         ?.longurl !=
                                                                     null &&
                                                                 value
-                                                                        ?.result
+                                                                        .result
                                                                         ?.paymentGatewayDetail
                                                                         ?.metadata
                                                                         ?.longurl !=
@@ -4410,9 +4408,9 @@ class CommonUtil {
                                                                   MaterialPageRoute(
                                                                       builder: (context) => PaymentPage(
                                                                             redirectUrl:
-                                                                                value?.result?.paymentGatewayDetail?.metadata?.longurl,
+                                                                                value.result?.paymentGatewayDetail?.metadata?.longurl,
                                                                             paymentId:
-                                                                                value?.result?.payment?.id.toString(),
+                                                                                value.result?.payment?.id.toString(),
                                                                             isFromSubscribe:
                                                                                 true,
                                                                             isFromRazor:
@@ -4483,32 +4481,32 @@ class CommonUtil {
                                                     .then((value) {
                                                   if (value != null) {
                                                     if (value.isSuccess!) {
-                                                      if (value?.result !=
+                                                      if (value.result !=
                                                           null) {
-                                                        if (value?.result
+                                                        if (value.result
                                                                 ?.payment !=
                                                             null) {
                                                           if (value
-                                                                  ?.result
+                                                                  .result
                                                                   ?.payment
                                                                   ?.status ==
                                                               'PAYITA') {
-                                                            if (value?.result
+                                                            if (value.result
                                                                     ?.paymentGatewayDetail !=
                                                                 null) {
                                                               if (value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.metadata !=
                                                                   null) {
                                                                 if (value
-                                                                        ?.result
+                                                                        .result
                                                                         ?.paymentGatewayDetail
                                                                         ?.metadata!
                                                                         .paymentGateWay ==
                                                                     STR_RAZOPAY) {
                                                                   if (value
-                                                                          ?.result
+                                                                          .result
                                                                           ?.paymentGatewayDetail
                                                                           ?.metadata
                                                                           ?.shorturl !=
@@ -4517,8 +4515,8 @@ class CommonUtil {
                                                                         context,
                                                                         MaterialPageRoute(
                                                                             builder: (context) => PaymentPage(
-                                                                                  redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.shorturl,
-                                                                                  paymentId: value?.result?.payment?.id.toString(),
+                                                                                  redirectUrl: value.result?.paymentGatewayDetail?.metadata?.shorturl,
+                                                                                  paymentId: value.result?.payment?.id.toString(),
                                                                                   isFromSubscribe: true,
                                                                                   isFromRazor: true,
                                                                                   closePage: (value) {
@@ -4550,13 +4548,13 @@ class CommonUtil {
                                                                   }
                                                                 } else {
                                                                   if (value
-                                                                              ?.result
+                                                                              .result
                                                                               ?.paymentGatewayDetail
                                                                               ?.metadata
                                                                               ?.longurl !=
                                                                           null &&
                                                                       value
-                                                                              ?.result
+                                                                              .result
                                                                               ?.paymentGatewayDetail
                                                                               ?.metadata
                                                                               ?.longurl !=
@@ -4565,8 +4563,8 @@ class CommonUtil {
                                                                         Get.context!,
                                                                         MaterialPageRoute(
                                                                             builder: (context) => PaymentPage(
-                                                                                  redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
-                                                                                  paymentId: value?.result?.payment?.id?.toString(),
+                                                                                  redirectUrl: value.result?.paymentGatewayDetail?.metadata?.longurl,
+                                                                                  paymentId: value.result?.payment?.id?.toString(),
                                                                                   isFromSubscribe: true,
                                                                                   isFromRazor: false,
                                                                                   closePage: (value) {
@@ -4793,14 +4791,14 @@ class CommonUtil {
     String? userId = PreferenceUtil.getStringValue(KEY_USERID);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket!
+        .socket!
         .disconnect();
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.initSocket()
+        .initSocket()
         .then((value) {
       //update common count
       Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-          ?.socket!
+          .socket!
           .emitWithAck(getChatTotalCountEmit, {
         'userId': userId,
       }, ack: (countResponseEmit) {
@@ -4809,7 +4807,7 @@ class CommonUtil {
               TotalCountModel.fromJson(countResponseEmit);
           if (totalCountModel != null) {
             Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-                ?.updateChatTotalCount(totalCountModel);
+                .updateChatTotalCount(totalCountModel);
           }
         }
       });
@@ -4908,7 +4906,7 @@ class CommonUtil {
                       : Color(CommonUtil().getMyPrimaryColor())),
             ),
             // To display the title it is optional
-            content: Text('Record ' + name ?? ''),
+            content: Text('Record ' + name),
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
@@ -5010,10 +5008,10 @@ class CommonUtil {
   String showDescriptionTextForm(FieldModel fieldModel) {
     String? desc = '';
 
-    if (fieldModel?.description != null && fieldModel?.description != '') {
-      desc = fieldModel?.description;
-    } else if (fieldModel?.title != null && fieldModel?.title != '') {
-      desc = fieldModel?.title;
+    if (fieldModel.description != null && fieldModel.description != '') {
+      desc = fieldModel.description;
+    } else if (fieldModel.title != null && fieldModel.title != '') {
+      desc = fieldModel.title;
     } else {
       desc = '';
     }
@@ -5025,10 +5023,10 @@ class CommonUtil {
     String? desc = '';
 
     if (vitalsData != null) {
-      if (vitalsData?.description != null && vitalsData?.description != '') {
-        desc = vitalsData?.description;
-      } else if (vitalsData?.vitalName != null && vitalsData?.vitalName != '') {
-        desc = vitalsData?.vitalName;
+      if (vitalsData.description != null && vitalsData.description != '') {
+        desc = vitalsData.description;
+      } else if (vitalsData.vitalName != null && vitalsData.vitalName != '') {
+        desc = vitalsData.vitalName;
       } else {
         desc = '';
       }
@@ -5285,7 +5283,7 @@ class CommonUtil {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       BadgeIconBig(
-                        badgeCount: count ?? 0,
+                        badgeCount: count,
                         badgeColor: ColorUtils.badgeQueue,
                         icon: AssetImageWidget(
                           icon: icon_sheela_queue,
@@ -5326,7 +5324,7 @@ class CommonUtil {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         BadgeIconBig(
-                          badgeCount: count ?? 0,
+                          badgeCount: count,
                           badgeColor: ColorUtils.badgeQueue,
                           icon: GestureDetector(
                             onTap: () {
@@ -5388,10 +5386,10 @@ class CommonUtil {
       MyProfileModel myProfile;
 
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
-      userName = myProfile?.result != null &&
+      userName = myProfile.result != null &&
               myProfile.result!.firstName != null &&
               myProfile.result!.firstName != ''
-          ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
+          ? 'Hey ${toBeginningOfSentenceCase(myProfile.result?.firstName ?? "")}'
           : myProfile != null
               ? 'Hey User'
               : '';
@@ -5475,12 +5473,12 @@ class CommonUtil {
             .then((value) {
           myProfile = value;
 
-          if (myProfile?.result != null) {
+          if (myProfile.result != null) {
             Navigator.of(context).pop();
 
             Get.toNamed(router.rt_AddFamilyUserInfo,
                     arguments: AddFamilyUserInfoArguments(
-                        myProfileResult: myProfile?.result,
+                        myProfileResult: myProfile.result,
                         fromClass: CommonConstants.user_update,
                         isFromAppointmentOrSlotPage: false,
                         isForFamily: false,
@@ -5506,7 +5504,7 @@ class CommonUtil {
   Future<List<RegimentDataModel>> getMasterData(
       BuildContext context, String searchText) async {
     RegimentResponseModel regimentsData;
-    Provider.of<RegimentViewModel>(context, listen: false)?.regimentFilter =
+    Provider.of<RegimentViewModel>(context, listen: false).regimentFilter =
         RegimentFilter.Missed;
 
     Provider.of<RegimentViewModel>(context, listen: false)
@@ -5528,11 +5526,11 @@ class CommonUtil {
     );
     List<RegimentDataModel> missedActvities = [];
     regimentsData.regimentsList!.forEach((regimenData) {
-      if (!(regimenData?.asNeeded ?? false) &&
-          (regimenData?.estart
+      if (!(regimenData.asNeeded) &&
+          (regimenData.estart
                   ?.difference(DateTime.now())
-                  ?.inMinutes
-                  ?.isNegative ??
+                  .inMinutes
+                  .isNegative ??
               false) &&
           regimenData.ack == null) {
         missedActvities.add(regimenData);
@@ -5582,9 +5580,9 @@ class CommonUtil {
         myProfile = value;
 
         if (value != null) {
-          if (value.result!.userProfileSettingCollection3!.isNotEmpty!) {
+          if (value.result!.userProfileSettingCollection3!.isNotEmpty) {
             var profileSetting =
-                value?.result?.userProfileSettingCollection3![0].profileSetting;
+                value.result?.userProfileSettingCollection3![0].profileSetting;
             if (profileSetting != null) {
               CommonUtil.langaugeCodes.forEach((language, languageCode) {
                 if (language == profileSetting.preferred_language) {
@@ -5650,11 +5648,11 @@ class CommonUtil {
 
     if (userId == null)
       return Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-          ?.socket!
+          .socket!
           .off(getChatTotalCountOn);
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket!
+        .socket!
         .emitWithAck(getChatTotalCountEmit, {
       'userId': userId,
     }, ack: (countResponseEmit) {
@@ -5663,20 +5661,20 @@ class CommonUtil {
             TotalCountModel.fromJson(countResponseEmit);
         if (totalCountModel != null) {
           Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              ?.updateChatTotalCount(totalCountModel);
+              .updateChatTotalCount(totalCountModel);
         }
       }
     });
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket!
+        .socket!
         .on(getChatTotalCountOn, (countResponseOn) {
       if (countResponseOn != null) {
         TotalCountModel totalCountModelOn =
             TotalCountModel.fromJson(countResponseOn);
         if (totalCountModelOn != null) {
           Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              ?.updateChatTotalCount(totalCountModelOn);
+              .updateChatTotalCount(totalCountModelOn);
         }
       }
     });
@@ -5817,11 +5815,11 @@ class CommonUtil {
         isAppExists: false,
         role: ClientRole.Broadcaster,
         channelName: navRoute.split('&')[0],
-        doctorName: navRoute.split('&')[1] ?? 'Test',
-        doctorId: navRoute.split('&')[2] ?? 'Doctor',
+        doctorName: navRoute.split('&')[1],
+        doctorId: navRoute.split('&')[2],
         doctorPic: docPic,
-        patientId: navRoute.split('&')[5] ?? 'Patient',
-        patientName: navRoute.split('&')[6] ?? 'Test',
+        patientId: navRoute.split('&')[5],
+        patientName: navRoute.split('&')[6],
         patientPicUrl: patPic,
         isWeb: isWeb,
       ));
@@ -6063,7 +6061,7 @@ class VideoCallCommonUtils {
 
     var channelName =
         (bookId.isNotEmpty || bookId != null) ? bookId : randomMID;
-    Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
+    Provider.of<RTCEngineProvider>(context, listen: false).isVideoPaused =
         false;
     // initialize agora sdk
     await initialize(
@@ -6118,10 +6116,10 @@ class VideoCallCommonUtils {
       return;
     }
     var rtcProvider = Provider.of<RTCEngineProvider>(context!, listen: false);
-    await rtcProvider?.startRtcEngine();
+    await rtcProvider.startRtcEngine();
 
     /// Create agora sdk instance and initialize
-    rtcProvider?.rtcEngine?.setEventHandler(rtcEngineEventHandler);
+    rtcProvider.rtcEngine?.setEventHandler(rtcEngineEventHandler);
     _addAgoraEventHandlers(
         patId: patId,
         isFromAppointment: isFromAppointment,
@@ -6130,7 +6128,7 @@ class VideoCallCommonUtils {
         appointmentId: appointmentId,
         context: context);
     await _initAgoraRtcEngine(rtcProvider, context: context);
-    await rtcProvider?.rtcEngine?.joinChannel(null, channelName!, null, 0);
+    await rtcProvider.rtcEngine?.joinChannel(null, channelName!, null, 0);
     var regController = Get.find<QurhomeRegimenController>();
     /*await platform.invokeMethod(
         parameters.startOnGoingNS, {parameters.mode: parameters.start});*/
@@ -6152,18 +6150,18 @@ class VideoCallCommonUtils {
       configuration.dimensions = VideoDimensions(width: 640, height: 360);
       configuration.frameRate = VideoFrameRate.Fps15;
       configuration.bitrate = 200;
-      await rtcProvider?.rtcEngine?.setVideoEncoderConfiguration(configuration);
-      await rtcProvider?.rtcEngine?.enableVideo();
+      await rtcProvider.rtcEngine?.setVideoEncoderConfiguration(configuration);
+      await rtcProvider.rtcEngine?.enableVideo();
     } else {
       //* Audio call
       // if audio call means, diable video and put on inEar
       //await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
 
     }
-    await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
-    await rtcProvider?.rtcEngine
+    await rtcProvider.rtcEngine?.setEnableSpeakerphone(true);
+    await rtcProvider.rtcEngine
         ?.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await rtcProvider?.rtcEngine?.setClientRole(ClientRole.Broadcaster);
+    await rtcProvider.rtcEngine?.setClientRole(ClientRole.Broadcaster);
   }
 
   /// Add agora event handlers
@@ -6368,15 +6366,15 @@ class VideoCallCommonUtils {
 
         if (CommonUtil.isLocalUserOnPause) {
           CommonUtil.isLocalUserOnPause = false;
-          await rtcProvider?.rtcEngine?.disableVideo();
-          await rtcProvider?.rtcEngine?.enableLocalVideo(false);
-          await rtcProvider?.rtcEngine?.muteLocalVideoStream(true);
+          await rtcProvider.rtcEngine?.disableVideo();
+          await rtcProvider.rtcEngine?.enableLocalVideo(false);
+          await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
           Provider.of<HideProvider>(Get.context!, listen: false)
-              ?.swithToAudio();
+              .swithToAudio();
           Provider.of<AudioCallProvider>(Get.context!, listen: false)
-              ?.enableAudioCall();
+              .enableAudioCall();
           Provider.of<VideoIconProvider>(Get.context!, listen: false)
-              ?.turnOffVideo();
+              .turnOffVideo();
         } else {
           if (!(Provider.of<AudioCallProvider>(Get.context!, listen: false)
               .isAudioCall)) {
@@ -6460,9 +6458,9 @@ class VideoCallCommonUtils {
 
     if (user_id != null && user_id != '') {
       Provider.of<RTCEngineProvider>(Get.context!, listen: false)
-          ?.rtcEngine
+          .rtcEngine
           ?.getUserInfoByUid(user_id)
-          ?.then((value) {
+          .then((value) {
         //print('connected user info ${value?.userAccount}');
       });
     }
@@ -6882,7 +6880,7 @@ class VideoCallCommonUtils {
           }
           if (callMetaData != null && !isMissedCallNsSent) {
             isMissedCallNsSent = true;
-            if (regController.isFromSOS.value ?? false) {
+            if (regController.isFromSOS.value) {
               regController.onGoingSOSCall.value = false;
             } else {
               unavailabilityOfCC();
@@ -6930,19 +6928,19 @@ class VideoCallCommonUtils {
                   : '',
               healthOrganizationId: healthOrganizationId,
               gender:
-                  callMetaData?.mgender != null ? callMetaData?.mgender : '',
-              patId: callMetaData?.patientPrescriptionId != null
-                  ? callMetaData?.patientPrescriptionId
+                  callMetaData.mgender != null ? callMetaData.mgender : '',
+              patId: callMetaData.patientPrescriptionId != null
+                  ? callMetaData.patientPrescriptionId
                   : '',
               patName:
-                  (callMetaData?.patName != null ? callMetaData?.patName : '')!,
-              patientDOB: (callMetaData?.patientDOB != null
-                  ? callMetaData?.patientDOB
-                  : '')!,
-              patientPicUrl: callMetaData?.mpatientPicUrl != null
-                  ? callMetaData?.mpatientPicUrl
+                  (callMetaData.patName != null ? callMetaData.patName : ''),
+              patientDOB: (callMetaData.patientDOB != null
+                  ? callMetaData.patientDOB
+                  : ''),
+              patientPicUrl: callMetaData.mpatientPicUrl != null
+                  ? callMetaData.mpatientPicUrl
                   : '',
-              slotDuration: callMetaData?.slotDuration,
+              slotDuration: callMetaData.slotDuration,
               healthRecord: healthRecord,
               patienInfo: patienInfo,
               isFromAppointment: isFromAppointment,
@@ -6955,7 +6953,7 @@ class VideoCallCommonUtils {
           CommonUtil.isCallStarted = false;
           callActions.value = CallActions.DECLINED;
           var regController = Get.find<QurhomeRegimenController>();
-          if (regController.isFromSOS.value ?? false) {
+          if (regController.isFromSOS.value) {
             regController.onGoingSOSCall.value = false;
           } else {
             unavailabilityOfCC();

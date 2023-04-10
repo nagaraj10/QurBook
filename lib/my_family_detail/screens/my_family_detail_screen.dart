@@ -221,9 +221,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                 fromClass: CommonConstants.my_family,
                                 isForFamily: false,
                                 defaultrelationShips:
-                                    relationShipResponseList!.result!.isNotEmpty
+                                    relationShipResponseList.result!.isNotEmpty
                                         ? relationShipResponseList
-                                            ?.result![0].referenceValueCollection
+                                            .result![0].referenceValueCollection
                                         : <RelationsShipModel>[]))
                         .then((value) {});
                   })
@@ -321,12 +321,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             sharedbyme.child!.lastName!.capitalizeFirstofEach;
       }
     } else {
-      firstNameController.text = sharedbyme!.child!.name!;
+      firstNameController.text = sharedbyme.child!.name!;
       middleNameController.text = '';
       lastNameController.text = '';
     }
 
-    if (sharedbyme?.child?.isVirtualUser != null) {
+    if (sharedbyme.child?.isVirtualUser != null) {
       try {
         if (sharedbyme.child!.isVirtualUser!) {
           try {
@@ -354,9 +354,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           }
         } else {
           // this is non primary user
-          if (sharedbyme!.child!.userContactCollection3!.isNotEmpty) {
+          if (sharedbyme.child!.userContactCollection3!.isNotEmpty) {
             mobileNoController.text =
-                sharedbyme!.child!.userContactCollection3![0].phoneNumber!;
+                sharedbyme.child!.userContactCollection3![0].phoneNumber!;
             emailController.text =
                 sharedbyme.child!.userContactCollection3![0].email!;
           }
@@ -382,41 +382,41 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       }
     }
 
-    if (sharedbyme?.child?.additionalInfo != null) {
-      if (sharedbyme?.child?.additionalInfo?.heightObj != null) {
+    if (sharedbyme.child?.additionalInfo != null) {
+      if (sharedbyme.child?.additionalInfo?.heightObj != null) {
         isFeetOrInches = true;
         heightConroller.text =
-            sharedbyme?.child?.additionalInfo!.heightObj?.valueFeet ?? '';
+            sharedbyme.child?.additionalInfo!.heightObj?.valueFeet ?? '';
         heightInchConroller.text =
-            sharedbyme?.child?.additionalInfo!.heightObj?.valueInches ?? '';
+            sharedbyme.child?.additionalInfo!.heightObj?.valueInches ?? '';
       } else {
         isFeetOrInches = false;
 
-        heightConroller.text = sharedbyme?.child?.additionalInfo!.height ?? '';
+        heightConroller.text = sharedbyme.child?.additionalInfo!.height ?? '';
       }
 
-      if (sharedbyme?.child?.additionalInfo?.weightUnitCode == 'lb') {
+      if (sharedbyme.child?.additionalInfo?.weightUnitCode == 'lb') {
         isKg = false;
       } else {
         isKg = true;
       }
-      weightController.text = sharedbyme?.child?.additionalInfo!.weight ?? '';
+      weightController.text = sharedbyme.child?.additionalInfo!.weight ?? '';
     } else {
       var preferredMeasurement = PreferenceUtil.getPreferredMeasurement(
           Constants.KEY_PREFERREDMEASUREMENT);
 
       if (preferredMeasurement != null) {
         try {
-          if (preferredMeasurement?.height?.unitCode ==
+          if (preferredMeasurement.height?.unitCode ==
                   Constants.STR_VAL_HEIGHT_IND ||
-              preferredMeasurement?.height?.unitCode ==
+              preferredMeasurement.height?.unitCode ==
                   STR_VAL_HEIGHT_IND_NEW) {
             isFeetOrInches = true;
           } else {
             isFeetOrInches = false;
           }
 
-          if (preferredMeasurement?.weight?.unitCode ==
+          if (preferredMeasurement.weight?.unitCode ==
               Constants.STR_VAL_WEIGHT_IND) {
             isKg = true;
           } else {
@@ -455,9 +455,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           FHBUtils().getFormattedDateOnlyNew(sharedbyme.child!.dateOfBirth)!;
     }
 
-    if (sharedbyme!.child!.userAddressCollection3!.isNotEmpty) {
+    if (sharedbyme.child!.userAddressCollection3!.isNotEmpty) {
       cntrlr_addr_one.text =
-          sharedbyme!.child!.userAddressCollection3![0].addressLine1!;
+          sharedbyme.child!.userAddressCollection3![0].addressLine1!;
       cntrlr_addr_two.text =
           sharedbyme.child!.userAddressCollection3![0].addressLine2!;
       cntrlr_addr_city.text =
@@ -465,12 +465,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       cntrlr_addr_state.text =
           sharedbyme.child!.userAddressCollection3![0].state!.name!;
       cntrlr_addr_zip.text =
-          sharedbyme!.child!.userAddressCollection3![0].pincode!;
+          sharedbyme.child!.userAddressCollection3![0].pincode!;
     }
 
-    if (sharedbyme?.membershipOfferedBy != null &&
-        sharedbyme?.membershipOfferedBy != '') {
-      cntrlr_corp_name.text = sharedbyme!.membershipOfferedBy!;
+    if (sharedbyme.membershipOfferedBy != null &&
+        sharedbyme.membershipOfferedBy != '') {
+      cntrlr_corp_name.text = sharedbyme.membershipOfferedBy!;
     }
 
     final profilebanner =
@@ -1444,7 +1444,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
     if (picked != null) {
       setState(() {
-        dateTime = picked ?? dateTime;
+        dateTime = picked;
         dateOfBirthController.text =
             CommonUtil.dateConversionToApiFormat(dateTime);
       });

@@ -133,7 +133,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
         .compareTo(b.name.toString().toLowerCase()));
 
     labsModel?.sort((a, b) {
-      if (b?.isPrimaryProvider ?? false) {
+      if (b.isPrimaryProvider ?? false) {
         return 1;
       }
       return -1;

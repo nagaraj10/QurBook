@@ -75,7 +75,7 @@ class ChatSocketViewModel extends ChangeNotifier {
   }
 
   void updateChatUserList(UserChatListModel userChatListModel) {
-    userChatList = userChatListModel?.payload;
+    userChatList = userChatListModel.payload;
 
     notifyListeners();
   }
@@ -103,7 +103,7 @@ class ChatSocketViewModel extends ChangeNotifier {
     chatTotalCount = 0;
 
     if (totalCountModel != null) {
-      if (totalCountModel.isSuccess! && totalCountModel?.payload != null) {
+      if (totalCountModel.isSuccess! && totalCountModel.payload != null) {
         if (totalCountModel.payload!.isNotEmpty) {
           if (totalCountModel.payload![0].count != null &&
               totalCountModel.payload![0].count != '') {
@@ -147,7 +147,7 @@ class ChatSocketViewModel extends ChangeNotifier {
       var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
       ChatHistoryModel? chatHistoryModel = await chocketService!.getChatHistory(
-          userId??'',
+          userId,
           peerId??'',
           familyUserId??'',
           isCareCoordinator??false,

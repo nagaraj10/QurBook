@@ -117,7 +117,7 @@ class OrderDataModel {
   Map<String, dynamic> toMap() {
     return {
       'isSuccess': isSuccess,
-      'result': result?.map((x) => x.toMap())?.toList(),
+      'result': result?.map((x) => x.toMap()).toList(),
     };
   }
 

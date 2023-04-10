@@ -120,15 +120,15 @@ class OverlayCategoryDialog extends ModalRoute<void> {
                   width: 25.0.h,
                   height: 25.0.h,
                   child: CachedNetworkImage(
-                    imageUrl: Constants.BASE_URL + catgoryDataList[i]!.logo!,
+                    imageUrl: Constants.BASE_URL + catgoryDataList[i].logo!,
                     color: Colors.white70,
                     placeholder: (context, url) => CommonCircularIndicator(),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
                 onTap: () {
-                  callBackPage(catgoryDataList[i]!.categoryName!, context,
-                      catgoryDataList[i]!.id);
+                  callBackPage(catgoryDataList[i].categoryName!, context,
+                      catgoryDataList[i].id);
                 },
               ),
               Padding(
@@ -138,7 +138,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
                   padding: const EdgeInsets.all(8),
                   child: Center(
                     child: Text(
-                      catgoryDataList[i]!.categoryName!,
+                      catgoryDataList[i].categoryName!,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -147,8 +147,8 @@ class OverlayCategoryDialog extends ModalRoute<void> {
             ],
           ),
           onTap: () {
-            callBackPage(catgoryDataList[i]!.categoryName!, context,
-                catgoryDataList[i]!.id);
+            callBackPage(catgoryDataList[i].categoryName!, context,
+                catgoryDataList[i].id);
           },
         ),
       );

@@ -370,15 +370,15 @@ class NavigationDrawer extends StatelessWidget {
 
     try {
       myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
-      name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
-              myProfile?.result?.name != '')
-          ? myProfile?.result?.name?.capitalizeFirstofEach
-          : myProfile?.result?.firstName != null &&
-                  myProfile?.result?.lastName != null
-              ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
+      name = toBeginningOfSentenceCase((myProfile.result?.name != null &&
+              myProfile.result?.name != '')
+          ? myProfile.result?.name?.capitalizeFirstofEach
+          : myProfile.result?.firstName != null &&
+                  myProfile.result?.lastName != null
+              ? ('${myProfile.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile.result?.lastName?.capitalizeFirstofEach}')
               : '');
-      phoneNumber = (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
-          ? myProfile?.result?.userContactCollection3![0]!.phoneNumber
+      phoneNumber = (myProfile.result?.userContactCollection3?.length ?? 0) > 0
+          ? myProfile.result?.userContactCollection3![0]!.phoneNumber
           : '';
     } catch (e) {
       //print(e);
