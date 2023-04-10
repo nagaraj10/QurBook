@@ -453,7 +453,6 @@ class QurhomeRegimenController extends GetxController {
               (Timer timer) {
                 final addSeconds =  -1 ;
                 final seconds = duration.inSeconds + addSeconds;
-                print("seconds: "+seconds.toString());
             if (seconds == 0) {
               this.timer?.cancel();
               this.timer=null;
