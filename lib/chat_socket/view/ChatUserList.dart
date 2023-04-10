@@ -172,8 +172,7 @@ class _ChatUserListState extends State<ChatUserList> {
               UserChatListModel userChatList =
                   UserChatListModel.fromJson(userList);
               if (userChatList != null) {
-                Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-                    .updateChatUserList(userChatList);
+                controller.updateChatUserList(userChatList);
               }
             }
             if (mounted) {
@@ -371,9 +370,9 @@ class _ChatUserListState extends State<ChatUserList> {
           onTap: () {
             try {
               String strLastDate = (data.chatListItem?.deliveredOn != null &&
-                  data.chatListItem?.deliveredOn != '')
-                  ? CommonUtil()
-                      .getFormattedDateTime(data.chatListItem?.deliveredOn??'')
+                      data.chatListItem?.deliveredOn != '')
+                  ? CommonUtil().getFormattedDateTime(
+                      data.chatListItem?.deliveredOn ?? '')
                   : '';
               Get.back();
               Navigator.push(
@@ -396,7 +395,7 @@ class _ChatUserListState extends State<ChatUserList> {
                               : false,
                           groupId: data.chatListItem?.id ?? '',
                           lastDate: strLastDate))).then((value) {
-                if (value??false) {
+                if (value ?? false) {
                   initSocket(true);
                 } else {
                   initSocket(false);
@@ -568,46 +567,38 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   Widget getChatList() {
-    return Stack(
-      children: <Widget>[
-        // List
-        Container(
-            child: (Provider.of<ChatSocketViewModel>(Get.context!)
-                            .userChatList
-                            ?.length ??
-                        0) >
-                    0
-                ? ListView.builder(
-                    padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) => buildItem(
-                        context,
-                        Provider.of<ChatSocketViewModel>(Get.context!)
-                            .userChatList![index]),
-                    itemCount: Provider.of<ChatSocketViewModel>(Get.context!)
-                        .userChatList!
-                        .length,
-                  )
-                : Container(
-                    child: Center(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          strNoMessage,
-                          style: TextStyle(
-                              fontSize: 16.0.sp, color: Colors.grey[800]),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    )),
-                  )),
+    return Obx(() => Stack(
+          children: <Widget>[
+            // List
+            Container(
+                child: (controller.userChatList?.length ?? 0) > 0
+                    ? ListView.builder(
+                        padding: EdgeInsets.all(10.0),
+                        itemBuilder: (context, index) =>
+                            buildItem(context, controller.userChatList![index]),
+                        itemCount: controller?.userChatList!.length,
+                      )
+                    : Container(
+                        child: Center(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              strNoMessage,
+                              style: TextStyle(
+                                  fontSize: 16.0.sp, color: Colors.grey[800]),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        )),
+                      )),
 
-        // Loading
-        /*Positioned(
+            // Loading
+            /*Positioned(
           child: isLoading ? CommonCircularIndicator() : Container(),
         )*/
-      ],
-    );
+          ],
+        ));
   }
 
   Widget buildItem(BuildContext context, PayloadChat userChatList) {

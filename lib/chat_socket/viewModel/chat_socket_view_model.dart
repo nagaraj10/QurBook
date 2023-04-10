@@ -18,7 +18,7 @@ class ChatSocketViewModel extends ChangeNotifier {
 
   final String _baseUrl = BASE_URL;
 
-  List<PayloadChat>? userChatList = [];
+  //List<PayloadChat>? userChatList = [];
   List<ChatHistoryResult?>? chatHistoryList = [];
   List<PayloadChat> chatHistoryCount = [];
 
@@ -74,11 +74,11 @@ class ChatSocketViewModel extends ChangeNotifier {
     }
   }
 
-  void updateChatUserList(UserChatListModel userChatListModel) {
-    userChatList = userChatListModel.payload;
+  /*void updateChatUserList(UserChatListModel userChatListModel) {
+    userChatList = userChatListModel?.payload;
 
     notifyListeners();
-  }
+  }*/
 
   /*void updateChatTotalCount(UserChatListModel userChatListModelCount) {
     chatTotalCount  = 0;

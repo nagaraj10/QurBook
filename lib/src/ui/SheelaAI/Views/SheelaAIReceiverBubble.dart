@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:loading/indicator/ball_pulse_indicator.dart';  FU2.5
-// import 'package:loading/loading.dart';  FU2.5
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 
@@ -19,6 +17,7 @@ import '../Models/SheelaResponse.dart';
 import 'CommonUitls.dart';
 import 'youtube_player.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SheelaAIReceiverBubble extends StatelessWidget {
   final SheelaResponse chat;
@@ -70,16 +69,16 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                     borderRadius: chatBubbleBorderRadiusFor(false),
                   ),
                   child: (chat.loading ?? false)
-                      ?  Container()
-                      // Loading(
-                      //     indicator: BallPulseIndicator(),
-                      //     size: 20.0,
-                      //     color: PreferenceUtil.getIfQurhomeisAcive()
-                      //         ? Color(
-                      //             CommonUtil().getQurhomeGredientColor(),
-                      //           )
-                      //         : Colors.white,
-                      //   )
+                      ? Container(
+                          width: CommonUtil().isTablet! ? 60.0 : 40.0,
+                          child: SpinKitThreeBounce(
+                              size: CommonUtil().isTablet! ? 25.0 : 18.0,
+                              color: PreferenceUtil.getIfQurhomeisAcive()
+                                  ? Color(
+                                      CommonUtil().getQurhomeGredientColor(),
+                                    )
+                                  : Colors.white),
+                        )
                       : (chat.audioFile ?? '').isNotEmpty
                           ? AudioWidget(
                               chat.audioFile,
