@@ -21,7 +21,7 @@ class CalendarMonth extends StatefulWidget {
 
 class _HomePageState extends State<CalendarMonth> {
   Map<DateTime, List<dynamic>> _events;
-
+  bool onPageChanged=false;
   DateTime monthToday = DateTime.now();
   var str_doctorId;
   final controller = CommonUtil().onInitQurhomeRegimenController();
@@ -55,7 +55,7 @@ class _HomePageState extends State<CalendarMonth> {
           TableCalendar(
             onPageChanged: (dateTime) {
               controller.selectedDate.value=dateTime;
-              controller.selectedCalendar.value=dateTime;
+              onPageChanged=true;
               controller.getCalendarRegimenList();
             },
             eventLoader: (DateTime dateTime) {
@@ -64,7 +64,7 @@ class _HomePageState extends State<CalendarMonth> {
             },
             calendarFormat: CalendarFormat.month,
             firstDay: DateTime(2010),
-            focusedDay: controller.selectedCalendar.value,
+            focusedDay: onPageChanged?controller.selectedDate.value:controller.selectedCalendar.value,
             lastDay: DateTime(2200),
             // currentDay: controller.selectedCalendar.value,
             daysOfWeekHeight: 50.0.h,
