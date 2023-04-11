@@ -96,12 +96,12 @@ class QurhomeRegimenController extends GetxController {
       }
       loadingData.value = true;
       qurHomeRegimenResponseModel = await _apiProvider.getRegimenList(date);
-      qurHomeRegimenResponseModel!.regimentsList?.removeWhere((element) =>
-      (element.isEventDisabled) && (element.isSymptom) ||
-          (element.scheduled) &&
-              !(element.dayrepeat?.trim().toLowerCase() ==
+      qurHomeRegimenResponseModel?.regimentsList?.removeWhere((element) =>
+      element!.isEventDisabled && !element!.isSymptom ||
+          !element!.scheduled &&
+              !(element?.dayrepeat?.trim().toLowerCase() ==
                   strText.trim().toLowerCase()));
-    bool allActivitiesCompleted=true;
+      bool allActivitiesCompleted=true;
 
     for (int i = 0;
           i < qurHomeRegimenResponseModel!.regimentsList!.length;

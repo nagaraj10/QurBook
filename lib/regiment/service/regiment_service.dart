@@ -71,7 +71,6 @@ class RegimentService {
       }
 
       if (response != null && response.statusCode == 200) {
-        print(response.body);
         return RegimentResponseModel.fromJson(json.decode(response.body));
       } else {
         return RegimentResponseModel(
