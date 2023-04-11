@@ -88,14 +88,14 @@ class RegimentService {
   }
 
   static Future<RegimentResponseModel> getRegimentDataCalendar(
-      {String startDate,
-        String endDate,
+      {String? startDate,
+        String? endDate,
         int isSymptoms = 0,
         bool isForMasterData = false,
         String searchText = ''}) async {
     var response;
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    var urlForRegiment = Constants.BASE_URL+'qurplan-node-mysql/regimen-calendar-filter/'+ userId+'?startDate=${startDate}%2000%3A00%3A00&endDate=${endDate}%2000%3A00%3A00';
+    var urlForRegiment = Constants.BASE_URL+'qurplan-node-mysql/regimen-calendar-filter/'+ userId!+'?startDate=${startDate}%2000%3A00%3A00&endDate=${endDate}%2000%3A00%3A00';
     try {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
 

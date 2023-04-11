@@ -251,7 +251,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           appBar: widget.addAppBar
               ? AppBar(
                   backgroundColor: Colors.white,
-                  toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+                  toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
                   elevation: 0,
                   centerTitle: true,
                   title: Text(
@@ -263,7 +263,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   leading: IconWidget(
                     icon: Icons.arrow_back_ios,
                     colors: Colors.black,
-                    size: CommonUtil().isTablet ? 38.0 : 24.0,
+                    size: CommonUtil().isTablet! ? 38.0 : 24.0,
                     onTap: () {
                       Get.back();
                     },
@@ -297,7 +297,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 child: InkWell(
                                     onTap: () {
                                       controller.cancelTimer();
-                                      Get.to(CalendarMonth()).then((value) {
+                                      Get.to(CalendarMonth())!.then((value) {
                                         controller.restartTimer();
                                         controller.getRegimenList(
                                             isLoading: true, date: value);
@@ -360,7 +360,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             try {
                               FHBUtils().check().then((intenet) async {
                                 if (intenet != null && intenet) {
-                                  if (CommonUtil().isTablet &&
+                                  if (CommonUtil().isTablet! &&
                                       controller.careCoordinatorId.value
                                           .trim()
                                           .isEmpty) {

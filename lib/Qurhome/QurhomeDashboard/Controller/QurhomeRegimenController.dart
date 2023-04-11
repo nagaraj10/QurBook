@@ -80,12 +80,11 @@ class QurhomeRegimenController extends GetxController {
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
   var qurhomeDashboardController = Get.put(QurhomeDashboardController());
   Duration duration = CommonUtil.isUSRegion()?Duration(minutes: 2):Duration(seconds: 30);
-  Timer timer;
+  Timer? timer;
 
   var isFirstTime = true.obs;
-  int _start = CommonUtil.isUSRegion()?120:30;
 
-  getRegimenList({bool isLoading = true,String date=null}) async {
+  getRegimenList({bool isLoading = true,String? date}) async {
     try {
       if (!isLoading) {
         loadingDataWithoutProgress.value = true;
@@ -97,10 +96,10 @@ class QurhomeRegimenController extends GetxController {
       }
       loadingData.value = true;
       qurHomeRegimenResponseModel = await _apiProvider.getRegimenList(date);
-      qurHomeRegimenResponseModel.regimentsList?.removeWhere((element) =>
-          element?.isEventDisabled && !element?.isSymptom ||
-          !element?.scheduled &&
-              !(element?.dayrepeat?.trim().toLowerCase() ==
+      qurHomeRegimenResponseModel!.regimentsList?.removeWhere((element) =>
+      (element.isEventDisabled) && (element.isSymptom) ||
+          (element.scheduled) &&
+              !(element.dayrepeat?.trim().toLowerCase() ==
                   strText.trim().toLowerCase()));
     bool allActivitiesCompleted=true;
 
@@ -194,7 +193,7 @@ class QurhomeRegimenController extends GetxController {
     }
   }
 
-  getCalendarRegimenList({DateTime nextPreviousDate=null}) async {
+  getCalendarRegimenList({DateTime? nextPreviousDate=null}) async {
     DateTime startDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month,1).subtract(Duration(days: 7));
     DateTime endDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month+1,0).add(Duration(days: 7));
     loadingCalendar.value=true;
@@ -516,7 +515,7 @@ class QurhomeRegimenController extends GetxController {
   showCurrLoggedRegimen(RegimentDataModel regimen) {
     cancelTimer();
     restartTimer();
-    currLoggedEID.value = CommonUtil().validString(regimen?.eid?.toString());
+    currLoggedEID.value = CommonUtil().validString(regimen.eid?.toString());
     getRegimenList(date: selectedDate.value.toString());
   }
 
@@ -525,7 +524,7 @@ class QurhomeRegimenController extends GetxController {
     timer=null;
   }
 
-  String getFormatedDate({String date=null}) {
+  String getFormatedDate({String? date=null}) {
     DateTime now = date==null?DateTime.now():DateTime.parse(date);
     selectedDate.value=now;
     String prefix='';
