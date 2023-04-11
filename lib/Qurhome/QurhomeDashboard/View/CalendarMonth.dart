@@ -56,7 +56,6 @@ class _HomePageState extends State<CalendarMonth> {
             onPageChanged: (dateTime) {
               controller.selectedDate.value=dateTime;
               onPageChanged=true;
-              // controller.selectedCalendar.value=dateTime;
               controller.getCalendarRegimenList();
             },
             eventLoader: (DateTime dateTime) {
