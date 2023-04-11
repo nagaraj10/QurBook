@@ -46,7 +46,7 @@ class FormDataDialog extends StatefulWidget {
       this.followEventContext,
       this.isFromQurHomeSymptom = false,
       this.isFromQurHomeRegimen = false,
-      this.providerId});
+      @required this.providerId});
 
   final List<FieldModel>? fieldsData;
   final String? eid;
@@ -134,14 +134,14 @@ class FormDataDialogState extends State<FormDataDialog> {
               elevation: 0,
               centerTitle: false,
               titleSpacing: 0,
-              title: Flexible(
-                child: Text(
-                  widget.formTitle!,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.start,
+              title: Text(
+                widget.formTitle??'',
+                style: TextStyle(
+                  color: Colors.white,
                 ),
+                textAlign: TextAlign.start,
+                overflow: TextOverflow.fade,
+                maxLines: 1,
               ),
               leading: IconWidget(
                 icon: Icons.arrow_back_ios,
@@ -163,7 +163,15 @@ class FormDataDialogState extends State<FormDataDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.introText,
+                    widget.formTitle??'',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        color: Color(CommonUtil().getQurhomePrimaryColor()),
+                        fontSize: 18.h),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    widget.introText ?? '',
                     maxLines: 10,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.fade,
@@ -171,7 +179,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                         color: Color(CommonUtil().getQurhomePrimaryColor()),
                         fontSize: 18.h),
                   ),
-                  if ((widget.introText).trim().isNotEmpty)
+                  if ((widget.introText ?? '').trim().isNotEmpty)
                     SizedBox(height: 5.0)
                   else
                     SizedBox.shrink(),

@@ -152,6 +152,7 @@ const String icon_photo_image = 'assets/icons/photo_image.png';
 const String icon_save_image = 'assets/icons/save_image.png';
 const String icon_qurplan = 'assets/launcher/qurplan.png';
 const String icon_qurhome = 'assets/Qurhome/Qurhome.png';
+const String icon_calendar = 'assets/Qurhome/calendar.png';
 const String icon_device_scan_measure = 'assets/Qurhome/scan_search_device.gif';
 const String icon_vitals_qurhome = 'assets/dashboard/vitals_qurhome.png';
 const String icon_symptom_qurhome = 'assets/dashboard/symptom_qurhome.png';
@@ -610,6 +611,10 @@ List<String> documentList = ['Hospital IDS', 'Insurance IDs', 'Other IDs'];
 const String strFalse = 'false';
 const String strSkip = 'Skip';
 const String strImgNtClear = 'Image not clear';
+
+const String strRegimenRedirection = 'Redirecting to current date regimen in';
+const String strViewPastDateRegimen = 'You are viewing past date regimen';
+const String strViewFutureDateRegimen = 'You are viewing future date regimen';
 
 //for device screen
 const String strGlucUnit = 'mgdl';

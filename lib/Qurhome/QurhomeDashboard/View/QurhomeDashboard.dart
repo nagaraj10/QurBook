@@ -285,8 +285,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                               controller.currentSelectedIndex.value == 1) ...{
                             SizedBox(height: 3),
                             Text(
-                              'Today, ' +
-                                  qurHomeRegimenController.dateHeader.value,
+                              qurHomeRegimenController.dateHeader.value,
                               style: TextStyle(
                                 fontSize: 12.h,
                                 color: Colors.grey,
