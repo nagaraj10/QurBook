@@ -116,8 +116,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   closeDialog() {
@@ -135,7 +134,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
         .updateUnitPreferences(
             userMappingId, profileSetting!, preferredMeasurementNew, tagsList)
         .then((value) {
-      if (value?.isSuccess ?? false) {
+      if (value.isSuccess ?? false) {
         toast.getToast(value.message!, Colors.green);
 
         PreferenceUtil.savePreferredMeasurement(

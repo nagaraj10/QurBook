@@ -183,11 +183,11 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                                     doctors!.doctorProfessionalDetailCollection!
                                             .length >
                                         0)
-                                ? doctors?.doctorProfessionalDetailCollection![0]
-                                            ?.specialty !=
+                                ? doctors.doctorProfessionalDetailCollection![0]
+                                            .specialty !=
                                         null
-                                    ? doctors?.doctorProfessionalDetailCollection![0]
-                                                ?.specialty?.name !=
+                                    ? doctors.doctorProfessionalDetailCollection![0]
+                                                .specialty?.name !=
                                             null
                                         ? '${doctors.doctorProfessionalDetailCollection![0].specialty!.name}'
                                         : ''
@@ -533,11 +533,11 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
           bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }

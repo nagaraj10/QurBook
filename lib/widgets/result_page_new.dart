@@ -131,7 +131,7 @@ class _ResultPage extends State<PaymentResultPage> {
                           height: 120.0.h,
                           color: status! ? Colors.white : Colors.red),
                       SizedBox(height: 15.0.h),
-                      (widget?.isFreePlan ?? false)
+                      (widget.isFreePlan)
                           ? Text(
                               status!
                                   ? 'Plan Subscription/Renewal Successful'
@@ -187,7 +187,7 @@ class _ResultPage extends State<PaymentResultPage> {
                                   }
                                 });
                               } else {
-                                if (widget?.isFreePlan ?? false) {
+                                if (widget.isFreePlan) {
                                   Get.back();
                                 } else {
                                   SchedulerBinding.instance!
@@ -267,8 +267,8 @@ class _ResultPage extends State<PaymentResultPage> {
                               ),
                             )
                           : SizedBox.shrink(),
-                      ((widget?.isPaymentFails ?? false) &&
-                              ((widget?.cartUserId ?? '').isNotEmpty))
+                      ((widget.isPaymentFails ?? false) &&
+                              ((widget.cartUserId ?? '').isNotEmpty))
                           ? FlatButton(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
@@ -292,7 +292,7 @@ class _ResultPage extends State<PaymentResultPage> {
 
                                   Get.offAll(CheckoutPage(
                                     //cartType: CartType.RETRY_CART,
-                                    cartUserId: widget?.cartUserId,
+                                    cartUserId: widget.cartUserId,
                                   ));
                                 }
                               },
@@ -314,7 +314,7 @@ class _ResultPage extends State<PaymentResultPage> {
   }
 
   Widget getRetryButton() {
-    if (!status! && !widget.isFreePlan ?? false) {
+    if (!status! && !widget.isFreePlan) {
       return FlatButton(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),

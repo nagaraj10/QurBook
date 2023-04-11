@@ -299,7 +299,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                               Colors.green);
                           var body = {};
                           body['templateName'] =
-                              widget?.arguments?.templateName;
+                              widget.arguments?.templateName;
                           body['contextId'] = _bookingId;
                           FetchNotificationService()
                               .updateNsActionStatus(body)

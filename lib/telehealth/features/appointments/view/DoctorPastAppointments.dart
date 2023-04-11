@@ -242,8 +242,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                                       .Appointments_time_format)
                                                   .format(DateTime.parse(
                                                       doc.plannedStartDateTime!))
-                                                  .toString() ??
-                                              '',
+                                                  .toString(),
                                       fontWeight: FontWeight.w600,
                                       colors: Color(
                                           new CommonUtil().getMyPrimaryColor()),
@@ -263,13 +262,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                         : DateFormat.yMMMEd()
                                                 .format(DateTime.parse(
                                                     doc.plannedStartDateTime!))
-                                                .toString() ??
-                                            ''
+                                                .toString()
                                     : DateFormat.yMMMEd()
                                             .format(DateTime.parse(
-                                                doc!.plannedFollowupDate!))
-                                            .toString() ??
-                                        '',
+                                                doc.plannedFollowupDate!))
+                                            .toString(),
                                 fontWeight: FontWeight.w500,
                                 overflow: TextOverflow.visible,
                                 colors: Colors.black,
@@ -280,8 +277,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                     ? ''
                                     : '${CommonUtil.CURRENCY}' +
                                             providerCommonWidget.getMoneyWithForamt(
-                                                doc.doctorFollowUpFee) ??
-                                        '',
+                                                doc.doctorFollowUpFee),
                                 fontWeight: FontWeight.w600,
                                 overflow: TextOverflow.visible,
                                 colors: Color(new CommonUtil().getMyPrimaryColor()),
@@ -412,7 +408,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     bool status = false;
 
     if (doc != null && doc != '') {
-      if (doc?.plannedFollowupDate != null && doc?.plannedFollowupDate != '') {
+      if (doc.plannedFollowupDate != null && doc.plannedFollowupDate != '') {
         status = true;
       } else {
         status = false;
@@ -430,7 +426,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     String? userId = doc.doctor!.user!.id;
     String? doctorName = doc.doctor!.user!.name;
     String? doctorPic = doc.doctor!.user!.profilePicThumbnailUrl;
-    String? chatListId = doc?.chatListId;
+    String? chatListId = doc.chatListId;
     /*chatViewModel.storePatientDetailsToFCM(
         doctorId, doctorName, doctorPic, '', '', '', context, false);*/
     Navigator.push(

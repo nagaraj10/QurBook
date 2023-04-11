@@ -148,7 +148,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
         body: Consumer<CheckoutPageProvider>(
           builder: (context, value, widgetObj) {
-            if (value?.cartStatus == CartStatus.LOADING) {
+            if (value.cartStatus == CartStatus.LOADING) {
               return SafeArea(
                 child: SizedBox(
                   height: 1.sh / 4.5,
@@ -203,12 +203,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   if (widget.isFromNotification == false) {
                                     Provider.of<PlanWizardViewModel>(context,
                                             listen: false)
-                                        ?.changeCurrentPage(0);
+                                        .changeCurrentPage(0);
                                     if (Provider.of<PlanWizardViewModel>(
                                                 context,
                                                 listen: false)
-                                            ?.isPlanWizardActive ??
-                                        false) {
+                                            .isPlanWizardActive) {
                                       Get.back();
                                     } else {
                                       Get.offAndToNamed(router.rt_PlanWizard);
@@ -486,10 +485,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         Row(
                                           children: [
                                             Text(
-                                                'Price \(${value?.fetchingCartItemsModel?.result!.productsCount ?? 0} items\)'),
+                                                'Price \(${value.fetchingCartItemsModel?.result!.productsCount ?? 0} items\)'),
                                             Spacer(),
                                             Text(
-                                                '${CommonUtil.CURRENCY}${value?.totalProductCount ?? 0}'),
+                                                '${CommonUtil.CURRENCY}${value.totalProductCount}'),
                                           ],
                                         ),
                                         DottedLine(
@@ -509,7 +508,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               width: 20.0.w,
                                             ),
                                             Text(
-                                              '${CommonUtil.CURRENCY}${value?.totalProductCount ?? 0}',
+                                              '${CommonUtil.CURRENCY}${value.totalProductCount}',
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
@@ -552,7 +551,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${CommonUtil.CURRENCY}${value?.totalProductCount ?? 0}',
+                                        '${CommonUtil.CURRENCY}${value.totalProductCount}',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -626,8 +625,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     value.cartType ==
                                                             CartType.RETRY_CART
                                                         ? strRetryPay
-                                                        : (value?.totalProductCount ??
-                                                                    0) >
+                                                        : (value.totalProductCount) >
                                                                 0
                                                             ? strReviewPay
                                                             : strFreePlan,
@@ -669,7 +667,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
-    var mCartTotal = value?.totalProductCount ?? 0;
+    var mCartTotal = value.totalProductCount;
     var firebase = FirebaseAnalyticsService();
     firebase.trackEvent("on_pay_clicked", {
       "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
@@ -720,11 +718,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
     } else {
       ApiBaseHelper().makePayment(body).then((value) {
         if (value != null) {
-          if (value.isSuccess! && !(value?.result != null)) {
+          if (value.isSuccess! && !(value.result != null)) {
             Alert.displayConfirmation(Get.context!,
                 confirm: "Update Cart",
                 title: "Update",
-                content: value?.message ?? '', onPressedConfirm: () {
+                content: value.message!, onPressedConfirm: () {
               ApiBaseHelper()
                   .updateCartIcon(fetchingCartItemsModel?.result)
                   .then((value) {
@@ -736,7 +734,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 }
               });
             });
-          } else if ((value?.isSuccess ?? false) && value?.result != null) {
+          } else if ((value.isSuccess ?? false) && value.result != null) {
             Get.off(
               PaymentResultPage(
                 refNo: value.result!.orderId,
@@ -760,9 +758,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     int productValue = 0;
 
     if (!isFirsTym) {
-      if (item?.productDetail?.planSubscriptionFee != null &&
-          item?.productDetail?.planSubscriptionFee != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      if (item.productDetail?.planSubscriptionFee != null &&
+          item.productDetail?.planSubscriptionFee != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
           productValue =
@@ -770,19 +768,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
         }
       }
     } else {
-      if (item?.additionalInfo?.newFee != null &&
-          item?.additionalInfo?.newFee != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      if (item.additionalInfo?.newFee != null &&
+          item.additionalInfo?.newFee != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item?.additionalInfo?.newFee).toInt();
+          productValue = double.parse(item.additionalInfo?.newFee).toInt();
         }
-      } else if (item?.additionalInfo?.actualFee != null &&
-          item?.additionalInfo?.actualFee != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      } else if (item.additionalInfo?.actualFee != null &&
+          item.additionalInfo?.actualFee != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item?.additionalInfo?.actualFee).toInt();
+          productValue = double.parse(item.additionalInfo?.actualFee).toInt();
         }
       } else if (item.paidAmount!.contains(".")) {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
@@ -791,7 +789,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           productValue = double.parse(item.paidAmount!).toInt();
         }
       } else {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
           productValue = int.parse(item.paidAmount!);
@@ -802,7 +800,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       padding: EdgeInsets.only(top: 10),
       child: Column(
         children: [
-          item?.additionalInfo?.isMembershipAvail ?? false
+          item.additionalInfo?.isMembershipAvail ?? false
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -838,7 +836,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       //mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '${item?.productDetail?.planName}',
+                          '${item.productDetail?.planName}',
                           style: TextStyle(
                               color: Colors.black54,
                               // fontWeight: FontWeight.bold,
@@ -865,7 +863,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           fontSize: 9),
                     ),
                     Text(
-                      'Offered By: ${item?.productDetail?.healthOrganizationName}',
+                      'Offered By: ${item.productDetail?.healthOrganizationName}',
                       style: TextStyle(
                           color: Colors.black54,
                           // fontWeight: FontWeight.bold,
@@ -944,7 +942,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 TextSpan>[
                                                               TextSpan(
                                                                 text:
-                                                                    '${item?.productDetail?.planName!.toLowerCase()}',
+                                                                    '${item.productDetail?.planName!.toLowerCase()}',
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
@@ -1069,11 +1067,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                           context,
                                                                           listen:
                                                                               false)
-                                                                      ?.getProductListUsingPackageId(
-                                                                          '${item?.productDetail?.id}');
+                                                                      .getProductListUsingPackageId(
+                                                                          '${item.productDetail?.id}');
                                                                   await Provider.of<CheckoutPageProvider>(context, listen: false).removeCartItem(
                                                                       productId:
-                                                                          '${item?.productDetail?.id}',
+                                                                          '${item.productDetail?.id}',
                                                                       isNeedRelod:
                                                                           true,
                                                                       productList:
@@ -1136,27 +1134,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
   int? getDurationBasedOnCondition(ProductList item, {bool firstTym = true}) {
     int? planDuration = 0;
     if (!firstTym) {
-      if (item?.productDetail?.packageDuration != null &&
-          item?.productDetail?.packageDuration != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      if (item.productDetail?.packageDuration != null &&
+          item.productDetail?.packageDuration != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           planDuration = 0;
         } else {
-          planDuration = item?.productDetail?.packageDuration;
+          planDuration = item.productDetail?.packageDuration;
         }
       }
     } else {
-      if (item?.additionalInfo?.duration != null &&
-          item?.additionalInfo?.duration != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      if (item.additionalInfo?.duration != null &&
+          item.additionalInfo?.duration != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           planDuration = 0;
         } else {
-          planDuration = item?.additionalInfo?.duration!.toInt();
+          planDuration = item.additionalInfo?.duration!.toInt();
         }
       } else {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           planDuration = 0;
         } else {
-          planDuration = item?.productDetail?.packageDuration;
+          planDuration = item.productDetail?.packageDuration;
         }
       }
     }
@@ -1172,7 +1170,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
-    var mCartTotal = value?.totalProductCount ?? 0;
+    var mCartTotal = value.totalProductCount;
     var firebase = FirebaseAnalyticsService();
     firebase.trackEvent("on_pay_clicked", {
       "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
@@ -1203,7 +1201,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             var checkValidation = await CheckoutPageWidgets()
                 .profileValidationCheckOnCart(context,
                     feeZero:
-                        (value?.totalProductCount ?? 0) > 0 ? false : true);
+                        (value.totalProductCount) > 0 ? false : true);
             if (checkValidation ?? false) {
               planSubLogic(value);
             }
@@ -1247,7 +1245,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       } else {
         var result = await CheckoutPageWidgets().profileValidationCheckOnCart(
             context,
-            feeZero: (value?.totalProductCount ?? 0) > 0 ? false : true);
+            feeZero: (value.totalProductCount) > 0 ? false : true);
         if (result ?? false) {
           planSubLogic(value);
         }

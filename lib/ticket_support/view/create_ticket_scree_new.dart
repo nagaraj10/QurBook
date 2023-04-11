@@ -139,7 +139,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
 
     if (picked != null) {
       setState(() {
-        dateTime = picked ?? dateTime;
+        dateTime = picked;
         preferredDateStr =
             FHBUtils().getPreferredDateString(dateTime.toString());
         preferredDateController.text = preferredDateStr;
@@ -223,7 +223,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           ),
           title: Text(tckConstants.strAddMyTicket),
         ),
-        body: Obx(() => isFirstTym && controller!.isCTLoading.value ?? false
+        body: Obx(() => isFirstTym && controller.isCTLoading.value
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -474,7 +474,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         //Lab Appointment
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? Row(
                 children: [
                   Text(tckConstants.strPreferredLab,
@@ -486,24 +486,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               )
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? SizedBox(height: 10.h)
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? dropDownButton(
-                controller!.labsList != null && controller!.labsList!.length > 0
-                    ? controller!.labsList!
+                controller.labsList != null && controller.labsList!.length > 0
+                    ? controller.labsList!
                     : [])
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value &&
-                controller!.isPreferredLabDisable.value
+        controller.labBookAppointment.value &&
+                controller.isPreferredLabDisable.value
             ? SizedBox(height: 5.h)
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value &&
-                controller!.isPreferredLabDisable.value
+        controller.labBookAppointment.value &&
+                controller.isPreferredLabDisable.value
             ? RichText(
                 text: TextSpan(
                     text: ' *',
@@ -520,7 +520,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               )
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? SizedBox(height: 20.h)
             : SizedBox.shrink(),
       ],
@@ -837,9 +837,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     try {
       if (labsList.length > 0) {
         for (Hospitals selHospitals in labsList) {
-          if (selHospitals.name == controller!.selPrefLab.value) {
+          if (selHospitals.name == controller.selPrefLab.value) {
             selectedLab = selHospitals;
-            controller!.selPrefLabId.value =
+            controller.selPrefLabId.value =
                 CommonUtil().validString(selHospitals.id);
           }
         }
@@ -858,7 +858,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
         child: IgnorePointer(
-          ignoring: controller!.isPreferredLabDisable.value ?? false,
+          ignoring: controller.isPreferredLabDisable.value,
           child: DropdownButton<Hospitals>(
             value: selectedLab,
             underline: SizedBox(),
@@ -889,9 +889,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
             onChanged: (Hospitals? currLab) {
               try {
                 selectedLab = currLab;
-                controller!.selPrefLab.value =
+                controller.selPrefLab.value =
                     CommonUtil().validString(currLab!.name);
-                controller!.selPrefLabId.value =
+                controller.selPrefLabId.value =
                     CommonUtil().validString(currLab.id);
                 setState(() {});
               } catch (e) {}
@@ -906,9 +906,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     try {
       if (doctorsList.length > 0) {
         for (Doctors? selDoctors in doctorsList) {
-          if (selDoctors!.user!.name == controller!.selPrefLab.value) {
+          if (selDoctors!.user!.name == controller.selPrefLab.value) {
             selectedDoctor = selDoctors;
-            controller!.selPrefDoctorId.value =
+            controller.selPrefDoctorId.value =
                 CommonUtil().validString(selDoctors.id);
           }
         }
@@ -927,7 +927,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
         child: IgnorePointer(
-          ignoring: controller!.isPreferredLabDisable.value ?? false,
+          ignoring: controller.isPreferredLabDisable.value,
           child: DropdownButton<Doctors>(
             value: selectedDoctor,
             underline: SizedBox(),
@@ -958,9 +958,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
             onChanged: (Doctors? currDoc) {
               try {
                 selectedDoctor = currDoc;
-                controller!.selPrefDoctor.value =
+                controller.selPrefDoctor.value =
                     CommonUtil().validString(currDoc!.user!.name);
-                controller!.selPrefDoctorId.value =
+                controller.selPrefDoctorId.value =
                     CommonUtil().validString(currDoc.id);
                 setState(() {});
               } catch (e) {}
@@ -1016,7 +1016,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                   snapshot.data!.result!.doctors != null &&
                   snapshot.data!.result!.doctors!.isNotEmpty) {
                 doctorsListFromProvider = snapshot.data!.result!.doctors;
-                controller!.isCTLoading = true.obs;
+                controller.isCTLoading = true.obs;
                 filterDuplicateDoctor();
                 familyWidget = getDoctorDropDown(
                   doctorsListFromProvider,
@@ -1056,8 +1056,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   void filterDuplicateHospital() {
     if (hospitalListFromProvider!.isNotEmpty) {
       copyOfhospitalModel = hospitalListFromProvider;
-      var ids = copyOfhospitalModel!.map((e) => e?.id).toSet();
-      copyOfhospitalModel!.retainWhere((x) => ids.remove(x?.id));
+      var ids = copyOfhospitalModel!.map((e) => e.id).toSet();
+      copyOfhospitalModel!.retainWhere((x) => ids.remove(x.id));
       hospitalListFromProvider = copyOfhospitalModel;
     }
   }
@@ -1464,11 +1464,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       healthOrganizationId: newValue.id,
       healthOrganizationName: newValue.name,
       addressLine1:
-          newValue.healthOrganizationAddressCollection![0]?.addressLine1,
+          newValue.healthOrganizationAddressCollection![0].addressLine1,
       addressLine2:
-          newValue.healthOrganizationAddressCollection![0]?.addressLine2,
-      cityName: newValue.healthOrganizationAddressCollection![0]?.city?.name,
-      stateName: newValue.healthOrganizationAddressCollection![0]?.state?.name,
+          newValue.healthOrganizationAddressCollection![0].addressLine2,
+      cityName: newValue.healthOrganizationAddressCollection![0].city?.name,
+      stateName: newValue.healthOrganizationAddressCollection![0].state?.name,
       /*healthOrganizationTypeName: newValue.healthOrganizationType?.name,
       healthOrganizationTypeId: newValue.healthOrganizationType?.id,
       phoneNumber: newValue.healthOrganizationContactCollection[0]?.phoneNumber,
@@ -1486,7 +1486,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         //Lab Appointment
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? Row(
                 children: [
                   Text(tckConstants.strPreferredDoctors,
@@ -1498,24 +1498,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               )
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value
+        controller.doctorBookAppointment.value
             ? SizedBox(height: 10.h)
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value
-            ? dropDoctorDownButton(controller!.doctorsList != null &&
-                    controller!.doctorsList!.length > 0
-                ? controller!.doctorsList!
+        controller.doctorBookAppointment.value
+            ? dropDoctorDownButton(controller.doctorsList != null &&
+                    controller.doctorsList!.length > 0
+                ? controller.doctorsList!
                 : [])
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value &&
-                controller!.isPreferredDoctorDisable.value
+        controller.doctorBookAppointment.value &&
+                controller.isPreferredDoctorDisable.value
             ? SizedBox(height: 5.h)
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value &&
-                controller!.isPreferredDoctorDisable.value
+        controller.doctorBookAppointment.value &&
+                controller.isPreferredDoctorDisable.value
             ? RichText(
                 text: TextSpan(
                     text: ' *',
@@ -1532,7 +1532,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               )
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value
+        controller.doctorBookAppointment.value
             ? SizedBox(height: 20.h)
             : SizedBox.shrink(),
       ],
@@ -1543,10 +1543,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     tckConstants.ticketType = ticketListData.id;
     tckConstants.tckPriority = ticketListData.id;
 
-    if (controller!.labBookAppointment.value &&
-        controller!.selPrefLab.value != "Select") {
-      tckConstants.tckPrefLab = controller!.selPrefLab.value;
-      tckConstants.tckPrefLabId = controller!.selPrefLabId.value;
+    if (controller.labBookAppointment.value &&
+        controller.selPrefLab.value != "Select") {
+      tckConstants.tckPrefLab = controller.selPrefLab.value;
+      tckConstants.tckPrefLabId = controller.selPrefLabId.value;
     } else {
       tckConstants.tckPrefLab = "";
       tckConstants.tckPrefLabId = "";
@@ -1564,7 +1564,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           List resposnes = await apiBaseHelper
               .uploadAttachmentForTicket(
                   CommonUtil.TRUE_DESK_URL + "tickets/uploadattachment",
-                  value?.result?.ticket?.id,
+                  value.result?.ticket?.id,
                   imagePaths)
               .then((values) {
                 FlutterToast()
@@ -1916,7 +1916,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     return SizedBoxWithChild(
         height: 50,
         child: IgnorePointer(
-            ignoring: controller!.isPreferredDoctorDisable.value,
+            ignoring: controller.isPreferredDoctorDisable.value,
             child: Expanded(
                 flex: 1,
                 child: DropdownButton<MenuItem>(
@@ -1979,15 +1979,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           return ErrorsWidget();
         } else {
           var healthConditionsList =
-              (Provider.of<PlanWizardViewModel>(context)?.isHealthSearch ??
-                      false)
+              (Provider.of<PlanWizardViewModel>(context).isHealthSearch)
                   ? (Provider.of<PlanWizardViewModel>(context, listen: false)
-                          ?.filteredHealthConditions ??
-                      {})
+                          .filteredHealthConditions)
                   : (Provider.of<PlanWizardViewModel>(context, listen: false)
-                          ?.healthConditions ??
-                      {});
-          if ((healthConditionsList?.length ?? 0) > 0) {
+                          .healthConditions);
+          if ((healthConditionsList.length) > 0) {
             healthConditionsResult = healthConditionsList;
             return getDropDownForPlanCategory(healthConditionsResult!);
           } else {

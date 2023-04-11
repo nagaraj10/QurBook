@@ -177,8 +177,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               null
                           ? CachedNetworkImage(
                               imageUrl: appointmentDetailsController
-                                      .appointmentIconUrl.value ??
-                                  "",
+                                      .appointmentIconUrl.value,
                               height: imgSize,
                               width: imgSize,
                               fit: BoxFit.fill,

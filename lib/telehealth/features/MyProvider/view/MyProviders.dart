@@ -117,8 +117,7 @@ class _MyProvidersState extends State<MyProviders> {
               },
             ),
             Expanded(
-              child: (widget.isRefresh! && myProvidersResponseList != null ??
-                      myProvidersResponseList!.isSuccess)!
+              child: (widget.isRefresh! && myProvidersResponseList != null)
                   ? myProviderList(myProvidersResponseList)
                   : getDoctorProviderListNew(),
             )

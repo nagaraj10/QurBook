@@ -155,7 +155,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
     if (picked != null) {
       setState(() {
-        dateTime = picked ?? dateTime;
+        dateTime = picked;
         preferredDateStr =
             FHBUtils().getPreferredDateString(dateTime.toString());
         preferredDateController.text = preferredDateStr;
@@ -203,7 +203,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           _providersBloc!.getMedicalPreferencesForHospital();
       healthConditions =
           Provider.of<PlanWizardViewModel>(context, listen: false)
-              ?.getHealthConditions();
+              .getHealthConditions();
 
       setBooleanValues();
     } catch (e) {
@@ -302,12 +302,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 (field.isProvider != null && field.isProvider!)) {
               if (field.providerType != null && field.providerType!.length > 0) {
                 await controller.getProviderList(
-                    field.providerType![0] ?? "", field);
+                    field.providerType![0], field);
               }
               getTextField(field);
               if (field.fieldData != null &&
                   (field.fieldData?.length ?? 0) > 0 &&
-                  field?.fieldData?.length == 1) {
+                  field.fieldData?.length == 1) {
                 await Future.delayed(Duration(milliseconds: 50));
                 onSelectDD(field.fieldData![0], field);
               }
@@ -351,7 +351,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           ),
           title: Text(tckConstants.strAddMyTicket),
         ),
-        body: Obx(() => isFirstTym && controller.isCTLoading.value ?? false
+        body: Obx(() => isFirstTym && controller.isCTLoading.value
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -469,7 +469,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       SizedBox(height: 15.h),
                       getWidgetForTitleText(
                           title: displayName,
-                          isRequired: /*field.isRequired*/ isVisible ?? false),
+                          isRequired: /*field.isRequired*/ isVisible),
                       SizedBox(height: 10.h),
                       getWidgetForTextValue(
                           i, CommonUtil().getFieldName(field.name),field),
@@ -501,7 +501,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       SizedBox(height: 15.h),
                       getWidgetForTitleText(
                           title: displayName,
-                          isRequired: /*field.isRequired*/ isVisible ?? false),
+                          isRequired: /*field.isRequired*/ isVisible),
                       SizedBox(height: 10.h),
                       getWidgetForTextAreaValue(
                           i, CommonUtil().getFieldName(field.name)),
@@ -779,12 +779,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                           ],
                         ),
                         SizedBox(height: 10.h),
-                        controller!.strAddressLine.value.trim().isNotEmpty &&
+                        controller.strAddressLine.value.trim().isNotEmpty &&
                                 isLabAddressVisible
                             ? CommonUtil().commonWidgetForTitleValue(
                                 tckConstants.address, controller.strAddressLine.value)
                             : SizedBox.shrink(),
-                        controller!.strCityName.value.trim().isNotEmpty &&
+                        controller.strCityName.value.trim().isNotEmpty &&
                                 isLabAddressVisible
                             ? CommonUtil().commonWidgetForTitleValue(
                                 tckConstants.city, controller.strCityName.value)
@@ -795,7 +795,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                 tckConstants.state,
                                 controller.strStateName.value)
                             : SizedBox.shrink(),
-                        controller!.strPincode.value.trim().isNotEmpty &&
+                        controller.strPincode.value.trim().isNotEmpty &&
                                 isLabAddressVisible
                             ? CommonUtil().commonWidgetForTitleValue(
                                 tckConstants.pincode, controller.strPincode.value)
@@ -816,8 +816,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                           SizedBox(height: 15.h),
                           getWidgetForTitleText(
                               title: displayName,
-                              isRequired:isLabNameOthers ??
-                                  false),
+                              isRequired:isLabNameOthers),
                           SizedBox(height: 10.h),
                           getWidgetForTextValue(
                               i, CommonUtil().getFieldName(field.name), field),
@@ -836,7 +835,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       SizedBox(height: 15.h),
                       getWidgetForTitleText(
                           title: displayName,
-                          isRequired: isVisible ?? false),
+                          isRequired: isVisible),
                       SizedBox(height: 10.h),
                       Row(
                         children: [
@@ -911,15 +910,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           } else if (results.containsKey(tckConstants.keyLab)) {
             labData = json.decode(results[tckConstants.keyLab]);
             lab.text = labData[parameters.strHealthOrganizationName];
-            controller!.selPrefLab.value =
+            controller.selPrefLab.value =
                 labData[parameters.strHealthOrganizationName];
-            controller!.selPrefLabId.value =
+            controller.selPrefLabId.value =
                 labData[parameters.strHealthOrganizationId];
-            controller!.strAddressLine.value =
+            controller.strAddressLine.value =
                 CommonUtil().validString(labData[parameters.strAddressLine1]);
-            controller!.strCityName.value =
+            controller.strCityName.value =
                 CommonUtil().validString(labData[parameters.strcityName]);
-            controller!.strPincode.value =
+            controller.strPincode.value =
                 CommonUtil().validString(labData[parameters.strpincode]);
             controller.strStateName.value =
                 CommonUtil().validString(labData[parameters.strstateName]);
@@ -976,11 +975,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       children: [
         //Lab Appointment
 
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? SizedBox(height: 15.h)
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? Row(
                 children: [
                   Text(tckConstants.strPreferredLab,
@@ -992,24 +991,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               )
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? SizedBox(height: 10.h)
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? dropDownButton(
-                controller!.labsList != null && controller!.labsList!.length > 0
-                    ? controller!.labsList!
+                controller.labsList != null && controller.labsList!.length > 0
+                    ? controller.labsList!
                     : [])
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value &&
-                controller!.isPreferredLabDisable.value
+        controller.labBookAppointment.value &&
+                controller.isPreferredLabDisable.value
             ? SizedBox(height: 5.h)
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value &&
-                controller!.isPreferredLabDisable.value
+        controller.labBookAppointment.value &&
+                controller.isPreferredLabDisable.value
             ? RichText(
                 text: TextSpan(
                     text: ' *',
@@ -1026,7 +1025,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               )
             : SizedBox.shrink(),
 
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? SizedBox(height: 10.h)
             : SizedBox.shrink(),
       ],
@@ -1351,7 +1350,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     try {
       String strName =
           CommonUtil().validString(ticketListData.name ?? "").toLowerCase();
-      controller!.dynamicTextFiledObj = {};
+      controller.dynamicTextFiledObj = {};
       if (widget.ticketList != null) {
         if (widget.ticketList!.additionalInfo != null)
           for (int i = 0;
@@ -1419,10 +1418,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 field.isLab!) {
               if (CommonUtil.REGION_CODE == "IN") {
                 if (lab.text.isNotEmpty) {
-                  controller!.dynamicTextFiledObj[field.name] =
+                  controller.dynamicTextFiledObj[field.name] =
                       controller.selPrefLabId.value;
                   if (!isLabNameOthers) {
-                    controller!.dynamicTextFiledObj[strLabName] =
+                    controller.dynamicTextFiledObj[strLabName] =
                         lab.text.toString().trim();
                   }
                 } else if (field.isRequired!) {
@@ -1430,9 +1429,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   return;
                 }
               } else {
-                if (controller!.selPrefLab.value != "Select") {
-                  controller!.dynamicTextFiledObj[field.name] =
-                      controller!.selPrefLab.value;
+                if (controller.selPrefLab.value != "Select") {
+                  controller.dynamicTextFiledObj[field.name] =
+                      controller.selPrefLab.value;
                 }
               }
             }
@@ -1441,7 +1440,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               if (preferredDateController.text.isNotEmpty) {
                 tckConstants.tckPrefDate =
                     preferredDateController.text.toString();
-                controller!.dynamicTextFiledObj[field.name] =
+                controller.dynamicTextFiledObj[field.name] =
                     preferredDateController.text.toString();
               } else if (field.isRequired!) {
                 showAlertMsg("Please select $displayName");
@@ -1528,11 +1527,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     try {
       if (labsList.length > 0) {
         for (Hospitals selHospitals in labsList) {
-          if (selHospitals.name == controller!.selPrefLab.value) {
+          if (selHospitals.name == controller.selPrefLab.value) {
             selectedLab = selHospitals;
-            controller!.selPrefLabId.value =
+            controller.selPrefLabId.value =
                 CommonUtil().validString(selHospitals.id);
-            controller!.selPrefLab.value =
+            controller.selPrefLab.value =
                 CommonUtil().validString(selHospitals.name);
           }
         }
@@ -1551,7 +1550,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
         child: IgnorePointer(
-          ignoring: controller!.isPreferredLabDisable.value ?? false,
+          ignoring: controller.isPreferredLabDisable.value,
           child: DropdownButton<Hospitals>(
             value: selectedLab,
             underline: SizedBox(),
@@ -1582,9 +1581,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             onChanged: (Hospitals? currLab) {
               try {
                 selectedLab = currLab;
-                controller!.selPrefLab.value =
+                controller.selPrefLab.value =
                     CommonUtil().validString(currLab!.name);
-                controller!.selPrefLabId.value =
+                controller.selPrefLabId.value =
                     CommonUtil().validString(currLab.id);
                 setState(() {});
               } catch (e) {}
@@ -1599,9 +1598,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     try {
       if (doctorsList.length > 0) {
         for (Doctors? selDoctors in doctorsList) {
-          if (selDoctors!.user!.name == controller!.selPrefLab.value) {
+          if (selDoctors!.user!.name == controller.selPrefLab.value) {
             selectedDoctor = selDoctors;
-            controller!.selPrefDoctorId.value =
+            controller.selPrefDoctorId.value =
                 CommonUtil().validString(selDoctors.id);
           }
         }
@@ -1620,7 +1619,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
         child: IgnorePointer(
-          ignoring: controller!.isPreferredLabDisable.value ?? false,
+          ignoring: controller.isPreferredLabDisable.value,
           child: DropdownButton<Doctors>(
             value: selectedDoctor,
             underline: SizedBox(),
@@ -1651,9 +1650,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             onChanged: (Doctors? currDoc) {
               try {
                 selectedDoctor = currDoc;
-                controller!.selPrefDoctor.value =
+                controller.selPrefDoctor.value =
                     CommonUtil().validString(currDoc!.user!.name);
-                controller!.selPrefDoctorId.value =
+                controller.selPrefDoctorId.value =
                     CommonUtil().validString(currDoc.id);
                 setState(() {});
               } catch (e) {}
@@ -1709,7 +1708,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   snapshot.data!.result!.doctors != null &&
                   snapshot.data!.result!.doctors!.isNotEmpty) {
                 doctorsListFromProvider = snapshot.data!.result!.doctors;
-                controller!.isCTLoading = true.obs;
+                controller.isCTLoading = true.obs;
                 filterDuplicateDoctor();
                 familyWidget = getDoctorDropDown(
                   doctorsListFromProvider,
@@ -1749,8 +1748,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   void filterDuplicateHospital() {
     if (hospitalListFromProvider!.isNotEmpty) {
       copyOfhospitalModel = hospitalListFromProvider;
-      var ids = copyOfhospitalModel!.map((e) => e?.id).toSet();
-      copyOfhospitalModel!.retainWhere((x) => ids.remove(x?.id));
+      var ids = copyOfhospitalModel!.map((e) => e.id).toSet();
+      copyOfhospitalModel!.retainWhere((x) => ids.remove(x.id));
       hospitalListFromProvider = copyOfhospitalModel;
     }
   }
@@ -2155,11 +2154,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       healthOrganizationId: newValue.id,
       healthOrganizationName: newValue.name,
       addressLine1:
-          newValue.healthOrganizationAddressCollection![0]?.addressLine1,
+          newValue.healthOrganizationAddressCollection![0].addressLine1,
       addressLine2:
-          newValue.healthOrganizationAddressCollection![0]?.addressLine2,
-      cityName: newValue.healthOrganizationAddressCollection![0]?.city?.name,
-      stateName: newValue.healthOrganizationAddressCollection![0]?.state?.name,
+          newValue.healthOrganizationAddressCollection![0].addressLine2,
+      cityName: newValue.healthOrganizationAddressCollection![0].city?.name,
+      stateName: newValue.healthOrganizationAddressCollection![0].state?.name,
       /*healthOrganizationTypeName: newValue.healthOrganizationType?.name,
       healthOrganizationTypeId: newValue.healthOrganizationType?.id,
       phoneNumber: newValue.healthOrganizationContactCollection[0]?.phoneNumber,
@@ -2177,7 +2176,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         //Lab Appointment
-        controller!.labBookAppointment.value
+        controller.labBookAppointment.value
             ? Row(
                 children: [
                   Text(tckConstants.strPreferredDoctors,
@@ -2189,24 +2188,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               )
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value
+        controller.doctorBookAppointment.value
             ? SizedBox(height: 10.h)
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value
-            ? dropDoctorDownButton(controller!.doctorsList != null &&
-                    controller!.doctorsList!.length > 0
-                ? controller!.doctorsList!
+        controller.doctorBookAppointment.value
+            ? dropDoctorDownButton(controller.doctorsList != null &&
+                    controller.doctorsList!.length > 0
+                ? controller.doctorsList!
                 : [])
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value &&
-                controller!.isPreferredDoctorDisable.value
+        controller.doctorBookAppointment.value &&
+                controller.isPreferredDoctorDisable.value
             ? SizedBox(height: 5.h)
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value &&
-                controller!.isPreferredDoctorDisable.value
+        controller.doctorBookAppointment.value &&
+                controller.isPreferredDoctorDisable.value
             ? RichText(
                 text: TextSpan(
                     text: ' *',
@@ -2223,7 +2222,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               )
             : SizedBox.shrink(),
 
-        controller!.doctorBookAppointment.value
+        controller.doctorBookAppointment.value
             ? SizedBox(height: 20.h)
             : SizedBox.shrink(),
       ],
@@ -2262,7 +2261,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   ? CommonUtil().validString(field.selValueDD!.id)
                   : "";
               tckConstants.tckPrefMOSName = strMOS;
-              controller!.dynamicTextFiledObj[field.name] = field.selValueDD;
+              controller.dynamicTextFiledObj[field.name] = field.selValueDD;
             } else if (field.isRequired!) {
               showAlertMsg("Please choose $displayName");
               return;
@@ -2275,10 +2274,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             String strProviderField = getText(field);
             if (strProviderField.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] =
-                  field?.selValueDD?.id ?? "";
+                  field.selValueDD?.id;
               if (!isProviderOthers) {
                 controller.dynamicTextFiledObj[strProviderName] =
-                    field?.selValueDD?.name ?? "";
+                    field.selValueDD?.name;
               }
             } else if (field.isRequired!) {
               showAlertMsg("Please choose $displayName");
@@ -2307,7 +2306,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 return;
               }
               tckConstants.tckPrefTime = strTime;
-              controller!.dynamicTextFiledObj[field.name] = strTime;
+              controller.dynamicTextFiledObj[field.name] = strTime;
             } else if (field.isRequired!) {
               showAlertMsg("Please select $displayName");
               return;
@@ -2334,7 +2333,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             String strText = getText(field);
             if (isVisible) {
               if (strText.isNotEmpty) {
-                controller!.dynamicTextFiledObj[field.name] = strText;
+                controller.dynamicTextFiledObj[field.name] = strText;
               } else if (isVisible) {
                 showAlertMsg("Please fill $displayName");
                 return;
@@ -2360,7 +2359,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             String strText = getText(field);
             if (isVisible) {
               if (strText.isNotEmpty) {
-                controller!.dynamicTextFiledObj[field.name] = strText;
+                controller.dynamicTextFiledObj[field.name] = strText;
               } else if (isVisible) {
                 showAlertMsg("Please fill $displayName");
                 return;
@@ -2404,10 +2403,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       tckConstants.ticketType = ticketListData.id;
       tckConstants.tckPriority = ticketListData.id;
 
-      if (controller!.labBookAppointment.value &&
-          controller!.selPrefLab.value != "Select") {
-        tckConstants.tckPrefLab = controller!.selPrefLab.value;
-        tckConstants.tckPrefLabId = controller!.selPrefLabId.value;
+      if (controller.labBookAppointment.value &&
+          controller.selPrefLab.value != "Select") {
+        tckConstants.tckPrefLab = controller.selPrefLab.value;
+        tckConstants.tckPrefLabId = controller.selPrefLabId.value;
       } else {
         tckConstants.tckPrefLab = "";
         tckConstants.tckPrefLabId = "";
@@ -2428,7 +2427,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             List resposnes = await apiBaseHelper
                 .uploadAttachmentForTicket(
                     CommonUtil.TRUE_DESK_URL + "tickets/uploadattachment",
-                    value?.result?.ticket?.id,
+                    value.result?.ticket?.id,
                     imagePaths)
                 .then((values) {
                   FlutterToast()
@@ -2819,7 +2818,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   color: Colors.grey, style: BorderStyle.solid, width: 0.80),
             ),
             child: IgnorePointer(
-              ignoring: controller!.isPreferredDoctorDisable.value,
+              ignoring: controller.isPreferredDoctorDisable.value,
               child: DropdownButton<MenuItem>(
                 // Initial Value
                 value: dropdownValue,
@@ -2884,15 +2883,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           return ErrorsWidget();
         } else {
           var healthConditionsList =
-              (Provider.of<PlanWizardViewModel>(context)?.isHealthSearch ??
-                      false)
+              (Provider.of<PlanWizardViewModel>(context).isHealthSearch)
                   ? (Provider.of<PlanWizardViewModel>(context, listen: false)
-                          ?.filteredHealthConditions ??
-                      {})
+                          .filteredHealthConditions)
                   : (Provider.of<PlanWizardViewModel>(context, listen: false)
-                          ?.healthConditions ??
-                      {});
-          if ((healthConditionsList?.length ?? 0) > 0) {
+                          .healthConditions);
+          if ((healthConditionsList.length) > 0) {
             healthConditionsResult = healthConditionsList;
             return getDropDownForPlanCategory(healthConditionsResult!);
           } else {
@@ -2996,10 +2992,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       Constants.tckSelectedHospitalId = 'HospitalId';
       Constants.tckSelectedCategory = 'Category';
       Constants.tckPackageName = 'Package Name';
-      controller!.strAddressLine.value = "";
-      controller!.strCityName.value = "";
-      controller!.strPincode.value = "";
-      controller!.strStateName.value = ""; 
+      controller.strAddressLine.value = "";
+      controller.strCityName.value = "";
+      controller.strPincode.value = "";
+      controller.strStateName.value = ""; 
     } catch (e) {
       //print(e);
     }
@@ -3071,7 +3067,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         isLabAddressVisible = false;
       }
       if (field.isProvider != null && field.isProvider!) {
-        if (value?.id?.toLowerCase() == strOthers) {
+        if (value.id?.toLowerCase() == strOthers) {
           isProviderOthers = true;
         } else {
           isProviderOthers = false;
@@ -3079,7 +3075,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       }
       setState(() {
         textEditingControllers[CommonUtil().getFieldName(field.name)]?.text =
-            field.selValueDD!.name! ?? '';
+            field.selValueDD!.name!;
       });
       onRefreshWidget();
     } catch (e) {}

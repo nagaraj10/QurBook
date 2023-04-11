@@ -22,7 +22,7 @@ class CartIconWithBadge extends StatelessWidget {
         ),
       ),
       badgeColor: ColorUtils.countColor,
-      badgeCount: Provider.of<CheckoutPageProvider>(context)?.currentCartCount,
+      badgeCount: Provider.of<CheckoutPageProvider>(context).currentCartCount,
     );
   }
 }

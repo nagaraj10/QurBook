@@ -154,9 +154,9 @@ class _WebViewExampleState extends State<PaymentPage> {
                   updatePaymentSubscribe(paymentId!, paymentOrderId!,
                           paymentRequestId!, isFromRazor!, signature!)
                       .then((value) {
-                    if (value?.isSuccess == true &&
-                        value?.result?.paymentStatus == PAYSUC) {
-                      paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
+                    if (value.isSuccess == true &&
+                        value.result?.paymentStatus == PAYSUC) {
+                      paymentOrderIdSub = value.result?.paymentOrderId ?? '';
                       subscribeViewModel
                           .subScribePlan(
                               value.result!.planPackage!.packageid.toString())
@@ -166,16 +166,16 @@ class _WebViewExampleState extends State<PaymentPage> {
                             callResultPage(true, paymentOrderIdSub);
                           } else {
                             FlutterToast().getToast(
-                                (value != null && value?.result?.message != null
-                                    ? value?.result?.message!
+                                (value != null && value.result?.message != null
+                                    ? value.result?.message!
                                     : 'Subscribe Failed')!,
                                 Colors.red);
                             callResultPage(false, '');
                           }
                         } else {
                           FlutterToast().getToast(
-                              (value != null && value?.result?.message != null
-                                  ? value?.result?.message!
+                              (value != null && value.result?.message != null
+                                  ? value.result?.message!
                                   : 'Subscribe Failed')!,
                               Colors.red);
                           callResultPage(false, '');
@@ -194,7 +194,7 @@ class _WebViewExampleState extends State<PaymentPage> {
                   updatePaymentSubscribe(paymentId!, paymentOrderId!,
                           paymentRequestId!, isFromRazor!, signature!)
                       .then((value) {
-                    if (value?.isSuccess == true) {
+                    if (value.isSuccess == true) {
                       callResultPage(false, '');
                     } else {
                       callResultPage(false, '');
@@ -259,28 +259,28 @@ class _WebViewExampleState extends State<PaymentPage> {
                 updatePaymentSubscribe(paymentId!, paymentOrderId!,
                         paymentRequestId!, isFromRazor!, signature!)
                     .then((value) {
-                  if (value?.isSuccess == true &&
-                      value?.result?.paymentStatus == PAYSUC) {
-                    paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
+                  if (value.isSuccess == true &&
+                      value.result?.paymentStatus == PAYSUC) {
+                    paymentOrderIdSub = value.result?.paymentOrderId ?? '';
                     subscribeViewModel
                         .subScribePlan(
                             value.result!.planPackage!.packageid.toString())
                         .then((value) {
                       if (value!.isSuccess!) {
-                        if (value?.result?.result == 'Done') {
+                        if (value.result?.result == 'Done') {
                           callResultPage(true, paymentOrderIdSub);
                         } else {
                           FlutterToast().getToast(
-                              (value != null && value?.result?.message != null
-                                  ? value?.result?.message!
+                              (value != null && value.result?.message != null
+                                  ? value.result?.message!
                                   : 'Subscribe Failed')!,
                               Colors.red);
                           callResultPage(false, '');
                         }
                       } else {
                         FlutterToast().getToast(
-                            (value != null && value?.result?.message != null
-                                ? value?.result?.message!
+                            (value != null && value.result?.message != null
+                                ? value.result?.message!
                                 : 'Subscribe Failed')!,
                             Colors.red);
                         callResultPage(false, '');
@@ -299,7 +299,7 @@ class _WebViewExampleState extends State<PaymentPage> {
                 updatePaymentSubscribe(paymentId!, paymentOrderId!,
                         paymentRequestId!, isFromRazor!, signature!)
                     .then((value) {
-                  if (value?.isSuccess == true) {
+                  if (value.isSuccess == true) {
                     callResultPage(false, '');
                   } else {
                     callResultPage(false, '');
@@ -352,8 +352,7 @@ class _WebViewExampleState extends State<PaymentPage> {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   void callResultPage(bool status, String? refNo) {

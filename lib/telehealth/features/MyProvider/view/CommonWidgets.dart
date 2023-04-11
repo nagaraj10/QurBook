@@ -951,12 +951,7 @@ class CommonWidgets {
                       getSizedBox(15),
                       getTextForDoctors('About: '),
                       getTextAbout((docs.doctorProfessionalDetailCollection!
-                                  .isNotEmpty ??
-                              docs.doctorProfessionalDetailCollection!.length >
-                                  0 ??
-                              docs.doctorProfessionalDetailCollection![0]
-                                      .aboutMe !=
-                                  null)
+                                  .isNotEmpty)
                           ? docs.doctorProfessionalDetailCollection![0].aboutMe
                           : ''),
                     ],
@@ -1069,12 +1064,7 @@ class CommonWidgets {
                       getSizedBox(15),
                       getTextForDoctors('About: '),
                       getTextAbout((docs.doctorProfessionalDetailCollection!
-                                  .isNotEmpty ??
-                              docs.doctorProfessionalDetailCollection!.length >
-                                  0 ??
-                              docs.doctorProfessionalDetailCollection![0]
-                                      .aboutMe !=
-                                  null)
+                                  .isNotEmpty)
                           ? docs.doctorProfessionalDetailCollection![0].aboutMe
                           : ''),
                     ],
@@ -1189,12 +1179,7 @@ class CommonWidgets {
                       getSizedBox(15),
                       getTextForDoctors('About: '),
                       getTextAbout((docs.doctorProfessionalDetailCollection!
-                                  .isNotEmpty ??
-                              docs.doctorProfessionalDetailCollection!.length >
-                                  0 ??
-                              docs.doctorProfessionalDetailCollection![0]
-                                      .aboutMe !=
-                                  null)
+                                  .isNotEmpty)
                           ? docs.doctorProfessionalDetailCollection![0].aboutMe
                           : ''),
                     ],

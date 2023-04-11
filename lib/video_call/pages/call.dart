@@ -179,10 +179,10 @@ class _CallPageState extends State<CallPage> {
     }
 
     //todo name has to be change with dynamic
-    widget?.rtcEngine?.setEventHandler(rtcEngineEventHandler);
+    widget.rtcEngine?.setEventHandler(rtcEngineEventHandler);
     _addAgoraEventHandlers();
     await _initAgoraRtcEngine();
-    await widget?.rtcEngine?.joinChannel(null, widget.channelName!, null, 0);
+    await widget.rtcEngine?.joinChannel(null, widget.channelName!, null, 0);
     await platform.invokeMethod(
         parameters.startOnGoingNS, {parameters.mode: parameters.start});
   }
@@ -197,15 +197,15 @@ class _CallPageState extends State<CallPage> {
           : VideoDimensions(width: 640, height: 360);
       configuration.frameRate = VideoFrameRate.Fps15;
       configuration.bitrate = 200;
-      await widget?.rtcEngine?.setVideoEncoderConfiguration(configuration);
-      await widget?.rtcEngine?.enableVideo();
+      await widget.rtcEngine?.setVideoEncoderConfiguration(configuration);
+      await widget.rtcEngine?.enableVideo();
     } else {
       //* audio call
 
     }
-    await widget?.rtcEngine?.setEnableSpeakerphone(true);
-    await widget?.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await widget?.rtcEngine?.setClientRole(widget.role!);
+    await widget.rtcEngine?.setEnableSpeakerphone(true);
+    await widget.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await widget.rtcEngine?.setClientRole(widget.role!);
   }
 
   /// Add agora event handlers
@@ -480,15 +480,15 @@ class _CallPageState extends State<CallPage> {
         CommonUtil.isRemoteUserOnPause = true;
         if (CommonUtil.isLocalUserOnPause) {
           CommonUtil.isLocalUserOnPause = false;
-          await widget?.rtcEngine?.disableVideo();
-          await widget?.rtcEngine?.enableLocalVideo(false);
-          await widget?.rtcEngine?.muteLocalVideoStream(true);
+          await widget.rtcEngine?.disableVideo();
+          await widget.rtcEngine?.enableLocalVideo(false);
+          await widget.rtcEngine?.muteLocalVideoStream(true);
 
-          Provider.of<HideProvider>(context, listen: false)?.swithToAudio();
+          Provider.of<HideProvider>(context, listen: false).swithToAudio();
           Provider.of<AudioCallProvider>(context, listen: false)
-              ?.enableAudioCall();
+              .enableAudioCall();
           Provider.of<VideoIconProvider>(context, listen: false)
-              ?.turnOffVideo();
+              .turnOffVideo();
         } else {
           if (!(Provider.of<AudioCallProvider>(Get.context!, listen: false)
               .isAudioCall)) {
@@ -832,7 +832,7 @@ class _CallPageState extends State<CallPage> {
                     children: [
                       Container(
                         child: Text(
-                          '${widget?.doctorName} requesting to switch to video call',
+                          '${widget.doctorName} requesting to switch to video call',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20.0.sp,
@@ -879,22 +879,22 @@ class _CallPageState extends State<CallPage> {
                                       .update(newStatus.toMap());
                                 return;
                               } else {
-                                await widget?.rtcEngine?.enableVideo();
-                                await widget?.rtcEngine?.enableLocalVideo(true);
-                                await widget?.rtcEngine
+                                await widget.rtcEngine?.enableVideo();
+                                await widget.rtcEngine?.enableLocalVideo(true);
+                                await widget.rtcEngine
                                     ?.muteLocalVideoStream(false);
                                 Provider.of<HideProvider>(Get.context!,
                                         listen: false)
-                                    ?.swithToVideo();
+                                    .swithToVideo();
                                 Provider.of<AudioCallProvider>(Get.context!,
                                         listen: false)
-                                    ?.disableAudioCall();
+                                    .disableAudioCall();
                                 Provider.of<VideoIconProvider>(Get.context!,
                                         listen: false)
-                                    ?.turnOnVideo();
+                                    .turnOnVideo();
                                 Provider.of<RTCEngineProvider>(Get.context!,
                                         listen: false)
-                                    ?.changeLocalVideoStatus(false);
+                                    .changeLocalVideoStatus(false);
                                 var newStatus = VideoCallStatus();
                                 newStatus.setDefaultValues();
                                 newStatus.acceptedByMobile = 1;
@@ -938,16 +938,16 @@ class _CallPageState extends State<CallPage> {
               }
               final audioStatus =
                   Provider.of<AudioCallProvider>(Get.context!, listen: false);
-              if (!(audioStatus.isAudioCall ?? false)) {
-                await widget?.rtcEngine?.disableVideo();
-                await widget?.rtcEngine?.enableLocalVideo(false);
-                await widget?.rtcEngine?.muteLocalVideoStream(true);
+              if (!(audioStatus.isAudioCall)) {
+                await widget.rtcEngine?.disableVideo();
+                await widget.rtcEngine?.enableLocalVideo(false);
+                await widget.rtcEngine?.muteLocalVideoStream(true);
                 Provider.of<HideProvider>(Get.context!, listen: false)
-                    ?.swithToAudio();
+                    .swithToAudio();
                 Provider.of<AudioCallProvider>(Get.context!, listen: false)
-                    ?.enableAudioCall();
+                    .enableAudioCall();
                 Provider.of<VideoIconProvider>(Get.context!, listen: false)
-                    ?.turnOffVideo();
+                    .turnOffVideo();
               }
             } else if (recStatus.acceptedByMobile == 1 ||
                 recStatus.acceptedByWeb == 1) {
@@ -956,13 +956,13 @@ class _CallPageState extends State<CallPage> {
                 CommonUtil.isVideoRequestSent = false;
                 Get.back();
                 Provider.of<HideProvider>(Get.context!, listen: false)
-                    ?.swithToVideo();
+                    .swithToVideo();
                 Provider.of<AudioCallProvider>(Get.context!, listen: false)
-                    ?.disableAudioCall();
+                    .disableAudioCall();
                 Provider.of<VideoIconProvider>(Get.context!, listen: false)
-                    ?.turnOnVideo();
+                    .turnOnVideo();
                 Provider.of<RTCEngineProvider>(Get.context!, listen: false)
-                    ?.changeLocalVideoStatus(false);
+                    .changeLocalVideoStatus(false);
               }
             } else if (recStatus.acceptedByMobile == 0 ||
                 recStatus.acceptedByWeb == 0) {
@@ -987,9 +987,9 @@ class _CallPageState extends State<CallPage> {
                   ),
                   backgroundColor: Colors.red.shade400,
                 );
-                await widget?.rtcEngine?.disableVideo();
-                await widget?.rtcEngine?.enableLocalVideo(false);
-                await widget?.rtcEngine?.muteLocalVideoStream(true);
+                await widget.rtcEngine?.disableVideo();
+                await widget.rtcEngine?.enableLocalVideo(false);
+                await widget.rtcEngine?.muteLocalVideoStream(true);
               }
             }
           },
@@ -1012,7 +1012,7 @@ class _CallPageState extends State<CallPage> {
             if (status.isAudioCall) {
               return InkWell(
                 child: AudioCallScreen(
-                  patName: widget?.doctorName,
+                  patName: widget.doctorName,
                 ),
               );
             } else {

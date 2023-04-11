@@ -62,7 +62,7 @@ class AppointmentDetailsController extends GetxController {
             "${constants.changeDateFormat(CommonUtil().validString(appointmentDetailsModel!.result?.plannedStartDateTime ?? ""))}";
 
         scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
-            ? "${scheduleDateTime.value}, ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel!.result?.plannedStartDateTime ?? "")).toString() ?? ''}"
+            ? "${scheduleDateTime.value}, ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel!.result?.plannedStartDateTime ?? "")).toString()}"
             : "";
 
         bool showEndTime=true;
@@ -74,7 +74,7 @@ class AppointmentDetailsController extends GetxController {
         if (appointmentType.value.toLowerCase() != strTransportation) {
           if(showEndTime){
             scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
-                ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel?.result?.plannedEndDateTime ?? "")).toString() ?? ''}"
+                ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel?.result?.plannedEndDateTime ?? "")).toString()}"
                 : "";
           }else{
             scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
@@ -88,16 +88,13 @@ class AppointmentDetailsController extends GetxController {
           if (appointmentType.value.toLowerCase() == strDoctorAppointment) {
             providerName.value = (appointmentDetailsModel!.result!.doctor != null
                 ? toBeginningOfSentenceCase((appointmentDetailsModel!
-                            .result!.doctor!.user!.firstName! ??
-                        '')! +
+                            .result!.doctor!.user!.firstName!) +
                     ' ' +
-                    (appointmentDetailsModel!.result!.doctor!.user!.lastName! ??
-                        ""))
+                    (appointmentDetailsModel!.result!.doctor!.user!.lastName!))
                 : '')!;
           } else {
             providerName.value = toBeginningOfSentenceCase(
-                appointmentDetailsModel!.result!.healthOrganization!.name! ??
-                    "")!;
+                appointmentDetailsModel!.result!.healthOrganization!.name!)!;
           }
           if (appointmentDetailsModel!.result?.healthOrganization
                       ?.healthOrganizationAddressCollection !=
@@ -132,12 +129,10 @@ class AppointmentDetailsController extends GetxController {
         } else {
           if (appointmentType.value.toLowerCase() == strLabAppointment) {
             providerName.value = toBeginningOfSentenceCase(
-                appointmentDetailsModel!.result!.additionalInfo!.labName! ??
-                    "")!;
+                appointmentDetailsModel!.result!.additionalInfo!.labName!)!;
           } else {
             providerName.value = toBeginningOfSentenceCase(
-                appointmentDetailsModel!.result!.additionalInfo!.providerName ??
-                    "")!;
+                appointmentDetailsModel!.result!.additionalInfo!.providerName)!;
           }
           getAddress();
         }
@@ -147,7 +142,7 @@ class AppointmentDetailsController extends GetxController {
             for (int i = 0;
                 i <
                         (appointmentDetailsModel!.result!.serviceCategory!
-                            .additionalInfo!.field!.length)!;
+                            .additionalInfo!.field!.length);
                 i++) {
               Field field = appointmentDetailsModel!
                   .result!.serviceCategory!.additionalInfo!.field![i];
@@ -157,7 +152,7 @@ class AppointmentDetailsController extends GetxController {
                             "") ==
                         (element.id ?? "")));
                 if (index! >= 0) {
-                  testName.value = field.data![index!].name ?? "";
+                  testName.value = field.data![index].name ?? "";
                   break;
                 }
               }

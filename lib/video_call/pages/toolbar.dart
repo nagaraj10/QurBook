@@ -294,7 +294,7 @@ class _ToolbarState extends State<Toolbar> {
       });
       widget.controllerState(widget.muted, widget._isHideMyVideo);
       Provider.of<RTCEngineProvider>(Get.context!, listen: false)
-          ?.rtcEngine
+          .rtcEngine
           ?.muteLocalAudioStream(widget.muted);
     } catch (e) {
       print(e);
@@ -316,11 +316,11 @@ class _ToolbarState extends State<Toolbar> {
           return;
         } else {
           // open request dialog for requesting
-          await rtcProvider?.rtcEngine?.enableVideo();
-          await rtcProvider?.rtcEngine?.enableLocalVideo(true);
-          await rtcProvider?.rtcEngine?.muteLocalVideoStream(false);
+          await rtcProvider.rtcEngine?.enableVideo();
+          await rtcProvider.rtcEngine?.enableLocalVideo(true);
+          await rtcProvider.rtcEngine?.muteLocalVideoStream(false);
           Provider.of<RTCEngineProvider>(context, listen: false)
-              ?.changeLocalVideoStatus(false);
+              .changeLocalVideoStatus(false);
           requestingDialog();
           var newStatus = VideoCallStatus();
           newStatus.setDefaultValues();
@@ -333,22 +333,22 @@ class _ToolbarState extends State<Toolbar> {
         }
       } else {
         if (CommonUtil.isRemoteUserOnPause) {
-          await rtcProvider?.rtcEngine?.disableVideo();
-          await rtcProvider?.rtcEngine?.enableLocalVideo(false);
-          await rtcProvider?.rtcEngine?.muteLocalVideoStream(true);
+          await rtcProvider.rtcEngine?.disableVideo();
+          await rtcProvider.rtcEngine?.enableLocalVideo(false);
+          await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
 
-          Provider.of<HideProvider>(context, listen: false)?.swithToAudio();
+          Provider.of<HideProvider>(context, listen: false).swithToAudio();
           Provider.of<AudioCallProvider>(context, listen: false)
-              ?.enableAudioCall();
+              .enableAudioCall();
           Provider.of<VideoIconProvider>(context, listen: false)
-              ?.turnOffVideo();
+              .turnOffVideo();
         } else {
-          await rtcProvider?.rtcEngine
+          await rtcProvider.rtcEngine
               ?.muteLocalVideoStream(videoIconStatus.isVideoOn);
           Provider.of<RTCEngineProvider>(context, listen: false)
-              ?.changeLocalVideoStatus(videoIconStatus.isVideoOn);
+              .changeLocalVideoStatus(videoIconStatus.isVideoOn);
           CommonUtil.isLocalUserOnPause = videoIconStatus.isVideoOn;
-          videoIconStatus?.swapVideo();
+          videoIconStatus.swapVideo();
           widget.controllerState(widget.muted, videoIconStatus.isVideoOn);
         }
       }
@@ -469,13 +469,13 @@ class _ToolbarState extends State<Toolbar> {
                       onPressed: () async {
                         try {
                           CommonUtil.isVideoRequestSent = false;
-                          await rtcProvider?.rtcEngine?.disableVideo();
-                          await rtcProvider?.rtcEngine?.enableLocalVideo(false);
-                          await rtcProvider?.rtcEngine
+                          await rtcProvider.rtcEngine?.disableVideo();
+                          await rtcProvider.rtcEngine?.enableLocalVideo(false);
+                          await rtcProvider.rtcEngine
                               ?.muteLocalVideoStream(true);
                           Provider.of<RTCEngineProvider>(Get.context!,
                                   listen: false)
-                              ?.changeLocalVideoStatus(true);
+                              .changeLocalVideoStatus(true);
                           var newStatus = VideoCallStatus();
                           newStatus.setDefaultValues();
                           newStatus.videoRequestFromMobile = 0;

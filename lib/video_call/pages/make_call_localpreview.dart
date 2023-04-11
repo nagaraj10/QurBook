@@ -81,7 +81,7 @@ class _MakeCallLocalPreviewState extends State<MakeCallLocalPreview> {
                               try {
                                 Provider.of<RTCEngineProvider>(Get.context!,
                                         listen: false)
-                                    ?.rtcEngine
+                                    .rtcEngine
                                     ?.switchCamera();
                               } catch (e) {
                                 print(e);

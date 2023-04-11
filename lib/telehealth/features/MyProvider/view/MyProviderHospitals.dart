@@ -78,14 +78,14 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
   }
 
   getHospitalsList() {
-    if (myProvidersResponseList != null ?? myProvidersResponseList!.isSuccess!) {
+    if (myProvidersResponseList != null) {
       setState(() {
         initialHospitalList = myProvidersResponseList!.result!.hospitals;
       });
     } else {
       _providersBloc.getMedicalPreferencesForHospital().then((value) {
         if ((value!.result != null &&
-            value?.result?.hospitals != null &&
+            value.result?.hospitals != null &&
             value.result!.hospitals!.length > 0)) {
           setState(() {
             initialHospitalList = value.result!.hospitals;
@@ -130,8 +130,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
               },
               ),
               Expanded(
-                child: myProvidersResponseList != null ??
-                        myProvidersResponseList!.isSuccess!
+                child: myProvidersResponseList != null
                     ? hospitalList(isSearch
                         ? myProviderHospitalList
                         : myProvidersResponseList!.result!.hospitals)
@@ -406,7 +405,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
     if (eachHospitalModel.name != null) {
       if (eachHospitalModel.name != "Self" &&
           eachHospitalModel.name != "self") {
-        name = eachHospitalModel?.name?.capitalizeFirstofEach;
+        name = eachHospitalModel.name?.capitalizeFirstofEach;
       } else {
         if (eachHospitalModel.createdBy != null) {
           if (eachHospitalModel.createdBy!.firstName != "" &&

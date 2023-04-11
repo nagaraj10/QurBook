@@ -139,33 +139,33 @@ class CheckoutPageWidgets {
                                                 if (value.result?.payment !=
                                                     null) {
                                                   if (value
-                                                          ?.result
+                                                          .result
                                                           ?.payment
                                                           ?.paymentStatus
                                                           ?.code ==
                                                       'PAYITA') {
-                                                    if (value?.result
+                                                    if (value.result
                                                             ?.paymentGatewayDetail !=
                                                         null) {
                                                       if (value
-                                                              ?.result
+                                                              .result
                                                               ?.paymentGatewayDetail
                                                               ?.responseInfo !=
                                                           null) {
                                                         if (value
-                                                                ?.result
+                                                                .result
                                                                 ?.paymentGatewayDetail
                                                                 ?.responseInfo
                                                                 ?.paymentGateWay ==
                                                             STR_RAZOPAY) {
                                                           if (value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.shorturl !=
                                                                   null &&
                                                               value
-                                                                      ?.result
+                                                                    .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.shorturl !=
@@ -178,12 +178,12 @@ class CheckoutPageWidgets {
                                                                     (context) =>
                                                                         PaymentGatwayPage(
                                                                   redirectUrl: value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.shorturl,
                                                                   paymentId: value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.payment
                                                                       ?.id
                                                                       ?.toString(),
@@ -209,13 +209,13 @@ class CheckoutPageWidgets {
                                                           }
                                                         } else {
                                                           if (value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.longurl !=
                                                                   null &&
                                                               value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.longurl !=
@@ -228,12 +228,12 @@ class CheckoutPageWidgets {
                                                                     (context) =>
                                                                         PaymentGatwayPage(
                                                                   redirectUrl: value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.longurl,
                                                                   paymentId: value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.payment
                                                                       ?.id
                                                                       ?.toString(),
@@ -305,7 +305,7 @@ class CheckoutPageWidgets {
                                                     confirm: "Update Cart",
                                                     title: "Update",
                                                     content:
-                                                        value?.message ?? '',
+                                                        value.message ?? '',
                                                     onPressedConfirm: () {
                                                   ApiBaseHelper()
                                                       .updateCartIcon(
@@ -607,7 +607,7 @@ class CheckoutPageWidgets {
                                 await commonUtil.fetchUserProfileInfo();
                             Get.toNamed(router.rt_AddFamilyUserInfo,
                                 arguments: AddFamilyUserInfoArguments(
-                                  myProfileResult: myProfile?.result,
+                                  myProfileResult: myProfile.result,
                                   fromClass: CommonConstants.user_update,
                                   isFromCSIR: false,
                                   packageId: packageId,

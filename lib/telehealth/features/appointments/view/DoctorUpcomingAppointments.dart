@@ -260,8 +260,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                     : Constants.Appointments_time_formatUS)
                                     .format(DateTime.parse(
                                     widget.doc!.plannedStartDateTime!))
-                                    .toString() ??
-                                    '',
+                                    .toString(),
                                 fontWeight: FontWeight.w600,
                                 colors: Color(new CommonUtil().getMyPrimaryColor()),
                               ),
@@ -270,8 +269,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                 text: DateFormat.yMMMEd()
                                     .format(DateTime.parse(
                                     widget.doc!.plannedStartDateTime!))
-                                    .toString() ??
-                                    '',
+                                    .toString(),
                                 fontWeight: FontWeight.w500,
                                 overflow: TextOverflow.visible,
                                 colors: Colors.black,

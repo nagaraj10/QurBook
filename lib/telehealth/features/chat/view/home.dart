@@ -290,7 +290,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
               elevation: 0.0,
               backgroundColor: Colors.transparent,
               title: Text(
-                ((widget?.careGiversList?.length ?? 0) > 0 ||
+                ((widget.careGiversList?.length ?? 0) > 0 ||
                         widget.isDynamicLink)
                     ? CAREPROVIDERS
                     : CHAT,
@@ -431,8 +431,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   peerId: document.id,
                                   peerAvatar: document[STR_PHOTO_URL],
                                   peerName:
-                                      snapshotUser?.data![STR_NICK_NAME] != ''
-                                          ? snapshotUser?.data![STR_NICK_NAME]
+                                      snapshotUser.data![STR_NICK_NAME] != ''
+                                          ? snapshotUser.data![STR_NICK_NAME]
                                           : '',
                                   lastDate: getFormattedDateTime(
                                       (document[STR_CREATED_AT] as Timestamp)
@@ -518,12 +518,12 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   child: Text(
                                     /* toBeginningOfSentenceCase(
                                         snapshotUser.data[STR_NICK_NAME]), */
-                                    (snapshotUser?.data![STR_NICK_NAME] != '' &&
-                                            snapshotUser?.data![STR_NICK_NAME] !=
+                                    (snapshotUser.data![STR_NICK_NAME] != '' &&
+                                            snapshotUser.data![STR_NICK_NAME] !=
                                                 null
-                                        ? snapshotUser?.data![STR_NICK_NAME]
+                                        ? snapshotUser.data![STR_NICK_NAME]
                                             ?.toString()
-                                            ?.capitalizeFirstofEach
+                                            .capitalizeFirstofEach
                                         : '')!,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
@@ -713,7 +713,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
   Widget getisDisabled(DocumentSnapshot document) {
     try {
       bool isDisable = document[STR_IS_DISABLE] ?? false;
-      if ((widget?.careGiversList?.length ?? 0) > 0 && isDisable) {
+      if ((widget.careGiversList?.length ?? 0) > 0 && isDisable) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: Text(

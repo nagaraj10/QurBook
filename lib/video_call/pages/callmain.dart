@@ -84,7 +84,7 @@ class _CallMainState extends State<CallMain> {
   @override
   void initState() {
     checkPermission();
-    Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
+    Provider.of<RTCEngineProvider>(context, listen: false).isVideoPaused =
         false;
     checkUserId();
     createRtcEngine();
@@ -108,7 +108,7 @@ class _CallMainState extends State<CallMain> {
   void dispose() {
     rtcEngine!.leaveChannel();
     rtcEngine!.destroy();
-    Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
+    Provider.of<RTCEngineProvider>(context, listen: false).isVideoPaused =
         false;
     super.dispose();
   }
@@ -123,7 +123,7 @@ class _CallMainState extends State<CallMain> {
         Provider.of<AudioCallProvider>(context, listen: false);
     final videoIconStatus =
         Provider.of<VideoIconProvider>(Get.context!, listen: false);
-    videoIconStatus?.isVideoOn = audioCallStatus.isAudioCall ? false : true;
+    videoIconStatus.isVideoOn = audioCallStatus.isAudioCall ? false : true;
     //_isVideoHide = audioCallStatus?.isAudioCall;
 
     /// hide controller after 5 secs
@@ -170,7 +170,7 @@ class _CallMainState extends State<CallMain> {
                       Consumer<HideProvider>(builder: (context, status, child) {
                         if (status.isAudioSwitchToVideo >= 0) {
                           _isVideoHide =
-                              status?.isAudioSwitchToVideo == 0 ? true : false;
+                              status.isAudioSwitchToVideo == 0 ? true : false;
                           hideStatus.isAudioSwitchToVideo = -1;
                         }
                         return Visibility(
@@ -231,7 +231,7 @@ class _CallMainState extends State<CallMain> {
   }
 
   Future<bool> _onBackPressed() {
-    return userAlert().then((value) => value as bool) ?? false as Future<bool>;
+    return userAlert().then((value) => value as bool);
   }
 
   Future userAlert() {

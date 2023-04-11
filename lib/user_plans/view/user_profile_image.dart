@@ -27,7 +27,7 @@ class UserProfileImage extends StatelessWidget {
   Widget build(BuildContext context) =>
       LayoutBuilder(builder: (context, constraints) {
         var isGoldMember =
-            Provider.of<UserPlansViewModel>(context)?.isGoldMember ?? false;
+            Provider.of<UserPlansViewModel>(context).isGoldMember;
         return Stack(
           children: [
             LayoutBuilder(

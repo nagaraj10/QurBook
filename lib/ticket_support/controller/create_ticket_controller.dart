@@ -145,10 +145,10 @@ class CreateTicketController extends GetxController {
       if (memberShipDetailResponse != null &&
           memberShipDetailResponse.result != null &&
           memberShipDetailResponse.result!.length > 0) {
-        memberShipDetailResponse?.result?.forEach((element) {
+        memberShipDetailResponse.result?.forEach((element) {
           providerList.add(FieldData.fromJson({
-            id_sheela: element?.healthOrganizationId??"",
-            strName: element?.healthOrganizationName??"",
+            id_sheela: element.healthOrganizationId,
+            strName: element.healthOrganizationName,
           }));
         });
       }

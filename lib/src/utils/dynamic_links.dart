@@ -42,7 +42,7 @@ class DynamicLinks {
   static Future<void> processDynamicLink(Uri? deepLink) async {
     if ((PreferenceUtil.getStringValue(KEY_USERID) ?? '').isNotEmpty) {
       await PreferenceUtil.saveString(KEY_DYNAMIC_URL, '');
-      if ((deepLink?.queryParameters?.length ?? 0) > 0 &&
+      if ((deepLink?.queryParameters.length ?? 0) > 0 &&
           (deepLink?.queryParameters['module'] ?? '').isNotEmpty) {
         var firebase=FirebaseAnalyticsService();
         firebase.trackEvent("on_deep_link_clicked",
@@ -74,30 +74,30 @@ class DynamicLinks {
 
               if ((deepLink?.queryParameters['freePlans'] ?? '').isNotEmpty) {
                 if (deepLink?.queryParameters['freePlans'] == '1') {
-                  planWizardViewModel?.dynamicLinkTabIndex = 1;
+                  planWizardViewModel.dynamicLinkTabIndex = 1;
                 } else {
-                  planWizardViewModel?.dynamicLinkTabIndex = 0;
+                  planWizardViewModel.dynamicLinkTabIndex = 0;
                 }
               }
 
               if ((deepLink?.queryParameters['provider'] ?? '').isNotEmpty) {
-                planWizardViewModel?.dynamicLinkSearchText =
+                planWizardViewModel.dynamicLinkSearchText =
                     deepLink?.queryParameters['provider'];
               }
 
               if ((deepLink?.queryParameters['plan'] ?? '').isNotEmpty) {
-                planWizardViewModel?.dynamicLinkSearchText =
+                planWizardViewModel.dynamicLinkSearchText =
                     deepLink?.queryParameters['plan'];
               }
 
               if ((deepLink?.queryParameters['diseaseCondition'] ?? '')
                   .isNotEmpty) {
-                planWizardViewModel?.selectedTag =
+                planWizardViewModel.selectedTag =
                     deepLink?.queryParameters['diseaseCondition'];
               }
 
               planWizardViewModel.isDynamicLink = true;
-              planWizardViewModel?.dynamicLinkPage = currentPage ?? 0;
+              planWizardViewModel.dynamicLinkPage = currentPage ?? 0;
               Get.offAllNamed(rt_PlanWizard);
             }
             break;

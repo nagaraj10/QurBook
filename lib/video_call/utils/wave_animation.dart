@@ -60,7 +60,7 @@ class _WaveAnimationState extends State<WaveAnimation>
               width: 60,
               child: Center(
                 child: Text(
-                  '${widget.patName![0].toUpperCase() ?? 'U'}',
+                  '${widget.patName![0].toUpperCase()}',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,

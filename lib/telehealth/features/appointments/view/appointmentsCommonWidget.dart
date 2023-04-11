@@ -578,21 +578,21 @@ class AppointmentsCommonWidget {
   Widget getFirstLastNameText(Past doc) {
     if (doc.doctorSessionId == null && doc.healthOrganization != null) {
       return commonTextWidget(doc.healthOrganization!.name ?? "");
-    } else if (doc?.additionalinfo?.provider_name != null) {
-      return commonTextWidget(doc?.additionalinfo?.provider_name ?? '');
-    } else if (doc?.additionalinfo?.healthOrganizationId != null) {
-      return commonTextWidget(doc?.additionalinfo?.healthOrganizationId ?? '');
+    } else if (doc.additionalinfo?.provider_name != null) {
+      return commonTextWidget(doc.additionalinfo?.provider_name ?? '');
+    } else if (doc.additionalinfo?.healthOrganizationId != null) {
+      return commonTextWidget(doc.additionalinfo?.healthOrganizationId ?? '');
     } else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
       return Text(
-          (doc?.additionalinfo?.title != null &&
-                  doc?.additionalinfo?.title != '')
+          (doc.additionalinfo?.title != null &&
+                  doc.additionalinfo?.title != '')
               ? CommonUtil()
-                  .getFirstAndLastName(doc?.additionalinfo?.title! ?? '')
-              : (doc?.serviceCategory?.code == 'LAB')
-                  ? ((doc?.additionalinfo?.lab_name != null &&
-                          doc?.additionalinfo?.lab_name != '')
+                  .getFirstAndLastName(doc.additionalinfo?.title! ?? '')
+              : (doc.serviceCategory?.code == 'LAB')
+                  ? ((doc.additionalinfo?.lab_name != null &&
+                          doc.additionalinfo?.lab_name != '')
                       ? CommonUtil().getFirstAndLastName(
-                          doc?.additionalinfo?.lab_name ?? '')
+                          doc.additionalinfo?.lab_name ?? '')
                       : '')
                   : '',
           style: TextStyle(
@@ -653,7 +653,7 @@ class AppointmentsCommonWidget {
           child: getFirstLastNameText(doc),
         ),
       );
-    else if (doc?.doctor?.user?.profilePicThumbnailUrl == null)
+    else if (doc.doctor?.user?.profilePicThumbnailUrl == null)
       return Container(color: Color(fhbColors.bgColorContainer));
     else
       return Image.network(doc.doctor!.user!.profilePicThumbnailUrl!,
@@ -672,19 +672,19 @@ class AppointmentsCommonWidget {
 
   getDoctorAndHealthOrganizationName(Past doc) {
     String? name = '';
-    if (doc.doctorSessionId == null && doc?.healthOrganization != null) {
-      name = doc?.healthOrganization?.name?.capitalizeFirstofEach != null
-          ? doc?.healthOrganization?.name?.capitalizeFirstofEach
+    if (doc.doctorSessionId == null && doc.healthOrganization != null) {
+      name = doc.healthOrganization?.name?.capitalizeFirstofEach != null
+          ? doc.healthOrganization?.name?.capitalizeFirstofEach
           : '';
-    } else if (doc?.additionalinfo?.provider_name != null) {
-      name = doc?.additionalinfo?.provider_name ?? '';
-    } else if (doc?.additionalinfo?.healthOrganizationId != null) {
-      name = doc?.additionalinfo?.healthOrganizationId ?? '';
-    } else if (doc.doctorSessionId == null && doc?.healthOrganization == null) {
-      name = doc?.additionalinfo?.title ?? '';
+    } else if (doc.additionalinfo?.provider_name != null) {
+      name = doc.additionalinfo?.provider_name ?? '';
+    } else if (doc.additionalinfo?.healthOrganizationId != null) {
+      name = doc.additionalinfo?.healthOrganizationId ?? '';
+    } else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
+      name = doc.additionalinfo?.title ?? '';
     } else if (doc.doctorSessionId != null &&
-        doc?.doctor != null &&
-        doc?.doctor?.user != null) {
+        doc.doctor != null &&
+        doc.doctor?.user != null) {
       name = doc.doctor!.user!.firstName != null
           ? doc.doctor!.user!.firstName!.capitalizeFirstofEach +
               ' ' +
@@ -726,9 +726,9 @@ class AppointmentsCommonWidget {
   getServiceCategory(Past doc) {
     String serviceCategory = '';
     if (doc.serviceCategory != null) {
-      serviceCategory = doc?.serviceCategory?.name ?? '';
+      serviceCategory = doc.serviceCategory?.name ?? '';
       if (serviceCategory.toLowerCase() == "others") {
-        serviceCategory = doc?.additionalinfo?.title ?? "";
+        serviceCategory = doc.additionalinfo?.title ?? "";
       }
     }
     return serviceCategory;
@@ -737,7 +737,7 @@ class AppointmentsCommonWidget {
   getModeOfService(Past doc) {
     String modeOfService = '';
     if (doc.modeOfService != null) {
-      modeOfService = doc?.modeOfService?.name ?? '';
+      modeOfService = doc.modeOfService?.name ?? '';
     }
     return modeOfService;
   }

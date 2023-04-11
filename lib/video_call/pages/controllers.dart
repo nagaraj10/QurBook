@@ -365,9 +365,9 @@ class _MyControllersState extends State<MyControllers> {
         return;
       } else {
         // open request dialog for requesting
-        await widget?.rtcEngine?.enableVideo();
-        await widget?.rtcEngine?.enableLocalVideo(true);
-        await widget?.rtcEngine?.muteLocalVideoStream(false);
+        await widget.rtcEngine?.enableVideo();
+        await widget.rtcEngine?.enableLocalVideo(true);
+        await widget.rtcEngine?.muteLocalVideoStream(false);
         requestingDialog();
         var newStatus = VideoCallStatus();
         newStatus.setDefaultValues();
@@ -379,14 +379,14 @@ class _MyControllersState extends State<MyControllers> {
       }
     } else {
       if (CommonUtil.isRemoteUserOnPause) {
-        await widget?.rtcEngine?.disableVideo();
-        await widget?.rtcEngine?.enableLocalVideo(false);
-        await widget?.rtcEngine?.muteLocalVideoStream(true);
+        await widget.rtcEngine?.disableVideo();
+        await widget.rtcEngine?.enableLocalVideo(false);
+        await widget.rtcEngine?.muteLocalVideoStream(true);
 
-        Provider.of<HideProvider>(context, listen: false)?.swithToAudio();
+        Provider.of<HideProvider>(context, listen: false).swithToAudio();
         Provider.of<AudioCallProvider>(context, listen: false)
-            ?.enableAudioCall();
-        Provider.of<VideoIconProvider>(context, listen: false)?.turnOffVideo();
+            .enableAudioCall();
+        Provider.of<VideoIconProvider>(context, listen: false).turnOffVideo();
       } else {
         widget.rtcEngine!.muteLocalVideoStream(videoIconStatus.isVideoOn);
         Provider.of<RTCEngineProvider>(context, listen: false)
@@ -447,9 +447,9 @@ class _MyControllersState extends State<MyControllers> {
                               .update(newStatus.toMap());
                         // }
                         CommonUtil.isVideoRequestSent = false;
-                        await widget?.rtcEngine?.disableVideo();
-                        await widget?.rtcEngine?.enableLocalVideo(false);
-                        await widget?.rtcEngine?.muteLocalVideoStream(true);
+                        await widget.rtcEngine?.disableVideo();
+                        await widget.rtcEngine?.enableLocalVideo(false);
+                        await widget.rtcEngine?.muteLocalVideoStream(true);
                         Get.back();
                       }),
                 ],

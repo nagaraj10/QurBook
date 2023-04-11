@@ -306,7 +306,7 @@ class _UserAccountsState extends State<UserAccounts>
         if (value != null) {
           if (value.result!.userProfileSettingCollection3!.isNotEmpty) {
             var profileSetting =
-                value?.result?.userProfileSettingCollection3![0].profileSetting;
+                value.result?.userProfileSettingCollection3![0].profileSetting;
             if (profileSetting?.preferredMeasurement != null) {
               PreferredMeasurement preferredMeasurement =
                   profileSetting!.preferredMeasurement!;

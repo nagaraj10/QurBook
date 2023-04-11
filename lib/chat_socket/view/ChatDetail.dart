@@ -47,7 +47,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-// import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 
 import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
@@ -2140,8 +2140,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   openYoutubeDialog(String url) {
-    // final videoId = YoutubePlayer.convertUrlToId(url);
-    final videoId = '';
+    final videoId = YoutubePlayer.convertUrlToId(url);
     if (videoId != null) {
       Navigator.push(
         context,

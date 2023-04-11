@@ -924,19 +924,19 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
 
   Widget? _getChatWidget(BuildContext context, Ticket ticketList) {
     print('comments length=======');
-    print(ticketList?.comments?.length??0);
+    print(ticketList.comments?.length??0);
     return ScrollablePositionedList.builder(
       physics: BouncingScrollPhysics(),
-      itemCount: ticketList?.comments?.length??0,
+      itemCount: ticketList.comments?.length??0,
       reverse: true,
       itemScrollController: listScrollController,
       itemBuilder: (context, i) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ticketList?.comments![(ticketList.comments?.length??0) - 1 - i]?.owner?.role?.isAgent !=
+            ticketList.comments![(ticketList.comments?.length??0) - 1 - i].owner?.role?.isAgent !=
                 null &&
-                ticketList?.comments![(ticketList.comments?.length??0) - 1 - i]?.owner?.role?.isAgent ==
+                ticketList.comments![(ticketList.comments?.length??0) - 1 - i].owner?.role?.isAgent ==
                     false
                 ? Container(
               alignment: Alignment.bottomRight,
@@ -971,7 +971,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 style: TextStyle(
                                     color: Color(CommonUtil().getMyPrimaryColor())),
                               ),*/
-                        child: ticketList?.comments![(ticketList?.comments?.length??0) -
+                        child: ticketList.comments![(ticketList.comments?.length??0) -
                             1 -
                             i]
                             .comment !=
@@ -1122,7 +1122,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             .comment !=
                             null
                             ? Text(
-                            '${_parseHtmlString(ticketList.comments![(ticketList.comments?.length??0) - 1 - i]?.comment)}',
+                            '${_parseHtmlString(ticketList.comments![(ticketList.comments?.length??0) - 1 - i].comment)}',
                             style: TextStyle(color: Colors.black))
                             : Text('Hi !!',
                             style: TextStyle(color: Colors.black)),
@@ -1228,7 +1228,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       BASE_URL + 'trudesk/tickets/getAttachment',
       body: {"fileUrl": fileUrl},
       headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ' + authToken!,
+        HttpHeaders.authorizationHeader: 'Bearer ' + authToken,
         KEY_OffSet: CommonUtil().setTimeZone()
       },
     );

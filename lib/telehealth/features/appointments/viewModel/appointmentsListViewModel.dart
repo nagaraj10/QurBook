@@ -56,7 +56,7 @@ class AppointmentsListViewModel extends ChangeNotifier {
     AppointmentsModel appointments = _appointmentsModel!;
     if (appointments.result?.upcoming != null &&
         appointments.result!.upcoming!.length > 0) {
-      for (Past element in appointments!.result!.upcoming!) {
+      for (Past element in appointments.result!.upcoming!) {
         try {
           String name = '';
           name = methodToGetTitle(element);
@@ -119,28 +119,28 @@ class AppointmentsListViewModel extends ChangeNotifier {
   String methodToGetTitle(Past element) {
     String name = "";
     if (element.doctorSessionId == null &&
-        element?.healthOrganization != null) {
+        element.healthOrganization != null) {
       name = (element.healthOrganization!.name?.capitalizeFirstofEach) != null
           ? element.healthOrganization!.name!.capitalizeFirstofEach
           : '';
-    } else if (element?.additionalinfo?.provider_name != null) {
-      name = element?.additionalinfo?.provider_name ?? '';
+    } else if (element.additionalinfo?.provider_name != null) {
+      name = element.additionalinfo?.provider_name ?? '';
     } else if (element.doctorSessionId == null &&
-        element?.healthOrganization == null) {
-      name = element?.additionalinfo?.title ?? '';
+        element.healthOrganization == null) {
+      name = element.additionalinfo?.title ?? '';
     } else if (element.doctorSessionId != null &&
-        element?.doctor != null &&
-        element?.doctor?.user != null) {
-      name = element?.doctor?.user?.firstName != null
-          ? element.doctor!.user!.firstName!.capitalizeFirstofEach! +
+        element.doctor != null &&
+        element.doctor?.user != null) {
+      name = element.doctor?.user?.firstName != null
+          ? element.doctor!.user!.firstName!.capitalizeFirstofEach +
               ' ' +
               element.doctor!.user!.lastName!.capitalizeFirstofEach
           : '';
     }
 
     if (name == '') {
-      if (element?.serviceCategory?.code == 'LAB') {
-        name = element?.additionalinfo?.lab_name ?? '';
+      if (element.serviceCategory?.code == 'LAB') {
+        name = element.additionalinfo?.lab_name ?? '';
       }
     }
 

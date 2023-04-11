@@ -214,17 +214,17 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   Future<void> clearAllInCareDiet() async {
     await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-        ?.fetchCartItem();
+        .fetchCartItem();
     Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-        ?.updateSingleSelectionProvider('');
+        .updateSingleSelectionProvider('');
     Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-        ?.updateSingleSelectionFree('');
+        .updateSingleSelectionFree('');
     Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-        ?.updateSingleSelectionProviderDiet('');
+        .updateSingleSelectionProviderDiet('');
     Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-        ?.updateSingleSelectionFreeDiet('');
+        .updateSingleSelectionFreeDiet('');
     Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-        ?.updateProviderId('');
+        .updateProviderId('');
   }
 
   void updateCarePlanCount(bool condition) async {
@@ -234,7 +234,7 @@ class CheckoutPageProvider extends ChangeNotifier {
 
     if (!condition) {
       await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-          ?.carePlanCount++;
+          .carePlanCount++;
     }
     print("carePlanCount incheckout" +
         await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
@@ -251,7 +251,7 @@ class CheckoutPageProvider extends ChangeNotifier {
 
     if (!condition) {
       await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-          ?.dietPlanCount++;
+          .dietPlanCount++;
     }
     print("dietPlanCount incheckout" +
         await Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
@@ -279,8 +279,8 @@ class CheckoutPageProvider extends ChangeNotifier {
   ProductList? getProductListUsingPackageId(String packageId) {
     ProductList? productList;
     print("packageIdpackageId" + packageId);
-    cartList?.forEach((cartItem) {
-      if ('${cartItem?.productDetail?.id}' == packageId) {
+    cartList.forEach((cartItem) {
+      if ('${cartItem.productDetail?.id}' == packageId) {
         productList = cartItem;
       }
     });
@@ -289,15 +289,15 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   void updateCareCount() {
     if (cartList != null && cartList.length > 0) {
-      cartList?.forEach((cartItem) {
-        if ((cartItem?.additionalInfo?.isMembershipAvail ?? false) &&
-            cartItem?.additionalInfo?.planType == "CARE") {
+      cartList.forEach((cartItem) {
+        if ((cartItem.additionalInfo?.isMembershipAvail ?? false) &&
+            cartItem.additionalInfo?.planType == "CARE") {
           Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-              ?.carePlanCount--;
-        } else if ((cartItem?.additionalInfo?.isMembershipAvail ?? false) &&
-            cartItem?.additionalInfo?.planType == "DIET") {
+              .carePlanCount--;
+        } else if ((cartItem.additionalInfo?.isMembershipAvail ?? false) &&
+            cartItem.additionalInfo?.planType == "DIET") {
           Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-              ?.dietPlanCount--;
+              .dietPlanCount--;
         }
       });
     } else {
@@ -311,19 +311,19 @@ class CheckoutPageProvider extends ChangeNotifier {
       if (creditBalance.isSuccess! && creditBalance.result != null) {
         CreditBalanceResult creditBalanceResult = creditBalance.result!;
         Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-            ?.carePlanCount = int.parse(creditBalanceResult.balanceCarePlans!);
+            .carePlanCount = int.parse(creditBalanceResult.balanceCarePlans!);
         Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-            ?.dietPlanCount = int.parse(creditBalanceResult.balanceDietPlans!);
+            .dietPlanCount = int.parse(creditBalanceResult.balanceDietPlans!);
         Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-                ?.isMembershipAVailable =
+                .isMembershipAVailable =
             creditBalanceResult.isMembershipUser ?? false;
       } else {
         Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-            ?.carePlanCount = 0;
+            .carePlanCount = 0;
         Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-            ?.dietPlanCount = 0;
+            .dietPlanCount = 0;
         Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-            ?.isMembershipAVailable = false;
+            .isMembershipAVailable = false;
       }
     });
   }

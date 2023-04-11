@@ -5992,7 +5992,7 @@ class VideoCallCommonUtils {
           );
         } else {
           callMeta = CallMetaData(mID as String, '', patName??"", patId??"", patientDOB ?? '',
-              patientPicUrl??"", '', docName??"", healthRecord!=null?healthRecord:null, patientPrescriptionId??"");
+              patientPicUrl??"", '', docName, healthRecord!=null?healthRecord:null, patientPrescriptionId??"");
         }
         regController.loadingData.value = false;
         regController.meetingId.value = CommonUtil().validString(mID.toString());

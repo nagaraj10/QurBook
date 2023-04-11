@@ -478,11 +478,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         Text(
                             user.child == null
                                 ? 'Self'
-                                : ((user?.child?.firstName ?? '') +
+                                : ((user.child?.firstName ?? '') +
                                             ' ' +
-                                            (user?.child?.lastName ?? ''))
-                                        ?.capitalizeFirstofEach ??
-                                    '',
+                                            (user.child?.lastName ?? ''))
+                                        .capitalizeFirstofEach,
                             style: TextStyle(
                               fontSize: 14.0.sp,
                             )),
@@ -764,7 +763,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   String? getFollowUpFee() {
     if (widget.followUpFee != null && widget.followUpFee != '') {
-      return widget?.followUpFee;
+      return widget.followUpFee;
     } else {
       return '';
     }
@@ -1067,23 +1066,23 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             value.result != null) {
           if (value.isSuccess == true &&
               value.message == appointmentCreatedMessage) {
-            if (value?.result?.paymentInfo != null &&
-                value?.result!.paymentInfo?.payload?.paymentGatewayDetail !=
+            if (value.result?.paymentInfo != null &&
+                value.result!.paymentInfo?.payload?.paymentGatewayDetail !=
                     null) {
-              if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+              if (value.result?.paymentInfo?.payload?.paymentGatewayDetail
                       ?.responseInfo?.paymentGateWay ==
                   STR_RAZOPAY) {
-                if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                if (value.result?.paymentInfo?.payload?.paymentGatewayDetail
                         ?.responseInfo?.shorturl !=
                     null) {
                   PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
 
                   goToPaymentPage(
-                      value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                      value.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.shorturl,
-                      value?.result?.paymentInfo?.payload?.payment?.id,
+                      value.result?.paymentInfo?.payload?.payment?.id,
                       true,
-                      value?.result?.appointmentInfo?.id);
+                      value.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(
@@ -1091,17 +1090,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       Colors.red);
                 }
               } else {
-                if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                if (value.result?.paymentInfo?.payload?.paymentGatewayDetail
                         ?.responseInfo?.longurl !=
                     null) {
                   PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
 
                   goToPaymentPage(
-                      value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                      value.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.longurl,
-                      value?.result?.paymentInfo?.payload?.payment?.id,
+                      value.result?.paymentInfo?.payload?.payment?.id,
                       false,
-                      value?.result?.appointmentInfo?.id);
+                      value.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(noUrl, Colors.red);
@@ -1733,11 +1732,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }
@@ -1759,11 +1758,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection![i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }

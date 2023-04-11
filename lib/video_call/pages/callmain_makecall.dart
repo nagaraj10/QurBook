@@ -163,23 +163,23 @@ class CallMainMakeCall extends StatelessWidget {
                                       .update(newStatus.toMap());
                                 return;
                               } else {
-                                await rtcProvider?.rtcEngine?.enableVideo();
-                                await rtcProvider?.rtcEngine
+                                await rtcProvider.rtcEngine?.enableVideo();
+                                await rtcProvider.rtcEngine
                                     ?.enableLocalVideo(true);
-                                await rtcProvider?.rtcEngine
+                                await rtcProvider.rtcEngine
                                     ?.muteLocalVideoStream(false);
                                 Provider.of<HideProvider>(Get.context!,
                                         listen: false)
-                                    ?.swithToVideo();
+                                    .swithToVideo();
                                 Provider.of<AudioCallProvider>(Get.context!,
                                         listen: false)
-                                    ?.disableAudioCall();
+                                    .disableAudioCall();
                                 Provider.of<VideoIconProvider>(Get.context!,
                                         listen: false)
-                                    ?.turnOnVideo();
+                                    .turnOnVideo();
                                 Provider.of<RTCEngineProvider>(Get.context!,
                                         listen: false)
-                                    ?.changeLocalVideoStatus(false);
+                                    .changeLocalVideoStatus(false);
                                 var newStatus = VideoCallStatus();
                                 newStatus.setDefaultValues();
                                 newStatus.acceptedByMobile = 1;
@@ -226,16 +226,16 @@ class CallMainMakeCall extends StatelessWidget {
             }
             final audioStatus =
                 Provider.of<AudioCallProvider>(Get.context!, listen: false);
-            if (!(audioStatus.isAudioCall ?? false)) {
-              await rtcProvider?.rtcEngine?.disableVideo();
-              await rtcProvider?.rtcEngine?.enableLocalVideo(false);
-              await rtcProvider?.rtcEngine?.muteLocalVideoStream(true);
+            if (!(audioStatus.isAudioCall)) {
+              await rtcProvider.rtcEngine?.disableVideo();
+              await rtcProvider.rtcEngine?.enableLocalVideo(false);
+              await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
               Provider.of<HideProvider>(Get.context!, listen: false)
-                  ?.swithToAudio();
+                  .swithToAudio();
               Provider.of<AudioCallProvider>(Get.context!, listen: false)
-                  ?.enableAudioCall();
+                  .enableAudioCall();
               Provider.of<VideoIconProvider>(Get.context!, listen: false)
-                  ?.turnOffVideo();
+                  .turnOffVideo();
             }
           } else if (recStatus.acceptedByMobile == 1 ||
               recStatus.acceptedByWeb == 1) {
@@ -244,13 +244,13 @@ class CallMainMakeCall extends StatelessWidget {
               CommonUtil.isVideoRequestSent = false;
               Get.back();
               Provider.of<HideProvider>(Get.context!, listen: false)
-                  ?.swithToVideo();
+                  .swithToVideo();
               Provider.of<AudioCallProvider>(Get.context!, listen: false)
-                  ?.disableAudioCall();
+                  .disableAudioCall();
               Provider.of<VideoIconProvider>(Get.context!, listen: false)
-                  ?.turnOnVideo();
+                  .turnOnVideo();
               Provider.of<RTCEngineProvider>(Get.context!, listen: false)
-                  ?.changeLocalVideoStatus(false);
+                  .changeLocalVideoStatus(false);
             }
           } else if (recStatus.acceptedByMobile == 0 ||
               recStatus.acceptedByWeb == 0) {
@@ -275,9 +275,9 @@ class CallMainMakeCall extends StatelessWidget {
                 ),
                 backgroundColor: Colors.red.shade400,
               );
-              await rtcProvider?.rtcEngine?.disableVideo();
-              await rtcProvider?.rtcEngine?.enableLocalVideo(false);
-              await rtcProvider?.rtcEngine?.muteLocalVideoStream(true);
+              await rtcProvider.rtcEngine?.disableVideo();
+              await rtcProvider.rtcEngine?.enableLocalVideo(false);
+              await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
             }
           }
         },
@@ -460,7 +460,7 @@ class CallMainMakeCall extends StatelessWidget {
                   try {
                     if (status.isAudioSwitchToVideo >= 0) {
                       _isVideoHide =
-                          status?.isAudioSwitchToVideo == 0 ? true : false;
+                          status.isAudioSwitchToVideo == 0 ? true : false;
                       hideStatus.isAudioSwitchToVideo = -1;
                     }
                   } catch (e) {
@@ -520,7 +520,7 @@ class CallMainMakeCall extends StatelessWidget {
   }
 
   Future<bool> _onBackPressed() {
-    return userAlert().then((value) => value as bool) ?? false as Future<bool>;
+    return userAlert().then((value) => value as bool);
   }
 
   void prepareMyData() async {

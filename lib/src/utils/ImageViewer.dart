@@ -145,7 +145,7 @@ class _ImageViewerState extends State<ImageViewer> {
         setState(() {});
         var imagePaths = croppedFile.path;
 
-        if ((imagePaths ?? '').isNotEmpty) {
+        if ((imagePaths).isNotEmpty) {
           saveMediaRegiment(imagePaths,widget.providerId).then((value) {
             LoaderClass.hideLoadingDialog(Get.context!);
             if (value.isSuccess!) {
@@ -179,7 +179,7 @@ class _ImageViewerState extends State<ImageViewer> {
     setState(() {});
     _image = File(pickedFile.path);
 
-    if ((_image.path ?? '').isNotEmpty) {
+    if ((_image.path).isNotEmpty) {
       await saveMediaRegiment(_image.path,widget.providerId).then((value) {
         LoaderClass.hideLoadingDialog(Get.context!);
 

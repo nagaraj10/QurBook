@@ -150,17 +150,17 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                 updatePaymentSubscribe(widget.paymentId, paymentOrderId,
                         paymentRequestId, isFromRazor!, signature)
                     .then((value) {
-                  if ((value?.isSuccess == true &&
-                          value?.result?.paymentStatus == PAYCREDIT) ||
-                      (value?.isSuccess == true &&
-                          value?.result?.paymentStatus == PAYCAPTURED)) {
-                    paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
+                  if ((value.isSuccess == true &&
+                          value.result?.paymentStatus == PAYCREDIT) ||
+                      (value.isSuccess == true &&
+                          value.result?.paymentStatus == PAYCAPTURED)) {
+                    paymentOrderIdSub = value.result?.paymentOrderId ?? '';
                     gotoPaymentResultPage(true, paymentOrderIdSub);
                   } else {
                     gotoPaymentResultPage(
                       false,
-                      value?.result?.paymentOrderId ?? '',
-                      cartUserId: value?.result?.cartUserId,
+                      value.result?.paymentOrderId ?? '',
+                      cartUserId: value.result?.cartUserId,
                       isPaymentFails: true,
                     );
                   }
@@ -171,8 +171,8 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                     .then((value) {
                   gotoPaymentResultPage(
                     false,
-                    value?.result?.paymentOrderId ?? '',
-                    cartUserId: value?.result?.cartUserId,
+                    value.result?.paymentOrderId ?? '',
+                    cartUserId: value.result?.cartUserId,
                     isPaymentFails: true,
                   );
                 });
@@ -236,17 +236,17 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               updatePaymentSubscribe(widget.paymentId, paymentOrderId,
                       paymentRequestId, isFromRazor!, signature)
                   .then((value) {
-                if ((value?.isSuccess == true &&
-                        value?.result?.paymentStatus == PAYCREDIT) ||
-                    (value?.isSuccess == true &&
-                        value?.result?.paymentStatus == PAYCAPTURED)) {
-                  paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
+                if ((value.isSuccess == true &&
+                        value.result?.paymentStatus == PAYCREDIT) ||
+                    (value.isSuccess == true &&
+                        value.result?.paymentStatus == PAYCAPTURED)) {
+                  paymentOrderIdSub = value.result?.paymentOrderId ?? '';
                   gotoPaymentResultPage(true, paymentOrderIdSub);
                 } else {
                   gotoPaymentResultPage(
                     false,
-                    value?.result?.paymentOrderId ?? '',
-                    cartUserId: value?.result?.cartUserId,
+                    value.result?.paymentOrderId ?? '',
+                    cartUserId: value.result?.cartUserId,
                     isPaymentFails: true,
                   );
                 }
@@ -257,8 +257,8 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                   .then((value) {
                 gotoPaymentResultPage(
                   false,
-                  value?.result?.paymentOrderId ?? '',
-                  cartUserId: value?.result?.cartUserId,
+                  value.result?.paymentOrderId ?? '',
+                  cartUserId: value.result?.cartUserId,
                   isPaymentFails: true,
                 );
               });
