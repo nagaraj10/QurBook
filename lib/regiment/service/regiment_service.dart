@@ -87,6 +87,40 @@ class RegimentService {
     }
   }
 
+  static Future<RegimentResponseModel> getRegimentDataCalendar(
+      {String startDate,
+        String endDate,
+        int isSymptoms = 0,
+        bool isForMasterData = false,
+        String searchText = ''}) async {
+    var response;
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL+'qurplan-node-mysql/regimen-calendar-filter/'+ userId+'?startDate=${startDate}%2000%3A00%3A00&endDate=${endDate}%2000%3A00%3A00';
+    try {
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+
+        response = await ApiServices.get(
+          urlForRegiment,
+          headers: headerRequest,
+        );
+
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return RegimentResponseModel.fromJson(json.decode(response.body));
+      } else {
+        return RegimentResponseModel(
+          regimentsList: [],
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+
+      return RegimentResponseModel(
+        regimentsList: [],
+      );
+    }
+  }
+
   static Future<ExternalLinksResponseModel> getExternalLinks() async {
     var response;
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);

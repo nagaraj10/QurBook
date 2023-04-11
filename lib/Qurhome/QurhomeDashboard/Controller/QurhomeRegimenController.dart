@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -19,6 +18,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/soscallagentnumberdata.dart
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -34,9 +34,11 @@ class QurhomeRegimenController extends GetxController {
   final _apiProvider = QurHomeApiProvider();
   var loadingData = false.obs;
   var loadingDataWithoutProgress = false.obs;
+  var loadingCalendar = false.obs;
 
   // QurHomeRegimenResponseModel qurHomeRegimenResponseModel;
   RegimentResponseModel? qurHomeRegimenResponseModel;
+  RegimentResponseModel qurHomeRegimenCalendarResponseModel;
   int nextRegimenPosition = 0;
   int currentIndex = 0;
 
@@ -61,12 +63,15 @@ class QurhomeRegimenController extends GetxController {
   var sid = "".obs;
   //var isSIMInserted = false.obs;
   var isSOSAgentCallDialogOpen = false.obs;
+  var isTodaySelected = false.obs;
   var SOSAgentNumber = "".obs;
+  var statusText = "".obs;
   var SOSAgentNumberEmptyMsg = "".obs;
   var currLoggedEID = "".obs;
 
   var dateHeader = "".obs;
-
+  var selectedDate=DateTime.now().obs;
+  var selectedCalendar=DateTime.now().obs;
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
 
@@ -74,23 +79,28 @@ class QurhomeRegimenController extends GetxController {
 
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
   var qurhomeDashboardController = Get.put(QurhomeDashboardController());
-
-  Timer? timer;
+  Duration duration = CommonUtil.isUSRegion()?Duration(minutes: 2):Duration(seconds: 30);
+  Timer timer;
 
   var isFirstTime = true.obs;
+  int _start = CommonUtil.isUSRegion()?120:30;
 
-  getRegimenList({bool isLoading = true}) async {
+  getRegimenList({bool isLoading = true,String date=null}) async {
     try {
       if (!isLoading) {
         loadingDataWithoutProgress.value = true;
       }
+      if(date!=null){
+        dateHeader.value = getFormatedDate(date: date);
+      }else{
+        date='';
+      }
       loadingData.value = true;
-      qurHomeRegimenResponseModel = await (_apiProvider.getRegimenList(""));
-
-      qurHomeRegimenResponseModel!.regimentsList!.removeWhere((element) =>
-          element.isEventDisabled && !element.isSymptom ||
-          !element.scheduled &&
-              !(element.dayrepeat?.trim().toLowerCase() ==
+      qurHomeRegimenResponseModel = await _apiProvider.getRegimenList(date);
+      qurHomeRegimenResponseModel.regimentsList?.removeWhere((element) =>
+          element?.isEventDisabled && !element?.isSymptom ||
+          !element?.scheduled &&
+              !(element?.dayrepeat?.trim().toLowerCase() ==
                   strText.trim().toLowerCase()));
     bool allActivitiesCompleted=true;
 
@@ -182,6 +192,16 @@ class QurhomeRegimenController extends GetxController {
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
     }
+  }
+
+  getCalendarRegimenList({DateTime nextPreviousDate=null}) async {
+    DateTime startDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month,1).subtract(Duration(days: 7));
+    DateTime endDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month+1,0).add(Duration(days: 7));
+    loadingCalendar.value=true;
+    qurHomeRegimenCalendarResponseModel = await _apiProvider.getRegimenListCalendar(startDate,endDate);
+    loadingCalendar.value=false;
+    update(["refreshCalendar"]);
+
   }
 
   @override
@@ -430,11 +450,44 @@ class QurhomeRegimenController extends GetxController {
 
   void startTimer() {
     try {
-      //30 seconds API calling
-      timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
-        dateHeader.value = getFormatedDate();
-        getRegimenList(isLoading: false);
-      });
+        timer = new Timer.periodic(
+          Duration(seconds: 1),
+              (Timer timer) {
+                final addSeconds =  -1 ;
+                final seconds = duration.inSeconds + addSeconds;
+            if (seconds == 0) {
+              this.timer?.cancel();
+              this.timer=null;
+              dateHeader.value = getFormatedDate();
+              //selectedCalendar.value = DateTime.now();
+              getRegimenList(isLoading: false);
+              if(CommonUtil.isUSRegion()){
+                duration = Duration(minutes: 2);
+              }else{
+                duration = Duration(seconds: 30);
+              }
+            }else if(seconds<11){
+              if(!isTodaySelected.value){
+                statusText.value='${strRegimenRedirection} ${seconds.toString()}';
+                update(["refershStatusText"]);
+              }
+              duration = Duration(seconds: seconds);
+            } else {
+              if(!isTodaySelected.value){
+                if(calculateDifference(selectedDate.value)<0){//past
+                  isTodaySelected.value=false;
+                  statusText.value=strViewPastDateRegimen;
+                }else if(calculateDifference(selectedDate.value)>0){//future
+                  isTodaySelected.value=false;
+                  statusText.value=strViewFutureDateRegimen;
+                }
+                update(["refershStatusText"]);
+              }
+              duration = Duration(seconds: seconds);
+            }
+          },
+        );
+
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -445,6 +498,13 @@ class QurhomeRegimenController extends GetxController {
   void restartTimer() {
     try {
       timer?.cancel();
+      this.timer=null;
+      if(CommonUtil.isUSRegion()){
+        duration = Duration(minutes: 2);
+      }else{
+        duration = Duration(seconds: 30);
+      }
+
       startTimer();
     } catch (e) {
       if (kDebugMode) {
@@ -454,13 +514,48 @@ class QurhomeRegimenController extends GetxController {
   }
 
   showCurrLoggedRegimen(RegimentDataModel regimen) {
+    cancelTimer();
+    restartTimer();
     currLoggedEID.value = CommonUtil().validString(regimen?.eid?.toString());
-    getRegimenList();
+    getRegimenList(date: selectedDate.value.toString());
   }
 
-  String getFormatedDate() {
+  cancelTimer(){
+    timer?.cancel();
+    timer=null;
+  }
+
+  String getFormatedDate({String date=null}) {
+    DateTime now = date==null?DateTime.now():DateTime.parse(date);
+    selectedDate.value=now;
+    String prefix='';
+    if(calculateDifference(now)==0){//today
+      isTodaySelected.value=true;
+      statusText.value='';
+      prefix='Today, ';
+    }else if(calculateDifference(now)<0){//past
+      isTodaySelected.value=false;
+      statusText.value=strViewPastDateRegimen;
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix=formattedDate+', ';
+    }else if(calculateDifference(now)>0){//future
+      isTodaySelected.value=false;
+      statusText.value=strViewFutureDateRegimen;
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix=formattedDate+', ';
+    }else{
+      isTodaySelected.value=false;
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix=formattedDate+', ';
+    }
+    update(["refershStatusText"]);
+
+    String formattedDate = DateFormat('dd MMM').format(now);
+    return prefix+formattedDate;
+  }
+
+  int calculateDifference(DateTime date) {
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('dd MMM yyyy').format(now);
-    return formattedDate;
+    return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
   }
 }
