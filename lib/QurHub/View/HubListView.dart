@@ -64,7 +64,7 @@ class HubListView extends GetView<HubListViewController> {
             .isEmpty)) {
       return pairNewVirtualHubBtn();
     }
-    if (((controller.hubListResponse!.result!.userDeviceCollection!.length ?? 0) >
+    if (((controller.hubListResponse!.result!.userDeviceCollection!.length) >
             0) &&
         (controller.hubListResponse!.result!.hub?.additionalDetails != null)) {
       return listContent();
@@ -248,7 +248,7 @@ class HubListView extends GetView<HubListViewController> {
   Widget listContent() {
     return ListView.builder(
       itemCount:
-          (controller.hubListResponse!.result!.userDeviceCollection!.length ?? 0),
+          (controller.hubListResponse!.result!.userDeviceCollection!.length),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return Padding(

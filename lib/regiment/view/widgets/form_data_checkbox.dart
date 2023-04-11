@@ -37,7 +37,7 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
   }
 
   List<Widget> loadCheckboxItems() {
-    final checkboxList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    final checkboxList = (widget.fieldData.fdata ?? '')?.split('|');
     if (checkboxList.isNotEmpty && checkboxList.length.isEven) {
       checkboxWidget.clear();
       for (var index = 0; index < checkboxList.length; index++) {
@@ -72,12 +72,12 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.isFromQurHomeRegimen ?? false
+          widget.isFromQurHomeRegimen
               ? SizedBox.shrink()
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget?.fieldData != null)
+                    if (widget.fieldData != null)
                       Text(
                         CommonUtil().showDescriptionTextForm(widget.fieldData),
                         style: TextStyle(

@@ -162,8 +162,8 @@ class _MyPlanState extends State<PlanList> {
     isSelected = false;
     if (planList != null && planList.isNotEmpty) {
       planList.where((element1) {
-        return element1?.packcatid == categoryId &&
-            (element1?.metadata?.diseases == diseases);
+        return element1.packcatid == categoryId &&
+            (element1.metadata?.diseases == diseases);
       }).forEach((element) {
         if (element.isSubscribed == '1') {
           isSelected = true;
@@ -296,7 +296,7 @@ class _MyPlanState extends State<PlanList> {
                     radius: 20,
                     child: CommonUtil().customImage(
                       getImage(i, planList),
-                      planInitial: planList[i]?.providerName,
+                      planInitial: planList[i].providerName,
                     ),
                   ),
                   SizedBox(
@@ -457,7 +457,7 @@ class _MyPlanState extends State<PlanList> {
                                                               strIsFromSubscibe,
                                                           feeZero: planListResult![
                                                                           i]
-                                                                      ?.price ==
+                                                                      .price ==
                                                                   '' ||
                                                               planList[i]
                                                                       .price ==
@@ -528,10 +528,10 @@ class _MyPlanState extends State<PlanList> {
                                                         isFrom:
                                                             strIsFromSubscibe,
                                                         feeZero: planList[i]
-                                                                    ?.price ==
+                                                                    .price ==
                                                                 '' ||
                                                             planList[i]
-                                                                    ?.price ==
+                                                                    .price ==
                                                                 '0',
                                                         refresh: () {
                                                       setState(() {});

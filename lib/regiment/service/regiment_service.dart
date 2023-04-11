@@ -150,7 +150,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents?.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK",
+                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK",
             'isVitalSave': isVitals
           },
         ),
@@ -197,7 +197,7 @@ class RegimentService {
           var provider =
               Provider.of<RegimentViewModel>(Get.context!, listen: false);
           provider.cachedEvents
-              ?.removeWhere((element) => element.contains(name));
+              .removeWhere((element) => element.contains(name));
           provider.cachedEvents.add('&$name=$value'.toString());
         }
       }

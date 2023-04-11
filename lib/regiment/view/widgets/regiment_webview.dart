@@ -63,11 +63,11 @@ class _RegimentWebViewState extends State<RegimentWebView> {
           children: <Widget>[
             Html(
               data: Platform.isIOS
-                  ? widget?.selectedUrl?.replaceAll(
+                  ? widget.selectedUrl?.replaceAll(
                       'src="//',
                       'src="https://',
                     )??''
-                  : widget?.selectedUrl?.replaceAll(
+                  : widget.selectedUrl?.replaceAll(
                       'src="//',
                       'src="',
                     )??'',

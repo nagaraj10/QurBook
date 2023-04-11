@@ -56,21 +56,21 @@ class SymptomListController extends GetxController {
 
           if (tempRegimentsList != null && tempRegimentsList.length > 0) {
             recentRegimentsList = tempRegimentsList
-                .where((item) => item?.ack_local != null)
+                .where((item) => item.ack_local != null)
                 .toList();
             seqRegimentsList = tempRegimentsList
                 .where((item) =>
-                    CommonUtil().validString(item?.seq) != null &&
-                    CommonUtil().validString(item?.seq) != "0" &&
-                    CommonUtil().validString(item?.seq).trim().isNotEmpty)
+                    CommonUtil().validString(item.seq) != null &&
+                    CommonUtil().validString(item.seq) != "0" &&
+                    CommonUtil().validString(item.seq).trim().isNotEmpty)
                 .toList();
             seqRegimentsList.sort((b, a) =>
-                int.parse(CommonUtil().validString(a?.seq))
-                    .compareTo(int.parse(CommonUtil().validString(b?.seq))));
+                int.parse(CommonUtil().validString(a.seq))
+                    .compareTo(int.parse(CommonUtil().validString(b.seq))));
             otherRegimentsList = tempRegimentsList
                 .where((item) =>
-                    CommonUtil().validString(item?.seq) == "0" ||
-                    CommonUtil().validString(item?.seq).trim().isEmpty)
+                    CommonUtil().validString(item.seq) == "0" ||
+                    CommonUtil().validString(item.seq).trim().isEmpty)
                 .toList();
 
             finalRegimentsList =
@@ -116,7 +116,7 @@ class SymptomListController extends GetxController {
   void stopSymptomTTS({bool isInitial = false}) {
     sheelaTTSController.stopTTS();
 
-    symptomList.value?.forEach((regimenData) {
+    symptomList.value.forEach((regimenData) {
       regimenData.isPlaying.value = false;
     });
 

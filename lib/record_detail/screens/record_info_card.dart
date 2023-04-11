@@ -98,7 +98,7 @@ class RecordInfoCard {
                           Text(
                             /* toBeginningOfSentenceCase(
                                     metaInfo.hospital.healthOrganizationName) */
-                            metaInfo?.hospital?.healthOrganizationName
+                            metaInfo.hospital?.healthOrganizationName
                                     ?.capitalizeFirstofEach ??
                                 "",
                             softWrap: false,
@@ -215,7 +215,7 @@ class RecordInfoCard {
                                 ? ((metaInfo.doctor!.name != null &&
                                         metaInfo.doctor!.name != '')
                                     ? metaInfo
-                                        ?.doctor?.name?.capitalizeFirstofEach
+                                        .doctor?.name?.capitalizeFirstofEach
                                     : metaInfo.doctor!.firstName
                                             !.capitalizeFirstofEach +
                                         ' ' +
@@ -332,7 +332,7 @@ class RecordInfoCard {
                                 ? ((metaInfo.doctor!.name != null &&
                                         metaInfo.doctor!.name != '')
                                     ? metaInfo
-                                        ?.doctor?.name?.capitalizeFirstofEach
+                                        .doctor?.name?.capitalizeFirstofEach
                                     : metaInfo.doctor!.firstName
                                             !.capitalizeFirstofEach +
                                         ' ' +

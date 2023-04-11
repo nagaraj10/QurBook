@@ -96,7 +96,7 @@ class PlanViewModel extends ChangeNotifier {
       String title, List<PlanListResult> planListOld) {
     var filterSearch = <PlanListResult>[];
     for (final searchList in planListOld) {
-      if (searchList.providerName != null && searchList?.providerName != '') {
+      if (searchList.providerName != null && searchList.providerName != '') {
         if (searchList.providerName!
                 .toLowerCase()
                 .trim()

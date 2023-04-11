@@ -139,7 +139,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
       if (value != '') {
         _doctorsListBlock!.getDoctorsListNew(
-            _textFieldController.text.toString() ?? '', widget.isSkipUnknown);
+            _textFieldController.text.toString(), widget.isSkipUnknown);
       } else {
         if (widget.arguments!.searchWord == CommonConstants.doctors) {
           _doctorsListBlock!.getExistingDoctorList('40');
@@ -445,7 +445,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 ? Container(
                     margin: EdgeInsets.all(5),
                     child: getAllDatasInLabsList(
-                        snapshot?.data?.data?.result ?? []),
+                        snapshot.data?.data?.result ?? []),
                   )
                 : snapshot.data!.data!.result == null
                     ? Container(
@@ -517,7 +517,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 SizedBox(
                   height: 10,
                 ),
-                fhbBasicWidget!.getSaveButton(() {
+                fhbBasicWidget.getSaveButton(() {
                   if (widget.toPreviousScreen!) {
                     widget.arguments!.searchWord == CommonConstants.doctors
                         ? saveMediaDialog(context)
@@ -628,7 +628,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       onRefresh: _refresh,
       child: (data.isSuccess == false &&
               widget.isSkipUnknown == true &&
-              data?.diagnostics?.errorData != null)
+              data.diagnostics?.errorData != null)
           ? Container(
               color: Color(fhbColors.bgColorContainer),
               child: getEmptyCard(data.diagnostics),
@@ -954,7 +954,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 : SizedBox(height: 10.0.h)
             : (specialization != null && specialization != '')
                 ? Text(
-                    toBeginningOfSentenceCase(specialization ?? '')!,
+                    toBeginningOfSentenceCase(specialization)!,
                     style: TextStyle(
                         fontSize: 15.0.sp,
                         fontWeight: FontWeight.w400,
@@ -1684,7 +1684,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           Navigator.pop(context);
           HospitalsListResult hospitaData = new HospitalsListResult();
           hospitaData.name = '';
-          hospitaData.healthOrganizationName = value!.result!.name;
+          hospitaData.healthOrganizationName = value.result!.name;
           hospitaData.healthOrganizationId = null;
           hospitaData.healthOrganizationReferenceId = value.result!.id;
           hospitaData.healthOrganizationTypeId = Constants.STR_HEALTHORG_HOSPID;
@@ -1723,7 +1723,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   showDialogBoxToAddDoctorWhenPermissionRequired(
       BuildContext context, DoctorsListResult data) {
-    if (data?.isTelehealthEnabled != null) {
+    if (data.isTelehealthEnabled != null) {
       teleHealthAlertShown = data.isTelehealthEnabled;
     }
     var dialog = StatefulBuilder(builder: (context, setState) {
@@ -1762,7 +1762,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       _ShowDoctorTextField((data.name != null
-                          ? data?.name
+                          ? data.name
                               ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.data.name)
                           : '')!),
                       SizedBox(height: 10.0.h),
@@ -1885,10 +1885,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         showAlertDialog(
             context,
             okButton,
-            (value?.message != null &&
-                    value?.message !=
+            (value.message != null &&
+                    value.message !=
                         "New Provider Request has been created successfully.")
-                ? value?.message ?? ""
+                ? value.message ?? ""
                 : "Request sent successfully");
       } else {
         Navigator.pop(context);
@@ -2315,7 +2315,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   ),
                                   child: Text(
                                     CommonUtil()
-                                        .validString(data[index]?.name ?? ""),
+                                        .validString(data[index].name ?? ""),
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16.0.sp,

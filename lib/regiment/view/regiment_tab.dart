@@ -91,7 +91,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
           ? 0
           : null,
       isInitial: true,
-      eventId: widget?.eventId,
+      eventId: widget.eventId,
     );
 
     Provider.of<RegimentViewModel>(context, listen: false).resetRegimenTab(
@@ -201,7 +201,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
-    scrollController?.dispose();
+    scrollController.dispose();
     WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
@@ -251,7 +251,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         : 40.0.sp;
     try {
       if (metadata?.icon != null) {
-        if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
+        if (metadata?.icon?.toLowerCase().contains('.svg') ?? false) {
           return SvgPicture.network(
             metadata!.icon!,
             height: iconSize,
@@ -601,9 +601,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 if (regimentViewModel.regimentStatus ==
                     RegimentStatus.Loading) {
                   return CommonCircularIndicator();
-                } else if ((regimentViewModel.regimentsList?.length ?? 0) > 0) {
+                } else if ((regimentViewModel.regimentsList.length) > 0) {
                   final regimentsList = regimentViewModel.regimentsList;
-                  if ((regimentsList?.length ?? 0) > 0) {
+                  if ((regimentsList.length) > 0) {
                     if (regimentViewModel.initialShowIndex != null) {
                       Future.delayed(Duration(microseconds: 1), () {
                         scrollController.scrollToIndex(
@@ -625,7 +625,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         bottom: 10.0.h,
                       ),
                       // physics: NeverScrollableScrollPhysics(),
-                      itemCount: regimentsList?.length ?? 0,
+                      itemCount: regimentsList.length,
                       itemBuilder: (context, index) {
                         final regimentData = (index < regimentsList.length)
                             ? regimentsList[index]
@@ -638,7 +638,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                 ? RegimentDataCard(
                                     index: index,
                                     title: regimentData.title,
-                                    time: regimentData?.estart != null
+                                    time: regimentData.estart != null
                                         ? DateFormat('hh:mm\na')
                                             .format(regimentData.estart!)
                                         : '',
@@ -669,7 +669,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                     RegimentDataCard(
                                       index: index,
                                       title: regimentData.title,
-                                      time: regimentData?.estart != null
+                                      time: regimentData.estart != null
                                           ? DateFormat('hh:mm\na')
                                               .format(regimentData.estart!)
                                           : '',
@@ -791,7 +791,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                       return RegimentDataCard(
                         index: index,
                         title: regimentData.title,
-                        time: regimentData?.estart != null
+                        time: regimentData.estart != null
                             ? DateFormat('hh:mm\na')
                                 .format(regimentData.estart!)
                             : '',

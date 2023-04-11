@@ -660,25 +660,25 @@ class _CategoryState extends State<CategoryList> {
                                     ? null
                                     : () async {
                                         if (planListResult[inx.index]
-                                                ?.isSubscribed ==
+                                                .isSubscribed ==
                                             '0') {
                                           CommonUtil().profileValidationCheck(
                                               context,
                                               packageId:
                                                   planListResult[inx.index]
-                                                      ?.packageid,
+                                                      .packageid,
                                               isSubscribed:
                                                   planListResult[inx.index]
-                                                      ?.isSubscribed,
+                                                      .isSubscribed,
                                               providerId:
                                                   planListResult[inx.index]
-                                                      ?.plinkid,
+                                                      .plinkid,
                                               isFrom: strIsFromSubscibe,
                                               feeZero: planListResult[inx.index]
-                                                          ?.price ==
+                                                          .price ==
                                                       '' ||
                                                   planListResult[inx.index]
-                                                          ?.price ==
+                                                          .price ==
                                                       '0', refresh: () {
                                             setState(() {
                                               planListModel = myPlanViewModel
@@ -697,7 +697,7 @@ class _CategoryState extends State<CategoryList> {
                                       },
                                 child: TextWidget(
                                   text:
-                                      planListResult[inx.index]?.isSubscribed ==
+                                      planListResult[inx.index].isSubscribed ==
                                               '0'
                                           ? strSubscribe
                                           : strSubscribed,
@@ -788,13 +788,13 @@ class _CategoryState extends State<CategoryList> {
   }
 
   Color getBorderColor(int i, List<PlanListResult> planList) {
-    if (planList[i]?.catselecttype == '1'
-        ? (planList[i]?.isSubscribed == '1' ||
-            (isSelectedMap[planList[i]?.packcatid] ?? false))
-        : (planList[i]?.isSubscribed == '1')) {
+    if (planList[i].catselecttype == '1'
+        ? (planList[i].isSubscribed == '1' ||
+            (isSelectedMap[planList[i].packcatid] ?? false))
+        : (planList[i].isSubscribed == '1')) {
       return Colors.grey;
     } else {
-      if (planList[i]?.isSubscribed == '0') {
+      if (planList[i].isSubscribed == '0') {
         return Color(CommonUtil().getMyPrimaryColor());
       } else {
         return Colors.grey;

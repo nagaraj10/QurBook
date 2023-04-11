@@ -23,7 +23,7 @@ class SubscribeViewModel extends ChangeNotifier {
       var myPlanListModel =
           await myPlanService.subscribePlan(packageId, userid);
       await Provider.of<UserPlansViewModel>(Get.context!, listen: false)
-          ?.getUserPlanInfo();
+          .getUserPlanInfo();
       return myPlanListModel;
     } catch (e) {}
   }
@@ -34,7 +34,7 @@ class SubscribeViewModel extends ChangeNotifier {
       var myPlanListModel =
           await myPlanService.UnsubscribePlan(packageId, userid);
       await Provider.of<UserPlansViewModel>(Get.context!, listen: false)
-          ?.getUserPlanInfo();
+          .getUserPlanInfo();
       return myPlanListModel;
     } catch (e) {}
   }

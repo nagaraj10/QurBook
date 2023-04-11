@@ -258,8 +258,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   closeDialog() {

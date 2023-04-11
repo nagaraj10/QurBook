@@ -120,7 +120,7 @@ class RegimentDataCard extends StatelessWidget {
                                                 listen: false)
                                             .regimentMode ==
                                         RegimentMode.Schedule &&
-                                    !(regimentData.asNeeded ?? false),
+                                    !(regimentData.asNeeded),
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                     top: 2.0.h,
@@ -167,7 +167,7 @@ class RegimentDataCard extends StatelessWidget {
                             ],
                           ),
                           Visibility(
-                            visible: (regimentData.isModifiedToday ?? false) ||
+                            visible: (regimentData.isModifiedToday) ||
                                 regimentData.ack_local != null,
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -180,7 +180,7 @@ class RegimentDataCard extends StatelessWidget {
                                 children: [
                                   Visibility(
                                     visible:
-                                        regimentData.isModifiedToday ?? false,
+                                        regimentData.isModifiedToday,
                                     child: SvgPicture.asset(
                                       icon_modified,
                                       width: 20.0.sp,
@@ -290,7 +290,7 @@ class RegimentDataCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Visibility(
-                    visible: regimentData.isMandatory ?? false,
+                    visible: regimentData.isMandatory,
                     child: Padding(
                       padding: EdgeInsets.only(
                         right: 5.0.w,
@@ -685,7 +685,7 @@ class RegimentDataCard extends StatelessWidget {
 
   String? getDialogTitle(BuildContext context, String? activityName) {
     String? title = '';
-    if (!(regimentData.asNeeded ?? false) &&
+    if (!(regimentData.asNeeded) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule) {
       if (activityName != null && activityName != '') {

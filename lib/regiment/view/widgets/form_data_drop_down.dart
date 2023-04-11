@@ -35,7 +35,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
   }
 
   loadComboItems() {
-    final comboItemsList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    final comboItemsList = (widget.fieldData.fdata ?? '')?.split('|');
     if (comboItemsList.isNotEmpty && comboItemsList.length.isEven) {
       comboItems.clear();
       for (var i = 0; i < comboItemsList.length; i++) {
@@ -63,7 +63,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        widget.isFromQurHomeRegimen ?? false
+        widget.isFromQurHomeRegimen
             ? SizedBox.shrink()
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +91,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
             /*(widget.fieldData?.title ?? '').isNotEmpty
                 ? '${Constants.select} ${widget.fieldData?.title}'
                 : '',*/
-            (widget.fieldData?.title ?? '').isNotEmpty
+            (widget.fieldData.title ?? '').isNotEmpty
                 ? '${Constants.select}'
                 : '',
             style: TextStyle(

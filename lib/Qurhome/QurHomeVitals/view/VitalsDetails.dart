@@ -343,8 +343,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   @override
   void dispose() {
     try {
-      animationController?.dispose();
-      _events?.close();
+      animationController.dispose();
+      _events.close();
       super.dispose();
       fbaLog(eveName: 'qurbook_screen_event', eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -937,7 +937,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                     commonConstants.bpDPUNIT,
                                     deviceController, (errorValue) {
                                   setState(() {
-                                    errorMsgSys = errorValue ?? "";
+                                    errorMsgSys = errorValue;
                                     errorMsg = errorMsgSys;
                                   });
                                 }, errorMsgSys, variable.strbpunit, deviceName,
@@ -1606,10 +1606,10 @@ class _VitalsDetailsState extends State<VitalsDetails>
     switch (widget.device_name) {
       case strDataTypeBP:
         {
-          final translis = controllerGetx?.bpList?.value;
+          final translis = controllerGetx.bpList.value;
           //List<WVResult> translist = translis.first;
           final List<BPResult> bpResultNew =
-              translis!.isNotEmpty ? translis?.first : [];
+              translis.isNotEmpty ? translis.first : [];
           bpResultNew.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue!
                 .compareTo(translisCopy.dateTimeValue!);

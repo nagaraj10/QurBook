@@ -150,7 +150,7 @@ class _NonAdheranceSettingsScreenState
 
   getMemberName(SharedToUsers data){
     String? fulName="";
-    if (data?.parent?.firstName != null && data?.parent?.firstName != '') {
+    if (data.parent?.firstName != null && data.parent?.firstName != '') {
       fulName = data.parent!.firstName;
     }
     if (data.parent!.lastName != null && data.parent!.lastName != '') {

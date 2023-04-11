@@ -209,7 +209,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
                   if (regimentViewModel.activityStatus ==
                       ActivityStatus.Loading) {
                     return CommonCircularIndicator();
-                  } else if ((regimentViewModel.activitiesList?.length ?? 0) >
+                  } else if ((regimentViewModel.activitiesList.length) >
                       0) {
                     final regimentsList = regimentViewModel.activitiesList;
                     return ListView.builder(
@@ -217,7 +217,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
                       padding: EdgeInsets.only(
                         bottom: 10.0.h,
                       ),
-                      itemCount: regimentsList?.length ?? 0,
+                      itemCount: regimentsList.length,
                       itemBuilder: (context, index) {
                         final regimentData = (index < regimentsList.length)
                             ? regimentsList[index]
@@ -225,7 +225,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
                         return RegimentActivitiesCard(
                           index: index,
                           title: regimentData.title,
-                          time: regimentData?.estart != null
+                          time: regimentData.estart != null
                               ? DateFormat('hh:mm\na')
                                   .format(regimentData.estart!)
                               : '',

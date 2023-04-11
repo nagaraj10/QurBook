@@ -99,7 +99,7 @@ class EventListWidget extends StatelessWidget {
                       .saveProfile(
                     schedules: schedules,
                   );
-                  if (saveResponse?.isSuccess ?? false) {
+                  if (saveResponse.isSuccess ?? false) {
                     FlutterToast().getToast(
                         'Regimen will be updated from the next day',
                         Colors.green);
@@ -224,8 +224,8 @@ class EventListWidget extends StatelessWidget {
   }
 
   getTimeAsString(TimeOfDay timeOfDay) {
-    var hour = timeOfDay?.hour;
-    return '${hour! > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+    var hour = timeOfDay.hour;
+    return '${hour > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
   }
 
   double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;

@@ -22,7 +22,7 @@ class PlanDietListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: (planList?.length??0)>0,
+      visible: (planList.length)>0,
       child: Column(
         children: [
           SizedBox(

@@ -151,7 +151,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
             }
             mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected!;
             if (mediaMetaInfo != null &&
-                (mediaMetaInfo?.healthRecordCollection?.length ?? 0) > 0) {
+                (mediaMetaInfo.healthRecordCollection?.length ?? 0) > 0) {
               mediMasterId =
                   new CommonUtil().getMetaMasterIdListNew(mediaMetaInfo);
               if (mediMasterId.length > 0) {

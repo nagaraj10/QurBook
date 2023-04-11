@@ -177,7 +177,7 @@ class PlanWizardViewModel extends ChangeNotifier {
                 .getCarePlanList(conditionChosen!))!;
 
         planWizardProviderCount =
-            providerOrganizationResult?.result?.length ?? 0;
+            providerOrganizationResult.result?.length ?? 0;
       }
 
       PlanListModel myPlanListModel =
@@ -232,8 +232,8 @@ class PlanWizardViewModel extends ChangeNotifier {
       HealthConditionResponseModel healthConditionResponseModel =
           await planWizardService.getHealthConditions(userid);
       String? currentSeperator = '';
-      if (healthConditionResponseModel?.isSuccess ?? false) {
-        healthConditionResponseModel?.healthConditionData?.menuitems
+      if (healthConditionResponseModel.isSuccess ?? false) {
+        healthConditionResponseModel.healthConditionData?.menuitems
             ?.forEach((menuItem) {
           if (menuItem.menuitemtype == Menuitemtype.SEPERATOR) {
             currentSeperator = menuItem.title;
@@ -253,16 +253,16 @@ class PlanWizardViewModel extends ChangeNotifier {
   void getFilteredHealthConditions(
     String filterText,
   ) async {
-    if ((filterText ?? '')?.isNotEmpty ?? false) {
+    if ((filterText).isNotEmpty) {
       isHealthSearch = true;
       filteredHealthConditions = {};
       healthConditions.forEach((categoryName, menuItemsList) {
         menuItemsList.forEach((menuItem) {
           if (menuItem.menuitemtype != Menuitemtype.SEPERATOR &&
-              (menuItem.title!.toLowerCase().trim() ?? '')
+              (menuItem.title!.toLowerCase().trim())
                   .contains(filterText.toLowerCase().trim())) {
             filteredHealthConditions.putIfAbsent(categoryName, () => []);
-            filteredHealthConditions[categoryName ?? '']!.add(menuItem);
+            filteredHealthConditions[categoryName]!.add(menuItem);
           }
         });
       });
@@ -294,7 +294,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   List<PlanListResult> filterPlanNameProviderDiet(String title) {
     List<PlanListResult> filterSearch = [];
     for (PlanListResult searchList in providerDietPlanListResult!) {
-      if (searchList?.title != null && searchList?.title != '') {
+      if (searchList.title != null && searchList.title != '') {
         if (searchList.title!
                 .toLowerCase()
                 .trim()
@@ -353,19 +353,19 @@ class PlanWizardViewModel extends ChangeNotifier {
     List<PlanListResult> planLisDefault = List.from(providerPlanListResult!);
     if (filter == popUpChoicePrice) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) {
-          var priceA = double.tryParse(a?.price ?? 0 as String) ?? 0;
-          var priceB = double.tryParse(b?.price ?? 0 as String) ?? 0;
-          return priceA.compareTo(priceB ?? 0);
+        planLisDefault.sort((a, b) {
+          var priceA = double.tryParse(a.price ?? 0 as String) ?? 0;
+          var priceB = double.tryParse(b.price ?? 0 as String) ?? 0;
+          return priceA.compareTo(priceB);
         });
       }
       planListLocal = List.from(planLisDefault);
     } else if (filter == popUpChoiceDura) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) {
-          var duraA = double.tryParse(a?.packageDuration ?? 0 as String) ?? 0;
-          var duraB = double.tryParse(b?.packageDuration ?? 0 as String) ?? 0;
-          return duraA.compareTo(duraB ?? 0);
+        planLisDefault.sort((a, b) {
+          var duraA = double.tryParse(a.packageDuration ?? 0 as String) ?? 0;
+          var duraB = double.tryParse(b.packageDuration ?? 0 as String) ?? 0;
+          return duraA.compareTo(duraB);
         });
         planListLocal = List.from(planLisDefault);
       }
@@ -385,19 +385,19 @@ class PlanWizardViewModel extends ChangeNotifier {
     List<PlanListResult> planLisDefault = List.from(freePlanListResult!);
     if (filter == popUpChoicePrice) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) {
-          var priceA = double.tryParse(a?.price ?? 0 as String) ?? 0;
-          var priceB = double.tryParse(b?.price ?? 0 as String) ?? 0;
-          return priceA.compareTo(priceB ?? 0);
+        planLisDefault.sort((a, b) {
+          var priceA = double.tryParse(a.price ?? 0 as String) ?? 0;
+          var priceB = double.tryParse(b.price ?? 0 as String) ?? 0;
+          return priceA.compareTo(priceB);
         });
       }
       planListLocal = List.from(planLisDefault);
     } else if (filter == popUpChoiceDura) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) {
-          var duraA = double.tryParse(a?.packageDuration ?? 0 as String) ?? 0;
-          var duraB = double.tryParse(b?.packageDuration ?? 0 as String) ?? 0;
-          return duraA.compareTo(duraB ?? 0);
+        planLisDefault.sort((a, b) {
+          var duraA = double.tryParse(a.packageDuration ?? 0 as String) ?? 0;
+          var duraB = double.tryParse(b.packageDuration ?? 0 as String) ?? 0;
+          return duraA.compareTo(duraB);
         });
         planListLocal = List.from(planLisDefault);
       }
@@ -417,19 +417,19 @@ class PlanWizardViewModel extends ChangeNotifier {
     List<PlanListResult> planLisDefault = List.from(providerDietPlanListResult!);
     if (filter == popUpChoicePrice) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) {
-          var priceA = double.tryParse(a?.price ?? 0 as String) ?? 0;
-          var priceB = double.tryParse(b?.price ?? 0 as String) ?? 0;
-          return priceA.compareTo(priceB ?? 0);
+        planLisDefault.sort((a, b) {
+          var priceA = double.tryParse(a.price ?? 0 as String) ?? 0;
+          var priceB = double.tryParse(b.price ?? 0 as String) ?? 0;
+          return priceA.compareTo(priceB);
         });
       }
       planListLocal = List.from(planLisDefault);
     } else if (filter == popUpChoiceDura) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) {
-          var duraA = double.tryParse(a?.packageDuration ?? 0 as String) ?? 0;
-          var duraB = double.tryParse(b?.packageDuration ?? 0 as String) ?? 0;
-          return duraA.compareTo(duraB ?? 0);
+        planLisDefault.sort((a, b) {
+          var duraA = double.tryParse(a.packageDuration ?? 0 as String) ?? 0;
+          var duraB = double.tryParse(b.packageDuration ?? 0 as String) ?? 0;
+          return duraA.compareTo(duraB);
         });
         planListLocal = List.from(planLisDefault);
       }
@@ -450,19 +450,19 @@ class PlanWizardViewModel extends ChangeNotifier {
     List<PlanListResult> planLisDefault = List.from(freeDietPlanListResult!);
     if (filter == popUpChoicePrice) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) {
-          var priceA = double.tryParse(a?.price ?? 0 as String) ?? 0;
-          var priceB = double.tryParse(b?.price ?? 0 as String) ?? 0;
-          return priceA.compareTo(priceB ?? 0);
+        planLisDefault.sort((a, b) {
+          var priceA = double.tryParse(a.price ?? 0 as String) ?? 0;
+          var priceB = double.tryParse(b.price ?? 0 as String) ?? 0;
+          return priceA.compareTo(priceB);
         });
       }
       planListLocal = List.from(planLisDefault);
     } else if (filter == popUpChoiceDura) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) {
-          var duraA = double.tryParse(a?.packageDuration ?? 0 as String) ?? 0;
-          var duraB = double.tryParse(b?.packageDuration ?? 0 as String) ?? 0;
-          return duraA.compareTo(duraB ?? 0);
+        planLisDefault.sort((a, b) {
+          var duraA = double.tryParse(a.packageDuration ?? 0 as String) ?? 0;
+          var duraB = double.tryParse(b.packageDuration ?? 0 as String) ?? 0;
+          return duraA.compareTo(duraB);
         });
         planListLocal = List.from(planLisDefault);
       }
@@ -621,7 +621,7 @@ class PlanWizardViewModel extends ChangeNotifier {
         }
 
         Get.snackbar(
-            '', (addToCartModel?.message ?? 'Adding Failed! Try again'),
+            '', (addToCartModel.message ?? 'Adding Failed! Try again'),
             backgroundColor:
                 Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.9),
             colorText: Colors.white);
@@ -715,8 +715,8 @@ class PlanWizardViewModel extends ChangeNotifier {
   bool checkItemInCart(String? packageId, String? tag, {String? providerId}) {
     bool isItemInCart = false;
 
-    cartList?.forEach((element) {
-      if ('${element?.productDetail?.id}' == packageId) {
+    cartList.forEach((element) {
+      if ('${element.productDetail?.id}' == packageId) {
         if (tag == strProviderCare) {
           currentPackageProviderCareId = packageId;
           updateProviderId(providerId);
@@ -740,11 +740,11 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   bool checkAllItemsForProviderCare() {
     bool isCarePlanInCart = false;
-    cartList?.forEach((cartItem) {
-      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+    cartList.forEach((cartItem) {
+      if ('${cartItem.additionalInfo?.tag ?? ''}' ==
           (selectedTag ?? '') + ',' + strProviderCare) {
         isCarePlanInCart = true;
-        currentCartProviderCarePackageId = '${cartItem?.productDetail?.id}';
+        currentCartProviderCarePackageId = '${cartItem.productDetail?.id}';
         /*FlutterToast().getToast(
             'Only one care plan can be added for a health condition',
             Colors.red);*/
@@ -760,11 +760,11 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   bool checkAllItemsForProviderDiet() {
     bool isCarePlanInCart = false;
-    cartList?.forEach((cartItem) {
-      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+    cartList.forEach((cartItem) {
+      if ('${cartItem.additionalInfo?.tag ?? ''}' ==
           (selectedTag ?? '') + ',' + strProviderDiet) {
         isCarePlanInCart = true;
-        currentCartProviderDietPackageId = '${cartItem?.productDetail?.id}';
+        currentCartProviderDietPackageId = '${cartItem.productDetail?.id}';
         /*FlutterToast().getToast(
             'Only one care plan can be added for a health condition',
             Colors.red);*/
@@ -780,11 +780,11 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   bool checkAllItemsForFreeCare() {
     bool isCarePlanInCart = false;
-    cartList?.forEach((cartItem) {
-      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+    cartList.forEach((cartItem) {
+      if ('${cartItem.additionalInfo?.tag ?? ''}' ==
           (selectedTag ?? '') + ',' + strFreeCare) {
         isCarePlanInCart = true;
-        currentCartFreeCarePackageId = '${cartItem?.productDetail?.id}';
+        currentCartFreeCarePackageId = '${cartItem.productDetail?.id}';
         /*FlutterToast().getToast(
             'Only one care plan can be added for a health condition',
             Colors.red);*/
@@ -800,11 +800,11 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   bool checkAllItemsForFreeDiet() {
     bool isCarePlanInCart = false;
-    cartList?.forEach((cartItem) {
-      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+    cartList.forEach((cartItem) {
+      if ('${cartItem.additionalInfo?.tag ?? ''}' ==
           (selectedTag ?? '') + ',' + strFreeDiet) {
         isCarePlanInCart = true;
-        currentCartFreeDietPackageId = '${cartItem?.productDetail?.id}';
+        currentCartFreeDietPackageId = '${cartItem.productDetail?.id}';
         /*FlutterToast().getToast(
             'Only one care plan can be added for a health condition',
             Colors.red);*/
@@ -820,11 +820,11 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   bool checkAllItemsDiet() {
     bool isCarePlanInCart = false;
-    cartList?.forEach((cartItem) {
-      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+    cartList.forEach((cartItem) {
+      if ('${cartItem.additionalInfo?.tag ?? ''}' ==
           (selectedTag ?? '') + ',' + strDiet) {
         isCarePlanInCart = true;
-        currentCartDietPackageId = '${cartItem?.productDetail?.id}';
+        currentCartDietPackageId = '${cartItem.productDetail?.id}';
         /*FlutterToast().getToast(
             'Only one diet plan can be added for a health condition',
             Colors.red);*/
@@ -840,8 +840,8 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   bool checkCartForBundle() {
     bool isBundlePlanInCart = false;
-    cartList?.forEach((cartItem) {
-      if (('${cartItem?.additionalInfo?.tag ?? ''}').contains(strMembership)) {
+    cartList.forEach((cartItem) {
+      if (('${cartItem.additionalInfo?.tag ?? ''}').contains(strMembership)) {
         isBundlePlanInCart = true;
       }
     });
@@ -853,7 +853,7 @@ class PlanWizardViewModel extends ChangeNotifier {
 
     var isBundlePlan = (selectedTag?.contains(strMembership) ?? false);
 
-    var isCartEmpty = (cartList?.length ?? 0) == 0;
+    var isCartEmpty = (cartList.length) == 0;
 
     if (!isCartEmpty) {
       var isBundlePlanInCart = checkCartForBundle();
@@ -900,9 +900,9 @@ class PlanWizardViewModel extends ChangeNotifier {
     ProductList? productList;
     print("packageIdpackageId" + packageId);
     Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-        ?.cartList
+        .cartList
         .forEach((cartItem) {
-      if ('${cartItem?.productDetail?.id}' == packageId) {
+      if ('${cartItem.productDetail?.id}' == packageId) {
         productList = cartItem;
       }
     });
@@ -911,9 +911,9 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   void updateCareCount() {
     if (cartList != null && cartList.length > 0)
-      cartList?.forEach((cartItem) {
-        if ((cartItem?.additionalInfo?.isMembershipAvail ?? false) &&
-            cartItem?.additionalInfo?.planType == "CARE") {
+      cartList.forEach((cartItem) {
+        if ((cartItem.additionalInfo?.isMembershipAvail ?? false) &&
+            cartItem.additionalInfo?.planType == "CARE") {
           carePlanCount--;
         }
       });
@@ -921,9 +921,9 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   void updateDietCount() {
     if (cartList != null && cartList.length > 0)
-      cartList?.forEach((cartItem) {
-        if ((cartItem?.additionalInfo?.isMembershipAvail ?? false) &&
-            cartItem?.additionalInfo?.planType == "DIET") {
+      cartList.forEach((cartItem) {
+        if ((cartItem.additionalInfo?.isMembershipAvail ?? false) &&
+            cartItem.additionalInfo?.planType == "DIET") {
           dietPlanCount--;
         }
       });

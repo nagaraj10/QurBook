@@ -461,7 +461,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     switch (device) {
       case Constants.STR_GLUCOMETER:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse!.result!.deviceMeasurementsHead != null) {
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
@@ -497,7 +497,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_THERMOMETER:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse!.result!.deviceMeasurementsHead != null) {
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
@@ -537,7 +537,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_WEIGHING_SCALE:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse!.result!.deviceMeasurementsHead != null) {
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
@@ -578,7 +578,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_PULSE_OXIMETER:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse!.result!.deviceMeasurementsHead != null) {
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
@@ -616,7 +616,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_BP_MONITOR:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse!.result!.deviceMeasurementsHead != null) {
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
@@ -730,7 +730,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
     if (picked != null) {
       setState(() {
-        dateTime = picked ?? dateTime;
+        dateTime = picked;
         dateOfVisit.text = FHBUtils().getFormattedDateOnly(dateTime.toString());
       });
     }

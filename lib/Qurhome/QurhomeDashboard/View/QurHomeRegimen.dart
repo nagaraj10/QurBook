@@ -790,7 +790,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         )
                                       : Obx(() {
                                           return Icon(
-                                            (regimen.isPlaying.value ?? false)
+                                            (regimen.isPlaying.value)
                                                 ? Icons.stop_circle_outlined
                                                 : Icons
                                                     .play_circle_fill_rounded,
@@ -1022,15 +1022,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     if (fieldsResponseModel.isSuccess! &&
         (fieldsResponseModel.result!.fields!.isNotEmpty ||
             regimen.otherinfo!.toJson().toString().contains('1')) &&
-        Provider.of<RegimentViewModel>(context!, listen: false)
+        Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentStatus !=
             RegimentStatus.DialogOpened) {
       if (!Get.isRegistered<SheelaBLEController>()) {
         Get.put(SheelaBLEController());
       }
       _sheelaBLEController = Get.find();
-      String trimmedTitle = removeAllWhitespaces(regimen.title ?? '');
-      trimmedTitle = removeAllUnderscores(trimmedTitle ?? '');
+      String trimmedTitle = removeAllWhitespaces(regimen.title);
+      trimmedTitle = removeAllUnderscores(trimmedTitle);
       trimmedTitle = trimmedTitle.toLowerCase();
       if (trimmedTitle.isNotEmpty &&
           KeysForSPO2.contains(
@@ -1142,7 +1142,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             .updateRegimentStatus(RegimentStatus.DialogOpened);
 
         Get.to(FormDataDialog(
-          introText: regimen?.otherinfo?.introText ?? '',
+          introText: regimen.otherinfo?.introText ?? '',
           fieldsData: fieldsResponseModel.result!.fields,
           eid: eventId,
           color: Color(CommonUtil().getQurhomePrimaryColor()),
@@ -1236,7 +1236,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   String? getDialogTitle(BuildContext context, RegimentDataModel regimentData,
       String? activityName) {
     String? title = '';
-    if (!(regimentData.asNeeded ?? false) &&
+    if (!(regimentData.asNeeded) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule) {
       if (activityName != null && activityName != '') {

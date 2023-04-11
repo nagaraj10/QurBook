@@ -29,22 +29,21 @@ class _TabCareMainState extends State<TabCareMain>
     _tabController!.addListener(_setActiveTabIndex);
 
     if ((Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.isDynamicLink) ??
-        false) {
+            .isDynamicLink)) {
       Future.delayed(Duration(), () {
         var tabIndex = Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.dynamicLinkTabIndex;
+            .dynamicLinkTabIndex;
         Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.changeCurrentTab(tabIndex!);
-        _tabController!.animateTo(tabIndex!);
+            .changeCurrentTab(tabIndex);
+        _tabController!.animateTo(tabIndex);
       });
     } else {
-      Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;
-      Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 1;
+      Provider.of<PlanWizardViewModel>(context, listen: false).currentTab = 0;
+      Provider.of<PlanWizardViewModel>(context, listen: false).currentPage = 1;
     }
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty =
+    Provider.of<PlanWizardViewModel>(context, listen: false).isListEmpty =
         false;
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty =
+    Provider.of<PlanWizardViewModel>(context, listen: false).isDietListEmpty =
         false;
   }
 

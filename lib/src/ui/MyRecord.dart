@@ -401,7 +401,7 @@ class _MyRecordsState extends State<MyRecords> {
           initPosition = index;
 
           getDataForParticularLabel(categoryData.elementAt(index!).categoryName,
-              categoryData.elementAt(index!).id);
+              categoryData.elementAt(index).id);
 
           PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName!)
               .then((value) {
@@ -1205,7 +1205,7 @@ class _CustomTabsState extends State<CustomTabView>
       }
       if (condition) {
         if (!(widget.selectedMedia!.contains(metaId!))) {
-          widget.selectedMedia!.add(metaId!);
+          widget.selectedMedia!.add(metaId);
           widget.selectedRecordsId!.addAll(healthRecords!);
         }
       } else {

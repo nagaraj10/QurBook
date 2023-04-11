@@ -171,7 +171,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                             PreferenceUtil.saveString(
                                 SHEELA_LANG,
                                 CommonUtil
-                                    .langaugeCodes[languageCode ?? 'undef']!);
+                                    .langaugeCodes[languageCode]!);
                             controller.getDeviceSelectionValues(
                               preferredLanguage: languageCode,
                             );
@@ -254,8 +254,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                     if (controller.isLoading.isFalse) {
                       if (controller.currentPlayingConversation != null &&
                               controller.currentPlayingConversation!.isPlaying
-                                  .value ??
-                          false) {
+                                  .value) {
                         controller.stopTTS();
                       } else {
                         controller.gettingReposnseFromNative();
@@ -271,8 +270,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   child: Icon(
                     (controller.currentPlayingConversation != null &&
                                 controller.currentPlayingConversation!.isPlaying
-                                    .value ??
-                            false)
+                                    .value)
                         ? Icons.pause
                         : controller.isLoading.isTrue
                             ? Icons.mic_off

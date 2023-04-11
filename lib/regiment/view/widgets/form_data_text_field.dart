@@ -27,7 +27,7 @@ class FormDataTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        isFromQurHomeRegimen ?? false
+        isFromQurHomeRegimen
             ? SizedBox.shrink()
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +83,7 @@ class FormDataTextField extends StatelessWidget {
               if (value!.isEmpty) {
                 return '${fieldData.title} is required';
               } else if (isNumberOnly) {
-                if (((double.tryParse(value!) ?? 0) <
+                if (((double.tryParse(value) ?? 0) <
                         (double.tryParse(fieldData.vmin!) ?? 0)) ||
                     ((double.tryParse(value) ?? 0) >
                         (double.tryParse(fieldData.vmax!) ?? 0))) {

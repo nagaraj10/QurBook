@@ -25,8 +25,8 @@ class PickImageController {
                       : FileType.any,
       /*allowedExtensions: [strJpg, strPdf, strPng],*/
     );
-    File? file = (filePickerResult!.files.length ?? 0) > 0
-        ? File(filePickerResult!.files[0].path!)
+    File? file = (filePickerResult!.files.length) > 0
+        ? File(filePickerResult.files[0].path!)
         : null;
     // Start crop iamge then take the file.
     if (file != null &&

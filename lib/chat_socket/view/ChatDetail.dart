@@ -436,7 +436,7 @@ class ChatState extends State<ChatDetail> {
 
     Provider
         .of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket
+        .socket
         ?.emitWithAck(unreadNotification, data, ack: (res) {
       //print('emitWithackCount$res');
     });
@@ -488,7 +488,7 @@ class ChatState extends State<ChatDetail> {
                   appointmentResult!
                       .deviceToken!.patient!.payload!.isNotEmpty &&
                   appointmentResult
-                      ?.deviceToken?.patient?.payload![0]?.deviceTokenId !=
+                      ?.deviceToken?.patient?.payload![0].deviceTokenId !=
                       null) {
                 patientDeviceToken = appointmentResult
                     ?.deviceToken?.patient?.payload![0].deviceTokenId;
@@ -498,7 +498,7 @@ class ChatState extends State<ChatDetail> {
                   appointmentResult!
                       .deviceToken!.parentMember!.payload!.isNotEmpty &&
                   appointmentResult?.deviceToken?.parentMember?.payload![0]
-                      ?.deviceTokenId !=
+                      .deviceTokenId !=
                       null) {
                 patientDeviceToken = appointmentResult
                     ?.deviceToken?.parentMember?.payload![0].deviceTokenId;
@@ -567,7 +567,7 @@ class ChatState extends State<ChatDetail> {
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.length > 0) {*/
           Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              ?.updateChatHistoryList(snapshot?.data?.result,
+              .updateChatHistoryList(snapshot.data?.result,
               shouldUpdate: false);
 
           return buildListMessage();
@@ -620,7 +620,7 @@ class ChatState extends State<ChatDetail> {
         try {
           Provider
               .of<ChatSocketViewModel>(Get.context!, listen: false)
-              ?.socket
+              .socket
               ?.emitWithAck(message, data, ack: (res) {
             //print('emitWithack$res');
             if (res != null) {
@@ -718,7 +718,7 @@ class ChatState extends State<ChatDetail> {
                             textFieldValue != '' &&
                             textFieldValue.length > 2) {
                           getListIndexMapFilter();
-                          commonIndex = listIndex?.length ?? 0;
+                          commonIndex = listIndex.length;
                         }
                       }
 
@@ -1366,9 +1366,9 @@ class ChatState extends State<ChatDetail> {
     if (chatList.messages?.idFrom == patientId) {
       return Row(
         children: <Widget>[
-          chatList?.messages?.type == 0
+          chatList.messages?.type == 0
           // Text
-              ? chatList!.isCommonContent!
+              ? chatList.isCommonContent!
               ? Card(
             color: Colors.transparent,
             shape: RoundedRectangleBorder(
@@ -1428,7 +1428,7 @@ class ChatState extends State<ChatDetail> {
               ),
             ),
           )
-              : chatList?.messages?.type == 1
+              : chatList.messages?.type == 1
           // Image
               ? Container(
             child: FlatButton(
@@ -1460,7 +1460,7 @@ class ChatState extends State<ChatDetail> {
                         ),
                         clipBehavior: Clip.hardEdge,
                       ),
-                  imageUrl: chatList?.messages?.content ?? '',
+                  imageUrl: chatList.messages?.content ?? '',
                   width: 200.0.h,
                   height: 200.0.h,
                   fit: BoxFit.cover,
@@ -1474,10 +1474,10 @@ class ChatState extends State<ChatDetail> {
                     MaterialPageRoute(
                         builder: (context) =>
                             FullPhoto(
-                                url: chatList?.messages?.content)));
+                                url: chatList.messages?.content)));
               },
               onLongPress: () {
-                openDownloadAlert(chatList?.messages?.content,
+                openDownloadAlert(chatList.messages?.content,
                     context, false, '.jpg');
               },
               padding: EdgeInsets.all(0),
@@ -1486,7 +1486,7 @@ class ChatState extends State<ChatDetail> {
                 bottom: isIconNeed ? 20.0 : 10.0, right: 10.0),
           )
           // Pdf
-              : chatList?.messages?.type == 2
+              : chatList.messages?.type == 2
               ? Card(
             color: Colors.transparent,
             shape: RoundedRectangleBorder(
@@ -1497,10 +1497,10 @@ class ChatState extends State<ChatDetail> {
             child: InkWell(
               onTap: () {
                 goToPDFViewBasedonURL(
-                    chatList?.messages?.content);
+                    chatList.messages?.content);
               },
               onLongPress: () {
-                openDownloadAlert(chatList?.messages?.content,
+                openDownloadAlert(chatList.messages?.content,
                     context, false, '.pdf');
               },
               child: Container(
@@ -1534,7 +1534,7 @@ class ChatState extends State<ChatDetail> {
             ),
           )
           // voice card
-              : chatList?.messages?.type == 3
+              : chatList.messages?.type == 3
               ? Padding(
             padding: const EdgeInsets.all(4.0),
             child: Material(
@@ -1548,7 +1548,7 @@ class ChatState extends State<ChatDetail> {
                   MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     fhbBasicWidget.getAudioWidgetForChat(
-                        chatList?.messages?.content)
+                        chatList.messages?.content)
                   ],
                 ),
               ),
@@ -1556,7 +1556,7 @@ class ChatState extends State<ChatDetail> {
           )
               : Container(
             child: Image.asset(
-              'images/${chatList?.messages?.content}.gif',
+              'images/${chatList.messages?.content}.gif',
               width: 100.0.h,
               height: 100.0.h,
               fit: BoxFit.cover,
@@ -1651,7 +1651,7 @@ class ChatState extends State<ChatDetail> {
                   clipBehavior: Clip.hardEdge,
                 )
                     : Container(width: 38.0.w),
-                chatList?.messages?.type == 0
+                chatList.messages?.type == 0
                     ? Card(
                   color: Colors.transparent,
                   shape: RoundedRectangleBorder(
@@ -1680,7 +1680,7 @@ class ChatState extends State<ChatDetail> {
                     ),
                   ),
                 )
-                    : chatList?.messages?.type == 1
+                    : chatList.messages?.type == 1
                     ? Container(
                   child: FlatButton(
                     child: Material(
@@ -1712,7 +1712,7 @@ class ChatState extends State<ChatDetail> {
                               clipBehavior: Clip.hardEdge,
                             ),
                         imageUrl:
-                        chatList?.messages?.content ?? '',
+                        chatList.messages?.content ?? '',
                         width: 200.0.h,
                         height: 200.0.h,
                         fit: BoxFit.cover,
@@ -1728,11 +1728,11 @@ class ChatState extends State<ChatDetail> {
                               builder: (context) =>
                                   FullPhoto(
                                       url: chatList
-                                          ?.messages?.content)));
+                                          .messages?.content)));
                     },
                     onLongPress: () {
                       openDownloadAlert(
-                          chatList?.messages?.content,
+                          chatList.messages?.content,
                           context,
                           false,
                           '.jpg');
@@ -1741,7 +1741,7 @@ class ChatState extends State<ChatDetail> {
                   ),
                   margin: EdgeInsets.only(left: 10.0),
                 )
-                    : chatList?.messages?.type == 2
+                    : chatList.messages?.type == 2
                     ? Card(
                   color: Colors.transparent,
                   shape: RoundedRectangleBorder(
@@ -1753,11 +1753,11 @@ class ChatState extends State<ChatDetail> {
                   child: InkWell(
                     onTap: () {
                       goToPDFViewBasedonURL(
-                          chatList?.messages?.content);
+                          chatList.messages?.content);
                     },
                     onLongPress: () {
                       openDownloadAlert(
-                          chatList?.messages?.content,
+                          chatList.messages?.content,
                           context,
                           false,
                           '.pdf');
@@ -1798,7 +1798,7 @@ class ChatState extends State<ChatDetail> {
                     ),
                   ),
                 )
-                    : chatList?.messages?.type == 3
+                    : chatList.messages?.type == 3
                     ? Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: Material(
@@ -1816,7 +1816,7 @@ class ChatState extends State<ChatDetail> {
                           Expanded(
                             child: fhbBasicWidget
                                 .getAudioWidgetForChat(
-                                chatList?.messages
+                                chatList.messages
                                     ?.content),
                           )
                         ],
@@ -1826,7 +1826,7 @@ class ChatState extends State<ChatDetail> {
                 )
                     : Container(
                   child: Image.asset(
-                    'images/${chatList?.messages?.content}.gif',
+                    'images/${chatList.messages?.content}.gif',
                     width: 100.0.h,
                     height: 100.0.h,
                     fit: BoxFit.cover,
@@ -1843,7 +1843,7 @@ class ChatState extends State<ChatDetail> {
               child: Text(
                 getFormattedDateTime(
                     DateTime.fromMillisecondsSinceEpoch(int.parse(
-                        chatList!
+                        chatList
                             .messages!.timestamp!.sSeconds!))
                         .toString()),
                 style: TextStyle(
@@ -1950,7 +1950,7 @@ class ChatState extends State<ChatDetail> {
                 List<String> result = [];
                 result.add(value);
                 try {
-                  if (result.length! > 0) {
+                  if (result.length > 0) {
                     final removedBrackets = result
                         .toString()
                         .substring(2, result
@@ -1960,7 +1960,7 @@ class ChatState extends State<ChatDetail> {
                       Provider.of<ChatSocketViewModel>(
                         Get.context!,
                         listen: false,
-                      )?.initRRTNotificaiton(
+                      ).initRRTNotificaiton(
                         peerId: peerId,
                         selectedDate: removedBrackets.toString() +
                             getRefText(),
@@ -2543,8 +2543,8 @@ class ChatState extends State<ChatDetail> {
           if (familyListModel?.result?.length > 0) {
             for (Result data in familyListModel.result) {
               if (widget.peerName!.contains(data.firstName!)) {
-                lastReceived = data?.chatListItem?.deliveredOn != null &&
-                    data?.chatListItem?.deliveredOn != ''
+                lastReceived = data.chatListItem?.deliveredOn != null &&
+                    data.chatListItem?.deliveredOn != ''
                     ? CommonUtil()
                     .getFormattedDateTime(data.chatListItem!.deliveredOn!)
                     : '';

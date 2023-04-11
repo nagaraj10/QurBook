@@ -31,7 +31,7 @@ class _FormDataRadioState extends State<FormDataRadio> {
   }
 
   List<Widget> loadRadioItems() {
-    final radioList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    final radioList = (widget.fieldData.fdata ?? '')?.split('|');
     if (radioList.isNotEmpty && radioList.length.isEven) {
       radioGroupValue ??= radioList.isNotEmpty ? radioList[0] : null;
       radioWidget.clear();

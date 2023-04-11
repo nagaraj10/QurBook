@@ -2116,7 +2116,7 @@ class ApiBaseHelper {
             ? notificationListId
             : createBy;
         if (isPaymentLinkViaPush) {
-          jsobBodyMap['paymentLinkViaPush'] = isPaymentLinkViaPush ?? false;
+          jsobBodyMap['paymentLinkViaPush'] = isPaymentLinkViaPush;
           jsobBodyMap['cartId'] = cartId ?? '';
         }
         try {
