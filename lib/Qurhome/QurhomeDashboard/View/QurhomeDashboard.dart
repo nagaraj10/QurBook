@@ -91,7 +91,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   onInit() async {
     try {
       if (CommonUtil.isUSRegion()) {
-        Provider.of<ChatSocketViewModel>(Get.context!)?.initSocket();
+        Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
         CommonUtil().initSocket();
 
         Provider.of<LandingViewModel>(context, listen: false)
@@ -429,8 +429,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                               rt_Sheela,
                               arguments: SheelaArgument(
                                 isSheelaAskForLang:
-                                    !((sheela_lang ?? '').isNotEmpty),
-                                langCode: (sheela_lang ?? ''),
+                                    !((sheela_lang).isNotEmpty),
+                                langCode: (sheela_lang),
                               ),
                             )?.then((value) {
                               sheelBadgeController.getSheelaBadgeCount(
@@ -463,10 +463,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       ),
                     ),
                   ),
-                  if ((sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0) >
+                  if ((sheelBadgeController.sheelaIconBadgeCount.value) >
                       0)
                     badge(
-                      sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0,
+                      sheelBadgeController.sheelaIconBadgeCount.value,
                     ),
                 ],
               ),
@@ -660,7 +660,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
             color: Color(CommonUtil().getQurhomePrimaryColor())),
       ),
       badgeColor: ColorUtils.countColor,
-      badgeCount: Provider.of<ChatSocketViewModel>(Get.context!)?.chatTotalCount,
+      badgeCount: Provider.of<ChatSocketViewModel>(Get.context!).chatTotalCount,
     );
   }
 

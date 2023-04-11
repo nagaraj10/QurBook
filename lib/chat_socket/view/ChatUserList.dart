@@ -571,12 +571,12 @@ class _ChatUserListState extends State<ChatUserList> {
           children: <Widget>[
             // List
             Container(
-                child: (controller.userChatList?.length ?? 0) > 0
+                child: (controller.userChatList.length) > 0
                     ? ListView.builder(
                         padding: EdgeInsets.all(10.0),
                         itemBuilder: (context, index) =>
-                            buildItem(context, controller.userChatList![index]),
-                        itemCount: controller?.userChatList!.length,
+                            buildItem(context, controller.userChatList[index]),
+                        itemCount: controller.userChatList.length,
                       )
                     : Container(
                         child: Center(

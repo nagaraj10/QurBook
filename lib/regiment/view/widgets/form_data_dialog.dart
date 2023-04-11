@@ -99,7 +99,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   void initState() {
     super.initState();
     try {
-      widget.fieldsData?.sort((a, b) => (a?.seq ?? 0).compareTo(b?.seq ?? 0));
+      widget.fieldsData?.sort((a, b) => (a.seq ?? 0).compareTo(b.seq ?? 0));
     } catch (e) {}
     fieldsData = widget.fieldsData;
     eid = widget.eid;
@@ -109,8 +109,8 @@ class FormDataDialogState extends State<FormDataDialog> {
 
     if (eid != null && eid != '') {
       RegimentService.getActivityStatus(eid: eid!).then((value) {
-        if (value?.isSuccess ?? false) {
-          actvityStatus = value?.result![0]?.planStatus ?? '';
+        if (value.isSuccess ?? false) {
+          actvityStatus = value.result![0].planStatus ?? '';
         }
       });
     }
@@ -126,7 +126,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     initDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     setCurrentTime();
-    return widget.isFromQurHomeRegimen ?? false
+    return widget.isFromQurHomeRegimen
         ? Scaffold(
             appBar: AppBar(
               backgroundColor: Color(CommonUtil().getQurhomePrimaryColor()),
@@ -213,7 +213,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Container(
-        width: widget.isFromQurHomeRegimen ?? false ? double.infinity : 0.75.sw,
+        width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
         child: getListView(),
       );
     });
@@ -223,11 +223,11 @@ class FormDataDialogState extends State<FormDataDialog> {
     return ListView(
       shrinkWrap: true,
       padding: EdgeInsets.only(
-          bottom: widget.isFromQurHomeRegimen ?? false ? 100 : 0),
+          bottom: widget.isFromQurHomeRegimen ? 100 : 0),
       children: [
         Container(
           width:
-              widget.isFromQurHomeRegimen ?? false ? double.infinity : 0.75.sw,
+              widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
           padding: EdgeInsets.only(
             bottom: 10.0.h,
             left: 10.0.w,
@@ -249,7 +249,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                     bottom: 10.0.h,
                   ),
                   child: FormFieldWidget(
-                    canEdit: widget.canEdit ?? false,
+                    canEdit: widget.canEdit,
                     fieldData: fieldsData![index],
                     isFromQurHomeRegimen: widget.isFromQurHomeRegimen,
                     isFromQurHomeSymptom: widget.isFromQurHomeSymptom ||
@@ -283,7 +283,7 @@ class FormDataDialogState extends State<FormDataDialog> {
         ),
         Container(
           width:
-              widget.isFromQurHomeRegimen ?? false ? double.infinity : 0.75.sw,
+              widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -477,7 +477,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
         ),
         Container(
-            width: widget.isFromQurHomeRegimen ?? false
+            width: widget.isFromQurHomeRegimen
                 ? double.infinity
                 : 0.75.sw,
             padding: EdgeInsets.only(
@@ -575,16 +575,16 @@ class FormDataDialogState extends State<FormDataDialog> {
               ],
             ),
           ),
-        widget.isFromQurHomeRegimen ?? false ? SizedBox.shrink() : onSaveBtn(),
+        widget.isFromQurHomeRegimen ? SizedBox.shrink() : onSaveBtn(),
       ],
     );
   }
 
   Widget onSaveBtn() {
     return Container(
-      width: widget.isFromQurHomeRegimen ?? false ? double.infinity : 0.75.sw,
+      width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
       margin: EdgeInsets.only(
-        bottom: widget.isFromQurHomeRegimen ?? false ? 5.0.h : 0.0,
+        bottom: widget.isFromQurHomeRegimen ? 5.0.h : 0.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -652,7 +652,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     saveMap.forEach((key, value) {
       events += '&$key=$value';
       var provider = Provider.of<RegimentViewModel>(context, listen: false);
-      provider.cachedEvents?.removeWhere((element) => element.contains(key));
+      provider.cachedEvents.removeWhere((element) => element.contains(key));
       provider.cachedEvents.add('&$key=$value'.toString());
     });
     if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
@@ -677,7 +677,7 @@ class FormDataDialogState extends State<FormDataDialog> {
       selectedDate: initDate,
       selectedTime: _currentTime,
     );
-    if (saveResponse?.isSuccess ?? false) {
+    if (saveResponse.isSuccess ?? false) {
       QurPlanReminders.getTheRemindersFromAPI();
       if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
         LoaderQurHome.hideLoadingDialog(Get.context!);
@@ -688,11 +688,11 @@ class FormDataDialogState extends State<FormDataDialog> {
               .regimentStatus ==
           RegimentStatus.DialogOpened) {
         Navigator.pop(context, true);
-      } else if (widget.isFromQurHomeRegimen ?? false) {
+      } else if (widget.isFromQurHomeRegimen) {
         Get.back(result: true);
       }
       checkForReturnActions(
-        returnAction: saveResponse?.result?.actions?.returnData,
+        returnAction: saveResponse.result?.actions?.returnData,
       );
     }
   }
@@ -706,7 +706,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           children: [
             Flexible(
               child: Text(
-                widget.formTitle??'',
+                widget.formTitle!,
                 style: TextStyle(
                   fontSize: 16.0.sp,
                 ),
@@ -722,7 +722,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           ],
         ),
         Text(
-          widget.introText ?? '',
+          widget.introText,
           maxLines: 10,
           style: TextStyle(color: Colors.black, fontSize: 16.h),
         ),
@@ -768,7 +768,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                   left: 15.0.w,
                 ),
                 content: Container(
-                  width: widget.isFromQurHomeRegimen ?? false
+                  width: widget.isFromQurHomeRegimen
                       ? double.infinity
                       : 0.75.sw,
                   child: Column(

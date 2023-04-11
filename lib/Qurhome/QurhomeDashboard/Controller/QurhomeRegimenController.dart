@@ -38,7 +38,7 @@ class QurhomeRegimenController extends GetxController {
 
   // QurHomeRegimenResponseModel qurHomeRegimenResponseModel;
   RegimentResponseModel? qurHomeRegimenResponseModel;
-  RegimentResponseModel qurHomeRegimenCalendarResponseModel;
+  RegimentResponseModel? qurHomeRegimenCalendarResponseModel;
   int nextRegimenPosition = 0;
   int currentIndex = 0;
 
@@ -105,11 +105,11 @@ class QurhomeRegimenController extends GetxController {
     bool allActivitiesCompleted=true;
 
     for (int i = 0;
-          i < qurHomeRegimenResponseModel!.regimentsList!.length!;
+          i < qurHomeRegimenResponseModel!.regimentsList!.length;
           i++) {
         String strCurrLoggedEID = CommonUtil().validString(currLoggedEID.value);
         String strCurrRegimenEID = CommonUtil().validString(
-            qurHomeRegimenResponseModel?.regimentsList![i]?.eid ?? "");
+            qurHomeRegimenResponseModel?.regimentsList![i].eid ?? "");
         if (strCurrLoggedEID.trim().isNotEmpty &&
             strCurrLoggedEID.contains(strCurrRegimenEID)) {
           nextRegimenPosition = i;
@@ -151,7 +151,7 @@ class QurhomeRegimenController extends GetxController {
         }
       }
       for (int i = 0;
-          i < qurHomeRegimenResponseModel!.regimentsList!.length ?? 0 as bool;
+          i < qurHomeRegimenResponseModel!.regimentsList!.length;
           i++) {
         if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin !=
             null) {

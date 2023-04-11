@@ -27,11 +27,11 @@ class _EventTimeTileState extends State<EventTimeTile> {
   getTimeAsString(TimeOfDay? timeOfDay) {
     if (timeOfDay != null) {
       selectedTimePeriod = timeOfDay.period;
-      var hour = timeOfDay?.hour;
+      var hour = timeOfDay.hour;
       // if (timeOfDay?.hour == 12) {
       //   hour = 12;
       // }
-      return '${hour! > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+      return '${hour > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
     } else {
       return '';
     }

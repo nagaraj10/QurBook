@@ -251,8 +251,7 @@ class _MySettingsState extends State<MySettings> {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   closeDialog() {
@@ -271,7 +270,7 @@ class _MySettingsState extends State<MySettings> {
           : true;
       if (getDeviceSelectionModel.isSuccess!) {
         if (getDeviceSelectionModel
-                .result![0]?.profileSetting?.qurhomeDefaultUI ??
+                .result![0].profileSetting?.qurhomeDefaultUI ??
             false) {
           if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
             PreferenceUtil.saveQurhomeAsDefaultUI(

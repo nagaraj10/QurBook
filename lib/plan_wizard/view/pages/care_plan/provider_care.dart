@@ -51,11 +51,11 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
   @override
   void initState() {
     Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.planWizardProviderCount = 0;
+        .planWizardProviderCount = 0;
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageProviderCareId = '';
 
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty =
+    Provider.of<PlanWizardViewModel>(context, listen: false).isListEmpty =
         false;
 
     conditionChosen =
@@ -163,21 +163,20 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
               snapshot.data!.result!.length > 0) {
             carePlanListLength = isSearch
                 ? planSearchList.length
-                : snapshot.data!.result!.length ?? 0;
+                : snapshot.data!.result!.length;
             if (((Provider.of<PlanWizardViewModel>(context, listen: false)
-                    .isDynamicLink) ??
-                false)) {
+                    .isDynamicLink))) {
               Future.delayed(Duration(), () {
                 var searchText =
                     Provider.of<PlanWizardViewModel>(context, listen: false)
-                            ?.dynamicLinkSearchText ??
+                            .dynamicLinkSearchText ??
                         '';
-                if (searchText?.isNotEmpty ?? false) {
+                if (searchText.isNotEmpty) {
                   isSearch = true;
                   onSearched(searchText, 'localSearch');
                 }
                 Provider.of<PlanWizardViewModel>(context, listen: false)
-                    ?.isDynamicLink = false;
+                    .isDynamicLink = false;
               });
             }
 
@@ -186,11 +185,11 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                 bool needReload =
                     Provider
                         .of<PlanWizardViewModel>(context, listen: false)
-                        ?.isListEmpty !=
+                        .isListEmpty !=
                         (snapshot.data!.result!.length > 0 ? true : false);
 
                 Provider.of<PlanWizardViewModel>(context, listen: false)
-                    ?.updateBottonLayoutEmptyList(
+                    .updateBottonLayoutEmptyList(
                     snapshot.data!.result!.length > 0 ? true : false,
                     needReload: needReload);
               }catch(e){
@@ -199,7 +198,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
             });
 
             return carePlanList(
-                isSearch ? planSearchList : snapshot?.data?.result);
+                isSearch ? planSearchList : snapshot.data?.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -253,7 +252,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
 
     if (Provider.of<PlanWizardViewModel>(context, listen: false)
-                ?.providerHosCount ==
+                .providerHosCount ==
             0 &&
         planWizardProviderLength == 0) {
       return RichText(
@@ -276,7 +275,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         ),
       );
     } else if (planWizardProviderLength != 0 && Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.providerHosCount!=0) {
+        .providerHosCount!=0) {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -284,8 +283,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
           children: <TextSpan>[
             TextSpan(
                 text: 'Your providers do not offer care plans yet for ' +
-                        planListProvider!.healthTitle ??
-                    ''),
+                        planListProvider!.healthTitle),
             TextSpan(
                 text: '. Tap here',
                 style: linkStyle,
@@ -298,7 +296,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         ),
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.providerHosCount ==
+            .providerHosCount ==
         0 && planWizardProviderLength != 0) {
       return RichText(
         textAlign: TextAlign.center,
@@ -372,8 +370,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   /* Widget popMenuItem() {

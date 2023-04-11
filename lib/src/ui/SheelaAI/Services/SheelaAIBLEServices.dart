@@ -58,12 +58,12 @@ class SheelaBLEController extends GetxController {
       (event) async {
         if (event == PlayerState.COMPLETED) {
           isPlaying = false;
-          if ((playConversations ?? []).isNotEmpty) {
+          if ((playConversations).isNotEmpty) {
             playTTS();
           } else if (isCompleted) {
             await Future.delayed(const Duration(seconds: 4));
             stopTTS();
-            if (SheelaController?.isSheelaScreenActive ?? false) Get.back();
+            if (SheelaController.isSheelaScreenActive) Get.back();
           }
         }
       },
@@ -112,7 +112,7 @@ class SheelaBLEController extends GetxController {
         print("Val in " + val.toString());
         final List<String>? receivedValues = val.split('|');
         if ((receivedValues ?? []).length > 0) {
-          switch (receivedValues!.first ?? "") {
+          switch (receivedValues!.first) {
             case "enablebluetooth":
               FlutterToast().getToast(
                 receivedValues.last ?? 'Please enable the Bluetooth and re-try',
@@ -165,7 +165,7 @@ class SheelaBLEController extends GetxController {
                 return;
               }
               String deviceType =
-                  hublistController.bleDeviceType!.toLowerCase() ?? '';
+                  hublistController.bleDeviceType!.toLowerCase();
               if (deviceType.isNotEmpty &&
                   (deviceType == "spo2" ||
                       deviceType == "bp" ||
@@ -190,7 +190,7 @@ class SheelaBLEController extends GetxController {
                   Future.delayed(const Duration(seconds: 1)).then((_) {
                     if (Get.isRegistered<QurhomeRegimenController>()) {
                       Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController?.eid ?? '';
+                          hublistController.eid ?? '';
                       Get.find<QurhomeRegimenController>().getRegimenList();
                     }
                   });
@@ -230,7 +230,7 @@ class SheelaBLEController extends GetxController {
                   Future.delayed(const Duration(seconds: 1)).then((value) {
                     if (Get.isRegistered<QurhomeRegimenController>()) {
                       Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController?.eid ?? '';
+                          hublistController.eid ?? '';
                       Get.find<QurhomeRegimenController>().getRegimenList();
                     }
                   });
@@ -324,7 +324,7 @@ class SheelaBLEController extends GetxController {
     var msg = '';
     if ((arguments.deviceType ?? '').isNotEmpty) {
       String strText = CommonUtil().validString(arguments.deviceType);
-      if (strText?.toLowerCase() == "weight") {
+      if (strText.toLowerCase() == "weight") {
         strText = "Weighing scale";
       }
       msg = "Your $strText device is connected & reading values. Please wait";
@@ -367,7 +367,7 @@ class SheelaBLEController extends GetxController {
         seconds: 2,
       ),
     );
-    if ((data ?? '').isNotEmpty &&
+    if ((data).isNotEmpty &&
         SheelaController.canSpeak &&
         (SheelaController.arguments?.takeActiveDeviceReadings ?? false)) {
       // _disableTimer();
@@ -381,7 +381,7 @@ class SheelaBLEController extends GetxController {
           try {
             weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT)!;
           } catch (e) {}
-          if ((weightUnit ?? '').isEmpty) {
+          if ((weightUnit).isEmpty) {
             weightUnit = CommonUtil.REGION_CODE == "IN"
                 ? STR_VAL_WEIGHT_IND
                 : STR_VAL_WEIGHT_US;
@@ -478,7 +478,7 @@ class SheelaBLEController extends GetxController {
   }
 
   playTTS() async {
-    if ((playConversations ?? []).isEmpty || isPlaying) {
+    if ((playConversations).isEmpty || isPlaying) {
       return;
     }
     final currentPlayingConversation = playConversations.first;
@@ -501,7 +501,7 @@ class SheelaBLEController extends GetxController {
 
             stopTTS();
           }
-          if ((playConversations ?? []).isNotEmpty) {
+          if ((playConversations).isNotEmpty) {
             playTTS();
           }
         }

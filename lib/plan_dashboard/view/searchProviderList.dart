@@ -164,11 +164,11 @@ class _SearchProviderList extends State<SearchProviderList> {
 
     if (planList != null && planList.isNotEmpty) {
       planList.where((element1) {
-        return (element1?.metadata?.diseases ?? '') == diseases;
+        return (element1.metadata?.diseases ?? '') == diseases;
       }).forEach((element) {
         var keysUniq = true;
         planListUniq.forEach((catElement) {
-          if (catElement?.plinkid == element.plinkid) {
+          if (catElement.plinkid == element.plinkid) {
             keysUniq = false;
           }
         });
@@ -250,8 +250,8 @@ class _SearchProviderList extends State<SearchProviderList> {
           MaterialPageRoute(
               builder: (context) => CategoryList(
                   planList[i].providerid,
-                  planList[i]?.metadata?.icon,
-                  planList[i]?.metadata?.diseases)),
+                  planList[i].metadata?.icon,
+                  planList[i].metadata?.diseases)),
         ).then((value) {
           setState(() {});
         });
@@ -285,8 +285,8 @@ class _SearchProviderList extends State<SearchProviderList> {
                       backgroundColor: Colors.grey[200],
                       radius: 20,
                       child: CommonUtil().customImage(
-                        planList[i]?.providerMetadata?.icon ?? '',
-                        planInitial: planList[i]?.providerName,
+                        planList[i].providerMetadata?.icon ?? '',
+                        planInitial: planList[i].providerName,
                       )),
                   SizedBox(
                     width: 20.0.w,

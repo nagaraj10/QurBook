@@ -27,7 +27,7 @@ class ApiServices {
           .timeout(Duration(seconds: timeout));
       await CommonUtil.saveLog(
         message:
-            'Request - ${response?.request ?? ''} || Response(${response?.statusCode}) - ${response?.body}',
+            'Request - ${response.request ?? ''} || Response(${response.statusCode}) - ${response.body}',
       );
 
       // if (response.statusCode == 200 || response.statusCode == 201) {
@@ -41,7 +41,7 @@ class ApiServices {
       await CommonUtil.saveLog(
         isError: true,
         message:
-            'Path - ${path ?? ''} || Header - ${headers ?? ''}\n Exception - ${exception ?? ''}',
+            'Path - ${path} || Header - ${headers ?? ''}\n Exception - ${exception}',
       );
       if (exception is SocketException) {
         //TODO: handle connection error
@@ -78,7 +78,7 @@ class ApiServices {
           );
       CommonUtil.saveLog(
         message:
-            'Request - ${response?.request ?? ''} || Response(${response?.statusCode}) - ${response?.body}',
+            'Request - ${response.request ?? ''} || Response(${response.statusCode}) - ${response.body}',
       );
       // if (response.statusCode == 200 || response.statusCode == 201) {
       return response;
@@ -88,7 +88,7 @@ class ApiServices {
       CommonUtil.saveLog(
         isError: true,
         message:
-            'Path - ${path ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
+            'Path - ${path} || Body - ${body}\n Exception - ${exception}',
       );
       if (exception is SocketException) {
         //TODO: handle connection error
@@ -119,7 +119,7 @@ class ApiServices {
           .timeout(Duration(seconds: 20));
       CommonUtil.saveLog(
         message:
-            'Request - ${response?.request ?? ''} || Response(${response?.statusCode}) - ${response?.body}',
+            'Request - ${response.request ?? ''} || Response(${response.statusCode}) - ${response.body}',
       );
 
       // if (response.statusCode == 200 || response.statusCode == 201) {
@@ -130,7 +130,7 @@ class ApiServices {
       CommonUtil.saveLog(
         isError: true,
         message:
-            'Path - ${path ?? ''} || Header - ${headers ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
+            'Path - ${path} || Header - ${headers} || Body - ${body}\n Exception - ${exception}',
       );
       if (exception is SocketException) {
         //TODO: handle connection error
@@ -162,7 +162,7 @@ class ApiServices {
 
       CommonUtil.saveLog(
         message:
-            'Request - ${response?.request ?? ''} || Response(${response?.statusCode}) - ${response?.body}',
+            'Request - ${response.request ?? ''} || Response(${response.statusCode}) - ${response.body}',
       );
       // if (response.statusCode == 200 || response.statusCode == 201) {
       return response;
@@ -172,7 +172,7 @@ class ApiServices {
       CommonUtil.saveLog(
         isError: true,
         message:
-            'Path - ${path ?? ''} || Header - ${headers ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
+            'Path - ${path} || Header - ${headers} || Body - ${body}\n Exception - ${exception}',
       );
       if (exception is SocketException) {
         //TODO: handle connection error

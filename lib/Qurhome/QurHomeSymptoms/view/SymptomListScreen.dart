@@ -56,7 +56,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                         child: Column(
                       children: [
                         Expanded(
-                            child: controller.symptomList?.value?.length != 0
+                            child: controller.symptomList.value.length != 0
                                 ? GridView.builder(
                                     controller: scrollController,
                                     shrinkWrap: true,
@@ -72,13 +72,12 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                                     ),
                                     // physics: NeverScrollableScrollPhysics(),
                                     itemCount:
-                                        controller.symptomList?.value?.length ??
-                                            0,
+                                        controller.symptomList.value.length,
                                     itemBuilder: (context, index) {
                                       final symptomData = (index <
                                               controller
                                                   .symptomList.value.length)
-                                          ? controller.symptomList?.value[index]
+                                          ? controller.symptomList.value[index]
                                           : RegimentDataModel();
                                       return SymptomItemCard(
                                         orientation: orientation,
@@ -133,7 +132,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                       child: Column(
                     children: [
                       Expanded(
-                          child: controller.symptomList?.value?.length != 0
+                          child: controller.symptomList.value.length != 0
                               ? ListView.builder(
                                   controller: scrollController,
                                   shrinkWrap: true,
@@ -142,13 +141,12 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                                   ),
                                   // physics: NeverScrollableScrollPhysics(),
                                   itemCount:
-                                      controller.symptomList?.value?.length ??
-                                          0,
+                                      controller.symptomList.value.length,
                                   itemBuilder: (context, index) {
                                     final symptomData = (index <
                                             controller
                                                 .symptomList.value.length)
-                                        ? controller.symptomList?.value[index]
+                                        ? controller.symptomList.value[index]
                                         : RegimentDataModel();
                                     return SymptomItemCard(
                                       orientation: orientation,

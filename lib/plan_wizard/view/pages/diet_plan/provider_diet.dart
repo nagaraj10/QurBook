@@ -54,7 +54,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel?>;// FUcrash
 
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty =
+    Provider.of<PlanWizardViewModel>(context, listen: false).isDietListEmpty =
         false;
   }
 
@@ -175,21 +175,20 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               snapshot.data!.result!.length > 0) {
             carePlanListLength = isSearch
                 ? planSearchList.length
-                : snapshot.data!.result!.length ?? 0;
+                : snapshot.data!.result!.length;
             if (((Provider.of<PlanWizardViewModel>(context, listen: false)
-                    ?.isDynamicLink) ??
-                false)) {
+                    .isDynamicLink))) {
               Future.delayed(Duration(), () {
                 var searchText =
                     Provider.of<PlanWizardViewModel>(context, listen: false)
-                            ?.dynamicLinkSearchText ??
+                            .dynamicLinkSearchText ??
                         '';
-                if (searchText?.isNotEmpty ?? false) {
+                if (searchText.isNotEmpty) {
                   isSearch = true;
                   onSearched(searchText, 'localSearch');
                 }
                 Provider.of<PlanWizardViewModel>(context, listen: false)
-                    ?.isDynamicLink = false;
+                    .isDynamicLink = false;
               });
             }
 
@@ -206,7 +205,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             });
 
             return dietPlanList(
-                isSearch ? planSearchList : snapshot?.data?.result);
+                isSearch ? planSearchList : snapshot.data?.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -273,8 +272,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   Widget popMenuItemNew() {
@@ -363,10 +361,10 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
 
     if (Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.providerHosCount ==
+        .providerHosCount ==
         0 &&
         Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.planWizardProviderCount ==
+            .planWizardProviderCount ==
             0) {
       return RichText(
         textAlign: TextAlign.center,
@@ -378,7 +376,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         ),
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.planWizardProviderCount ==
+        .planWizardProviderCount ==
         0) {
       return RichText(
         textAlign: TextAlign.center,
@@ -390,9 +388,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         ),
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.planWizardProviderCount !=
+        .planWizardProviderCount !=
         0 && Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.providerHosCount !=
+        .providerHosCount !=
         0) {
       return RichText(
         textAlign: TextAlign.center,
@@ -401,8 +399,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
           children: <TextSpan>[
             TextSpan(
                 text: 'Your providers do not offer diet plans yet for ' +
-                    planListProvider!.healthTitle ??
-                    ''),
+                    planListProvider!.healthTitle),
             TextSpan(
                 text: ' Tap here',
                 style: linkStyle,
@@ -415,9 +412,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         ),
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.providerHosCount ==
+        .providerHosCount ==
         0 && Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.planWizardProviderCount !=
+        .planWizardProviderCount !=
         0) {
       return RichText(
         textAlign: TextAlign.center,

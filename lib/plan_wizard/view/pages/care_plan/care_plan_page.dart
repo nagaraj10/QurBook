@@ -158,9 +158,9 @@ class _CarePlanPageState extends State<CarePlanPage> {
               snapshot.data!.result!.length > 0) {
             carePlanListLength = isSearch
                 ? planSearchList.length
-                : snapshot?.data?.result?.length ?? 0;
+                : snapshot.data?.result?.length ?? 0;
             return carePlanList(
-                isSearch ? planSearchList : snapshot?.data?.result);
+                isSearch ? planSearchList : snapshot.data?.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -223,8 +223,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   /* Widget popMenuItem() {

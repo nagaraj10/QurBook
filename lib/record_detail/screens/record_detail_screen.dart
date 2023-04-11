@@ -224,7 +224,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                                 AppConstants.voiceNotes ||
                                             ispdfPresent == true)
                                         ? getCarousalImage(null)
-                                        : widget?.data?.metadata?.sourceName ==
+                                        : widget.data.metadata?.sourceName ==
                                                 'SHEELA'
                                             ? getCarousalImage(null)
                                             : getDocumentImageWidgetClone())),
@@ -234,7 +234,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                widget?.data?.metadata?.sourceName == 'SHEELA'
+                                widget.data.metadata?.sourceName == 'SHEELA'
                                     ? SizedBox()
                                     : IconButton(
                                         onPressed: () {
@@ -259,7 +259,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                           size: 24.0.sp,
                                         ),
                                       ),
-                                if (widget?.data?.metadata?.sourceName ==
+                                if (widget.data.metadata?.sourceName ==
                                     'SHEELA')
                                   SizedBox()
                                 else
@@ -343,7 +343,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 }),
                           if (widget.data.metadata!.sourceName ==
                                   strsourceCARGIVER ||
-                              widget.data?.healthRecordCollection!.length == 0)
+                              widget.data.healthRecordCollection!.length == 0)
                             IconButton(
                                 icon: ImageIcon(
                               AssetImage(variable.icon_edit),
@@ -1333,7 +1333,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       index = _current + 1;
       _current = 0;
       length = imagesPath.length;
-    } else if (widget?.data?.metadata?.sourceName == 'SHEELA') {
+    } else if (widget.data.metadata?.sourceName == 'SHEELA') {
       index = _current + 1;
       _current = 0;
       length = 1;
@@ -1396,7 +1396,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     new CommonUtil().showPDFInWidget(pdfFile),
                               ),
                             )
-                      : widget?.data?.metadata?.sourceName == 'SHEELA'
+                      : widget.data.metadata?.sourceName == 'SHEELA'
                           ? Container(
                               child: Image.asset(
                                 'assets/maya/maya_us_main.png',
@@ -1411,7 +1411,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 size: 24.0.sp,
                               ),
                             )
-              : widget?.data?.metadata?.sourceName == 'SHEELA'
+              : widget.data.metadata?.sourceName == 'SHEELA'
                   ? Container(
                       child: Image.asset(
                       'assets/maya/maya_us_main.png',

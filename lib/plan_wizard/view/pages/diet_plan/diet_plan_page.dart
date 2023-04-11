@@ -176,7 +176,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
           return ErrorsWidget();
         } else {
           int totalListCount = 0;
-          totalListCount = (snapshot.data!.result!.length ?? 0) > 0
+          totalListCount = (snapshot.data!.result!.length) > 0
               ? snapshot.data!.result!.length
               : 0;
           if (totalListCount > 0 ) {
@@ -185,11 +185,11 @@ class _DietPlanPageState extends State<DietPlanPage> {
               totalListCount += element.length;
             });
           }
-          if (totalListCount! > 0) {
+          if (totalListCount > 0) {
             dietPlanListLength =
-                isSearch ? planSearchList.length : totalListCount ?? 0;
+                isSearch ? planSearchList.length : totalListCount;
             return carePlanList(
-                isSearch ? planSearchList : snapshot?.data?.result ?? []);
+                isSearch ? planSearchList : snapshot.data?.result ?? []);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -260,8 +260,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   /* Widget popMenuItem() {

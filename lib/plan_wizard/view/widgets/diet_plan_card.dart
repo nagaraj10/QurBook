@@ -35,7 +35,7 @@ class DietPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
+    Provider.of<PlanWizardViewModel>(context, listen: false).fetchCartItem();
     return InkWell(
       onTap: () {
         onClick!();
@@ -239,7 +239,7 @@ class DietPlanCard extends StatelessWidget {
                                     if (Provider.of<PlanWizardViewModel>(
                                                 context,
                                                 listen: false)
-                                            ?.currentPackageProviderDietId !=
+                                            .currentPackageProviderDietId !=
                                         '') {
                                       commonRemoveCartDialog(
                                           context,
@@ -271,7 +271,7 @@ class DietPlanCard extends StatelessWidget {
                                     if (Provider.of<PlanWizardViewModel>(
                                                 context,
                                                 listen: false)
-                                            ?.currentPackageFreeDietId !=
+                                            .currentPackageFreeDietId !=
                                         '') {
                                       commonRemoveCartDialog(
                                           context,
@@ -339,7 +339,7 @@ class DietPlanCard extends StatelessWidget {
                     if (isFrom == strProviderDiet) {
                       if (Provider.of<PlanWizardViewModel>(Get.context!,
                                   listen: false)
-                              ?.currentPackageProviderDietId !=
+                              .currentPackageProviderDietId !=
                           '') {
                         commonRemoveCartDialog(
                             context,
@@ -370,7 +370,7 @@ class DietPlanCard extends StatelessWidget {
                     else {
                       if (Provider.of<PlanWizardViewModel>(Get.context!,
                                   listen: false)
-                              ?.currentPackageFreeDietId !=
+                              .currentPackageFreeDietId !=
                           '') {
                         commonRemoveCartDialog(
                             context,
@@ -402,8 +402,7 @@ class DietPlanCard extends StatelessWidget {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   void checkIfMemberShipIsAvailable(
@@ -458,24 +457,23 @@ class DietPlanCard extends StatelessWidget {
               ),
             ],
           ),
-        ).then((value) => value as bool) ??
-        false as Future<bool>;
+        ).then((value) => value as bool);
   }
 
   void addToCartCommonMethod(PlanListResult planList, BuildContext context,
       String? orginalPrice, String remark, bool isMemberShipAvailable) async {
     await Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.addToCartItem(
+        .addToCartItem(
             packageId: planList.packageid,
             price: orginalPrice,
             isRenew: planList.isexpired == '1' ? true : false,
             providerId: planList.providerid,
             isFromAdd: isFrom,
-            isMemberShipAvail: isMemberShipAvailable ?? false,
+            isMemberShipAvail: isMemberShipAvailable,
             actualFee: orginalPrice,
             remarks: remark,
             planType: isFrom == strProviderDiet ? "DIET" : "",
-            packageDuration: planList?.packageDuration);
+            packageDuration: planList.packageDuration);
   }
 
   Future<Widget?> _alertBoxforCheckMemberShip(
@@ -621,12 +619,12 @@ class DietPlanCard extends StatelessWidget {
   void commonRemoveCartDialog(
       BuildContext context, PlanListResult? planList, String packageId) async {
     await Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.fetchCartItem();
+        .fetchCartItem();
 
     ProductList? productList =
         Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.getProductListUsingPackageId(packageId);
-    await Provider.of<PlanWizardViewModel>(context, listen: false)?.removeCart(
+            .getProductListUsingPackageId(packageId);
+    await Provider.of<PlanWizardViewModel>(context, listen: false).removeCart(
         packageId: packageId, isFrom: isFrom, productList: productList);
   }
 }

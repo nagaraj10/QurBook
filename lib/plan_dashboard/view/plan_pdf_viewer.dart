@@ -20,7 +20,7 @@ class PlanPdfViewer extends StatelessWidget {
   Widget build(BuildContext context) => Builder(
         builder: (_) {
           final updatedData = CommonUtil().getFileNameAndUrl(url!);
-          if (updatedData?.isNotEmpty ?? false) {
+          if (updatedData.isNotEmpty) {
             return FutureBuilder<PDFDocument>(
               future: PDFDocument.fromURL(updatedData.first),
               builder: (context, snapshot) {
@@ -41,7 +41,7 @@ class PlanPdfViewer extends StatelessWidget {
                           children: [
                             Flexible(
                               child: Text(
-                                updatedData?.last ?? '',
+                                updatedData.last,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14.0.sp,

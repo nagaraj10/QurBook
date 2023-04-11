@@ -66,9 +66,9 @@ class RegimentViewModel extends ChangeNotifier {
       initialShowIndex = null;
     } else if (index != null) {
       initialShowIndex = index;
-    } else if ((regimentsScheduledList?.length ?? 0) > 0) {
+    } else if ((regimentsScheduledList.length) > 0) {
       var index = 0;
-      if ((redirectEventId ?? '').isNotEmpty) {
+      if ((redirectEventId).isNotEmpty) {
         for (final event in regimentsScheduledList) {
           if (event.eid == redirectEventId) {
             initialShowIndex = index;
@@ -81,7 +81,7 @@ class RegimentViewModel extends ChangeNotifier {
         initialShowIndex = 0;
       } else {
         for (final event in regimentsScheduledList) {
-          if (event?.scheduled ?? false) {
+          if (event.scheduled) {
             if (event.estart!.isAfter(DateTime.now()) ||
                 event.estart!.isAtSameMomentAs(DateTime.now())) {
               initialShowIndex = index;
@@ -183,25 +183,25 @@ class RegimentViewModel extends ChangeNotifier {
   ) {
     final actualList = filteredList ?? regimentsScheduledList;
     final filteredRegimenList = <RegimentDataModel>[];
-    actualList?.forEach((regimenData) {
+    actualList.forEach((regimenData) {
       if (regimentFilter == RegimentFilter.AsNeeded) {
-        if (regimenData?.asNeeded ?? false) {
+        if (regimenData.asNeeded) {
           filteredRegimenList.add(regimenData);
         }
       }
       if (regimentFilter == RegimentFilter.Scheduled) {
-        if (regimenData?.scheduled ?? false) {
+        if (regimenData.scheduled) {
           filteredRegimenList.add(regimenData);
-        } else if (regimenData?.dayrepeat?.trim().toLowerCase() ==
+        } else if (regimenData.dayrepeat?.trim().toLowerCase() ==
             strText.trim().toLowerCase()) {
           filteredRegimenList.add(regimenData);
         }
       } else if (regimentFilter == RegimentFilter.Missed) {
-        if (!(regimenData?.asNeeded ?? false) &&
-            (regimenData?.estart
+        if (!(regimenData.asNeeded) &&
+            (regimenData.estart
                     ?.difference(DateTime.now())
-                    ?.inMinutes
-                    ?.isNegative ??
+                    .inMinutes
+                    .isNegative ??
                 false) &&
             regimenData.ack == null) {
           filteredRegimenList.add(regimenData);
@@ -233,7 +233,7 @@ class RegimentViewModel extends ChangeNotifier {
   void stopRegimenTTS({bool isInitial = false}) {
     sheelaTTSController.stopTTS();
 
-    regimentsList?.forEach((regimenData) {
+    regimentsList.forEach((regimenData) {
       regimenData.isPlaying.value = false;
     });
     if (!isInitial) {
@@ -309,12 +309,10 @@ class RegimentViewModel extends ChangeNotifier {
     );
     updateRegimentStatus(RegimentStatus.Loaded);
     regimentsData?.regimentsList?.forEach((event) {
-      if (!(event?.isEventDisabled ?? false)) {
-        if (event.isSymptom ?? false) {
+      if (!(event.isEventDisabled)) {
+        if (event.isSymptom) {
           regimentsSymptomsList.add(event);
-        } else if ((event?.dayrepeat != null) ??
-            event?.dayrepeat?.trim().toLowerCase() ==
-                strText.trim().toLowerCase()) {
+        } else if ((event.dayrepeat != null)) {
           regimentsScheduledList.add(event);
         } else {
           regimentsScheduledList.add(event);
@@ -351,20 +349,20 @@ class RegimentViewModel extends ChangeNotifier {
 
     if (tempRegimentsList != null && tempRegimentsList.length > 0) {
       recentRegimentsList =
-          tempRegimentsList.where((item) => item?.ack_local != null).toList();
+          tempRegimentsList.where((item) => item.ack_local != null).toList();
       seqRegimentsList = tempRegimentsList
           .where((item) =>
-              CommonUtil().validString(item?.seq) != null &&
-              CommonUtil().validString(item?.seq) != "0" &&
-              CommonUtil().validString(item?.seq).trim().isNotEmpty)
+              CommonUtil().validString(item.seq) != null &&
+              CommonUtil().validString(item.seq) != "0" &&
+              CommonUtil().validString(item.seq).trim().isNotEmpty)
           .toList();
       seqRegimentsList.sort((b, a) =>
-          int.parse(CommonUtil().validString(a?.seq))
-              .compareTo(int.parse(CommonUtil().validString(b?.seq))));
+          int.parse(CommonUtil().validString(a.seq))
+              .compareTo(int.parse(CommonUtil().validString(b.seq))));
       otherRegimentsList = tempRegimentsList
           .where((item) =>
-              CommonUtil().validString(item?.seq) == "0" ||
-              CommonUtil().validString(item?.seq).trim().isEmpty)
+              CommonUtil().validString(item.seq) == "0" ||
+              CommonUtil().validString(item.seq).trim().isEmpty)
           .toList();
 
       finalRegimentsList =
@@ -393,7 +391,7 @@ class RegimentViewModel extends ChangeNotifier {
       searchController = controller;
       searchFocus = focusNode;
     } else {
-      searchController?.clear();
+      searchController.clear();
       searchFocus?.unfocus();
     }
   }
@@ -413,7 +411,7 @@ class RegimentViewModel extends ChangeNotifier {
       selectedRegimenDate = selectedRegimenDate.add(Duration(days: 1));
     }
     regimentDate =
-        '${CommonUtil().regimentDateFormat(selectedRegimenDate ?? DateTime.now())}';
+        '${CommonUtil().regimentDateFormat(selectedRegimenDate)}';
     if (!isInitial) {
       resetRegimenTab();
       fetchRegimentData(isInitial: true);
@@ -545,7 +543,7 @@ class RegimentViewModel extends ChangeNotifier {
       selectedActivityDate = selectedActivityDate.add(Duration(days: 1));
     }
     activitiesDate =
-        '${CommonUtil().regimentDateFormat(selectedActivityDate ?? DateTime.now())}';
+        '${CommonUtil().regimentDateFormat(selectedActivityDate)}';
     if (!isInitial) {
       fetchScheduledActivities(isInitial: true);
       notifyListeners();
@@ -578,7 +576,7 @@ class RegimentViewModel extends ChangeNotifier {
         isForMasterData: false);
     updateActivityStatus(ActivityStatus.Loaded);
     activitiesData?.regimentsList?.forEach((event) {
-      if (event?.scheduled ?? false) {
+      if (event.scheduled) {
         activitiesAllList.add(event);
       }
     });
@@ -593,8 +591,8 @@ class RegimentViewModel extends ChangeNotifier {
     if (searchText.isNotEmpty) {
       activitiesFilteredList.clear();
       try {
-        activitiesAllList?.forEach((event) {
-          if (event.title?.toLowerCase().contains(searchText?.toLowerCase())) {
+        activitiesAllList.forEach((event) {
+          if (event.title?.toLowerCase().contains(searchText.toLowerCase())) {
             activitiesFilteredList.add(event);
           }
         });
@@ -637,7 +635,7 @@ class RegimentViewModel extends ChangeNotifier {
       startTime: startTime,
       isDisable: isDisable,
     );
-    if (response?.isSuccess ?? false) {
+    if (response.isSuccess ?? false) {
       await fetchScheduledActivities(isInitial: true);
     }
     LoaderClass.hideLoadingDialog(Get.context!);

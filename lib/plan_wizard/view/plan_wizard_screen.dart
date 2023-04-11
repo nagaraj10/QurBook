@@ -38,9 +38,8 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     super.initState();
     mInitialTime = DateTime.now();
     if (!(Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.isDynamicLink ??
-        false)) {
-      Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
+            .isDynamicLink)) {
+      Provider.of<PlanWizardViewModel>(context, listen: false).currentPage = 0;
     } else {
       Future.delayed(Duration(), () {
         Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -50,12 +49,12 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         );
       });
     }
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.getCreditBalance();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateCareCount();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateDietCount();
+    Provider.of<PlanWizardViewModel>(context, listen: false).getCreditBalance();
+    Provider.of<PlanWizardViewModel>(context, listen: false).fetchCartItem();
+    Provider.of<PlanWizardViewModel>(context, listen: false).updateCareCount();
+    Provider.of<PlanWizardViewModel>(context, listen: false).updateDietCount();
     Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.isPlanWizardActive = true;
+        .isPlanWizardActive = true;
   }
 
   @override
@@ -72,7 +71,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   @override
   void deactivate() {
     Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.isPlanWizardActive = false;
+        .isPlanWizardActive = false;
     super.dispose();
   }
 
@@ -264,9 +263,9 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   onBackPressed(BuildContext context) {
     var planWizardViewModel =
         Provider.of<PlanWizardViewModel>(context, listen: false);
-    if (planWizardViewModel?.currentPage == 0) {
-      planWizardViewModel?.isDynamicLink = false;
-      planWizardViewModel?.dynamicLinkSearchText = '';
+    if (planWizardViewModel.currentPage == 0) {
+      planWizardViewModel.isDynamicLink = false;
+      planWizardViewModel.dynamicLinkSearchText = '';
       if (Navigator.canPop(context)) {
         Get.back();
       } else {
@@ -279,7 +278,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
       }
     } else {
       var newPage = 0;
-      if (planWizardViewModel.isDynamicLink ?? false) {
+      if (planWizardViewModel.isDynamicLink) {
         planWizardViewModel.isDynamicLink = false;
         planWizardViewModel.dynamicLinkSearchText = '';
         newPage = 0;

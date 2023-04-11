@@ -318,7 +318,7 @@ class SheelaAIController extends GetxController {
       final response = await SheelAIAPIService().SheelaAIAPI(
         body,
       );
-      if (response?.statusCode == 200 && (response?.body ?? '').isNotEmpty) {
+      if (response.statusCode == 200 && (response.body).isNotEmpty) {
         if (isUnAvailableCC) {
           isUnAvailableCC = false;
         }
@@ -330,7 +330,7 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.recipientId ?? '').isEmpty) {
             currentResponse.recipientId = "Sheela Response";
           }
-          currentResponse = (await getGoogleTTSForConversation(currentResponse!))!;
+          currentResponse = (await getGoogleTTSForConversation(currentResponse))!;
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
           if ((currentResponse.buttons ?? []).length > 0) {
@@ -351,12 +351,12 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
             additionalInfo = currentResponse.additionalInfo;
           }
-          if ((currentResponse?.audioURL != null) &&
-              (currentResponse?.audioURL ?? '').isNotEmpty) {
+          if ((currentResponse.audioURL != null) &&
+              (currentResponse.audioURL ?? '').isNotEmpty) {
             isLoading(true);
             SheelaResponse audioResponse = SheelaResponse();
             audioResponse.recipientId = sheelaAudioMsgUrl;
-            audioResponse.audioFile = currentResponse?.audioURL;
+            audioResponse.audioFile = currentResponse.audioURL;
             audioResponse.playAudioInit = true;
             conversations.add(audioResponse);
           }
@@ -369,7 +369,7 @@ class SheelaAIController extends GetxController {
           }
           playTTS();
           callToCC(currentResponse);
-          PreferenceUtil.saveString(SHEELA_LANG, currentResponse?.lang??"");
+          PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang??"");
           scrollToEnd();
         } else {
           //Received a wrong format data
@@ -378,7 +378,7 @@ class SheelaAIController extends GetxController {
       } else {
         // Failed to get Sheela Response
         conversations.removeLast();
-        if (kDebugMode) print(response?.body);
+        if (kDebugMode) print(response.body);
         FlutterToast().getToast(
             'There is some issue with sheela,\n Please try after some time',
             Colors.black54);
@@ -498,7 +498,7 @@ class SheelaAIController extends GetxController {
           final result =
               await getGoogleTTSForText(currentPlayingConversation!.text);
           if ((result!.payload!.audioContent ?? '').isNotEmpty) {
-            textForPlaying = result!.payload!.audioContent;
+            textForPlaying = result.payload!.audioContent;
           }
         }
       }
@@ -595,7 +595,7 @@ class SheelaAIController extends GetxController {
       req.input!.text = text;
       req.voice!.languageCode = getCurrentLanCode();
       final response = await SheelAIAPIService().getAudioFileTTS(req.toJson());
-      if (response.statusCode == 200 && (response.body ?? '').isNotEmpty) {
+      if (response.statusCode == 200 && (response.body).isNotEmpty) {
         final data = jsonDecode(response.body);
         final GoogleTTSResponseModel result =
             GoogleTTSResponseModel.fromJson(data);
@@ -651,23 +651,23 @@ class SheelaAIController extends GetxController {
 
                   dynamic button = null;
 
-                  if (!conversations?.last?.isButtonNumber) {
+                  if (!conversations.last?.isButtonNumber) {
                     if (responseRecived == carGiverSheela) {
                       responseRecived = careGiverSheela;
                     }
-                    button = conversations?.last?.buttons.firstWhere(
+                    button = conversations.last?.buttons.firstWhere(
                         (element) =>
                             (element.title ?? "").toLowerCase() ==
                             responseRecived);
-                  } else if (conversations?.last?.isButtonNumber) {
+                  } else if (conversations.last?.isButtonNumber) {
                     bool isDigit = CommonUtil().isNumeric(responseRecived);
                     for (int i = 0;
-                        i < conversations?.last?.buttons.length ?? 0 as bool;
+                        i < conversations.last?.buttons.length;
                         i++) {
                       var temp =
-                          conversations?.last?.buttons[i].title.split(".");
+                          conversations.last?.buttons[i].title.split(".");
                       var realNumber = CommonUtil().realNumber(
-                          int.tryParse(temp[0].toString().trim() ?? 0 as String));
+                          int.tryParse(temp[0].toString().trim()));
                       var optionWithRealNumber =
                           "Option ${realNumber.toString().trim()}";
                       var optionWithDigit =
@@ -676,7 +676,7 @@ class SheelaAIController extends GetxController {
                           "Number ${realNumber.toString().trim()}";
                       var numberWithDigit =
                           "Number ${temp[0].toString().trim()}";
-                      if (((temp[isDigit ? 0 : 1].toString().trim() ?? "")
+                      if (((temp[isDigit ? 0 : 1].toString().trim())
                                   .toLowerCase() ==
                               responseRecived) ||
                           (realNumber.toString().toLowerCase().trim() ==
@@ -695,7 +695,7 @@ class SheelaAIController extends GetxController {
                               responseRecived) ||
                           (numberWithDigit.toString().toLowerCase().trim() ==
                               responseRecived)) {
-                        button = conversations?.last?.buttons[i];
+                        button = conversations.last?.buttons[i];
                         break;
                       }
                     }
@@ -873,7 +873,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.allowVitalNotification,
         currentDeviceStatus.allowSymptomsNotification,
         currentDeviceStatus.preferredMeasurement);
-    if (value?.isSuccess ?? false) {
+    if (value.isSuccess ?? false) {
       //updated
 
     } else {
@@ -888,12 +888,12 @@ class SheelaAIController extends GetxController {
       sheelaBadgeServices.getSheelaBadgeCount().then((value) {
         if (value != null) {
           if (value.isSuccess!) {
-            if (value?.result != null) {
-              sheelaIconBadgeCount.value = value?.result?.queueCount ?? 0;
+            if (value.result != null) {
+              sheelaIconBadgeCount.value = value.result?.queueCount ?? 0;
               if (isNeedSheelaDialog) {
-                if ((value?.result?.queueCount ?? 0) > 0) {
+                if ((value.result?.queueCount ?? 0) > 0) {
                   CommonUtil().dialogForSheelaQueueStable(
-                      Get.context!, value?.result?.queueCount ?? 0,
+                      Get.context!, value.result?.queueCount ?? 0,
                       onTapSheela: () {
                     Get.back();
                     Get.toNamed(

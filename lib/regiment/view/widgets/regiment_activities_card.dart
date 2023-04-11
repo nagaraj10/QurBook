@@ -90,7 +90,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Visibility(
-                          visible: regimentData?.isMandatory ?? false,
+                          visible: regimentData.isMandatory,
                           child: Padding(
                             padding: EdgeInsets.only(
                               right: 5.0.w,
@@ -121,7 +121,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                   inactiveThumbColor: Colors.grey[200],
                   inactiveTrackColor: Colors.grey[400],
                   value: !regimentData.isEventDisabled,
-                  onChanged: (regimentData?.isMandatory ?? false)
+                  onChanged: (regimentData.isMandatory)
                       ? null
                       : (isEnabled) {
                           Provider.of<RegimentViewModel>(

@@ -255,7 +255,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                                 allowedExtensions: [
                                               variable.strpdf
                                             ]);
-                                        if ((image?.files?.length ?? 0) > 0) {
+                                        if ((image?.files.length ?? 0) > 0) {
                                           imagePaths.add(image!.files[0].path);
                                         }
                                         callDisplayPictureScreen(context);
@@ -297,7 +297,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     // Attempt to take a picture and log where it's been saved.
                                     XFile xpath =
                                         await _controller.takePicture();
-                                    imagePaths.add(xpath?.path);
+                                    imagePaths.add(xpath.path);
                                     setState(() {});
                                   } catch (e) {
                                     // If an error occurs, log the error to the console.
@@ -407,7 +407,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                             var image = await FilePicker
                                                 .platform
                                                 .pickFiles();
-                                            if ((image?.files?.length ?? 0) > 0)
+                                            if ((image?.files.length ?? 0) > 0)
                                               imagePaths
                                                   .add(image!.files[0].path);
                                             callDisplayPictureScreen(context);
@@ -453,12 +453,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
                                     if (isMultipleImages) {
                                       isThumbnails = true;
-                                      imagePaths.add(xpath?.path);
+                                      imagePaths.add(xpath.path);
 
                                       setState(() {});
                                     } else {
                                       // If the picture was taken, display it on a new screen.
-                                      imagePaths.add(xpath?.path);
+                                      imagePaths.add(xpath.path);
                                       callDisplayPictureScreen(context);
                                     }
                                   } catch (e) {
@@ -643,7 +643,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       type: FileType.custom,
       allowedExtensions: [variable.strpdf],
     );
-    if ((filePaths?.files?.length ?? 0) > 0) {
+    if ((filePaths?.files.length ?? 0) > 0) {
       for (PlatformFile file in filePaths!.files) {
         // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: file.path??'');
         // if(filePath!=null)imagePaths.add(filePath);

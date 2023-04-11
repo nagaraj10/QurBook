@@ -221,9 +221,9 @@ class RegimentDataModel {
         'tplanid': tplanid,
         'teid_user': teidUser,
         'aid': aid,
-        'activityname': activitynameValues?.reverse![activityname!],
+        'activityname': activitynameValues.reverse![activityname!],
         'uformid': uformid,
-        'uformname': uformnameValues?.reverse![uformname!],
+        'uformname': uformnameValues.reverse![uformname!],
         'uformname': uformname1,
         'estart': estart?.toIso8601String(),
         'eend': eend?.toIso8601String(),
@@ -312,7 +312,7 @@ class UformData {
       final vitalsMap = <String, dynamic>{};
       vitalsMap.addAll(value);
       vitalsMap.putIfAbsent('vitalName', () => key);
-      vitalsDataList.add(VitalsData.fromJson(vitalsMap ?? {}));
+      vitalsDataList.add(VitalsData.fromJson(vitalsMap));
     });
     return UformData(
       vitalsData: vitalsDataList,

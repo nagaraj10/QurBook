@@ -111,7 +111,7 @@ class _SearchListState extends State<SearchListHome> {
                       ),
                     )),
                 Expanded(
-                    child: searchModel != null ?? searchModel!.isSuccess!
+                    child: searchModel != null
                         ? searchListView(searchModel!.result)
                         : getProviderList())
               ],
@@ -161,7 +161,7 @@ class _SearchListState extends State<SearchListHome> {
           if (snapshot.hasData &&
               snapshot.data!.result != null &&
               snapshot.data!.result!.isNotEmpty) {
-            providerListSelected = snapshot?.data?.result;
+            providerListSelected = snapshot.data?.result;
             return searchListView(snapshot.data!.result);
           } else {
             return SafeArea(
@@ -283,7 +283,7 @@ class _SearchListState extends State<SearchListHome> {
           context,
           MaterialPageRoute(
               builder: (context) => CategoryList(
-                  searchList[i].providerid, searchList[i]?.metadata?.icon, '')),
+                  searchList[i].providerid, searchList[i].metadata?.icon, '')),
         ).then((value) {
           setState(() {});
         });
@@ -317,7 +317,7 @@ class _SearchListState extends State<SearchListHome> {
                       backgroundColor: Colors.grey[200],
                       radius: 20,
                       child: CommonUtil()
-                          .customImage(searchList[i]?.metadata?.icon ?? '')),
+                          .customImage(searchList[i].metadata?.icon ?? '')),
                   SizedBox(
                     width: 20.0.w,
                   ),

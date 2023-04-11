@@ -291,7 +291,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         gender.text = toBeginningOfSentenceCase(data.gender!.toLowerCase())!;
       }
       if (data.bloodGroup != null) {
-        print('current blood group ${data?.bloodGroup}');
+        print('current blood group ${data.bloodGroup}');
         bloodGroupController.text = data.bloodGroup!.split(' ')[0];
         bloodRangeController.text = data.bloodGroup!.split(' ')[1];
         //renameBloodGroup(data.bloodGroup);
@@ -302,7 +302,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       if (data != null) {
         firstName.text = data.firstName!.capitalizeFirstofEach;
         middleName.text = ((data.middleName != null && data.middleName != '')
-            ? data?.middleName?.capitalizeFirstofEach
+            ? data.middleName?.capitalizeFirstofEach
             : '')!;
         lastName.text = data.lastName!.capitalizeFirstofEach;
       } else {
@@ -358,8 +358,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                   width: 1.5.w,
                                   color:
                                       (Provider.of<UserPlansViewModel>(context)
-                                                  ?.isGoldMember ??
-                                              false)
+                                                  .isGoldMember)
                                           ? Colors.transparent
                                           : Color(new CommonUtil()
                                               .getMyPrimaryColor()))),
@@ -842,12 +841,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
   void setUnit(MyProfileResult data) {
     var profileSetting = data.userProfileSettingCollection3![0].profileSetting;
     if (profileSetting != null) {
-      if (profileSetting?.preferredMeasurement != null) {
+      if (profileSetting.preferredMeasurement != null) {
         try {
           String? heightUnit =
-              profileSetting?.preferredMeasurement?.height?.unitCode;
+              profileSetting.preferredMeasurement?.height?.unitCode;
           String? weightUnit =
-              profileSetting?.preferredMeasurement?.weight?.unitCode;
+              profileSetting.preferredMeasurement?.weight?.unitCode;
           if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
             isFeetOrInches = true;
           } else {

@@ -115,7 +115,7 @@ class LoginBloc with Validators implements BaseBloc {
 
   @override
   void dispose() {
-    _mobileNumberController?.close();
+    _mobileNumberController.close();
     _loginController?.close();
     _signUpController?.close();
     _signOutController?.close();

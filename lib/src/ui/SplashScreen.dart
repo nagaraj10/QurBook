@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     PreferenceUtil.init();
     CommonUtil().ListenForTokenUpdate();
-    Provider.of<ChatSocketViewModel>(Get.context!)?.initSocket();
+    Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
     CommonUtil().OnInitAction();
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
@@ -407,7 +407,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     } else if (widget.nsRoute == 'isSheelaFollowup') {
                       final temp = widget.bundle.split('|');
                       if (temp[0] == 'isSheelaFollowup' &&
-                          (temp[1].toString() ?? '').isNotEmpty) {
+                          (temp[1].toString()).isNotEmpty) {
                         Get.toNamed(
                           router.rt_Sheela,
                           arguments: SheelaArgument(
@@ -540,10 +540,10 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': '${widget.templateName}',
                       });
                       final temp = widget.templateName!.split('|');
-                      final dataOne = temp[1] ?? '';
+                      final dataOne = temp[1];
                       final dataTwo = temp[2];
                       if (dataTwo.runtimeType == String &&
-                          (dataTwo ?? '').isNotEmpty) {
+                          (dataTwo).isNotEmpty) {
                         final userId =
                             PreferenceUtil.getStringValue(KEY_USERID);
                         if ((widget.bundle ?? '') == userId) {
@@ -756,10 +756,10 @@ class _SplashScreenState extends State<SplashScreen> {
                     } else if (widget.nsRoute == 'Renew' ||
                         widget.nsRoute == 'Callback' ||
                         widget.nsRoute == 'myplandetails') {
-                      final planid = widget?.bundle['planid'];
-                      final template = widget?.bundle['template'];
-                      final userId = widget?.bundle['userId'];
-                      final patName = widget?.bundle['patName'];
+                      final planid = widget.bundle['planid'];
+                      final template = widget.bundle['template'];
+                      final userId = widget.bundle['userId'];
+                      final patName = widget.bundle['patName'];
                       //TODO if its Renew take the user into plandetail view
                       if (widget.nsRoute == 'Renew' ||
                           widget.nsRoute == 'myplandetails') {
@@ -815,8 +815,8 @@ class _SplashScreenState extends State<SplashScreen> {
                         ),
                       ).then((value) {});
                     } else if (widget.nsRoute == 'claimList') {
-                      final userId = widget?.bundle['userId'];
-                      final claimId = widget?.bundle['claimId'];
+                      final userId = widget.bundle['userId'];
+                      final claimId = widget.bundle['claimId'];
                       Get.to(
                         ClaimRecordDisplay(
                           claimID: claimId,

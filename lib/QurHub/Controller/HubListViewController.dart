@@ -46,7 +46,7 @@ class HubListViewController extends GetxController {
       loadingData.value = true;
       hubListResponse = null;
       http.Response response = await (_apiProvider.getHubList());
-      if (response.statusCode != 200 || (response.body ?? "").isEmpty) {
+      if (response.statusCode != 200 || (response.body).isEmpty) {
         hubListResponse = null;
         return;
       }
@@ -62,7 +62,7 @@ class HubListViewController extends GetxController {
   Future<bool> callCreateVirtualHub() async {
     try {
       http.Response response = (await (_apiProvider.callCreateVirtualHub() as FutureOr<Response>)) as http.Response;
-      if (response.statusCode != 200 || (response.body ?? "").isEmpty) {
+      if (response.statusCode != 200 || (response.body).isEmpty) {
         FlutterToast().getToast(
           CommonUtil().validString(
             response.body,

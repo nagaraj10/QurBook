@@ -17,7 +17,7 @@ class CustomImageNetwork extends StatelessWidget {
   Widget build(BuildContext context) {
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       try {
-        return (imageUrl!.toLowerCase().contains('.svg') ?? false)
+        return (imageUrl!.toLowerCase().contains('.svg'))
             ? SvgPicture.network(
                 variable.regimentImagePath + imageUrl!,
               )

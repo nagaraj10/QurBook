@@ -129,16 +129,16 @@ class QurhomeDashboardController extends GetxController {
       print(val);
       List<String>? receivedValues = val.split('|');
       if ((receivedValues ?? []).length > 0) {
-        switch ((receivedValues!.first ?? "")) {
+        switch ((receivedValues!.first)) {
           case "scheduleAppointment":
             if (isFirstTime) {
               isFirstTime = false;
               if (sheelaAIController.isSheelaScreenActive) {
                 var reqJson = {
                   KIOSK_task: KIOSK_appointment_avail,
-                  KIOSK_appoint_id: receivedValues[1] ?? ''.toString(),
-                  KIOSK_eid: receivedValues[2] ?? ''.toString(),
-                  KIOSK_say_text: receivedValues[3] ?? ''.toString(),
+                  KIOSK_appoint_id: receivedValues[1],
+                  KIOSK_eid: receivedValues[2],
+                  KIOSK_say_text: receivedValues[3],
                 };
                 CommonUtil().callQueueNotificationPostApi(reqJson);
               } else if (PreferenceUtil.getIfQurhomeisAcive()) {
@@ -182,23 +182,23 @@ class QurhomeDashboardController extends GetxController {
   updateModuleAccess(List<SelectionResult> selectionResult) {
     try {
       for (var i = 0; i < selectionResult.length; i++) {
-        if (selectionResult[i]?.primaryProvider != null) {
-          if (selectionResult[i]?.primaryProvider?.additionalInfo != null) {
+        if (selectionResult[i].primaryProvider != null) {
+          if (selectionResult[i].primaryProvider?.additionalInfo != null) {
             if (selectionResult[i]
-                    ?.primaryProvider
+                    .primaryProvider
                     ?.additionalInfo
                     ?.moduleAccess !=
                 null) {
               for (var j = 0;
                   j <
                       selectionResult[i]
-                          !.primaryProvider
+                          .primaryProvider
                           !.additionalInfo
                           !.moduleAccess!
                           .length;
                   j++) {
                 var isAccess = selectionResult[i]
-                        !.primaryProvider
+                        .primaryProvider
                         !.additionalInfo
                         !.moduleAccess![j]
                         .name ??

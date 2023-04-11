@@ -31,7 +31,7 @@ class PlansGridView extends StatelessWidget {
             maxCrossAxisExtent: 140.0.w,
           ),
           physics: NeverScrollableScrollPhysics(),
-          itemCount: planList?.length ?? 0,
+          itemCount: planList.length,
           itemBuilder: (context, index) {
             return PlanCard(
               healthCondition: planList[index],
