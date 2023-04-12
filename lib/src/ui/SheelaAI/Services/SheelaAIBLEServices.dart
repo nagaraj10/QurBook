@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
@@ -71,11 +72,16 @@ class SheelaBLEController extends GetxController {
 
   setupListenerForReadings() async {
     try {
-      bool status = await checkForBLEEnableConditions();
-      if (!status) {
+      if ((CommonUtil.isUSRegion() &&
+          Get.find<QurhomeDashboardController>().isVitalModuleDisable.value)) {
         return;
+      } else {
+        bool status = await checkForBLEEnableConditions();
+        if (!status) {
+          return;
+        }
+        _enableTimer();
       }
-      _enableTimer();
     } catch (e) {
       print(e.toString());
     }
