@@ -1515,31 +1515,44 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           ),
         ),
         Divider(),
-        Theme(
-          data: theme,
-          child: ListTile(
-            onTap: () {
-              try {
-                //Get.back();
-                Get.to(
-                  () => HubListView(),
-                  binding: BindingsBuilder(
-                    () {
-                      if (!Get.isRegistered<HubListViewController>()) {
-                        Get.lazyPut(
-                          () => HubListViewController(),
-                        );
-                      }
-                    },
-                  ),
-                );
-              } catch (e) {}
-            },
-            title: Text(variable.strConnectedDevices,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black)),
-          ),
-        ),
+        (CommonUtil.isUSRegion() &&
+                qurhomeDashboardController.isVitalModuleDisable.value)
+            ? Theme(
+                data: theme,
+                child: ListTile(
+                  onTap: () {
+                    FlutterToast().getToast(strFeatureNotEnable, Colors.black);
+                  },
+                  title: Text(variable.strConnectedDevices,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.grey)),
+                ),
+              )
+            : Theme(
+                data: theme,
+                child: ListTile(
+                  onTap: () {
+                    try {
+                      //Get.back();
+                      Get.to(
+                        () => HubListView(),
+                        binding: BindingsBuilder(
+                          () {
+                            if (!Get.isRegistered<HubListViewController>()) {
+                              Get.lazyPut(
+                                () => HubListViewController(),
+                              );
+                            }
+                          },
+                        ),
+                      );
+                    } catch (e) {}
+                  },
+                  title: Text(variable.strConnectedDevices,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.black)),
+                ),
+              ),
         Divider(),
         Theme(
             data: theme,
