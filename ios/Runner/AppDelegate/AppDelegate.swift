@@ -13,8 +13,13 @@ import GSH601_DeviceManager
 import DB62M_DeviceManager
 import LS202_DeviceManager
 
+//Incoming Call
+import UIKit
+import CallKit
+import PushKit
+
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate {
+@objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate, CXProviderDelegate, PKPushRegistryDelegate {
     
     
     var speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: Language.instance.setlanguage()))!
@@ -79,6 +84,8 @@ import LS202_DeviceManager
         // 1
         // Google Api Key
         GMSServices.provideAPIKey(Constants.googlekey)
+        
+        triggerCallKit()
         
         // 1
         // Local Notification
@@ -301,7 +308,7 @@ import LS202_DeviceManager
             if let userInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [String: AnyObject] {
                 if let notificationType = userInfo[Constants.type] as? NSString {
                     isFromKilledStateNotification = true;
-
+                    
                     if(notificationType as String == Constants.call){
                         // Received call notification
                         triggerAppLockMethod(isCallRecieved: true)
@@ -320,6 +327,83 @@ import LS202_DeviceManager
         }
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
+    
+    func triggerCallKit(){
+        // 1: Create an incoming call update object. This object stores different types of information about the caller. You can use it in setting whether the call has a video.
+        let update = CXCallUpdate()
+        
+        // Specify the type of information to display about the caller during an incoming call. The different types of information available include `.generic`. For example, you could use the caller's name for the generic type. During an incoming call, the name displays to the other user. Other available information types are emails and phone numbers.
+        update.remoteHandle = CXHandle(type: .generic, value: "Senthil kumar")
+        //update.remoteHandle = CXHandle(type: .emailAddress, value: "senthil@gmail.com")
+        //update.remoteHandle = CXHandle(type: .phoneNumber, value: "a+35846599990")
+        
+        // 2: Create and set configurations about how the calling application should behave
+        if #available(iOS 14.0, *) {
+            let config = CallKit.CXProviderConfiguration()
+            //        config.iconTemplateImageData = UIImage(named: "")!.pngData()
+            config.includesCallsInRecents = true;
+            config.supportsVideo = true;
+            update.hasVideo = true
+            
+            // Provide a custom ringtone
+            config.ringtoneSound = "ringtone1.aiff";
+            
+            // 3: Create a CXProvider instance and set its delegate
+            let provider = CXProvider(configuration: config)
+            provider.setDelegate(self, queue: nil)
+            
+            // 4. Post local notification to the user that there is an incoming call. When using CallKit, you do not need to rely on only displaying incoming calls using the local notification API because it helps to show incoming calls to users using the native full-screen incoming call UI on iOS. Add the helper method below `reportIncomingCall` to show the full-screen UI. It must contain `UUID()` that helps to identify the caller using a random identifier. You should also provide the `CXCallUpdate` that comprises metadata information about the incoming call. You can also check for errors to see if everything works fine.
+            provider.reportNewIncomingCall(with: UUID(), update: update, completion: { error in })
+            
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        // 5: Create a Push kit
+        let registry = PKPushRegistry(queue: DispatchQueue.main)
+        registry.delegate = self
+        registry.desiredPushTypes = [PKPushType.voIP]
+    }
+    
+    // CALLKIT DELEGATES
+    func providerDidReset(_ provider: CXProvider) {
+    }
+    
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
+        print("Successfully registered for notifications!")
+        print(pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
+    }
+    
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
+        if #available(iOS 14.0, *) {
+            let config = CXProviderConfiguration()
+            config.iconTemplateImageData = UIImage(named: "amosbw")!.pngData()
+            config.ringtoneSound = "ringtone1.aiff";
+            config.includesCallsInRecents = true;
+            config.supportsVideo = true;
+            let provider = CXProvider(configuration: config)
+            provider.setDelegate(self, queue: nil)
+            let update = CXCallUpdate()
+            update.remoteHandle = CXHandle(type: .generic, value: "Senthil kumar")
+            update.hasVideo = true
+            provider.reportNewIncomingCall(with: UUID(), update: update, completion: { error in })
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
+    // What happens when the user accepts the call by pressing the incoming call button? You should implement the method below and call the fulfill method if the call is successful.
+    func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
+        action.fulfill()
+        return
+    }
+    
+    // What happens when the user taps the reject button? Call the fail method if the call is unsuccessful. It checks the call based on the UUID. It uses the network to connect to the end call method you provide.
+    func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+        action.fail()
+        return
+    }
+    
     
     func triggerAppLockMethod(isCallRecieved: Bool){
         let data = [ Constants.isCallRecieved : isCallRecieved]
@@ -775,7 +859,7 @@ import LS202_DeviceManager
         if let userInfo = notification.request.content.userInfo as? NSDictionary,let type = userInfo["activityname_orig"] as? String,type.lowercased() == "appointment",let controller = navigationController?.children.first as? FlutterViewController{
             print("Inside the notification")
             let notificationChannel = FlutterMethodChannel.init(name: Constants.appointmentDetailsMethodAndChannel, binaryMessenger: controller.binaryMessenger)
-
+            
             notificationChannel.invokeMethod(Constants.appointmentDetailsMethodAndChannel, arguments: userInfo)
             completionHandler([])
             
