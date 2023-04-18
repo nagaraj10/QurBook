@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,8 +26,8 @@ enum RegimentStatus { Loading, Loaded, DialogOpened, DialogClosed }
 enum ActivityStatus { Loading, Loaded }
 
 class RegimentViewModel extends ChangeNotifier {
-  RegimentResponseModel regimentsData;
-  RegimentResponseModel activitiesData;
+  RegimentResponseModel? regimentsData;
+  RegimentResponseModel? activitiesData;
   List<RegimentDataModel> regimentsList = [];
   List<RegimentDataModel> regimentsScheduledList = [];
   List<RegimentDataModel> regimentsSymptomsList = [];
@@ -42,21 +43,21 @@ class RegimentViewModel extends ChangeNotifier {
   String activitiesDate = '${CommonUtil().regimentDateFormat(DateTime.now())}';
   RegimentMode regimentMode = RegimentMode.Schedule;
   TextEditingController searchController = TextEditingController();
-  FocusNode searchFocus = FocusNode();
+  FocusNode? searchFocus = FocusNode();
   ScrollController scrollController = ScrollController();
   int tabIndex = 0;
-  double scrollOffset;
-  int initialShowIndex;
-  RegimentFilter regimentFilter = RegimentFilter.Scheduled;
+  double? scrollOffset;
+  int? initialShowIndex;
+  RegimentFilter? regimentFilter = RegimentFilter.Scheduled;
   String redirectEventId = '';
   ActivityStatus activityStatus = ActivityStatus.Loaded;
   List<String> cachedEvents = [];
 
   void updateInitialShowIndex({
     bool isDone = false,
-    int index,
+    int? index,
     bool isInitial = false,
-    String eventId,
+    String? eventId,
   }) {
     if (eventId != null) {
       redirectEventId = eventId;
@@ -65,9 +66,9 @@ class RegimentViewModel extends ChangeNotifier {
       initialShowIndex = null;
     } else if (index != null) {
       initialShowIndex = index;
-    } else if ((regimentsScheduledList?.length ?? 0) > 0) {
+    } else if ((regimentsScheduledList.length) > 0) {
       var index = 0;
-      if ((redirectEventId ?? '').isNotEmpty) {
+      if ((redirectEventId).isNotEmpty) {
         for (final event in regimentsScheduledList) {
           if (event.eid == redirectEventId) {
             initialShowIndex = index;
@@ -80,9 +81,9 @@ class RegimentViewModel extends ChangeNotifier {
         initialShowIndex = 0;
       } else {
         for (final event in regimentsScheduledList) {
-          if (event?.scheduled ?? false) {
-            if (event.estart.isAfter(DateTime.now()) ||
-                event.estart.isAtSameMomentAs(DateTime.now())) {
+          if (event.scheduled) {
+            if (event.estart!.isAfter(DateTime.now()) ||
+                event.estart!.isAtSameMomentAs(DateTime.now())) {
               initialShowIndex = index;
               break;
             } else {
@@ -98,7 +99,7 @@ class RegimentViewModel extends ChangeNotifier {
     }
   }
 
-  void updateTabIndex({int currentIndex, bool isInitial = false}) {
+  void updateTabIndex({int? currentIndex, bool isInitial = false}) {
     if (isInitial) {
       tabIndex = (regimentsData?.regimentsList?.length ?? 0) > 0 ? 0 : 2;
     } else {
@@ -118,7 +119,7 @@ class RegimentViewModel extends ChangeNotifier {
     }
   }
 
-  void changeFilter(RegimentFilter newFilter) {
+  void changeFilter(RegimentFilter? newFilter) {
     regimentFilter = newFilter;
     if (newFilter == RegimentFilter.Missed ||
         newFilter == RegimentFilter.AsNeeded) {
@@ -127,12 +128,12 @@ class RegimentViewModel extends ChangeNotifier {
       );
     }
     searchController.clear();
-    searchFocus.unfocus();
+    searchFocus!.unfocus();
     setViewRegimentsData();
     notifyListeners();
   }
 
-  Future<void> switchRegimentMode() {
+  Future<void> switchRegimentMode() async{
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
@@ -154,7 +155,7 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   void setViewRegimentsData({
-    List<RegimentDataModel> filteredList,
+    List<RegimentDataModel>? filteredList,
     bool isInitial = false,
   }) {
     if (regimentMode == RegimentMode.Schedule &&
@@ -178,29 +179,29 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   List<RegimentDataModel> getFilteredList(
-    List<RegimentDataModel> filteredList,
+    List<RegimentDataModel>? filteredList,
   ) {
     final actualList = filteredList ?? regimentsScheduledList;
     final filteredRegimenList = <RegimentDataModel>[];
-    actualList?.forEach((regimenData) {
+    actualList.forEach((regimenData) {
       if (regimentFilter == RegimentFilter.AsNeeded) {
-        if (regimenData?.asNeeded ?? false) {
+        if (regimenData.asNeeded) {
           filteredRegimenList.add(regimenData);
         }
       }
       if (regimentFilter == RegimentFilter.Scheduled) {
-        if (regimenData?.scheduled ?? false) {
+        if (regimenData.scheduled) {
           filteredRegimenList.add(regimenData);
-        } else if (regimenData?.dayrepeat?.trim().toLowerCase() ==
+        } else if (regimenData.dayrepeat?.trim().toLowerCase() ==
             strText.trim().toLowerCase()) {
           filteredRegimenList.add(regimenData);
         }
       } else if (regimentFilter == RegimentFilter.Missed) {
-        if (!(regimenData?.asNeeded ?? false) &&
-            (regimenData?.estart
+        if (!(regimenData.asNeeded) &&
+            (regimenData.estart
                     ?.difference(DateTime.now())
-                    ?.inMinutes
-                    ?.isNegative ??
+                    .inMinutes
+                    .isNegative ??
                 false) &&
             regimenData.ack == null) {
           filteredRegimenList.add(regimenData);
@@ -211,7 +212,7 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   void startRegimenTTS(int index,
-      {String staticText, String dynamicText}) async {
+      {String? staticText, String? dynamicText}) async {
     stopRegimenTTS();
     if (index < regimentsList.length) {
       Future.delayed(
@@ -232,7 +233,7 @@ class RegimentViewModel extends ChangeNotifier {
   void stopRegimenTTS({bool isInitial = false}) {
     sheelaTTSController.stopTTS();
 
-    regimentsList?.forEach((regimenData) {
+    regimentsList.forEach((regimenData) {
       regimenData.isPlaying.value = false;
     });
     if (!isInitial) {
@@ -308,12 +309,10 @@ class RegimentViewModel extends ChangeNotifier {
     );
     updateRegimentStatus(RegimentStatus.Loaded);
     regimentsData?.regimentsList?.forEach((event) {
-      if (!(event?.isEventDisabled ?? false)) {
-        if (event.isSymptom ?? false) {
+      if (!(event.isEventDisabled)) {
+        if (event.isSymptom) {
           regimentsSymptomsList.add(event);
-        } else if ((event?.dayrepeat != null) ??
-            event?.dayrepeat?.trim().toLowerCase() ==
-                strText.trim().toLowerCase()) {
+        } else if ((event.dayrepeat != null)) {
           regimentsScheduledList.add(event);
         } else {
           regimentsScheduledList.add(event);
@@ -350,20 +349,20 @@ class RegimentViewModel extends ChangeNotifier {
 
     if (tempRegimentsList != null && tempRegimentsList.length > 0) {
       recentRegimentsList =
-          tempRegimentsList.where((item) => item?.ack_local != null).toList();
+          tempRegimentsList.where((item) => item.ack_local != null).toList();
       seqRegimentsList = tempRegimentsList
           .where((item) =>
-              CommonUtil().validString(item?.seq) != null &&
-              CommonUtil().validString(item?.seq) != "0" &&
-              CommonUtil().validString(item?.seq).trim().isNotEmpty)
+              CommonUtil().validString(item.seq) != null &&
+              CommonUtil().validString(item.seq) != "0" &&
+              CommonUtil().validString(item.seq).trim().isNotEmpty)
           .toList();
       seqRegimentsList.sort((b, a) =>
-          int.parse(CommonUtil().validString(a?.seq))
-              .compareTo(int.parse(CommonUtil().validString(b?.seq))));
+          int.parse(CommonUtil().validString(a.seq))
+              .compareTo(int.parse(CommonUtil().validString(b.seq))));
       otherRegimentsList = tempRegimentsList
           .where((item) =>
-              CommonUtil().validString(item?.seq) == "0" ||
-              CommonUtil().validString(item?.seq).trim().isEmpty)
+              CommonUtil().validString(item.seq) == "0" ||
+              CommonUtil().validString(item.seq).trim().isEmpty)
           .toList();
 
       finalRegimentsList =
@@ -385,14 +384,14 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   handleSearchField({
-    TextEditingController controller,
-    FocusNode focusNode,
+    TextEditingController? controller,
+    FocusNode? focusNode,
   }) {
     if (controller != null) {
       searchController = controller;
       searchFocus = focusNode;
     } else {
-      searchController?.clear();
+      searchController.clear();
       searchFocus?.unfocus();
     }
   }
@@ -400,7 +399,7 @@ class RegimentViewModel extends ChangeNotifier {
   void getRegimentDate({
     bool isPrevious = false,
     bool isNext = false,
-    DateTime dateTime,
+    DateTime? dateTime,
     bool isInitial = false,
     bool isDataChange = false,
   }) {
@@ -412,7 +411,7 @@ class RegimentViewModel extends ChangeNotifier {
       selectedRegimenDate = selectedRegimenDate.add(Duration(days: 1));
     }
     regimentDate =
-        '${CommonUtil().regimentDateFormat(selectedRegimenDate ?? DateTime.now())}';
+        '${CommonUtil().regimentDateFormat(selectedRegimenDate)}';
     if (!isInitial) {
       resetRegimenTab();
       fetchRegimentData(isInitial: true);
@@ -429,12 +428,12 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   Future<SaveResponseModel> saveFormData(
-      {String eid,
-      String events,
-      bool isFollowEvent,
-      String followEventContext,
-      DateTime selectedDate,
-      TimeOfDay selectedTime,
+      {String? eid,
+      String? events,
+      bool? isFollowEvent,
+      String? followEventContext,
+      DateTime? selectedDate,
+      TimeOfDay? selectedTime,
       bool isVitals = false}) async {
     updateInitialShowIndex(isDone: true);
     return await RegimentService.saveFormData(
@@ -447,34 +446,34 @@ class RegimentViewModel extends ChangeNotifier {
         isVitals: isVitals);
   }
 
-  Future<SaveResponseModel> deletMedia({String eid}) async {
+  Future<SaveResponseModel> deletMedia({String? eid}) async {
     return await RegimentService.deleteMedia(eid: eid);
   }
 
-  Future<SaveResponseModel> updatePhoto({String eid, String url}) async {
+  Future<SaveResponseModel> updatePhoto({String? eid, String? url}) async {
     LoaderClass.showLoadingDialog(
-      Get.context,
+      Get.context!,
       canDismiss: false,
     );
     var response = await RegimentService.updatePhoto(
       eid: eid,
       url: url,
     );
-    LoaderClass.hideLoadingDialog(Get.context);
+    LoaderClass.hideLoadingDialog(Get.context!);
     return response;
   }
 
   Future<FieldsResponseModel> getFormData({
-    String eid,
+    String? eid,
   }) async {
     LoaderClass.showLoadingDialog(
-      Get.context,
+      Get.context!,
       canDismiss: true,
     );
     var response = await RegimentService.getFormData(
       eid: eid,
     );
-    LoaderClass.hideLoadingDialog(Get.context);
+    LoaderClass.hideLoadingDialog(Get.context!);
     return response;
   }
 
@@ -485,13 +484,13 @@ class RegimentViewModel extends ChangeNotifier {
     dynamic formName,
   }) async {
     LoaderClass.showLoadingDialog(
-      Get.context,
+      Get.context!,
       canDismiss: false,
     );
     var response = await RegimentService.getEventId(
         uid: uid, aid: aid, formId: formId, formName: formName);
-    LoaderClass.hideLoadingDialog(Get.context);
-    return response;
+    LoaderClass.hideLoadingDialog(Get.context!);
+    return response!;
   }
 
   Future<ProfileResponseModel> getProfile() async {
@@ -505,21 +504,21 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   Future<SaveResponseModel> saveProfile({
-    String schedules,
+    String? schedules,
   }) async {
     LoaderClass.showLoadingDialog(
-      Get.context,
+      Get.context!,
       canDismiss: false,
     );
     var response = await RegimentService.saveProfile(
       schedules: schedules,
     );
-    LoaderClass.hideLoadingDialog(Get.context);
+    LoaderClass.hideLoadingDialog(Get.context!);
     return response;
   }
 
   Future<SaveResponseModel> undoSaveFormData({
-    String eid,
+    String? eid,
   }) async {
     return await RegimentService.undoSaveFormData(
       eid: eid,
@@ -533,7 +532,7 @@ class RegimentViewModel extends ChangeNotifier {
   void getActivityDate({
     bool isPrevious = false,
     bool isNext = false,
-    DateTime dateTime,
+    DateTime? dateTime,
     bool isInitial = false,
   }) {
     if (dateTime != null) {
@@ -544,7 +543,7 @@ class RegimentViewModel extends ChangeNotifier {
       selectedActivityDate = selectedActivityDate.add(Duration(days: 1));
     }
     activitiesDate =
-        '${CommonUtil().regimentDateFormat(selectedActivityDate ?? DateTime.now())}';
+        '${CommonUtil().regimentDateFormat(selectedActivityDate)}';
     if (!isInitial) {
       fetchScheduledActivities(isInitial: true);
       notifyListeners();
@@ -577,7 +576,7 @@ class RegimentViewModel extends ChangeNotifier {
         isForMasterData: false);
     updateActivityStatus(ActivityStatus.Loaded);
     activitiesData?.regimentsList?.forEach((event) {
-      if (event?.scheduled ?? false) {
+      if (event.scheduled) {
         activitiesAllList.add(event);
       }
     });
@@ -592,8 +591,8 @@ class RegimentViewModel extends ChangeNotifier {
     if (searchText.isNotEmpty) {
       activitiesFilteredList.clear();
       try {
-        activitiesAllList?.forEach((event) {
-          if (event.title?.toLowerCase().contains(searchText?.toLowerCase())) {
+        activitiesAllList.forEach((event) {
+          if (event.title?.toLowerCase().contains(searchText.toLowerCase())) {
             activitiesFilteredList.add(event);
           }
         });
@@ -609,7 +608,7 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   void setViewActivitiesData({
-    List<RegimentDataModel> filteredList,
+    List<RegimentDataModel>? filteredList,
     bool isInitial = false,
   }) {
     if (filteredList != null) {
@@ -623,12 +622,12 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   Future<SaveResponseModel> enableDisableActivity({
-    String eidUser,
-    DateTime startTime,
+    String? eidUser,
+    required DateTime startTime,
     bool isDisable = true,
   }) async {
     LoaderClass.showLoadingDialog(
-      Get.context,
+      Get.context!,
       canDismiss: false,
     );
     var response = await RegimentService.enableDisableActivity(
@@ -636,10 +635,10 @@ class RegimentViewModel extends ChangeNotifier {
       startTime: startTime,
       isDisable: isDisable,
     );
-    if (response?.isSuccess ?? false) {
+    if (response.isSuccess ?? false) {
       await fetchScheduledActivities(isInitial: true);
     }
-    LoaderClass.hideLoadingDialog(Get.context);
+    LoaderClass.hideLoadingDialog(Get.context!);
     return response;
   }
 }

@@ -1,3 +1,4 @@
+
 import 'package:multi_image_picker/src/asset.dart';
 
 class ImagesModel {
@@ -7,9 +8,9 @@ class ImagesModel {
       this.isdownloaded = false,
       this.asset,
       this.fileType});
-  String file;
+  String? file;
   bool isFromFile;
   bool isdownloaded;
-  Asset asset;
-  String fileType;
+  Asset? asset;
+  String? fileType;
 }

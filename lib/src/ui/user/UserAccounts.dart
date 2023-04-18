@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
@@ -29,7 +30,7 @@ import 'package:provider/provider.dart';
 import 'MyProfilePage.dart';
 
 class UserAccounts extends StatefulWidget {
-  UserAccountsArguments arguments;
+  UserAccountsArguments? arguments;
 
   UserAccounts({this.arguments});
 
@@ -40,19 +41,19 @@ class UserAccounts extends StatefulWidget {
 class _UserAccountsState extends State<UserAccounts>
     with SingleTickerProviderStateMixin {
   double sliverBarHeight = 220;
-  TabController _sliverTabController;
+  TabController? _sliverTabController;
   int selectedTab = 0;
   bool _isEditable = false;
-  File imageURIProfile, profileImage;
+  File? imageURIProfile, profileImage;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
-  MyProfileModel myProfile;
+  MyProfileModel? myProfile;
   bool islogout = false;
   final GlobalKey<State> _key = GlobalKey<State>();
-  Future profileData;
+  Future? profileData;
   bool isUserMainId = true;
-  LandingViewModel landingViewModel;
+  LandingViewModel? landingViewModel;
 
   @override
   void initState() {
@@ -60,8 +61,8 @@ class _UserAccountsState extends State<UserAccounts>
     PreferenceUtil.init();
     //fetchUserProfileInfo();
     _sliverTabController = TabController(
-        vsync: this, length: 4, initialIndex: widget.arguments.selectedIndex);
-    _sliverTabController.addListener(_handleSelected);
+        vsync: this, length: 4, initialIndex: widget.arguments!.selectedIndex!);
+    _sliverTabController!.addListener(_handleSelected);
 
     profileData = getMyProfile();
     Provider.of<LandingViewModel>(context, listen: false)
@@ -69,14 +70,14 @@ class _UserAccountsState extends State<UserAccounts>
   }
 
   fetchUserProfileInfo() async {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!;
     myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
   }
 
   void _handleSelected() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     this.setState(() {
-      selectedTab = _sliverTabController.index;
+      selectedTab = _sliverTabController!.index;
 //      if (selectedTab != 0) {
       sliverBarHeight = 50;
 //      } else {
@@ -85,7 +86,7 @@ class _UserAccountsState extends State<UserAccounts>
     });
   }
 
-  Future<bool> onBackPressed(BuildContext context) {
+  Future<bool>? onBackPressed(BuildContext context) {
     // if (widget?.cartType == CartType.RETRY_CART) {
     //   PageNavigator.goToPermanent(context, router.rt_Landing);
     // }
@@ -111,7 +112,7 @@ class _UserAccountsState extends State<UserAccounts>
     if (!islogout) fetchUserProfileInfo();
 
     return new WillPopScope(
-        onWillPop: () => onBackPressed(context),
+        onWillPop: () => onBackPressed(context)!,
         child: Scaffold(
           backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           appBar: AppBar(
@@ -248,8 +249,8 @@ class _UserAccountsState extends State<UserAccounts>
             PreferenceUtil.saveProfileData(
                 Constants.KEY_PROFILE, snapshot.data);
 
-          imageCache.clear();
-          imageCache.clearLiveImages();
+          imageCache!.clear();
+          imageCache!.clearLiveImages();
 
           return SwitchProfile().buildActions(
             context,
@@ -257,8 +258,8 @@ class _UserAccountsState extends State<UserAccounts>
             () {
               profileData = getMyProfile();
               checkIfUserIdSame();
-              landingViewModel.getQurPlanDashBoard(needNotify: true);
-              landingViewModel.checkIfUserIdSame().then((value) {
+              landingViewModel!.getQurPlanDashBoard(needNotify: true);
+              landingViewModel!.checkIfUserIdSame().then((value) {
                 isUserMainId = value;
               });
               QurPlanReminders.getTheRemindersFromAPI();
@@ -303,21 +304,21 @@ class _UserAccountsState extends State<UserAccounts>
         myProfile = value;
 
         if (value != null) {
-          if (value?.result?.userProfileSettingCollection3?.isNotEmpty) {
+          if (value.result!.userProfileSettingCollection3!.isNotEmpty) {
             var profileSetting =
-                value?.result?.userProfileSettingCollection3[0].profileSetting;
+                value.result?.userProfileSettingCollection3![0].profileSetting;
             if (profileSetting?.preferredMeasurement != null) {
               PreferredMeasurement preferredMeasurement =
-                  profileSetting?.preferredMeasurement;
+                  profileSetting!.preferredMeasurement!;
               await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement.height?.unitCode)
+                      preferredMeasurement.height!.unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                        preferredMeasurement.weight?.unitCode)
+                        preferredMeasurement.weight!.unitCode!)
                     .then((value) {
                   PreferenceUtil.saveString(
                           Constants.STR_KEY_TEMP,
-                          preferredMeasurement.temperature?.unitCode
+                          preferredMeasurement.temperature!.unitCode!
                               .toUpperCase())
                       .then((value) {});
                 });
@@ -337,7 +338,7 @@ class _UserAccountsState extends State<UserAccounts>
     } else {
       CommonUtil().logout(moveToLoginPage);
     }
-    return myProfile;
+    return myProfile!;
   }
 }
 

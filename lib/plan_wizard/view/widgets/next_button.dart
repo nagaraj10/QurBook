@@ -1,9 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class NextButton extends StatelessWidget {
-  final Function() onPressed;
+  final Function()? onPressed;
   const NextButton({this.onPressed});
 
   @override

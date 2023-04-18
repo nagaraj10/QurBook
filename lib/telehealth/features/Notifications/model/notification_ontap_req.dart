@@ -1,6 +1,7 @@
+
 class NotificationOntapRequest {
-  List<String> logIds;
-  bool isMarkAllRead;
+  List<String?>? logIds;
+  bool? isMarkAllRead;
 
   NotificationOntapRequest({this.logIds, this.isMarkAllRead});
 

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -5,16 +6,16 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyYoutubePlayer extends StatefulWidget {
-  final String videoId;
+  final String? videoId;
   MyYoutubePlayer({this.videoId});
   @override
   _YoutubePlayerState createState() => _YoutubePlayerState();
 }
 
 class _YoutubePlayerState extends State<MyYoutubePlayer> {
-  YoutubePlayerController _controller;
-  PlayerState _playerState;
-  YoutubeMetaData _videoMetaData;
+  YoutubePlayerController? _controller;
+  PlayerState? _playerState;
+  late YoutubeMetaData _videoMetaData;
   double _volume = 100;
   bool _muted = false;
   bool _isPlayerReady = false;
@@ -23,7 +24,7 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
   void initState() {
     super.initState();
     _controller = YoutubePlayerController(
-      initialVideoId: widget?.videoId,
+      initialVideoId: widget.videoId!,
       flags: const YoutubePlayerFlags(
         mute: false,
         autoPlay: true,
@@ -40,13 +41,13 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
 
   @override
   void deactivate() {
-    _controller.pause();
+    _controller!.pause();
     super.deactivate();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller!.dispose();
     super.dispose();
   }
 
@@ -54,8 +55,8 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
     //!_controller.value.isFullScreen
     if (_isPlayerReady && mounted) {
       setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
+        _playerState = _controller!.value.playerState;
+        _videoMetaData = _controller!.metadata;
       });
     }
   }
@@ -65,19 +66,19 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
     return YoutubePlayerBuilder(
       onExitFullScreen: () {
         SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-        _controller.play();
+        _controller!.play();
       },
       onEnterFullScreen: () {
         SystemChrome.setPreferredOrientations([
           DeviceOrientation.landscapeLeft,
           DeviceOrientation.landscapeRight
         ]);
-        if (!_controller.value.isPlaying) {
-          _controller.play();
+        if (!_controller!.value.isPlaying) {
+          _controller!.play();
         }
       },
       player: YoutubePlayer(
-        controller: _controller,
+        controller: _controller!,
         showVideoProgressIndicator: false,
         progressIndicatorColor: Color(new CommonUtil().getMyPrimaryColor()),
         topActions: <Widget>[

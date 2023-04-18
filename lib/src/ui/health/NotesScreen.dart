@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
@@ -18,19 +19,19 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
 class NotesScreenList extends StatefulWidget {
-  final HealthRecordList completeData;
+  final HealthRecordList? completeData;
   final Function callBackToRefresh;
-  final String categoryName;
-  final String categoryId;
+  final String? categoryName;
+  final String? categoryId;
   final String categoryDescription;
 
   final Function(String, String) getDataForParticularLabel;
-  final Function(String, bool, HealthResult) mediaSelected;
-  final bool allowSelect;
-  List<String> mediaMeta;
-  final bool isNotesSelect;
-  final bool isAudioSelect;
-  final bool showDetails;
+  final Function(String?, bool?, HealthResult) mediaSelected;
+  final bool? allowSelect;
+  List<String?>? mediaMeta;
+  final bool? isNotesSelect;
+  final bool? isAudioSelect;
+  final bool? showDetails;
 
   NotesScreenList(
       this.completeData,
@@ -51,7 +52,7 @@ class NotesScreenList extends StatefulWidget {
 }
 
 class _NotesScreenListState extends State<NotesScreenList> {
-  HealthReportListForUserBlock _healthReportListForUserBlock;
+  late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -77,12 +78,12 @@ class _NotesScreenListState extends State<NotesScreenList> {
 
   @override
   Widget build(BuildContext context) {
-    return getWidgetToDisplayOtherDocsList(widget.completeData);
+    return getWidgetToDisplayOtherDocsList(widget.completeData!);
     //return getNotes();
   }
 
   Widget getWidgetToDisplayOtherDocsList(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    List<HealthResult> mediaMetaInfoObj = [];
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, widget.categoryDescription);
@@ -123,8 +124,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
   getCardWidgetForOtherDocs(HealthResult mediaMetaInfoObj, int i) {
     return InkWell(
         onLongPress: () {
-          if (widget.isNotesSelect) {
-            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+          if (widget.isNotesSelect!) {
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
 
             setState(() {});
             widget.mediaSelected(mediaMetaInfoObj.id,
@@ -132,14 +133,14 @@ class _NotesScreenListState extends State<NotesScreenList> {
           }
         },
         onTap: () {
-          if (widget.isNotesSelect && widget.showDetails == false) {
+          if (widget.isNotesSelect! && widget.showDetails == false) {
             bool condition;
-            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+            if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
               condition = false;
             } else {
               condition = true;
             }
-            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
 
             // setState(() {});
             widget.mediaSelected(
@@ -175,14 +176,14 @@ class _NotesScreenListState extends State<NotesScreenList> {
                 CircleAvatar(
                   radius: 25,
                   backgroundColor: const Color(fhbColors.bgColorContainer),
-                  child: mediaMetaInfoObj.metadata.healthRecordCategory.logo !=
+                  child: mediaMetaInfoObj.metadata!.healthRecordCategory!.logo !=
                           null
                       ? Image.network(
                           /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                         :
                           Constants.BASE_URL +*/
-                          mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                          mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                           height: 25.0.h,
                           width: 25.0.h,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -202,8 +203,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
                     children: <Widget>[
                       SizedBox(height: 10.0.h),
                       Text(
-                        mediaMetaInfoObj.metadata.fileName != null
-                            ? mediaMetaInfoObj.metadata.fileName
+                        mediaMetaInfoObj.metadata!.fileName != null
+                            ? mediaMetaInfoObj.metadata!.fileName!
                             : '',
                         style: TextStyle(fontWeight: FontWeight.w500),
                         overflow: TextOverflow.fade,
@@ -225,7 +226,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       IconButton(
-                          icon: mediaMetaInfoObj.isBookmarked
+                          icon: mediaMetaInfoObj.isBookmarked!
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
@@ -241,14 +242,14 @@ class _NotesScreenListState extends State<NotesScreenList> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
-                      (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
-                              mediaMetaInfoObj.metadata.hasVoiceNotes)
+                      (mediaMetaInfoObj.metadata!.hasVoiceNotes != null &&
+                              mediaMetaInfoObj.metadata!.hasVoiceNotes!)
                           ? Icon(
                               Icons.mic,
                               color: Colors.black54,
                             )
                           : Container(),
-                      widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                      widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                           ? Icon(
                               Icons.done,
                               color:
@@ -265,7 +266,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
   getDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)),
+          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(snapshot.data);
@@ -274,8 +275,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
             width: 50.0.h,
             height: 50.0.h,
             child: Shimmer.fromColors(
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[600],
+                baseColor: Colors.grey[200]!,
+                highlightColor: Colors.grey[600]!,
                 child: Container(
                     width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
@@ -292,7 +293,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
       builder:
           (context, AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Scaffold(
                 backgroundColor: Colors.white,
@@ -307,7 +308,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
 
             case Status.ERROR:
               return FHBBasicWidget.getRefreshContainerButton(
-                  snapshot.data.message, () {
+                  snapshot.data!.message, () {
                 setState(() {});
               });
               break;
@@ -315,7 +316,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
             case Status.COMPLETED:
               //_healthReportListForUserBlock = null;
 
-              return getWidgetToDisplayOtherDocsList(snapshot.data.data);
+              return getWidgetToDisplayOtherDocsList(snapshot.data!.data!);
               break;
           }
         } else {

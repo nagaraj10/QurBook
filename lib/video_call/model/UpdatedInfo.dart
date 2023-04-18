@@ -1,7 +1,8 @@
+
 class UpdatedInfo {
-  String bookingId;
-  String actualStartDateTime;
-  String actualEndDateTime;
+  String? bookingId;
+  String? actualStartDateTime;
+  String? actualEndDateTime;
 
   UpdatedInfo(
       {this.bookingId, this.actualStartDateTime, this.actualEndDateTime});

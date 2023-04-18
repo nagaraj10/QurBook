@@ -1,3 +1,4 @@
+
 import '../../constants/fhb_parameters.dart' as param;
 
 class HeartRate {
@@ -6,8 +7,8 @@ class HeartRate {
     this.entities,
   });
 
-  bool isSuccess;
-  List<HeartRateEntity> entities;
+  bool? isSuccess;
+  List<HeartRateEntity>? entities;
 
   factory HeartRate.fromJson(Map<String, dynamic> json) => HeartRate(
         isSuccess: json[param.is_Success],
@@ -17,7 +18,7 @@ class HeartRate {
 
   Map<String, dynamic> toJson() => {
         param.is_Success: isSuccess,
-        param.strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
+        param.strentities: List<dynamic>.from(entities!.map((x) => x.toJson())),
       };
 }
 
@@ -32,11 +33,11 @@ class HeartRateEntity {
   });
 
   //String id;
-  DateTime startDateTime;
-  DateTime endDateTime;
+  DateTime? startDateTime;
+  DateTime? endDateTime;
   var bpm;
-  DeviceHealthRecord deviceHealthRecord;
-  AverageAsOfNow averageAsOfNow;
+  DeviceHealthRecord? deviceHealthRecord;
+  AverageAsOfNow? averageAsOfNow;
 
   factory HeartRateEntity.fromJson(Map<String, dynamic> json) =>
       HeartRateEntity(
@@ -54,17 +55,17 @@ class HeartRateEntity {
 
   Map<String, dynamic> toJson() => {
         //"id": id,
-        param.strsyncStartDate: startDateTime.toIso8601String(),
-        param.strsyncEndDate: endDateTime.toIso8601String(),
+        param.strsyncStartDate: startDateTime!.toIso8601String(),
+        param.strsyncEndDate: endDateTime!.toIso8601String(),
         param.strParamHeartRate: bpm,
-        param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
-        param.strParamAverageAsOfNow:averageAsOfNow.toJson(),
+        param.strParamDeviceHealthRecord:deviceHealthRecord!.toJson(),
+        param.strParamAverageAsOfNow:averageAsOfNow!.toJson(),
       };
 }
 
 class DeviceHealthRecord {
-  SourceType sourceType;
-  DateTime createdOn;
+  SourceType? sourceType;
+  DateTime? createdOn;
 
 
   DeviceHealthRecord({this.sourceType,this.createdOn});
@@ -80,9 +81,9 @@ class DeviceHealthRecord {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (sourceType != null) {
-      data['sourceType'] = sourceType.toJson();
+      data['sourceType'] = sourceType!.toJson();
     }
-    data[param.strCreatedOn] = createdOn.toIso8601String();
+    data[param.strCreatedOn] = createdOn!.toIso8601String();
 
     return data;
   }
@@ -105,7 +106,7 @@ class AverageAsOfNow {
 }
 
 class SourceType {
-  String code;
+  String? code;
 
   SourceType({this.code});
 

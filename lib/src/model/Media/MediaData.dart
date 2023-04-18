@@ -1,21 +1,22 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class MediaData {
-  String id;
-  String name;
-  String description;
-  String logo;
-  String categoryId;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  bool isDisplay;
-  bool isCreate;
-  bool isRead;
-  bool isEdit;
-  bool isDelete;
-  bool isManualTranscription;
-  bool isAITranscription;
+  String? id;
+  String? name;
+  String? description;
+  String? logo;
+  String? categoryId;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isDisplay;
+  bool? isCreate;
+  bool? isRead;
+  bool? isEdit;
+  bool? isDelete;
+  bool? isManualTranscription;
+  bool? isAITranscription;
 
   MediaData(
       {this.id,
@@ -74,14 +75,14 @@ class MediaData {
 
   @override
   String toString() {
-    return id +
-        name +
-        description +
-        logo +
-        categoryId +
+    return id! +
+        name! +
+        description! +
+        logo! +
+        categoryId! +
         isActive.toString() +
-        createdOn +
-        lastModifiedOn +
+        createdOn! +
+        lastModifiedOn! +
         isDisplay.toString() +
         isCreate.toString() +
         isRead.toString() +

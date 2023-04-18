@@ -1,13 +1,14 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class PlanHeader extends StatelessWidget {
   const PlanHeader({
-    @required this.title,
+    required this.title,
   });
 
-  final String title;
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class PlanHeader extends StatelessWidget {
       ),
       color: Color(CommonUtil().getMyPrimaryColor()),
       child: Text(
-        title,
+        title!,
         style: TextStyle(
           color: Colors.white,
           fontSize: 14.0.sp,

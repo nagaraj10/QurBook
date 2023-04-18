@@ -1,11 +1,12 @@
+
 import 'package:get/get.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/GoogleTTSResponseModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:rxdart/streams.dart';
 
 class SpeechModelAPIResponse {
-  bool isSuccess;
-  SheelaResponse result;
+  bool? isSuccess;
+  SheelaResponse? result;
 
   SpeechModelAPIResponse({this.isSuccess, this.result});
 
@@ -19,48 +20,48 @@ class SpeechModelAPIResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class SheelaResponse {
-  String recipientId;
-  String text;
-  String audioURL;
-  bool endOfConv = true;
-  List<Buttons> buttons;
+  String? recipientId;
+  String? text;
+  String? audioURL;
+  bool? endOfConv = true;
+  List<Buttons>? buttons;
   var imageURL;
-  List<String> imageURLS;
+  List<String>? imageURLS;
   var searchURL;
-  String lang;
+  String? lang;
   var postId;
   var matchedQuestion;
-  List<VideoLinks> videoLinks;
+  List<VideoLinks>? videoLinks;
   var translatedUserText;
-  bool redirect;
-  bool enableMic;
-  bool providerMsg;
+  bool? redirect;
+  bool? enableMic;
+  bool? providerMsg;
   var redirectTo;
-  bool singleuse = false;
-  bool isActionDone = false;
+  bool? singleuse = false;
+  bool? isActionDone = false;
   var eid;
-  bool directCall;
-  String recipient;
+  bool? directCall;
+  String? recipient;
   String timeStamp =
       FHBUtils().getFormattedDateString(DateTime.now().toString());
-  GoogleTTSResponseModel ttsResponse;
+  GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
-  int currentButtonPlayingIndex;
-  bool loading = false;
-  String conversationFlag;
+  int? currentButtonPlayingIndex;
+  bool? loading = false;
+  String? conversationFlag;
   var additionalInfo;
-  String sessionId;
-  String relationshipId;
-  String audioFile;
-  bool playAudioInit = false;
-  bool isButtonNumber;
+  String? sessionId;
+  String? relationshipId;
+  String? audioFile;
+  bool? playAudioInit = false;
+  bool? isButtonNumber;
 
   SheelaResponse({
     this.recipientId,
@@ -176,11 +177,11 @@ class SheelaResponse {
 }
 
 class Buttons {
-  String payload;
-  String title;
-  bool skipTts;
-  bool relationshipIdNotRequired;
-  GoogleTTSResponseModel ttsResponse;
+  String? payload;
+  String? title;
+  bool? skipTts;
+  bool? relationshipIdNotRequired;
+  GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
   bool isSelected = false;
 
@@ -210,9 +211,9 @@ class Buttons {
 }
 
 class VideoLinks {
-  String title;
-  String thumbnail;
-  String url;
+  String? title;
+  String? thumbnail;
+  String? url;
 
   VideoLinks({this.title, this.thumbnail, this.url});
 

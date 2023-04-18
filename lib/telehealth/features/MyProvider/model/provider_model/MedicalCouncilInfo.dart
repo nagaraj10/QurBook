@@ -1,9 +1,10 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class MedicalCouncilInfo {
-  String name;
-  String isActive;
-  String description;
+  String? name;
+  String? isActive;
+  String? description;
 
   MedicalCouncilInfo({this.name, this.isActive, this.description});
 

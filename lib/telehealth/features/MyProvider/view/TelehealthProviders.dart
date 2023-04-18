@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/bottomnavigation_item.dart';
@@ -32,11 +33,11 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/common/CommonConstants.dart';
 
 class TelehealthProviders extends StatefulWidget {
-  static _TelehealthProvidersState of(BuildContext context) =>
-      context.findAncestorStateOfType<State<TelehealthProviders>>();
+  static _TelehealthProvidersState? of(BuildContext context) =>
+      context.findAncestorStateOfType<State<TelehealthProviders>>() as _TelehealthProvidersState?;
 
-  final int bottomindex;
-  HomeScreenArguments arguments;
+  final int? bottomindex;
+  HomeScreenArguments? arguments;
 
   TelehealthProviders({this.bottomindex, this.arguments});
 
@@ -45,15 +46,15 @@ class TelehealthProviders extends StatefulWidget {
 }
 
 class _TelehealthProvidersState extends State<TelehealthProviders> {
-  int _selectedIndex;
-  bool _isCancelDialogShouldShown = false;
-  String _bookingId;
-  String date;
+  int? _selectedIndex;
+  bool? _isCancelDialogShouldShown = false;
+  String? _bookingId;
+  String? date;
   GlobalKey _bottomNavigationKey = GlobalKey();
   static TextStyle optionStyle =
       TextStyle(fontSize: 30.0.sp, fontWeight: FontWeight.bold);
-  List<BottomNavigationArguments> bottomNavigationArgumentsList = new List();
-  var _widgetOptions;
+  List<BottomNavigationArguments> bottomNavigationArgumentsList = [];
+  late var _widgetOptions;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -68,11 +69,11 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.arguments.selectedIndex;
-    if (widget.arguments.isCancelDialogShouldShow != null) {
-      _isCancelDialogShouldShown = widget.arguments.isCancelDialogShouldShow;
-      _bookingId = widget.arguments.bookingId;
-      date = widget.arguments.date;
+    _selectedIndex = widget.arguments!.selectedIndex;
+    if (widget.arguments!.isCancelDialogShouldShow != null) {
+      _isCancelDialogShouldShown = widget.arguments!.isCancelDialogShouldShow;
+      _bookingId = widget.arguments!.bookingId;
+      date = widget.arguments!.date;
     }
 
     getAllValuesForBottom();
@@ -80,7 +81,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
     _widgetOptions = [
       AppointmentsMain(),
       MyProvidersMain(
-        mTabIndex: widget.arguments.thTabIndex,
+        mTabIndex: widget.arguments!.thTabIndex,
       ),
       SuperMaya(),
       //ChatHomeScreen(),
@@ -93,7 +94,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
 
   @override
   Widget build(BuildContext context) {
-    if (_selectedIndex == 0 && _isCancelDialogShouldShown) {
+    if (_selectedIndex == 0 && _isCancelDialogShouldShown!) {
       if (CommonConstants.showNotificationdialog) {
         CommonConstants.showNotificationdialog = false;
 
@@ -205,7 +206,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
 
   Widget getChatIcon(String icon) {
     int count = 0;
-    String targetID = PreferenceUtil.getStringValue(KEY_USERID);
+    String? targetID = PreferenceUtil.getStringValue(KEY_USERID);
     return StreamBuilder<QuerySnapshot<Map<dynamic, dynamic>>>(
         stream: FirebaseFirestore.instance
             .collection(STR_CHAT_LIST)
@@ -215,10 +216,10 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             count = 0;
-            snapshot.data.docs.forEach((element) {
+            snapshot.data!.docs.forEach((element) {
               if (element.data()[STR_IS_READ_COUNT] != null &&
                   element.data()[STR_IS_READ_COUNT] != '') {
-                count = count + element.data()[STR_IS_READ_COUNT];
+                count = count + element.data()[STR_IS_READ_COUNT] as int;
               }
             });
             return BadgeIcon(
@@ -288,17 +289,17 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                         FlutterToast toast = new FlutterToast();
                         _isCancelDialogShouldShown = false;
                         Navigator.of(context).pop(true);
-                        CancelAppointmentModel cancelAppointment =
+                        CancelAppointmentModel? cancelAppointment =
                             await CancelAppointmentViewModel()
                                 .fetchCancelAppointment([_bookingId], [date]);
 
-                        if (cancelAppointment.isSuccess == true) {
+                        if (cancelAppointment!.isSuccess == true) {
                           toast.getToast(
                               TranslationConstants.yourBookingSuccess.t(),
                               Colors.green);
                           var body = {};
                           body['templateName'] =
-                              widget?.arguments?.templateName;
+                              widget.arguments?.templateName;
                           body['contextId'] = _bookingId;
                           FetchNotificationService()
                               .updateNsActionStatus(body)

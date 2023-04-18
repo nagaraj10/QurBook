@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import '../../model/Authentication/OTPEmailResponse.dart';
 import '../../model/Authentication/OTPResponse.dart';
@@ -13,8 +14,8 @@ import '../../../constants/variable_constant.dart' as variable;
 
 
 class OTPVerifyBloc with Validators implements BaseBloc {
-  AuthenticationRepository _authenticationRepository;
-  StreamController _otpVerifyController;
+  late AuthenticationRepository _authenticationRepository;
+  StreamController? _otpVerifyController;
 
   final _mobileNumberController = BehaviorSubject<String>();
 
@@ -24,14 +25,14 @@ class OTPVerifyBloc with Validators implements BaseBloc {
       _mobileNumberController.stream.transform(mobileNumberValidator);
   Stream<bool> get submitCheck => mobileNumber.map((m) => true);
 
-  StreamSink<ApiResponse<OTPResponse>> get otpSink => _otpVerifyController.sink;
-  Stream<ApiResponse<OTPResponse>> get otpStream => _otpVerifyController.stream;
+  StreamSink<ApiResponse<OTPResponse>> get otpSink => _otpVerifyController!.sink as StreamSink<ApiResponse<OTPResponse>>;
+  Stream<ApiResponse<OTPResponse>> get otpStream => _otpVerifyController!.stream as Stream<ApiResponse<OTPResponse>>;
 
-  StreamController _otpFromEmailController;
+  StreamController? _otpFromEmailController;
   StreamSink<ApiResponse<OTPEmailResponse>> get otpFromEmailSink =>
-      _otpFromEmailController.sink;
+      _otpFromEmailController!.sink as StreamSink<ApiResponse<OTPEmailResponse>>;
   Stream<ApiResponse<OTPEmailResponse>> get otpFromEmailStream =>
-      _otpFromEmailController.stream;
+      _otpFromEmailController!.stream as Stream<ApiResponse<OTPEmailResponse>>;
 
   OTPVerifyBloc() {
     _otpVerifyController = StreamController<ApiResponse<OTPResponse>>();
@@ -45,7 +46,7 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     _otpFromEmailController?.close();
   }
 
-  Future<OTPResponse> verifyOtp(String enteredMobNumber,
+  Future<OTPResponse?> verifyOtp(String? enteredMobNumber,
       String selectedCountryCode, String otp, bool isFromSignIn) async {
     final verifyOTP = {};
     //verifyOTP['sourceName'] = CommonConstants.strTrident;
@@ -64,7 +65,7 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     final jsonString = convert.jsonEncode(verifyOTP);
 
     otpSink.add(ApiResponse.loading(variable.strVerifyOtp));
-    OTPResponse otpResponse;
+    OTPResponse? otpResponse;
     try {
       otpResponse = await _authenticationRepository.verifyOTP(jsonString);
     } catch (e) {
@@ -73,7 +74,7 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     return otpResponse;
   }
 
-  Future<OTPResponse> generateOTP(String enteredMobNumber,
+  Future<OTPResponse?> generateOTP(String? enteredMobNumber,
       String selectedCountryCode, bool isFromSignIn) async {
     final verifyOTP = {};
     //verifyOTP['sourceName'] = CommonConstants.strTrident;
@@ -91,7 +92,7 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     final jsonString = convert.jsonEncode(verifyOTP);
 
     otpSink.add(ApiResponse.loading(variable.strGeneratingOtp));
-    OTPResponse otpResponse;
+    OTPResponse? otpResponse;
     try {
       otpResponse = await _authenticationRepository.generateOTP(jsonString);
     } catch (e) {
@@ -99,14 +100,14 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     return otpResponse;
   }
 
-  Future<OTPEmailResponse> verifyOTPFromEmail(String otp) async {
+  Future<OTPEmailResponse?> verifyOTPFromEmail(String otp) async {
     final verifyEmailOTP = {};
     verifyEmailOTP[parameters.strverification] = otp;
 
     final jsonString = convert.jsonEncode(verifyEmailOTP);
 
     otpFromEmailSink.add(ApiResponse.loading(variable.strVerifyOtp));
-    OTPEmailResponse otpEmailResponse;
+    OTPEmailResponse? otpEmailResponse;
     try {
       otpEmailResponse =
           await _authenticationRepository.verifyOTPFromEmail(jsonString);

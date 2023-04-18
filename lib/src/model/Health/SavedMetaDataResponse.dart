@@ -1,10 +1,11 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class SavedMetaDataResponse {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   SavedMetaDataResponse(
       {this.status, this.success, this.message, this.response});
@@ -24,15 +25,15 @@ class SavedMetaDataResponse {
     data[parameters.strSuccess] = success;
     data[parameters.strMessage] = message;
     if (response != null) {
-      data[parameters.strResponse] = response.toJson();
+      data[parameters.strResponse] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  int count;
-  SavedMediaData data;
+  int? count;
+  SavedMediaData? data;
 
   Response({this.count, this.data});
 
@@ -46,14 +47,14 @@ class Response {
     final data = <String, dynamic>{};
     data[parameters.strCount] = count;
     if (this.data != null) {
-      data[parameters.strData] = this.data.toJson();
+      data[parameters.strData] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class SavedMediaData {
-  String mediaMetaID;
+  String? mediaMetaID;
 
   SavedMediaData({this.mediaMetaID});
 

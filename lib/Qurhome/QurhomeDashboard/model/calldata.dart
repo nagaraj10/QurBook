@@ -12,7 +12,7 @@ class CallMetaData {
   String gender;
   String docName;
   dynamic slotDuration;
-  HealthRecord healthRecord;
+  HealthRecord? healthRecord;
   String patientPrescriptionId;
 
   CallMetaData(
@@ -61,6 +61,6 @@ class CallMetaData {
   }
 
   HealthRecord get mhealthRecord {
-    return healthRecord;
+    return healthRecord!;
   }
 }

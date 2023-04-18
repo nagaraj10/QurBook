@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -7,11 +8,11 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ChooseDateSlot extends StatefulWidget {
-  ChooseDateSlot({Key key, this.messageContent = '', this.getRefNumber})
+  ChooseDateSlot({Key? key, this.messageContent = '', this.getRefNumber})
       : super(key: key);
 
   var messageContent;
-  Function(String) getRefNumber;
+  Function(String)? getRefNumber;
 
   @override
   _ChooseDateSlotState createState() => _ChooseDateSlotState();
@@ -183,11 +184,11 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 120, vertical: 5),
                 width: double.infinity,
-                child: FlatButton(
-                  child: Text('Ok', style: TextStyle(fontSize: 20)),
+                child: ElevatedButton(
+                  child: Text('Ok', style: TextStyle(fontSize: 20,color: Colors.white)),
                   onPressed: () {
                     try {
-                      if (finalList?.length > 0) {
+                      if (finalList.length > 0) {
                         List<String> appendedList = [];
 
                         for (var array in finalList) {
@@ -196,15 +197,15 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                               ' - ' +
                               array['selectedSession'].toString());
                         }
-                        widget.getRefNumber(widget.messageContent ?? '');
+                        widget.getRefNumber!(widget.messageContent ?? '');
                         Navigator.pop(context, appendedList.toString());
                       } else {
                         Navigator.pop(context);
                       }
                     } catch (e) {}
                   },
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  textColor: Colors.white,
+                  // color: Color(CommonUtil().getMyPrimaryColor()),
+                 // textColor: Colors.white,
                 ),
               ),
             ),
@@ -334,13 +335,13 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
   }
 
   Future<void> _selectTime(BuildContext context, int index) async {
-    final TimeOfDay picked_s = await showTimePicker(
+    final TimeOfDay? picked_s = await showTimePicker(
         context: context,
         initialTime: selectedTime,
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           return MediaQuery(
             data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-            child: child,
+            child: child!,
           );
         });
 

@@ -1,21 +1,22 @@
+
 import 'UpdateMediaResponse.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/fhb_query.dart' as query;
 
 class MediaMetaInfo {
-  String id;
-  String metaTypeId;
-  String userId;
-  MetaInfo metaInfo;
-  bool isActive;
-  bool isVisible;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
-  bool isBookmarked;
-  bool isDraft;
-  String lastModifiedBy;
+  String? id;
+  String? metaTypeId;
+  String? userId;
+  MetaInfo? metaInfo;
+  bool? isActive;
+  bool? isVisible;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isBookmarked;
+  bool? isDraft;
+  String? lastModifiedBy;
 
   MediaMetaInfo(
       {this.id,
@@ -54,7 +55,7 @@ class MediaMetaInfo {
     data[parameters.strmetaTypeId] = metaTypeId;
     data[parameters.struserId] = userId;
     if (metaInfo != null) {
-      data[parameters.strmetaInfo] = metaInfo.toJson();
+      data[parameters.strmetaInfo] = metaInfo!.toJson();
     }
     data[parameters.strIsActive] = isActive;
     data[parameters.strisVisible] = isVisible;

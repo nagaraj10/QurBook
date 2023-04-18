@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
@@ -23,7 +24,7 @@ class TicketsList extends StatefulWidget {
 }
 
 class _TicketsList extends State<TicketsList> {
-  UserTicketModel userTicketModel;
+  UserTicketModel? userTicketModel;
   TicketViewModel ticketViewModel = TicketViewModel();
   bool _isTabVisible = false;
 
@@ -54,7 +55,7 @@ class _TicketsList extends State<TicketsList> {
   }
 
   Widget getTicketsList() {
-    return FutureBuilder<TicketsListResponse>(
+    return FutureBuilder<TicketsListResponse?>(
       future: ticketViewModel.getTicketsList(),
       builder: (context, snapshot) {
         print('=================');
@@ -75,10 +76,10 @@ class _TicketsList extends State<TicketsList> {
           return ErrorsWidget();
         } else if (snapshot.connectionState == ConnectionState.done) {
           //return ticketListTest(context);
-          if (snapshot?.hasData && snapshot?.data != null) {
-            print(snapshot.data.tickets.length.toString());
+          if (snapshot.hasData && snapshot.data != null) {
+            print(snapshot.data!.tickets!.length.toString());
             print('=================');
-            return ticketList(snapshot.data.tickets);
+            return ticketList(snapshot.data!.tickets);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -114,7 +115,7 @@ class _TicketsList extends State<TicketsList> {
     );
   }
 
-  Widget ticketList(List<Tickets> ticketList) {
+  Widget ticketList(List<Tickets>? ticketList) {
     return (ticketList != null && ticketList.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
@@ -184,7 +185,7 @@ class _TicketsList extends State<TicketsList> {
                             children: [
                               Text(
                                 ticketList[i]
-                                    .type
+                                    .type!
                                     .name
                                     .toString()
                                     .capitalizeFirstofEach,
@@ -239,7 +240,7 @@ class _TicketsList extends State<TicketsList> {
                                 maxLines: 2,
                               ),
                               Text(
-                                (ticketList[i]
+                                ((ticketList[i]
                                                 .additionalInfo
                                                 ?.ticketStatus
                                                 ?.name !=
@@ -252,10 +253,10 @@ class _TicketsList extends State<TicketsList> {
                                     ? ticketList[i]
                                         .additionalInfo
                                         ?.ticketStatus
-                                        ?.name
+                                        ?.name!
                                     : ticketList[i].status == 0
                                         ? 'Open'
-                                        : 'Closed',
+                                        : 'Closed')!,
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w600,
@@ -267,7 +268,7 @@ class _TicketsList extends State<TicketsList> {
                             ],
                           ),
                           (ticketList[i].subject.toString() !=
-                                  ticketList[i].type.name)
+                                  ticketList[i].type!.name)
                               ? Text(
                                   ticketList[i]
                                       .subject

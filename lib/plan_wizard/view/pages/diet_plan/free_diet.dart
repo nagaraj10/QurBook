@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
@@ -22,22 +23,22 @@ class FreeDietPlans extends StatefulWidget {
 }
 
 class _FreeDietPlans extends State<FreeDietPlans> {
-  Future<PlanListModel> planListModel;
+  late Future<PlanListModel?> planListModel;
 
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
 
   bool isSearch = false;
 
-  List<PlanListResult> planSearchList = List();
+  List<PlanListResult> planSearchList = [];
 
-  String _selectedView = popUpChoiceDefault;
+  String? _selectedView = popUpChoiceDefault;
 
   int carePlanListLength = 0;
 
-  PlanWizardViewModel planListProvider;
+  PlanWizardViewModel? planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
+  ValueNotifier<String?> _selectedItem = new ValueNotifier<String?>('Default');
 
   bool isSwitched = false;
 
@@ -47,7 +48,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
         .currentPackageFreeDietId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getDietPlanListNew(isFrom: strFreeDiet);
+        .getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel?>;
   }
 
   @override
@@ -70,7 +71,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                         });
                       }
                     },onClosePress: (){
-                    FocusManager.instance.primaryFocus.unfocus();
+                    FocusManager.instance.primaryFocus!.unfocus();
                   },
                     hintText: strPlanHospitalDiet,
                     padding: 10.0.sp,
@@ -116,33 +117,33 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                     .isEmpty) {
               _alertForUncheckPlan();
             } else {
-              Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
+              Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
             }
           },
         ));
   }
 
-  onSearched(String title, String filterBy) async {
+  onSearched(String? title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
       planSearchList =
-          await planListProvider.filterSortingForFreeDiet(popUpChoicePrice);
+          await planListProvider!.filterSortingForFreeDiet(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
       planSearchList =
-          await planListProvider.filterSortingForFreeDiet(popUpChoiceDura);
+          await planListProvider!.filterSortingForFreeDiet(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
       planSearchList =
-          await planListProvider.filterSortingForFreeDiet(popUpChoiceDefault);
+          await planListProvider!.filterSortingForFreeDiet(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
-        planSearchList = await planListProvider.filterPlanNameFreeDiet(title);
+        planSearchList = await planListProvider!.filterPlanNameFreeDiet(title);
       }
     }
     setState(() {});
   }
 
   Widget getDietPlanList() {
-    return new FutureBuilder<PlanListModel>(
+    return new FutureBuilder<PlanListModel?>(
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -161,30 +162,29 @@ class _FreeDietPlans extends State<FreeDietPlans> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.length > 0) {
             carePlanListLength = isSearch
                 ? planSearchList.length
-                : snapshot?.data?.result?.length ?? 0;
+                : snapshot.data?.result?.length ?? 0;
             if (((Provider.of<PlanWizardViewModel>(context, listen: false)
-                    ?.isDynamicLink) ??
-                false)) {
+                    .isDynamicLink))) {
               Future.delayed(Duration(), () {
                 var searchText =
                     Provider.of<PlanWizardViewModel>(context, listen: false)
-                            ?.dynamicLinkSearchText ??
+                            .dynamicLinkSearchText ??
                         '';
-                if (searchText?.isNotEmpty ?? false) {
+                if (searchText.isNotEmpty) {
                   isSearch = true;
                   onSearched(searchText, 'localSearch');
                 }
                 Provider.of<PlanWizardViewModel>(context, listen: false)
-                    ?.isDynamicLink = false;
+                    .isDynamicLink = false;
               });
             }
             return dietPlanList(
-                isSearch ? planSearchList : snapshot?.data?.result);
+                isSearch ? planSearchList : snapshot.data?.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -202,7 +202,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
     );
   }
 
-  Widget dietPlanList(List<PlanListResult> planList) {
+  Widget dietPlanList(List<PlanListResult>? planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
@@ -212,7 +212,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
             itemBuilder: (BuildContext ctx, int i) => DietPlanCard(
               planList: isSearch ? planSearchList[i] : planList[i],
               onClick: () {
-                FocusManager.instance.primaryFocus.unfocus();
+                FocusManager.instance.primaryFocus!.unfocus();
               },
               isFrom: strFreeDiet,
             ),
@@ -245,14 +245,13 @@ class _FreeDietPlans extends State<FreeDietPlans> {
               FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
+                  Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
                 },
                 child: Text('Yes'),
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool);
   }
 
   Widget popMenuItemNew() {
@@ -270,7 +269,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
               child: new AnimatedBuilder(
                 child: new Text(sortType[index]),
                 animation: _selectedItem,
-                builder: (BuildContext context, Widget child) {
+                builder: (BuildContext context, Widget? child) {
                   return new RadioListTile<String>(
                     value: sortType[index],
                     groupValue: _selectedItem.value,
@@ -278,7 +277,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                     onChanged: (value) {
                       setState(() {
                         _selectedItem.value = value;
-                        FocusManager.instance.primaryFocus.unfocus();
+                        FocusManager.instance.primaryFocus!.unfocus();
                         _selectedView = value;
                         if (value == popUpChoicePrice) {
                           isSearch = true;
@@ -322,14 +321,14 @@ class _FreeDietPlans extends State<FreeDietPlans> {
     if (isSwitched == false) {
       setState(() {
         isSwitched = true;
-        planListModel = planListProvider.getDietPlanListNew(
-            isFrom: strFreeDiet, isVeg: true);
+        planListModel = planListProvider!.getDietPlanListNew(
+            isFrom: strFreeDiet, isVeg: true) as Future<PlanListModel?>;
       });
     } else {
       setState(() {
         isSwitched = false;
         planListModel =
-            planListProvider.getDietPlanListNew(isFrom: strFreeDiet);
+            planListProvider!.getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel?>;
       });
     }
   }

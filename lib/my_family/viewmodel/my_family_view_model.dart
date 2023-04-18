@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../constants/fhb_query.dart' as query;
 import '../../constants/webservice_call.dart';
@@ -12,15 +13,15 @@ class MyFamilyViewModel with ChangeNotifier {
 
   // 1
   // Get the family members list
-  FamilyMembersList familyMembersList;
+  FamilyMembersList? familyMembersList;
 
   // 2
   // Get the relationship list
-  RelationShipResponseList relationShipResponseList;
+  RelationShipResponseList? relationShipResponseList;
 
   // 1
   // Get Family Members
-  Future<FamilyMembersList> getFamilyMembersInfo() async {
+  Future<FamilyMembersList?> getFamilyMembersInfo() async {
     try {
       var response = await _helper
           .getFamilyMembersList(webserviceCall.getQueryForFamilyMemberList());
@@ -33,7 +34,7 @@ class MyFamilyViewModel with ChangeNotifier {
 
   // 2
   // Get Roles
-  Future<RelationShipResponseList> getCustomRoles() async {
+  Future<RelationShipResponseList?> getCustomRoles() async {
     try {
       var response =
           await _helper.getCustomRoles(query.qr_customRole);

@@ -1,32 +1,33 @@
+
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
     as parameters;
 import 'package:myfhb/telehealth/features/appointments/model/createdBy.dart';
 
 class ResheduleAppointmentInfo {
-  bool isFollowUp;
-  String slotNumber;
-  bool isHealthRecordShared;
+  bool? isFollowUp;
+  String? slotNumber;
+  bool? isHealthRecordShared;
   dynamic sharedHealthRecordMetadata;
-  CreatedBy doctorSession;
-  bool isActive;
-  CreatedBy lastModifiedBy;
-  CreatedBy bookedFor;
-  CreatedBy createdBy;
-  CreatedBy bookedBy;
-  String bookingId;
-  String plannedStartDateTime;
-  String plannedEndDateTime;
-  CreatedBy status;
-  String doctorSessionId;
+  CreatedBy? doctorSession;
+  bool? isActive;
+  CreatedBy? lastModifiedBy;
+  CreatedBy? bookedFor;
+  CreatedBy? createdBy;
+  CreatedBy? bookedBy;
+  String? bookingId;
+  String? plannedStartDateTime;
+  String? plannedEndDateTime;
+  CreatedBy? status;
+  String? doctorSessionId;
   dynamic actualStartDateTime;
   dynamic actualEndDateTime;
   dynamic plannedFollowupDate;
   dynamic isFollowup;
   dynamic lastModifiedOn;
-  String id;
-  bool isRefunded;
-  bool isFollowupFee;
-  String createdOn;
+  String? id;
+  bool? isRefunded;
+  bool? isFollowupFee;
+  String? createdOn;
 
   ResheduleAppointmentInfo(
       {this.isFollowUp,
@@ -99,26 +100,26 @@ class ResheduleAppointmentInfo {
     data['isHealthRecordShared'] = this.isHealthRecordShared;
     data['sharedHealthRecordMetadata'] = this.sharedHealthRecordMetadata;
     if (this.doctorSession != null) {
-      data['doctorSession'] = this.doctorSession.toJson();
+      data['doctorSession'] = this.doctorSession!.toJson();
     }
     data['isActive'] = this.isActive;
     if (this.lastModifiedBy != null) {
-      data['lastModifiedBy'] = this.lastModifiedBy.toJson();
+      data['lastModifiedBy'] = this.lastModifiedBy!.toJson();
     }
     if (this.bookedFor != null) {
-      data['bookedFor'] = this.bookedFor.toJson();
+      data['bookedFor'] = this.bookedFor!.toJson();
     }
     if (this.createdBy != null) {
-      data['createdBy'] = this.createdBy.toJson();
+      data['createdBy'] = this.createdBy!.toJson();
     }
     if (this.bookedBy != null) {
-      data['bookedBy'] = this.bookedBy.toJson();
+      data['bookedBy'] = this.bookedBy!.toJson();
     }
     data['bookingId'] = this.bookingId;
     data['plannedStartDateTime'] = this.plannedStartDateTime;
     data['plannedEndDateTime'] = this.plannedEndDateTime;
     if (this.status != null) {
-      data['status'] = this.status.toJson();
+      data['status'] = this.status!.toJson();
     }
     data['doctorSessionId'] = this.doctorSessionId;
     data['actualStartDateTime'] = this.actualStartDateTime;

@@ -1,3 +1,4 @@
+
 import '../../constants/fhb_parameters.dart';
 import 'googleFitDataset.dart';
 
@@ -8,9 +9,9 @@ class Bucket {
     this.dataset,
   });
 
-  String startTimeMillis;
-  String endTimeMillis;
-  List<Dataset> dataset;
+  String? startTimeMillis;
+  String? endTimeMillis;
+  List<Dataset>? dataset;
 
   factory Bucket.fromJson(Map<String, dynamic> json) => Bucket(
         startTimeMillis: json[gfstartTimeMillis],
@@ -22,6 +23,6 @@ class Bucket {
   Map<String, dynamic> toJson() => {
         gfstartTimeMillis: startTimeMillis,
         gfendTimeMillis: endTimeMillis,
-        gfdataset: List<dynamic>.from(dataset.map((x) => x.toJson())),
+        gfdataset: List<dynamic>.from(dataset!.map((x) => x.toJson())),
       };
 }

@@ -1,3 +1,4 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/services/slotsAvailabilityService.dart';
@@ -8,7 +9,7 @@ class SlotsAvailabilityViewModel{
   SlotsResultModel sessionList = new SlotsResultModel();
 
 
-  Future<AvailableTimeSlotsModel> fetchTimeSlots(String date, String doctorId,String healthOrgId) async {
+  Future<AvailableTimeSlotsModel?> fetchTimeSlots(String date, String doctorId,String healthOrgId) async {
     try {
       AvailableTimeSlotsModel doctorTimeSlotsModel =
       await slotsAvailabilityService.getTelehealthSlotsList(date, doctorId,healthOrgId);

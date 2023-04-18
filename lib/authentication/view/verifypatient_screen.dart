@@ -1,3 +1,4 @@
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -53,20 +54,20 @@ class VerifyPatient extends StatefulWidget {
       this.forFamilyMember,
       this.isVirtualNumber = false});
 
-  final String PhoneNumber;
-  final String from;
-  final String fName;
-  final String mName;
-  final String lName;
-  final RelationsShipModel relationship;
-  final bool isPrimaryNoSelected;
-  final bool userConfirm;
-  final bool fromSignUp;
-  final String userId;
-  final String emailId;
-  final bool forFamilyMember;
-  final bool isVirtualNumber;
-  Map<String, dynamic> dataForResendOtp;
+  final String? PhoneNumber;
+  final String? from;
+  final String? fName;
+  final String? mName;
+  final String? lName;
+  final RelationsShipModel? relationship;
+  final bool? isPrimaryNoSelected;
+  final bool? userConfirm;
+  final bool? fromSignUp;
+  final String? userId;
+  final String? emailId;
+  final bool? forFamilyMember;
+  final bool? isVirtualNumber;
+  Map<String, dynamic>? dataForResendOtp;
 
   @override
   _VerifyPatientState createState() => _VerifyPatientState();
@@ -79,28 +80,28 @@ class _VerifyPatientState extends State<VerifyPatient>
   var isLoading = false;
   bool _autoValidateBool = false;
   final _OtpKey = GlobalKey<FormState>();
-  AuthViewModel authViewModel;
+  late AuthViewModel authViewModel;
   UserModel saveuser = UserModel();
   String authcode = '';
-  String last_name;
-  String first_name;
-  String special;
-  String AuthToken;
-  Image doctor_image;
-  String decodesstring;
-  String id_token_string;
-  String family_name;
-  String username;
-  String doctor_id;
-  String user_mobile_no;
+  String? last_name;
+  String? first_name;
+  String? special;
+  String? AuthToken;
+  Image? doctor_image;
+  String? decodesstring;
+  String? id_token_string;
+  String? family_name;
+  String? username;
+  String? doctor_id;
+  String? user_mobile_no;
   var token1;
-  String token2;
+  String? token2;
   FlutterToast toast = FlutterToast();
   var from;
   int numberOfTimesResendTapped = 0;
   bool enableResendButton = true;
   bool disableResendButton = false;
-  OtpViewModel otpViewModel;
+  OtpViewModel? otpViewModel;
   ValueNotifier otpNotifier = ValueNotifier(false);
   bool appIsInBackground = false;
 
@@ -111,12 +112,12 @@ class _VerifyPatientState extends State<VerifyPatient>
     listenForCode();
     SmsAutoFill().listenForCode;
     from = widget.from;
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     authViewModel = AuthViewModel();
-    if (widget.userConfirm) {
+    if (widget.userConfirm!) {
       _resendOtpDetails();
     }
-    Provider.of<OtpViewModel>(context, listen: false)?.startTimer();
+    Provider.of<OtpViewModel>(context, listen: false).startTimer();
   }
 
   @override
@@ -126,7 +127,7 @@ class _VerifyPatientState extends State<VerifyPatient>
     cancel();
     unregisterListener();
     otpNotifier.value = false;
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
     con.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -140,9 +141,9 @@ class _VerifyPatientState extends State<VerifyPatient>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        if (appIsInBackground && otpViewModel.isDialogOpen) {
+        if (appIsInBackground && otpViewModel!.isDialogOpen) {
           appIsInBackground = false;
-          otpViewModel.updateDialogStatus(false);
+          otpViewModel!.updateDialogStatus(false);
           Get.back();
         }
         break;
@@ -157,7 +158,7 @@ class _VerifyPatientState extends State<VerifyPatient>
   @override
   void codeUpdated() {
     setState(() {
-      OtpController.text = code;
+      OtpController.text = code!;
     });
     if (OtpController.text != '') {
       otpNotifier.value = true;
@@ -177,7 +178,7 @@ class _VerifyPatientState extends State<VerifyPatient>
             children: <Widget>[
               Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: CommonUtil().isTablet ? 50 : 20),
+                    horizontal: CommonUtil().isTablet! ? 50 : 20),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -223,7 +224,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                       ),
                       ValueListenableBuilder(
                         valueListenable: otpNotifier,
-                        builder: (context, otpStatus, child) {
+                        builder: (context, dynamic otpStatus, child) {
                           if (otpStatus) {
                             otpNotifier.value = false;
                             AuthenticationValidator()
@@ -265,7 +266,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: otpViewModel.timeForResend,
+                                      text: otpViewModel!.timeForResend,
                                       style: TextStyle(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
@@ -281,7 +282,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                         ],
                       ),
                       Visibility(
-                        visible: otpViewModel.timerSeconds == 0,
+                        visible: otpViewModel!.timerSeconds == 0,
                         child: Column(
                           children: [
                             SizedBox(height: 10.0.h),
@@ -294,7 +295,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                                     Color(CommonUtil().getMyGredientColor()),
                                   ]),
                                   width: 280.0.w,
-                                  onPressed: otpViewModel.timerSeconds == 0
+                                  onPressed: otpViewModel!.timerSeconds == 0
                                       ? () {
                                           otpViewModel?.stopOTPTimer();
                                           otpViewModel?.startTimer();
@@ -333,10 +334,10 @@ class _VerifyPatientState extends State<VerifyPatient>
                                       Color(CommonUtil().getMyGredientColor()),
                                     ]),
                                     width: 280.0.w,
-                                    onPressed: otpViewModel.timerSeconds == 0
+                                    onPressed: otpViewModel!.timerSeconds == 0
                                         ? () {
                                             otpViewModel?.stopOTPTimer();
-                                            otpViewModel.confirmViaCall(
+                                            otpViewModel!.confirmViaCall(
                                               phoneNumber:
                                                   widget.PhoneNumber ?? '',
                                               onOtpReceived: (otpCode) {
@@ -375,10 +376,10 @@ class _VerifyPatientState extends State<VerifyPatient>
 
   String getNumber() {
     if (from == strFromVerifyFamilyMember) {
-      return strOtpTextForFamilyMember + widget.fName + mobileNumber;
+      return strOtpTextForFamilyMember + widget.fName! + mobileNumber;
     } else {
-      var num = widget.PhoneNumber.replaceRange(0,
-          widget.PhoneNumber.length - 4, 'x' * (widget.PhoneNumber.length - 4));
+      var num = widget.PhoneNumber!.replaceRange(0,
+          widget.PhoneNumber!.length - 4, 'x' * (widget.PhoneNumber!.length - 4));
       return (widget.isVirtualNumber ?? false)
           ? strOtpText + num + strOtpTextVirtual
           : strOtpText + num;
@@ -416,11 +417,11 @@ class _VerifyPatientState extends State<VerifyPatient>
   // }
 
   _loginOTPSent(loginModel.PatientLogIn response) {
-    if (response.isSuccess) {
+    if (response.isSuccess!) {
       toast.getToast('One Time Password sent successfully', Colors.green);
     } else {
       if (response.message != null) {
-        toast.getToast(response.message, Colors.red);
+        toast.getToast(response.message!, Colors.red);
       } else {
         toast.getToast('Something went wrong.Please try again', Colors.red);
       }
@@ -441,7 +442,7 @@ class _VerifyPatientState extends State<VerifyPatient>
 
   _startTimer() async {
     numberOfTimesResendTapped++;
-    final data = <String, String>{'phoneNumber': widget.PhoneNumber};
+    final data = <String, String?>{'phoneNumber': widget.PhoneNumber};
     if (numberOfTimesResendTapped < 3) {
       _updateResendButton();
       Future.delayed(Duration(minutes: 1), _updateResendButton);
@@ -450,7 +451,7 @@ class _VerifyPatientState extends State<VerifyPatient>
         _checkOtpResponse(response);
       } else {
         var response =
-            await authViewModel.loginPatient(widget.dataForResendOtp);
+            await authViewModel.loginPatient(widget.dataForResendOtp!);
         _loginOTPSent(response);
       }
     } else if (numberOfTimesResendTapped == 3) {
@@ -463,7 +464,7 @@ class _VerifyPatientState extends State<VerifyPatient>
         _checkOtpResponse(response);
       } else {
         final response =
-            await authViewModel.loginPatient(widget.dataForResendOtp);
+            await authViewModel.loginPatient(widget.dataForResendOtp!);
         _loginOTPSent(response);
       }
     }
@@ -498,7 +499,7 @@ class _VerifyPatientState extends State<VerifyPatient>
               )),
           validator: (value) {
             return AuthenticationValidator()
-                .phoneOtpValidation(value, patternOtp, strEnterOtpp);
+                .phoneOtpValidation(value!, patternOtp as String, strEnterOtpp);
           },
         ));
   }
@@ -541,12 +542,12 @@ class _VerifyPatientState extends State<VerifyPatient>
     );
   }
 
-  _verifyDetails({String otpCode}) async {
+  _verifyDetails({String? otpCode}) async {
     FocusScope.of(context).unfocus();
     var otpToVerify = otpCode ?? OtpController.text;
-    if (otpCode != null || _OtpKey.currentState.validate()) {
+    if (otpCode != null || _OtpKey.currentState!.validate()) {
       if (otpCode == null) {
-        _OtpKey.currentState.save();
+        _OtpKey.currentState!.save();
       }
       LoaderClass.showLoadingDialog(context);
       if (from == strFromSignUp) {
@@ -554,7 +555,7 @@ class _VerifyPatientState extends State<VerifyPatient>
           verificationCode: otpToVerify,
           userName: widget.PhoneNumber,
           source: strSource,
-          userId: widget.userConfirm
+          userId: widget.userConfirm!
               ? widget.userId
               : PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         );
@@ -566,12 +567,12 @@ class _VerifyPatientState extends State<VerifyPatient>
         final params = VerifyOTPModel(
             phoneNumber: widget.PhoneNumber, verificationCode: otpToVerify);
         var response = await authViewModel.verifyMyOTP(params.toJson());
-        if (response.isSuccess) {
+        if (response.isSuccess!) {
           //? this might be change
           toast.getToast('User added successfully', Colors.green);
           //Navigator.pop(context);
           LoaderClass.hideLoadingDialog(context);
-          if (widget.forFamilyMember) {
+          if (widget.forFamilyMember!) {
             Navigator.pop(context);
           }
           await Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
@@ -591,7 +592,7 @@ class _VerifyPatientState extends State<VerifyPatient>
           //something went wrong.
           //Navigator.pop(context);
           LoaderClass.hideLoadingDialog(context);
-          toast.getToast(response.message, Colors.red);
+          toast.getToast(response.message!, Colors.red);
           //Navigator.pop(context);
           // setState(() {
           //   from = strFromSignUp;
@@ -625,11 +626,11 @@ class _VerifyPatientState extends State<VerifyPatient>
   }
 
   _checkResponse(PatientSignupOtp response) {
-    if (response.isSuccess) {
+    if (response.isSuccess!) {
       _getPatientDetails();
     } else {
       LoaderClass.hideLoadingDialog(context);
-      if (response?.message?.contains('expired') ?? false) {
+      if (response.message?.contains('expired') ?? false) {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -638,7 +639,7 @@ class _VerifyPatientState extends State<VerifyPatient>
           (route) => false,
         );
       }
-      toast.getToast(response.message, Colors.red);
+      toast.getToast(response.message!, Colors.red);
     }
   }
 
@@ -646,7 +647,7 @@ class _VerifyPatientState extends State<VerifyPatient>
     var logInModel = ResendOtpModel(
       userName: widget.PhoneNumber,
       source: strSource,
-      userId: widget.userConfirm
+      userId: widget.userConfirm!
           ? widget.userId
           : PreferenceUtil.getStringValue(strKeyConfirmUserToken),
     );
@@ -656,17 +657,17 @@ class _VerifyPatientState extends State<VerifyPatient>
   }
 
   _checkOtpResponse(ResendOtpModel response) {
-    if (response.isSuccess) {
+    if (response.isSuccess!) {
       toast.getToast('One Time Password sent successfully', Colors.green);
     } else {
       if (response.message != null) {
-        toast.getToast(response.message, Colors.red);
+        toast.getToast(response.message!, Colors.red);
       }
     }
   }
 
-  Future<String> _getPatientDetails() async {
-    String userId;
+  Future<String?> _getPatientDetails() async {
+    String? userId;
     decodesstring = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     saveuser.auth_token = decodesstring;
     try {
@@ -674,7 +675,7 @@ class _VerifyPatientState extends State<VerifyPatient>
       final res = apiBaseHelper.updateLastVisited();
     } catch (e) {}
     if (widget.from == strFromSignUp) {
-      if (widget.userConfirm) {
+      if (widget.userConfirm!) {
         userId = widget.userId;
       } else {
         userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -682,9 +683,9 @@ class _VerifyPatientState extends State<VerifyPatient>
 
       saveuser.userId = userId;
       print(userId);
-      await PreferenceUtil.saveString(Constants.MOB_NUM, widget.PhoneNumber)
+      await PreferenceUtil.saveString(Constants.MOB_NUM, widget.PhoneNumber!)
           .then((onValue) {});
-      await PreferenceUtil.saveString(Constants.KEY_USERID, userId)
+      await PreferenceUtil.saveString(Constants.KEY_USERID, userId!)
           .then((onValue) {});
       PreferenceUtil.save(strUserDetails, saveuser);
       authToken = decodesstring;
@@ -696,7 +697,7 @@ class _VerifyPatientState extends State<VerifyPatient>
           .sendDeviceToken(
               userId, widget.emailId, widget.PhoneNumber, token, true)
           .then((value) {
-        if (widget.fromSignUp != null && widget.fromSignUp) {
+        if (widget.fromSignUp != null && widget.fromSignUp!) {
           PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
         } else {
           PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
@@ -710,33 +711,33 @@ class _VerifyPatientState extends State<VerifyPatient>
           LoaderClass.hideLoadingDialog(context);
           FHBBasicWidget().showDialogWithTwoButtons(context, () {
             PageNavigator.goToPermanent(context, router.rt_Landing);
-          }, value.message, strConfirmDialog);
+          }, value.message!, strConfirmDialog);
         }
       });
     } else {
-      final String userId = parseJwtPayLoad(decodesstring)[strToken][strUserId];
+      final String userId = parseJwtPayLoad(decodesstring!)[strToken][strUserId];
       saveuser.userId = userId;
-      id_token_string = parseJwtPayLoad(decodesstring)[strToken]
+      id_token_string = parseJwtPayLoad(decodesstring!)[strToken]
           [strProviderPayLoad][strIdToken];
-      final idTokens = parseJwtPayLoad(id_token_string);
+      final idTokens = parseJwtPayLoad(id_token_string!);
       print(idTokens);
       user_mobile_no = idTokens[strphonenumber];
       print(idTokens[strphonenumber]);
       saveuser.family_name = idTokens[strFamilyName];
       print(idTokens[strFamilyName]);
       saveuser.phone_number = idTokens[strphonenumber];
-      final String ph = idTokens[strphonenumber];
+      final String? ph = idTokens[strphonenumber];
       print(idTokens[strphonenumber]);
       saveuser.given_name = idTokens[strGivenName];
       print(idTokens[strGivenName]);
       saveuser.email = idTokens[stremail];
       print(idTokens[stremail]);
-      await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no)
+      await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no!)
           .then((onValue) {});
       await PreferenceUtil.saveString(
-              Constants.KEY_EMAIL, saveuser?.email ?? '')
+              Constants.KEY_EMAIL, saveuser.email ?? '')
           .then((onValue) {});
-      await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring)
+      await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring!)
           .then((onValue) {});
       print(decodesstring);
       await PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, userId)
@@ -748,13 +749,13 @@ class _VerifyPatientState extends State<VerifyPatient>
       final _firebaseMessaging = FirebaseMessaging.instance;
       var token = '';
       try {
-        token = await _firebaseMessaging.getToken();
+        token = (await _firebaseMessaging.getToken())!;
       } catch (e) {}
       CommonUtil().OnInitAction();
       await CommonUtil()
           .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {
-        if (widget.fromSignUp != null && widget.fromSignUp) {
+        if (widget.fromSignUp != null && widget.fromSignUp!) {
           PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
         } else {
           PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
@@ -768,7 +769,7 @@ class _VerifyPatientState extends State<VerifyPatient>
           LoaderClass.hideLoadingDialog(context);
           FHBBasicWidget().showDialogWithTwoButtons(context, () {
             PageNavigator.goToPermanent(context, router.rt_Landing);
-          }, value.message, strConfirmDialog);
+          }, value.message!, strConfirmDialog);
         }
       });
     }

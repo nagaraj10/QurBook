@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -25,7 +26,7 @@ class SuperMaya extends StatefulWidget {
   });
 
   final bool isHome;
-  final Function onBackPressed;
+  final Function? onBackPressed;
 
   @override
   _SuperMayaState createState() => _SuperMayaState();
@@ -33,7 +34,7 @@ class SuperMaya extends StatefulWidget {
 
 class _SuperMayaState extends State<SuperMaya> {
   final GlobalKey _micKey = GlobalKey();
-  BuildContext _myContext;
+  late BuildContext _myContext;
   final sheelBadgeController = Get.put(SheelaAIController());
 
   // PermissionStatus permissionStatus = PermissionStatus.undetermined;
@@ -46,12 +47,12 @@ class _SuperMayaState extends State<SuperMaya> {
     PreferenceUtil.init();
 
     var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MAYA);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       Future.delayed(
           Duration(milliseconds: 200),
           () => isFirstTime
               ? null
-              : ShowCaseWidget.of(_myContext).startShowCase([_micKey]));
+              : ShowCaseWidget.of(_myContext)!.startShowCase([_micKey]));
     });
   }
 
@@ -91,12 +92,13 @@ class _SuperMayaState extends State<SuperMaya> {
         builder: (context) {
           _myContext = context;
           return WillPopScope(
-            onWillPop: () {
+            onWillPop: () async{ // FUcrash added async
               if (widget.isHome) {
-                widget.onBackPressed();
+                widget.onBackPressed!();
               }
               Future.value(widget.isHome ? false : true);
-            },
+              return true;  // FUcrash added return and removed cast
+            } ,
             child: Scaffold(
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 appBar: widget.isHome
@@ -136,7 +138,7 @@ class _SuperMayaState extends State<SuperMaya> {
                         PreferenceUtil.getStringValue(Constants.keyMayaAsset) !=
                                 null
                             ? PreferenceUtil.getStringValue(
-                                    Constants.keyMayaAsset) +
+                                    Constants.keyMayaAsset)! +
                                 variable.strExtImg
                             : variable.icon_mayaMain,
                         height: 160.0.h,
@@ -172,7 +174,7 @@ class _SuperMayaState extends State<SuperMaya> {
                                   ),
                                   onPressed: () {
                                     if (sheelBadgeController
-                                            ?.sheelaIconBadgeCount?.value >
+                                            .sheelaIconBadgeCount.value >
                                         0) {
                                       Get.toNamed(
                                         rt_Sheela,
@@ -181,7 +183,7 @@ class _SuperMayaState extends State<SuperMaya> {
                                         ),
                                       );
                                     } else {
-                                      String sheela_lang =
+                                      String? sheela_lang =
                                           PreferenceUtil.getStringValue(
                                               Constants.SHEELA_LANG);
                                       if (sheela_lang != null &&

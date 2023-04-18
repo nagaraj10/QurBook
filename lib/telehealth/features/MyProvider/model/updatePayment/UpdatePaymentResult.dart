@@ -1,13 +1,14 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/AppointmentStatus.dart';
 
 class UpdatePaymentResult {
-  String appointmentId;
-  String bookingId;
-  String paymentId;
-  String paymentOrderId;
-  String paymentRequestId;
-  AppointmentStatus appointmentStatus;
-  AppointmentStatus paymentStatus;
+  String? appointmentId;
+  String? bookingId;
+  String? paymentId;
+  String? paymentOrderId;
+  String? paymentRequestId;
+  AppointmentStatus? appointmentStatus;
+  AppointmentStatus? paymentStatus;
 
   UpdatePaymentResult(
       {this.appointmentId,
@@ -40,10 +41,10 @@ class UpdatePaymentResult {
     data['paymentOrderId'] = this.paymentOrderId;
     data['paymentRequestId'] = this.paymentRequestId;
     if (this.appointmentStatus != null) {
-      data['appointmentStatus'] = this.appointmentStatus.toJson();
+      data['appointmentStatus'] = this.appointmentStatus!.toJson();
     }
     if (this.paymentStatus != null) {
-      data['paymentStatus'] = this.paymentStatus.toJson();
+      data['paymentStatus'] = this.paymentStatus!.toJson();
     }
     return data;
   }

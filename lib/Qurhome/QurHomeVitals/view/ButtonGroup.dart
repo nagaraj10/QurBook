@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
@@ -7,17 +8,17 @@ class ButtonGroup extends StatelessWidget {
 
   final int current;
   final List<String> titles;
-  final ValueChanged<int> onTab;
-  final Color color;
-  final Color secondaryColor;
+  final ValueChanged<int>? onTab;
+  final Color? color;
+  final Color? secondaryColor;
 
   const ButtonGroup({
-    Key key,
-    this.titles,
+    Key? key,
+    required this.titles,
     this.onTab,
-    int current,
-    Color color,
-    Color secondaryColor,
+    int? current,
+    Color? color,
+    Color? secondaryColor,
   })  : assert(titles != null),
         current = current ?? 0,
         color = color,
@@ -91,7 +92,7 @@ class ButtonGroup extends StatelessWidget {
             style:
                 TextStyle(color: Color(CommonUtil().getQurhomePrimaryColor()))),
         onPressed: () {
-          if (onTab != null) onTab(index);
+          if (onTab != null) onTab!(index);
         },
       );
 }

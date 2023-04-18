@@ -1,9 +1,10 @@
+
 import 'City.dart';
 import 'State.dart';
 
 class CityModel {
-  bool isSuccess;
-  List<City> result;
+  bool? isSuccess;
+  List<City>? result;
 
   CityModel({this.isSuccess, this.result});
 
@@ -12,7 +13,7 @@ class CityModel {
     if (json['result'] != null) {
       result = <City>[];
       json['result'].forEach((v) {
-        result.add(City.fromJson(v));
+        result!.add(City.fromJson(v));
       });
     }
   }
@@ -21,19 +22,19 @@ class CityModel {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class CityResult {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  State state;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  State? state;
 
   CityResult(
       {this.id,
@@ -60,7 +61,7 @@ class CityResult {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (state != null) {
-      data['state'] = state.toJson();
+      data['state'] = state!.toJson();
     }
     return data;
   }

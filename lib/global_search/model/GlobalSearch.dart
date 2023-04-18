@@ -1,12 +1,13 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'Data.dart';
 import '../../src/model/Health/Laboratory.dart';
 
 class GlobalSearch {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   GlobalSearch({this.status, this.success, this.message, this.response});
 
@@ -25,15 +26,15 @@ class GlobalSearch {
     data[parameters.strSuccess] = success;
     data[parameters.strMessage] = message;
     if (response != null) {
-      data[parameters.strResponse] = response.toJson();
+      data[parameters.strResponse] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  int count;
-  List<Data> data;
+  int? count;
+  List<Data>? data;
 
   Response({this.count, this.data});
 
@@ -42,7 +43,7 @@ class Response {
     if (json[parameters.strData] != null) {
       data = <Data>[];
       json[parameters.strData].forEach((v) {
-        data.add(Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
@@ -51,7 +52,7 @@ class Response {
     final data = Map<String, dynamic>();
     data[parameters.strCount] = count;
     if (this.data != null) {
-      data[parameters.strData] = this.data.map((v) => v.toJson()).toList();
+      data[parameters.strData] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }

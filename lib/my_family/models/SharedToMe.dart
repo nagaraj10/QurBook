@@ -1,10 +1,11 @@
+
 import 'LinkedData.dart';
 import 'ProfileData.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class SharedToMe {
-  ProfileData profileData;
-  LinkedData linkedData;
+  ProfileData? profileData;
+  LinkedData? linkedData;
 
   SharedToMe({this.profileData, this.linkedData});
 
@@ -20,10 +21,10 @@ class SharedToMe {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (profileData != null) {
-      data[parameters.strprofileData] = profileData.toJson();
+      data[parameters.strprofileData] = profileData!.toJson();
     }
     if (linkedData != null) {
-      data[parameters.strlinkedData] = linkedData.toJson();
+      data[parameters.strlinkedData] = linkedData!.toJson();
     }
     return data;
   }

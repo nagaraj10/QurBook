@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'dart:typed_data' show Uint8List;
 import 'package:avatar_glow/avatar_glow.dart';
@@ -31,7 +32,7 @@ enum t_MEDIA {
 }
 
 class AudioRecordScreen extends StatefulWidget {
-  AudioScreenArguments arguments;
+  AudioScreenArguments? arguments;
 
   AudioRecordScreen({this.arguments});
   @override
@@ -40,16 +41,16 @@ class AudioRecordScreen extends StatefulWidget {
 
 class _AudioRecordScreenState extends State<AudioRecordScreen> {
   bool _isRecording = false;
-  List<String> _path = [null, null, null, null, null, null, null];
-  StreamSubscription _recorderSubscription;
-  StreamSubscription _dbPeakSubscription;
-  StreamSubscription _playerSubscription;
-  FlutterSound flutterSound;
+  List<String?> _path = [null, null, null, null, null, null, null];
+  StreamSubscription? _recorderSubscription;
+  StreamSubscription? _dbPeakSubscription;
+  StreamSubscription? _playerSubscription;
+  late FlutterSound flutterSound;
 
   String _recorderTxt = variable.strStartTime;
   String _playerTxt = variable.strStartTime;
-  double _dbLevel;
-  String audioPathMain = '';
+  double? _dbLevel;
+  String? audioPathMain = '';
   bool containsAudioMain = true;
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
@@ -58,7 +59,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
 
   FlutterToast toast = new FlutterToast();
 
-  List<CategoryResult> filteredCategoryData = new List();
+  List<CategoryResult> filteredCategoryData = [];
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
   @override
@@ -136,29 +137,29 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
   }
 
   void stopRecorder() async {
-    String result;
+    String? result;
     try {
       // result = await flutterSound.stopRecorder();
       //TODO: Check for audio
 
       if (_recorderSubscription != null) {
-        _recorderSubscription.cancel();
+        _recorderSubscription!.cancel();
         _recorderSubscription = null;
       }
       if (_dbPeakSubscription != null) {
-        _dbPeakSubscription.cancel();
+        _dbPeakSubscription!.cancel();
         _dbPeakSubscription = null;
       }
     } catch (err) {}
     this.setState(() {
       this._isRecording = false;
     });
-    if (widget.arguments.fromVoice) {
+    if (widget.arguments!.fromVoice!) {
       PreferenceUtil.saveString(
               Constants.KEY_CATEGORYNAME, AppConstants.voiceRecords)
           .then((value) {
         PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
-                PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID))
+                PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID)!)
             .then((value) {
           TextEditingController fileName = new TextEditingController(
               text: AppConstants.voiceRecords +
@@ -174,7 +175,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
             audioPathMain = audioPath;
             containsAudioMain = containsAudio;
             setState(() {});
-          }, false, fileName, fromClass: widget.arguments.fromClass);
+          }, false, fileName, fromClass: widget.arguments!.fromClass);
         });
       });
     } else {
@@ -188,7 +189,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     return await File(path).exists();
   }
 
-  Future<Uint8List> makeBuffer(String path) async {
+  Future<Uint8List?> makeBuffer(String path) async {
     try {
       if (!await fileExists(path)) return null;
       File file = File(path);
@@ -203,7 +204,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
 
   void startPlayer() async {
     try {
-      String path = null;
+      String? path = null;
       if (_media == t_MEDIA.ASSET) {
         Uint8List buffer =
             (await rootBundle.load(variable.assetSample[_codec.index]))
@@ -216,14 +217,14 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         //TODO: Check for audio
       } else if (_media == t_MEDIA.FILE) {
         // Do we want to play from buffer or from file ?
-        if (await fileExists(_path[_codec.index])) {}
+        if (await fileExists(_path[_codec.index]!)) {}
         //TODO: Check for audio
         // path = await flutterSound
         //     .startPlayer(this._path[_codec.index]); // From file
       } else if (_media == t_MEDIA.BUFFER) {
         // Do we want to play from buffer or from file ?
-        if (await fileExists(_path[_codec.index])) {
-          Uint8List buffer = await makeBuffer(this._path[_codec.index]);
+        if (await fileExists(_path[_codec.index]!)) {
+          Uint8List? buffer = await makeBuffer(this._path[_codec.index]!);
           // if (buffer != null)
           // path = await flutterSound.thePlayer.startPlayerFromBuffer(
           //   buffer,
@@ -261,7 +262,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     try {
       await flutterSound.thePlayer.stopPlayer();
       if (_playerSubscription != null) {
-        _playerSubscription.cancel();
+        _playerSubscription!.cancel();
         _playerSubscription = null;
       }
       sliderCurrentPosition = 0.0;

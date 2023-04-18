@@ -1,8 +1,9 @@
+
 import 'relationship_result.dart';
 
 class RelationShipResponseList {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   RelationShipResponseList({this.isSuccess, this.result});
 
@@ -11,7 +12,7 @@ class RelationShipResponseList {
     if (json['result'] != null) {
       result = <Result>[];
       json['result'].forEach((v) {
-        result.add(Result.fromJson(v));
+        result!.add(Result.fromJson(v));
       });
     }
   }
@@ -20,7 +21,7 @@ class RelationShipResponseList {
     final data = <String, dynamic>{};
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }

@@ -156,22 +156,22 @@ class WebserviceCall {
   }
 
   String getQueryToUpdateProfile(
-      String userID,
-      String name,
-      String phoneNo,
-      String email,
-      String gender,
-      String bloodGroup,
-      String dateOfBirth,
-      File profilePic,
-      String firstName,
-      String middleName,
-      String lastName,
-      String cityId,
-      String stateId,
-      String addressLine1,
-      String addressLine2,
-      String zipcode,
+      String? userID,
+      String? name,
+      String? phoneNo,
+      String? email,
+      String? gender,
+      String? bloodGroup,
+      String? dateOfBirth,
+      File? profilePic,
+      String? firstName,
+      String? middleName,
+      String? lastName,
+      String? cityId,
+      String? stateId,
+      String? addressLine1,
+      String? addressLine2,
+      String? zipcode,
       bool fromFamily) {
     String query;
     query =
@@ -197,25 +197,25 @@ class WebserviceCall {
   }
 
   String makeJsonForUpdateProfile(
-      String userID,
-      String name,
-      String phoneNo,
-      String email,
-      String gender,
-      String bloodGroup,
-      String dateOfBirth,
-      File profilePic,
-      String firstName,
-      String middleName,
-      String lastName,
-      String cityId,
-      String stateId,
+      String? userID,
+      String? name,
+      String? phoneNo,
+      String? email,
+      String? gender,
+      String? bloodGroup,
+      String? dateOfBirth,
+      File? profilePic,
+      String? firstName,
+      String? middleName,
+      String? lastName,
+      String? cityId,
+      String? stateId,
       bool isUpdate,
-      String addressLine1,
-      String addressLine2,
-      String zipcode,
-      MyProfileModel myProfileModel,
-      UpdateRelationshipModel relationship) {
+      String? addressLine1,
+      String? addressLine2,
+      String? zipcode,
+      MyProfileModel? myProfileModel,
+      UpdateRelationshipModel? relationship) {
     final input = {};
     input[variable.qr_gender_p] = gender;
     input[variable.qr_bloodgroup_p] = bloodGroup;
@@ -227,18 +227,18 @@ class WebserviceCall {
     input[variable.qr_email_p] = email;
     final query = json.encode(input);
 
-    final profileResult = myProfileModel.result;
+    final profileResult = myProfileModel?.result;
 
-    final queryProfile = profileResult.toJson();
+    final queryProfile = profileResult?.toJson();
     if (isUpdate) {
       // NOTE if user try to update the role this would change
       final relationshipCollection = {
-        'userRelationshipCollection': [relationship.toJson()]
+        'userRelationshipCollection': [relationship?.toJson()]
       };
-      queryProfile.addAll(relationshipCollection);
+      queryProfile?.addAll(relationshipCollection);
     }
 
-    profileResult.userAddressCollection3[0].addressType = AddressType(
+    profileResult?.userAddressCollection3![0].addressType = AddressType(
       id: '22f814a7-5b72-41aa-b5f7-7d2cd38d5da4',
       code: 'RESADD',
       name: 'Resident Address',
@@ -252,7 +252,7 @@ class WebserviceCall {
     //TOD O here only check user add/update flow for removing the id from useraddresscollection
     var copyOfQueryProfile = queryProfile;
     final Map<String, dynamic> addressObj =
-        copyOfQueryProfile['userAddressCollection3'][0];
+        copyOfQueryProfile!['userAddressCollection3'][0];
     if (!isUpdate && addressObj['id'] == null) {
       addressObj.removeWhere((key, value) => key == 'id');
     } else if (addressObj['id'] == null) {

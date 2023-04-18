@@ -1,25 +1,26 @@
+
 import 'dart:convert';
 
 class Reminder {
-  String eid;
-  String title;
-  String description;
-  String estart;
-  String tplanid;
-  String teid_user;
-  String activityname;
-  String uformname;
-  String remindin;
-  String remindin_type;
-  String remindbefore;
-  String remindbefore_type;
-  String providerid;
-  String providername;
+  String? eid;
+  String? title;
+  String? description;
+  String? estart;
+  String? tplanid;
+  String? teid_user;
+  String? activityname;
+  String? uformname;
+  String? remindin;
+  String? remindin_type;
+  String? remindbefore;
+  String? remindbefore_type;
+  String? providerid;
+  String? providername;
   bool alreadyScheduled = false;
   bool evDisabled;
-  String importance;
-  String ack;
-  String ack_local;
+  String? importance;
+  String? ack;
+  String? ack_local;
 
   Reminder(
       {this.eid,
@@ -42,24 +43,24 @@ class Reminder {
       this.ack_local = ""});
 
   Reminder copyWith(
-      {String eid,
-      String title,
-      String description,
-      String estart,
-      String tplanid,
-      String teid_user,
-      String activityname,
-      String uformname,
-      String remindin,
-      String remindin_type,
-      String remindbefore,
-      String remindbefore_type,
-      String providerid,
-      String providername,
-      bool evDisabled,
-      int importance,
-      String ack,
-      String ack_local}) {
+      {String? eid,
+      String? title,
+      String? description,
+      String? estart,
+      String? tplanid,
+      String? teid_user,
+      String? activityname,
+      String? uformname,
+      String? remindin,
+      String? remindin_type,
+      String? remindbefore,
+      String? remindbefore_type,
+      String? providerid,
+      String? providername,
+      bool? evDisabled,
+      int? importance,
+      String? ack,
+      String? ack_local}) {
     return Reminder(
       eid: eid ?? this.eid,
       title: title ?? this.title,
@@ -76,7 +77,7 @@ class Reminder {
       evDisabled: evDisabled ?? this.evDisabled,
       remindbefore: remindbefore ?? this.remindbefore,
       remindbefore_type: remindbefore_type ?? this.remindbefore_type,
-      importance: importance ?? this.importance,
+      importance: importance as String? ?? this.importance,
       ack: ack ?? this.ack,
       ack_local: ack_local ?? this.ack_local,
     );

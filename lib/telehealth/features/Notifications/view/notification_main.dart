@@ -10,7 +10,7 @@ class NotificationMain extends StatefulWidget {
 
   bool isFromQurday;
 
-  NotificationMain({Key key, this.isFromQurday = false}) : super(key: key);
+  NotificationMain({Key? key, this.isFromQurday = false}) : super(key: key);
 
   @override
   _NotificationMainState createState() => _NotificationMainState();

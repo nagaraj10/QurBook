@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../../../common/PreferenceUtil.dart';
@@ -11,19 +12,19 @@ import '../../../constants/variable_constant.dart' as variable;
 import '../../../constants/fhb_query.dart' as query;
 
 class MediaTypeBlock implements BaseBloc {
-  MediaTypeRepository _mediaTypeRepository;
-  StreamController _mediaTypeControlller;
-  StreamController _mediaTypeControlllers;
+  late MediaTypeRepository _mediaTypeRepository;
+  StreamController? _mediaTypeControlller;
+  StreamController? _mediaTypeControlllers;
 
   StreamSink<ApiResponse<MediaTypesResponse>> get mediaTypeSink =>
-      _mediaTypeControlller.sink;
+      _mediaTypeControlller!.sink as StreamSink<ApiResponse<MediaTypesResponse>>;
   Stream<ApiResponse<MediaTypesResponse>> get mediaTypeStream =>
-      _mediaTypeControlller.stream;
+      _mediaTypeControlller!.stream as Stream<ApiResponse<MediaTypesResponse>>;
 
   StreamSink<ApiResponse<MediaDataList>> get mediaTypeSinks =>
-      _mediaTypeControlllers.sink;
+      _mediaTypeControlllers!.sink as StreamSink<ApiResponse<MediaDataList>>;
   Stream<ApiResponse<MediaDataList>> get mediaTypeStreams =>
-      _mediaTypeControlllers.stream;
+      _mediaTypeControlllers!.stream as Stream<ApiResponse<MediaDataList>>;
 
   @override
   void dispose() {
@@ -52,8 +53,8 @@ class MediaTypeBlock implements BaseBloc {
     }
   }
 
-  Future<MediaDataList> getMediTypesList() async {
-    MediaDataList mediaTypesResponse;
+  Future<MediaDataList?> getMediTypesList() async {
+    MediaDataList? mediaTypesResponse;
     mediaTypeSinks.add(ApiResponse.loading(variable.strgetMediaTypes));
     try {
       mediaTypesResponse = await _mediaTypeRepository.getMediaTypes();

@@ -1,6 +1,7 @@
+
 class Notes {
   Notes({
-    String id,
+    String? id,
   }) {
     _id = id;
   }
@@ -8,9 +9,9 @@ class Notes {
   Notes.fromJson(dynamic json) {
     _id = json['id'];
   }
-  String _id;
+  String? _id;
 
-  String get id => _id;
+  String? get id => _id;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

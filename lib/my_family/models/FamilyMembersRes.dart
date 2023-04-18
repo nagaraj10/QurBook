@@ -1,11 +1,12 @@
+
 import 'relationships.dart';
 import '../../src/model/user/AddressTypeModel.dart';
 import '../../src/model/user/UserAddressCollection.dart';
 
 class FamilyMembers {
-  bool isSuccess;
-  String message;
-  FamilyMemberResult result;
+  bool? isSuccess;
+  String? message;
+  FamilyMemberResult? result;
 
   FamilyMembers({this.isSuccess, this.message, this.result});
 
@@ -22,31 +23,31 @@ class FamilyMembers {
     data['isSuccess'] = isSuccess;
     data['message'] = message;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class FamilyMemberResult {
-  List<SharedByUsers> sharedByUsers;
-  List<SharedToUsers> sharedToUsers;
-  VirtualUserParent virtualUserParent;
+  List<SharedByUsers>? sharedByUsers;
+  List<SharedToUsers>? sharedToUsers;
+  VirtualUserParent? virtualUserParent;
 
   FamilyMemberResult(
       {this.sharedByUsers, this.sharedToUsers, this.virtualUserParent});
 
   FamilyMemberResult.fromJson(Map<String, dynamic> json) {
     if (json['sharedByUsers'] != null) {
-      sharedByUsers = List<SharedByUsers>();
+      sharedByUsers = <SharedByUsers>[];
       json['sharedByUsers'].forEach((v) {
-        sharedByUsers.add(SharedByUsers.fromJson(v));
+        sharedByUsers!.add(SharedByUsers.fromJson(v));
       });
     }
     if (json['sharedToUsers'] != null) {
-      sharedToUsers = List<SharedToUsers>();
+      sharedToUsers = <SharedToUsers>[];
       json['sharedToUsers'].forEach((v) {
-        sharedToUsers.add(SharedToUsers.fromJson(v));
+        sharedToUsers!.add(SharedToUsers.fromJson(v));
       });
     }
     try {
@@ -59,36 +60,36 @@ class FamilyMemberResult {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (sharedByUsers != null) {
-      data['sharedByUsers'] = sharedByUsers.map((v) => v.toJson()).toList();
+      data['sharedByUsers'] = sharedByUsers!.map((v) => v.toJson()).toList();
     }
     if (sharedToUsers != null) {
-      data['sharedToUsers'] = sharedToUsers.map((v) => v.toJson()).toList();
+      data['sharedToUsers'] = sharedToUsers!.map((v) => v.toJson()).toList();
     }
     if (virtualUserParent != null) {
-      data['virtualUserParent'] = virtualUserParent.toJson();
+      data['virtualUserParent'] = virtualUserParent!.toJson();
     }
     return data;
   }
 }
 
 class SharedByUsers {
-  String id;
-  String status;
-  String nickName;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  RelationsShipModel relationship;
-  Child child;
-  String membershipOfferedBy;
-  bool isCaregiver;
+  String? id;
+  String? status;
+  String? nickName;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  RelationsShipModel? relationship;
+  Child? child;
+  String? membershipOfferedBy;
+  bool? isCaregiver;
   //for Non adherance
-  bool isNewUser = true;
-  String remainderForId;
-  String remainderFor;
-  String remainderMins;
-  String nonAdheranceId;
-  ChatListItem chatListItem;
+  bool? isNewUser = true;
+  String? remainderForId;
+  String? remainderFor;
+  String? remainderMins;
+  String? nonAdheranceId;
+  ChatListItem? chatListItem;
   SharedByUsers(
       {this.id,
       this.status,
@@ -136,13 +137,13 @@ class SharedByUsers {
     data['lastModifiedOn'] = lastModifiedOn;
     data['membershipOfferedBy'] = membershipOfferedBy;
     if (relationship != null) {
-      data['relationship'] = relationship.toJson();
+      data['relationship'] = relationship!.toJson();
     }
     if (child != null) {
-      data['child'] = child.toJson();
+      data['child'] = child!.toJson();
     }
     if (this.chatListItem != null) {
-      data['chatListItem'] = this.chatListItem.toJson();
+      data['chatListItem'] = this.chatListItem!.toJson();
     }
     return data;
   }
@@ -198,36 +199,36 @@ class SharedByUsers {
 } */
 
 class Child {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
-  String communicationPreferences;
-  String medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  List<UserContactCollectionFamily> userContactCollection3;
-  List<UserRoleCollection3> userRoleCollection3;
-  List<UserAddressCollection3> userAddressCollection3;
-  AdditionalInfo additionalInfo;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
+  String? communicationPreferences;
+  String? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  List<UserContactCollectionFamily>? userContactCollection3;
+  List<UserRoleCollection3>? userRoleCollection3;
+  List<UserAddressCollection3>? userAddressCollection3;
+  AdditionalInfo? additionalInfo;
 
   Child({
     this.id,
@@ -293,19 +294,19 @@ class Child {
     if (json['userContactCollection3'] != null) {
       userContactCollection3 = <UserContactCollectionFamily>[];
       json['userContactCollection3'].forEach((v) {
-        userContactCollection3.add(UserContactCollectionFamily.fromJson(v));
+        userContactCollection3!.add(UserContactCollectionFamily.fromJson(v));
       });
     }
     if (json['userRoleCollection3'] != null) {
       userRoleCollection3 = <UserRoleCollection3>[];
       json['userRoleCollection3'].forEach((v) {
-        userRoleCollection3.add(UserRoleCollection3.fromJson(v));
+        userRoleCollection3!.add(UserRoleCollection3.fromJson(v));
       });
     }
     if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = List<UserAddressCollection3>();
+      userAddressCollection3 = <UserAddressCollection3>[];
       json['userAddressCollection3'].forEach((v) {
-        userAddressCollection3.add(UserAddressCollection3.fromJson(v));
+        userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
       });
     }
     additionalInfo = json['additionalInfo'] != null
@@ -343,26 +344,26 @@ class Child {
     data['lastModifiedOn'] = lastModifiedOn;
     if (userContactCollection3 != null) {
       data['userContactCollection3'] =
-          userContactCollection3.map((v) => v.toJson()).toList();
+          userContactCollection3!.map((v) => v.toJson()).toList();
     }
     if (userRoleCollection3 != null) {
       data['userRoleCollection3'] =
-          userRoleCollection3.map((v) => v.toJson()).toList();
+          userRoleCollection3!.map((v) => v.toJson()).toList();
     }
     if (userAddressCollection3 != null) {
       data['userAddressCollection3'] =
-          userAddressCollection3.map((v) => v.toJson()).toList();
+          userAddressCollection3!.map((v) => v.toJson()).toList();
     }
     if (additionalInfo != null) {
-      data['additionalInfo'] = additionalInfo.toJson();
+      data['additionalInfo'] = additionalInfo!.toJson();
     }
     return data;
   }
 }
 
 class HeightObj {
-  String valueFeet;
-  String valueInches;
+  String? valueFeet;
+  String? valueInches;
 
   HeightObj({this.valueFeet, this.valueInches});
 
@@ -380,10 +381,10 @@ class HeightObj {
 }
 
 class AdditionalInfo {
-  String height;
-  String weight;
-  String weightUnitCode;
-  HeightObj heightObj;
+  String? height;
+  String? weight;
+  String? weightUnitCode;
+  HeightObj? heightObj;
 
   AdditionalInfo({this.height, this.weight});
 
@@ -411,7 +412,7 @@ class AdditionalInfo {
     data['height'] = height;
     data['weight'] = weight;
     if (this.heightObj != null) {
-      data['height'] = this.heightObj.toJson();
+      data['height'] = this.heightObj!.toJson();
     }
     return data;
   }
@@ -480,13 +481,13 @@ class AdditionalInfo {
 } */
 
 class UserContactCollectionFamily {
-  String id;
-  String phoneNumber;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String email;
+  String? id;
+  String? phoneNumber;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? email;
 
   UserContactCollectionFamily(
       {this.id,
@@ -521,15 +522,15 @@ class UserContactCollectionFamily {
 }
 
 class PhoneNumberType {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   PhoneNumberType(
       {this.id,
@@ -570,10 +571,10 @@ class PhoneNumberType {
 }
 
 class UserRoleCollection3 {
-  String id;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   UserRoleCollection3(
       {this.id, this.isActive, this.createdOn, this.lastModifiedOn});
@@ -596,15 +597,15 @@ class UserRoleCollection3 {
 }
 
 class Role {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String roleCode;
-  String description;
-  bool isSystemRole;
-  bool isEnabled;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? roleCode;
+  String? description;
+  bool? isSystemRole;
+  bool? isEnabled;
 
   Role(
       {this.id,
@@ -645,21 +646,21 @@ class Role {
 }
 
 class SharedToUsers {
-  String id;
-  String status;
-  String nickName;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  RelationsShipModel relationship;
-  Parent parent;
+  String? id;
+  String? status;
+  String? nickName;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  RelationsShipModel? relationship;
+  Parent? parent;
   //non Adherance
-  bool isCaregiver;
-  bool isNewUser = true;
-  String remainderForId;
-  String remainderFor;
-  String remainderMins;
-  String nonAdheranceId;
+  bool? isCaregiver;
+  bool? isNewUser = true;
+  String? remainderForId;
+  String? remainderFor;
+  String? remainderMins;
+  String? nonAdheranceId;
   SharedToUsers(
       {this.id,
       this.status,
@@ -699,43 +700,43 @@ class SharedToUsers {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (relationship != null) {
-      data['relationship'] = relationship.toJson();
+      data['relationship'] = relationship!.toJson();
     }
     if (parent != null) {
-      data['parent'] = parent.toJson();
+      data['parent'] = parent!.toJson();
     }
     return data;
   }
 }
 
 class Parent {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
   dynamic isEmailVerified;
-  bool isCpUser;
+  bool? isCpUser;
   dynamic communicationPreferences;
   dynamic medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
 
   Parent(
       {this.id,
@@ -830,9 +831,9 @@ class Parent {
 }
 
 class VirtualUserParent {
-  String countryCode;
-  String email;
-  String phoneNumber;
+  String? countryCode;
+  String? email;
+  String? phoneNumber;
 
   VirtualUserParent({this.countryCode, this.email, this.phoneNumber});
 
@@ -852,15 +853,15 @@ class VirtualUserParent {
 }
 
 class ChatListItem {
-  String id;
-  String peerId;
-  String userId;
-  String createdOn;
-  bool isActive;
-  bool isDisable;
-  bool isMuted;
-  int unReadNotificationCount;
-  String lastModifiedOn;
+  String? id;
+  String? peerId;
+  String? userId;
+  String? createdOn;
+  bool? isActive;
+  bool? isDisable;
+  bool? isMuted;
+  int? unReadNotificationCount;
+  String? lastModifiedOn;
 
   ChatListItem(
       {this.id,

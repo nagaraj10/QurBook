@@ -1,35 +1,36 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class LaboratoryIds {
-  String id;
-  String createdBy;
-  String name;
-  String logo;
-  String latitude;
-  String longitude;
-  String logoThumbnail;
-  int zipCode;
-  String website;
-  String city;
-  String googleMapUrl;
-  String branch;
-  String addressLine1;
-  String addressLine2;
-  String state;
-  String email;
-  String description;
-  String phoneNumber1;
-  String phoneNumber2;
-  String phoneNumber3;
-  String phoneNumber4;
-  bool isUserDefined;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  bool isDefault;
-  String labPatientMappingId;
-  String entityCode;
-  String goFhbCode;
+  String? id;
+  String? createdBy;
+  String? name;
+  String? logo;
+  String? latitude;
+  String? longitude;
+  String? logoThumbnail;
+  int? zipCode;
+  String? website;
+  String? city;
+  String? googleMapUrl;
+  String? branch;
+  String? addressLine1;
+  String? addressLine2;
+  String? state;
+  String? email;
+  String? description;
+  String? phoneNumber1;
+  String? phoneNumber2;
+  String? phoneNumber3;
+  String? phoneNumber4;
+  bool? isUserDefined;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isDefault;
+  String? labPatientMappingId;
+  String? entityCode;
+  String? goFhbCode;
 
   LaboratoryIds(
       {this.id,

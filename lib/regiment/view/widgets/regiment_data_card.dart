@@ -1,3 +1,4 @@
+
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -33,9 +34,9 @@ class RegimentDataCard extends StatelessWidget {
   final Color color;
   final dynamic icon;
   final dynamic eid;
-  final List<VitalsData> vitalsData;
-  final Otherinfo mediaData;
-  final DateTime startTime;
+  final List<VitalsData>? vitalsData;
+  final Otherinfo? mediaData;
+  final DateTime? startTime;
   final RegimentDataModel regimentData;
 
   final dynamic uid;
@@ -44,16 +45,16 @@ class RegimentDataCard extends StatelessWidget {
   final dynamic formName;
 
   const RegimentDataCard({
-    @required this.index,
-    @required this.title,
-    @required this.time,
-    @required this.color,
-    @required this.icon,
-    @required this.eid,
-    @required this.vitalsData,
-    @required this.startTime,
-    @required this.mediaData,
-    @required this.regimentData,
+    required this.index,
+    required this.title,
+    required this.time,
+    required this.color,
+    required this.icon,
+    required this.eid,
+    required this.vitalsData,
+    required this.startTime,
+    required this.mediaData,
+    required this.regimentData,
     this.uid = '',
     this.aid = '',
     this.formId = '',
@@ -69,15 +70,15 @@ class RegimentDataCard extends StatelessWidget {
             bottom: 10.0.h,
           ),
           child: Material(
-            color: regimentData?.activityOrgin == strAppointmentRegimen
+            color: regimentData.activityOrgin == strAppointmentRegimen
                 ? Color(CommonUtil().getMyPrimaryColor())
                 : Colors.white,
             child: InkWell(
               onTap: () {
-                if (regimentData?.activityOrgin == strAppointmentRegimen) {
-                  if ((regimentData?.eid != null) &&
-                      (regimentData?.eid != '')) {
-                    CommonUtil().goToAppointmentDetailScreen(regimentData?.eid);
+                if (regimentData.activityOrgin == strAppointmentRegimen) {
+                  if ((regimentData.eid != null) &&
+                      (regimentData.eid != '')) {
+                    CommonUtil().goToAppointmentDetailScreen(regimentData.eid);
                   }
                 } else {
                   onCardPressed(context,
@@ -89,12 +90,12 @@ class RegimentDataCard extends StatelessWidget {
                   Expanded(
                     child: Material(
                       color:
-                          regimentData?.activityOrgin == strAppointmentRegimen
+                          regimentData.activityOrgin == strAppointmentRegimen
                               ? Colors.white
                               : color,
                       child: InkWell(
                         onTap: () {
-                          if (regimentData?.activityOrgin !=
+                          if (regimentData.activityOrgin !=
                               strAppointmentRegimen) {
                             onCardPressed(context,
                                 aid: aid,
@@ -110,7 +111,7 @@ class RegimentDataCard extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              regimentData?.activityOrgin ==
+                              regimentData.activityOrgin ==
                                       strAppointmentRegimen
                                   ? getAppointmentIcon()
                                   : icon,
@@ -119,7 +120,7 @@ class RegimentDataCard extends StatelessWidget {
                                                 listen: false)
                                             .regimentMode ==
                                         RegimentMode.Schedule &&
-                                    !(regimentData?.asNeeded ?? false),
+                                    !(regimentData.asNeeded),
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                     top: 2.0.h,
@@ -127,7 +128,7 @@ class RegimentDataCard extends StatelessWidget {
                                   child: Text(
                                     time,
                                     style: TextStyle(
-                                      color: regimentData?.activityOrgin ==
+                                      color: regimentData.activityOrgin ==
                                               strAppointmentRegimen
                                           ? Color(
                                               CommonUtil().getMyPrimaryColor())
@@ -166,7 +167,7 @@ class RegimentDataCard extends StatelessWidget {
                             ],
                           ),
                           Visibility(
-                            visible: (regimentData?.isModifiedToday ?? false) ||
+                            visible: (regimentData.isModifiedToday) ||
                                 regimentData.ack_local != null,
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -179,7 +180,7 @@ class RegimentDataCard extends StatelessWidget {
                                 children: [
                                   Visibility(
                                     visible:
-                                        regimentData?.isModifiedToday ?? false,
+                                        regimentData.isModifiedToday,
                                     child: SvgPicture.asset(
                                       icon_modified,
                                       width: 20.0.sp,
@@ -193,10 +194,10 @@ class RegimentDataCard extends StatelessWidget {
                                       children: [
                                         Text(
                                           '${CommonUtil().regimentDateFormat(
-                                            regimentData?.asNeeded
-                                                ? regimentData?.ack_local ??
+                                            regimentData.asNeeded
+                                                ? regimentData.ack_local ??
                                                     DateTime.now()
-                                                : regimentData?.ack_local ??
+                                                : regimentData.ack_local ??
                                                     DateTime.now(),
                                             isAck: true,
                                           )}',
@@ -209,7 +210,7 @@ class RegimentDataCard extends StatelessWidget {
                                           child: InkWell(
                                             onTap: () async {
                                               LoaderClass.showLoadingDialog(
-                                                Get.context,
+                                                Get.context!,
                                                 canDismiss: false,
                                               );
                                               var saveResponse = await Provider
@@ -219,7 +220,7 @@ class RegimentDataCard extends StatelessWidget {
                                                   .undoSaveFormData(
                                                 eid: eid,
                                               );
-                                              if (saveResponse?.isSuccess ??
+                                              if (saveResponse.isSuccess ??
                                                   false) {
                                                 Future.delayed(
                                                     Duration(milliseconds: 300),
@@ -230,11 +231,11 @@ class RegimentDataCard extends StatelessWidget {
                                                           listen: false)
                                                       .fetchRegimentData();
                                                   LoaderClass.hideLoadingDialog(
-                                                      Get.context);
+                                                      Get.context!);
                                                 });
                                               } else {
                                                 LoaderClass.hideLoadingDialog(
-                                                    Get.context);
+                                                    Get.context!);
                                               }
                                             },
                                             child: Text(
@@ -261,7 +262,7 @@ class RegimentDataCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (regimentData?.activityOrgin != strAppointmentRegimen)
+                  if (regimentData.activityOrgin != strAppointmentRegimen)
                     SizedBox(
                       width: 3.0.w,
                       child: Container(
@@ -289,7 +290,7 @@ class RegimentDataCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Visibility(
-                    visible: regimentData?.isMandatory ?? false,
+                    visible: regimentData.isMandatory,
                     child: Padding(
                       padding: EdgeInsets.only(
                         right: 5.0.w,
@@ -307,51 +308,51 @@ class RegimentDataCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          getNameFromTitle(regimentData),
+                          getNameFromTitle(regimentData)!,
                           style: TextStyle(
                             fontSize: 16.0.sp,
                             fontWeight: FontWeight.w500,
-                            color: regimentData?.activityOrgin ==
+                            color: regimentData.activityOrgin ==
                                     strAppointmentRegimen
                                 ? Colors.white
                                 : Colors.black,
                           ),
                         ),
-                        if (regimentData?.healthOrgName != null &&
-                            regimentData?.healthOrgName != '' &&
-                            regimentData?.healthOrgName != strSelfRegimen &&
-                            regimentData?.activityOrgin ==
+                        if (regimentData.healthOrgName != null &&
+                            regimentData.healthOrgName != '' &&
+                            regimentData.healthOrgName != strSelfRegimen &&
+                            regimentData.activityOrgin ==
                                 strAppointmentRegimen)
-                          if (regimentData?.doctorSessionId != null)
+                          if (regimentData.doctorSessionId != null)
                             getHealthOrgName(regimentData),
-                        if (regimentData?.doctorSessionId == null)
+                        if (regimentData.doctorSessionId == null)
                           Text(
-                            regimentData?.serviceCategory?.name ?? '',
+                            regimentData.serviceCategory?.name ?? '',
                             style: getTextStyle(),
                           ),
-                        if (regimentData?.doctorSessionId == null &&
-                            regimentData?.modeOfService?.name != null)
+                        if (regimentData.doctorSessionId == null &&
+                            regimentData.modeOfService?.name != null)
                           Text(
-                            regimentData?.modeOfService?.name ?? '',
+                            regimentData.modeOfService?.name ?? '',
                             style: getTextStyle(),
                           )
                         else
                           SizedBox(),
-                        if (regimentData?.estart != null &&
-                            regimentData?.estart != '' &&
-                            regimentData?.eend != null &&
-                            regimentData?.eend != '' &&
-                            regimentData?.activityOrgin ==
+                        if (regimentData.estart != null &&
+                            regimentData.estart != '' &&
+                            regimentData.eend != null &&
+                            regimentData.eend != '' &&
+                            regimentData.activityOrgin ==
                                 strAppointmentRegimen)
                           getStartEndTime(regimentData),
-                        (regimentData?.healthOrgName != null &&
-                                regimentData?.healthOrgName != '' &&
-                                regimentData?.healthOrgName != strSelfRegimen &&
-                                regimentData?.activityOrgin ==
+                        (regimentData.healthOrgName != null &&
+                                regimentData.healthOrgName != '' &&
+                                regimentData.healthOrgName != strSelfRegimen &&
+                                regimentData.activityOrgin ==
                                     strAppointmentRegimen)
                             ? SizedBox(height: 4.h)
                             : SizedBox(height: 20.h),
-                        if (regimentData?.activityOrgin ==
+                        if (regimentData.activityOrgin ==
                             strAppointmentRegimen)
                           Container(
                             alignment: Alignment.bottomRight,
@@ -364,7 +365,7 @@ class RegimentDataCard extends StatelessWidget {
               ),
             ),
           ),
-          if (regimentData?.activityOrgin != strAppointmentRegimen)
+          if (regimentData.activityOrgin != strAppointmentRegimen)
             Padding(
               padding: EdgeInsets.symmetric(
                 vertical: 10.0.h,
@@ -379,8 +380,8 @@ class RegimentDataCard extends StatelessWidget {
                       Provider.of<RegimentViewModel>(context, listen: false)
                           .startRegimenTTS(
                         index,
-                        staticText: regimentData?.title ?? '',
-                        dynamicText: regimentData?.sayTextDynamic ?? '',
+                        staticText: regimentData.title ?? '',
+                        dynamicText: regimentData.sayTextDynamic ?? '',
                       );
                     }
                   },
@@ -411,10 +412,10 @@ class RegimentDataCard extends StatelessWidget {
           isNormal = (double.tryParse(vitalData.value).toString().isNotEmpty &&
                   double.tryParse(vitalData.amin).toString().isNotEmpty &&
                   double.tryParse(vitalData.amax).toString().isNotEmpty)
-              ? (double.tryParse(vitalData.value) <=
-                      double.tryParse(vitalData.amax) &&
-                  double.tryParse(vitalData.value) >=
-                      double.tryParse(vitalData.amin))
+              ? (double.tryParse(vitalData.value)! <=
+                      double.tryParse(vitalData.amax)! &&
+                  double.tryParse(vitalData.value)! >=
+                      double.tryParse(vitalData.amin)!)
               : true;
         } catch (e) {
           //print(e);
@@ -455,18 +456,18 @@ class RegimentDataCard extends StatelessWidget {
         );
       }
     });
-    var imageUrl = null;
-    regimentData?.uformdata?.vitalsData?.forEach((vital) {
+    dynamic imageUrl = null;
+    regimentData.uformdata?.vitalsData?.forEach((vital) {
       if ((vital.photo?.url ?? "").isNotEmpty) {
         imageUrl = vital.photo?.url;
       }
     });
-    if (regimentData?.ack == null) if (mediaData?.snoozeText != null &&
-        mediaData?.snoozeText.length > 0) {
+    if (regimentData.ack == null) if (mediaData?.snoozeText != null &&
+        mediaData!.snoozeText!.length > 0) {
       fieldWidgets.add(Padding(
         padding: EdgeInsets.all(5.0.sp),
         child: Text(
-          mediaData.snoozeText,
+          mediaData!.snoozeText!,
           style: TextStyle(
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -474,7 +475,7 @@ class RegimentDataCard extends StatelessWidget {
         ),
       ));
     }
-    if (mediaData != null || (regimentData?.hashtml ?? false)) {
+    if (mediaData != null || (regimentData.hashtml ?? false)) {
       fieldWidgets.add(
         Padding(
           padding: EdgeInsets.symmetric(
@@ -484,7 +485,7 @@ class RegimentDataCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Visibility(
-                visible: mediaData.needPhoto == '1',
+                visible: mediaData!.needPhoto == '1',
                 child: MediaIconWidget(
                   color: color,
                   icon: imageUrl != null
@@ -494,35 +495,35 @@ class RegimentDataCard extends StatelessWidget {
                       ? () {
                           Get.to(
                             () => ImageViewer(
-                                imageUrl, eid, regimentData?.providerid),
+                                imageUrl, eid, regimentData.providerid),
                           );
                         }
                       : null,
                 ),
               ),
               Visibility(
-                visible: mediaData.needAudio == '1',
+                visible: mediaData!.needAudio == '1',
                 child: MediaIconWidget(
                   color: color,
                   icon: Icons.mic,
                 ),
               ),
               Visibility(
-                visible: mediaData.needVideo == '1',
+                visible: mediaData!.needVideo == '1',
                 child: MediaIconWidget(
                   color: color,
                   icon: Icons.videocam,
                 ),
               ),
               Visibility(
-                visible: mediaData.needFile == '1',
+                visible: mediaData!.needFile == '1',
                 child: MediaIconWidget(
                   color: color,
                   icon: Icons.attach_file,
                 ),
               ),
               Visibility(
-                visible: regimentData.hashtml,
+                visible: regimentData.hashtml!,
                 child: MediaIconWidget(
                   color: color,
                   icon: Icons.menu_book_rounded,
@@ -530,7 +531,7 @@ class RegimentDataCard extends StatelessWidget {
                     Get.to(
                       RegimentWebView(
                         title: title,
-                        selectedUrl: regimentData?.htmltemplate,
+                        selectedUrl: regimentData.htmltemplate,
                       ),
                     );
                     // CommonUtil().openWebViewNew(
@@ -542,7 +543,7 @@ class RegimentDataCard extends StatelessWidget {
                 ),
               ),
               Visibility(
-                visible: !regimentData.hasform,
+                visible: !regimentData.hasform!,
                 child: Padding(
                   padding: EdgeInsets.only(
                     left: 5.0.w,
@@ -556,47 +557,47 @@ class RegimentDataCard extends StatelessWidget {
                           Navigator.pop(context);
                           stopRegimenTTS();
                           final canEdit =
-                              startTime.difference(DateTime.now()).inMinutes <=
+                              startTime!.difference(DateTime.now()).inMinutes <=
                                       15 &&
                                   Provider.of<RegimentViewModel>(context,
                                               listen: false)
                                           .regimentMode ==
                                       RegimentMode.Schedule;
                           if (canEdit || isValidSymptom(context)) {
-                            if (regimentData?.eid != null &&
-                                regimentData?.eid != '') {
+                            if (regimentData.eid != null &&
+                                regimentData.eid != '') {
                               RegimentService.getActivityStatus(
-                                      eid: regimentData?.eid)
+                                      eid: regimentData.eid)
                                   .then((value) {
-                                if (value?.isSuccess ?? false) {
-                                  if (value?.result != null) {
-                                    if (value?.result[0].planStatus ==
+                                if (value.isSuccess ?? false) {
+                                  if (value.result != null) {
+                                    if (value.result![0].planStatus ==
                                             UnSubscribed ||
-                                        value?.result[0].planStatus ==
+                                        value.result![0].planStatus ==
                                             Expired) {
                                       var message =
-                                          (value?.result[0].planStatus ==
+                                          (value.result![0].planStatus ==
                                                   UnSubscribed)
                                               ? UnSubscribed
                                               : Expired;
                                       CommonUtil().showDialogForActivityStatus(
                                           'Plan $message, $msgData',
-                                          Get.context, pressOk: () {
+                                          Get.context!, pressOk: () {
                                         Get.back();
-                                        logRegimenActivity(Get.context);
+                                        logRegimenActivity(Get.context!);
                                       });
                                     } else {
-                                      logRegimenActivity(Get.context);
+                                      logRegimenActivity(Get.context!);
                                     }
                                   } else {
-                                    logRegimenActivity(Get.context);
+                                    logRegimenActivity(Get.context!);
                                   }
                                 } else {
-                                  logRegimenActivity(Get.context);
+                                  logRegimenActivity(Get.context!);
                                 }
                               });
                             } else {
-                              logRegimenActivity(Get.context);
+                              logRegimenActivity(Get.context!);
                             }
                           } else {
                             FlutterToast().getToast(
@@ -633,7 +634,7 @@ class RegimentDataCard extends StatelessWidget {
 
   logRegimenActivity(BuildContext context) async {
     LoaderClass.showLoadingDialog(
-      Get.context,
+      Get.context!,
       canDismiss: false,
     );
     var saveResponse =
@@ -641,19 +642,19 @@ class RegimentDataCard extends StatelessWidget {
             .saveFormData(
       eid: eid,
     );
-    if (saveResponse?.isSuccess ?? false) {
-      if ((saveResponse?.result != null) &&
-          (saveResponse?.result?.actions != null) &&
-          (saveResponse?.result?.actions?.returnData != null)) {
-        LoaderClass.hideLoadingDialog(Get.context);
+    if (saveResponse.isSuccess ?? false) {
+      if ((saveResponse.result != null) &&
+          (saveResponse.result?.actions != null) &&
+          (saveResponse.result?.actions?.returnData != null)) {
+        LoaderClass.hideLoadingDialog(Get.context!);
         checkForReturnActionsProviderForm(
-          returnAction: saveResponse?.result?.actions?.returnData,
+          returnAction: saveResponse.result?.actions?.returnData,
         );
       } else {
         Future.delayed(Duration(milliseconds: 300), () async {
           await Provider.of<RegimentViewModel>(context, listen: false)
               .fetchRegimentData();
-          LoaderClass.hideLoadingDialog(Get.context);
+          LoaderClass.hideLoadingDialog(Get.context!);
         });
       }
       /* Future.delayed(Duration(milliseconds: 300),
@@ -664,7 +665,7 @@ class RegimentDataCard extends StatelessWidget {
                               LoaderClass.hideLoadingDialog(Get.context);
                             });*/
     } else {
-      LoaderClass.hideLoadingDialog(Get.context);
+      LoaderClass.hideLoadingDialog(Get.context!);
     }
   }
 
@@ -675,27 +676,27 @@ class RegimentDataCard extends StatelessWidget {
     return (Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentMode ==
             RegimentMode.Symptoms) &&
-        ((selectedDate?.year <= currentTime.year)
-            ? (selectedDate?.month <= currentTime.month
-                ? selectedDate?.day <= currentTime.day
+        ((selectedDate.year <= currentTime.year)
+            ? (selectedDate.month <= currentTime.month
+                ? selectedDate.day <= currentTime.day
                 : false)
             : false);
   }
 
-  String getDialogTitle(BuildContext context, String activityName) {
-    var title = '';
-    if (!(regimentData?.asNeeded ?? false) &&
+  String? getDialogTitle(BuildContext context, String? activityName) {
+    String? title = '';
+    if (!(regimentData.asNeeded) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule) {
       if (activityName != null && activityName != '') {
-        title = activityName?.capitalizeFirstofEach;
+        title = activityName.capitalizeFirstofEach;
       } else {
         title =
-            '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
+            '${regimentData.estart != null ? DateFormat('hh:mm a').format(regimentData.estart!) : ''},${regimentData.title}';
       }
     } else {
       if (activityName != null && activityName != '') {
-        title = activityName?.capitalizeFirstofEach;
+        title = activityName.capitalizeFirstofEach;
       } else {
         title = regimentData.title;
       }
@@ -704,9 +705,9 @@ class RegimentDataCard extends StatelessWidget {
   }
 
   Future<void> onCardPressed(BuildContext context,
-      {String eventIdReturn,
-      String followEventContext,
-      String activityName,
+      {String? eventIdReturn,
+      String? followEventContext,
+      String? activityName,
       dynamic uid,
       dynamic aid,
       dynamic formId,
@@ -719,13 +720,13 @@ class RegimentDataCard extends StatelessWidget {
                 listen: false)
             .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
         if (response != null &&
-            response?.isSuccess &&
-            response?.result != null) {
+            response.isSuccess! &&
+            response.result != null) {
           print('forEventId: ' + response.toJson().toString());
-          eventId = response?.result?.eid.toString();
+          eventId = response.result?.eid.toString();
         }
       }
-      var canEdit = startTime.difference(DateTime.now()).inMinutes <= 15 &&
+      var canEdit = startTime!.difference(DateTime.now()).inMinutes <= 15 &&
           Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
               RegimentMode.Schedule;
       // if (canEdit || isValidSymptom(context)) {
@@ -733,9 +734,9 @@ class RegimentDataCard extends StatelessWidget {
           await Provider.of<RegimentViewModel>(context, listen: false)
               .getFormData(eid: eventId);
       print(fieldsResponseModel);
-      if (fieldsResponseModel.isSuccess &&
-          (fieldsResponseModel.result.fields.isNotEmpty ||
-              mediaData.toJson().toString().contains('1')) &&
+      if (fieldsResponseModel.isSuccess! &&
+          (fieldsResponseModel.result!.fields!.isNotEmpty ||
+              mediaData!.toJson().toString().contains('1')) &&
           Provider.of<RegimentViewModel>(context, listen: false)
                   .regimentStatus !=
               RegimentStatus.DialogOpened) {
@@ -744,58 +745,58 @@ class RegimentDataCard extends StatelessWidget {
         var value = await showDialog(
           context: context,
           builder: (context) => FormDataDialog(
-            introText: regimentData?.otherinfo?.introText ?? '',
-            fieldsData: fieldsResponseModel.result.fields,
+            introText: regimentData.otherinfo?.introText ?? '',
+            fieldsData: fieldsResponseModel.result?.fields,
             eid: eventId,
             color: color,
             mediaData: mediaData,
             formTitle: getDialogTitle(context, activityName),
             canEdit: canEdit || isValidSymptom(context),
-            triggerAction: (String triggerEventId, String followContext,
-                String activityName) {
-              Provider.of<RegimentViewModel>(Get.context, listen: false)
+            triggerAction: (String? triggerEventId, String? followContext,
+                String? activityName) {
+              Provider.of<RegimentViewModel>(Get.context!, listen: false)
                   .updateRegimentStatus(RegimentStatus.DialogClosed);
               Get.back();
-              onCardPressed(Get.context,
+              onCardPressed(Get.context!,
                   eventIdReturn: triggerEventId,
                   followEventContext: followContext,
                   activityName: activityName);
             },
             followEventContext: followEventContext,
             isFollowEvent: eventIdReturn != null,
-            providerId: regimentData?.providerid,
+            providerId: regimentData.providerid,
           ),
         );
         if (value != null && (value ?? false)) {
           LoaderClass.showLoadingDialog(
-            Get.context,
+            Get.context!,
             canDismiss: false,
           );
           Future.delayed(Duration(milliseconds: 300), () async {
             await Provider.of<RegimentViewModel>(context, listen: false)
                 .fetchRegimentData();
-            LoaderClass.hideLoadingDialog(Get.context);
+            LoaderClass.hideLoadingDialog(Get.context!);
           });
         }
         QurPlanReminders.getTheRemindersFromAPI();
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogClosed);
-      } else if (!regimentData.hasform) {
+      } else if (!regimentData.hasform!) {
         FlutterToast().getToast(
           tickInfo,
           Colors.black,
         );
       }
     } catch (e) {
-      LoaderClass.hideLoadingDialog(Get.context);
+      LoaderClass.hideLoadingDialog(Get.context!);
     }
   }
 
   getHealthOrgName(RegimentDataModel regimen) {
-    if (regimentData?.healthOrgName != null &&
-        regimentData?.healthOrgName != '') {
+    if (regimentData.healthOrgName != null &&
+        regimentData.healthOrgName != '') {
       return Text(
-        regimentData?.healthOrgName?.trim(),
+        regimentData.healthOrgName?.trim(),
         style: TextStyle(
             fontSize: 16.0.sp,
             fontWeight: FontWeight.w500,
@@ -810,34 +811,34 @@ class RegimentDataCard extends StatelessWidget {
     return TextStyle(
         fontSize: 16.0.sp,
         fontWeight: FontWeight.w500,
-        color: regimentData?.activityOrgin == strAppointmentRegimen
+        color: regimentData.activityOrgin == strAppointmentRegimen
             ? Colors.white
             : Colors.black);
   }
 
   getStartEndTime(RegimentDataModel regimen) {
-    if (regimentData?.estart != null &&
-        regimentData?.estart != '' &&
-        regimentData?.eend != null &&
-        regimentData?.eend != '') {
+    if (regimentData.estart != null &&
+        regimentData.estart != '' &&
+        regimentData.eend != null &&
+        regimentData.eend != '') {
       bool showEndTime = true;
-      if (CommonUtil.REGION_CODE == 'US'&& regimentData?.code!='CONSLTN') {
-        showEndTime = !(regimentData?.isEndTimeOptional??false);
+      if (CommonUtil.REGION_CODE == 'US'&& regimentData.code!='CONSLTN') {
+        showEndTime = !(regimentData.isEndTimeOptional??false);
       }
       return Row(
         children: [
           Text(
-            DateFormat('hh:mm a').format(regimentData?.estart),
+            DateFormat('hh:mm a').format(regimentData.estart!),
             style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
           ),
           if (showEndTime) ...{
             Text(
-              ' - ' + DateFormat('hh:mm a').format(regimentData?.eend),
+              ' - ' + DateFormat('hh:mm a').format(regimentData.eend!),
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
             ),
             Text(
               ' (' +
-                  (CommonUtil.convertMinuteToHour(regimentData?.duration ?? 0))
+                  (CommonUtil.convertMinuteToHour(regimentData.duration ?? 0))
                       .toString() +
                   ')',
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
@@ -880,25 +881,25 @@ class RegimentDataCard extends StatelessWidget {
   }
 
   stopRegimenTTS() {
-    Provider.of<RegimentViewModel>(Get.context, listen: false).stopRegimenTTS();
+    Provider.of<RegimentViewModel>(Get.context!, listen: false).stopRegimenTTS();
   }
 
   checkForReturnActionsProviderForm({
-    ReturnModel returnAction,
+    ReturnModel? returnAction,
   }) async {
     if ((returnAction?.action ?? '').isNotEmpty &&
         (returnAction?.message ?? '').isNotEmpty) {
       await showDialog(
-        context: Get.context,
+        context: Get.context!,
         barrierDismissible: false,
         builder: (context) => WillPopScope(
           onWillPop: () async {
-            Provider.of<RegimentViewModel>(Get.context, listen: false)
+            Provider.of<RegimentViewModel>(Get.context!, listen: false)
                 .cachedEvents = [];
             Get.back();
             await Provider.of<RegimentViewModel>(context, listen: false)
                 .fetchRegimentData();
-          },
+          } as Future<bool> Function()?,
           child: AlertDialog(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -909,7 +910,7 @@ class RegimentDataCard extends StatelessWidget {
                       size: 24.0.sp,
                     ),
                     onPressed: () async {
-                      Provider.of<RegimentViewModel>(Get.context, listen: false)
+                      Provider.of<RegimentViewModel>(Get.context!, listen: false)
                           .cachedEvents = [];
                       Navigator.pop(context);
                       await Provider.of<RegimentViewModel>(context,
@@ -949,21 +950,21 @@ class RegimentDataCard extends StatelessWidget {
                               (returnAction?.action ?? '') == startActivity) {
                             if (returnAction?.activityName == '' ||
                                 returnAction?.activityName == null) {
-                              Provider.of<RegimentViewModel>(Get.context,
+                              Provider.of<RegimentViewModel>(Get.context!,
                                       listen: false)
                                   .cachedEvents = [];
                             }
-                            Provider.of<RegimentViewModel>(Get.context,
+                            Provider.of<RegimentViewModel>(Get.context!,
                                     listen: false)
                                 .updateRegimentStatus(
                                     RegimentStatus.DialogClosed);
                             Get.back();
-                            onCardPressed(Get.context,
+                            onCardPressed(Get.context!,
                                 eventIdReturn: returnAction?.eid,
                                 followEventContext: returnAction?.context,
                                 activityName: returnAction?.activityName);
                           } else {
-                            Provider.of<RegimentViewModel>(Get.context,
+                            Provider.of<RegimentViewModel>(Get.context!,
                                     listen: false)
                                 .cachedEvents = [];
                             Get.back();
@@ -997,7 +998,7 @@ class RegimentDataCard extends StatelessWidget {
                           ),
                           child: RaisedButton(
                             onPressed: () async {
-                              Provider.of<RegimentViewModel>(Get.context,
+                              Provider.of<RegimentViewModel>(Get.context!,
                                       listen: false)
                                   .cachedEvents = [];
                               Get.back();
@@ -1041,10 +1042,10 @@ class RegimentDataCard extends StatelessWidget {
         ),
       );
     } else {
-      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+      Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents =
           [];
       Future.delayed(Duration(milliseconds: 300), () async {
-        await Provider.of<RegimentViewModel>(Get.context, listen: false)
+        await Provider.of<RegimentViewModel>(Get.context!, listen: false)
             .fetchRegimentData();
         //LoaderClass.hideLoadingDialog(Get.context);
       });
@@ -1052,10 +1053,10 @@ class RegimentDataCard extends StatelessWidget {
     }
   }
 
-  String getNameFromTitle(RegimentDataModel regimentData) {
-    String name = '';
-    name = (regimentData?.activityOrgin == strAppointmentRegimen)
-        ? regimentData?.doctorSessionId != null
+  String? getNameFromTitle(RegimentDataModel regimentData) {
+    String? name = '';
+    name = (regimentData.activityOrgin == strAppointmentRegimen)
+        ? regimentData.doctorSessionId != null
             ? 'Dr. ' + title?.trim()
             : title?.trim()
         : title?.trim();

@@ -1,4 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
+
+// import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -34,11 +35,11 @@ import 'package:myfhb/constants/fhb_constants.dart' as prefKey;
 import 'package:myfhb/common/errors_widget.dart';
 
 class ResheduleAppointments extends StatefulWidget {
-  Past doc;
-  bool isFromNotification;
-  bool isReshedule;
-  bool isFromFollowUpApp;
-  Function(String) closePage;
+  Past? doc;
+  bool? isFromNotification;
+  bool? isReshedule;
+  bool? isFromFollowUpApp;
+  Function(String)? closePage;
   dynamic body;
 
   ResheduleAppointments(
@@ -59,13 +60,13 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   AppointmentsCommonWidget appointmentsCommonWidget =
       AppointmentsCommonWidget();
   MyProviderViewModel providerViewModel = MyProviderViewModel();
-  List<DoctorIds> doctorIdsList = new List();
+  List<DoctorIds> doctorIdsList = [];
   DoctorIds docs = DoctorIds();
   bool noData = false;
-  String placeHolder = null;
+  String? placeHolder = null;
   ProvidersBloc _providersBloc = ProvidersBloc();
-  DoctorResult doctors = DoctorResult();
-  DateTime onUserChangedDate;
+  DoctorResult? doctors = DoctorResult();
+  DateTime? onUserChangedDate;
 
   @override
   void initState() {
@@ -87,9 +88,9 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
 
   getDoctorsData() async {
     await _providersBloc
-        .getDoctorsById(doctorId: widget.doc.doctor.id)
+        .getDoctorsById(doctorId: widget.doc!.doctor!.id!)
         .then((value) => setState(() {
-              doctors = value.result;
+              doctors = value!.result;
             }));
   }
 
@@ -103,15 +104,15 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
           child: Column(
         children: <Widget>[
           Expanded(
-              child: widget.doc.healthOrganization.id != null && doctors != null
-                  ? getHospitalProviderList(widget.doc.doctor.id)
+              child: widget.doc!.healthOrganization!.id != null && doctors != null
+                  ? getHospitalProviderList(widget.doc!.doctor!.id!)
                   : Container())
         ],
       )),
     );
   }
 
-  Widget getAppBar(DoctorResult doctors) {
+  Widget getAppBar(DoctorResult? doctors) {
     return AppBar(
         automaticallyImplyLeading: false,
         flexibleSpace: SafeArea(
@@ -153,7 +154,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     CircleAvatar(
                       backgroundImage: NetworkImage(
                           doctors?.user?.profilePicThumbnailUrl != null
-                              ? doctors.user.profilePicThumbnailUrl
+                              ? doctors!.user!.profilePicThumbnailUrl!
                               : ''),
                       radius: 20,
                     ),
@@ -167,7 +168,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                         children: <Widget>[
                           Text(
                               doctors?.user?.name != null
-                                  ? doctors.user.name
+                                  ? doctors!.user!.name!
                                   : '',
                               textAlign: TextAlign.left,
                               overflow: TextOverflow.ellipsis,
@@ -179,16 +180,16 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                           Text(
                             (doctors?.doctorProfessionalDetailCollection !=
                                         null &&
-                                    doctors.doctorProfessionalDetailCollection
+                                    doctors!.doctorProfessionalDetailCollection!
                                             .length >
                                         0)
-                                ? doctors?.doctorProfessionalDetailCollection[0]
-                                            ?.specialty !=
+                                ? doctors.doctorProfessionalDetailCollection![0]
+                                            .specialty !=
                                         null
-                                    ? doctors?.doctorProfessionalDetailCollection[0]
-                                                ?.specialty?.name !=
+                                    ? doctors.doctorProfessionalDetailCollection![0]
+                                                .specialty?.name !=
                                             null
-                                        ? '${doctors.doctorProfessionalDetailCollection[0].specialty.name}'
+                                        ? '${doctors.doctorProfessionalDetailCollection![0].specialty!.name}'
                                         : ''
                                     : ''
                                 : '',
@@ -198,7 +199,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                                 color: Colors.white),
                           ),
                           Text(
-                            '' + getCity(doctors),
+                            '' + getCity(doctors)!,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: TextStyle(
@@ -265,7 +266,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     return Container(
         padding: EdgeInsets.all(10.0),
         child: ExpandableButton(
-          child: getHospitalWidget(i, docs, doctors, i),
+          child: getHospitalWidget(i, docs, doctors!, i),
         ));
   }
 
@@ -277,22 +278,22 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
       child: ExpandableButton(
         child: Column(
           children: [
-            getHospitalWidget(i, docs, doctors, i),
+            getHospitalWidget(i, docs, doctors!, i),
             commonWidgets.getSizedBox(20.0),
             DoctorSessionTimeSlot(
                 date: _selectedValue.toString(),
-                doctorId: widget.doc.doctor.id,
+                doctorId: widget.doc!.doctor!.id,
                 docs: null,
                 docsReschedule: [doctors],
                 isReshedule: widget.isReshedule,
                 i: i,
                 doctorsData: widget.doc,
-                healthOrganizationId: widget.doc.healthOrganization.id,
+                healthOrganizationId: widget.doc!.healthOrganization!.id,
                 healthOrganizationResult: docs,
                 resultFromHospitalList: [],
                 doctorListPos: 0,
                 closePage: (value) {
-                  widget.closePage(value);
+                  widget.closePage!(value);
                 },
                 refresh: () {
                   setState(() {});
@@ -309,7 +310,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                 body: widget.body,
                 isFromFollowOrReschedule: true,
                 isFromFollowUpApp: widget.isFromFollowUpApp,
-                isFromFollowUpTake: widget.doc.isFollowUpTaken),
+                isFromFollowUpTake: widget.doc!.isFollowUpTaken),
           ],
         ),
       ),
@@ -340,12 +341,12 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                             child: Text(
                               eachHospitalModel[i].healthOrganization != null
                                   ? eachHospitalModel[i]
-                                              .healthOrganization
+                                              .healthOrganization!
                                               .name !=
                                           null
                                       ? eachHospitalModel[i]
-                                          .healthOrganization
-                                          .name[0]
+                                          .healthOrganization!
+                                          .name![0]
                                           .toUpperCase()
                                       : ''
                                   : '',
@@ -375,10 +376,11 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 5.0.h),
-              AutoSizeText(
-                eachHospitalModel[i].healthOrganization.name != null
+              Text( //FU2.5
+             //  AutoSizeText(FU2.5
+                eachHospitalModel[i].healthOrganization!.name != null
                     ? toBeginningOfSentenceCase(
-                        eachHospitalModel[i].healthOrganization.name)
+                        eachHospitalModel[i].healthOrganization!.name)!
                     : '',
                 maxLines: 1,
                 style: TextStyle(
@@ -386,18 +388,19 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.start,
-              ),
+              ),  
               SizedBox(height: 5.0.h),
-              AutoSizeText(
+              Text(// FU2.5
+             // AutoSizeText( FU2.5
                 (doctors.doctorProfessionalDetailCollection != null &&
-                        doctors.doctorProfessionalDetailCollection.length > 0)
-                    ? doctors.doctorProfessionalDetailCollection[0].specialty !=
+                        doctors.doctorProfessionalDetailCollection!.length > 0)
+                    ? doctors.doctorProfessionalDetailCollection![0].specialty !=
                             null
-                        ? doctors.doctorProfessionalDetailCollection[0]
-                                    .specialty.name !=
+                        ? doctors.doctorProfessionalDetailCollection![0]
+                                    .specialty!.name !=
                                 null
-                            ? doctors.doctorProfessionalDetailCollection[0]
-                                .specialty.name
+                            ? doctors.doctorProfessionalDetailCollection![0]
+                                .specialty!.name!
                             : ''
                         : ''
                     : '',
@@ -406,18 +409,19 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     fontSize: 15.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
-              ),
+              ), 
               SizedBox(height: 5.0.h),
-              AutoSizeText(
-                '' + commonWidgets.getCity(eachHospitalModel[i]) == ''
-                    ? getCity(doctors)
+              Text( //FU2.5
+            //  AutoSizeText( FU2.5
+                '' + commonWidgets.getCity(eachHospitalModel[i])! == ''
+                    ? getCity(doctors)!
                     : '',
                 maxLines: 1,
                 style: TextStyle(
                     fontSize: 15.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
-              ),
+              ),  
               SizedBox(height: 5.0.h),
             ],
           ),
@@ -434,10 +438,10 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                       child: TextWidget(
                           text: '${CommonUtil.CURRENCY}' +
                               commonWidgets.getMoneyWithForamt(widget
-                                      .isReshedule
+                                      .isReshedule!
                                   ? 0.toString()
-                                  : (widget.isFromFollowUpApp &&
-                                          widget.doc.isFollowUpTaken == false)
+                                  : (widget.isFromFollowUpApp! &&
+                                          widget.doc!.isFollowUpTaken == false)
                                       ? followUpFee(eachHospitalModel[i])
                                       : getFees(eachHospitalModel[i], false)),
 //                                  widget.doc.plannedFollowupDate == null
@@ -451,7 +455,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     ),
                   ),
                   SizedBox(height: 5),
-                  widget.isReshedule || widget.isFromFollowUpApp
+                  widget.isReshedule! || widget.isFromFollowUpApp!
                       ? SizedBox.shrink()
                       : getCSRDiscount(getFees(eachHospitalModel[i], true))
                 ],
@@ -461,7 +465,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     );
   }
 
-  Widget getCSRDiscount(String fees) {
+  Widget getCSRDiscount(String? fees) {
     Widget widget;
     if (fees != null && fees != '') {
       if (fees != '0.00' && fees != '0') {
@@ -474,7 +478,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
         }
         widget = Container(
           child: Center(
-            child: Text('Discount ' + fees + '%',
+            child: Text('Discount ' + fees! + '%',
                 style: TextStyle(
                     fontSize: 16.0.sp,
                     fontWeight: FontWeight.w500,
@@ -491,15 +495,15 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     return widget;
   }
 
-  String followUpFee(value) {
+  String? followUpFee(value) {
     if (widget.doc?.plannedFollowupDate != null &&
         widget.doc?.doctorFollowUpFee != null) {
       if (onUserChangedDate != null) {
-        if (onUserChangedDate
-                .difference(DateTime.parse(widget.doc.plannedFollowupDate))
+        if (onUserChangedDate!
+                .difference(DateTime.parse(widget.doc!.plannedFollowupDate!))
                 .inDays <=
             0) {
-          return widget.doc.doctorFollowUpFee;
+          return widget.doc!.doctorFollowUpFee;
         } else {
           return getFees(value, false);
         }
@@ -507,10 +511,10 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
         return getFees(value, false);
       } else {
         if (DateTime.now()
-                .difference(DateTime.parse(widget.doc.plannedFollowupDate))
+                .difference(DateTime.parse(widget.doc!.plannedFollowupDate!))
                 .inDays <=
             0) {
-          return widget.doc.doctorFollowUpFee;
+          return widget.doc!.doctorFollowUpFee;
         } else {
           return getFees(value, false);
         }
@@ -520,20 +524,20 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     }
   }
 
-  String getFees(HealthOrganizationResult result, bool isCSRDiscount) {
-    String fees;
+  String? getFees(HealthOrganizationResult result, bool isCSRDiscount) {
+    String? fees;
     if (result.doctorFeeCollection != null) {
-      if (result.doctorFeeCollection.length > 0) {
-        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
-          String feesCode = result.doctorFeeCollection[i].feeType.code;
-          bool isActive = result.doctorFeeCollection[i].isActive;
+      if (result.doctorFeeCollection!.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection!.length; i++) {
+          String? feesCode = result.doctorFeeCollection![i].feeType!.code;
+          bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }
@@ -546,13 +550,13 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     return fees;
   }
 
-  String getCity(DoctorResult doctors) {
-    String city;
+  String? getCity(DoctorResult? doctors) {
+    String? city;
 
     if (doctors?.user?.userAddressCollection3 != null) {
-      if (doctors.user.userAddressCollection3.length > 0) {
-        if (doctors.user.userAddressCollection3[0].city != null) {
-          city = doctors.user.userAddressCollection3[0].city.name;
+      if (doctors!.user!.userAddressCollection3!.length > 0) {
+        if (doctors.user!.userAddressCollection3![0].city != null) {
+          city = doctors.user!.userAddressCollection3![0].city!.name;
         } else {
           city = '';
         }
@@ -566,24 +570,24 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   }
 
   Widget getHospitalProviderList(String doctorId) {
-    return new FutureBuilder<HealthOrganizationModel>(
+    return new FutureBuilder<HealthOrganizationModel?>(
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot?.data?.isSuccess != null &&
-              !snapshot?.data?.isSuccess &&
-              (snapshot?.data?.message ?? '').isNotEmpty) {
+          if (snapshot.data!.isSuccess != null &&
+              !snapshot.data!.isSuccess! &&
+              (snapshot.data!.message ?? '').isNotEmpty) {
             return Container(
               child: Center(
-                child: Text(snapshot?.data?.message),
+                child: Text(snapshot.data!.message!),
               ),
             );
           } else {
             List<HealthOrganizationResult> healthOrganizationResult =
-                snapshot.data.result;
+                snapshot.data!.result!;
             healthOrganizationResult.retainWhere((element) =>
-                element.healthOrganization.id ==
-                widget.doc.healthOrganization.id);
+                element.healthOrganization!.id ==
+                widget.doc!.healthOrganization!.id);
             return providerListWidget(healthOrganizationResult);
           }
         } else if (snapshot.hasError) {

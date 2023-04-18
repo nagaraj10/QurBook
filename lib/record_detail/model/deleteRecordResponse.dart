@@ -1,9 +1,10 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class DeleteRecordResponse {
-  int status;
-  bool success;
-  String message;
+  int? status;
+  bool? success;
+  String? message;
 
   DeleteRecordResponse({this.status, this.success, this.message});
 

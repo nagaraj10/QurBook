@@ -1,3 +1,4 @@
+
 import '../../constants/fhb_query.dart' as query;
 import '../models/doctor_list_response_new.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
@@ -17,7 +18,7 @@ class DoctorsListRepository {
   }
 
   Future<DoctorsSearchListResponse> getDoctorsListFromSearchNew(
-      String param, bool isSkipUnknown) async {
+      String? param, bool? isSkipUnknown) async {
     final offset = 0;
     var limit = 10;
     var response = await _helper.getDoctorsListFromSearchNew(
@@ -41,7 +42,7 @@ class DoctorsListRepository {
     return DoctorsSearchListResponse.fromJson(response);
   }
 
-  Future<DoctorsListResult> addDoctorFromProvider(String jsonData) async {
+  Future<DoctorsListResult?> addDoctorFromProvider(String jsonData) async {
     var response = await _helper.addDoctorFromProvider(
         "${query.qr_doctor}${query.qr_reference_doctor}${query.qr_non_qurpro}",
         jsonData);

@@ -1,3 +1,4 @@
+
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
@@ -34,8 +35,8 @@ import 'package:myfhb/src/model/TagsResult.dart';
 class HealthReportListForUserRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<UserHealthResponseList> getHealthReportList({bool condition}) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  Future<UserHealthResponseList> getHealthReportList({required bool condition}) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     final response = await _helper.getHealthRecordList(
         query.qr_mediameta + userID + query.qr_slash + query.qr_getMediaData,
@@ -53,7 +54,7 @@ class HealthReportListForUserRepository {
   }
 
   Future<ImageDocumentResponse> getDocumentImage(String metaMasterID) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     final response = await _helper.getDocumentImage(query.qr_mediameta +
         userID +
@@ -64,11 +65,11 @@ class HealthReportListForUserRepository {
   }
 
   Future<SavedMetaDataResponse> postMediaData(String jsonString) async {
-    String id;
+    String? id;
 
     try {
       String familyId =
-          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)!;
       if (familyId.length > 0) {
         id = familyId;
       } else {
@@ -79,14 +80,14 @@ class HealthReportListForUserRepository {
     }
 
     var response = await _helper.saveMediaData(
-        query.qr_mediameta + id + query.qr_slash + query.qr_savedmedia,
+        query.qr_mediameta + id! + query.qr_slash + query.qr_savedmedia,
         jsonString);
     return SavedMetaDataResponse.fromJson(response);
   }
 
   Future<DigitRecogResponse> postDevicesData(
-      List<String> fileName, String metaID, String jsonData) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      List<String?> fileName, String metaID, String jsonData) async {
+    String? userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.saveImageAndGetDeviceInfo(
         query.qr_health_record +
@@ -101,7 +102,7 @@ class HealthReportListForUserRepository {
 
   Future<PostImageResponse> postImage(
       String fileName, String metaID, String jsonData) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     var response = await _helper.saveImageToServerClone(
         query.qr_mediamaster +
@@ -116,11 +117,11 @@ class HealthReportListForUserRepository {
   }
 
   Future<MetaDataMovedResponse> moveDataToOtherUser(
-      String familyID, String metaId) async {
+      String? familyID, String? metaId) async {
     var signInData = {};
     signInData[parameters.strHealthRecordMetaId] = metaId;
     signInData[parameters.strDestinationUserId] = familyID;
-    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
     signInData[parameters.strSourceUserId] = userID;
     var jsonString = convert.jsonEncode(signInData);
 
@@ -131,7 +132,7 @@ class HealthReportListForUserRepository {
 
   Future<UpdateMediaResponse> updateMediaData(
       String jsonString, String metaInfoID) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!;
 
     var response = await _helper.updateMediaData(
         query.qr_mediameta +
@@ -145,7 +146,7 @@ class HealthReportListForUserRepository {
 
   Future<List<dynamic>> getDocumentImageListOld(
       List<MediaMasterIds> metaMasterIdList) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     final response = await _helper.getDocumentImageList(
         query.qr_mediameta + userID + query.qr_slash + query.qr_rawMedia,
@@ -155,8 +156,8 @@ class HealthReportListForUserRepository {
 
   Future<List<ImageDocumentResponse>> getDocumentImageList(
       List<MediaMasterIds> metaMasterIdList) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    var imagesList = new List<ImageDocumentResponse>();
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
+    var imagesList = <ImageDocumentResponse>[];
 
     imagesList = await _helper.getDocumentImageList(
         query.qr_mediameta + userID + query.qr_slash + query.qr_rawMedia,
@@ -164,8 +165,8 @@ class HealthReportListForUserRepository {
     return imagesList;
   }
 
-  Future<HealthRecordList> getHealthReportLists({String commonUserId}) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  Future<HealthRecordList> getHealthReportLists({String? commonUserId}) async {
+    String? userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var requestParam = {};
     requestParam[query.qr_userid] =
         (commonUserId != null && commonUserId != '') ? commonUserId : userID;
@@ -178,13 +179,13 @@ class HealthReportListForUserRepository {
   }
 
   Future<HealthRecordSuccess> createMediaData(
-      String jsonString, List<String> imagePaths, String audioPath,
+      String jsonString, List<String?>? imagePaths, String? audioPath,
       {bool isVital = false}) async {
-    String id;
+    String? id;
 
     try {
       String familyId =
-          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)!;
       if (familyId.length > 0) {
         id = familyId;
       } else {
@@ -201,12 +202,12 @@ class HealthReportListForUserRepository {
   }
 
   Future<HealthRecordSuccess> createMediaDataClaim(
-      String jsonString, List<String> imagePaths, String audioPath) async {
-    String id;
+      String jsonString, List<String?>? imagePaths, String? audioPath) async {
+    String? id;
 
     try {
       String familyId =
-          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)!;
       if (familyId.length > 0) {
         id = familyId;
       } else {
@@ -222,12 +223,12 @@ class HealthReportListForUserRepository {
   }
 
   Future<HealthRecordSuccess> updateHealthRecords(String jsonString,
-      List<String> imagePaths, String audioPath, String metaId) async {
-    String id;
+      List<String?>? imagePaths, String? audioPath, String? metaId) async {
+    String? id;
 
     try {
       String familyId =
-          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)!;
       if (familyId.length > 0) {
         id = familyId;
       } else {
@@ -243,12 +244,12 @@ class HealthReportListForUserRepository {
   }
 
   Future<HealthRecordSuccess> updateFileInRecords(
-      String audioPath, HealthResult healthResult) async {
-    String id;
+      String? audioPath, HealthResult healthResult) async {
+    String? id;
 
     try {
       String familyId =
-          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)!;
       if (familyId.length > 0) {
         id = familyId;
       } else {
@@ -257,7 +258,7 @@ class HealthReportListForUserRepository {
     } catch (e) {
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
-    var jsonString = healthResult.metadata.toJson();
+    var jsonString = healthResult.metadata!.toJson();
 
     var response = await _helper.updateHealthRecords(query.qr_health_record,
         convert.jsonEncode(jsonString), null, audioPath, healthResult.id);
@@ -265,7 +266,7 @@ class HealthReportListForUserRepository {
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelection(
-      {String userIdFromBloc}) async {
+      {String? userIdFromBloc}) async {
     var userId;
     if (userIdFromBloc != null) {
       userId = userIdFromBloc;
@@ -282,14 +283,14 @@ class HealthReportListForUserRepository {
   }
 
   Future<AvailableDevicesResponseModel> getAvailableDevices() async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     final response = await _helper.getAvailableDevices(
         query.external_available_device + query.qr_userId + userId);
     return AvailableDevicesResponseModel.fromJson(response);
   }
 
-  Future<CommonResponse> unPairDexcomm(String externalId) async {
+  Future<CommonResponse> unPairDexcomm(String? externalId) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var temp = json.encode({
       'id': externalId.toString(),
@@ -300,24 +301,24 @@ class HealthReportListForUserRepository {
   }
 
   Future<CreateDeviceSelectionModel> createDeviceSelection(
-      bool allowDigit,
-      bool allowDevice,
-      bool googleFit,
-      bool healthFit,
-      bool bpMonitor,
-      bool gluco,
-      bool pulseOximeter,
-      bool thermo,
-      bool weighScale,
-      String userId,
-      String preferred_language,
-      String qa_subscription,
-      int priColor,
-      int greColor,
-      List<Tags> tags,
-      bool allowAppointmentALert,
-      bool allowVitalALerts,
-      bool allowsymptomsAlert) async {
+      bool? allowDigit,
+      bool? allowDevice,
+      bool? googleFit,
+      bool? healthFit,
+      bool? bpMonitor,
+      bool? gluco,
+      bool? pulseOximeter,
+      bool? thermo,
+      bool? weighScale,
+      String? userId,
+      String? preferred_language,
+      String? qa_subscription,
+      int? priColor,
+      int? greColor,
+      List<Tags>? tags,
+      bool? allowAppointmentALert,
+      bool? allowVitalALerts,
+      bool? allowsymptomsAlert) async {
     var userIDMain =
         await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     var body = jsonEncode({
@@ -353,24 +354,24 @@ class HealthReportListForUserRepository {
 
   Future<UpdateDeviceModel> updateDeviceModel(
     userMappingId,
-    bool allowDigit,
-    bool allowDevice,
-    bool googleFit,
-    bool healthFit,
-    bool bpMonitor,
-    bool gluco,
-    bool pulseOximeter,
-    bool thermo,
-    bool weighScale,
-    String preferred_language,
-    String qa_subscription,
-    int priColor,
-    int greColor,
-    List<Tags> tagsList,
-    bool allowAppointmentALert,
-    bool allowVitalALerts,
-    bool allowsymptomsAlert,
-    PreferredMeasurement preferredMeasurement,
+    bool? allowDigit,
+    bool? allowDevice,
+    bool? googleFit,
+    bool? healthFit,
+    bool? bpMonitor,
+    bool? gluco,
+    bool? pulseOximeter,
+    bool? thermo,
+    bool? weighScale,
+    String? preferred_language,
+    String? qa_subscription,
+    int? priColor,
+    int? greColor,
+    List<Tags>? tagsList,
+    bool? allowAppointmentALert,
+    bool? allowVitalALerts,
+    bool? allowsymptomsAlert,
+    PreferredMeasurement? preferredMeasurement,
   ) async {
     var body = jsonEncode({
       'id': userMappingId,
@@ -418,10 +419,10 @@ class HealthReportListForUserRepository {
   }
 
   Future<UpdateDeviceModel> updateUnitPreferences(
-      String userMappingId,
+      String? userMappingId,
       ProfileSetting profileSetting,
       PreferredMeasurement preferredMeasurement,
-      List<Tags> tagsList) async {
+      List<Tags>? tagsList) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -440,16 +441,16 @@ class HealthReportListForUserRepository {
         'qa-subscription': profileSetting.qa_subscription,
         'preferred_measurement': {
           'height': {
-            'unitCode': preferredMeasurement.height.unitCode,
-            'unitName': preferredMeasurement.height.unitName
+            'unitCode': preferredMeasurement.height!.unitCode,
+            'unitName': preferredMeasurement.height!.unitName
           },
           'weight': {
-            'unitCode': preferredMeasurement.weight.unitCode,
-            'unitName': preferredMeasurement.weight.unitName
+            'unitCode': preferredMeasurement.weight!.unitCode,
+            'unitName': preferredMeasurement.weight!.unitName
           },
           'temperature': {
-            'unitCode': preferredMeasurement.temperature.unitCode,
-            'unitName': preferredMeasurement.temperature.unitName
+            'unitCode': preferredMeasurement.temperature!.unitCode,
+            'unitName': preferredMeasurement.temperature!.unitName
           },
         },
         'caregiverCommunicationSetting': {

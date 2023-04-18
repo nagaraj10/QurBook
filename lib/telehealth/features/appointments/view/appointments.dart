@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -45,15 +46,15 @@ class Appointments extends StatefulWidget {
 class _AppointmentsState extends State<Appointments> {
   ChatViewModel chatViewModel = ChatViewModel();
   TextEditingController _searchQueryController = TextEditingController();
-  AppointmentsListViewModel appointmentsViewModel;
+  late AppointmentsListViewModel appointmentsViewModel;
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
-  List<Past> upcomingInfo = List();
-  List<String> bookingIds = new List();
-  List<Past> historyInfo = List();
+  List<Past>? upcomingInfo = [];
+  List<String> bookingIds = [];
+  List<Past>? historyInfo = [];
   bool isSearch = false;
-  List<Past> upcomingTimeInfo = List();
-  SharedPreferences prefs;
-  Function(String) closePage;
+  List<Past> upcomingTimeInfo = [];
+  SharedPreferences? prefs;
+  Function(String)? closePage;
   final GlobalKey<State> _key = new GlobalKey<State>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
@@ -92,7 +93,7 @@ class _AppointmentsState extends State<Appointments> {
             return refreshPage();
           },
           child: body()),
-      appBar: widget.isHome ? null : appBar(),
+      appBar: widget.isHome ? null : appBar() as PreferredSizeWidget?,
       floatingActionButton: Visibility(
         visible: CommonUtil.REGION_CODE == 'IN',
         child: commonWidget.floatingButton(
@@ -177,8 +178,8 @@ class _AppointmentsState extends State<Appointments> {
                         } else {
                           setState(() {
                             isSearch = false;
-                            upcomingInfo.clear();
-                            historyInfo.clear();
+                            upcomingInfo!.clear();
+                            historyInfo!.clear();
                           });
                         }
                       } catch (e) {
@@ -233,13 +234,13 @@ class _AppointmentsState extends State<Appointments> {
       case LoadingStatus.completed:
         return Consumer<AppointmentsListViewModel>(
           builder: (context, appointmentsViewModel, child) {
-            final AppointmentsModel appointmentsData =
+            final AppointmentsModel? appointmentsData =
                 appointmentsViewModel.appointments;
             if (appointmentsData != null) {
-              return ((appointmentsData?.result?.past != null &&
-                          appointmentsData?.result?.past?.length > 0) ||
-                      (appointmentsData?.result?.upcoming != null &&
-                          appointmentsData?.result?.upcoming?.length > 0))
+              return ((appointmentsData.result!.past != null &&
+                          appointmentsData.result!.past!.length > 0) ||
+                      (appointmentsData.result!.upcoming != null &&
+                          appointmentsData.result!.upcoming!.length > 0))
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -248,13 +249,13 @@ class _AppointmentsState extends State<Appointments> {
                           height: 10.0.h,
                         ),
                         isSearch
-                            ? (upcomingInfo != null && upcomingInfo.length != 0)
+                            ? (upcomingInfo != null && upcomingInfo!.length != 0)
                                 ? commonWidget.title(TranslationConstants
                                     .upcomingAppointments
                                     .t())
                                 : Container()
-                            : (appointmentsData.result.upcoming != null &&
-                                    appointmentsData.result.upcoming.length !=
+                            : (appointmentsData.result!.upcoming != null &&
+                                    appointmentsData.result!.upcoming!.length !=
                                         0)
                                 ? commonWidget.title(TranslationConstants
                                     .upcomingAppointments
@@ -268,35 +269,35 @@ class _AppointmentsState extends State<Appointments> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (BuildContext ctx, int i) {
-                            appointmentsData.result.upcoming.sort((a, b) =>
-                                a.plannedStartDateTime.compareTo(
-                                    b.plannedStartDateTime.toLowerCase()));
-                            upcomingInfo.sort((a, b) => a.plannedStartDateTime
+                            appointmentsData.result!.upcoming!.sort((a, b) =>
+                                a.plannedStartDateTime!.compareTo(
+                                    b.plannedStartDateTime!.toLowerCase()));
+                            upcomingInfo!.sort((a, b) => a.plannedStartDateTime!
                                 .compareTo(
-                                    b.plannedStartDateTime.toLowerCase()));
+                                    b.plannedStartDateTime!.toLowerCase()));
                             return DoctorUpcomingAppointments(
                                 doc: isSearch
-                                    ? upcomingInfo[i]
-                                    : appointmentsData.result.upcoming[i],
+                                    ? upcomingInfo![i]
+                                    : appointmentsData.result!.upcoming![i],
                                 onChanged: (value) {
                                   refreshAppointments();
                                 });
                           },
                           itemCount: !isSearch
-                              ? appointmentsData.result.upcoming.length
-                              : upcomingInfo.length,
+                              ? appointmentsData.result!.upcoming!.length
+                              : upcomingInfo!.length,
                         ),
                         SizedBoxWidget(
                           width: 0.0.h,
                           height: 10.0.h,
                         ),
                         isSearch
-                            ? (historyInfo != null && historyInfo.length != 0)
+                            ? (historyInfo != null && historyInfo!.length != 0)
                                 ? commonWidget.title(
                                     TranslationConstants.appointmentHistory.t())
                                 : Container()
-                            : (appointmentsData.result.past != null &&
-                                    appointmentsData.result.past.length != 0)
+                            : (appointmentsData.result!.past != null &&
+                                    appointmentsData.result!.past!.length != 0)
                                 ? commonWidget.title(
                                     TranslationConstants.appointmentHistory.t())
                                 : Container(),
@@ -304,24 +305,24 @@ class _AppointmentsState extends State<Appointments> {
                           width: 0.0.h,
                           height: 10.0.h,
                         ),
-                        (appointmentsData?.result?.past != null &&
-                                appointmentsData?.result?.past.length > 0)
+                        (appointmentsData.result!.past != null &&
+                                appointmentsData.result!.past!.length > 0)
                             ? new ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext ctx, int i) {
-                                  appointmentsData.result.past.sort((b, a) => a
-                                      .plannedStartDateTime
-                                      .compareTo(b.plannedStartDateTime
+                                  appointmentsData.result!.past!.sort((b, a) => a
+                                      .plannedStartDateTime!
+                                      .compareTo(b.plannedStartDateTime!
                                           .toLowerCase()));
-                                  historyInfo.sort((b, a) => a
-                                      .plannedStartDateTime
-                                      .compareTo(b.plannedStartDateTime
+                                  historyInfo!.sort((b, a) => a
+                                      .plannedStartDateTime!
+                                      .compareTo(b.plannedStartDateTime!
                                           .toLowerCase()));
                                   return DoctorPastAppointments(
                                     doc: isSearch
-                                        ? historyInfo[i]
-                                        : appointmentsData.result.past[i],
+                                        ? historyInfo![i]
+                                        : appointmentsData.result!.past![i],
                                     onChanged: (value) {
                                       refreshAppointments();
                                     },
@@ -333,8 +334,8 @@ class _AppointmentsState extends State<Appointments> {
                                   );
                                 },
                                 itemCount: isSearch
-                                    ? historyInfo.length
-                                    : appointmentsData.result.past.length,
+                                    ? historyInfo!.length
+                                    : appointmentsData.result!.past!.length,
                               )
                             : Container()
                       ],
@@ -379,37 +380,41 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   Widget appBar() {
-    return AppBar(
-      flexibleSpace: GradientAppBar(),
-      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-      // leading: Row(
-      //     // mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //     // mainAxisSize: MainAxisSize.max,
-      //     children: [
-      //       SizedBoxWidget(
-      //         height: 0.0.h,
-      //         width: 30.0.w,
-      //       ),
-      //       IconWidget(
-      //         icon: Icons.arrow_back_ios,
-      //         colors: Colors.white,
-      //         size: 11.0.sp,
-      //         onTap: () {
-      //
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      leading: IconWidget(
-        icon: Icons.arrow_back_ios,
-        colors: Colors.white,
-        size: 24.0.sp,
-        onTap: () {
-          Navigator.pop(context);
-          //PageNavigator.goToPermanent(context, router.rt_Dashboard);
-        },
+    return PreferredSize(
+
+    preferredSize: Size.fromHeight(70),
+      child: AppBar(
+        flexibleSpace: GradientAppBar(),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        // leading: Row(
+        //     // mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //     // mainAxisSize: MainAxisSize.max,
+        //     children: [
+        //       SizedBoxWidget(
+        //         height: 0.0.h,
+        //         width: 30.0.w,
+        //       ),
+        //       IconWidget(
+        //         icon: Icons.arrow_back_ios,
+        //         colors: Colors.white,
+        //         size: 11.0.sp,
+        //         onTap: () {
+        //
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        leading: IconWidget(
+          icon: Icons.arrow_back_ios,
+          colors: Colors.white,
+          size: 24.0.sp,
+          onTap: () {
+            Navigator.pop(context);
+            //PageNavigator.goToPermanent(context, router.rt_Dashboard);
+          },
+        ),
+        title: getTitle(),
       ),
-      title: getTitle(),
     );
   }
 
@@ -452,7 +457,7 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   Future<String> refreshPage() async {
-    await appointmentsViewModel.clearAppointments();
+     appointmentsViewModel.clearAppointments();
     await appointmentsViewModel.fetchAppointments();
     return 'success';
   }

@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,7 +51,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget getTicketTypes() {
-    return FutureBuilder<TicketTypesModel>(
+    return FutureBuilder<TicketTypesModel?>(
       future: ticketViewModel.getTicketTypesList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -70,11 +71,11 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           return ErrorsWidget();
         } else {
           //return ticketTypeListTest(context);
-          if (snapshot?.hasData &&
-              snapshot?.data?.ticketTypeResults != null &&
-              snapshot?.data?.ticketTypeResults.isNotEmpty) {
+          if (snapshot.hasData &&
+              snapshot.data!.ticketTypeResults != null &&
+              snapshot.data!.ticketTypeResults!.isNotEmpty) {
             return Container(
-                child: ticketTypesList(snapshot.data.ticketTypeResults));
+                child: ticketTypesList(snapshot.data!.ticketTypeResults));
           } else {
             return SafeArea(
               child: SizedBox(
@@ -97,7 +98,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     );
   }
 
-  Widget ticketTypesList(List<TicketTypesResult> ticketTypesList) {
+  Widget ticketTypesList(List<TicketTypesResult>? ticketTypesList) {
     var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
@@ -145,7 +146,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             onTap: () {
               try {
                 var createTicketController = Get.put(CreateTicketController());
-                createTicketController.isCTLoading?.value = false;
+                createTicketController.isCTLoading.value = false;
 
                 if (CommonUtil()
                     .validString(ticketList[i].name)
@@ -222,7 +223,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                     child: getTicketTypeImages(context, ticketList[i]),
                   ),
                   Text(
-                    ticketList[i].name,
+                    ticketList[i].name!,
                     overflow: TextOverflow.visible,
                     style: TextStyle(
                       fontSize: 14.0.sp,

@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,7 +34,7 @@ class TicketViewModel extends ChangeNotifier {
   int currentTab = 0;
 
   // get list of tickets
-  Future<TicketsListResponse> getTicketsList() async {
+  Future<TicketsListResponse?> getTicketsList() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {
@@ -45,7 +46,7 @@ class TicketViewModel extends ChangeNotifier {
     }
   }
 
-  Future<TicketDetailResponseModel> getTicketDetail(String sId) async {
+  Future<TicketDetailResponseModel?> getTicketDetail(String sId) async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {
@@ -58,7 +59,7 @@ class TicketViewModel extends ChangeNotifier {
   }
 
   // Get list of ticket category
-  Future<TicketTypesModel> getTicketTypesList() async {
+  Future<TicketTypesModel?> getTicketTypesList() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {
@@ -72,7 +73,7 @@ class TicketViewModel extends ChangeNotifier {
   }
 
   // Create Ticket
-  Future<CreateTicketModel> createTicket() async {
+  Future<CreateTicketModel?> createTicket() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var createTicketModel;
     if (userid != null) {
@@ -87,7 +88,7 @@ class TicketViewModel extends ChangeNotifier {
   }
 
   // Comment Ticket
-  Future<CommonResponse> commentTicket() async {
+  Future<CommonResponse?> commentTicket() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {

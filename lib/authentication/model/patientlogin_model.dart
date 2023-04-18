@@ -1,12 +1,13 @@
+
 import '../constants/constants.dart';
 
 class PatientLogIn {
-  String userName;
-  String password;
-  String source;
-  String message;
-  bool isSuccess;
-  DiagnosticsLogin diagnostics;
+  String? userName;
+  String? password;
+  String? source;
+  String? message;
+  bool? isSuccess;
+  DiagnosticsLogin? diagnostics;
 
   PatientLogIn(
       {this.userName,
@@ -35,15 +36,15 @@ class PatientLogIn {
     data[strmessage] = message;
     data[strIsSuccess] = isSuccess;
     if (diagnostics != null) {
-      data['diagnostics'] = diagnostics.toJson();
+      data['diagnostics'] = diagnostics!.toJson();
     }
     return data;
   }
 }
 
 class DiagnosticsLogin {
-  ErrorDataLogin errorData;
-  bool includeErrorDataInResponse;
+  ErrorDataLogin? errorData;
+  bool? includeErrorDataInResponse;
 
   DiagnosticsLogin({this.errorData, this.includeErrorDataInResponse});
 
@@ -57,7 +58,7 @@ class DiagnosticsLogin {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (errorData != null) {
-      data['errorData'] = errorData.toJson();
+      data['errorData'] = errorData!.toJson();
     }
     data['includeErrorDataInResponse'] = includeErrorDataInResponse;
     return data;
@@ -65,9 +66,9 @@ class DiagnosticsLogin {
 }
 
 class ErrorDataLogin {
-  String userId;
-  String userName;
-  String source;
+  String? userId;
+  String? userName;
+  String? source;
 
   ErrorDataLogin({this.userId, this.userName, this.source});
 

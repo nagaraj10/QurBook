@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import '../../constants/fhb_parameters.dart' as param;
 import 'BloodGlucose.dart';
@@ -17,8 +18,8 @@ class LastMeasureSync {
         this.result,
     });
 
-    bool isSuccess;
-    LastMeasureSyncValues result;
+    bool? isSuccess;
+    LastMeasureSyncValues? result;
 
     factory LastMeasureSync.fromJson(Map<String, dynamic> json) =>
         LastMeasureSync(
@@ -30,7 +31,7 @@ class LastMeasureSync {
 
     Map<String, dynamic> toJson() => {
         param.is_Success: isSuccess,
-        param.dataResult: result.toJson(),
+        param.dataResult: result!.toJson(),
     };
 }
 
@@ -44,12 +45,12 @@ class LastMeasureSyncValues {
         this.oxygenSaturation,
     });
 
-    BloodGlucose bloodGlucose;
-    BloodPressure bloodPressure;
-    BodyTemperature bodyTemperature;
-    BodyWeight bodyWeight;
-    HeartRate heartRate;
-    OxygenSaturation oxygenSaturation;
+    BloodGlucose? bloodGlucose;
+    BloodPressure? bloodPressure;
+    BodyTemperature? bodyTemperature;
+    BodyWeight? bodyWeight;
+    HeartRate? heartRate;
+    OxygenSaturation? oxygenSaturation;
 
     factory LastMeasureSyncValues.fromJson(Map<String, dynamic> json) => LastMeasureSyncValues(
         bloodGlucose: BloodGlucose.fromJson(json[param.strBGlucose]),
@@ -61,12 +62,12 @@ class LastMeasureSyncValues {
     );
 
     Map<String, dynamic> toJson() => {
-        param.strBGlucose: bloodGlucose.toJson(),
-        param.strBP: bloodPressure.toJson(),
-        param.strTemp: bodyTemperature.toJson(),
-        param.strWgt: bodyWeight.toJson(),
-        param.strHRate: heartRate.toJson(),
-        param.strOxygen: oxygenSaturation.toJson(),
+        param.strBGlucose: bloodGlucose!.toJson(),
+        param.strBP: bloodPressure!.toJson(),
+        param.strTemp: bodyTemperature!.toJson(),
+        param.strWgt: bodyWeight!.toJson(),
+        param.strHRate: heartRate!.toJson(),
+        param.strOxygen: oxygenSaturation!.toJson(),
     };
 }
 

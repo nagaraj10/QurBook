@@ -1,7 +1,8 @@
+
 class UpdateSelfProfileModel {
-  bool isSuccess;
-  String message;
-  String result;
+  bool? isSuccess;
+  String? message;
+  String? result;
 
   UpdateSelfProfileModel({this.isSuccess, this.message, this.result});
 

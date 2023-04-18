@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'dart:ui';
 
@@ -20,9 +21,9 @@ import 'package:get/get.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 
 class ImageViewer extends StatefulWidget {
-  String imageURL;
-  String eid;
-  String providerId;
+  String? imageURL;
+  String? eid;
+  String? providerId;
 
   ImageViewer(this.imageURL, this.eid,this.providerId);
 
@@ -34,7 +35,7 @@ class _ImageViewerState extends State<ImageViewer> {
   bool enabledEdit = false;
   final ApiBaseHelper _helper = ApiBaseHelper();
   FlutterToast toast = FlutterToast();
-  String imagePath;
+  String? imagePath;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -120,7 +121,7 @@ class _ImageViewerState extends State<ImageViewer> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
-                        widget.imageURL,
+                        widget.imageURL!,
                       ),
                       fit: BoxFit.fill,
                     ),
@@ -140,18 +141,18 @@ class _ImageViewerState extends State<ImageViewer> {
   void getOpenGallery() {
     PickImageController.instance.cropImageFromFile('photo').then((croppedFile) {
       if (croppedFile != null) {
-        LoaderClass.showLoadingDialog(Get.context, canDismiss: false);
+        LoaderClass.showLoadingDialog(Get.context!, canDismiss: false);
         setState(() {});
         var imagePaths = croppedFile.path;
 
-        if ((imagePaths ?? '').isNotEmpty) {
+        if ((imagePaths).isNotEmpty) {
           saveMediaRegiment(imagePaths,widget.providerId).then((value) {
-            LoaderClass.hideLoadingDialog(Get.context);
-            if (value.isSuccess) {
+            LoaderClass.hideLoadingDialog(Get.context!);
+            if (value.isSuccess!) {
               setState(() {
-                imagePath = value.result.accessUrl;
+                imagePath = value.result!.accessUrl;
 
-                widget.imageURL = value.result.accessUrl;
+                widget.imageURL = value.result!.accessUrl;
               });
             } else {
               setState(() {
@@ -171,21 +172,21 @@ class _ImageViewerState extends State<ImageViewer> {
   void imgFromCamera() async {
     File _image;
     var picker = ImagePicker();
-    var pickedFile = await picker.getImage(
+    var pickedFile = await (picker.getImage(
       source: ImageSource.camera,
-    );
-    LoaderClass.showLoadingDialog(Get.context, canDismiss: false);
+    ) as Future<PickedFile>);
+    LoaderClass.showLoadingDialog(Get.context!, canDismiss: false);
     setState(() {});
     _image = File(pickedFile.path);
 
-    if ((_image.path ?? '').isNotEmpty) {
+    if ((_image.path).isNotEmpty) {
       await saveMediaRegiment(_image.path,widget.providerId).then((value) {
-        LoaderClass.hideLoadingDialog(Get.context);
+        LoaderClass.hideLoadingDialog(Get.context!);
 
-        if (value.isSuccess) {
+        if (value.isSuccess!) {
           setState(() {
-            imagePath = value.result.accessUrl;
-            widget.imageURL = value.result.accessUrl;
+            imagePath = value.result!.accessUrl;
+            widget.imageURL = value.result!.accessUrl;
           });
         } else {
           setState(() {
@@ -200,7 +201,7 @@ class _ImageViewerState extends State<ImageViewer> {
     }
   }
 
-  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths,String providerId) async {
+  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths,String? providerId) async {
     var patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final response = await _helper.saveRegimentMedia(
         qr_save_regi_media, imagePaths, patientId,providerId);
@@ -307,7 +308,7 @@ class _ImageViewerState extends State<ImageViewer> {
       final saveResponse =
           await Provider.of<RegimentViewModel>(context, listen: false)
               .updatePhoto(eid: widget.eid, url: imagePath);
-      if (saveResponse.isSuccess) {
+      if (saveResponse.isSuccess!) {
         toast.getToast(
           'Image updated successfully',
           Colors.green,

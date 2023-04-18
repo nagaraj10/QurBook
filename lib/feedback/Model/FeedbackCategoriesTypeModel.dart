@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 FeedbackCategoryType feedbackCategoryTypeFromJson(String str) =>
@@ -12,8 +13,8 @@ class FeedbackCategoryType {
     this.result,
   });
 
-  bool isSuccess;
-  List<FeedbackCategoryModel> result;
+  bool? isSuccess;
+  List<FeedbackCategoryModel>? result;
 
   factory FeedbackCategoryType.fromJson(Map<String, dynamic> json) =>
       FeedbackCategoryType(
@@ -28,7 +29,7 @@ class FeedbackCategoryType {
         "isSuccess": isSuccess == null ? null : isSuccess,
         "result": result == null
             ? null
-            : List<dynamic>.from(result.map((x) => x.toJson())),
+            : List<dynamic>.from(result!.map((x) => x.toJson())),
       };
 }
 
@@ -39,9 +40,9 @@ class FeedbackCategoryModel {
     this.name,
   });
 
-  String id;
-  String code;
-  String name;
+  String? id;
+  String? code;
+  String? name;
 
   factory FeedbackCategoryModel.fromJson(Map<String, dynamic> json) =>
       FeedbackCategoryModel(

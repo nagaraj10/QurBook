@@ -1,3 +1,4 @@
+
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
@@ -30,32 +31,32 @@ class History {
       this.paymentMediaMetaId,
       this.refundMediaMetaId});
 
-  String appointmentId;
-  String createdOn;
-  String createdBy;
-  String lastModifiedBy;
-  HealthRecord healthRecord;
-  String plannedStartDateTime;
-  String plannedEndDateTime;
-  int slotNumber;
-  bool isRefunded;
-  String bookingId;
-  String sharedMedicalRecordsId;
-  bool isMedicalRecordsShared;
-  String specialization;
-  String location;
-  String doctorPic;
-  String doctorName;
-  String doctorId;
-  String doctorSessionId;
-  String patientId;
-  String actualStartDateTime;
-  String actualEndDateTime;
-  String followupDate;
-  String followupFee;
-  String status;
-  String paymentMediaMetaId;
-  String refundMediaMetaId;
+  String? appointmentId;
+  String? createdOn;
+  String? createdBy;
+  String? lastModifiedBy;
+  HealthRecord? healthRecord;
+  String? plannedStartDateTime;
+  String? plannedEndDateTime;
+  int? slotNumber;
+  bool? isRefunded;
+  String? bookingId;
+  String? sharedMedicalRecordsId;
+  bool? isMedicalRecordsShared;
+  String? specialization;
+  String? location;
+  String? doctorPic;
+  String? doctorName;
+  String? doctorId;
+  String? doctorSessionId;
+  String? patientId;
+  String? actualStartDateTime;
+  String? actualEndDateTime;
+  String? followupDate;
+  String? followupFee;
+  String? status;
+  String? paymentMediaMetaId;
+  String? refundMediaMetaId;
 
   History.fromJson(Map<String, dynamic> json) {
     appointmentId = json[parameters.strAppointmentId];

@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
@@ -18,7 +19,7 @@ class VitalListController extends GetxController {
   ApiBaseHelper _helper = ApiBaseHelper();
   var loadingData = false.obs;
 
-  Future<LastMeasureSyncValues> fetchDeviceDetails() async {
+  Future<LastMeasureSyncValues?> fetchDeviceDetails() async {
     try {
       var resp = await _helperRepo.getLatestDeviceHealthRecord();
       final res = json.encode(resp);
@@ -29,7 +30,7 @@ class VitalListController extends GetxController {
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelection(
-      {String userIdFromBloc}) async {
+      {String? userIdFromBloc}) async {
     var userId;
     if (userIdFromBloc != null) {
       userId = userIdFromBloc;

@@ -1,17 +1,18 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/PaymentStatusModel.dart';
 
 class PaymentModel {
-  String id;
-  PaymentStatusModel paymentStatus;
-  String createdOn;
-  bool isActive;
-  String purpose;
-  String paidAmount;
-  String transactionDateTime;
-  String paymentReference;
-  String paidDate;
-  String receiptUrl;
-  String lastModifiedOn;
+  String? id;
+  PaymentStatusModel? paymentStatus;
+  String? createdOn;
+  bool? isActive;
+  String? purpose;
+  String? paidAmount;
+  String? transactionDateTime;
+  String? paymentReference;
+  String? paidDate;
+  String? receiptUrl;
+  String? lastModifiedOn;
 
   PaymentModel(
       {this.id,
@@ -46,7 +47,7 @@ class PaymentModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     if (this.paymentStatus != null) {
-      data['paymentStatus'] = this.paymentStatus.toJson();
+      data['paymentStatus'] = this.paymentStatus!.toJson();
     }
     data['createdOn'] = this.createdOn;
     data['isActive'] = this.isActive;

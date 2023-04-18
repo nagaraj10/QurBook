@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -19,21 +20,21 @@ import 'regiment_webview.dart';
 
 class RegimentActivitiesCard extends StatelessWidget {
   final int index;
-  final String title;
+  final String? title;
   final String time;
   final Color color;
-  final String eid;
-  final DateTime startTime;
+  final String? eid;
+  final DateTime? startTime;
   final RegimentDataModel regimentData;
 
   const RegimentActivitiesCard({
-    @required this.index,
-    @required this.title,
-    @required this.time,
-    @required this.color,
-    @required this.eid,
-    @required this.startTime,
-    @required this.regimentData,
+    required this.index,
+    required this.title,
+    required this.time,
+    required this.color,
+    required this.eid,
+    required this.startTime,
+    required this.regimentData,
   });
 
   @override
@@ -89,7 +90,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Visibility(
-                          visible: regimentData?.isMandatory ?? false,
+                          visible: regimentData.isMandatory,
                           child: Padding(
                             padding: EdgeInsets.only(
                               right: 5.0.w,
@@ -104,7 +105,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            title?.trim(),
+                            title!.trim(),
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.w500,
@@ -119,16 +120,16 @@ class RegimentActivitiesCard extends StatelessWidget {
                   activeColor: Colors.green,
                   inactiveThumbColor: Colors.grey[200],
                   inactiveTrackColor: Colors.grey[400],
-                  value: !regimentData?.isEventDisabled,
-                  onChanged: (regimentData?.isMandatory ?? false)
+                  value: !regimentData.isEventDisabled,
+                  onChanged: (regimentData.isMandatory)
                       ? null
                       : (isEnabled) {
                           Provider.of<RegimentViewModel>(
                             context,
                             listen: false,
                           ).enableDisableActivity(
-                            eidUser: regimentData?.teidUser,
-                            startTime: regimentData?.estart,
+                            eidUser: regimentData.teidUser,
+                            startTime: regimentData.estart!,
                             isDisable: !isEnabled,
                           );
                         },

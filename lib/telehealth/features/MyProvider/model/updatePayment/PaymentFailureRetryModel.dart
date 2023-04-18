@@ -1,5 +1,6 @@
+
 class PaymentFailureRetryModel {
-  bool isSuccess;
+  bool? isSuccess;
 
   PaymentFailureRetryModel({this.isSuccess});
 

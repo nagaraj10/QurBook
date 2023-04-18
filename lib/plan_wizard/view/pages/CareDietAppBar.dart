@@ -1,10 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CareDietAppBar extends StatelessWidget implements PreferredSizeWidget {
-  TabController tabController;
+  TabController? tabController;
 
   CareDietAppBar({this.tabController});
 

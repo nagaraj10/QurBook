@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
@@ -6,17 +7,17 @@ import 'checkbox_tile_widget.dart';
 
 class FormDataCheckbox extends StatefulWidget {
   const FormDataCheckbox({
-    @required this.fieldData,
-    @required this.updateValue,
-    @required this.canEdit,
+    required this.fieldData,
+    required this.updateValue,
+    required this.canEdit,
     this.isFromQurHomeSymptom = false,
   });
 
   final FieldModel fieldData;
   final Function(
     FieldModel updatedFieldData, {
-    bool isAdd,
-    String title,
+    bool? isAdd,
+    String? title,
   }) updateValue;
   final bool canEdit;
   final bool isFromQurHomeSymptom;
@@ -34,7 +35,7 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
   }
 
   List<Widget> loadCheckboxItems() {
-    final checkboxList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    final checkboxList = (widget.fieldData.fdata ?? '')?.split('|');
     if (checkboxList.isNotEmpty && checkboxList.length.isEven) {
       checkboxWidget.clear();
       for (var index = 0; index < checkboxList.length; index++) {
@@ -69,7 +70,7 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget?.fieldData != null)
+          if (widget.fieldData != null)
             Text(
               CommonUtil().showDescriptionTextForm(widget.fieldData),
               style: TextStyle(

@@ -1,15 +1,16 @@
+
 class MemberShipAdditionalInfo {
-  String remarks;
-  String planTags;
-  bool isRenewal;
-  String paymentId;
-  String planEndDate;
-  bool isTerminated;
-  String planStartDate;
-  int packageDuration;
-  String terminationDate;
-  String prescribedDoctor;
-  String planPackageCategoryName;
+  String? remarks;
+  String? planTags;
+  bool? isRenewal;
+  String? paymentId;
+  String? planEndDate;
+  bool? isTerminated;
+  String? planStartDate;
+  int? packageDuration;
+  String? terminationDate;
+  String? prescribedDoctor;
+  String? planPackageCategoryName;
 
   MemberShipAdditionalInfo(
       {this.remarks,

@@ -1,3 +1,4 @@
+
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -6,7 +7,7 @@ import 'package:myfhb/ticket_support/services/ticket_service.dart';
 
 class AddProvidersController extends GetxController {
   var isLoadingProgress = false.obs;
-  TicketTypesResult labTicketTypesResult;
+  TicketTypesResult? labTicketTypesResult;
   UserTicketService userTicketService = UserTicketService();
 
   @override
@@ -33,15 +34,15 @@ class AddProvidersController extends GetxController {
       var userTicketModel = await userTicketService.getTicketTypesList();
       if (userTicketModel != null &&
           userTicketModel.ticketTypeResults != null &&
-          userTicketModel.ticketTypeResults.isNotEmpty) {
+          userTicketModel.ticketTypeResults!.isNotEmpty) {
         isLoadingProgress.value = false;
-        final index = userTicketModel.ticketTypeResults.indexWhere((element) =>
+        final index = userTicketModel.ticketTypeResults!.indexWhere((element) =>
             (CommonUtil()
                 .validString(element.name)
                 .toLowerCase()
                 .contains("lab appointment")));
         if (index >= 0) {
-          labTicketTypesResult = userTicketModel.ticketTypeResults[index];
+          labTicketTypesResult = userTicketModel.ticketTypeResults![index];
         } else {
           labTicketTypesResult = null;
         }

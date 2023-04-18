@@ -1,11 +1,12 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'SignInAndSignUpResponse.dart';
 
 class SignIn {
-  int status;
-  bool success;
-  String message;
-  SignInAndSignUpResponse response;
+  int? status;
+  bool? success;
+  String? message;
+  SignInAndSignUpResponse? response;
 
   SignIn({this.status, this.success, this.message, this.response});
 
@@ -24,7 +25,7 @@ class SignIn {
     data[parameters.strSuccess] = success;
     data[parameters.strMessage] = message;
     if (response != null) {
-      data[parameters.strResponse] = response.toJson();
+      data[parameters.strResponse] = response!.toJson();
     }
     
     return data;

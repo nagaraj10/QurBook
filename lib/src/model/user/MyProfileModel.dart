@@ -1,9 +1,10 @@
+
 import 'MyProfileResult.dart';
 
 class MyProfileModel {
-  bool isSuccess;
-  String message;
-  MyProfileResult result;
+  bool? isSuccess;
+  String? message;
+  MyProfileResult? result;
 
   MyProfileModel({this.isSuccess, this.message, this.result});
 
@@ -19,7 +20,7 @@ class MyProfileModel {
     data['isSuccess'] = isSuccess;
     data['message'] = message;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }

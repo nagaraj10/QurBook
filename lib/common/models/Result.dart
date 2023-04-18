@@ -1,13 +1,14 @@
+
 import 'ConfigurationData.dart';
 
 class Result {
   Result({
-      String id, 
-      String code, 
-      String name, 
-      ConfigurationData configurationData, 
-      bool isActive, 
-      String createdOn, 
+      String? id, 
+      String? code, 
+      String? name, 
+      ConfigurationData? configurationData, 
+      bool? isActive, 
+      String? createdOn, 
       dynamic lastModifiedOn,}){
     _id = id;
     _code = code;
@@ -27,20 +28,20 @@ class Result {
     _createdOn = json['createdOn'];
     _lastModifiedOn = json['lastModifiedOn'];
   }
-  String _id;
-  String _code;
-  String _name;
-  ConfigurationData _configurationData;
-  bool _isActive;
-  String _createdOn;
+  String? _id;
+  String? _code;
+  String? _name;
+  ConfigurationData? _configurationData;
+  bool? _isActive;
+  String? _createdOn;
   dynamic _lastModifiedOn;
 
-  String get id => _id;
-  String get code => _code;
-  String get name => _name;
-  ConfigurationData get configurationData => _configurationData;
-  bool get isActive => _isActive;
-  String get createdOn => _createdOn;
+  String? get id => _id;
+  String? get code => _code;
+  String? get name => _name;
+  ConfigurationData? get configurationData => _configurationData;
+  bool? get isActive => _isActive;
+  String? get createdOn => _createdOn;
   dynamic get lastModifiedOn => _lastModifiedOn;
 
   Map<String, dynamic> toJson() {
@@ -49,7 +50,7 @@ class Result {
     map['code'] = _code;
     map['name'] = _name;
     if (_configurationData != null) {
-      map['configurationData'] = _configurationData.toJson();
+      map['configurationData'] = _configurationData!.toJson();
     }
     map['isActive'] = _isActive;
     map['createdOn'] = _createdOn;

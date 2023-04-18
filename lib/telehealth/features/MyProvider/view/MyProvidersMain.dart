@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 class MyProvidersMain extends StatefulWidget {
-  final int mTabIndex;
+  final int? mTabIndex;
 
   MyProvidersMain({this.mTabIndex});
   @override
@@ -28,7 +29,7 @@ class MyProvidersMain extends StatefulWidget {
 class _TabBarDemoState extends State<MyProvidersMain>
     with SingleTickerProviderStateMixin {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  TabController _controller;
+  TabController? _controller;
   int _selectedIndex = 0;
   bool isRefresh = true;
   @override
@@ -41,12 +42,12 @@ class _TabBarDemoState extends State<MyProvidersMain>
       vsync: this,
     );
 
-    _controller.index = widget.mTabIndex != null ? widget.mTabIndex : 0;
+    _controller!.index = widget.mTabIndex != null ? widget.mTabIndex! : 0;
 
-    _controller.addListener(() {
-      FocusManager.instance.primaryFocus.unfocus();
+    _controller!.addListener(() {
+      FocusManager.instance.primaryFocus!.unfocus();
       setState(() {
-        _selectedIndex = _controller.index;
+        _selectedIndex = _controller!.index;
       });
     });
   }

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -37,21 +38,21 @@ class MyPlanList extends StatefulWidget {
 }
 
 class _MyPlanState extends State<MyPlanList> {
-  MyPlanListModel myPlanListModel;
+  MyPlanListModel? myPlanListModel;
   MyPlanViewModel myPlanViewModel = MyPlanViewModel();
   bool isSearch = false;
   List<MyPlanListResult> myPLanListResult = [];
   final GlobalKey _GotoRegimentKey = GlobalKey();
   final GlobalKey _PlanCardKey = GlobalKey();
-  bool isFirst;
+  late bool isFirst;
   bool addplanbutton = false;
   bool showRenewOrSubscribeButton = false;
-  BuildContext _myContext;
+  late BuildContext _myContext;
   @override
   void initState() {
     super.initState();
     mInitialTime = DateTime.now();
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     getConfiguration();
     if (widget.fromDashBoard) {
       Provider.of<RegimentViewModel>(
@@ -60,39 +61,39 @@ class _MyPlanState extends State<MyPlanList> {
       ).updateTabIndex(currentIndex: 3);
     }
     Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.getCreditBalance();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateCareCount();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateDietCount();
+        .getCreditBalance();
+    Provider.of<PlanWizardViewModel>(context, listen: false).fetchCartItem();
+    Provider.of<PlanWizardViewModel>(context, listen: false).updateCareCount();
+    Provider.of<PlanWizardViewModel>(context, listen: false).updateDietCount();
 
     PreferenceUtil.init();
 
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MyPlan);
     try {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         Future.delayed(
             Duration(milliseconds: 1000),
             () => isFirst
                 ? null
-                : ShowCaseWidget.of(_myContext).startShowCase([_PlanCardKey]));
+                : ShowCaseWidget.of(_myContext)!.startShowCase([_PlanCardKey]));
       });
     } catch (e) {}
   }
 
   Future<void> getConfiguration() async {
-    bool addplanbutton = await PreferenceUtil.getAddPlanBtn();
-    bool showRenewOrSubscribeButton =
+    bool? addplanbutton = await PreferenceUtil.getAddPlanBtn();
+    bool? showRenewOrSubscribeButton =
         await PreferenceUtil.getUnSubscribeValue();
     print('addplanbtn: ' + addplanbutton.toString());
     setState(() {
-      this.addplanbutton = addplanbutton;
-      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton;
+      this.addplanbutton = addplanbutton?? false; // FUcrash add ?? false
+      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton?? false;// FUcrash add ?? false;
     });
   }
 
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
       'pageName': 'MyPlans Screen',
@@ -110,7 +111,7 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          floatingActionButton: addplanbutton??false
+          floatingActionButton: addplanbutton
               ? FloatingActionButton.extended(
                   onPressed: () async {
                     var firebase = FirebaseAnalyticsService();
@@ -119,8 +120,8 @@ class _MyPlanState extends State<MyPlanList> {
                     });
 
                     // await Get.toNamed(rt_Diseases);
-                    await Get.toNamed(rt_PlanWizard).then((value) =>
-                        FocusManager.instance.primaryFocus.unfocus());
+                    await Get.toNamed(rt_PlanWizard)!.then((value) =>
+                        FocusManager.instance.primaryFocus!.unfocus());
                   },
                   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                   icon: Icon(
@@ -150,15 +151,15 @@ class _MyPlanState extends State<MyPlanList> {
                       }
                     },
                     onClosePress: () {
-                      FocusManager.instance.primaryFocus.unfocus();
+                      FocusManager.instance.primaryFocus!.unfocus();
                     },
                   ),
                   SizedBox(
                     height: 5.0.h,
                   ),
                   Expanded(
-                    child: myPlanListModel != null ?? myPlanListModel.isSuccess
-                        ? hospitalList(myPlanListModel.result)
+                    child: myPlanListModel != null 
+                        ? hospitalList(myPlanListModel!.result)
                         : getPlanList(),
                   )
                 ],
@@ -231,7 +232,7 @@ class _MyPlanState extends State<MyPlanList> {
     );
   }
 
-  Widget hospitalList(List<MyPlanListResult> planList) {
+  Widget hospitalList(List<MyPlanListResult>? planList) {
     return (planList != null && planList.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
@@ -268,7 +269,7 @@ class _MyPlanState extends State<MyPlanList> {
   }
 
   Widget getPlanList() {
-    return FutureBuilder<MyPlanListModel>(
+    return FutureBuilder<MyPlanListModel?>(
       future: myPlanViewModel.getMyPlanList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -287,10 +288,10 @@ class _MyPlanState extends State<MyPlanList> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result.isNotEmpty) {
-            return hospitalList(snapshot.data.result);
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.isNotEmpty) {
+            return hospitalList(snapshot.data!.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -335,7 +336,7 @@ class _MyPlanState extends State<MyPlanList> {
                     // isExtendable: planList[i]?.isExtendable,
                   )),
         ).then((value) {
-          FocusManager.instance.primaryFocus.unfocus();
+          FocusManager.instance.primaryFocus!.unfocus();
           if (value == 'refreshUI') {
             setState(() {});
           }
@@ -371,7 +372,7 @@ class _MyPlanState extends State<MyPlanList> {
                     radius: 20.h,
                     child: CommonUtil().customImage(
                       getImage(i, planList),
-                      planInitial: planList[i]?.providerName ?? '',
+                      planInitial: planList[i].providerName ?? '',
                     ),
                   ),
                   SizedBox(
@@ -384,7 +385,7 @@ class _MyPlanState extends State<MyPlanList> {
                       children: [
                         Text(
                           planList[i].title != null
-                              ? toBeginningOfSentenceCase(planList[i].title)
+                              ? toBeginningOfSentenceCase(planList[i].title)!
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
@@ -401,7 +402,7 @@ class _MyPlanState extends State<MyPlanList> {
                               child: Text(
                                 planList[i].providerName != null
                                     ? toBeginningOfSentenceCase(
-                                        planList[i].providerName)
+                                        planList[i].providerName)!
                                     : '',
                                 maxLines: 2,
                                 style: TextStyle(
@@ -437,7 +438,7 @@ class _MyPlanState extends State<MyPlanList> {
                       ],
                     ),
                   ),
-                  if (planList[i]?.tags != strMemb)
+                  if (planList[i].tags != strMemb)
                     Row(
                       children: [
                         showRenewOrSubscribeButton
@@ -469,16 +470,16 @@ class _MyPlanState extends State<MyPlanList> {
                                             await CommonUtil().renewAlertDialog(
                                                 context,
                                                 packageId:
-                                                    planList[i]?.packageid,
-                                                price: planList[i]?.price,
+                                                    planList[i].packageid,
+                                                price: planList[i].price,
                                                 startDate:
-                                                    planList[i]?.startdate,
-                                                endDate: planList[i]?.enddate,
+                                                    planList[i].startdate,
+                                                endDate: planList[i].enddate,
                                                 isExpired: true,
                                                 packageDuration:
-                                                    planList[i]?.duration,
+                                                    planList[i].duration,
                                                 IsExtendable:
-                                                    planList[i]?.isExtendable ==
+                                                    planList[i].isExtendable ==
                                                             '1'
                                                         ? true
                                                         : false, refresh: () {
@@ -564,24 +565,24 @@ class _MyPlanState extends State<MyPlanList> {
   }
 
   String getImage(int i, List<MyPlanListResult> planList) {
-    var image = '';
+    String? image = '';
     if (planList[i] != null) {
       if (planList[i].metadata != null && planList[i].metadata != '') {
-        if (planList[i].metadata.icon != null &&
-            planList[i].metadata.icon != '') {
-          image = planList[i].metadata.icon;
+        if (planList[i].metadata!.icon != null &&
+            planList[i].metadata!.icon != '') {
+          image = planList[i].metadata!.icon;
         } else {
           if (planList[i].catmetadata != null &&
               planList[i].catmetadata != '') {
-            if (planList[i].catmetadata.icon != null &&
-                planList[i].catmetadata.icon != '') {
-              image = planList[i].catmetadata.icon;
+            if (planList[i].catmetadata!.icon != null &&
+                planList[i].catmetadata!.icon != '') {
+              image = planList[i].catmetadata!.icon;
             } else {
               if (planList[i].providermetadata != null &&
                   planList[i].providermetadata != '') {
-                if (planList[i].providermetadata.icon != null &&
-                    planList[i].providermetadata.icon != '') {
-                  image = planList[i].providermetadata.icon;
+                if (planList[i].providermetadata!.icon != null &&
+                    planList[i].providermetadata!.icon != '') {
+                  image = planList[i].providermetadata!.icon;
                 } else {
                   image = '';
                 }
@@ -592,9 +593,9 @@ class _MyPlanState extends State<MyPlanList> {
           } else {
             if (planList[i].providermetadata != null &&
                 planList[i].providermetadata != '') {
-              if (planList[i].providermetadata.icon != null &&
-                  planList[i].providermetadata.icon != '') {
-                image = planList[i].providermetadata.icon;
+              if (planList[i].providermetadata!.icon != null &&
+                  planList[i].providermetadata!.icon != '') {
+                image = planList[i].providermetadata!.icon;
               } else {
                 image = '';
               }
@@ -605,15 +606,15 @@ class _MyPlanState extends State<MyPlanList> {
         }
       } else {
         if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
-          if (planList[i].catmetadata.icon != null &&
-              planList[i].catmetadata.icon != '') {
-            image = planList[i].catmetadata.icon;
+          if (planList[i].catmetadata!.icon != null &&
+              planList[i].catmetadata!.icon != '') {
+            image = planList[i].catmetadata!.icon;
           } else {
             if (planList[i].providermetadata != null &&
                 planList[i].providermetadata != '') {
-              if (planList[i].providermetadata.icon != null &&
-                  planList[i].providermetadata.icon != '') {
-                image = planList[i].providermetadata.icon;
+              if (planList[i].providermetadata!.icon != null &&
+                  planList[i].providermetadata!.icon != '') {
+                image = planList[i].providermetadata!.icon;
               } else {
                 image = '';
               }
@@ -624,9 +625,9 @@ class _MyPlanState extends State<MyPlanList> {
         } else {
           if (planList[i].providermetadata != null &&
               planList[i].providermetadata != '') {
-            if (planList[i].providermetadata.icon != null &&
-                planList[i].providermetadata.icon != '') {
-              image = planList[i].providermetadata.icon;
+            if (planList[i].providermetadata!.icon != null &&
+                planList[i].providermetadata!.icon != '') {
+              image = planList[i].providermetadata!.icon;
             } else {
               image = '';
             }
@@ -637,15 +638,15 @@ class _MyPlanState extends State<MyPlanList> {
       }
     } else {
       if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
-        if (planList[i].catmetadata.icon != null &&
-            planList[i].catmetadata.icon != '') {
-          image = planList[i].catmetadata.icon;
+        if (planList[i].catmetadata!.icon != null &&
+            planList[i].catmetadata!.icon != '') {
+          image = planList[i].catmetadata!.icon;
         } else {
           if (planList[i].providermetadata != null &&
               planList[i].providermetadata != '') {
-            if (planList[i].providermetadata.icon != null &&
-                planList[i].providermetadata.icon != '') {
-              image = planList[i].providermetadata.icon;
+            if (planList[i].providermetadata!.icon != null &&
+                planList[i].providermetadata!.icon != '') {
+              image = planList[i].providermetadata!.icon;
             } else {
               image = '';
             }
@@ -656,9 +657,9 @@ class _MyPlanState extends State<MyPlanList> {
       } else {
         if (planList[i].providermetadata != null &&
             planList[i].providermetadata != '') {
-          if (planList[i].providermetadata.icon != null &&
-              planList[i].providermetadata.icon != '') {
-            image = planList[i].providermetadata.icon;
+          if (planList[i].providermetadata!.icon != null &&
+              planList[i].providermetadata!.icon != '') {
+            image = planList[i].providermetadata!.icon;
           } else {
             image = '';
           }
@@ -668,6 +669,6 @@ class _MyPlanState extends State<MyPlanList> {
       }
     }
 
-    return image;
+    return image!;
   }
 }

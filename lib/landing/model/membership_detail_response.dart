@@ -1,15 +1,16 @@
+
 class MemberShipDetailResponse {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   MemberShipDetailResponse({this.isSuccess, this.result});
 
   MemberShipDetailResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = <Result>[];
       json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+        result!.add(new Result.fromJson(v));
       });
     }
   }
@@ -18,21 +19,21 @@ class MemberShipDetailResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
-  String healthOrganizationName;
-  String healthOrganizationId;
-  String planName;
-  AdditionalInfo additionalInfo;
-  String planStartDate;
-  String planEndDate;
-  String planSubscriptionInfoId;
+  String? id;
+  String? healthOrganizationName;
+  String? healthOrganizationId;
+  String? planName;
+  AdditionalInfo? additionalInfo;
+  String? planStartDate;
+  String? planEndDate;
+  String? planSubscriptionInfoId;
 
   Result(
       {this.id,
@@ -64,7 +65,7 @@ class Result {
     data['healthOrganizationId'] = this.healthOrganizationId;
     data['planName'] = this.planName;
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo!.toJson();
     }
     data['planStartDate'] = this.planStartDate;
     data['planEndDate'] = this.planEndDate;
@@ -74,17 +75,17 @@ class Result {
 }
 
 class AdditionalInfo {
-  String remarks;
-  String planTags;
-  bool isRenewal;
-  String paymentId;
-  String planEndDate;
-  bool isTerminated;
-  String planStartDate;
-  int packageDuration;
-  String terminationDate;
-  String prescribedDoctor;
-  String planPackageCategoryName;
+  String? remarks;
+  String? planTags;
+  bool? isRenewal;
+  String? paymentId;
+  String? planEndDate;
+  bool? isTerminated;
+  String? planStartDate;
+  int? packageDuration;
+  String? terminationDate;
+  String? prescribedDoctor;
+  String? planPackageCategoryName;
 
   AdditionalInfo(
       {this.remarks,

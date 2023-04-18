@@ -1,10 +1,11 @@
+
 class MetaDataForHospitalLogo {
-  String icon;
-  String address;
-  String city;
-  String zip;
-  String descriptionURL;
-  String siteURL;
+  String? icon;
+  String? address;
+  String? city;
+  String? zip;
+  String? descriptionURL;
+  String? siteURL;
 
   MetaDataForHospitalLogo(
       {this.icon,

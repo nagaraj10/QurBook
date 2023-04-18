@@ -1,3 +1,4 @@
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,22 +27,22 @@ class ProviderDietPlans extends StatefulWidget {
 }
 
 class _ProviderDietPlans extends State<ProviderDietPlans> {
-  Future<PlanListModel> planListModel;
+  late  Future<PlanListModel?> planListModel; // FUcrash
 
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
 
   bool isSearch = false;
 
-  List<PlanListResult> planSearchList = List();
+  List<PlanListResult> planSearchList = [];
 
-  String _selectedView = popUpChoiceDefault;
+  String? _selectedView = popUpChoiceDefault;
 
   int carePlanListLength = 0;
 
-  PlanWizardViewModel planListProvider;
+  PlanWizardViewModel? planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
+  ValueNotifier<String?> _selectedItem = new ValueNotifier<String?>('Default');
 
   bool isSwitched = false;
 
@@ -51,9 +52,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         .currentPackageProviderDietId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getDietPlanListNew(isFrom: strProviderDiet);
+        .getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel?>;// FUcrash
 
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty =
+    Provider.of<PlanWizardViewModel>(context, listen: false).isDietListEmpty =
         false;
   }
 
@@ -77,7 +78,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                         });
                       }
                     },onClosePress: (){
-                    FocusManager.instance.primaryFocus.unfocus();
+                    FocusManager.instance.primaryFocus!.unfocus();
                   },
                     hintText: strPlanHospitalDiet,
                     padding: 10.0.sp,
@@ -123,34 +124,34 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                 (planListProvider?.currentPackageFreeDietId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
-              Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
+              Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
             }
           },
         ));
   }
 
-  onSearched(String title, String filterBy) async {
+  onSearched(String? title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
       planSearchList =
-          await planListProvider.filterSortingForProviderDiet(popUpChoicePrice);
+          await planListProvider!.filterSortingForProviderDiet(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
       planSearchList =
-          await planListProvider.filterSortingForProviderDiet(popUpChoiceDura);
+          await planListProvider!.filterSortingForProviderDiet(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList = await planListProvider
+      planSearchList = await planListProvider!
           .filterSortingForProviderDiet(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
         planSearchList =
-            await planListProvider.filterPlanNameProviderDiet(title);
+            await planListProvider!.filterPlanNameProviderDiet(title);
       }
     }
     setState(() {});
   }
 
   Widget getDietPlanList() {
-    return new FutureBuilder<PlanListModel>(
+    return new FutureBuilder<PlanListModel?>(// FUcrash
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -169,43 +170,42 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.length > 0) {
             carePlanListLength = isSearch
                 ? planSearchList.length
-                : snapshot?.data?.result?.length ?? 0;
+                : snapshot.data!.result!.length;
             if (((Provider.of<PlanWizardViewModel>(context, listen: false)
-                    ?.isDynamicLink) ??
-                false)) {
+                    .isDynamicLink))) {
               Future.delayed(Duration(), () {
                 var searchText =
                     Provider.of<PlanWizardViewModel>(context, listen: false)
-                            ?.dynamicLinkSearchText ??
+                            .dynamicLinkSearchText ??
                         '';
-                if (searchText?.isNotEmpty ?? false) {
+                if (searchText.isNotEmpty) {
                   isSearch = true;
                   onSearched(searchText, 'localSearch');
                 }
                 Provider.of<PlanWizardViewModel>(context, listen: false)
-                    ?.isDynamicLink = false;
+                    .isDynamicLink = false;
               });
             }
 
             Future.delayed(Duration(milliseconds: 100), () {
               bool needReload =
                   Provider.of<PlanWizardViewModel>(context, listen: false)
-                          ?.isDietListEmpty !=
-                      (snapshot?.data?.result.length > 0 ? true : false);
+                          .isDietListEmpty !=
+                      (snapshot.data!.result!.length > 0 ? true : false);
 
               Provider.of<PlanWizardViewModel>(context, listen: false)
-                  ?.updateBottonLayoutEmptyDietList(
-                      snapshot?.data?.result.length > 0 ? true : false,
+                  .updateBottonLayoutEmptyDietList(
+                      snapshot.data!.result!.length > 0 ? true : false,
                       needReload: needReload);
             });
 
             return dietPlanList(
-                isSearch ? planSearchList : snapshot?.data?.result);
+                isSearch ? planSearchList : snapshot.data?.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -223,7 +223,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     );
   }
 
-  Widget dietPlanList(List<PlanListResult> planList) {
+  Widget dietPlanList(List<PlanListResult>? planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
@@ -233,7 +233,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             itemBuilder: (BuildContext ctx, int i) => DietPlanCard(
               planList: isSearch ? planSearchList[i] : planList[i],
               onClick: () {
-                FocusManager.instance.primaryFocus.unfocus();
+                FocusManager.instance.primaryFocus!.unfocus();
               },
               isFrom: strProviderDiet,
             ),
@@ -266,14 +266,13 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
+                  Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
                 },
                 child: Text('Yes'),
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool);
   }
 
   Widget popMenuItemNew() {
@@ -291,7 +290,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               child: new AnimatedBuilder(
                 child: new Text(sortType[index]),
                 animation: _selectedItem,
-                builder: (BuildContext context, Widget child) {
+                builder: (BuildContext context, Widget? child) {
                   return new RadioListTile<String>(
                     value: sortType[index],
                     groupValue: _selectedItem.value,
@@ -299,7 +298,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                     onChanged: (value) {
                       setState(() {
                         _selectedItem.value = value;
-                        FocusManager.instance.primaryFocus.unfocus();
+                        FocusManager.instance.primaryFocus!.unfocus();
                         _selectedView = value;
                         if (value == popUpChoicePrice) {
                           isSearch = true;
@@ -343,14 +342,14 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     if (isSwitched == false) {
       setState(() {
         isSwitched = true;
-        planListModel = planListProvider.getDietPlanListNew(
-            isFrom: strProviderDiet, isVeg: true);
+        planListModel = planListProvider!.getDietPlanListNew(
+            isFrom: strProviderDiet, isVeg: true) as Future<PlanListModel?>;// FUcrash
       });
     } else {
       setState(() {
         isSwitched = false;
         planListModel =
-            planListProvider.getDietPlanListNew(isFrom: strProviderDiet);
+            planListProvider!.getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel?>;// FUcrash
       });
     }
   }
@@ -362,10 +361,10 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
 
     if (Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.providerHosCount ==
+        .providerHosCount ==
         0 &&
         Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.planWizardProviderCount ==
+            .planWizardProviderCount ==
             0) {
       return RichText(
         textAlign: TextAlign.center,
@@ -377,7 +376,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         ),
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.planWizardProviderCount ==
+        .planWizardProviderCount ==
         0) {
       return RichText(
         textAlign: TextAlign.center,
@@ -389,9 +388,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         ),
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.planWizardProviderCount !=
+        .planWizardProviderCount !=
         0 && Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.providerHosCount !=
+        .providerHosCount !=
         0) {
       return RichText(
         textAlign: TextAlign.center,
@@ -400,8 +399,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
           children: <TextSpan>[
             TextSpan(
                 text: 'Your providers do not offer diet plans yet for ' +
-                    planListProvider?.healthTitle ??
-                    ''),
+                    planListProvider!.healthTitle),
             TextSpan(
                 text: ' Tap here',
                 style: linkStyle,
@@ -414,9 +412,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         ),
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.providerHosCount ==
+        .providerHosCount ==
         0 && Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.planWizardProviderCount !=
+        .planWizardProviderCount !=
         0) {
       return RichText(
         textAlign: TextAlign.center,
@@ -452,9 +450,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
   void callMyProviderPage(){
 
     Get.to(AddProviderPlan(
-        planListProvider.selectedTag)).then((value) =>  setState(() {
+        planListProvider!.selectedTag))!.then((value) =>  setState(() {
       planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-          .getDietPlanListNew(isFrom: strProviderDiet);
+          .getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel?>;// FUcrash
     }));
 
     /*Navigator.pushNamed(

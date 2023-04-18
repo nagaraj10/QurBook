@@ -18,11 +18,11 @@ class FeedbackApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       final body = convert.jsonEncode(["FEEDBACK"]);
-      responseJson = await ApiServices.post(
+      responseJson = (await ApiServices.post(
         _baseUrl + typeUrl,
         headers: header,
         body: body,
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -40,10 +40,10 @@ class FeedbackApiProvider {
     Response responseJson;
     try {
       var header = await HeaderRequest().getAuth();
-      responseJson = await ApiServices.get(
+      responseJson = (await ApiServices.get(
         _baseUrl + url,
         headers: header,
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {

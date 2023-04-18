@@ -1,7 +1,9 @@
+
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -38,9 +40,9 @@ var fullName, date, isUser;
 class DetailedTicketView extends StatefulWidget {
   DetailedTicketView(this.ticket, this.isFromNotification, this.ticketId);
 
-  final Tickets ticket;
+  final Tickets? ticket;
   final bool isFromNotification;
-  final String ticketId;
+  final String? ticketId;
   @override
   State createState() {
     return _DetailedTicketViewState();
@@ -69,8 +71,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         description: "Chat"),
   ];
 
-  Future<TicketDetailResponseModel> future;
-  TabController _controller;
+ late Future<TicketDetailResponseModel?> future = ticketViewModel.getTicketDetail(widget.isFromNotification
+          ? widget.ticketId.toString()
+          : widget.ticket!.uid.toString());
+  late TabController _controller;
   int selectedTab = 0;
   String authToken = '';
   bool isHideInputTextBox = false;
@@ -79,9 +83,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   void initState() {
     try {
       super.initState();
+        callTicketDetailsApi();
       _controller = TabController(vsync: this, length: 3);
       _controller.addListener(_handleTabSelection);
-      callTicketDetailsApi();
+    
     } catch (e) {
       //print(e);
     }
@@ -91,10 +96,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   callTicketDetailsApi() async {
     var token = await PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     setState(() {
-      authToken = token;
+      authToken = token??"";
       future = ticketViewModel.getTicketDetail(widget.isFromNotification
           ? widget.ticketId.toString()
-          : widget.ticket.uid.toString());
+          : widget.ticket!.uid.toString());
     });
   }
 
@@ -124,10 +129,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget getData() {
-    return FutureBuilder<TicketDetailResponseModel>(
+    return FutureBuilder<TicketDetailResponseModel?>(
       future: future,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.none && snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
@@ -142,34 +147,48 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();
-        } else {
-          if (snapshot?.data != null &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.ticket != null)
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          if ( snapshot.hasData &&
+              snapshot.data?.result != null &&
+              snapshot.data?.result?.ticket != null)
             return SingleChildScrollView(
-                child: detailView(snapshot.data.result.ticket));
+                child: detailView(snapshot.data!.result!.ticket!));
           else
             return ErrorsWidget();
+        
+        }else{
+           return SafeArea(
+            child: SizedBox(
+              height: 1.sh / 4.5,
+              child: Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: CommonCircularIndicator(),
+                ),
+              ),
+            ),
+          );
         }
-      },
+      }
     );
   }
 
   Widget detailView(Ticket ticket) {
-    List<Widget> widgetForColumn = List();
+    List<Widget> widgetForColumn = [];
     String strName = "";
     try {
-      if (ticket.additionalInfo?.ticketStatus?.name != null &&
-          ticket.additionalInfo?.ticketStatus?.name != '') {
+      if (ticket.additionalInfo!.ticketStatus?.name != null &&
+          ticket.additionalInfo!.ticketStatus?.name != '') {
         String strStatus = CommonUtil()
-            .validString(ticket.additionalInfo?.ticketStatus?.name)
+            .validString(ticket.additionalInfo!.ticketStatus?.name)
             .toLowerCase();
         if (strStatus.contains("cancelled") ||
             strStatus.contains("completed")) {
           isHideInputTextBox = true;
         }
       }
-      strName = CommonUtil().validString(ticket.type.name ?? "").toLowerCase();
+      strName = CommonUtil().validString(ticket.type!.name ?? "").toLowerCase();
       final dataFields = ticket.dataFields;
       if (strName.contains(variable.strTransportation) ||
           strName.contains(variable.strHomecareServices) ||
@@ -178,15 +197,15 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           strName.contains(variable.strLabAppointment) ||
           strName.contains(strOthers) ||
           strName.contains(variable.strGeneralHealth)) {
-        if (ticket.type.additionalInfo != null && dataFields != null) {
-          for (int i = 0; i < ticket.type.additionalInfo?.field.length; i++) {
-            Field field = ticket.type.additionalInfo?.field[i];
-            List<FieldData> fieldData = field.fieldData;
+        if (ticket.type!.additionalInfo != null && dataFields != null) {
+          for (int i = 0; i < ticket.type!.additionalInfo!.field!.length; i++) {
+            Field field = ticket.type!.additionalInfo!.field![i];
+            List<FieldData> fieldData = field.fieldData??[];
             String fieldName = CommonUtil().validString(field.name ?? "");
             String displayName = CommonUtil().validString(field.displayName);
             displayName = displayName.trim().isNotEmpty
                 ? displayName
-                : CommonUtil().getFieldName(field.name);
+                : CommonUtil().getFieldName(field.name)!;
             for (final name in dataFields.keys) {
               String LabelName = CommonUtil().validString(name.toString());
               var value = dataFields[LabelName];
@@ -196,10 +215,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                     (LabelName.contains("mode_of_service") ||
                         LabelName.contains("modeOfService"))) {
                   widgetForColumn.add(
-                      (ticket?.additionalInfo?.modeOfService != null &&
-                              ticket?.additionalInfo?.modeOfService.name != "")
+                      (ticket.additionalInfo!.modeOfService != null &&
+                              ticket.additionalInfo!.modeOfService!.name != "")
                           ? commonWidgetForDropDownValue("Mode Of Service",
-                              ticket?.additionalInfo?.modeOfService.name)
+                              ticket.additionalInfo?.modeOfService?.name)
                           : SizedBox.shrink());
                   break;
                 } else if ((fieldName.contains("preferredDate") ||
@@ -244,7 +263,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       fieldData.length > 0 &&
                       value is! String) {
                     try {
-                      final strText = value['name'] as String;
+                      final strText = value['name'] as String?;
                       widgetForColumn.add(commonWidgetForDropDownValue(
                           displayName, CommonUtil().validString(strText)));
                     } catch (e) {
@@ -264,7 +283,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         }
       }
     } catch (e) {
-      //print(e);
+      if(kDebugMode){
+        print(e);
+      }
     }
     return Container(
       child: Padding(
@@ -291,7 +312,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             maxLines: 2,
                           ),
                           Text(
-                            getStatusName(ticket),
+                            getStatusName(ticket)!,
                             style: TextStyle(
                                 fontSize: 16.0.sp,
                                 fontWeight: FontWeight.w600,
@@ -317,7 +338,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 Text(
                                   widget.isFromNotification
                                       ? '#${widget.ticketId}'
-                                      : ' #${widget.ticket.uid.toString()}',
+                                      : ' #${widget.ticket!.uid.toString()}',
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w100,
@@ -346,8 +367,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  ticket?.subject
-                                      ?.toString()
+                                  ticket.subject
+                                      .toString()
                                       .capitalizeFirstofEach,
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
@@ -371,14 +392,14 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                           ),
-                                          (ticket?.additionalInfo
+                                          (ticket.additionalInfo
                                                           ?.preferredTime !=
                                                       null &&
-                                                  ticket?.additionalInfo
+                                                  ticket.additionalInfo
                                                           ?.preferredTime !=
                                                       "")
                                               ? Text(
-                                                  ", ${ticket?.additionalInfo?.preferredTime ?? ''}",
+                                                  ", ${ticket.additionalInfo!.preferredTime ?? ''}",
                                                   style: TextStyle(
                                                     fontSize: 16.0.sp,
                                                     fontWeight: FontWeight.w100,
@@ -392,23 +413,23 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                         ],
                                       )
                                     : SizedBox(),
-                                (ticket?.additionalInfo?.chooseCategory !=
+                                (ticket.additionalInfo?.chooseCategory !=
                                             null &&
-                                        ticket?.additionalInfo
+                                        ticket.additionalInfo
                                                 ?.chooseCategory !=
                                             "")
                                     ? commonWidgetForDropDownValue(
                                         "Category Name",
-                                        ticket?.additionalInfo
+                                        ticket.additionalInfo
                                                 ?.chooseCategory ??
                                             '')
                                     : SizedBox.shrink(),
-                                (ticket?.additionalInfo?.packageName != null &&
-                                        ticket?.additionalInfo?.packageName !=
+                                (ticket.additionalInfo?.packageName != null &&
+                                        ticket.additionalInfo!.packageName !=
                                             "")
                                     ? commonWidgetForDropDownValue(
                                         "Package Name",
-                                        ticket?.additionalInfo?.packageName ??
+                                        ticket.additionalInfo!.packageName ??
                                             '')
                                     : SizedBox.shrink(),
                               ],
@@ -435,7 +456,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget _tabWidget(BuildContext context, Ticket ticketList) {
-    for (var historyData in ticketList.history) {
+    for (var historyData in ticketList.history??[]) {
       fullName = ticketList.assignee?.fullname ?? "N/A";
       date = historyData.date.toString();
       print('History fullname : $fullName & $date');
@@ -524,7 +545,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       Center(
                         child: Container(
                           padding: EdgeInsets.only(left: 80.w, right: 70.w),
-                          child: ListView.builder(
+                          child: ticketList.history != null &&
+                                    ticketList.history!.isNotEmpty? ListView.builder(
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
                               return new Stack(
@@ -556,7 +578,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 30, right: 30),
-                                    child: Column(
+                                    child:  Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       mainAxisAlignment:
@@ -581,7 +603,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                                   .grey[400]),
                                                         ),
                                                         listOfEvents[index]
-                                                                    .description
+                                                                    .description!
                                                                     .contains(
                                                                         'assigned') &&
                                                                 fullName != null
@@ -617,13 +639,18 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                           ),
                                         ),
                                       ],
-                                    ),
+                                    )
                                   ),
                                 ],
                               );
                             },
                             itemCount: listOfEvents.length,
-                          ),
+                          ):Center(
+                                    child: Container(
+                                      child:
+                                          Text('No History available !!'),
+                                    ),
+                                  ),
                         ),
                       ),
                       Center(
@@ -633,7 +660,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               child: Container(
                                 child: //_getChatWidget(context, ticketList),
                                     ticketList.comments != null &&
-                                            ticketList.comments.isNotEmpty
+                                            ticketList.comments!.isNotEmpty
                                         ? _getChatWidget(context, ticketList)
                                         : Container(
                                             alignment: Alignment.center,
@@ -669,7 +696,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                 height: 50.0.h,
                                                 child: FlatButton(
                                                     onPressed: () async {
-                                                      FilePickerResult result =
+                                                      FilePickerResult? result =
                                                           await FilePicker
                                                               .platform
                                                               .pickFiles(
@@ -681,9 +708,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                       );
                                                       if (result != null) {
                                                         File file = File(result
-                                                            .files.single.path);
+                                                            .files.single.path!);
                                                         uploadFile(
-                                                            widget.ticket.sId,
+                                                            widget.ticket!.sId!,
                                                             file);
                                                       }
                                                     },
@@ -733,9 +760,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                         child: new Container(
                                           child: RawMaterialButton(
                                             onPressed: () {
-                                              onSendMessage(
-                                                  addCommentController.text,
-                                                  widget.ticket ?? ticketList);
+                                               onSendMessage(
+                                                   addCommentController.text,
+                                                   widget.ticket ?? ticketList);
                                             },
                                             elevation: 2.0,
                                             fillColor: Colors.white,
@@ -794,7 +821,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         child: Container(
                             alignment: Alignment.center,
                             child: ticketList.attachments != null &&
-                                    ticketList.attachments.isNotEmpty
+                                    ticketList.attachments!.isNotEmpty
                                 ? Container(
                                     alignment: Alignment.topCenter,
                                     child: SingleChildScrollView(
@@ -804,7 +831,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                             spacing: 5.0,
                                             runSpacing: 5.0,
                                             children: List<Widget>.generate(
-                                              ticketList.attachments.length,
+                                              ticketList.attachments!.length,
                                               (int index) {
                                                 return InkWell(
                                                     child: Container(
@@ -826,7 +853,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                                 .all(8.0),
                                                         child: Image.asset(
                                                           ticketList
-                                                                      .attachments[
+                                                                      .attachments![
                                                                           index]
                                                                       .path
                                                                       .toString()
@@ -845,12 +872,12 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                     onTap: () {
                                                       openIntent(
                                                           ticketList
-                                                                  .attachments[
+                                                                  .attachments![
                                                               index],
                                                           widget.isFromNotification
                                                               ? widget.ticketId
                                                               : widget
-                                                                  .ticket.uid
+                                                                  .ticket!.uid
                                                                   .toString());
                                                     });
                                               },
@@ -895,219 +922,214 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     }
   }
 
-  Widget _getChatWidget(BuildContext context, Ticket ticketList) {
+  Widget? _getChatWidget(BuildContext context, Ticket ticketList) {
     print('comments length=======');
-    print(ticketList.comments.length);
+    print(ticketList.comments?.length??0);
     return ScrollablePositionedList.builder(
       physics: BouncingScrollPhysics(),
-      itemCount: ticketList.comments.length,
+      itemCount: ticketList.comments?.length??0,
       reverse: true,
       itemScrollController: listScrollController,
       itemBuilder: (context, i) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ticketList.comments[ticketList.comments.length - 1 - i].owner.role
-                            .isAgent !=
-                        null &&
-                    ticketList.comments[ticketList.comments.length - 1 - i]
-                            .owner.role.isAgent ==
-                        false
+            ticketList.comments![(ticketList.comments?.length??0) - 1 - i].owner?.role?.isAgent !=
+                null &&
+                ticketList.comments![(ticketList.comments?.length??0) - 1 - i].owner?.role?.isAgent ==
+                    false
                 ? Container(
-                    alignment: Alignment.bottomRight,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Card(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(16),
-                                    topLeft: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16))),
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 1.sw * .6,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(16),
-                                  topLeft: Radius.circular(16),
-                                  bottomLeft: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                              ),
-                              /*child: Text(
+              alignment: Alignment.bottomRight,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Card(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(16),
+                              topLeft: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16))),
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 1.sw * .6,
+                        ),
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(16),
+                            topLeft: Radius.circular(16),
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(16),
+                          ),
+                        ),
+                        /*child: Text(
                                 document[STR_CONTENT],
                                 style: TextStyle(
                                     color: Color(CommonUtil().getMyPrimaryColor())),
                               ),*/
-                              child: ticketList
-                                          .comments[ticketList.comments.length -
-                                              1 -
-                                              i]
-                                          .comment !=
-                                      null
-                                  ? Text(
-                                      '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
-                                      style: TextStyle(color: Colors.white))
-                                  : Text('Hi I have a query !!',
-                                      style: TextStyle(color: Colors.white)),
-                            )),
-                        Flexible(
-                          flex: 1,
-                          child: new Container(
-                            child: RawMaterialButton(
-                              onPressed: () {
-                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-                              },
-                              elevation: 2.0,
-                              fillColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  child: CommonCircularIndicator(),
-                                  width: 30.w,
-                                  height: 30.h,
-                                  padding: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Material(
-                                  child: Image.asset(
-                                    'assets/maya/maya_india_main.png',
-                                    width: 30.w,
-                                    height: 30.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                  clipBehavior: Clip.hardEdge,
-                                ),
-                                imageUrl: '',
-                                width: 30.w,
-                                height: 30.h,
-                                fit: BoxFit.cover,
+                        child: ticketList.comments![(ticketList.comments?.length??0) -
+                            1 -
+                            i]
+                            .comment !=
+                            null
+                            ? Text(
+                            '${_parseHtmlString(ticketList.comments![(ticketList.comments?.length??0) - 1 - i].comment)}',
+                            style: TextStyle(color: Colors.white))
+                            : Text('Hi I have a query !!',
+                            style: TextStyle(color: Colors.white)),
+                      )),
+                  Flexible(
+                    flex: 1,
+                    child: new Container(
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                        },
+                        elevation: 2.0,
+                        fillColor:
+                        Color(CommonUtil().getMyPrimaryColor()),
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => Container(
+                            child: CommonCircularIndicator(),
+                            width: 30.w,
+                            height: 30.h,
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color:
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
                               ),
-                              padding: EdgeInsets.all(12.0),
-                              shape: CircleBorder(),
                             ),
                           ),
+                          errorWidget: (context, url, error) => Material(
+                            child: Image.asset(
+                              'assets/maya/maya_india_main.png',
+                              width: 30.w,
+                              height: 30.h,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                          imageUrl: '',
+                          width: 30.w,
+                          height: 30.h,
+                          fit: BoxFit.cover,
                         ),
-                      ],
+                        padding: EdgeInsets.all(12.0),
+                        shape: CircleBorder(),
+                      ),
                     ),
-                  )
+                  ),
+                ],
+              ),
+            )
                 : Container(),
             SizedBox(height: 15.h),
-            ticketList.comments[ticketList.comments.length - 1 - i].owner.role
-                            .isAgent !=
-                        null &&
-                    ticketList.comments[ticketList.comments.length - 1 - i]
-                        .owner.role.isAgent
+            ticketList.comments![(ticketList.comments?.length??0) - 1 - i].owner?.role?.isAgent !=
+                null &&
+                (ticketList.comments![(ticketList.comments?.length??0) - 1 - i].owner?.role?.isAgent??false)
                 ? Container(
-                    alignment: Alignment.bottomLeft,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: new Container(
-                            child: RawMaterialButton(
-                              onPressed: () {
-                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-                              },
-                              elevation: 2.0,
-                              fillColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  child: CommonCircularIndicator(),
-                                  width: 30.w,
-                                  height: 30.h,
-                                  padding: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Material(
-                                  child: Image.asset(
-                                    'assets/user/profile_pic_ph.png',
-                                    width: 30.w,
-                                    height: 30.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                  clipBehavior: Clip.hardEdge,
-                                ),
-                                imageUrl: '',
-                                width: 30.w,
-                                height: 30.h,
-                                fit: BoxFit.cover,
+              alignment: Alignment.bottomLeft,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: new Container(
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                        },
+                        elevation: 2.0,
+                        fillColor:
+                        Color(CommonUtil().getMyPrimaryColor()),
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => Container(
+                            child: CommonCircularIndicator(),
+                            width: 30.w,
+                            height: 30.h,
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color:
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
                               ),
-                              padding: EdgeInsets.all(12.0),
-                              shape: CircleBorder(),
                             ),
                           ),
+                          errorWidget: (context, url, error) => Material(
+                            child: Image.asset(
+                              'assets/user/profile_pic_ph.png',
+                              width: 30.w,
+                              height: 30.h,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                          imageUrl: '',
+                          width: 30.w,
+                          height: 30.h,
+                          fit: BoxFit.cover,
                         ),
-                        Card(
-                            color: Colors.grey[200],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(16),
-                                    topLeft: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16))),
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 1.sw * .6,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(16),
-                                  topLeft: Radius.circular(16),
-                                  bottomLeft: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                              ),
-                              /*child: Text(
+                        padding: EdgeInsets.all(12.0),
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                  ),
+                  Card(
+                      color: Colors.grey[200],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(16),
+                              topLeft: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16))),
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 1.sw * .6,
+                        ),
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(16),
+                            topLeft: Radius.circular(16),
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(16),
+                          ),
+                        ),
+                        /*child: Text(
                                 document[STR_CONTENT],
                                 style: TextStyle(
                                     color: Color(CommonUtil().getMyPrimaryColor())),
                               ),*/
-                              child: ticketList
-                                          .comments[ticketList.comments.length -
-                                              1 -
-                                              i]
-                                          .comment !=
-                                      null
-                                  ? Text(
-                                      '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
-                                      style: TextStyle(color: Colors.black))
-                                  : Text('Hi !!',
-                                      style: TextStyle(color: Colors.black)),
-                            )),
-                      ],
-                    ),
-                  )
+                        child: ticketList
+                            .comments![(ticketList.comments?.length??0) -
+                            1 -
+                            i]
+                            .comment !=
+                            null
+                            ? Text(
+                            '${_parseHtmlString(ticketList.comments![(ticketList.comments?.length??0) - 1 - i].comment)}',
+                            style: TextStyle(color: Colors.black))
+                            : Text('Hi !!',
+                            style: TextStyle(color: Colors.black)),
+                      )),
+                ],
+              ),
+            )
                 : Container(),
           ],
         );
@@ -1115,10 +1137,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     );
   }
 
-  String _parseHtmlString(String htmlString) {
+  String? _parseHtmlString(String? htmlString) {
     RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
 
-    return htmlString.replaceAll(exp, '');
+    return htmlString?.replaceAll(exp, '');
   }
 
   void onSendMessage(var comment, var ticketList) {
@@ -1174,15 +1196,15 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     selectedTab = _controller.index;
   }
 
-  Future<void> openIntent(Attachments attachments, String ticketUid) async {
+  Future<void> openIntent(Attachments attachments, String? ticketUid) async {
     FlutterToast().getToast('Please wait', Colors.grey);
     String path = await downloadFileOpen(attachments, ticketUid);
-    if (attachments.path.split('.').last == 'pdf') {
+    if (attachments.path!.split('.').last == 'pdf') {
       final controller = Get.find<PDFViewController>();
       final data = OpenPDF(
           type: PDFLocation.Path,
           path: path,
-          title: attachments.path.split('/').last);
+          title: attachments.path!.split('/').last);
       controller.data = data;
       Get.to(() => PDFView());
     } else {
@@ -1210,14 +1232,14 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         KEY_OffSet: CommonUtil().setTimeZone()
       },
     );
-    final bytes = request.bodyBytes; //close();
+    final bytes = request!.bodyBytes; //close();
     await file.writeAsBytes(bytes);
     return file.path.toString();
   }
 
   Future<String> downloadFileOpen(
-      Attachments attachments, String ticketUId) async {
-    String nameWithoutExtension = p.basenameWithoutExtension(attachments.path);
+      Attachments attachments, String? ticketUId) async {
+    //String nameWithoutExtension = p.basenameWithoutExtension(attachments.path);
     String filePath = await FHBUtils.createFolderInAppDocDirClone(
         variable.stAudioPath, attachments.name);
     var file = File('$filePath' /*+ fileType*/);
@@ -1233,12 +1255,12 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         KEY_OffSet: CommonUtil().setTimeZone()
       },
     );
-    final bytes = request.bodyBytes; //close();
+    final bytes = request!.bodyBytes; //close();
     await file.writeAsBytes(bytes);
     return file.path.toString();
   }
 
-  commonWidgetForDropDownValue(String header, String value,
+  commonWidgetForDropDownValue(String header, String? value,
       {bool isTime = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1258,8 +1280,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           flex: 1,
           child: Text(
             isTime
-                ? value.toUpperCase()
-                : CommonUtil().capitalizeFirstofEach(value),
+                ? value!.toUpperCase()
+                : CommonUtil().capitalizeFirstofEach(value!),
             style: TextStyle(
                 fontSize: 16.0.sp,
                 fontWeight: FontWeight.w400,
@@ -1271,14 +1293,14 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     );
   }
 
-  String getStatusName(Ticket ticket) {
-    String statusName = '';
+  String? getStatusName(Ticket ticket) {
+    String? statusName = '';
     if (widget.isFromNotification) {
-      if (ticket?.additionalInfo != null &&
-          ticket?.additionalInfo?.ticketStatus != null) {
-        if (ticket?.additionalInfo.ticketStatus?.name != null &&
-            ticket?.additionalInfo?.ticketStatus?.name != '') {
-          statusName = ticket?.additionalInfo?.ticketStatus?.name;
+      if (ticket.additionalInfo != null &&
+          ticket.additionalInfo!.ticketStatus != null) {
+        if (ticket.additionalInfo!.ticketStatus?.name != null &&
+            ticket.additionalInfo!.ticketStatus?.name != '') {
+          statusName = ticket.additionalInfo!.ticketStatus?.name;
         }
       }
     } else {
@@ -1293,9 +1315,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
 }
 
 class Events {
-  final String time;
-  final String eventName;
-  final String description;
+  final String? time;
+  final String? eventName;
+  final String? description;
 
   Events({this.time, this.eventName, this.description});
 }

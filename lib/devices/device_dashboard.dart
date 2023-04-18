@@ -1,5 +1,8 @@
+
+import 'dart:async';
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../constants/router_variable.dart';
 import '../src/utils/screenutils/size_extensions.dart';
@@ -29,7 +32,7 @@ import '../constants/fhb_parameters.dart' as parameters;
 import '../constants/variable_constant.dart' as variable;
 
 class Devicedashboard extends StatefulWidget {
-  DeviceDashboardArguments arguments;
+  DeviceDashboardArguments? arguments;
   Devicedashboard({this.arguments});
   @override
   _DevicedashboardScreenState createState() => _DevicedashboardScreenState();
@@ -42,7 +45,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   TextEditingController memoController = TextEditingController(text: '');
   TextEditingController diaStolicPressure = TextEditingController(text: '');
 
-  String validationMsg;
+  late String validationMsg;
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   CategoryResult categoryDataObj = CategoryResult();
   MediaResult mediaDataObj = MediaResult();
@@ -51,13 +54,13 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
 
-  List<String> imagePathMain = List();
+  List<String> imagePathMain = [];
   FlutterToast toast = FlutterToast();
   var commonConstants = CommonConstants();
-  bool _value;
-  List<bool> isSelected = List(2);
+  bool? _value;
+  List<bool?> isSelected = List.filled(2, null, growable: false);
 
-  String deviceName = Constants.STR_WEIGHING_SCALE;
+  String? deviceName = Constants.STR_WEIGHING_SCALE;
 
   String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
@@ -66,18 +69,18 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   final CategoryListBlock _categoryListBlock = CategoryListBlock();
   List<CategoryResult> catgoryDataList = [];
   final MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
-  MediaDataList mediaTypesResponse = MediaDataList();
+  MediaDataList? mediaTypesResponse = MediaDataList();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    deviceName = widget.arguments.deviceName;
-    catgoryDataList = PreferenceUtil.getCategoryType();
+    deviceName = widget.arguments!.deviceName;
+    catgoryDataList = PreferenceUtil.getCategoryType()!;
     if (catgoryDataList == null) {
       _categoryListBlock.getCategoryLists().then((value) {
-        catgoryDataList = value.result;
-      });
+        catgoryDataList = value.result!;
+      } as FutureOr Function(CategoryDataList?));
     }
     _mediaTypeBlock.getMediTypesList().then((value) {
       mediaTypesResponse = value;
@@ -114,7 +117,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
               },
             ),
             titleSpacing: 0,
-            title: Text(deviceName),
+            title: Text(deviceName!),
           ),
           body: Column(
             children: [
@@ -209,9 +212,11 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         ));
   }
 
-  Future<bool> _onBackPressed() {
+  Future<bool> _onBackPressed() async{
+    
     onOkClicked = false;
     Navigator.of(context).pop(true);
+    return true;
     /*return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
@@ -234,7 +239,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   }
 
   String getDeviceForString() {
-    switch (widget.arguments.deviceName) {
+    switch (widget.arguments!.deviceName) {
       case STR_GLUCOMETER:
         return variable.requestSheelaForglucose;
         break;
@@ -252,7 +257,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     }
   }
 
-  Widget getCardForBPMonitor(String deviceName) {
+  Widget getCardForBPMonitor(String? deviceName) {
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -390,7 +395,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         ));
   }
 
-  Widget getCardBasedOnDevices(String deviceName) {
+  Widget getCardBasedOnDevices(String? deviceName) {
     switch (deviceName) {
       case CommonConstants.STR_BP_MONITOR:
         return getCardForBPMonitor(deviceName);
@@ -399,13 +404,13 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         return getCardForThermometer(deviceName);
         break;
       case CommonConstants.STR_PULSE_OXIDOMETER:
-        return getCardForPulseOxidometer(deviceName);
+        return getCardForPulseOxidometer(deviceName!);
         break;
       case CommonConstants.STR_WEIGHING_SCALE:
         return getCardForWeighingScale(deviceName);
         break;
       case CommonConstants.STR_GLUCOMETER:
-        return getCardForGlucometer(deviceName);
+        return getCardForGlucometer(deviceName!);
         break;
       default:
         return getCardForBPMonitor(deviceName);
@@ -413,7 +418,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     }
   }
 
-  void createDeviceRecords(String deviceName) async {
+  void createDeviceRecords(String? deviceName) async {
     if (doValidation(deviceName)) {
       CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
@@ -422,7 +427,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
       var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       try {
-        catgoryDataList = PreferenceUtil.getCategoryType();
+        catgoryDataList = PreferenceUtil.getCategoryType()!;
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[parameters.strhealthRecordCategory] =
@@ -430,27 +435,27 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
       } catch (e) {
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
-            catgoryDataList = value.result;
+            catgoryDataList = value.result!;
             categoryDataObj = CommonUtil()
                 .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
             postMediaData[parameters.strhealthRecordCategory] =
                 categoryDataObj.toJson();
-          });
+          } as FutureOr Function(CategoryDataList?));
         }
       }
 
-      var metaDataFromSharedPrefernce = List<MediaResult>();
+      List<MediaResult>? metaDataFromSharedPrefernce = <MediaResult>[];
       if (mediaTypesResponse != null &&
-          mediaTypesResponse.result != null &&
-          mediaTypesResponse.result.isNotEmpty) {
-        metaDataFromSharedPrefernce = mediaTypesResponse.result;
+          mediaTypesResponse!.result != null &&
+          mediaTypesResponse!.result!.isNotEmpty) {
+        metaDataFromSharedPrefernce = mediaTypesResponse!.result;
       } else {
         mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
 
-        metaDataFromSharedPrefernce = mediaTypesResponse.result;
+        metaDataFromSharedPrefernce = mediaTypesResponse!.result;
       }
       mediaDataObj = CommonUtil().getMediaTypeInfoForParticularDevice(
-          deviceName, metaDataFromSharedPrefernce);
+          deviceName, metaDataFromSharedPrefernce!);
 
       postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
 
@@ -466,7 +471,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
       final commonConstants = CommonConstants();
 
       if (categoryName == variable.strDevices) {
-        var postDeviceData = List<Map<String, dynamic>>();
+        var postDeviceData = <Map<String, dynamic>>[];
         final Map<String, dynamic> postDeviceValues = {};
         final Map<String, dynamic> postDeviceValuesExtra = {};
         final postDeviceValuesExtraClone = Map<String, dynamic>();
@@ -541,7 +546,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         }
         postMediaData[parameters.strdeviceReadings] = postDeviceData;
         postMediaData[parameters.strfileName] =
-            deviceName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
+            deviceName! + '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
         final dateTime = DateTime.now();
 
         postMediaData[parameters.strdateOfVisit] =
@@ -554,9 +559,9 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         await _healthReportListForUserBlock
             .createHealtRecords(params.toString(), imagePathMain, '')
             .then((value) {
-          if (value != null && value.isSuccess) {
+          if (value != null && value.isSuccess!) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+              Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                   .pop();
               errorMsg = '';
               onOkClicked = false;
@@ -576,7 +581,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
           } else {
             errorMsg = '';
             onOkClicked = false;
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
             toast.getToast(Constants.ERR_MSG_RECORD_CREATE, Colors.red);
           }
         });
@@ -593,7 +598,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     }
   }
 
-  bool doValidation(String deviceName) {
+  bool doValidation(String? deviceName) {
     var validationConditon = false;
     if (categoryName == Constants.STR_DEVICES) {
       if (deviceName == Constants.STR_GLUCOMETER) {
@@ -650,7 +655,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     return validationConditon;
   }
 
-  Widget getCardForThermometer(String deviceName) {
+  Widget getCardForThermometer(String? deviceName) {
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -774,7 +779,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         ));
   }
 
-  Widget getCardForWeighingScale(String deviceName) {
+  Widget getCardForWeighingScale(String? deviceName) {
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),

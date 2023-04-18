@@ -1,22 +1,23 @@
+
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/paymentMode.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/refundStatus.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class Refund {
-  String createdOn;
-  bool isActive;
-  PaymentMode paymentMode;
-  String refundAmount;
-  RefundStatus refundStatus;
-  String totalAmount;
-  String transactionDateTime;
-  String paymentReference;
-  String refundReason;
+  String? createdOn;
+  bool? isActive;
+  PaymentMode? paymentMode;
+  String? refundAmount;
+  RefundStatus? refundStatus;
+  String? totalAmount;
+  String? transactionDateTime;
+  String? paymentReference;
+  String? refundReason;
   dynamic refundReference;
   dynamic refundedDate;
   dynamic receiptUrl;
   dynamic lastModifiedOn;
-  String id;
+  String? id;
 
   Refund(
       {this.createdOn,
@@ -60,11 +61,11 @@ class Refund {
     data[parameters.strCreatedOn] = this.createdOn;
     data[parameters.strIsActive] = this.isActive;
     if (this.paymentMode != null) {
-      data[parameters.strPaymentMode] = this.paymentMode.toJson();
+      data[parameters.strPaymentMode] = this.paymentMode!.toJson();
     }
     data[parameters.strRefundAmount] = this.refundAmount;
     if (this.refundStatus != null) {
-      data[parameters.strRefundStatus] = this.refundStatus.toJson();
+      data[parameters.strRefundStatus] = this.refundStatus!.toJson();
     }
     data[parameters.strTotalAmount] = this.totalAmount;
     data[parameters.strTransactionDateTime] = this.transactionDateTime;

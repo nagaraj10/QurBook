@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 class HealthConditionResponseModel {
@@ -6,8 +7,8 @@ class HealthConditionResponseModel {
     this.healthConditionData,
   });
 
-  final bool isSuccess;
-  final HealthConditionModel healthConditionData;
+  final bool? isSuccess;
+  final HealthConditionModel? healthConditionData;
 
   factory HealthConditionResponseModel.fromJson(Map<String, dynamic> json) =>
       HealthConditionResponseModel(
@@ -18,7 +19,7 @@ class HealthConditionResponseModel {
 
   Map<String, dynamic> toJson() => {
         'isSuccess': isSuccess,
-        'result': healthConditionData.toJson(),
+        'result': healthConditionData!.toJson(),
       };
 }
 
@@ -31,11 +32,11 @@ class HealthConditionModel {
     this.menustate,
   });
 
-  final List<MenuItem> menuitems;
-  final int isFinal;
-  final String tagHistory;
-  final String tags;
-  final String menustate;
+  final List<MenuItem>? menuitems;
+  final int? isFinal;
+  final String? tagHistory;
+  final String? tags;
+  final String? menustate;
 
   factory HealthConditionModel.fromJson(Map<String, dynamic> json) =>
       HealthConditionModel(
@@ -50,7 +51,7 @@ class HealthConditionModel {
       );
 
   Map<String, dynamic> toJson() => {
-        'menuitems': List<dynamic>.from(menuitems.map((x) => x.toJson())),
+        'menuitems': List<dynamic>.from(menuitems!.map((x) => x.toJson())),
         'isFinal': isFinal,
         'tag_history': tagHistory,
         'tags': tags,
@@ -80,24 +81,24 @@ class MenuItem {
     this.menunavtype,
   });
 
-  final String menuid;
-  final String menulistid;
-  final String uid;
-  final String providerid;
-  final String menucatid;
-  final String title;
-  final Description description;
-  final String tags;
-  final Menuitemtype menuitemtype;
-  final String groupname;
-  final Submenu submenu;
-  final Metadata metadata;
-  final DateTime ts;
-  final String seq;
-  final String depth;
-  final String deleted;
-  final String menulisttype;
-  final String menunavtype;
+  final String? menuid;
+  final String? menulistid;
+  final String? uid;
+  final String? providerid;
+  final String? menucatid;
+  final String? title;
+  final Description? description;
+  final String? tags;
+  final Menuitemtype? menuitemtype;
+  final String? groupname;
+  final Submenu? submenu;
+  final Metadata? metadata;
+  final DateTime? ts;
+  final String? seq;
+  final String? depth;
+  final String? deleted;
+  final String? menulisttype;
+  final String? menunavtype;
 
   factory MenuItem.fromJson(Map<String, dynamic> json) => MenuItem(
         menuid: json['menuid'],
@@ -130,13 +131,13 @@ class MenuItem {
         'providerid': providerid,
         'menucatid': menucatid,
         'title': title,
-        'description': descriptionValues.reverse[description],
+        'description': descriptionValues.reverse![description!],
         'tags': tags,
-        'menuitemtype': menuitemtypeValues.reverse[menuitemtype],
+        'menuitemtype': menuitemtypeValues.reverse![menuitemtype!],
         'groupname': groupname,
-        'submenu': submenuValues.reverse[submenu],
+        'submenu': submenuValues.reverse![submenu!],
         'metadata': metadata?.toJson(),
-        'ts': ts.toIso8601String(),
+        'ts': ts!.toIso8601String(),
         'seq': seq,
         'depth': depth,
         'deleted': deleted,
@@ -153,10 +154,10 @@ class Metadata {
     this.metadatafrom,
   });
 
-  final String icon;
-  final String color;
-  final String bgcolor;
-  final String metadatafrom;
+  final String? icon;
+  final String? color;
+  final String? bgcolor;
+  final String? metadatafrom;
 
   factory Metadata.fromJson(Map<String, dynamic> json) => Metadata(
         icon: json['icon'],
@@ -196,11 +197,11 @@ final submenuValues =
 
 class EnumValues<T> {
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<T, String>? reverseMap;
 
   EnumValues(this.map);
 
-  Map<T, String> get reverse {
+  Map<T, String>? get reverse {
     if (reverseMap == null) {
       reverseMap = map.map((k, v) => new MapEntry(v, k));
     }

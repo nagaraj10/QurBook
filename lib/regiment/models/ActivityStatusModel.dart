@@ -1,6 +1,7 @@
+
 class ActivityStatusModel {
-  bool isSuccess;
-  List<ActivityStatusResult> result;
+  bool? isSuccess;
+  List<ActivityStatusResult>? result;
 
   ActivityStatusModel({this.isSuccess, this.result});
 
@@ -9,7 +10,7 @@ class ActivityStatusModel {
     if (json['result'] != null) {
       result = <ActivityStatusResult>[];
       json['result'].forEach((v) {
-        result.add(new ActivityStatusResult.fromJson(v));
+        result!.add(new ActivityStatusResult.fromJson(v));
       });
     }
   }
@@ -18,15 +19,15 @@ class ActivityStatusModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class ActivityStatusResult {
-  String planStatus;
-  String curDate;
+  String? planStatus;
+  String? curDate;
 
   ActivityStatusResult({this.planStatus, this.curDate});
 

@@ -1,22 +1,23 @@
+
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
 class OrderModel {
-  String orderId;
-  DateTime date;
-  String feePaid;
-  List<String> plans;
-  String paymentReferenceId;
-  String paymentStatus;
-  bool isAppointment = false;
-  String patientFirstName;
-  String patientLastName;
-  String doctorFirstName;
-  String doctorLastName;
-  String paymentMode;
-  String hospitalName;
-  DateTime appointmentDateTime;
+  String? orderId;
+  DateTime? date;
+  String? feePaid;
+  List<String>? plans;
+  String? paymentReferenceId;
+  String? paymentStatus;
+  bool? isAppointment = false;
+  String? patientFirstName;
+  String? patientLastName;
+  String? doctorFirstName;
+  String? doctorLastName;
+  String? paymentMode;
+  String? hospitalName;
+  DateTime? appointmentDateTime;
 
   OrderModel({
     this.orderId,
@@ -51,7 +52,7 @@ class OrderModel {
       date: map['date'] != null
           ? DateTime.tryParse(
               map['date'],
-            ).toLocal()
+            )!.toLocal()
           : null,
       feePaid: map['feePaid'] ?? '',
       plans: List<String>.from(map['plans'] ?? [])
@@ -106,8 +107,8 @@ class OrderModel {
 }
 
 class OrderDataModel {
-  bool isSuccess;
-  List<OrderModel> result;
+  bool? isSuccess;
+  List<OrderModel>? result;
   OrderDataModel({
     this.isSuccess,
     this.result,
@@ -116,7 +117,7 @@ class OrderDataModel {
   Map<String, dynamic> toMap() {
     return {
       'isSuccess': isSuccess,
-      'result': result?.map((x) => x.toMap())?.toList(),
+      'result': result?.map((x) => x.toMap()).toList(),
     };
   }
 

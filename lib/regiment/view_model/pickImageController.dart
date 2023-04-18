@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -6,12 +7,12 @@ import '../../constants/fhb_constants.dart';
 
 class PickImageController {
   static PickImageController get instance => PickImageController();
-  File croppedFile;
+  File? croppedFile;
 
-  Future<File> cropImageFromFile(String isFrom) async {
+  Future<File?> cropImageFromFile(String isFrom) async {
     // TakeImage from user's photo
     //File imageFileFromLibrary = await ImagePicker.platform.pickImage(source:ImageSource.gallery);
-    final FilePickerResult filePickerResult =
+    final FilePickerResult? filePickerResult =
         await FilePicker.platform.pickFiles(
       type: isFrom == strGallery
           ? FileType.image
@@ -24,32 +25,32 @@ class PickImageController {
                       : FileType.any,
       /*allowedExtensions: [strJpg, strPdf, strPng],*/
     );
-    File file = (filePickerResult?.files?.length ?? 0) > 0
-        ? File(filePickerResult.files[0]?.path)
+    File? file = (filePickerResult!.files.length) > 0
+        ? File(filePickerResult.files[0].path!)
         : null;
     // Start crop iamge then take the file.
     if (file != null &&
         ((file.path.toString().toLowerCase().contains(strJpgDot)) ||
             (file.path.toString().toLowerCase().contains(strJpegDot)) ||
             (file.path.toString().toLowerCase().contains(strPngDot)))) {
-      croppedFile = await ImageCropper.cropImage(
-          sourcePath: file.path,
-          aspectRatioPresets: [
-            CropAspectRatioPreset.square,
-            CropAspectRatioPreset.ratio3x2,
-            CropAspectRatioPreset.original,
-            CropAspectRatioPreset.ratio4x3,
-            CropAspectRatioPreset.ratio16x9
-          ],
-          androidUiSettings: AndroidUiSettings(
-              toolbarTitle: 'Cropper',
-              toolbarColor: Colors.deepOrange,
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.original,
-              lockAspectRatio: false),
-          iosUiSettings: IOSUiSettings(
-            minimumAspectRatio: 1,
-          ));
+      // croppedFile = await ImageCropper.cropImage(
+      //     sourcePath: file.path,
+      //     aspectRatioPresets: [
+      //       CropAspectRatioPreset.square,
+      //       CropAspectRatioPreset.ratio3x2,
+      //       CropAspectRatioPreset.original,
+      //       CropAspectRatioPreset.ratio4x3,
+      //       CropAspectRatioPreset.ratio16x9
+      //     ],
+      //     androidUiSettings: AndroidUiSettings(
+      //         toolbarTitle: 'Cropper',
+      //         toolbarColor: Colors.deepOrange,
+      //         toolbarWidgetColor: Colors.white,
+      //         initAspectRatio: CropAspectRatioPreset.original,
+      //         lockAspectRatio: false),
+      //     iosUiSettings: IOSUiSettings(
+      //       minimumAspectRatio: 1,
+      //     ));
     } else {
       croppedFile = file;
     }

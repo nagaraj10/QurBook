@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/constants/fhb_query.dart';
@@ -14,26 +15,26 @@ enum LoadingStatus {
 
 class FetchNotificationViewModel extends ChangeNotifier {
   LoadingStatus loadingStatus = LoadingStatus.searching;
-  NotificationModel _notificationModel = NotificationModel();
+  NotificationModel? _notificationModel = NotificationModel();
   FetchNotificationService _fetchNotificationService =
       FetchNotificationService();
   bool deleteMode = false;
   bool selectAllTapped = false;
-  NotificationModel notificationModel;
-  List<String> deleteLogId = [];
+  NotificationModel? notificationModel;
+  List<String?> deleteLogId = [];
   List<NotificationResult> data = [];
   int currentPage = 0;
-  FetchNotificationViewModel({NotificationModel notificationModel})
+  FetchNotificationViewModel({NotificationModel? notificationModel})
       : _notificationModel = notificationModel;
 
-  NotificationModel get notifications => _notificationModel;
+  NotificationModel? get notifications => _notificationModel;
   final PagingController<int, NotificationResult> pagingController =
       PagingController(
     firstPageKey: 0,
     invisibleItemsThreshold: 1,
   );
   static const _pageSize = 50;
-  Future<NotificationModel> fetchNotifications() async {
+  Future<NotificationModel?> fetchNotifications() async {
     deleteLogId = [];
     deleteMode = false;
     selectAllTapped = false;
@@ -64,7 +65,7 @@ class FetchNotificationViewModel extends ChangeNotifier {
 
       final newdata =
           await _fetchNotificationService.fetchNotificationList(currentPage);
-      final newItems = newdata.result;
+      final newItems = newdata.result!;
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         pagingController.appendLastPage(newItems);
@@ -92,13 +93,13 @@ class FetchNotificationViewModel extends ChangeNotifier {
     }
   }
 
-  void addTheidToDelete(String id) {
+  void addTheidToDelete(String? id) {
     this.deleteLogId.add(id);
     this.loadingStatus = LoadingStatus.completed;
     notifyListeners();
   }
 
-  void removeTheIdToDelete(String id) {
+  void removeTheIdToDelete(String? id) {
     this.deleteLogId.removeWhere((element) => element == id);
     if (deleteLogId.length <= 0) {
       deleteMode = false;
@@ -112,7 +113,7 @@ class FetchNotificationViewModel extends ChangeNotifier {
 
     this.loadingStatus = LoadingStatus.searching;
     this.deleteLogId.clear();
-    _notificationModel.result.forEach(
+    _notificationModel!.result!.forEach(
       (element) {
         element.deleteSelected = selectAllTapped;
         if (selectAllTapped) {

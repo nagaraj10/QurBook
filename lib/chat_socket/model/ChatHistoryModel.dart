@@ -1,15 +1,16 @@
+
 class ChatHistoryModel {
-  bool isSuccess;
-  List<ChatHistoryResult> result;
+  bool? isSuccess;
+  List<ChatHistoryResult?>? result;
 
   ChatHistoryModel({this.isSuccess, this.result});
 
   ChatHistoryModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<ChatHistoryResult>();
+      result = <ChatHistoryResult?>[];
       json['result'].forEach((v) {
-        result.add(new ChatHistoryResult.fromJson(v));
+        result!.add(new ChatHistoryResult.fromJson(v));
       });
     }
   }
@@ -18,21 +19,21 @@ class ChatHistoryModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v!.toJson()).toList();
     }
     return data;
   }
 }
 
 class ChatHistoryResult {
-  String id;
-  String chatListId;
-  String deliveredDateTime;
-  bool isRead;
-  bool isCommonContent;
+  String? id;
+  String? chatListId;
+  String? deliveredDateTime;
+  bool? isRead;
+  bool? isCommonContent;
 
   //int messageType;
-  Messages messages;
+  Messages? messages;
   var documentId;
 
   ChatHistoryResult(
@@ -68,7 +69,7 @@ class ChatHistoryResult {
     data['isCommonContent'] = this.isCommonContent;
     //data['messageType'] = this.messageType;
     if (this.messages != null) {
-      data['messages'] = this.messages.toJson();
+      data['messages'] = this.messages!.toJson();
     }
     data['documentId'] = this.documentId;
     return data;
@@ -76,13 +77,13 @@ class ChatHistoryResult {
 }
 
 class Messages {
-  String id;
-  String idTo;
-  int type;
-  String idFrom;
-  bool isread;
-  String content;
-  Timestamp timestamp;
+  String? id;
+  String? idTo;
+  int? type;
+  String? idFrom;
+  bool? isread;
+  String? content;
+  Timestamp? timestamp;
 
   Messages(
       {this.id,
@@ -114,15 +115,15 @@ class Messages {
     data['isread'] = this.isread;
     data['content'] = this.content;
     if (this.timestamp != null) {
-      data['timestamp'] = this.timestamp.toJson();
+      data['timestamp'] = this.timestamp!.toJson();
     }
     return data;
   }
 }
 
 class Timestamp {
-  String sSeconds;
-  String sNanoseconds;
+  String? sSeconds;
+  String? sNanoseconds;
 
   Timestamp({this.sSeconds, this.sNanoseconds});
 

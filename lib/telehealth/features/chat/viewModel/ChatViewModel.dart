@@ -1,6 +1,8 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
@@ -16,9 +18,9 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 class ChatViewModel extends ChangeNotifier {
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
-  SharedPreferences prefs;
+  late SharedPreferences prefs;
 
-  AppointmentResult appointments;
+  AppointmentResult? appointments;
 
   Future<void> storePatientDetailsToFCM(
       String doctorId,
@@ -45,9 +47,9 @@ class ChatViewModel extends ChangeNotifier {
       String doctorId,
       String doctorName,
       String doctorPic,
-      String patientId,
+      String? patientId,
       String patientName,
-      String patientPicUrl,
+      String? patientPicUrl,
       BuildContext context,
       bool isFromVideoCall) async {
     prefs = await SharedPreferences.getInstance();
@@ -79,9 +81,9 @@ class ChatViewModel extends ChangeNotifier {
       });
 
       // Write data to local
-      await prefs.setString(ID, patientId);
+      await prefs.setString(ID, patientId!);
       await prefs.setString(NICK_NAME, patientName);
-      await prefs.setString(PHOTO_URL, patientPicUrl);
+      await prefs.setString(PHOTO_URL, patientPicUrl!);
     } else {
       // Write data to local
       await prefs.setString(ID, documents[0][ID]);
@@ -90,8 +92,8 @@ class ChatViewModel extends ChangeNotifier {
       //await prefs.setString(ABOUT_ME, documents[0][ABOUT_ME]);
     }
 
-    goToChatPage(doctorId, doctorName, doctorPic, patientId, patientName,
-        patientPicUrl, context, isFromVideoCall);
+    goToChatPage(doctorId, doctorName, doctorPic, patientId!, patientName,
+        patientPicUrl!, context, isFromVideoCall);
   }
 
   void goToChatPage(
@@ -120,30 +122,30 @@ class ChatViewModel extends ChangeNotifier {
 
   String getPatientName() {
     MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
     String patientName = myProfile.result != null
-        ? myProfile.result.firstName + ' ' + myProfile.result.lastName
+        ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
         : '';
 
     return patientName;
   }
 
-  String getProfileURL() {
+  String? getProfileURL() {
     MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    String patientPicURL = myProfile.result.profilePicThumbnailUrl;
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
+    String? patientPicURL = myProfile.result!.profilePicThumbnailUrl;
 
     return patientPicURL;
   }
 
-  Future<int> getUnreadMSGCount([String patientId]) async {
+  Future<int?> getUnreadMSGCount([String? patientId]) async {
     try {
       int unReadMSGCount = 0;
       String targetID = '';
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       patientId == null
-          ? targetID = (prefs.get('userId') ?? 'NoId')
+          ? targetID = (prefs.get('userId') as String? ?? 'NoId')
           : targetID = patientId;
 //      if (targetID != 'NoId') {
       final QuerySnapshot chatListResult = await FirebaseFirestore.instance
@@ -176,11 +178,11 @@ class ChatViewModel extends ChangeNotifier {
         return unReadMSGCount;
       }
     } catch (e) {
-      print(e.message);
+      print(e.toString());
     }
   }
 
-  String createGroupId(String patientId, String peerId) {
+  String createGroupId(String? patientId, String? peerId) {
     String groupId = '';
 
     if (patientId.hashCode <= peerId.hashCode) {
@@ -198,8 +200,8 @@ class ChatViewModel extends ChangeNotifier {
     await prefs.setString('currentChatRoom', value);
   }
 
-  Future<AppointmentResult> fetchAppointmentDetail(
-      String doctorId, String patientId, String careCoorId,String isNormalChatUserList) async {
+  Future<AppointmentResult?> fetchAppointmentDetail(
+      String doctorId, String patientId, String? careCoorId,String isNormalChatUserList) async {
     try {
       AppointmentDetailModel appointmentModel = await _providersListRepository
           .getAppointmentDetail(doctorId, patientId, careCoorId,isNormalChatUserList);
@@ -208,7 +210,7 @@ class ChatViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<void> upateUserNickname(String patientId, String patientName) async {
+  Future<void> upateUserNickname(String? patientId, String patientName) async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection(USERS)
         .where(ID, isEqualTo: patientId)

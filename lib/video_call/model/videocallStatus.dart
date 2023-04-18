@@ -1,3 +1,4 @@
+
 class VideoCallStatus {
   VideoCallStatus({
     this.acceptedByWeb,
@@ -6,10 +7,10 @@ class VideoCallStatus {
     this.videoRequestFromWeb,
   });
 
-  int acceptedByWeb = -1;
-  int videoRequestFromMobile = -1;
-  int acceptedByMobile = -1;
-  int videoRequestFromWeb = -1;
+  int? acceptedByWeb = -1;
+  int? videoRequestFromMobile = -1;
+  int? acceptedByMobile = -1;
+  int? videoRequestFromWeb = -1;
 
   factory VideoCallStatus.fromMap(Map<String, dynamic> json) => VideoCallStatus(
         acceptedByWeb: (json["acceptedByWeb"] ?? -1),

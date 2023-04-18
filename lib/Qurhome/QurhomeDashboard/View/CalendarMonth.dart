@@ -1,13 +1,10 @@
-import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -20,7 +17,7 @@ class CalendarMonth extends StatefulWidget {
 }
 
 class _HomePageState extends State<CalendarMonth> {
-  Map<DateTime, List<dynamic>> _events;
+  late Map<DateTime, List<dynamic>> _events;
   bool onPageChanged=false;
   DateTime monthToday = DateTime.now();
   var str_doctorId;
@@ -42,7 +39,7 @@ class _HomePageState extends State<CalendarMonth> {
     controller.getCalendarRegimenList();
   }
 
-  Widget getEventList(List<RegimentDataModel> data) {
+  Widget? getEventList(List<RegimentDataModel> data) {
     try {
       try {
         data = data.toList();
@@ -60,7 +57,7 @@ class _HomePageState extends State<CalendarMonth> {
             },
             eventLoader: (DateTime dateTime) {
               return _events[
-                  DateTime(dateTime.year, dateTime.month, dateTime.day, 12)];
+                  DateTime(dateTime.year, dateTime.month, dateTime.day, 12)]!;
             },
             calendarFormat: CalendarFormat.month,
             firstDay: DateTime(2010),
@@ -200,9 +197,9 @@ class _HomePageState extends State<CalendarMonth> {
 
     if (dataMonthly.length > 0) {
       for (int j = 0; j < dataMonthly.length; j++) {
-        DateTime dateFrmModel = dataMonthly[j].estart;
+        DateTime? dateFrmModel = dataMonthly[j].estart;
         DateTime date = DateTime(
-            dateFrmModel.year, dateFrmModel.month, dateFrmModel.day, 12);
+            dateFrmModel!.year, dateFrmModel.month, dateFrmModel.day, 12);
         List<bool> boolList = [];
         try {
           boolList.add(true);
@@ -247,7 +244,7 @@ class _HomePageState extends State<CalendarMonth> {
                       return getEventList(controller
                               .qurHomeRegimenCalendarResponseModel
                               ?.regimentsList ??
-                          []);
+                          [])!;
                     }),
           ),
         ));

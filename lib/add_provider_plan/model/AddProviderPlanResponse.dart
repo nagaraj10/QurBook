@@ -1,15 +1,16 @@
+
 class AddProviderPlanResponse {
-  bool isSuccess;
-  List<AddProviderPlanResponseResult> result;
+  bool? isSuccess;
+  List<AddProviderPlanResponseResult>? result;
 
   AddProviderPlanResponse({this.isSuccess, this.result});
 
   AddProviderPlanResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<AddProviderPlanResponseResult>();
+      result =  <AddProviderPlanResponseResult>[];
       json['result'].forEach((v) {
-        result.add(new AddProviderPlanResponseResult.fromJson(v));
+        result!.add(new AddProviderPlanResponseResult.fromJson(v));
       });
     }
   }
@@ -18,26 +19,26 @@ class AddProviderPlanResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class AddProviderPlanResponseResult {
-  String providerType;
-  CreatedBy createdBy;
-  String createdOn;
-  bool isDefault;
-  bool isInvite;
+  String? providerType;
+  CreatedBy? createdBy;
+  String? createdOn;
+  bool? isDefault;
+  bool? isInvite;
   dynamic doctor;
-  CreatedBy healthOrganization;
-  CreatedBy patient;
-  String startDate;
-  String endDate;
-  String lastModifiedOn;
-  String id;
-  bool isActive;
+  CreatedBy? healthOrganization;
+  CreatedBy? patient;
+  String? startDate;
+  String? endDate;
+  String? lastModifiedOn;
+  String? id;
+  bool? isActive;
 
   AddProviderPlanResponseResult(
       {this.providerType,
@@ -80,17 +81,17 @@ class AddProviderPlanResponseResult {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['providerType'] = this.providerType;
     if (this.createdBy != null) {
-      data['createdBy'] = this.createdBy.toJson();
+      data['createdBy'] = this.createdBy!.toJson();
     }
     data['createdOn'] = this.createdOn;
     data['isDefault'] = this.isDefault;
     data['isInvite'] = this.isInvite;
     data['doctor'] = this.doctor;
     if (this.healthOrganization != null) {
-      data['healthOrganization'] = this.healthOrganization.toJson();
+      data['healthOrganization'] = this.healthOrganization!.toJson();
     }
     if (this.patient != null) {
-      data['patient'] = this.patient.toJson();
+      data['patient'] = this.patient!.toJson();
     }
     data['startDate'] = this.startDate;
     data['endDate'] = this.endDate;
@@ -102,7 +103,7 @@ class AddProviderPlanResponseResult {
 }
 
 class CreatedBy {
-  String id;
+  String? id;
 
   CreatedBy({this.id});
 

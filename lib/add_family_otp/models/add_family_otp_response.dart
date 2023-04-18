@@ -1,3 +1,4 @@
+
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 
@@ -72,9 +73,9 @@ import '../../constants/fhb_parameters.dart' as parameters;
 // }
 
 class AddFamilyOTPResponse {
-  bool isSuccess;
-  Result result;
-  String message;
+  bool? isSuccess;
+  Result? result;
+  String? message;
 
   AddFamilyOTPResponse({this.isSuccess, this.result, this.message});
 
@@ -89,42 +90,42 @@ class AddFamilyOTPResponse {
     data['isSuccess'] = isSuccess;
     data['message'] = message;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
-  String communicationPreferences;
-  String medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  List<ContactInfo> contactInfo;
-  ChildInfo childInfo;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
+  String? communicationPreferences;
+  String? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  List<ContactInfo>? contactInfo;
+  ChildInfo? childInfo;
 
   Result(
       {this.id,
@@ -188,7 +189,7 @@ class Result {
     if (json['contactInfo'] != null) {
       contactInfo = <ContactInfo>[];
       json['contactInfo'].forEach((v) {
-        contactInfo.add(ContactInfo.fromJson(v));
+        contactInfo!.add(ContactInfo.fromJson(v));
       });
     }
     childInfo = json['childInfo'] != null
@@ -226,23 +227,23 @@ class Result {
     data['lastModifiedBy'] = lastModifiedBy;
     data['lastModifiedOn'] = lastModifiedOn;
     if (contactInfo != null) {
-      data['contactInfo'] = contactInfo.map((v) => v.toJson()).toList();
+      data['contactInfo'] = contactInfo!.map((v) => v.toJson()).toList();
     }
     if (childInfo != null) {
-      data['childInfo'] = childInfo.toJson();
+      data['childInfo'] = childInfo!.toJson();
     }
     return data;
   }
 }
 
 class ContactInfo {
-  String id;
-  String phoneNumber;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String email;
+  String? id;
+  String? phoneNumber;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? email;
 
   ContactInfo(
       {this.id,
@@ -277,37 +278,37 @@ class ContactInfo {
 }
 
 class ChildInfo {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
-  String communicationPreferences;
-  String medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  String membershipOfferedBy;
-  String providerId;
-  AdditionalInfos additionalInfo;
-  List<ContactInfo> contactInfo;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
+  String? communicationPreferences;
+  String? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  String? membershipOfferedBy;
+  String? providerId;
+  AdditionalInfos? additionalInfo;
+  List<ContactInfo>? contactInfo;
 
   ChildInfo(
       {this.id,
@@ -374,9 +375,9 @@ class ChildInfo {
       membershipOfferedBy = json['membershipOfferedBy'];
     }
     if (json['contactInfo'] != null) {
-      contactInfo = List<ContactInfo>();
+      contactInfo = <ContactInfo>[];
       json['contactInfo'].forEach((v) {
-        contactInfo.add(ContactInfo.fromJson(v));
+        contactInfo!.add(ContactInfo.fromJson(v));
       });
     }
     additionalInfo = json['additionalInfo'] != null
@@ -415,18 +416,18 @@ class ChildInfo {
     data['lastModifiedOn'] = lastModifiedOn;
     data['membershipOfferedBy'] = membershipOfferedBy;
     if (contactInfo != null) {
-      data['contactInfo'] = contactInfo.map((v) => v.toJson()).toList();
+      data['contactInfo'] = contactInfo!.map((v) => v.toJson()).toList();
     }
     if (additionalInfo != null) {
-      data['additionalInfo'] = additionalInfo.toJson();
+      data['additionalInfo'] = additionalInfo!.toJson();
     }
     return data;
   }
 }
 
 class HeightObjNew {
-  String valueFeet;
-  String valueInches;
+  String? valueFeet;
+  String? valueInches;
 
   HeightObjNew({this.valueFeet, this.valueInches});
 
@@ -444,9 +445,9 @@ class HeightObjNew {
 }
 
 class AdditionalInfos {
-  String height;
-  String weight;
-  HeightObjNew heightObj;
+  String? height;
+  String? weight;
+  HeightObjNew? heightObj;
   String offSet = CommonUtil().setTimeZone();
 
   AdditionalInfos({this.height, this.weight});
@@ -473,7 +474,7 @@ class AdditionalInfos {
     data['height'] = height;
     data['weight'] = weight;
     if (this.heightObj != null) {
-      data['height'] = this.heightObj.toJson();
+      data['height'] = this.heightObj!.toJson();
     }
     data[KEY_OffSet] = CommonUtil().setTimeZone();
 

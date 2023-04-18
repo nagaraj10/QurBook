@@ -1,11 +1,12 @@
+
 class DeviceInfoSucess {
-  bool isSuccess;
-  String message;
-  String result;
+  bool? isSuccess;
+  String? message;
+  String? result;
 
   DeviceInfoSucess({this.isSuccess, this.message, this.result});
 
-  DeviceInfoSucess.fromJson(Map<String, dynamic> json) {
+  DeviceInfoSucess.fromJson(Map<String, dynamic>? json) {
     if (json != null) {
       isSuccess = json['isSuccess'] ?? false;
       if (json.containsKey('message')) message = json['message'];

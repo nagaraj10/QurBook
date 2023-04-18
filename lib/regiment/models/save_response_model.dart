@@ -1,11 +1,12 @@
+
 class SaveResponseModel {
   SaveResponseModel({
     this.isSuccess,
     this.result,
   });
 
-  final bool isSuccess;
-  final SaveResultModel result;
+  final bool? isSuccess;
+  final SaveResultModel? result;
 
   factory SaveResponseModel.fromJson(Map<String, dynamic> json) =>
       SaveResponseModel(
@@ -16,7 +17,7 @@ class SaveResponseModel {
   Map<String, dynamic> toJson() =>
       {
         'isSuccess': isSuccess,
-        'result': result.toJson(),
+        'result': result!.toJson(),
       };
 }
 
@@ -34,11 +35,11 @@ class SaveResultModel {
 
   final dynamic eventrow;
   final dynamic result;
-  final String missing;
-  final bool saved;
-  final Actions actions;
-  final int hasform;
-  final int evSource;
+  final String? missing;
+  final bool? saved;
+  final Actions? actions;
+  final int? hasform;
+  final int? evSource;
   final dynamic ackLocal;
 
   factory SaveResultModel.fromJson(Map<String, dynamic> json) =>
@@ -61,7 +62,7 @@ class SaveResultModel {
         'result': result.toJson(),
         'missing': missing,
         'saved': saved,
-        'actions': actions.toJson(),
+        'actions': actions!.toJson(),
         'hasform': hasform,
         'ev_source': evSource,
         'ack_local': ackLocal.toIso8601String(),
@@ -77,11 +78,11 @@ class Actions {
     this.input
   });
 
-  final String type;
-  final String planid;
-  final String title;
-  final ReturnModel returnData;
-  Input input;
+  final String? type;
+  final String? planid;
+  final String? title;
+  final ReturnModel? returnData;
+  Input? input;
 
   factory Actions.fromJson(Map<String, dynamic> json) =>
       Actions(
@@ -99,8 +100,8 @@ class Actions {
         'type': type,
         'planid': planid,
         'title': title,
-        'ret': returnData.toJson(),
-        'input':input.toJson(),
+        'ret': returnData!.toJson(),
+        'input':input!.toJson(),
       };
 }
 
@@ -114,12 +115,12 @@ class ReturnModel {
     this.eid,
   });
 
-  final String action;
-  final String message;
-  final String activityName;
+  final String? action;
+  final String? message;
+  final String? activityName;
   final dynamic dbg;
-  final String context;
-  final String eid;
+  final String? context;
+  final String? eid;
 
   factory ReturnModel.fromJson(Map<String, dynamic> json) =>
       ReturnModel(
@@ -143,14 +144,14 @@ class ReturnModel {
 }
 
 class Input {
-  String action;
-  String ackLocal;
-  String eid;
-  String patientId;
-  String pfPainfulUrination;
-  String source;
-  String uid;
-  String providerId;
+  String? action;
+  String? ackLocal;
+  String? eid;
+  String? patientId;
+  String? pfPainfulUrination;
+  String? source;
+  String? uid;
+  String? providerId;
 
   Input({this.action,
     this.ackLocal,

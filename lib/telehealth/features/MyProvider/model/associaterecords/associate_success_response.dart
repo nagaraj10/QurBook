@@ -1,15 +1,16 @@
+
 class AssociateSuccessResponse {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   AssociateSuccessResponse({this.isSuccess, this.result});
 
   AssociateSuccessResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = <Result>[];
       json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+        result!.add(new Result.fromJson(v));
       });
     }
   }
@@ -18,15 +19,15 @@ class AssociateSuccessResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
-  List<HealthRecordShareDetailCollection> healthRecordShareDetailCollection;
+  String? id;
+  List<HealthRecordShareDetailCollection>? healthRecordShareDetailCollection;
 
   Result({this.id, this.healthRecordShareDetailCollection});
 
@@ -34,9 +35,9 @@ class Result {
     id = json['id'];
     if (json['healthRecordShareDetailCollection'] != null) {
       healthRecordShareDetailCollection =
-          new List<HealthRecordShareDetailCollection>();
+          <HealthRecordShareDetailCollection>[];
       json['healthRecordShareDetailCollection'].forEach((v) {
-        healthRecordShareDetailCollection
+        healthRecordShareDetailCollection!
             .add(new HealthRecordShareDetailCollection.fromJson(v));
       });
     }
@@ -47,7 +48,7 @@ class Result {
     data['id'] = this.id;
     if (this.healthRecordShareDetailCollection != null) {
       data['healthRecordShareDetailCollection'] = this
-          .healthRecordShareDetailCollection
+          .healthRecordShareDetailCollection!
           .map((v) => v.toJson())
           .toList();
     }
@@ -56,18 +57,18 @@ class Result {
 }
 
 class HealthRecordShareDetailCollection {
-  String healthRecordShare;
-  String status;
-  String startDateTime;
-  HealthRecordShareStatus healthRecordShareStatus;
-  ModeOfShare modeOfShare;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
-  HealthRecordShareStatus healthRecordMetadata;
-  String endDateTime;
-  String id;
+  String? healthRecordShare;
+  String? status;
+  String? startDateTime;
+  HealthRecordShareStatus? healthRecordShareStatus;
+  ModeOfShare? modeOfShare;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
+  HealthRecordShareStatus? healthRecordMetadata;
+  String? endDateTime;
+  String? id;
 
   HealthRecordShareDetailCollection(
       {this.healthRecordShare,
@@ -110,17 +111,17 @@ class HealthRecordShareDetailCollection {
     data['status'] = this.status;
     data['startDateTime'] = this.startDateTime;
     if (this.healthRecordShareStatus != null) {
-      data['healthRecordShareStatus'] = this.healthRecordShareStatus.toJson();
+      data['healthRecordShareStatus'] = this.healthRecordShareStatus!.toJson();
     }
     if (this.modeOfShare != null) {
-      data['modeOfShare'] = this.modeOfShare.toJson();
+      data['modeOfShare'] = this.modeOfShare!.toJson();
     }
     data['isActive'] = this.isActive;
     data['createdBy'] = this.createdBy;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.healthRecordMetadata != null) {
-      data['healthRecordMetadata'] = this.healthRecordMetadata.toJson();
+      data['healthRecordMetadata'] = this.healthRecordMetadata!.toJson();
     }
     data['endDateTime'] = this.endDateTime;
     data['id'] = this.id;
@@ -129,7 +130,7 @@ class HealthRecordShareDetailCollection {
 }
 
 class HealthRecordShareStatus {
-  String id;
+  String? id;
 
   HealthRecordShareStatus({this.id});
 
@@ -145,16 +146,16 @@ class HealthRecordShareStatus {
 }
 
 class ModeOfShare {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
-  ReferenceData referenceData;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
+  ReferenceData? referenceData;
 
   ModeOfShare(
       {this.id,
@@ -195,21 +196,21 @@ class ModeOfShare {
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.referenceData != null) {
-      data['referenceData'] = this.referenceData.toJson();
+      data['referenceData'] = this.referenceData!.toJson();
     }
     return data;
   }
 }
 
 class ReferenceData {
-  String id;
-  String code;
-  String name;
-  String description;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   ReferenceData(
       {this.id,

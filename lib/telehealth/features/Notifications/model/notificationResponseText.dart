@@ -1,6 +1,7 @@
+
 class NotificationResponseText {
-  String code;
-  String message;
+  String? code;
+  String? message;
 
   NotificationResponseText({this.code, this.message});
 

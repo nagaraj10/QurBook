@@ -1,11 +1,12 @@
+
 class QurPlanDashboardModel {
   QurPlanDashboardModel({
     this.isSuccess,
     this.dashboardData,
   });
 
-  final bool isSuccess;
-  final DashboardModel dashboardData;
+  final bool? isSuccess;
+  final DashboardModel? dashboardData;
 
   factory QurPlanDashboardModel.fromJson(Map<String, dynamic> json) =>
       QurPlanDashboardModel(
@@ -15,7 +16,7 @@ class QurPlanDashboardModel {
 
   Map<String, dynamic> toJson() => {
         'isSuccess': isSuccess,
-        'result': dashboardData.toJson(),
+        'result': dashboardData!.toJson(),
       };
 }
 
@@ -32,15 +33,15 @@ class DashboardModel {
     this.careGiverList,
   });
 
-  final ActivePlans activePlans;
-  final RegimenDue regimenDue;
-  final VitalsDetails vitalsDetails;
-  final SymptomsCheckIn symptomsCheckIn;
-  final FamilyMember familyMember;
-  final Providers providers;
-  final List<HelperVideo> helperVideos;
-  final CareGiverInfo careGiverInfo;
-  final List<CareGiverInfo> careGiverList;
+  final ActivePlans? activePlans;
+  final RegimenDue? regimenDue;
+  final VitalsDetails? vitalsDetails;
+  final SymptomsCheckIn? symptomsCheckIn;
+  final FamilyMember? familyMember;
+  final Providers? providers;
+  final List<HelperVideo>? helperVideos;
+  final CareGiverInfo? careGiverInfo;
+  final List<CareGiverInfo>? careGiverList;
 
   factory DashboardModel.fromJson(Map<String, dynamic> json) => DashboardModel(
         activePlans: ActivePlans.fromJson(json['activePlans'] ?? {}),
@@ -62,14 +63,14 @@ class DashboardModel {
       );
 
   Map<String, dynamic> toJson() => {
-        'activePlans': activePlans.toJson(),
-        'regimenDue': regimenDue.toJson(),
-        'vitalsDetails': vitalsDetails.toJson(),
-        'symptomsCheckIn': symptomsCheckIn.toJson(),
-        'familyMember': familyMember.toJson(),
-        'providers': providers.toJson(),
-        'helperVideos': List<dynamic>.from(helperVideos.map((x) => x.toJson())),
-        'careGiverInfo': careGiverInfo.toJson(),
+        'activePlans': activePlans!.toJson(),
+        'regimenDue': regimenDue!.toJson(),
+        'vitalsDetails': vitalsDetails!.toJson(),
+        'symptomsCheckIn': symptomsCheckIn!.toJson(),
+        'familyMember': familyMember!.toJson(),
+        'providers': providers!.toJson(),
+        'helperVideos': List<dynamic>.from(helperVideos!.map((x) => x.toJson())),
+        'careGiverInfo': careGiverInfo!.toJson(),
       };
 }
 
@@ -78,7 +79,7 @@ class ActivePlans {
     this.activePlanCount,
   });
 
-  final int activePlanCount;
+  final int? activePlanCount;
 
   factory ActivePlans.fromJson(Map<String, dynamic> json) => ActivePlans(
         activePlanCount: json['activePlanCount'],
@@ -94,7 +95,7 @@ class FamilyMember {
     this.noOfFamilyMembers,
   });
 
-  final int noOfFamilyMembers;
+  final int? noOfFamilyMembers;
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) => FamilyMember(
         noOfFamilyMembers: json['noOfFamilyMembers'],
@@ -112,9 +113,9 @@ class HelperVideo {
     this.url,
   });
 
-  final String title;
-  final String thumbnail;
-  final String url;
+  final String? title;
+  final String? thumbnail;
+  final String? url;
 
   factory HelperVideo.fromJson(Map<String, dynamic> json) => HelperVideo(
         title: json['title'],
@@ -136,9 +137,9 @@ class Providers {
     this.lab,
   });
 
-  final int doctor;
-  final int hospital;
-  final int lab;
+  final int? doctor;
+  final int? hospital;
+  final int? lab;
 
   factory Providers.fromJson(Map<String, dynamic> json) => Providers(
         doctor: json['doctor'],
@@ -161,10 +162,10 @@ class RegimenDue {
     this.eid,
   });
 
-  final int activeDues;
-  final DateTime lastEnteredDateTime;
-  final String lastEventTitle;
-  final int eid;
+  final int? activeDues;
+  final DateTime? lastEnteredDateTime;
+  final String? lastEventTitle;
+  final int? eid;
 
   factory RegimenDue.fromJson(Map<String, dynamic> json) => RegimenDue(
         activeDues: json['activeDues'],
@@ -177,7 +178,7 @@ class RegimenDue {
 
   Map<String, dynamic> toJson() => {
         'activeDues': activeDues,
-        'lastEnteredDateTime': lastEnteredDateTime.toIso8601String(),
+        'lastEnteredDateTime': lastEnteredDateTime!.toIso8601String(),
         'lastEventTitle': lastEventTitle,
         'eid': eid,
       };
@@ -194,13 +195,13 @@ class SymptomsCheckIn {
     this.ack,
   });
 
-  final int eid;
-  final String title;
-  final int aid;
-  final String activityname;
-  final DateTime estart;
-  final DateTime eend;
-  final DateTime ack;
+  final int? eid;
+  final String? title;
+  final int? aid;
+  final String? activityname;
+  final DateTime? estart;
+  final DateTime? eend;
+  final DateTime? ack;
 
   factory SymptomsCheckIn.fromJson(Map<String, dynamic> json) =>
       SymptomsCheckIn(
@@ -220,9 +221,9 @@ class SymptomsCheckIn {
         'title': title,
         'aid': aid,
         'activityname': activityname,
-        'estart': estart.toIso8601String(),
-        'eend': eend.toIso8601String(),
-        'ack': ack.toIso8601String(),
+        'estart': estart!.toIso8601String(),
+        'eend': eend!.toIso8601String(),
+        'ack': ack!.toIso8601String(),
       };
 }
 
@@ -234,10 +235,10 @@ class CareGiverInfo {
     this.profilePic,
   });
 
-  final String doctorId;
-  final String firstName;
-  final String lastName;
-  final String profilePic;
+  final String? doctorId;
+  final String? firstName;
+  final String? lastName;
+  final String? profilePic;
 
   factory CareGiverInfo.fromJson(Map<String, dynamic> json) => CareGiverInfo(
         doctorId: json['doctorId'] ?? json['id'],
@@ -260,8 +261,8 @@ class VitalsDetails {
     this.lastestDeviceInfo,
   });
 
-  final int activeDevice;
-  final LastestDeviceInfo lastestDeviceInfo;
+  final int? activeDevice;
+  final LastestDeviceInfo? lastestDeviceInfo;
 
   factory VitalsDetails.fromJson(Map<String, dynamic> json) => VitalsDetails(
         activeDevice: json['activeDevice'],
@@ -271,7 +272,7 @@ class VitalsDetails {
 
   Map<String, dynamic> toJson() => {
         'activeDevice': activeDevice,
-        'lastestDeviceInfo': lastestDeviceInfo.toJson(),
+        'lastestDeviceInfo': lastestDeviceInfo!.toJson(),
       };
 }
 
@@ -281,8 +282,8 @@ class LastestDeviceInfo {
     this.deviceName,
   });
 
-  final DateTime lastSyncDateTime;
-  final String deviceName;
+  final DateTime? lastSyncDateTime;
+  final String? deviceName;
 
   factory LastestDeviceInfo.fromJson(Map<String, dynamic> json) =>
       LastestDeviceInfo(
@@ -291,7 +292,7 @@ class LastestDeviceInfo {
       );
 
   Map<String, dynamic> toJson() => {
-        'lastSyncDateTime': lastSyncDateTime.toIso8601String(),
+        'lastSyncDateTime': lastSyncDateTime!.toIso8601String(),
         'deviceName': deviceName,
       };
 }

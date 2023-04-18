@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -19,20 +20,20 @@ import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MedicalReportListScreen extends StatefulWidget {
-  final HealthRecordList completeData;
+  final HealthRecordList? completeData;
   final Function callBackToRefresh;
-  final String categoryName;
-  final String categoryId;
+  final String? categoryName;
+  final String? categoryId;
   final Function(String, String) getDataForParticularLabel;
-  final Function(String, bool) mediaSelected;
-  final Function(String, List<HealthRecordCollection>, bool)
+  final Function(String?, bool?) mediaSelected;
+  final Function(String?, List<HealthRecordCollection>, bool)
       healthRecordSelected;
-  final bool allowSelect;
-  List<String> mediaMeta;
-  final bool isNotesSelect;
-  final bool isAudioSelect;
-  final bool showDetails;
-  final bool allowAttach;
+  final bool? allowSelect;
+  List<String?>? mediaMeta;
+  final bool? isNotesSelect;
+  final bool? isAudioSelect;
+  final bool? showDetails;
+  final bool? allowAttach;
 
   MedicalReportListScreen(
       this.completeData,
@@ -55,12 +56,12 @@ class MedicalReportListScreen extends StatefulWidget {
 }
 
 class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
-  HealthReportListForUserBlock _healthReportListForUserBlock;
+  late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
-  List<HealthRecordCollection> mediMasterId = new List();
+  List<HealthRecordCollection> mediMasterId = [];
 
   FlutterToast toast = new FlutterToast();
 
@@ -85,11 +86,11 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _getWidgetToDisplayMedicalrecords(widget.completeData);
+    return _getWidgetToDisplayMedicalrecords(widget.completeData!);
   }
 
   Widget _getWidgetToDisplayMedicalrecords(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    List<HealthResult> mediaMetaInfoObj = [];
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionMedicalReport);
@@ -132,25 +133,25 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
   Widget getCardWidgetForMedicalRecords(HealthResult data, int i) {
     return InkWell(
         onLongPress: () {
-          if (widget.allowSelect) {
-            data.isSelected = !data.isSelected;
+          if (widget.allowSelect!) {
+            data.isSelected = !data.isSelected!;
 
             setState(() {});
             widget.mediaSelected(data.id, data.isSelected);
           }
         },
         onTap: () {
-          if (widget.allowSelect && widget.showDetails == false) {
-            if (widget.allowAttach) {
+          if (widget.allowSelect! && widget.showDetails == false) {
+            if (widget.allowAttach!) {
               bool condition;
-              if (widget.mediaMeta.contains(data.id)) {
+              if (widget.mediaMeta!.contains(data.id)) {
                 condition = false;
               } else {
                 condition = true;
               }
-              data.isSelected = !data.isSelected;
+              data.isSelected = !data.isSelected!;
               if (data != null &&
-                  (data?.healthRecordCollection?.length ?? 0) > 0) {
+                  (data.healthRecordCollection?.length ?? 0) > 0) {
                 mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
                 if (mediMasterId.length > 0) {
                   widget.healthRecordSelected(data.id, mediMasterId, condition);
@@ -162,12 +163,12 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
               }
             } else {
               bool condition;
-              if (widget.mediaMeta.contains(data.id)) {
+              if (widget.mediaMeta!.contains(data.id)) {
                 condition = false;
               } else {
                 condition = true;
               }
-              data.isSelected = !data.isSelected;
+              data.isSelected = !data.isSelected!;
 
               // setState(() {});
               widget.mediaSelected(data.id, condition);
@@ -216,7 +217,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 child: Image.network(
                   /*Constants.BASE_URL + */ data
-                      .metadata.healthRecordCategory.logo,
+                      .metadata!.healthRecordCategory!.logo!,
                   height: 30,
                   width: 30,
                   color: Color(
@@ -238,12 +239,12 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    data.metadata.hospital != null
+                    data.metadata!.hospital != null
                         ? Text(
-                            data.metadata.hospital.healthOrganizationName !=
+                            data.metadata!.hospital!.healthOrganizationName !=
                                     null
                                 ? toBeginningOfSentenceCase(data
-                                    .metadata.hospital.healthOrganizationName)
+                                    .metadata!.hospital!.healthOrganizationName)!
                                 : '',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
@@ -252,14 +253,14 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                           )
                         : Text(''),
                     Text(
-                      data.metadata.doctor != null
+                      data.metadata!.doctor != null
                           ? toBeginningOfSentenceCase(
-                              (data.metadata.doctor.name != null &&
-                                      data.metadata.doctor.name != '')
-                                  ? data.metadata.doctor.name
-                                  : data.metadata.doctor.firstName +
+                              (data.metadata!.doctor!.name != null &&
+                                      data.metadata!.doctor!.name != '')
+                                  ? data.metadata!.doctor!.name
+                                  : data.metadata!.doctor!.firstName! +
                                       ' ' +
-                                      data.metadata.doctor.lastName)
+                                      data.metadata!.doctor!.lastName!)!
                           : '',
                       style: TextStyle(
                         color: Colors.grey,
@@ -283,7 +284,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     IconButton(
-                        icon: data.isBookmarked
+                        icon: data.isBookmarked!
                             ? ImageIcon(
                                 AssetImage(variable.icon_record_fav_active),
                                 //TODO chnage theme
@@ -299,14 +300,14 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                         onPressed: () {
                           new CommonUtil().bookMarkRecord(data, _refresh);
                         }),
-                    (data.metadata.hasVoiceNotes != null &&
-                            data.metadata.hasVoiceNotes)
+                    (data.metadata!.hasVoiceNotes != null &&
+                            data.metadata!.hasVoiceNotes!)
                         ? Icon(
                             Icons.mic,
                             color: Colors.black54,
                           )
                         : Container(),
-                    widget.mediaMeta.contains(data.id)
+                    widget.mediaMeta!.contains(data.id)
                         ? Icon(
                             Icons.done,
                             color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -323,7 +324,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
   getDoctorProfileImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future:
-          _healthReportListForUserBlock.getProfilePic(data.metaInfo.doctor.id),
+          _healthReportListForUserBlock.getProfilePic(data.metaInfo!.doctor!.id!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(
@@ -337,8 +338,8 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
             width: 50.0,
             height: 50.0,
             child: Shimmer.fromColors(
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[550],
+                baseColor: Colors.grey[200]!,
+                highlightColor: Colors.grey[550]!,
                 child:
                     Container(width: 50, height: 50, color: Colors.grey[200])),
           );
@@ -350,7 +351,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
   getDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)),
+          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(snapshot.data);
@@ -359,8 +360,8 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
             width: 50.0,
             height: 50.0,
             child: Shimmer.fromColors(
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[600],
+                baseColor: Colors.grey[200]!,
+                highlightColor: Colors.grey[600]!,
                 child:
                     Container(width: 50, height: 50, color: Colors.grey[200])),
           );

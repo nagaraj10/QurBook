@@ -1,3 +1,4 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'DeviceReadings.dart';
 import 'Hospital.dart';
@@ -6,18 +7,18 @@ import '../../src/model/Health/CategoryInfo.dart';
 import '../../src/model/Health/Doctor.dart';
 
 class MetaInfo {
-  CategoryInfo categoryInfo;
-  MediaTypeInfo mediaTypeInfo;
-  String dateOfVisit;
-  String memoText;
-  bool hasVoiceNote;
-  bool isDraft;
-  String sourceName;
-  String memoTextRaw;
-  Doctor doctor;
-  Hospital hospital;
-  String fileName;
-  List<DeviceReadings> deviceReadings;
+  CategoryInfo? categoryInfo;
+  MediaTypeInfo? mediaTypeInfo;
+  String? dateOfVisit;
+  String? memoText;
+  bool? hasVoiceNote;
+  bool? isDraft;
+  String? sourceName;
+  String? memoTextRaw;
+  Doctor? doctor;
+  Hospital? hospital;
+  String? fileName;
+  List<DeviceReadings>? deviceReadings;
   // Laboratory laboratory;
 
   MetaInfo(
@@ -41,7 +42,7 @@ class MetaInfo {
     if (json[parameters.strdeviceReadings] != null) {
       deviceReadings = <DeviceReadings>[];
       json[parameters.strdeviceReadings].forEach((v) {
-        deviceReadings.add(DeviceReadings.fromJson(v));
+        deviceReadings!.add(DeviceReadings.fromJson(v));
       });
     }
     doctor =
@@ -63,27 +64,27 @@ class MetaInfo {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (categoryInfo != null) {
-      data[parameters.strcategoryInfo] = categoryInfo.toJson();
+      data[parameters.strcategoryInfo] = categoryInfo!.toJson();
     }
     data[parameters.strdateOfVisit] = dateOfVisit;
     if (deviceReadings != null) {
       data[parameters.strdeviceReadings] =
-          deviceReadings.map((v) => v.toJson()).toList();
+          deviceReadings!.map((v) => v.toJson()).toList();
     }
     if (doctor != null) {
-      data[parameters.strdoctor] = doctor.toJson();
+      data[parameters.strdoctor] = doctor!.toJson();
     }
     data[parameters.strfileName] = fileName;
     data[parameters.strisDraft] = isDraft;
     if (mediaTypeInfo != null) {
-      data[parameters.strmediaTypeInfo] = mediaTypeInfo.toJson();
+      data[parameters.strmediaTypeInfo] = mediaTypeInfo!.toJson();
     }
     data[parameters.strmemoText] = memoText;
     data[parameters.strmemoTextRaw] = memoTextRaw;
     data[parameters.strsourceName] = sourceName;
    
     if (hospital != null) {
-      data[parameters.strhospital] = hospital.toJson();
+      data[parameters.strhospital] = hospital!.toJson();
     }
     
     return data;

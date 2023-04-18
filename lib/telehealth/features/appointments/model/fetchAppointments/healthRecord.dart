@@ -1,3 +1,4 @@
+
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class HealthRecord {
@@ -10,12 +11,12 @@ class HealthRecord {
     this.prescription,
   });
 
-  String notes;
-  String voice;
-  List<dynamic> associatedRecords;
-  List<String> bills;
-  List<String> others;
-  List<dynamic> prescription;
+  String? notes;
+  String? voice;
+  List<dynamic>? associatedRecords;
+  List<String>? bills;
+  List<String>? others;
+  List<dynamic>? prescription;
 
   HealthRecord.fromJson(Map<String, dynamic> json) {
     notes = json[parameters.strnotes];
@@ -24,9 +25,9 @@ class HealthRecord {
         ? null
         : List<dynamic>.from(
             json[parameters.strAssociatedRecords].map((x) => x));
-    bills = json[parameters.strBills] == null
-        ? null
-        : List<String>.from(json[parameters.strBills].map((x) => x));
+    bills = (json[parameters.strBills] == null
+        ?  null
+        : List<String>.from(json[parameters.strBills].map((x) => x??'')));
     others = json[parameters.strothers] == null
         ? null
         : List<String>.from(json[parameters.strothers].map((x) => x));
@@ -40,11 +41,11 @@ class HealthRecord {
     data[parameters.strnotes] = notes;
     data[parameters.strVoice] = voice;
     data[parameters.strAssociatedRecords] =
-        List<dynamic>.from(associatedRecords.map((x) => x));
-    data[parameters.strBills] = List<dynamic>.from(bills.map((x) => x));
-    data[parameters.strothers] = List<dynamic>.from(others.map((x) => x));
+        List<dynamic>.from(associatedRecords!.map((x) => x));
+    data[parameters.strBills] = List<dynamic>.from(bills!.map((x) => x));
+    data[parameters.strothers] = List<dynamic>.from(others!.map((x) => x));
     data[parameters.strPrescription] =
-        List<dynamic>.from(prescription.map((x) => x));
+        List<dynamic>.from(prescription!.map((x) => x));
     return data;
   }
 }

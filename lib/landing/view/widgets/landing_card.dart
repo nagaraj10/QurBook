@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,9 +10,9 @@ import '../../../src/utils/screenutils/size_extensions.dart';
 
 class LandingCard extends StatelessWidget {
   const LandingCard({
-    @required this.title,
-    @required this.icon,
-    @required this.color,
+    required this.title,
+    required this.icon,
+    required this.color,
     this.lastStatus,
     this.alerts,
     this.onPressed,
@@ -26,19 +27,19 @@ class LandingCard extends StatelessWidget {
   });
 
   final String title;
-  final String ticketsCount;
+  final String? ticketsCount;
   final String icon;
   final Color color;
-  final String lastStatus;
-  final String alerts;
-  final Function onPressed;
-  final Function onAddPressed;
-  final Function onTicketPressed;
+  final String? lastStatus;
+  final String? alerts;
+  final Function? onPressed;
+  final Function? onAddPressed;
+  final Function? onTicketPressed;
   final bool isEnabled;
-  final Function onLinkPressed;
-  final Color alertsColor;
-  final String eventName;
-  final Function onEventPressed;
+  final Function? onLinkPressed;
+  final Color? alertsColor;
+  final String? eventName;
+  final Function? onEventPressed;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -56,7 +57,7 @@ class LandingCard extends StatelessWidget {
           child: Stack(
             children: [
               InkWell(
-                onTap: onPressed,
+                onTap: onPressed as void Function()?,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.transparent,
@@ -75,7 +76,7 @@ class LandingCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        title ?? '',
+                        title,
                         style: TextStyle(
                           fontSize: 18.0.sp,
                           color: color,
@@ -104,7 +105,7 @@ class LandingCard extends StatelessWidget {
                             isEnabled &&
                             (alerts ?? '').isNotEmpty,
                         child: InkWell(
-                          onTap: onLinkPressed,
+                          onTap: onLinkPressed as void Function()?,
                           child: Text(
                             alerts ?? '',
                             style: TextStyle(
@@ -125,7 +126,7 @@ class LandingCard extends StatelessWidget {
                           child: Text(
                             (eventName ?? '').isNotEmpty
                                 ? toBeginningOfSentenceCase(
-                                    eventName?.trim() ?? '')
+                                    eventName?.trim() ?? '')!
                                 : '',
                             style: TextStyle(
                               fontSize: 12.0.sp,
@@ -192,7 +193,7 @@ class LandingCard extends StatelessWidget {
                               height: 30.0.sp,
                               width: 30.0.sp,
                               child: FloatingActionButton(
-                                onPressed: onAddPressed ?? () {},
+                                onPressed: onAddPressed as void Function()? ?? () {},
                                 elevation: 2,
                                 backgroundColor: color,
                                 heroTag: title,
@@ -209,7 +210,7 @@ class LandingCard extends StatelessWidget {
                               height: 40.0.sp,
                               width: 40.0.sp,
                               child: FloatingActionButton(
-                                onPressed: onTicketPressed ?? () {},
+                                onPressed: onTicketPressed as void Function()? ?? () {},
                                 elevation: 2,
                                 backgroundColor:
                                     Color(CommonUtil().getMyPrimaryColor()),
@@ -240,7 +241,7 @@ class LandingCard extends StatelessWidget {
                                                 minHeight: 5,
                                               ),
                                               child: new Text(
-                                                ticketsCount,
+                                                ticketsCount!,
                                                 style: new TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 8,

@@ -1,10 +1,11 @@
+
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/refundInfo.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class CancelResult {
-  String bookingId;
-  RefundInfo refundInfo;
-  bool status;
+  String? bookingId;
+  RefundInfo? refundInfo;
+  bool? status;
 
   CancelResult({this.bookingId, this.refundInfo, this.status});
 
@@ -20,7 +21,7 @@ class CancelResult {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[parameters.strBookingId] = this.bookingId;
     if (this.refundInfo != null) {
-      data[parameters.strRefundInfo] = this.refundInfo.toJson();
+      data[parameters.strRefundInfo] = this.refundInfo!.toJson();
     }
     data[parameters.strStatus] = this.status;
     return data;

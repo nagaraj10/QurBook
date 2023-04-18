@@ -1,6 +1,7 @@
+
 class HubListResponse {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   HubListResponse({this.isSuccess, this.result});
 
@@ -14,23 +15,23 @@ class HubListResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
-  String nickName;
-  String additionalDetails;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String hubId;
-  String userId;
-  Hub hub;
-  List<UserDeviceCollection> userDeviceCollection;
+  String? id;
+  String? nickName;
+  String? additionalDetails;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? hubId;
+  String? userId;
+  Hub? hub;
+  List<UserDeviceCollection>? userDeviceCollection;
 
   Result(
       {this.id,
@@ -53,9 +54,9 @@ class Result {
     hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
 
     if (json['userDeviceCollection'] != null) {
-      userDeviceCollection = new List<UserDeviceCollection>();
+      userDeviceCollection = <UserDeviceCollection>[];
       json['userDeviceCollection'].forEach((v) {
-        userDeviceCollection.add(new UserDeviceCollection.fromJson(v));
+        userDeviceCollection!.add(new UserDeviceCollection.fromJson(v));
       });
     }
   }
@@ -72,14 +73,14 @@ class Result {
     data['userId'] = this.userId;
     if (this.userDeviceCollection != null) {
       data['userDeviceCollection'] =
-          this.userDeviceCollection.map((v) => v.toJson()).toList();
+          this.userDeviceCollection!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class AdditionalDetails {
-  bool isVirtualHub;
+  bool? isVirtualHub;
 
   AdditionalDetails({this.isVirtualHub});
 
@@ -103,13 +104,13 @@ class AdditionalDetails {
 }
 
 class Hub {
-  String id;
-  String name;
-  String serialNumber;
-  AdditionalDetails additionalDetails;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? serialNumber;
+  AdditionalDetails? additionalDetails;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
   Hub(
       {this.id,
       this.name,
@@ -132,18 +133,18 @@ class Hub {
 }
 
 class UserDeviceCollection {
-  String id;
-  String userHubId;
-  String pairHash;
-  String additionalDetails;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String hubId;
-  String deviceId;
-  String userId;
-  User user;
-  Device device;
+  String? id;
+  String? userHubId;
+  String? pairHash;
+  String? additionalDetails;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? hubId;
+  String? deviceId;
+  String? userId;
+  User? user;
+  Device? device;
 
   UserDeviceCollection(
       {this.id,
@@ -188,21 +189,21 @@ class UserDeviceCollection {
     data['deviceId'] = this.deviceId;
     data['userId'] = this.userId;
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user!.toJson();
     }
     return data;
   }
 }
 
 class Device {
-  String id;
-  String serialNumber;
-  DeviceType deviceType;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String deviceTypeId;
+  String? id;
+  String? serialNumber;
+  DeviceType? deviceType;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? deviceTypeId;
   Device(
       {this.id,
       this.serialNumber,
@@ -232,15 +233,15 @@ class Device {
 }
 
 class DeviceType {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   DeviceType(
       {this.id,
@@ -271,36 +272,36 @@ class DeviceType {
 }
 
 class User {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  String isTempUser;
-  String isVirtualUser;
-  String isMigrated;
-  String isClaimed;
-  bool isIeUser;
-  String isEmailVerified;
-  bool isCpUser;
-  String communicationPreferences;
-  String medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  String providerId;
-  AdditionalInfo additionalInfo;
-  String firstLoggedIn;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  String? isTempUser;
+  String? isVirtualUser;
+  String? isMigrated;
+  String? isClaimed;
+  bool? isIeUser;
+  String? isEmailVerified;
+  bool? isCpUser;
+  String? communicationPreferences;
+  String? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  String? providerId;
+  AdditionalInfo? additionalInfo;
+  String? firstLoggedIn;
 
   User(
       {this.id,
@@ -400,7 +401,7 @@ class User {
     data['lastModifiedOn'] = this.lastModifiedOn;
     data['providerId'] = this.providerId;
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo!.toJson();
     }
     data['firstLoggedIn'] = this.firstLoggedIn;
     return data;
@@ -408,15 +409,15 @@ class User {
 }
 
 class AdditionalInfo {
-  int age;
-  String height;
-  String offset;
-  String weight;
+  int? age;
+  String? height;
+  String? offset;
+  String? weight;
   // List<Null> language;
-  String mrdNumber;
-  String uhidNumber;
-  String visitReason;
-  String patientHistory;
+  String? mrdNumber;
+  String? uhidNumber;
+  String? visitReason;
+  String? patientHistory;
 
   AdditionalInfo(
       {this.age,

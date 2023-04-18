@@ -1,20 +1,21 @@
+
 import '../../src/model/Health/MediaMasterIds.dart';
 import '../../src/model/Health/MetaInfo.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class Data {
-  String id;
-  String metaTypeId;
-  String userId;
-  MetaInfo metaInfo;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
-  bool isBookmarked;
-  bool isDraft;
-  String createdByUser;
-  List<MediaMasterIds> mediaMasterIds;
+  String? id;
+  String? metaTypeId;
+  String? userId;
+  MetaInfo? metaInfo;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isBookmarked;
+  bool? isDraft;
+  String? createdByUser;
+  List<MediaMasterIds>? mediaMasterIds;
 
   Data(
       {this.id,
@@ -47,7 +48,7 @@ class Data {
     if (json[parameters.strmediaMasterId] != null) {
       mediaMasterIds = <MediaMasterIds>[];
       json[parameters.strmediaMasterId].forEach((v) {
-        mediaMasterIds.add(MediaMasterIds.fromJson(v));
+        mediaMasterIds!.add(MediaMasterIds.fromJson(v));
       });
     }
   }
@@ -58,7 +59,7 @@ class Data {
     data[parameters.strmetaTypeId] = metaTypeId;
     data[parameters.struserId] = userId;
     if (metaInfo != null) {
-      data[parameters.strmetaInfo] = metaInfo.toJson();
+      data[parameters.strmetaInfo] = metaInfo!.toJson();
     }
     data[parameters.strIsActive] = isActive;
     data[parameters.strCreatedBy] = createdBy;
@@ -69,7 +70,7 @@ class Data {
     data[parameters.strcreatedByUser] = createdByUser;
     if (mediaMasterIds != null) {
       data[parameters.strmediaMasterId] =
-          mediaMasterIds.map((v) => v.toJson()).toList();
+          mediaMasterIds!.map((v) => v.toJson()).toList();
     }
     return data;
   }

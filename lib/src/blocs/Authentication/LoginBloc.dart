@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:io';
 import '../../model/Authentication/SignIn.dart';
@@ -15,12 +16,12 @@ import '../../../constants/variable_constant.dart' as variable;
 
 
 class LoginBloc with Validators implements BaseBloc {
-  AuthenticationRepository _authenticationRepository;
-  StreamController _loginController;
-  StreamController _signOutController;
+  late AuthenticationRepository _authenticationRepository;
+  StreamController? _loginController;
+  StreamController? _signOutController;
   final _mobileNumberController = BehaviorSubject<String>();
 
-  StreamController _signUpController;
+  StreamController? _signUpController;
 
   Function(String) get mobileNumberChanged => _mobileNumberController.sink.add;
 
@@ -28,16 +29,16 @@ class LoginBloc with Validators implements BaseBloc {
       _mobileNumberController.stream.transform(mobileNumberValidator);
   Stream<bool> get submitCheck => mobileNumber.map((m) => true);
 
-  StreamSink<ApiResponse<SignIn>> get signInSink => _loginController.sink;
-  Stream<ApiResponse<SignIn>> get signInStream => _loginController.stream;
+  StreamSink<ApiResponse<SignIn>> get signInSink => _loginController!.sink as StreamSink<ApiResponse<SignIn>>;
+  Stream<ApiResponse<SignIn>> get signInStream => _loginController!.stream as Stream<ApiResponse<SignIn>>;
 
-  StreamSink<ApiResponse<SignUp>> get signUpSink => _signUpController.sink;
-  Stream<ApiResponse<SignUp>> get signUpStream => _signUpController.stream;
+  StreamSink<ApiResponse<SignUp>> get signUpSink => _signUpController!.sink as StreamSink<ApiResponse<SignUp>>;
+  Stream<ApiResponse<SignUp>> get signUpStream => _signUpController!.stream as Stream<ApiResponse<SignUp>>;
 
   StreamSink<ApiResponse<SignOutResponse>> get signOutSink =>
-      _signOutController.sink;
+      _signOutController!.sink as StreamSink<ApiResponse<SignOutResponse>>;
   Stream<ApiResponse<SignOutResponse>> get signOutStream =>
-      _signOutController.stream;
+      _signOutController!.stream as Stream<ApiResponse<SignOutResponse>>;
 
   LoginBloc() {
     _loginController = StreamController<ApiResponse<SignIn>>();
@@ -46,7 +47,7 @@ class LoginBloc with Validators implements BaseBloc {
     _signOutController = StreamController<ApiResponse<SignOutResponse>>();
   }
 
-  Future<SignIn> submit(String phoneNumber, String countryCode) async {
+  Future<SignIn?> submit(String phoneNumber, String countryCode) async {
     final signInData = {};
     //signInData['sourceName'] = CommonConstants.strTrident;
     signInData[parameters.strCountryCode] = '+' + countryCode;
@@ -58,7 +59,7 @@ class LoginBloc with Validators implements BaseBloc {
     final jsonString = convert.jsonEncode(signInData);
 
     signInSink.add(ApiResponse.loading(variable.strSignUp));
-    SignIn signIn;
+    SignIn? signIn;
     try {
       signIn = await _authenticationRepository.signInUser(jsonString);
     } catch (e) {
@@ -67,7 +68,7 @@ class LoginBloc with Validators implements BaseBloc {
     return signIn;
   }
 
-  Future<SignUp> createUser(
+  Future<SignUp?> createUser(
       String countryCode,
       String phoneNumber,
       String email,
@@ -80,7 +81,7 @@ class LoginBloc with Validators implements BaseBloc {
       String middleName,
       String lastName) async {
     signUpSink.add(ApiResponse.loading(variable.strCreateuser));
-    SignUp signUp;
+    SignUp? signUp;
     try {
       signUp = await _authenticationRepository.signUpUser(
           countryCode,
@@ -100,9 +101,9 @@ class LoginBloc with Validators implements BaseBloc {
     return signUp;
   }
 
-  Future<SignOutResponse> logout() async {
+  Future<SignOutResponse?> logout() async {
     signOutSink.add(ApiResponse.loading(variable.strSignOut));
-    SignOutResponse signOutResponse;
+    SignOutResponse? signOutResponse;
     try {
       signOutResponse = await _authenticationRepository.signOutUser();
     } catch (e) {
@@ -114,7 +115,7 @@ class LoginBloc with Validators implements BaseBloc {
 
   @override
   void dispose() {
-    _mobileNumberController?.close();
+    _mobileNumberController.close();
     _loginController?.close();
     _signUpController?.close();
     _signOutController?.close();

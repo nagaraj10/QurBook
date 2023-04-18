@@ -1,20 +1,21 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/MedicalCouncilInfo.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/QualificationInfo.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Specialty.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class ProfessionalDetails {
-  String id;
-  String doctorId;
-  String aboutMe;
-  QualificationInfo qualificationInfo;
-  MedicalCouncilInfo medicalCouncilInfo;
-  Specialty specialty;
-  Specialty clinicName;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String lastModifiedBy;
+  String? id;
+  String? doctorId;
+  String? aboutMe;
+  QualificationInfo? qualificationInfo;
+  MedicalCouncilInfo? medicalCouncilInfo;
+  Specialty? specialty;
+  Specialty? clinicName;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? lastModifiedBy;
 
   ProfessionalDetails(
       {this.id,
@@ -57,16 +58,16 @@ class ProfessionalDetails {
     data[parameters.strDoctorId] = this.doctorId;
     data[parameters.straboutMe] = this.aboutMe;
     if (this.qualificationInfo != null) {
-      data[parameters.strqualificationInfo] = this.qualificationInfo.toJson();
+      data[parameters.strqualificationInfo] = this.qualificationInfo!.toJson();
     }
     if (this.medicalCouncilInfo != null) {
-      data[parameters.strmedicalCouncilInfo] = this.medicalCouncilInfo.toJson();
+      data[parameters.strmedicalCouncilInfo] = this.medicalCouncilInfo!.toJson();
     }
     if (this.specialty != null) {
-      data[parameters.strspecialty] = this.specialty.toJson();
+      data[parameters.strspecialty] = this.specialty!.toJson();
     }
     if (this.clinicName != null) {
-      data[parameters.strclinicName] = this.clinicName.toJson();
+      data[parameters.strclinicName] = this.clinicName!.toJson();
     }
     data[parameters.strIsActive] = this.isActive;
     data[parameters.strCreatedOn] = this.createdOn;

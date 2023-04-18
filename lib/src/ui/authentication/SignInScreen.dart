@@ -1,6 +1,11 @@
+
+// import 'package:country_pickers/country.dart';
+// import 'package:country_pickers/country_picker_dropdown.dart';
+// import 'package:country_pickers/country_pickers.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:flutter_country_picker/flutter_country_picker.dart';  FU2.5
 import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -27,7 +32,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  LoginBloc _loginBloc;
+  late LoginBloc _loginBloc;
   Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
   TextEditingController phoneTextController = new TextEditingController();
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
@@ -160,7 +165,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget submitButton(LoginBloc bloc, String countryCode,
+  Widget submitButton(LoginBloc bloc, String? countryCode,
       TextEditingController phoneTextController) {
     return StreamBuilder(
       stream: bloc.submitCheck,
@@ -184,9 +189,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 new FHBUtils().check().then((intenet) {
                   if (intenet != null && intenet) {
                     bloc
-                        .submit(phoneTextController.text, countryCode)
+                        .submit(phoneTextController.text, countryCode!)
                         .then((signInResponse) {
-                      if (signInResponse.message == Constants.STR_MSG_SIGNUP ||
+                      if (signInResponse!.message == Constants.STR_MSG_SIGNUP ||
                           signInResponse.message == Constants.STR_MSG_SIGNUP1 ||
                           signInResponse.message == Constants.STR_VERIFY_OTP ||
                           signInResponse.message == Constants.STR_VERIFY_USER)
@@ -209,7 +214,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             .then((onValue) {});
                         PreferenceUtil.saveString(
                             CommonConstants.KEY_COUNTRYNAME,
-                            _selectedDialogCountry.name);
+                            _selectedDialogCountry.name!);
                         moveToNext(signInResponse, phoneTextController.text,
                             countryCode);
                       }
@@ -226,8 +231,8 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void moveToNext(SignIn signIn, String phoneNumber, String countryCode) {
-    if (signIn.success) {
+  void moveToNext(SignIn signIn, String phoneNumber, String? countryCode) {
+    if (signIn.success!) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
@@ -241,7 +246,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       );
     } else {
-      new FHBBasicWidget().getSnackBarWidget(context, signIn.message);
+      new FHBBasicWidget().getSnackBarWidget(context, signIn.message!);
     }
   }
 }

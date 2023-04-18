@@ -1,17 +1,18 @@
+
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 
 class GetRecordIdsFilter {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   GetRecordIdsFilter({this.isSuccess, this.result});
 
   GetRecordIdsFilter.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = <Result>[];
       json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+        result!.add(new Result.fromJson(v));
       });
     }
   }
@@ -20,26 +21,26 @@ class GetRecordIdsFilter {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
-  String healthRecordTypeId;
-  String healthRecordTypeName;
-  Metadata metadata;
-  String userId;
-  bool isBookmarked;
-  bool isDraft;
-  bool isVisible;
-  bool isActive;
-  bool isCompleted;
-  String doctorId;
-  String createdOn;
-  List<HealthRecordCollection> healthRecordCollection;
+  String? id;
+  String? healthRecordTypeId;
+  String? healthRecordTypeName;
+  Metadata? metadata;
+  String? userId;
+  bool? isBookmarked;
+  bool? isDraft;
+  bool? isVisible;
+  bool? isActive;
+  bool? isCompleted;
+  String? doctorId;
+  String? createdOn;
+  List<HealthRecordCollection>? healthRecordCollection;
 
   Result(
       {this.id,
@@ -72,9 +73,9 @@ class Result {
     doctorId = json['doctorId'];
     createdOn = json['createdOn'];
     if (json['healthRecordCollection'] != null) {
-      healthRecordCollection = new List<HealthRecordCollection>();
+      healthRecordCollection = <HealthRecordCollection>[];
       json['healthRecordCollection'].forEach((v) {
-        healthRecordCollection.add(new HealthRecordCollection.fromJson(v));
+        healthRecordCollection!.add(new HealthRecordCollection.fromJson(v));
       });
     }
   }
@@ -85,7 +86,7 @@ class Result {
     data['healthRecordTypeId'] = this.healthRecordTypeId;
     data['healthRecordTypeName'] = this.healthRecordTypeName;
     if (this.metadata != null) {
-      data['metadata'] = this.metadata.toJson();
+      data['metadata'] = this.metadata!.toJson();
     }
     data['userId'] = this.userId;
     data['isBookmarked'] = this.isBookmarked;
@@ -97,23 +98,23 @@ class Result {
     data['createdOn'] = this.createdOn;
     if (this.healthRecordCollection != null) {
       data['healthRecordCollection'] =
-          this.healthRecordCollection.map((v) => v.toJson()).toList();
+          this.healthRecordCollection!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Metadata {
-  HealthRecordCategory healthRecordCategory;
-  HealthRecordType healthRecordType;
-  String memoText;
-  bool hasVoiceNotes;
-  String dateOfVisit;
-  bool isDraft;
-  String sourceName;
-  String memoTextRaw;
-  String idType;
-  String fileName;
+  HealthRecordCategory? healthRecordCategory;
+  HealthRecordType? healthRecordType;
+  String? memoText;
+  bool? hasVoiceNotes;
+  String? dateOfVisit;
+  bool? isDraft;
+  String? sourceName;
+  String? memoTextRaw;
+  String? idType;
+  String? fileName;
 
   Metadata(
       {this.healthRecordCategory,
@@ -147,10 +148,10 @@ class Metadata {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.healthRecordCategory != null) {
-      data['healthRecordCategory'] = this.healthRecordCategory.toJson();
+      data['healthRecordCategory'] = this.healthRecordCategory!.toJson();
     }
     if (this.healthRecordType != null) {
-      data['healthRecordType'] = this.healthRecordType.toJson();
+      data['healthRecordType'] = this.healthRecordType!.toJson();
     }
     data['memoText'] = this.memoText;
     data['hasVoiceNotes'] = this.hasVoiceNotes;
@@ -165,18 +166,18 @@ class Metadata {
 }
 
 class HealthRecordCategory {
-  String id;
-  String categoryName;
-  String categoryDescription;
-  String logo;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  bool isDisplay;
-  bool isCreate;
-  bool isRead;
-  bool isEdit;
-  bool isDelete;
+  String? id;
+  String? categoryName;
+  String? categoryDescription;
+  String? logo;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isDisplay;
+  bool? isCreate;
+  bool? isRead;
+  bool? isEdit;
+  bool? isDelete;
 
   HealthRecordCategory(
       {this.id,
@@ -226,21 +227,21 @@ class HealthRecordCategory {
 }
 
 class HealthRecordType {
-  String id;
-  String name;
-  String description;
-  String logo;
-  String categoryId;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  bool isDisplay;
-  bool isCreate;
-  bool isRead;
-  bool isEdit;
-  bool isDelete;
-  bool isManualTranscription;
-  bool isAITranscription;
+  String? id;
+  String? name;
+  String? description;
+  String? logo;
+  String? categoryId;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isDisplay;
+  bool? isCreate;
+  bool? isRead;
+  bool? isEdit;
+  bool? isDelete;
+  bool? isManualTranscription;
+  bool? isAITranscription;
 
   HealthRecordType(
       {this.id,

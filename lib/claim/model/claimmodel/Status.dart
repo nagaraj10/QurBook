@@ -1,13 +1,14 @@
+
 class Status {
   dynamic id;
   dynamic code;
   dynamic name;
   dynamic description;
-  int sortOrder;
-  bool isActive;
+  int? sortOrder;
+  bool? isActive;
   dynamic createdBy;
   dynamic createdOn;
-  String lastModifiedOn;
+  String? lastModifiedOn;
 
   Status(
       {this.id,
@@ -25,8 +26,8 @@ class Status {
     code = json['code']!=null?json['code']:"";
     name = json['name']!=null?json['name']:"";
     description = json['description']!=null?json['description']:"";
-    sortOrder = json['sortOrder']!=null?json['sortOrder']:"";
-    isActive = json['isActive']!=null?json['isActive']:"";
+    sortOrder = json['sortOrder']!=null?json['sortOrder']:"" as int?;
+    isActive = json['isActive']!=null?json['isActive']:"" as bool?;
     createdBy = json['createdBy']!=null?json['createdBy']:"";
     createdOn = json['createdOn']!=null?json['createdOn']:"";
     lastModifiedOn = json['lastModifiedOn']!=null?json['lastModifiedOn']:"";

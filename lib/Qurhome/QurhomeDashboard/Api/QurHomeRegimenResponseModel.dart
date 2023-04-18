@@ -1,10 +1,11 @@
+
 import 'dart:convert';
 
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 
 class QurHomeRegimenResponseModel {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   QurHomeRegimenResponseModel({this.isSuccess, this.result});
 
@@ -18,15 +19,15 @@ class QurHomeRegimenResponseModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String date;
-  List<UpcomingActivities> upcomingActivities;
+  String? date;
+  List<UpcomingActivities>? upcomingActivities;
 
   Result(
       {this.date,
@@ -38,7 +39,7 @@ class Result {
     if (json['upcomingActivities'] != null) {
       upcomingActivities = [];
       json['upcomingActivities'].forEach((v) {
-        upcomingActivities.add(new UpcomingActivities.fromJson(v));
+        upcomingActivities!.add(new UpcomingActivities.fromJson(v));
       });
     }
   }
@@ -49,22 +50,22 @@ class Result {
 
     if (this.upcomingActivities != null) {
       data['upcomingActivities'] =
-          this.upcomingActivities.map((v) => v.toJson()).toList();
+          this.upcomingActivities!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class UpcomingActivities {
-  int eid;
-  String description;
-  String title;
-  DateTime estart;
-  String eend;
-  String otherinfo;
-  Uformname uformname;
-  Activityname activityname;
-  Metadata metadata;
+  int? eid;
+  String? description;
+  String? title;
+  DateTime? estart;
+  String? eend;
+  String? otherinfo;
+  Uformname? uformname;
+  Activityname? activityname;
+  Metadata? metadata;
 
   UpcomingActivities(
       {this.eid,

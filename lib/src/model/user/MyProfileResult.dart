@@ -1,3 +1,4 @@
+
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 
@@ -9,40 +10,40 @@ import 'userrelationshipcollection.dart';
 import 'AddressTypeModel.dart';
 
 class MyProfileResult {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
-  String communicationPreferences;
-  String medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  bool isCaregiver;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
+  String? communicationPreferences;
+  String? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  bool? isCaregiver;
   // String createdBy;
   // String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  String membershipOfferedBy;
-  List<UserAddressCollection3> userAddressCollection3;
-  List<UserContactCollection3> userContactCollection3;
-  List<UserRoleCollection3> userRoleCollection3;
-  List<UserRelationshipCollection> userRelationshipCollection;
-  AdditionalInfo additionalInfo;
-  List<UserProfileSettingCollection3> userProfileSettingCollection3;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  String? membershipOfferedBy;
+  List<UserAddressCollection3>? userAddressCollection3;
+  List<UserContactCollection3?>? userContactCollection3;
+  List<UserRoleCollection3>? userRoleCollection3;
+  List<UserRelationshipCollection>? userRelationshipCollection;
+  AdditionalInfo? additionalInfo;
+  List<UserProfileSettingCollection3>? userProfileSettingCollection3;
 
   MyProfileResult(
       {this.id,
@@ -110,33 +111,33 @@ class MyProfileResult {
     if (json.containsKey('membershipOfferedBy'))
       membershipOfferedBy = json['membershipOfferedBy'];
     if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = List<UserAddressCollection3>();
+      userAddressCollection3 = <UserAddressCollection3>[];
       json['userAddressCollection3'].forEach((v) {
-        userAddressCollection3.add(UserAddressCollection3.fromJson(v));
+        userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
       });
     }
     if (json['userContactCollection3'] != null) {
-      userContactCollection3 = List<UserContactCollection3>();
+      userContactCollection3 = <UserContactCollection3>[];
       json['userContactCollection3'].forEach((v) {
-        userContactCollection3.add(UserContactCollection3.fromJson(v));
+        userContactCollection3!.add(UserContactCollection3.fromJson(v));
       });
     }
     if (json['userRoleCollection3'] != null) {
       userRoleCollection3 = <UserRoleCollection3>[];
       json['userRoleCollection3'].forEach((v) {
-        userRoleCollection3.add(UserRoleCollection3.fromJson(v));
+        userRoleCollection3!.add(UserRoleCollection3.fromJson(v));
       });
     }
     if (json['userRelationshipCollection'] != null) {
       userRelationshipCollection = <UserRelationshipCollection>[];
       json['userRelationshipCollection'].forEach((v) {
-        userRelationshipCollection.add(UserRelationshipCollection.fromJson(v));
+        userRelationshipCollection!.add(UserRelationshipCollection.fromJson(v));
       });
     }
     if (json['userProfileSettingCollection3'] != null) {
-      userProfileSettingCollection3 = List<UserProfileSettingCollection3>();
+      userProfileSettingCollection3 = <UserProfileSettingCollection3>[];
       json['userProfileSettingCollection3'].forEach((v) {
-        userProfileSettingCollection3
+        userProfileSettingCollection3!
             .add(UserProfileSettingCollection3.fromJson(v));
       });
     }
@@ -182,42 +183,42 @@ class MyProfileResult {
     data['isCaregiver'] = isCaregiver;
     if (userAddressCollection3 != null) {
       data['userAddressCollection3'] =
-          userAddressCollection3.map((v) => v.toJson()).toList();
+          userAddressCollection3!.map((v) => v.toJson()).toList();
     }
     if (userContactCollection3 != null) {
       data['userContactCollection3'] =
-          userContactCollection3.map((v) => v.toJson()).toList();
+          userContactCollection3!.map((v) => v!.toJson()).toList();
     }
     if (userRoleCollection3 != null) {
       data['userRoleCollection3'] =
-          userRoleCollection3.map((v) => v.toJson()).toList();
+          userRoleCollection3!.map((v) => v.toJson()).toList();
     }
     if (userRelationshipCollection != null) {
       data['userRelationshipCollection'] =
-          userRelationshipCollection.map((v) => v.toJson()).toList();
+          userRelationshipCollection!.map((v) => v.toJson()).toList();
     }
     if (additionalInfo != null) {
-      data['additionalInfo'] = additionalInfo.toJson();
+      data['additionalInfo'] = additionalInfo!.toJson();
     }
     if (userProfileSettingCollection3 != null) {
       data['userProfileSettingCollection3'] =
-          userProfileSettingCollection3.map((v) => v.toJson()).toList();
+          userProfileSettingCollection3!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class AdditionalInfo {
-  int age;
-  String height;
-  String weight;
-  List<String> language;
-  String mrdNumber;
-  String uhidNumber;
-  String visitReason;
-  String patientHistory;
-  HeightObj heightObj;
+  int? age;
+  String? height;
+  String? weight;
+  List<String>? language;
+  String? mrdNumber;
+  String? uhidNumber;
+  String? visitReason;
+  String? patientHistory;
   String offSet = CommonUtil().setTimeZone();
+  HeightObj? heightObj;
 
   AdditionalInfo(
       {this.age,
@@ -251,14 +252,17 @@ class AdditionalInfo {
 
 
     try {
-      if (json.containsKey('language')) {
+      height = json['height'];
+      weight = json['weight'];
+      if (json.containsKey('language') && json['language'] != null) {
         language = json['language'].cast<String>();
       }
     } catch (e) {}
-    if (json.containsKey('mrdNumber')) mrdNumber = json['mrdNumber'];
-    if (json.containsKey('uhidNumber')) uhidNumber = json['uhidNumber'];
-    if (json.containsKey('visitReason')) visitReason = json['visitReason'];
-    if (json.containsKey('patientHistory')) {
+
+    if (json.containsKey('mrdNumber') && json['mrdNumber'] != null) mrdNumber = json['mrdNumber'];
+    if (json.containsKey('uhidNumber') && json['uhidNumber'] != null) uhidNumber = json['uhidNumber'];
+    if (json.containsKey('visitReason') && json['visitReason'] != null) visitReason = json['visitReason'];
+    if (json.containsKey('patientHistory') && json['patientHistory'] != null) {
       patientHistory = json['patientHistory'];
     }
   }
@@ -274,7 +278,7 @@ class AdditionalInfo {
     data['visitReason'] = visitReason;
     data['patientHistory'] = patientHistory;
     if (this.heightObj != null) {
-      data['height'] = this.heightObj.toJson();
+      data['height'] = this.heightObj!.toJson();
     }
     data[KEY_OffSet] = CommonUtil().setTimeZone();
     return data;
@@ -282,14 +286,14 @@ class AdditionalInfo {
 }
 
 class UserContactCollection3 {
-  String id;
-  String phoneNumber;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String email;
-  AddressType phoneNumberType;
+  String? id;
+  String? phoneNumber;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? email;
+  AddressType? phoneNumberType;
 
   UserContactCollection3(
       {this.id,
@@ -324,18 +328,18 @@ class UserContactCollection3 {
     data['lastModifiedOn'] = lastModifiedOn;
     data['email'] = email;
     if (phoneNumberType != null) {
-      data['phoneNumberType'] = phoneNumberType.toJson();
+      data['phoneNumberType'] = phoneNumberType!.toJson();
     }
     return data;
   }
 }
 
 class UserRoleCollection3 {
-  String id;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  Role role;
+  String? id;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  Role? role;
 
   UserRoleCollection3(
       {this.id, this.isActive, this.createdOn, this.lastModifiedOn, this.role});
@@ -355,22 +359,22 @@ class UserRoleCollection3 {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (role != null) {
-      data['role'] = role.toJson();
+      data['role'] = role!.toJson();
     }
     return data;
   }
 }
 
 class Role {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String roleCode;
-  String description;
-  bool isSystemRole;
-  bool isEnabled;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? roleCode;
+  String? description;
+  bool? isSystemRole;
+  bool? isEnabled;
 
   Role(
       {this.id,
@@ -411,12 +415,12 @@ class Role {
 }
 
 class UserProfileSettingCollection3 {
-  String id;
-  String userId;
-  ProfileSetting profileSetting;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? userId;
+  ProfileSetting? profileSetting;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   UserProfileSettingCollection3(
       {this.id,
@@ -442,7 +446,7 @@ class UserProfileSettingCollection3 {
     data['id'] = id;
     data['userId'] = userId;
     if (profileSetting != null) {
-      data['profileSetting'] = profileSetting.toJson();
+      data['profileSetting'] = profileSetting!.toJson();
     }
     data['isActive'] = isActive;
     data['createdOn'] = createdOn;
@@ -452,8 +456,8 @@ class UserProfileSettingCollection3 {
 }
 
 class HeightObj {
-  String valueFeet;
-  String valueInches;
+  String? valueFeet;
+  String? valueInches;
 
   HeightObj({this.valueFeet, this.valueInches});
 

@@ -24,10 +24,10 @@ Future<String> _loadDeviceDataAsset() async {
 
 class DevicesViewModel with ChangeNotifier {
   final GetGFDataFromFHBRepo _helper = GetGFDataFromFHBRepo();
-  List<DeviceData> deviceList;
+  List<DeviceData>? deviceList;
 
   List<DeviceData> getDeviceValues() {
-    var devicelist = List<DeviceData>();
+    var devicelist = <DeviceData>[];
     devicelist.add(DeviceData(
         title: Constants.STR_BP_MONITOR,
         icon: Constants.Devices_BP,
@@ -85,13 +85,13 @@ class DevicesViewModel with ChangeNotifier {
     return devicelist;
   }
 
-  Future<List<DeviceData>> getDevices() async {
+  Future<List<DeviceData>?> getDevices() async {
     deviceList = [];
     deviceList = getDeviceValues();
     return deviceList;
   }
 
-  Future<LastMeasureSyncValues> fetchDeviceDetails() async {
+  Future<LastMeasureSyncValues?> fetchDeviceDetails() async {
     try {
       var resp = await _helper.getLatestDeviceHealthRecord();
       final res = json.encode(resp);
@@ -103,7 +103,7 @@ class DevicesViewModel with ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<dynamic>> fetchBPDetails() async {
+  Future<List<dynamic>?> fetchBPDetails() async {
     try {
       var resp = await _helper.getBPData();
       if (resp == null) {
@@ -113,25 +113,25 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
       List<BPResult> ret = [];
       //List<HeartRateEntity> heartRate = new List();
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bloodPressureCollection.isEmpty) {
+        if (dataElement.bloodPressureCollection!.isEmpty) {
           return [];
         }
-        dataElement.bloodPressureCollection.forEach((bpElement) {
+        dataElement.bloodPressureCollection!.forEach((bpElement) {
           var bpList = BPResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: bpElement.startDateTime.toIso8601String(),
-              endDateTime: bpElement.endDateTime.toIso8601String(),
+              sourceType: dataElement.sourceType!.description,
+              startDateTime: bpElement.startDateTime!.toIso8601String(),
+              endDateTime: bpElement.endDateTime!.toIso8601String(),
               systolic: bpElement.systolic,
               diastolic: bpElement.diastolic,
-              bpm: dataElement.heartRateCollection.isNotEmpty
-                  ? dataElement.heartRateCollection[0].bpm ?? null
+              bpm: dataElement.heartRateCollection!.isNotEmpty
+                  ? dataElement.heartRateCollection![0].bpm ?? null
                   : null,
               deviceId: dataElement.deviceId,
               dateTimeValue: bpElement.startDateTime);
@@ -158,7 +158,7 @@ class DevicesViewModel with ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<dynamic>> fetchGLDetails() async {
+  Future<List<dynamic>?> fetchGLDetails() async {
     try {
       var resp = await _helper.getBloodGlucoseData();
       if (resp == null) {
@@ -168,29 +168,29 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
-      var ret = List<GVResult>();
+      var ret = <GVResult>[];
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bloodGlucoseCollection.isEmpty) {
+        if (dataElement.bloodGlucoseCollection!.isEmpty) {
           return [];
         }
-        dataElement.bloodGlucoseCollection.forEach((bgValue) {
+        dataElement.bloodGlucoseCollection!.forEach((bgValue) {
           var bgList = GVResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: bgValue.startDateTime.toIso8601String(),
-              endDateTime: bgValue.endDateTime.toIso8601String(),
+              sourceType: dataElement.sourceType!.description,
+              startDateTime: bgValue.startDateTime!.toIso8601String(),
+              endDateTime: bgValue.endDateTime!.toIso8601String(),
               bloodGlucoseLevel: bgValue.bloodGlucoseLevel,
               bgUnit:
-                  (bgValue.bgUnit == null) ? null : bgValue.bgUnit.description,
+                  (bgValue.bgUnit == null) ? null : bgValue.bgUnit!.description,
               mealContext: (bgValue.mealContext == null)
                   ? null
-                  : bgValue.mealContext.description,
+                  : bgValue.mealContext!.description,
               mealType: (bgValue.mealType == null)
                   ? null
-                  : bgValue.mealType.description,
+                  : bgValue.mealType!.description,
               deviceId: dataElement.deviceId,
               dateTimeValue: bgValue.startDateTime);
           ret.add(bgList);
@@ -210,7 +210,7 @@ class DevicesViewModel with ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<dynamic>> fetchOXYDetails(String response) async {
+  Future<List<dynamic>?> fetchOXYDetails(String response) async {
     try {
       var resp = await _helper.getOxygenSaturationData();
       if (resp == null) {
@@ -220,29 +220,29 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
       var ret = <OxyResult>[];
       //List<HeartRateEntity> heartRate = new List();
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.oxygenSaturationCollection.isEmpty &&
-            dataElement.heartRateCollection.isEmpty) {
+        if (dataElement.oxygenSaturationCollection!.isEmpty &&
+            dataElement.heartRateCollection!.isEmpty) {
           return [];
         }
-        dataElement.oxygenSaturationCollection.forEach((oxyValue) {
+        dataElement.oxygenSaturationCollection!.forEach((oxyValue) {
           var oxyList = OxyResult(
-            sourceType: dataElement.sourceType.description,
-            startDateTime: oxyValue.startDateTime.toIso8601String(),
-            endDateTime: oxyValue.endDateTime.toIso8601String(),
+            sourceType: dataElement.sourceType!.description,
+            startDateTime: oxyValue.startDateTime!.toIso8601String(),
+            endDateTime: oxyValue.endDateTime!.toIso8601String(),
             oxygenSaturation: oxyValue.oxygenSaturation,
             deviceId: dataElement.deviceId,
             dateTimeValue: oxyValue.startDateTime,
-            bpm: dataElement.heartRateCollection.isEmpty
+            bpm: dataElement.heartRateCollection!.isEmpty
                 ? ''
-                : dataElement.heartRateCollection[0].bpm != null
-                    ? dataElement.heartRateCollection[0].bpm.toString()
+                : dataElement.heartRateCollection![0].bpm != null
+                    ? dataElement.heartRateCollection![0].bpm.toString()
                     : '',
           );
           ret.add(oxyList);
@@ -267,7 +267,7 @@ class DevicesViewModel with ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<dynamic>> fetchTMPDetails() async {
+  Future<List<dynamic>?> fetchTMPDetails() async {
     try {
       var resp = await _helper.getBodyTemperatureData();
       if (resp == null) {
@@ -277,29 +277,28 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<TMPResult> ret = [];
       List<dynamic> finalResult;
-      deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bodyTemperatureCollection.isEmpty) {
+      deviceIntervalData?.forEach((dataElement) {
+        if (dataElement?.bodyTemperatureCollection?.isEmpty) {
           return [];
         }
-        dataElement.bodyTemperatureCollection.forEach((tempValue) {
+        dataElement?.bodyTemperatureCollection?.forEach((tempValue) {
           var tempList = TMPResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: tempValue.startDateTime.toIso8601String(),
-              endDateTime: tempValue.endDateTime.toIso8601String(),
-              temperature: tempValue.temperature.toString(),
-              temperatureUnit:
-                  tempValue.temperatureUnit.code.capitalizeFirstofEach,
-              deviceId: dataElement.deviceId,
-              dateTimeValue: tempValue.startDateTime);
+              sourceType: dataElement?.sourceType?.description ?? '',
+              startDateTime: tempValue?.startDateTime?.toIso8601String() ?? '',
+              endDateTime: tempValue?.endDateTime?.toIso8601String() ?? '',
+              temperature: tempValue?.temperature ?? '',
+              temperatureUnit: getUnit(tempValue?.temperatureUnit?.code),
+              deviceId: dataElement?.deviceId ?? '',
+              dateTimeValue: tempValue?.startDateTime ?? '');
           ret.add(tempList);
         });
       });
-      if (deviceIntervalData.isEmpty || deviceIntervalData == null) {
+      if (deviceIntervalData?.isEmpty || deviceIntervalData == null) {
         deviceIntervalData = [];
       }
 
@@ -315,7 +314,7 @@ class DevicesViewModel with ChangeNotifier {
     }
   }
 
-  Future<List<dynamic>> fetchWVDetails(String response) async {
+  Future<List<dynamic>?> fetchWVDetails(String response) async {
     try {
       var resp = await _helper.getWeightData();
       if (resp == null) {
@@ -325,23 +324,23 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<WVResult> ret = [];
       List<dynamic> finalResult;
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bodyWeightCollection.isEmpty) {
+        if (dataElement.bodyWeightCollection!.isEmpty) {
           return [];
         }
-        dataElement.bodyWeightCollection.forEach((weightValue) {
+        dataElement.bodyWeightCollection!.forEach((weightValue) {
           var weightList = WVResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: weightValue.startDateTime.toIso8601String(),
-              endDateTime: weightValue.endDateTime.toIso8601String(),
+              sourceType: dataElement.sourceType!.description,
+              startDateTime: weightValue.startDateTime!.toIso8601String(),
+              endDateTime: weightValue.endDateTime!.toIso8601String(),
               weight: weightValue.weight.toString(),
               weightUnit: weightValue.weightUnit != null
-                  ? weightValue.weightUnit.code
+                  ? getUnit(weightValue.weightUnit!.code)
                   : 'kg',
               deviceId: dataElement.deviceId,
               dateTimeValue: weightValue.startDateTime);
@@ -364,7 +363,7 @@ class DevicesViewModel with ChangeNotifier {
     }
   }
 
-  Future<List<HRResult>> fetchHeartRateDetails(String response) async {
+  Future<List<HRResult>?> fetchHeartRateDetails(String response) async {
     try {
       var resp = await _helper.getHeartRateData();
       if (resp == null) {
@@ -374,25 +373,35 @@ class DevicesViewModel with ChangeNotifier {
       if (!(response ?? false)) {
         return [];
       }
-      var parsedResponse = json.decode(resp.toString())[dataResult] as List;
+      var parsedResponse = json.decode(resp.toString())[dataResult]; //as List;
       final deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
-      var ret = List<HRResult>();
+      var ret = <HRResult>[];
 
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.heartRateCollection.isEmpty) {
+        if (dataElement.heartRateCollection!.isEmpty) {
           return [];
         }
-        dataElement.heartRateCollection.forEach((hearRateValue) {
+        dataElement.heartRateCollection!.forEach((hearRateValue) {
           var heartRateList = HRResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: hearRateValue.startDateTime.toIso8601String(),
-              endDateTime: hearRateValue.endDateTime.toIso8601String(),
+              sourceType: dataElement.sourceType!.description,
+              startDateTime: hearRateValue.startDateTime!.toIso8601String(),
+              endDateTime: hearRateValue.endDateTime!.toIso8601String(),
               bpm: hearRateValue.bpm);
           ret.add(heartRateList);
         });
       });
       return ret;
     } catch (e) {}
+  }
+
+  getUnit(String unit) {
+    if (unit != null && unit != '') {
+      if (unit.length == 1) {
+        return unit.toUpperCase();
+      } else {
+        return unit.capitalizeFirstofEach;
+      }
+    }
   }
 }

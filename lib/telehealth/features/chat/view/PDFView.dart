@@ -55,7 +55,7 @@ class _PDFViewState extends State<PDFView> {
                     ),
                   )
                 : PDFViewer(
-                    document: controller.document,
+                    document: controller.document!,
                   );
           },
         ),

@@ -1,9 +1,10 @@
+
 import 'MyProviderResponseData.dart';
 
 class MyProvidersResponse {
-  bool isSuccess;
-  String message;
-  MyProvidersResponseData result;
+  bool? isSuccess;
+  String? message;
+  MyProvidersResponseData? result;
 
   MyProvidersResponse({this.isSuccess, this.message, this.result});
 
@@ -22,7 +23,7 @@ class MyProvidersResponse {
     data['isSuccess'] = isSuccess;
     data['message'] = message;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }

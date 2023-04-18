@@ -1,3 +1,6 @@
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
@@ -32,7 +35,7 @@ import '../../common/errors_widget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyFamilyDetailView extends StatefulWidget {
-  MyFamilyDetailViewArguments arguments;
+  MyFamilyDetailViewArguments? arguments;
 
   MyFamilyDetailView({this.arguments});
 
@@ -44,10 +47,10 @@ class MyFamilyDetailView extends StatefulWidget {
 
 class MyFamilyDetailViewState extends State<MyFamilyDetailView>
     with SingleTickerProviderStateMixin {
-  TabController tabController;
-  int activeTabIndex = 0;
-  MyFamilyDetailViewBloc myFamilyDetailViewBloc;
-  List<CategoryResult> categoryData;
+  TabController? tabController;
+  int? activeTabIndex = 0;
+  MyFamilyDetailViewBloc? myFamilyDetailViewBloc;
+  List<CategoryResult>? categoryData;
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
 
   @override
@@ -56,18 +59,18 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
     super.initState();
 
     tabController = TabController(length: 2, vsync: this);
-    activeTabIndex = widget.arguments.index;
+    activeTabIndex = widget.arguments!.index;
 
-    tabController.addListener(_setActiveTabIndex);
-    tabController.animateTo(activeTabIndex);
+    tabController!.addListener(_setActiveTabIndex);
+    tabController!.animateTo(activeTabIndex!);
 
     myFamilyDetailViewBloc = MyFamilyDetailViewBloc();
     //getCategories();
 
-    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.child.id;
+    myFamilyDetailViewBloc!.userId = widget.arguments!.sharedbyme!.child!.id;
 
     PreferenceUtil.saveString(
-        Constants.KEY_FAMILYMEMBERID, myFamilyDetailViewBloc.userId);
+        Constants.KEY_FAMILYMEMBERID, myFamilyDetailViewBloc!.userId!);
   }
 
   @override
@@ -82,7 +85,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   }
 
   void _setActiveTabIndex() {
-    activeTabIndex = tabController.index;
+    activeTabIndex = tabController!.index;
   }
 
   @override
@@ -134,25 +137,25 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                       CommonConstants.CAT_JSON_HOSPITAL);
                 }
 
-                for (final e in categoryData) {
+                for (final e in categoryData!) {
                   if (e.categoryDescription ==
                       CommonConstants.categoryDescriptionIDDocs) {
                     PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '')
                         .then((onValue) {
                       PreferenceUtil.saveString(
-                              Constants.KEY_CATEGORYNAME, e.categoryName)
+                              Constants.KEY_CATEGORYNAME, e.categoryName!)
                           .then((onValue) {
                         PreferenceUtil.saveString(
-                                Constants.KEY_CATEGORYID, e.id)
+                                Constants.KEY_CATEGORYID, e.id!)
                             .then((value) {
                           PreferenceUtil.saveString(
                                   Constants.KEY_FAMILYMEMBERID,
-                                  widget.arguments.sharedbyme.child.id)
+                                  widget.arguments!.sharedbyme!.child!.id!)
                               .then((value) {
                             Navigator.pushNamed(context, router.rt_TakePicture)
                                 .then((value) {
-                              myFamilyDetailViewBloc.getHelthReportLists(
-                                  myFamilyDetailViewBloc.userId);
+                              myFamilyDetailViewBloc!.getHelthReportLists(
+                                  myFamilyDetailViewBloc!.userId!);
                             });
                           });
                         });
@@ -175,7 +178,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   }
 
   Widget getValuesFromSharedPrefernce() {
-    return FutureBuilder<List<CategoryResult>>(
+    return FutureBuilder<List<CategoryResult>?>(
       future: getCategories(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -193,15 +196,15 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
   Widget getHealthReportToDisplayInBody() {
     myFamilyDetailViewBloc = MyFamilyDetailViewBloc();
-    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.child.id;
+    myFamilyDetailViewBloc!.userId = widget.arguments!.sharedbyme!.child!.id;
     //getCategories();
-    myFamilyDetailViewBloc.getHelthReportLists(myFamilyDetailViewBloc.userId);
+    myFamilyDetailViewBloc!.getHelthReportLists(myFamilyDetailViewBloc!.userId!);
 
     return StreamBuilder<ApiResponse<HealthRecordList>>(
-      stream: myFamilyDetailViewBloc.healthReportStreams,
+      stream: myFamilyDetailViewBloc!.healthReportStreams,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Scaffold(
                 backgroundColor: Colors.white,
@@ -226,7 +229,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
             case Status.COMPLETED:
               myFamilyDetailViewBloc = null;
 
-              return displayTabBarViewInFamilyDetail(snapshot.data.data);
+              return displayTabBarViewInFamilyDetail(snapshot.data!.data);
               break;
           }
         } else {
@@ -239,7 +242,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
     );
   }
 
-  Widget displayTabBarViewInFamilyDetail(HealthRecordList completeData) {
+  Widget displayTabBarViewInFamilyDetail(HealthRecordList? completeData) {
     return TabBarView(
       controller: tabController,
       children: [
@@ -253,8 +256,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
     );
   }
 
-  Future<List<CategoryResult>> getCategories() async {
-    final categoryDatalist = await myFamilyDetailViewBloc.getCategoryLists();
+  Future<List<CategoryResult>?> getCategories() async {
+    final categoryDatalist = await (myFamilyDetailViewBloc!.getCategoryLists() as FutureOr<CategoryDataList>);
     categoryData = categoryDatalist.result;
     return categoryData;
   }
@@ -262,13 +265,13 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   Widget getResponseFromApiWidget() {
     myFamilyDetailViewBloc = MyFamilyDetailViewBloc();
 
-    myFamilyDetailViewBloc.getCategoryLists();
+    myFamilyDetailViewBloc!.getCategoryLists();
 
     return StreamBuilder<ApiResponse<CategoryDataList>>(
-      stream: myFamilyDetailViewBloc.categoryListStreams,
+      stream: myFamilyDetailViewBloc!.categoryListStreams,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
@@ -280,15 +283,15 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
             case Status.ERROR:
               return FHBBasicWidget.getRefreshContainerButton(
-                  snapshot.data.message, () {
+                  snapshot.data!.message, () {
                 setState(() {});
               });
               break;
 
             case Status.COMPLETED:
-              if (snapshot.data.data.result != null &&
-                  snapshot.data.data.result.isNotEmpty) {
-                categoryData = snapshot.data.data.result;
+              if (snapshot.data!.data!.result != null &&
+                  snapshot.data!.data!.result!.isNotEmpty) {
+                categoryData = snapshot.data!.data!.result;
                 return getHealthReportToDisplayInBody();
               } else {
                 return Container(

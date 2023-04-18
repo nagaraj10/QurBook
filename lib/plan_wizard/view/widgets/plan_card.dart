@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -11,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class PlanCard extends StatelessWidget {
   const PlanCard({
-    @required this.healthCondition,
+    required this.healthCondition,
   });
 
   final MenuItem healthCondition;
@@ -24,16 +25,16 @@ class PlanCard extends StatelessWidget {
             10.0.sp,
           ),
           elevation: 5.0.sp,
-          color: HexColor((healthCondition?.metadata?.color?.length == 7
-                  ? healthCondition?.metadata?.color
+          color: HexColor((healthCondition.metadata?.color?.length == 7
+                  ? healthCondition.metadata?.color
                   : 'FFFFFF') ??
               'FFFFFF'),
           child: InkWell(
             onTap: () {
               Provider.of<PlanWizardViewModel>(context, listen: false)
-                  .selectedTag = healthCondition?.tags ?? '';
+                  .selectedTag = healthCondition.tags;
               Provider.of<PlanWizardViewModel>(context, listen: false)
-                  .healthTitle = healthCondition?.title ?? '';
+                  .healthTitle = healthCondition.title ?? '';
               Provider.of<PlanWizardViewModel>(context, listen: false)
                   .changeCurrentPage(1);
 
@@ -41,8 +42,8 @@ class PlanCard extends StatelessWidget {
               firebase.trackEvent("on_plan_added",
                   {
                     "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-                    "title" : healthCondition?.title ?? '',
-                    "tag" : healthCondition?.tags ?? ''
+                    "title" : healthCondition.title ?? '',
+                    "tag" : healthCondition.tags ?? ''
                   }
               );
             },
@@ -58,14 +59,14 @@ class PlanCard extends StatelessWidget {
                     children: [
                       Container(
                         constraints: BoxConstraints(
-                          maxHeight: (constraints?.maxHeight ?? 97.0.h) / 2,
+                          maxHeight: (constraints.maxHeight) / 2,
                         ),
                         margin: EdgeInsets.only(
                           bottom: 3.0.h,
                         ),
                         child: CommonUtil().customImage(
-                          healthCondition?.metadata?.icon ?? '',
-                          planInitial: healthCondition?.title?.substring(0, 1),
+                          healthCondition.metadata?.icon ?? '',
+                          planInitial: healthCondition.title?.substring(0, 1),
                           // defaultWidget: ClipOval(
                           //     child: CircleAvatar(
                           //   radius: 32,
@@ -85,7 +86,7 @@ class PlanCard extends StatelessWidget {
                       ),
                       Flexible(
                         child: Text(
-                          healthCondition.title,
+                          healthCondition.title!,
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,

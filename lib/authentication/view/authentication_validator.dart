@@ -1,9 +1,10 @@
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import '../constants/constants.dart';
 
 class AuthenticationValidator {
-  String charValidation(String name, String pattern, String validText) {
+  String? charValidation(String name, String pattern, String validText) {
     var regexName = RegExp(pattern);
     if (name.isEmpty) {
       return strUserNameCantEmpty;
@@ -13,7 +14,7 @@ class AuthenticationValidator {
     return null;
   }
 
-  String loginPasswordValidation(
+  String? loginPasswordValidation(
       String password, String pattern, String validText) {
     if (password.isEmpty) {
       return strPassCantEmpty;
@@ -23,7 +24,7 @@ class AuthenticationValidator {
     return null;
   }
 
-  String passwordValidation(String password, String pattern, String validText) {
+  String? passwordValidation(String password, String pattern, String validText) {
     var regexPassword = RegExp(pattern);
     if (password.isEmpty) {
       return strPassCantEmpty;
@@ -35,7 +36,7 @@ class AuthenticationValidator {
     return null;
   }
 
-  String confirmPasswordValidation(String password, String confirmpassword,
+  String? confirmPasswordValidation(String password, String? confirmpassword,
       String pattern, String validText) {
     final regexPassword = RegExp(pattern);
     if (password.isEmpty) {
@@ -50,7 +51,7 @@ class AuthenticationValidator {
     return null;
   }
 
-  String emailValidation(String email, String pattern, String validText) {
+  String? emailValidation(String email, String pattern, String validText) {
     var regexEmail = RegExp(pattern);
     if (email.isEmpty) {
       return strEmailCantEmpty;
@@ -62,7 +63,7 @@ class AuthenticationValidator {
     return null;
   }
 
-  String phoneValidation(String phone, String pattern, String validText) {
+  String? phoneValidation(String phone, String pattern, String validText) {
     var regexPhone = RegExp(pattern);
     if (phone.isEmpty) {
       return strPhoneCantEmpty;
@@ -72,7 +73,7 @@ class AuthenticationValidator {
     return null;
   }
 
-  String phoneOtpValidation(String otp, String pattern, String validText) {
+  String? phoneOtpValidation(String otp, String pattern, String validText) {
     final regexPhone = RegExp(pattern);
     if (otp.isEmpty) {
       return strOtpCantEmpty;

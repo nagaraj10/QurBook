@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../constants/constants.dart';
@@ -8,17 +9,17 @@ import 'or_divider.dart';
 
 class ConfirmViaCallWidget extends StatelessWidget {
   ConfirmViaCallWidget({
-    @required this.ivrNumbersList,
+    required this.ivrNumbersList,
   });
 
-  List<String> ivrNumbersList;
+  List<String>? ivrNumbersList;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
         Provider.of<OtpViewModel>(context, listen: false)
-            ?.updateDialogStatus(false);
+            .updateDialogStatus(false);
         return Future.value(true);
       },
       child: SimpleDialog(
@@ -65,13 +66,13 @@ class ConfirmViaCallWidget extends StatelessWidget {
     var phoneWidgets = <Widget>[];
     primaryNumber;
     var index = 0;
-    for (final ivrNumber in ivrNumbersList) {
-      phoneWidgets.add((ivrNumber ?? '').isNotEmpty
+    for (final ivrNumber in ivrNumbersList!) {
+      phoneWidgets.add((ivrNumber).isNotEmpty
           ? Column(
               children: [
                 if (index != 0) OrDivider(),
                 CallDialWidget(
-                  phoneNumber: ivrNumber ?? '',
+                  phoneNumber: ivrNumber,
                   phoneNumberName:
                       index == 0 ? primaryNumber : '$alternateNumber $index',
                 ),

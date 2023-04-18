@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -10,7 +11,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
 class NonAdheranceSettingsScreen extends StatefulWidget {
-  const NonAdheranceSettingsScreen({Key key}) : super(key: key);
+  const NonAdheranceSettingsScreen({Key? key}) : super(key: key);
 
   @override
   _NonAdheranceSettingsScreenState createState() =>
@@ -66,8 +67,8 @@ class _NonAdheranceSettingsScreenState
                             'Please re-try after some time',
                           ),
                         )
-                      : val.familyResponseList.result.sharedToUsers.length != 0
-                          ? showData(val.familyResponseList.result.sharedToUsers)
+                      : val.familyResponseList!.result!.sharedToUsers!.length != 0
+                          ? showData(val.familyResponseList!.result!.sharedToUsers!)
                           : const Center(
                               child: Text(
                                 'No Patients Found',
@@ -96,23 +97,23 @@ class _NonAdheranceSettingsScreenState
                       child: DropdownButton<String>(
                         elevation: 16,
                         value:sharedToUsers[index].remainderFor,
-                        onChanged: (String newValue) {
-                          String id="";
-                          controller.remainderForModel.result.forEach((element) {
+                        onChanged: (String? newValue) {
+                          String? id="";
+                          controller.remainderForModel.result!.forEach((element) {
                             if(element.name==newValue){
                               id=element.id;
                             }
                           });
-                          if(sharedToUsers[index].isNewUser){
-                            controller.saveNonAdherance(sharedToUsers[index].remainderMins.split(" ")[0], sharedToUsers[index].parent.id, id);
+                          if(sharedToUsers[index].isNewUser!){
+                            controller.saveNonAdherance(sharedToUsers[index].remainderMins!.split(" ")[0], sharedToUsers[index].parent!.id!, id!);
                           }else{
-                            controller.editNonAdherance(sharedToUsers[index].nonAdheranceId,sharedToUsers[index].remainderMins.split(" ")[0], sharedToUsers[index].parent.id, id);
+                            controller.editNonAdherance(sharedToUsers[index].nonAdheranceId!,sharedToUsers[index].remainderMins!.split(" ")[0], sharedToUsers[index].parent!.id!, id!);
                           }
                         },
-                        items: controller.remainderFor.map<DropdownMenuItem<String>>((String value) {
+                        items: controller.remainderFor.map<DropdownMenuItem<String>>((String? value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: Text(value!),
                           );
                         }).toList(),
                       ),
@@ -122,11 +123,11 @@ class _NonAdheranceSettingsScreenState
                       child: DropdownButton<String>(
                         elevation: 16,
                         value: sharedToUsers[index].remainderMins,
-                        onChanged: (String newValue) {
-                          if(sharedToUsers[index].isNewUser){
-                            controller.saveNonAdherance(newValue.split(" ")[0], sharedToUsers[index].parent.id, sharedToUsers[index].remainderForId);
+                        onChanged: (String? newValue) {
+                          if(sharedToUsers[index].isNewUser!){
+                            controller.saveNonAdherance(newValue!.split(" ")[0], sharedToUsers[index].parent!.id!, sharedToUsers[index].remainderForId!);
                           }else{
-                            controller.editNonAdherance(sharedToUsers[index].nonAdheranceId,newValue.split(" ")[0], sharedToUsers[index].parent.id, sharedToUsers[index].remainderForId);
+                            controller.editNonAdherance(sharedToUsers[index].nonAdheranceId!,newValue!.split(" ")[0], sharedToUsers[index].parent!.id!, sharedToUsers[index].remainderForId!);
                           }
                         },
                         items: <String>['15 Mins', '30 Mins', '60 Mins']
@@ -148,12 +149,12 @@ class _NonAdheranceSettingsScreenState
   }
 
   getMemberName(SharedToUsers data){
-    String fulName="";
-    if (data?.parent?.firstName != null && data?.parent?.firstName != '') {
-      fulName = data?.parent?.firstName;
+    String? fulName="";
+    if (data.parent?.firstName != null && data.parent?.firstName != '') {
+      fulName = data.parent!.firstName;
     }
-    if (data?.parent?.lastName != null && data?.parent?.lastName != '') {
-      fulName = fulName + ' ' + data?.parent?.lastName;
+    if (data.parent!.lastName != null && data.parent!.lastName != '') {
+      fulName = fulName! + ' ' + data.parent!.lastName!;
     }
     return fulName;
   }

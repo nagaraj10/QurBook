@@ -1,16 +1,17 @@
+
 import '../../constants/fhb_parameters.dart';
 import '../../src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
 import 'dart:convert' show json;
 
 class GetGFDataFromFHBRepo {
-  DeviceHealthRecord _deviceHealthRecord;
+  DeviceHealthRecord? _deviceHealthRecord;
   Map<String, dynamic> body = {};
 
   Future<dynamic> _getDataByDataType(String params,{String filter=''}) async {
     try {
       _deviceHealthRecord = DeviceHealthRecord();
       print(params);
-      var response = await _deviceHealthRecord.queryBydeviceInterval(params,filter: filter);
+      var response = await _deviceHealthRecord!.queryBydeviceInterval(params,filter: filter);
       return response;
     } catch (e) {}
   }
@@ -128,7 +129,7 @@ class GetGFDataFromFHBRepo {
       if (_deviceHealthRecord == null) {
         _deviceHealthRecord = DeviceHealthRecord();
       }
-      final response = await _deviceHealthRecord.getlastMeasureSync();
+      final response = await _deviceHealthRecord!.getlastMeasureSync();
       return response;
     } catch (e) {}
   }

@@ -1,10 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 class WaveAnimation extends StatefulWidget {
-  final String patName;
+  final String? patName;
 
   WaveAnimation({this.patName});
 
@@ -14,7 +15,7 @@ class WaveAnimation extends StatefulWidget {
 
 class _WaveAnimationState extends State<WaveAnimation>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
   var regController = Get.find<QurhomeRegimenController>();
 
   @override
@@ -59,7 +60,7 @@ class _WaveAnimationState extends State<WaveAnimation>
               width: 60,
               child: Center(
                 child: Text(
-                  '${widget.patName[0].toUpperCase() ?? 'U'}',
+                  '${widget.patName![0].toUpperCase()}',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,

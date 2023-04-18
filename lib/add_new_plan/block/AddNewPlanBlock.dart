@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
@@ -10,13 +11,13 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class AddNewBlock implements BaseBloc {
 
-  StreamController addPlanController;
+  StreamController? addPlanController;
 
 
   StreamSink<ApiResponse<AddPlanSuccessResponse>> get addPlanSink =>
-      addPlanController.sink;
+      addPlanController!.sink as StreamSink<ApiResponse<AddPlanSuccessResponse>>;
   Stream<ApiResponse<AddPlanSuccessResponse>> get addPlanStream =>
-      addPlanController.stream;
+      addPlanController!.stream as Stream<ApiResponse<AddPlanSuccessResponse>>;
 
   ApiBaseHelper _helper = ApiBaseHelper();
 
@@ -30,9 +31,9 @@ class AddNewBlock implements BaseBloc {
         StreamController<ApiResponse<AddPlanSuccessResponse>>();
   }
 
-  Future<AddPlanSuccessResponse> addNewPlan(
+  Future<AddPlanSuccessResponse?> addNewPlan(
       String jsonData,) async {
-    AddPlanSuccessResponse addPlanSuccessResponse;
+    AddPlanSuccessResponse? addPlanSuccessResponse;
     addPlanSink.add(ApiResponse.loading(variable.strSubmitting));
     try {
       final response = await _helper
@@ -45,7 +46,7 @@ class AddNewBlock implements BaseBloc {
     return addPlanSuccessResponse;
   }
 
-  Future<List<PlanCodeResult>> getPlanCode() async {
+  Future<List<PlanCodeResult>?> getPlanCode() async {
     PlanCode planCode;
     AddFamilyUserInfoRepository resposiory = AddFamilyUserInfoRepository();
     planCode = await resposiory

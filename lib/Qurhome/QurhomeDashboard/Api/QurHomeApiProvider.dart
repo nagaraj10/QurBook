@@ -1,3 +1,4 @@
+
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
@@ -57,10 +58,10 @@ class QurHomeApiProvider {
       return regimentsData;
 
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.get(
+      responseJson = (await ApiServices.get(
         '${CommonUtil.BASE_URL_FROM_RES}kiosk/$userId?date=$date',
         headers: header,
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -119,11 +120,11 @@ class QurHomeApiProvider {
     var data = {"userHubId": hubId};
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.post(
+      responseJson = (await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-hub/unpair-hub',
         headers: header,
         body: json.encode(data),
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -143,10 +144,10 @@ class QurHomeApiProvider {
     var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.get(
+      responseJson = (await ApiServices.get(
         '${Constants.BASE_URL}$qr_getCareCoordinatorId$userId',
         headers: header,
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -166,15 +167,15 @@ class QurHomeApiProvider {
   }
 
   Future<bool> callMessagingAPI(
-      {String token, CallPushNSModel callModel}) async {
+      {String? token, required CallPushNSModel callModel}) async {
     bool isCallSent = false;
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
-      http.Response res = await ApiServices.post(
+      http.Response res = (await ApiServices.post(
         Constants.BASE_URL + qr_messaging,
         headers: header,
         body: jsonEncode(callModel.toJson()),
-      );
+      ))!;
 
       if (res.statusCode == 200) {
         var response = json.decode(res.body);
@@ -189,8 +190,8 @@ class QurHomeApiProvider {
               'Could not initiate call. Please try again later', Colors.red);
         } else {
           FlutterToast().getToast(
-              ((err?.message ?? '')).isNotEmpty
-                  ? err?.message
+              (err.message ?? '').isNotEmpty
+                  ? err.message!
                   : 'Could not initiate call. Please try again later',
               Colors.red);
         }
@@ -202,15 +203,15 @@ class QurHomeApiProvider {
     return isCallSent;
   }
 
-  Future<dynamic> callLogData({CallLogModel request}) async {
+  Future<dynamic> callLogData({required CallLogModel request}) async {
     try {
       var regController = Get.find<QurhomeRegimenController>();
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
-      http.Response res = await ApiServices.post(
+      http.Response res = (await ApiServices.post(
         Constants.BASE_URL + qr_callLog,
         headers: header,
         body: convert.jsonEncode(request.toJson()),
-      );
+      ))!;
       if (res.statusCode == 200) {
         CallLogResponseModel _response =
             CallLogResponseModel.fromJson(convert.json.decode(res.body));
@@ -229,14 +230,14 @@ class QurHomeApiProvider {
     } catch (e) {}
   }
 
-  Future<dynamic> callLogEndData({CallEndModel request}) async {
+  Future<dynamic> callLogEndData({required CallEndModel request}) async {
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
-      http.Response res = await ApiServices.put(
+      http.Response res = (await ApiServices.put(
         Constants.BASE_URL + qr_callLog,
         headers: header,
         body: convert.jsonEncode(request.toJson()),
-      );
+      ))!;
       if (res.statusCode == 200) {
         CallLogResponseModel _response =
             CallLogResponseModel.fromJson(convert.json.decode(res.body));
@@ -251,24 +252,24 @@ class QurHomeApiProvider {
   }
 
   Future<dynamic> callMissedCallNsAlertAPI(
-      {CallLogModel request, dynamic isFromSheelaRequest}) async {
+      {CallLogModel? request, dynamic isFromSheelaRequest}) async {
     try {
       var regController = Get.find<QurhomeRegimenController>();
       var jsonString = "";
       String strURL = "";
       if (regController.isFromSOS.value) {
         strURL = qr_triggerSOSMissedCallNotification;
-        jsonString = convert.jsonEncode(request.toJson());
+        jsonString = convert.jsonEncode(request!.toJson());
       } else {
         strURL = qr_triggerMissedCallNotification;
         jsonString = convert.jsonEncode(isFromSheelaRequest);
       }
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
-      http.Response res = await ApiServices.post(
+      http.Response res = (await ApiServices.post(
         Constants.BASE_URL + strURL,
         headers: header,
         body: jsonString,
-      );
+      ))!;
       if (res.statusCode == 200) {
         CallLogResponseModel _response =
             CallLogResponseModel.fromJson(convert.json.decode(res.body));
@@ -282,17 +283,17 @@ class QurHomeApiProvider {
     } catch (e) {}
   }
 
-  Future<dynamic> updateCallStatus(String appointmentId) async {
+  Future<dynamic> updateCallStatus(String? appointmentId) async {
     try {
       final AuthService authService = AuthService();
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
       var jsonData = {};
       jsonData['id'] = appointmentId;
       jsonData['statusCode'] = 'PATDNA';
-      final response = await ApiServices.put(
+      final response = (await ApiServices.put(
           Constants.BASE_URL + qr_callAppointmentUpdate+"statusUpdate",
           headers: header,
-          body: convert.jsonEncode(jsonData));
+          body: convert.jsonEncode(jsonData)))!;
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
 
@@ -317,10 +318,10 @@ class QurHomeApiProvider {
       final AuthService authService = AuthService();
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
 
-      final response = await ApiServices.put(
+      final response = (await ApiServices.put(
           Constants.BASE_URL + qr_nonAppointmentUrl,
           headers: header,
-          body: convert.jsonEncode(body));
+          body: convert.jsonEncode(body)))!;
       if (response.statusCode == 200) {
         responseJson = jsonDecode(response.body);
 
@@ -365,20 +366,20 @@ class QurHomeApiProvider {
         qr_meetingId: CommonUtil().validString(regController.meetingId.value),
         qr_UID: CommonUtil().validString(regController.UID.value)
       };
-      http.Response res = await ApiServices.post(
+      http.Response res = (await ApiServices.post(
         Constants.BASE_URL + qr_startRecordCallLog,
         headers: header,
         body: json.encode(data),
-      );
+      ))!;
       if (res.statusCode == 200) {
         CallRecordModel _response =
             CallRecordModel.fromJson(convert.json.decode(res.body));
 
         regController.resourceId.value =
-            CommonUtil().validString(_response.result.resourceId);
+            CommonUtil().validString(_response.result!.resourceId);
 
         regController.sid.value =
-            CommonUtil().validString(_response.result.sid);
+            CommonUtil().validString(_response.result!.sid);
 
         return _response.isSuccess;
       } else {
@@ -400,11 +401,11 @@ class QurHomeApiProvider {
         qr_sid: CommonUtil().validString(regController.sid.value),
         qr_callLogId: CommonUtil().validString(regController.resultId.value),
       };
-      http.Response res = await ApiServices.post(
+      http.Response res = (await ApiServices.post(
         Constants.BASE_URL + qr_stopRecordCallLog,
         headers: header,
         body: json.encode(data),
-      );
+      ))!;
       if (res.statusCode == 200) {
         CallLogResponseModel _response =
             CallLogResponseModel.fromJson(convert.json.decode(res.body));
@@ -425,11 +426,11 @@ class QurHomeApiProvider {
       var data = {
         qr_location: regController.locationModel,
       };
-      responseJson = await ApiServices.post(
+      responseJson = (await ApiServices.post(
         '${Constants.BASE_URL}$qr_getSOSAgentNumber',
         headers: header,
         body: json.encode(data),
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -453,10 +454,10 @@ class QurHomeApiProvider {
     try {
       HeaderRequest headerRequest = HeaderRequest();
 
-      var response = await ApiServices.put(
+      var response = (await ApiServices.put(
           Constants.BASE_URL + qurPlanNode + updateSnoozeEvent,
           headers: await headerRequest.getRequestHeader(),
-          body: jsonBody);
+          body: jsonBody))!;
 
       if (response.statusCode == 200) {
         CallLogResponseModel _response =

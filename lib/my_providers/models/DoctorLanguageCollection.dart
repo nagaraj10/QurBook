@@ -1,9 +1,10 @@
+
 class DoctorLanguageCollection {
-  String id;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  Language language;
+  String? id;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  Language? language;
 
   DoctorLanguageCollection(
       {this.id,
@@ -29,22 +30,22 @@ class DoctorLanguageCollection {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (language != null) {
-      data['language'] = language.toJson();
+      data['language'] = language!.toJson();
     }
     return data;
   }
 }
 
 class Language {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   Language(
       {this.id,

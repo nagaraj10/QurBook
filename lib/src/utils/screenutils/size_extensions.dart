@@ -20,8 +20,8 @@ extension SizeExtension on num {
   double get nsp => ScreenUtil().setSp(this, allowFontScalingSelf: false);
 
   ///Multiple of screen width
-  double get sw => ScreenUtil().screenWidth * this;
+  double get sw => ScreenUtil().screenWidth! * this;
 
   ///Multiple of screen height
-  double get sh => ScreenUtil().screenHeight * this;
+  double get sh => ScreenUtil().screenHeight! * this;
 }

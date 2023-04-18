@@ -1,5 +1,6 @@
+
 class ProviderMetaModel {
-  String icon;
+  String? icon;
 
   ProviderMetaModel({this.icon});
 

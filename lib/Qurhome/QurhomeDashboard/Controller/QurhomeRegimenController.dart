@@ -4,7 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:flutter_geocoder/geocoder.dart';
+// import 'package:geocoder/geocoder.dart';  FU2.5
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
@@ -36,8 +37,8 @@ class QurhomeRegimenController extends GetxController {
   var loadingCalendar = false.obs;
 
   // QurHomeRegimenResponseModel qurHomeRegimenResponseModel;
-  RegimentResponseModel qurHomeRegimenResponseModel;
-  RegimentResponseModel qurHomeRegimenCalendarResponseModel;
+  RegimentResponseModel? qurHomeRegimenResponseModel;
+  RegimentResponseModel? qurHomeRegimenCalendarResponseModel;
   int nextRegimenPosition = 0;
   int currentIndex = 0;
 
@@ -72,19 +73,18 @@ class QurhomeRegimenController extends GetxController {
   var selectedDate=DateTime.now().obs;
   var selectedCalendar=DateTime.now().obs;
   static MyProfileModel prof =
-      PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+      PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
 
-  Location locationModel;
+  Location? locationModel;
 
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
   var qurhomeDashboardController = Get.put(QurhomeDashboardController());
   Duration duration = CommonUtil.isUSRegion()?Duration(minutes: 2):Duration(seconds: 30);
-  Timer timer;
+  Timer? timer;
 
   var isFirstTime = true.obs;
-  int _start = CommonUtil.isUSRegion()?120:30;
 
-  getRegimenList({bool isLoading = true,String date=null}) async {
+  getRegimenList({bool isLoading = true,String? date}) async {
     try {
       if (!isLoading) {
         loadingDataWithoutProgress.value = true;
@@ -96,19 +96,19 @@ class QurhomeRegimenController extends GetxController {
       }
       loadingData.value = true;
       qurHomeRegimenResponseModel = await _apiProvider.getRegimenList(date);
-      qurHomeRegimenResponseModel.regimentsList?.removeWhere((element) =>
-          element?.isEventDisabled && !element?.isSymptom ||
-          !element?.scheduled &&
+      qurHomeRegimenResponseModel?.regimentsList?.removeWhere((element) =>
+      element!.isEventDisabled && !element!.isSymptom ||
+          !element!.scheduled &&
               !(element?.dayrepeat?.trim().toLowerCase() ==
                   strText.trim().toLowerCase()));
-    bool allActivitiesCompleted=true;
+      bool allActivitiesCompleted=true;
 
     for (int i = 0;
-          i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0;
+          i < qurHomeRegimenResponseModel!.regimentsList!.length;
           i++) {
         String strCurrLoggedEID = CommonUtil().validString(currLoggedEID.value);
         String strCurrRegimenEID = CommonUtil().validString(
-            qurHomeRegimenResponseModel?.regimentsList[i]?.eid ?? "");
+            qurHomeRegimenResponseModel?.regimentsList![i].eid ?? "");
         if (strCurrLoggedEID.trim().isNotEmpty &&
             strCurrLoggedEID.contains(strCurrRegimenEID)) {
           nextRegimenPosition = i;
@@ -118,10 +118,10 @@ class QurhomeRegimenController extends GetxController {
           restartTimer();
           break;
         } else if (DateTime.now()
-            .isBefore(qurHomeRegimenResponseModel?.regimentsList[i]?.estart)) {
-          if (qurHomeRegimenResponseModel?.regimentsList[i]?.ack_local !=
+            .isBefore(qurHomeRegimenResponseModel!.regimentsList![i].estart!)) {
+          if (qurHomeRegimenResponseModel!.regimentsList![i].ack_local !=
               null) {
-            if (qurHomeRegimenResponseModel?.regimentsList?.length > (i + 1)) {
+            if (qurHomeRegimenResponseModel!.regimentsList!.length > (i + 1)) {
               nextRegimenPosition = i + 1;
               currentIndex = i + 1;
               allActivitiesCompleted=false;
@@ -145,22 +145,22 @@ class QurhomeRegimenController extends GetxController {
       }
       if(allActivitiesCompleted){
         if((qurHomeRegimenResponseModel?.regimentsList?.length ?? 0)>0){
-          nextRegimenPosition = qurHomeRegimenResponseModel?.regimentsList?.length-1;
-          currentIndex = qurHomeRegimenResponseModel?.regimentsList?.length-1;
+          nextRegimenPosition = qurHomeRegimenResponseModel!.regimentsList!.length-1;
+          currentIndex = qurHomeRegimenResponseModel!.regimentsList!.length-1;
         }
       }
       for (int i = 0;
-          i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0;
+          i < qurHomeRegimenResponseModel!.regimentsList!.length;
           i++) {
-        if (qurHomeRegimenResponseModel?.regimentsList[i]?.activityOrgin !=
+        if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin !=
             null) {
-          if (qurHomeRegimenResponseModel?.regimentsList[i]?.activityOrgin ==
+          if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
               'Appointment') {
-            if (qurHomeRegimenResponseModel?.regimentsList[i]?.estart != null &&
-                qurHomeRegimenResponseModel?.regimentsList[i]?.estart != '') {
-              if (qurHomeRegimenResponseModel?.regimentsList[i]?.eid != null &&
-                  qurHomeRegimenResponseModel?.regimentsList[i]?.eid != '') {
-                var apiReminder = qurHomeRegimenResponseModel.regimentsList[i];
+            if (qurHomeRegimenResponseModel!.regimentsList![i].estart != null &&
+                qurHomeRegimenResponseModel!.regimentsList![i].estart != '') {
+              if (qurHomeRegimenResponseModel!.regimentsList![i].eid != null &&
+                  qurHomeRegimenResponseModel!.regimentsList![i].eid != '') {
+                var apiReminder = qurHomeRegimenResponseModel!.regimentsList![i];
                 const platform = MethodChannel(APPOINTMENT_DETAILS);
                 if (Platform.isIOS) {
                   platform.invokeMethod(
@@ -193,7 +193,7 @@ class QurhomeRegimenController extends GetxController {
     }
   }
 
-  getCalendarRegimenList({DateTime nextPreviousDate=null}) async {
+  getCalendarRegimenList({DateTime? nextPreviousDate=null}) async {
     DateTime startDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month,1).subtract(Duration(days: 7));
     DateTime endDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month+1,0).add(Duration(days: 7));
     loadingCalendar.value=true;
@@ -264,7 +264,8 @@ class QurhomeRegimenController extends GetxController {
         var coordinates = Coordinates(latitude, longitude);
         final addresses =
             await Geocoder.local.findAddressesFromCoordinates(coordinates);
-        Address address = addresses.first;
+        Address address = addresses.first;  //FU2.5
+        // var address;//  FU2.5
 
         if (address != null) {
           locationModel = Location(
@@ -302,9 +303,9 @@ class QurhomeRegimenController extends GetxController {
         CareCoordinatorData careCoordinatorData =
             CareCoordinatorData.fromJson(json.decode(response.body));
         if (careCoordinatorData.result != null &&
-            careCoordinatorData.result.length > 0 &&
-            careCoordinatorData.isSuccess) {
-          var careCoordinatorDetails = careCoordinatorData.result;
+            careCoordinatorData.result!.length > 0 &&
+            careCoordinatorData.isSuccess!) {
+          var careCoordinatorDetails = careCoordinatorData.result!;
           var activeUser = "care coordinator";
 
           final index = careCoordinatorDetails.indexWhere((element) =>
@@ -314,11 +315,11 @@ class QurhomeRegimenController extends GetxController {
                   .contains(activeUser)));
           if (index >= 0) {
             careCoordinatorId.value = CommonUtil()
-                .validString(careCoordinatorData.result[index].userId);
+                .validString(careCoordinatorData.result![index].userId);
             careCoordinatorName.value = CommonUtil()
-                .validString(careCoordinatorData.result[index].name);
+                .validString(careCoordinatorData.result![index].name);
             userId.value = CommonUtil()
-                .validString(careCoordinatorData.result[index].patientId);
+                .validString(careCoordinatorData.result![index].patientId);
           }
         }
       }
@@ -355,7 +356,7 @@ class QurhomeRegimenController extends GetxController {
         var bookinId = getMyMeetingID().toString();
         print("bookinId $bookinId");
 
-        Provider.of<AudioCallProvider>(Get.context, listen: false)
+        Provider.of<AudioCallProvider>(Get.context!, listen: false)
             .enableAudioCall();
 
         VideoCallCommonUtils()
@@ -391,21 +392,21 @@ class QurhomeRegimenController extends GetxController {
 
   getUserDetails() {
     try {
-      prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+      prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
       userName.value = prof.result != null
           ? CommonUtil()
-              .validString(prof.result.firstName + ' ' + prof.result.lastName)
+              .validString(prof.result!.firstName! + ' ' + prof.result!.lastName!)
           : '';
-      userId.value = PreferenceUtil.getStringValue(constants.KEY_USERID);
+      userId.value = PreferenceUtil.getStringValue(constants.KEY_USERID)!;
       userProfilePic.value = prof.result != null
-          ? CommonUtil().validString(prof.result.profilePicThumbnailUrl)
+          ? CommonUtil().validString(prof.result!.profilePicThumbnailUrl)
           : '';
       userDOB.value = prof.result != null
-          ? CommonUtil().validString(prof.result.dateOfBirth)
+          ? CommonUtil().validString(prof.result!.dateOfBirth)
           : '';
       userMobNo.value = prof.result != null
           ? CommonUtil()
-              .validString(prof.result.userContactCollection3[0].phoneNumber)
+              .validString(prof.result!.userContactCollection3![0]!.phoneNumber)
           : '';
     } catch (e) {
       if (kDebugMode) {
@@ -430,9 +431,9 @@ class QurhomeRegimenController extends GetxController {
         SOSCallAgentNumberData sosCallAgentNumberData =
             SOSCallAgentNumberData.fromJson(json.decode(response.body));
         if (sosCallAgentNumberData.result != null &&
-            sosCallAgentNumberData.isSuccess) {
+            sosCallAgentNumberData.isSuccess!) {
           SOSAgentNumber.value = CommonUtil()
-              .validString(sosCallAgentNumberData.result.exoPhoneNumber);
+              .validString(sosCallAgentNumberData.result!.exoPhoneNumber);
         }
       }
     } catch (e) {
@@ -514,7 +515,7 @@ class QurhomeRegimenController extends GetxController {
   showCurrLoggedRegimen(RegimentDataModel regimen) {
     cancelTimer();
     restartTimer();
-    currLoggedEID.value = CommonUtil().validString(regimen?.eid?.toString());
+    currLoggedEID.value = CommonUtil().validString(regimen.eid?.toString());
     getRegimenList(date: selectedDate.value.toString());
   }
 
@@ -523,7 +524,7 @@ class QurhomeRegimenController extends GetxController {
     timer=null;
   }
 
-  String getFormatedDate({String date=null}) {
+  String getFormatedDate({String? date=null}) {
     DateTime now = date==null?DateTime.now():DateTime.parse(date);
     selectedDate.value=now;
     String prefix='';

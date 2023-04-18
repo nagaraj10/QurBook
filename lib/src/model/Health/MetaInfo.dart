@@ -1,3 +1,4 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'CategoryInfo.dart';
 import 'DeviceReadings.dart';
@@ -7,21 +8,21 @@ import 'Laboratory.dart';
 import 'MediaTypeInfo.dart';
 
 class MetaInfo {
-  CategoryInfo categoryInfo;
-  String dateOfVisit;
-  List<DeviceReadings> deviceReadings;
-  Doctor doctor;
-  String fileName;
-  bool hasVoiceNotes;
-  bool isDraft;
-  MediaTypeInfo mediaTypeInfo;
-  String memoText;
-  String memoTextRaw;
-  String sourceName;
-  Laboratory laboratory;
-  Hospital hospital;
-  String dateOfExpiry;
-  String idType;
+  CategoryInfo? categoryInfo;
+  String? dateOfVisit;
+  List<DeviceReadings>? deviceReadings;
+  Doctor? doctor;
+  String? fileName;
+  bool? hasVoiceNotes;
+  bool? isDraft;
+  MediaTypeInfo? mediaTypeInfo;
+  String? memoText;
+  String? memoTextRaw;
+  String? sourceName;
+  Laboratory? laboratory;
+  Hospital? hospital;
+  String? dateOfExpiry;
+  String? idType;
 
   MetaInfo(
       {this.categoryInfo,
@@ -49,7 +50,7 @@ class MetaInfo {
     if (json[parameters.strdeviceReadings] != null) {
       deviceReadings = <DeviceReadings>[];
       json[parameters.strdeviceReadings].forEach((v) {
-        deviceReadings.add(DeviceReadings.fromJson(v));
+        deviceReadings!.add(DeviceReadings.fromJson(v));
       });
     }
      }catch(e){
@@ -79,30 +80,30 @@ class MetaInfo {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (categoryInfo != null) {
-      data[parameters.strcategoryInfo] = categoryInfo.toJson();
+      data[parameters.strcategoryInfo] = categoryInfo!.toJson();
     }
     data[parameters.strdateOfVisit] = dateOfVisit;
     if (deviceReadings != null) {
       data[parameters.strdeviceReadings] =
-          deviceReadings.map((v) => v.toJson()).toList();
+          deviceReadings!.map((v) => v.toJson()).toList();
     }
     if (doctor != null) {
-      data[parameters.strdoctor] = doctor.toJson();
+      data[parameters.strdoctor] = doctor!.toJson();
     }
     data[parameters.strfileName] = fileName;
     data[parameters.strhasVoiceNotes] = hasVoiceNotes;
     data[parameters.strisDraft] = isDraft;
     if (mediaTypeInfo != null) {
-      data[parameters.strmediaTypeInfo] = mediaTypeInfo.toJson();
+      data[parameters.strmediaTypeInfo] = mediaTypeInfo!.toJson();
     }
     data[parameters.strmemoText] = memoText;
     data[parameters.strmemoTextRaw] = memoTextRaw;
     data[parameters.strsourceName] = sourceName;
     if (laboratory != null) {
-      data[parameters.strlaboratory] = laboratory.toJson();
+      data[parameters.strlaboratory] = laboratory!.toJson();
     }
     if (hospital != null) {
-      data[parameters.strhospital] = hospital.toJson();
+      data[parameters.strhospital] = hospital!.toJson();
     }
     data[parameters.strdateOfExpiry] = dateOfExpiry;
     if (idType != null) {

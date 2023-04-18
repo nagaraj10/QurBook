@@ -1,6 +1,7 @@
+
 class CommonResponseModel {
-  bool isSuccess;
-  String message;
+  bool? isSuccess;
+  String? message;
 
   CommonResponseModel({this.isSuccess, this.message});
 

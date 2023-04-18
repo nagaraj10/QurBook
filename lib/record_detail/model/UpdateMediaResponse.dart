@@ -1,3 +1,4 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'Doctor.dart';
 import 'Hospital.dart';
@@ -6,10 +7,10 @@ import 'UpdateMediaResponseData.dart';
 import '../../src/model/Health/CategoryInfo.dart';
 
 class UpdateMediaResponse {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   UpdateMediaResponse({this.status, this.success, this.message, this.response});
 
@@ -28,15 +29,15 @@ class UpdateMediaResponse {
     data[parameters.strSuccess] = success;
     data[parameters.strMessage] = message;
     if (response != null) {
-      data[parameters.strResponse] = response.toJson();
+      data[parameters.strResponse] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  int count;
-  UpdateMediaResponseData data;
+  int? count;
+  UpdateMediaResponseData? data;
 
   Response({this.count, this.data});
 
@@ -51,24 +52,24 @@ class Response {
     final data = Map<String, dynamic>();
     data[parameters.strCount] = count;
     if (this.data != null) {
-      data[parameters.strData] = this.data.toJson();
+      data[parameters.strData] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class MetaInfo {
-  CategoryInfo categoryInfo;
-  MediaTypeInfo mediaTypeInfo;
-  String dateOfVisit;
-  String memoText;
-  bool hasVoiceNote;
-  bool isDraft;
-  String sourceName;
-  String memoTextRaw;
-  Doctor doctor;
-  Hospital hospital;
-  String fileName;
+  CategoryInfo? categoryInfo;
+  MediaTypeInfo? mediaTypeInfo;
+  String? dateOfVisit;
+  String? memoText;
+  bool? hasVoiceNote;
+  bool? isDraft;
+  String? sourceName;
+  String? memoTextRaw;
+  Doctor? doctor;
+  Hospital? hospital;
+  String? fileName;
 
   MetaInfo(
       {this.categoryInfo,
@@ -109,24 +110,24 @@ class MetaInfo {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (categoryInfo != null) {
-      data[parameters.strcategoryInfo] = categoryInfo.toJson();
+      data[parameters.strcategoryInfo] = categoryInfo!.toJson();
     }
     data[parameters.strdateOfVisit] = dateOfVisit;
 
     if (doctor != null) {
-      data[parameters.strdoctor] = doctor.toJson();
+      data[parameters.strdoctor] = doctor!.toJson();
     }
     data[parameters.strfileName] = fileName;
     data[parameters.strisDraft] = isDraft;
     if (mediaTypeInfo != null) {
-      data[parameters.strmediaTypeInfo] = mediaTypeInfo.toJson();
+      data[parameters.strmediaTypeInfo] = mediaTypeInfo!.toJson();
     }
     data[parameters.strmemoText] = memoText;
     data[parameters.strmemoTextRaw] = memoTextRaw;
     data[parameters.strsourceName] = sourceName;
 
     if (hospital != null) {
-      data[parameters.strhospital] = hospital.toJson();
+      data[parameters.strhospital] = hospital!.toJson();
     }
 
     return data;

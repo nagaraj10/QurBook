@@ -1,3 +1,4 @@
+
 import 'dart:convert' as convert;
 
 import '../models/update_providers_id.dart';
@@ -17,7 +18,7 @@ class UpdateProvidersRepository {
   Future<UpdateProvidersId> updateDoctorsIdWithUserDetails(
       String providerId, bool isPreferred) async {
     // final response = await _helper .updateProviders("userProfiles/$userID/?sections=${query}");
-    final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     var response = await _helper.updateTeleHealthProviders(
         webserviceCall.getUrlToUpdateDoctor(userID),
@@ -29,12 +30,12 @@ class UpdateProvidersRepository {
   // 1
   // Doctors
   Future<UpdateProvidersId> updateDoctorsIdWithUserDetailsNew(
-      String providerId,
-      bool isPreferred,
-      String provideReferenceId,
+      String? providerId,
+      bool? isPreferred,
+      String? provideReferenceId,
       String userId,
-      List<String> selectedCategories,
-      {bool isPAR}) async {
+      List<String?>? selectedCategories,
+      {bool? isPAR}) async {
     //String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final Map<String, dynamic> doctorDic = {};
     doctorDic[parameters.doctorId] = providerId;
@@ -59,11 +60,11 @@ class UpdateProvidersRepository {
   // 2
   // Hospitals
   Future<UpdateProvidersId> updateHospitalsIdWithUserDetails(
-      String providerId,
-      bool isPreferred,
-      String provideReferenceId,
+      String? providerId,
+      bool? isPreferred,
+      String? provideReferenceId,
       String userId,
-      List<String> selectedCategories) async {
+      List<String?>? selectedCategories) async {
     // String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final Map<String, dynamic> hospitalDic = {};
@@ -93,11 +94,11 @@ class UpdateProvidersRepository {
   // 3
   // Labs
   Future<UpdateProvidersId> updateLabsIdWithUserDetails(
-      String providerId,
-      bool isPreferred,
-      String provideReferenceId,
+      String? providerId,
+      bool? isPreferred,
+      String? provideReferenceId,
       String userId,
-      List<String> selectedCategories) async {
+      List<String?>? selectedCategories) async {
     // String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final hospitalDic = Map<String, dynamic>();

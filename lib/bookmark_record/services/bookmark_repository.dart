@@ -8,7 +8,7 @@ class BookmarkRepository {
   final ApiBaseHelper _helper = ApiBaseHelper();
   WebserviceCall webservicecall=WebserviceCall(); 
 
-  String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+  String? userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
   Future<BookmarkResponse> bookmarkRecordForIds(String json) async {
     final response =

@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../models/add_doctors_providers_id.dart';
@@ -9,43 +10,43 @@ import '../../src/resources/network/ApiResponse.dart';
 import '../../constants/variable_constant.dart' as variable;
 
 class AddProvidersBloc implements BaseBloc {
-  AddProvidersRepository addProvidersRepository;
+  late AddProvidersRepository addProvidersRepository;
 
   // 1
   // Doctors
-  StreamController doctorsProvidersController;
+  late StreamController doctorsProvidersController;
 
   StreamSink<ApiResponse<AddDoctorsProvidersId>> get doctorsSink =>
-      doctorsProvidersController.sink;
+      doctorsProvidersController.sink as StreamSink<ApiResponse<AddDoctorsProvidersId>>;
 
   Stream<ApiResponse<AddDoctorsProvidersId>> get doctorsStream =>
-      doctorsProvidersController.stream;
+      doctorsProvidersController.stream as Stream<ApiResponse<AddDoctorsProvidersId>>;
 
-  String doctorsJsonString;
+  late String doctorsJsonString;
 
   // 2
   // Hospitals
-  StreamController hospitalsProvidersController;
+  late StreamController hospitalsProvidersController;
 
   StreamSink<ApiResponse<AddHospitalsProvidersId>> get hospitalsSink =>
-      hospitalsProvidersController.sink;
+      hospitalsProvidersController.sink as StreamSink<ApiResponse<AddHospitalsProvidersId>>;
 
   Stream<ApiResponse<AddHospitalsProvidersId>> get hospitalsStream =>
-      hospitalsProvidersController.stream;
+      hospitalsProvidersController.stream as Stream<ApiResponse<AddHospitalsProvidersId>>;
 
-  String hospitalsJsonString;
+  late String hospitalsJsonString;
 
   // 3
   // Labs
-  StreamController labsProvidersController;
+  late StreamController labsProvidersController;
 
   StreamSink<ApiResponse<AddLabsProvidersId>> get labsSink =>
-      labsProvidersController.sink;
+      labsProvidersController.sink as StreamSink<ApiResponse<AddLabsProvidersId>>;
 
   Stream<ApiResponse<AddLabsProvidersId>> get labsStream =>
-      labsProvidersController.stream;
+      labsProvidersController.stream as Stream<ApiResponse<AddLabsProvidersId>>;
 
-  String labsJsonString;
+  late String labsJsonString;
 
   AddProvidersBloc() {
     addProvidersRepository = AddProvidersRepository();

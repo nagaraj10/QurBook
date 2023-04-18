@@ -1,8 +1,9 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyCheckbox extends StatefulWidget {
-  final bool value;
+  final bool? value;
   final ValueChanged<bool> onChanged;
   final Color checkedIconColor;
   final Color checkedFillColor;
@@ -12,9 +13,9 @@ class MyCheckbox extends StatefulWidget {
   final IconData uncheckedIcon;
 
   const MyCheckbox({
-    Key key,
-    @required this.value,
-    @required this.onChanged,
+    Key? key,
+    required this.value,
+    required this.onChanged,
     this.checkedIconColor = Colors.white,
     this.checkedFillColor = Colors.grey,
     this.checkedIcon = Icons.check,
@@ -28,8 +29,8 @@ class MyCheckbox extends StatefulWidget {
 }
 
 class _MyCheckboxState extends State<MyCheckbox> {
-  bool _checked;
-  CheckStatus _status;
+  bool? _checked;
+  CheckStatus? _status;
 
   @override
   void initState() {
@@ -48,7 +49,7 @@ class _MyCheckboxState extends State<MyCheckbox> {
 
     if (_checked == null) {
       _status = CheckStatus.empty;
-    } else if (_checked) {
+    } else if (_checked!) {
       _status = CheckStatus.checked;
     } else {
       _status = CheckStatus.unchecked;
@@ -56,9 +57,9 @@ class _MyCheckboxState extends State<MyCheckbox> {
   }
 
   Widget _buildIcon() {
-    Color fillColor;
-    Color iconColor;
-    IconData iconData;
+    Color? fillColor;
+    Color? iconColor;
+    IconData? iconData;
 
     switch (_status) {
       case CheckStatus.empty:
@@ -91,7 +92,7 @@ class _MyCheckboxState extends State<MyCheckbox> {
   Widget build(BuildContext context) {
     return IconButton(
       icon: _buildIcon(),
-      onPressed: () => widget.onChanged(_checked == null ? true : !_checked),
+      onPressed: () => widget.onChanged(_checked == null ? true : !_checked!),
     );
   }
 }

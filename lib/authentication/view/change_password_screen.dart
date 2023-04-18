@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -23,7 +24,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   var isLoading = false;
   final _ChangePasswordKey = GlobalKey<FormState>();
   bool _autoValidateBool = false;
-  AuthViewModel authViewModel;
+  late AuthViewModel authViewModel;
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -54,7 +55,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: CommonUtil().isTablet ? 50 : 20),
+                    horizontal: CommonUtil().isTablet! ? 50 : 20),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +102,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               autovalidate: _autoValidateBool,
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .passwordValidation(value, patternPassword,
+                                    .passwordValidation(value!, patternPassword as String,
                                         strPassCantEmpty);
                               },
                               onSaved: (value) {},
@@ -129,7 +130,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               ),
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .passwordValidation(value, patternPassword,
+                                    .passwordValidation(value!, patternPassword as String,
                                         strPassCantEmpty);
                               },
                               controller: NewPasswordController,
@@ -162,7 +163,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                     .confirmPasswordValidation(
                                         NewPasswordController.text,
                                         value,
-                                        patternPassword,
+                                        patternPassword as String,
                                         strPassCantEmpty);
                               },
                             ),
@@ -223,8 +224,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   _verifyDetails() async {
     FocusScope.of(context).unfocus();
-    if (_ChangePasswordKey.currentState.validate()) {
-      _ChangePasswordKey.currentState.save();
+    if (_ChangePasswordKey.currentState!.validate()) {
+      _ChangePasswordKey.currentState!.save();
       var logInModel = ChangePasswordModel(
         newPassword: NewPasswordAgainController.text,
         oldPassword: OldPasswordController.text,
@@ -242,11 +243,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   _checkResponse(ChangePasswordModel response) {
-    if (response.isSuccess) {
-      toast.getToast(response.message, Colors.lightBlue);
+    if (response.isSuccess!) {
+      toast.getToast(response.message!, Colors.lightBlue);
       Navigator.pop(context);
     } else {
-      toast.getToast(response.message, Colors.red);
+      toast.getToast(response.message!, Colors.red);
     }
   }
 

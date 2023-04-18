@@ -1,4 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
+
+// import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
@@ -37,8 +38,8 @@ import 'healthOrganization/HealthOrganization.dart';
 import 'package:myfhb/common/errors_widget.dart';
 
 class MyProvidersHospitals extends StatefulWidget {
-  Function(String) closePage;
-  bool isRefresh;
+  Function(String)? closePage;
+  bool? isRefresh;
 
   @override
   _MyProvidersState createState() => _MyProvidersState();
@@ -48,13 +49,13 @@ class MyProvidersHospitals extends StatefulWidget {
 
 class _MyProvidersState extends State<MyProvidersHospitals> {
   MyProviderViewModel providerViewModel = MyProviderViewModel();
-  MyProvidersResponse myProvidersResponseList;
+  MyProvidersResponse? myProvidersResponseList;
   CommonWidgets commonWidgets = new CommonWidgets();
   bool isSearch = false;
-  ProvidersBloc _providersBloc;
-  List<Hospitals> myProviderHospitalList = List();
-  List<Hospitals> initialHospitalList = List();
-  Future<MyProvidersResponse> _medicalPreferenceList;
+  late ProvidersBloc _providersBloc;
+  List<Hospitals> myProviderHospitalList = [];
+  List<Hospitals>? initialHospitalList = [];
+  Future<MyProvidersResponse?>? _medicalPreferenceList;
 
   @override
   void initState() {
@@ -77,17 +78,17 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
   }
 
   getHospitalsList() {
-    if (myProvidersResponseList != null ?? myProvidersResponseList.isSuccess) {
+    if (myProvidersResponseList != null) {
       setState(() {
-        initialHospitalList = myProvidersResponseList.result.hospitals;
+        initialHospitalList = myProvidersResponseList!.result!.hospitals;
       });
     } else {
       _providersBloc.getMedicalPreferencesForHospital().then((value) {
-        if ((value.result != null &&
-            value?.result?.hospitals != null &&
-            value.result.hospitals.length > 0)) {
+        if ((value!.result != null &&
+            value.result?.hospitals != null &&
+            value.result!.hospitals!.length > 0)) {
           setState(() {
-            initialHospitalList = value.result.hospitals;
+            initialHospitalList = value.result!.hospitals;
           });
         }
       });
@@ -97,7 +98,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
   @override
   Widget build(BuildContext context) {
     print('inside build of doctors');
-    if (!widget.isRefresh) {
+    if (!widget.isRefresh!) {
       providerViewModel.doctorIdsList = null;
       setState(() {
         _medicalPreferenceList =
@@ -116,7 +117,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                       isSearch = true;
                       myProviderHospitalList =
                           providerViewModel.getHospitalName(
-                              hospitalList: initialHospitalList,
+                              hospitalList: initialHospitalList!,
                               query: hospitalsName);
                     });
                   } else {
@@ -125,15 +126,14 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                     });
                   }
                 },onClosePress: (){
-                FocusManager.instance.primaryFocus.unfocus();
+                FocusManager.instance.primaryFocus!.unfocus();
               },
               ),
               Expanded(
-                child: myProvidersResponseList != null ??
-                        myProvidersResponseList.isSuccess
+                child: myProvidersResponseList != null
                     ? hospitalList(isSearch
                         ? myProviderHospitalList
-                        : myProvidersResponseList.result.hospitals)
+                        : myProvidersResponseList!.result!.hospitals)
                     : getDoctorProviderListNew(),
               )
             ],
@@ -142,7 +142,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
         floatingActionButton: FloatingActionButton(
           heroTag: "btn1",
           onPressed: () {
-            FocusManager.instance.primaryFocus.unfocus();
+            FocusManager.instance.primaryFocus!.unfocus();
             Navigator.pushNamed(context, router.rt_SearchProvider,
                 arguments: SearchArguments(
                   searchWord: CommonConstants.hospitals,
@@ -162,7 +162,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
   }
 
   Widget getDoctorProviderListNew() {
-    return new FutureBuilder<MyProvidersResponse>(
+    return new FutureBuilder<MyProvidersResponse?>(
       future: _medicalPreferenceList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -172,28 +172,28 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
         } else {
           final items = snapshot.data ??
               <MyProvidersResponseData>[];
-          if(initialHospitalList!=null && initialHospitalList.length>0){
+          if(initialHospitalList!=null && initialHospitalList!.length>0){
             // handle the case that data is null
             return hospitalList(isSearch
                 ? myProviderHospitalList
-                : snapshot?.data?.result?.hospitals);
+                : snapshot.data?.result?.hospitals);
           }
-          else if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.hospitals != null &&
-              snapshot?.data?.result?.hospitals?.length > 0) {
-            initialHospitalList = snapshot?.data?.result?.hospitals;
-            if (snapshot?.hasData &&
-                snapshot?.data?.result != null &&
-                snapshot?.data?.result?.clinics != null &&
-                snapshot?.data?.result?.clinics?.length > 0) {
-              initialHospitalList.addAll(snapshot?.data?.result?.clinics);
+          else if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.hospitals != null &&
+              snapshot.data!.result!.hospitals!.length > 0) {
+            initialHospitalList = snapshot.data!.result!.hospitals;
+            if (snapshot.hasData &&
+                snapshot.data!.result != null &&
+                snapshot.data!.result!.clinics != null &&
+                snapshot.data!.result!.clinics!.length > 0) {
+              initialHospitalList!.addAll(snapshot.data!.result!.clinics!);
             }
             return hospitalList(isSearch
                 ? myProviderHospitalList
-                : snapshot?.data?.result?.hospitals);
+                : snapshot.data!.result!.hospitals);
           } else {
-            initialHospitalList = snapshot?.data?.result?.hospitals;
+            initialHospitalList = snapshot.data!.result!.hospitals;
             return Container(
                 child: Center(
               child: Text(variable.strNoHospitaldata),
@@ -204,7 +204,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
     );
   }
 
-  Widget hospitalList(List<Hospitals> hospitalList) {
+  Widget hospitalList(List<Hospitals>? hospitalList) {
     return (hospitalList != null && hospitalList.length > 0)
         ? new ListView.builder(
             itemBuilder: (BuildContext ctx, int i) =>
@@ -222,7 +222,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
       BuildContext context, int i, List<Hospitals> hospitals) {
     return InkWell(
       onTap: () {
-        FocusManager.instance.primaryFocus.unfocus();
+        FocusManager.instance.primaryFocus!.unfocus();
         navigateToDoctorList(context, hospitals, i);
       },
       child: Container(
@@ -256,7 +256,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                               color: Color(fhbColors.bgColorContainer),
                               child: Center(
                                 child: Text(
-                                  getHospitalName(hospitals[i])[0].toUpperCase(),
+                                  getHospitalName(hospitals[i])![0].toUpperCase(),
                                   style: TextStyle(
                                     color:
                                         Color(CommonUtil().getMyPrimaryColor()),
@@ -285,8 +285,9 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(height: 5.0.h),
-                  AutoSizeText(
-                    getHospitalName(hospitals[i]),
+                //  AutoSizeText( FU2.5
+                  Text( // FU2.5
+                    getHospitalName(hospitals[i])!,
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 16.0.sp,
@@ -319,13 +320,14 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                   ),*/
                   SizedBox(height: 5.0.h),
                   if (commonWidgets
-                          .getCityHospitalAddress(hospitals[i])
+                          .getCityHospitalAddress(hospitals[i])!
                           .length >
                       1)
                     Column(
                       children: [
-                        AutoSizeText(
-                          commonWidgets.getCityHospitalAddress(hospitals[i]),
+                       // AutoSizeText(  FU2.5
+                        Text(
+                          commonWidgets.getCityHospitalAddress(hospitals[i])!,
                           maxLines: 2,
                           style: TextStyle(
                               fontSize: 15.0.sp,
@@ -337,11 +339,12 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                     )
                   else
                     Container(),
-                  if (commonWidgets.getCityHospital(hospitals[i]).length > 1)
+                  if (commonWidgets.getCityHospital(hospitals[i])!.length > 1)
                     Column(
                       children: [
-                        AutoSizeText(
-                          commonWidgets.getCityHospital(hospitals[i]),
+                        // AutoSizeText( FU2.5
+                        Text( //  FU2.5
+                          commonWidgets.getCityHospital(hospitals[i])!,
                           maxLines: 1,
                           style: TextStyle(
                               fontSize: 15.0.sp,
@@ -391,27 +394,27 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
             hospitals: docs,
             index: i,
             closePage: (value) {
-              widget.closePage(value);
+              widget.closePage!(value);
             },
           ),
         ));
   }
-  String getHospitalName(Hospitals eachHospitalModel) {
-    String name="";
+  String? getHospitalName(Hospitals eachHospitalModel) {
+    String? name="";
 
     if (eachHospitalModel.name != null) {
       if (eachHospitalModel.name != "Self" &&
           eachHospitalModel.name != "self") {
-        name = eachHospitalModel?.name?.capitalizeFirstofEach;
+        name = eachHospitalModel.name?.capitalizeFirstofEach;
       } else {
         if (eachHospitalModel.createdBy != null) {
-          if (eachHospitalModel.createdBy.firstName != "" &&
-              eachHospitalModel.createdBy.firstName != null) {
-            name = eachHospitalModel.createdBy.firstName;
+          if (eachHospitalModel.createdBy!.firstName != "" &&
+              eachHospitalModel.createdBy!.firstName != null) {
+            name = eachHospitalModel.createdBy!.firstName;
           }
-          if (eachHospitalModel.createdBy.lastName != "" &&
-              eachHospitalModel.createdBy.lastName != null) {
-            name = name + " " + eachHospitalModel.createdBy.lastName;
+          if (eachHospitalModel.createdBy!.lastName != "" &&
+              eachHospitalModel.createdBy!.lastName != null) {
+            name = name! + " " + eachHospitalModel.createdBy!.lastName!;
           }
         }
       }
