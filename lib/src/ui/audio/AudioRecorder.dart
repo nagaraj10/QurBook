@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 
@@ -26,30 +27,30 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
 
 class AudioRecorder extends StatefulWidget {
-  AudioScreenArguments arguments;
+  AudioScreenArguments? arguments;
   AudioRecorder({this.arguments});
   @override
   _AudioRecorderState createState() => _AudioRecorderState();
 }
 
 class _AudioRecorderState extends State<AudioRecorder> {
-  FlutterSoundPlayer _mPlayer = FlutterSoundPlayer();
-  FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
+  FlutterSoundPlayer? _mPlayer = FlutterSoundPlayer();
+  FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
   final String _mPath = 'flutter_sound.aac';
-  StreamSubscription _recorderSubscription;
-  StreamSubscription _playerSubscription;
+  StreamSubscription? _recorderSubscription;
+  StreamSubscription? _playerSubscription;
   bool _isRecording = false;
   String _recorderTxt = variable.strStartTime;
   String _playerTxt = variable.strStartTime;
-  double _dbLevel;
-  String audioPathMain = '';
+  double? _dbLevel;
+  String? audioPathMain = '';
   bool containsAudioMain = true;
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
   FlutterToast toast = FlutterToast();
-  List<CategoryResult> filteredCategoryData;
+  List<CategoryResult>? filteredCategoryData;
   CategoryListBlock _categoryListBlock = CategoryListBlock();
-  String _tempPath = '';
+  String? _tempPath = '';
 
   @override
   void initState() {
@@ -59,9 +60,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   set_up_audios() async {
-    _mPlayer.openAudioSession().then(
+    _mPlayer!.openAudioSession().then(
       (value) {
-        _mPlayer.setSubscriptionDuration(
+        _mPlayer!.setSubscriptionDuration(
           Duration(
             seconds: 1,
           ),
@@ -69,9 +70,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
       },
     );
 
-    _mRecorder.openAudioSession().then(
+    _mRecorder!.openAudioSession().then(
       (value) {
-        _mRecorder.setSubscriptionDuration(
+        _mRecorder!.setSubscriptionDuration(
           Duration(
             seconds: 1,
           ),
@@ -82,16 +83,16 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   @override
   void dispose() {
-    _mPlayer.closeAudioSession();
+    _mPlayer!.closeAudioSession();
     _mPlayer = null;
-    _mRecorder.closeAudioSession();
+    _mRecorder!.closeAudioSession();
     _mRecorder = null;
     super.dispose();
   }
 
   void record() async {
     try {
-      await _mRecorder.startRecorder(
+      await _mRecorder!.startRecorder(
         toFile: _mPath,
         codec: Codec.aacMP4,
         audioSource: AudioSource.microphone,
@@ -100,7 +101,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       setState(
         () {},
       );
-      _mRecorder.onProgress.listen(
+      _mRecorder!.onProgress!.listen(
         (event) {
           setState(
             () {
@@ -138,13 +139,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   void stopRecorder() async {
     try {
-      final value = await _mRecorder.stopRecorder();
+      final value = await _mRecorder!.stopRecorder();
       _tempPath = value;
-      if (widget.arguments.fromVoice) {
+      if (widget.arguments!.fromVoice!) {
         await PreferenceUtil.saveString(
             Constants.KEY_CATEGORYNAME, AppConstants.voiceRecords);
         await PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
-            PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID));
+            PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID)!);
         TextEditingController fileName = new TextEditingController(
             text: AppConstants.voiceRecords +
                 '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
@@ -169,7 +170,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
           },
           false,
           fileName,
-          fromClass: widget.arguments.fromClass ?? '',
+          fromClass: widget.arguments!.fromClass ?? '',
         );
       } else {
         if (value != null && value != '')
@@ -180,7 +181,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     }
     _isRecording = false;
     if (_recorderSubscription != null) {
-      _recorderSubscription.cancel();
+      _recorderSubscription!.cancel();
       _recorderSubscription = null;
     }
     setState(
@@ -190,8 +191,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   void play() {
-    assert(_mRecorder.isStopped && _mPlayer.isStopped);
-    _mPlayer
+    assert(_mRecorder!.isStopped && _mPlayer!.isStopped);
+    _mPlayer!
         .startPlayer(
             fromURI: _mPath,
             codec: Codec.aacMP4,
@@ -210,7 +211,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   void stopPlayer() {
-    _mPlayer.stopPlayer().then(
+    _mPlayer!.stopPlayer().then(
       (value) {
         setState(
           () {},
@@ -325,7 +326,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                 child: ClipOval(
                   child: FlatButton(
                     onPressed: () {
-                      _mRecorder.isRecording ? stopRecorder() : record();
+                      _mRecorder!.isRecording ? stopRecorder() : record();
                     },
                     padding: EdgeInsets.all(8.0),
                     child: recorderAssetImage(),
@@ -343,7 +344,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   Widget recorderAssetImage() {
-    return _mRecorder.isStopped
+    return _mRecorder!.isStopped
         ? Text(
             variable.strStartrecord,
             style: TextStyle(

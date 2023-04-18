@@ -1,18 +1,19 @@
+
 class LocationDataModel {
-  String status;
-  String country;
-  String countryCode;
-  String region;
-  String regionName;
-  String city;
-  String zip;
-  double lat;
-  double lon;
-  String timezone;
-  String isp;
-  String org;
-  String as;
-  String query;
+  String? status;
+  String? country;
+  String? countryCode;
+  String? region;
+  String? regionName;
+  String? city;
+  String? zip;
+  double? lat;
+  double? lon;
+  String? timezone;
+  String? isp;
+  String? org;
+  String? as;
+  String? query;
 
   LocationDataModel(
       {this.status,
@@ -76,19 +77,19 @@ class LocationDataModel {
 }
 
 class Location {
-  String latitude;
-  String longitude;
-  String addressLine;
-  String countryName;
-  String countryCode;
-  String featureName;
-  String postalCode;
-  String adminArea;
-  String subAdminArea;
-  String locality;
-  String subLocality;
-  String thoroughfare;
-  String subThoroughfare;
+  String? latitude;
+  String? longitude;
+  String? addressLine;
+  String? countryName;
+  String? countryCode;
+  String? featureName;
+  String? postalCode;
+  String? adminArea;
+  String? subAdminArea;
+  String? locality;
+  String? subLocality;
+  String? thoroughfare;
+  String? subThoroughfare;
 
   Location(
       {this.latitude,

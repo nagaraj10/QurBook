@@ -1,3 +1,5 @@
+
+
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
@@ -33,35 +35,35 @@ class Booked {
     this.userAddressCollection3,
   });
 
-  String id;
-  String name;
+  String? id;
+  String? name;
   dynamic userName;
-  String firstName;
+  String? firstName;
   dynamic middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
   dynamic bloodGroup;
   dynamic countryCode;
 
 //  String profilePicUrl;
-  String profilePicThumbnailUrl;
+  String? profilePicThumbnailUrl;
   dynamic isTempUser;
   dynamic isVirtualUser;
   dynamic isMigrated;
   dynamic isClaimed;
-  bool isIeUser;
+  bool? isIeUser;
   dynamic isEmailVerified;
-  bool isCpUser;
+  bool? isCpUser;
   dynamic communicationPreferences;
   dynamic medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  List<UserAddressCollection3> userAddressCollection3;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  List<UserAddressCollection3>? userAddressCollection3;
 
   Booked.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];

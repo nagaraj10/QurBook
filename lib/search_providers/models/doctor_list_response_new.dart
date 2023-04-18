@@ -1,8 +1,9 @@
+
 class DoctorsSearchListResponse {
-  bool isSuccess;
-  String message;
-  List<DoctorsListResult> result;
-  Diagnostics diagnostics;
+  bool? isSuccess;
+  String? message;
+  List<DoctorsListResult>? result;
+  Diagnostics? diagnostics;
 
   DoctorsSearchListResponse(
       {this.isSuccess, this.message, this.result, this.diagnostics});
@@ -12,9 +13,9 @@ class DoctorsSearchListResponse {
     message = json['message'];
     if (json.containsKey('result')) {
       if (json['result'] != null) {
-        result = List<DoctorsListResult>();
+        result = <DoctorsListResult>[];
         json['result'].forEach((v) {
-          result.add(DoctorsListResult.fromJson(v));
+          result!.add(DoctorsListResult.fromJson(v));
         });
       }
     }
@@ -30,10 +31,10 @@ class DoctorsSearchListResponse {
     data['isSuccess'] = isSuccess;
     data['message'] = message;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     if (diagnostics != null) {
-      data['diagnostics'] = diagnostics.toJson();
+      data['diagnostics'] = diagnostics!.toJson();
     }
 
     return data;
@@ -41,22 +42,22 @@ class DoctorsSearchListResponse {
 }
 
 class DoctorsListResult {
-  String doctorId;
-  String userId;
-  String name;
-  String firstName;
-  String lastName;
-  String specialization;
-  String city;
-  String state;
-  String doctorReferenceId;
-  String addressLine1;
-  String specialty;
-  String addressLine2;
-  String profilePicThumbnailUrl;
-  bool isTelehealthEnabled;
-  bool isMciVerified;
-  bool patientAssociationRequest;
+  String? doctorId;
+  String? userId;
+  String? name;
+  String? firstName;
+  String? lastName;
+  String? specialization;
+  String? city;
+  String? state;
+  String? doctorReferenceId;
+  String? addressLine1;
+  String? specialty;
+  String? addressLine2;
+  String? profilePicThumbnailUrl;
+  bool? isTelehealthEnabled;
+  bool? isMciVerified;
+  bool? patientAssociationRequest;
 
   DoctorsListResult(
       {this.doctorId,
@@ -118,8 +119,8 @@ class DoctorsListResult {
 }
 
 class Diagnostics {
-  DoctorsListResult errorData;
-  bool includeErrorDataInResponse;
+  DoctorsListResult? errorData;
+  bool? includeErrorDataInResponse;
 
   Diagnostics({this.errorData, this.includeErrorDataInResponse});
 
@@ -133,7 +134,7 @@ class Diagnostics {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (errorData != null) {
-      data['errorData'] = errorData.toJson();
+      data['errorData'] = errorData!.toJson();
     }
     data['includeErrorDataInResponse'] = includeErrorDataInResponse;
     return data;

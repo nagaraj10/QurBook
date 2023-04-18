@@ -1,7 +1,8 @@
+
 class CaregiverCommunicationSetting {
-  bool vitals;
-  bool symptoms;
-  bool appointments;
+  bool? vitals;
+  bool? symptoms;
+  bool? appointments;
 
   CaregiverCommunicationSetting(
       {this.vitals, this.symptoms, this.appointments});

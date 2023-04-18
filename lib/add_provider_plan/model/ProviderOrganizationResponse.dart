@@ -1,15 +1,16 @@
+
 class ProviderOrganisationResponse {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   ProviderOrganisationResponse({this.isSuccess, this.result});
 
   ProviderOrganisationResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = <Result>[];
       json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+        result!.add(new Result.fromJson(v));
       });
     }
   }
@@ -18,28 +19,28 @@ class ProviderOrganisationResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  BusinessDetail businessDetail;
-  String domainUrl;
-  bool isDisabled;
-  String communicationEmails;
-  String emailDomain;
-  List<Specialty> specialty;
-  bool isHealthPlansActivated;
-  bool isOptCaregiveService;
-  HealthOrganizationType healthOrganizationType;
-  bool isBookmarked=false;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  BusinessDetail? businessDetail;
+  String? domainUrl;
+  bool? isDisabled;
+  String? communicationEmails;
+  String? emailDomain;
+  List<Specialty>? specialty;
+  bool? isHealthPlansActivated;
+  bool? isOptCaregiveService;
+  HealthOrganizationType? healthOrganizationType;
+  bool? isBookmarked=false;
 
   Result(
       {this.id,
@@ -71,9 +72,9 @@ class Result {
     communicationEmails = json['communicationEmails'];
     emailDomain = json['emailDomain'];
     if (json['specialty'] != null) {
-      specialty = new List<Specialty>();
+      specialty = <Specialty>[];
       json['specialty'].forEach((v) {
-        specialty.add(new Specialty.fromJson(v));
+        specialty!.add(new Specialty.fromJson(v));
       });
     }
     isHealthPlansActivated = json['isHealthPlansActivated'];
@@ -91,27 +92,27 @@ class Result {
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.businessDetail != null) {
-      data['businessDetail'] = this.businessDetail.toJson();
+      data['businessDetail'] = this.businessDetail!.toJson();
     }
     data['domainUrl'] = this.domainUrl;
     data['isDisabled'] = this.isDisabled;
     data['communicationEmails'] = this.communicationEmails;
     data['emailDomain'] = this.emailDomain;
     if (this.specialty != null) {
-      data['specialty'] = this.specialty.map((v) => v.toJson()).toList();
+      data['specialty'] = this.specialty!.map((v) => v.toJson()).toList();
     }
     data['isHealthPlansActivated'] = this.isHealthPlansActivated;
     data['isOptCaregiveService'] = this.isOptCaregiveService;
     if (this.healthOrganizationType != null) {
-      data['healthOrganizationType'] = this.healthOrganizationType.toJson();
+      data['healthOrganizationType'] = this.healthOrganizationType!.toJson();
     }
     return data;
   }
 }
 
 class BusinessDetail {
-  List<String> documents;
-  String gstNumber;
+  List<String>? documents;
+  String? gstNumber;
 
   BusinessDetail({this.documents, this.gstNumber});
 
@@ -137,8 +138,8 @@ class BusinessDetail {
 }
 
 class Specialty {
-  String id;
-  String name;
+  String? id;
+  String? name;
 
   Specialty({this.id, this.name});
 
@@ -156,15 +157,15 @@ class Specialty {
 }
 
 class HealthOrganizationType {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   HealthOrganizationType(
       {this.id,

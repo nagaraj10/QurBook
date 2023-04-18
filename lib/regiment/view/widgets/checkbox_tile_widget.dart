@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
@@ -5,15 +6,15 @@ import 'custom_image_network.dart';
 
 class CheckboxTileWidget extends StatefulWidget {
   const CheckboxTileWidget({
-    @required this.title,
-    @required this.onSelected,
-    @required this.value,
-    @required this.canEdit,
+    required this.title,
+    required this.onSelected,
+    required this.value,
+    required this.canEdit,
   });
 
   final String title;
-  final String value;
-  final Function(dynamic selectedValue, String valueText) onSelected;
+  final String? value;
+  final Function(dynamic selectedValue, String? valueText) onSelected;
   final bool canEdit;
 
   @override
@@ -21,7 +22,7 @@ class CheckboxTileWidget extends StatefulWidget {
 }
 
 class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
-  bool checkboxValue = false;
+  bool? checkboxValue = false;
   @override
   Widget build(BuildContext context) {
     var titleText;

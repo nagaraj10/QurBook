@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -6,18 +7,18 @@ import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class Taglist extends StatefulWidget {
-  const Taglist({Key key, this.title, this.tags, this.onChecked,this.isClickable})
+  const Taglist({Key? key, this.title, this.tags, this.onChecked,this.isClickable})
       : super(key: key);
-  final String title;
-  final List<Tags> tags;
-  final bool isClickable;
-  final Function(List<Tags>) onChecked;
+  final String? title;
+  final List<Tags>? tags;
+  final bool? isClickable;
+  final Function(List<Tags>?)? onChecked;
   @override
     // TODO: implement createState
   _TaglistState createState() => _TaglistState();
 }
 class _TaglistState extends State<Taglist> {
-  List<CheckboxListTile> data = List();
+  List<CheckboxListTile> data = [];
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +43,9 @@ class _TaglistState extends State<Taglist> {
                   children: [
                     Wrap(
                       spacing: 6,
-                      children: widget.tags
+                      children: widget.tags!
                           .map(
-                              (e) => e.isChecked ? _buildChip(e.name) : Container())
+                              (e) => e.isChecked! ? _buildChip(e.name!) : Container())
                           .toList(),
                     ),
 
@@ -58,11 +59,11 @@ class _TaglistState extends State<Taglist> {
   }
 
   List<CheckboxListTile> getlistWithCheckbox() {
-    return widget.tags
+    return widget.tags!
         .map((e) => CheckboxListTile(
       value: e.isChecked,
       checkColor: Color(CommonUtil().getMyPrimaryColor()),
-      title: Text(e.name,
+      title: Text(e.name!,
           style: TextStyle(
             color: Color(CommonUtil().getMyPrimaryColor()),
           )),
@@ -73,9 +74,9 @@ class _TaglistState extends State<Taglist> {
         setState(() {
           e.isChecked = val;
         });
-        widget.onChecked(widget.tags);
+        widget.onChecked!(widget.tags);
       },
-      selected: e.isChecked,
+      selected: e.isChecked!,
       activeColor: Colors.white,
     ))
         .toList();

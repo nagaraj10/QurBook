@@ -1,6 +1,7 @@
+
 class AddMediaRegimentModel {
-  bool isSuccess;
-  AddMediaRegimentResult result;
+  bool? isSuccess;
+  AddMediaRegimentResult? result;
 
   AddMediaRegimentModel({this.isSuccess, this.result});
 
@@ -15,16 +16,16 @@ class AddMediaRegimentModel {
     final data = <String, dynamic>{};
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class AddMediaRegimentResult {
-  String url;
-  String fileName;
-  String accessUrl;
+  String? url;
+  String? fileName;
+  String? accessUrl;
 
   AddMediaRegimentResult({this.url, this.fileName, this.accessUrl});
 

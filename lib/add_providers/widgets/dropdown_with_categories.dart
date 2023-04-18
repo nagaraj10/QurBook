@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -5,17 +6,17 @@ import '../../common/CommonUtil.dart';
 import '../../src/model/Media/media_result.dart';
 
 class DropdownWithCategories extends StatefulWidget {
-  const DropdownWithCategories({Key key, this.title, this.mediaData, this.onChecked})
+  const DropdownWithCategories({Key? key, this.title, this.mediaData, this.onChecked})
       : super(key: key);
-  final String title;
-  final List<MediaResult> mediaData;
-  final Function(List<MediaResult>) onChecked;
+  final String? title;
+  final List<MediaResult>? mediaData;
+  final Function(List<MediaResult>?)? onChecked;
   @override
   _DropdownWithCategoriesState createState() => _DropdownWithCategoriesState();
 }
 
 class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
-  List<CheckboxListTile> data = List();
+  List<CheckboxListTile> data = [];
 
   @override
   void initState() {
@@ -36,9 +37,9 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
               children: [
                 Wrap(
                   spacing: 6,
-                  children: widget.mediaData
+                  children: widget.mediaData!
                       .map(
-                          (e) => e.isChecked ? _buildChip(e.name) : Container())
+                          (e) => e.isChecked! ? _buildChip(e.name!) : Container())
                       .toList(),
                 ),
                 SizedBox(
@@ -61,24 +62,24 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
   }
 
   List<CheckboxListTile> getlistWithCheckbox() {
-    return widget.mediaData
+    return widget.mediaData!
         .map((e) => CheckboxListTile(
               value: e.isChecked,
               checkColor: Color(CommonUtil().getMyPrimaryColor()),
-              title: Text(e.name,
+              title: Text(e.name!,
                   style: TextStyle(
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   )),
               onChanged: (val) {
                 print(val);
-                whenAllIsChecked(val, e.name);
+                whenAllIsChecked(val!, e.name!);
                 e.isChecked = val;
                 setState(() {
                   e.isChecked = val;
                 });
-                widget.onChecked(widget.mediaData);
+                widget.onChecked!(widget.mediaData);
               },
-              selected: e.isChecked,
+              selected: e.isChecked!,
               activeColor: Colors.white,
             ))
         .toList();
@@ -123,7 +124,7 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
   void whenAllIsChecked(bool val, String name) {
     if (name == STR_ALL || name == STR_DEVICES) {
       if (name == STR_ALL) {
-        for (var mediaResult in widget.mediaData) {
+        for (var mediaResult in widget.mediaData!) {
           if (mediaResult.name == STR_PRESCRIPTION ||
               mediaResult.name == STR_LABREPORT ||
               mediaResult.name == STR_MEDICALREPORT ||
@@ -135,7 +136,7 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
           }
         }
       } else if (name == STR_DEVICES) {
-        for (var mediaResult in widget.mediaData) {
+        for (var mediaResult in widget.mediaData!) {
           if (mediaResult.name == STR_PULSE_OXIMETER ||
               mediaResult.name == STR_THERMOMETER ||
               mediaResult.name == STR_GLUCOMETER ||

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -16,7 +17,7 @@ import 'package:provider/provider.dart';
 
 class RegimentScreen extends StatelessWidget {
 
-  final RegimentArguments aruguments;
+  final RegimentArguments? aruguments;
 
   RegimentScreen({this.aruguments});
   final GlobalKey<State> _key = GlobalKey<State>();

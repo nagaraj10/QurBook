@@ -1,11 +1,12 @@
+
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
 as parameters;
 
 class FeeDetails {
   var paidAmount;
-  int doctorCancellationCharge;
+  int? doctorCancellationCharge;
   var finalRefundAmount;
-  String paymentMode;
+  String? paymentMode;
 
   FeeDetails(
       {this.paidAmount, this.doctorCancellationCharge, this.finalRefundAmount,this.paymentMode});

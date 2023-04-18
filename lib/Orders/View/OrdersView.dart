@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -29,7 +30,7 @@ class _OrdersViewState extends State<OrdersView> {
 
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
       'pageName': 'OrdersView Screen',
@@ -95,7 +96,7 @@ class _OrdersViewState extends State<OrdersView> {
                   itemCount: controller.orders.value.length,
                   itemBuilder: (BuildContext context, int index) {
                     OrderModel currentOrder = controller.orders.value[index];
-                    return currentOrder.isAppointment
+                    return currentOrder.isAppointment!
                         ? AppointmentOrderTile(
                             order: currentOrder,
                           )

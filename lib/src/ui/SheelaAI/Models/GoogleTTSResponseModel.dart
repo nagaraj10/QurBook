@@ -1,6 +1,7 @@
+
 class GoogleTTSResponseModel {
-  bool isSuccess;
-  Payload payload;
+  bool? isSuccess;
+  Payload? payload;
 
   GoogleTTSResponseModel({this.isSuccess, this.payload});
 
@@ -14,14 +15,14 @@ class GoogleTTSResponseModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
-      data['payload'] = this.payload.toJson();
+      data['payload'] = this.payload!.toJson();
     }
     return data;
   }
 }
 
 class Payload {
-  String audioContent;
+  String? audioContent;
 
   Payload({this.audioContent});
 

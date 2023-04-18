@@ -1,5 +1,6 @@
+
 class UserAccountsArguments {
-  int selectedIndex;
+  int? selectedIndex;
 
   UserAccountsArguments({this.selectedIndex});
 }

@@ -1,3 +1,4 @@
+
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -20,21 +21,21 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class PaymentPage extends StatefulWidget {
-  final String redirectUrl;
-  final String paymentId;
-  final String appointmentId;
-  Function(String) closePage;
+  final String? redirectUrl;
+  final String? paymentId;
+  final String? appointmentId;
+  Function(String)? closePage;
   bool isFromSubscribe;
-  bool isFromRazor;
+  bool? isFromRazor;
   bool isPaymentFromNotification;
 
   PaymentPage(
-      {Key key,
-      @required this.redirectUrl,
-      @required this.paymentId,
-      @required this.appointmentId,
-      @required this.isFromSubscribe,
-      @required this.isFromRazor,
+      {Key? key,
+      required this.redirectUrl,
+      required this.paymentId,
+     this.appointmentId,
+      required this.isFromSubscribe,
+      required this.isFromRazor,
       this.isPaymentFromNotification = false,
       this.closePage})
       : super(key: key);
@@ -44,12 +45,12 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _WebViewExampleState extends State<PaymentPage> {
-  String PAYMENT_URL;
-  String paymentId;
-  String appointmentId;
-  UpdatePaymentViewModel updatePaymentViewModel;
+  String? PAYMENT_URL;
+  String? paymentId;
+  String? appointmentId;
+  late UpdatePaymentViewModel updatePaymentViewModel;
   bool isFromSubscribe = false;
-  bool isFromRazor = false;
+  bool? isFromRazor = false;
 
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
@@ -103,7 +104,7 @@ class _WebViewExampleState extends State<PaymentPage> {
             NavigationControls(_controller.future),
           ],
         ),
-        body: isFromRazor
+        body: isFromRazor!
             ? iosWebview()
             : Platform.isAndroid
                 ? androidWebview()
@@ -130,13 +131,13 @@ class _WebViewExampleState extends State<PaymentPage> {
           navigationDelegate: (NavigationRequest request) {
             String finalUrl = request.url.toString();
             if (finalUrl.contains(CHECK_URL)) {
-              String paymentOrderId = '';
-              String paymentRequestId = '';
-              String signature = '';
-              String paymentStatus = '';
+              String? paymentOrderId = '';
+              String? paymentRequestId = '';
+              String? signature = '';
+              String? paymentStatus = '';
               Uri uri = Uri.parse(finalUrl);
 
-              if (isFromRazor) {
+              if (isFromRazor!) {
                 paymentStatus = uri.queryParameters[RAZOR_PAYMENT_STATUS];
                 paymentOrderId = uri.queryParameters[RAZOR_PAYMENT_ID];
                 paymentRequestId = uri.queryParameters[RAZOR_PAYMENT_REQ_ID];
@@ -150,32 +151,32 @@ class _WebViewExampleState extends State<PaymentPage> {
               if (paymentStatus != null && paymentStatus == CREDIT ||
                   paymentStatus != null && paymentStatus == PAID) {
                 if (isFromSubscribe) {
-                  updatePaymentSubscribe(paymentId, paymentOrderId,
-                          paymentRequestId, isFromRazor, signature)
+                  updatePaymentSubscribe(paymentId!, paymentOrderId!,
+                          paymentRequestId!, isFromRazor!, signature!)
                       .then((value) {
-                    if (value?.isSuccess == true &&
-                        value?.result?.paymentStatus == PAYSUC) {
-                      paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
+                    if (value.isSuccess == true &&
+                        value.result?.paymentStatus == PAYSUC) {
+                      paymentOrderIdSub = value.result?.paymentOrderId ?? '';
                       subscribeViewModel
                           .subScribePlan(
-                              value?.result?.planPackage?.packageid.toString())
+                              value.result!.planPackage!.packageid.toString())
                           .then((value) {
-                        if (value?.isSuccess) {
-                          if (value?.result?.result == 'Done') {
+                        if (value!.isSuccess!) {
+                          if (value.result?.result == 'Done') {
                             callResultPage(true, paymentOrderIdSub);
                           } else {
                             FlutterToast().getToast(
-                                value != null && value?.result?.message != null
-                                    ? value?.result?.message
-                                    : 'Subscribe Failed',
+                                (value != null && value.result?.message != null
+                                    ? value.result?.message!
+                                    : 'Subscribe Failed')!,
                                 Colors.red);
                             callResultPage(false, '');
                           }
                         } else {
                           FlutterToast().getToast(
-                              value != null && value?.result?.message != null
-                                  ? value?.result?.message
-                                  : 'Subscribe Failed',
+                              (value != null && value.result?.message != null
+                                  ? value.result?.message!
+                                  : 'Subscribe Failed')!,
                               Colors.red);
                           callResultPage(false, '');
                         }
@@ -185,23 +186,23 @@ class _WebViewExampleState extends State<PaymentPage> {
                     }
                   });
                 } else {
-                  updatePayment(paymentId, paymentOrderId, paymentRequestId,
-                      isFromRazor, signature);
+                  updatePayment(paymentId!, paymentOrderId!, paymentRequestId!,
+                      isFromRazor!, signature!);
                 }
               } else {
                 if (isFromSubscribe) {
-                  updatePaymentSubscribe(paymentId, paymentOrderId,
-                          paymentRequestId, isFromRazor, signature)
+                  updatePaymentSubscribe(paymentId!, paymentOrderId!,
+                          paymentRequestId!, isFromRazor!, signature!)
                       .then((value) {
-                    if (value?.isSuccess == true) {
+                    if (value.isSuccess == true) {
                       callResultPage(false, '');
                     } else {
                       callResultPage(false, '');
                     }
                   });
                 } else {
-                  updatePayment(paymentId, paymentOrderId, paymentRequestId,
-                      isFromRazor, signature);
+                  updatePayment(paymentId!, paymentOrderId!, paymentRequestId!,
+                      isFromRazor!, signature!);
                 }
               }
             } else if (finalUrl.contains(STATUS_FAILED)) {
@@ -236,13 +237,13 @@ class _WebViewExampleState extends State<PaymentPage> {
         navigationDelegate: (NavigationRequest request) {
           String finalUrl = request.url.toString();
           if (finalUrl.contains(CHECK_URL)) {
-            String paymentOrderId = '';
-            String paymentRequestId = '';
-            String signature = '';
-            String paymentStatus = '';
+            String? paymentOrderId = '';
+            String? paymentRequestId = '';
+            String? signature = '';
+            String? paymentStatus = '';
             Uri uri = Uri.parse(finalUrl);
 
-            if (isFromRazor) {
+            if (isFromRazor!) {
               paymentStatus = uri.queryParameters[RAZOR_PAYMENT_STATUS];
               paymentOrderId = uri.queryParameters[RAZOR_PAYMENT_ID];
               paymentRequestId = uri.queryParameters[RAZOR_PAYMENT_REQ_ID];
@@ -255,32 +256,32 @@ class _WebViewExampleState extends State<PaymentPage> {
             if (paymentStatus != null && paymentStatus == CREDIT ||
                 paymentStatus != null && paymentStatus == PAID) {
               if (isFromSubscribe) {
-                updatePaymentSubscribe(paymentId, paymentOrderId,
-                        paymentRequestId, isFromRazor, signature)
+                updatePaymentSubscribe(paymentId!, paymentOrderId!,
+                        paymentRequestId!, isFromRazor!, signature!)
                     .then((value) {
-                  if (value?.isSuccess == true &&
-                      value?.result?.paymentStatus == PAYSUC) {
-                    paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
+                  if (value.isSuccess == true &&
+                      value.result?.paymentStatus == PAYSUC) {
+                    paymentOrderIdSub = value.result?.paymentOrderId ?? '';
                     subscribeViewModel
                         .subScribePlan(
-                            value?.result?.planPackage?.packageid.toString())
+                            value.result!.planPackage!.packageid.toString())
                         .then((value) {
-                      if (value?.isSuccess) {
-                        if (value?.result?.result == 'Done') {
+                      if (value!.isSuccess!) {
+                        if (value.result?.result == 'Done') {
                           callResultPage(true, paymentOrderIdSub);
                         } else {
                           FlutterToast().getToast(
-                              value != null && value?.result?.message != null
-                                  ? value?.result?.message
-                                  : 'Subscribe Failed',
+                              (value != null && value.result?.message != null
+                                  ? value.result?.message!
+                                  : 'Subscribe Failed')!,
                               Colors.red);
                           callResultPage(false, '');
                         }
                       } else {
                         FlutterToast().getToast(
-                            value != null && value?.result?.message != null
-                                ? value?.result?.message
-                                : 'Subscribe Failed',
+                            (value != null && value.result?.message != null
+                                ? value.result?.message!
+                                : 'Subscribe Failed')!,
                             Colors.red);
                         callResultPage(false, '');
                       }
@@ -290,23 +291,23 @@ class _WebViewExampleState extends State<PaymentPage> {
                   }
                 });
               } else {
-                updatePayment(paymentId, paymentOrderId, paymentRequestId,
-                    isFromRazor, signature);
+                updatePayment(paymentId!, paymentOrderId!, paymentRequestId!,
+                    isFromRazor!, signature!);
               }
             } else {
               if (isFromSubscribe) {
-                updatePaymentSubscribe(paymentId, paymentOrderId,
-                        paymentRequestId, isFromRazor, signature)
+                updatePaymentSubscribe(paymentId!, paymentOrderId!,
+                        paymentRequestId!, isFromRazor!, signature!)
                     .then((value) {
-                  if (value?.isSuccess == true) {
+                  if (value.isSuccess == true) {
                     callResultPage(false, '');
                   } else {
                     callResultPage(false, '');
                   }
                 });
               } else {
-                updatePayment(paymentId, paymentOrderId, paymentRequestId,
-                    isFromRazor, signature);
+                updatePayment(paymentId!, paymentOrderId!, paymentRequestId!,
+                    isFromRazor!, signature!);
               }
             }
           } else if (finalUrl.contains(STATUS_FAILED)) {
@@ -339,7 +340,7 @@ class _WebViewExampleState extends State<PaymentPage> {
               FlatButton(
                 onPressed: () {
                   if (!isFromSubscribe) {
-                    widget.closePage(STR_FAILED);
+                    widget.closePage!(STR_FAILED);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   } else {
@@ -351,11 +352,10 @@ class _WebViewExampleState extends State<PaymentPage> {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool);
   }
 
-  void callResultPage(bool status, String refNo) {
+  void callResultPage(bool status, String? refNo) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -365,7 +365,7 @@ class _WebViewExampleState extends State<PaymentPage> {
                   isFromSubscribe: isFromSubscribe,
                   closePage: (value) {
                     if (widget.isPaymentFromNotification == false) {
-                      widget.closePage(value);
+                      widget.closePage!(value);
                       Navigator.pop(context);
                     }
                   },
@@ -373,7 +373,7 @@ class _WebViewExampleState extends State<PaymentPage> {
                   paymentRetryUrl: PAYMENT_URL,
                   paymentId: paymentId,
                   appointmentId: appointmentId,
-                  isPaymentFromNotification: widget?.isPaymentFromNotification,
+                  isPaymentFromNotification: widget.isPaymentFromNotification,
                 )));
   }
 
@@ -393,8 +393,8 @@ class _WebViewExampleState extends State<PaymentPage> {
             paymentId, paymentOrderId, paymentRequestId, isFromRazor, signature)
         .then((value) {
       if (value.isSuccess == true &&
-          value.result.paymentStatus.code == PAYSUC) {
-        callResultPage(true, value.result.paymentOrderId);
+          value.result!.paymentStatus!.code == PAYSUC) {
+        callResultPage(true, value.result!.paymentOrderId);
       } else {
         callResultPage(false, '');
       }
@@ -407,11 +407,11 @@ class _WebViewExampleState extends State<PaymentPage> {
       String paymentRequestId,
       bool isFromRazor,
       String signature) async {
-    UpdatePaymentModel updatePaymentModel =
+    UpdatePaymentModel? updatePaymentModel =
         await updatePaymentViewModel.updatePaymentStatus(paymentId,
             paymentOrderId, paymentRequestId, isFromRazor, signature);
 
-    return updatePaymentModel;
+    return updatePaymentModel!;
   }
 
   Future<UpdatePaymentStatusSubscribe> updatePaymentSubscribe(
@@ -420,11 +420,11 @@ class _WebViewExampleState extends State<PaymentPage> {
       String paymentRequestId,
       bool isFromRazor,
       String signature) async {
-    UpdatePaymentStatusSubscribe updatePaymentModel =
+    UpdatePaymentStatusSubscribe? updatePaymentModel =
         await updatePaymentViewModel.updatePaymentSubscribe(paymentId,
             paymentOrderId, paymentRequestId, isFromRazor, signature);
 
-    return updatePaymentModel;
+    return updatePaymentModel!;
   }
 }
 
@@ -442,7 +442,7 @@ class NavigationControls extends StatelessWidget {
           (BuildContext context, AsyncSnapshot<WebViewController> snapshot) {
         final bool webViewReady =
             snapshot.connectionState == ConnectionState.done;
-        final WebViewController controller = snapshot.data;
+        final WebViewController? controller = snapshot.data;
         return Row(
           children: <Widget>[],
         );

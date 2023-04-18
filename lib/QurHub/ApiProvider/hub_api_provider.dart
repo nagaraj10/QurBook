@@ -23,7 +23,7 @@ class HubApiProvider {
         '${CommonUtil.BASE_URL_QURHUB}user-hub/$userId',
         headers: header,
       );
-      printInfo(info: responseJson.body);
+      printInfo(info: responseJson!.body);
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -46,7 +46,7 @@ class HubApiProvider {
         headers: header,
         body: body,
       );
-      if (responseJson.statusCode == 200) {
+      if (responseJson!.statusCode == 200) {
         return responseJson;
       }
       return null;
@@ -77,11 +77,11 @@ class HubApiProvider {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       final body = json.encode(data);
       printInfo(info: body);
-      responseJson = await ApiServices.post(
+      responseJson = (await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-device',
         headers: header,
         body: body,
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -121,10 +121,10 @@ class HubApiProvider {
     http.Response responseJson;
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.delete(
+      responseJson = (await ApiServices.delete(
         '${CommonUtil.BASE_URL_QURHUB}user-device/' + deviceId,
         headers: header,
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -149,7 +149,7 @@ class HubApiProvider {
         body: json.encode(data),
         timeOutSeconds: 50,
       );
-      if (responseJson.statusCode == 200) {
+      if (responseJson!.statusCode == 200) {
         return responseJson;
       } else {
         return responseJson;

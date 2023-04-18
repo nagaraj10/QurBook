@@ -1,11 +1,12 @@
+
 import '../constants/constants.dart';
 
 class ChangePasswordModel {
-  String newPassword;
-  String oldPassword;
-  String source;
-  String message;
-  bool isSuccess;
+  String? newPassword;
+  String? oldPassword;
+  String? source;
+  String? message;
+  bool? isSuccess;
 
   ChangePasswordModel(
       {this.newPassword,

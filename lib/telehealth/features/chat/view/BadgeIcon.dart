@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -10,14 +11,14 @@ class BadgeIcon extends StatelessWidget {
       this.badgeColor = Colors.red,
       this.size = 15,
       this.fontSize = 12,
-      TextStyle badgeTextStyle})
+      TextStyle? badgeTextStyle})
       : this.badgeTextStyle = badgeTextStyle ??
             TextStyle(
               color: Colors.white,
               fontSize: 10.0.sp,
             );
-  final Widget icon;
-  final int badgeCount;
+  final Widget? icon;
+  final int? badgeCount;
   final bool showIfZero;
   final bool isForSheelaQueue;
   final Color badgeColor;
@@ -28,12 +29,12 @@ class BadgeIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Stack(children: <Widget>[
-      icon,
-      if (badgeCount > 0 || showIfZero) badge(badgeCount),
+      icon!,
+      if (badgeCount! > 0 || showIfZero) badge(badgeCount),
     ]);
   }
 
-  Widget badge(int count) => Positioned(
+  Widget badge(int? count) => Positioned(
         right: 0,
         top: 0,
         child: new Container(
@@ -49,10 +50,10 @@ class BadgeIcon extends StatelessWidget {
             child: getText(isForSheelaQueue, count)),
       );
 
-  getText(bool isForSheelaQueueBadge, int count) {
+  getText(bool isForSheelaQueueBadge, int? count) {
     return isForSheelaQueueBadge
         ? Text(
-            count > 9 ? '9+' : count.toString(),
+            count! > 9 ? '9+' : count.toString(),
             style: new TextStyle(
               color: Colors.white,
               fontSize: fontSize.sp,

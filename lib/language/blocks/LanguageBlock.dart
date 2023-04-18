@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../../common/PreferenceUtil.dart';
@@ -9,13 +10,13 @@ import '../../constants/variable_constant.dart' as variable;
 import '../../constants/fhb_constants.dart' as Constants;
 
 class LanguageBlock implements BaseBloc {
-  LanguageRepository _languageResponseListRepository;
-  StreamController _languageControlllers;
+  late LanguageRepository _languageResponseListRepository;
+  StreamController? _languageControlllers;
 
   StreamSink<ApiResponse<LanguageModel>> get categoryListSinks =>
-      _languageControlllers.sink;
+      _languageControlllers!.sink as StreamSink<ApiResponse<LanguageModel>>;
   Stream<ApiResponse<LanguageModel>> get categoryListStreams =>
-      _languageControlllers.stream;
+      _languageControlllers!.stream as Stream<ApiResponse<LanguageModel>>;
 
   @override
   void dispose() {
@@ -28,8 +29,8 @@ class LanguageBlock implements BaseBloc {
     _languageResponseListRepository = LanguageRepository();
   }
 
-  Future<LanguageModel> getLanguageList() async {
-    LanguageModel languageModelList;
+  Future<LanguageModel?> getLanguageList() async {
+    LanguageModel? languageModelList;
     categoryListSinks.add(ApiResponse.loading(variable.strGettingCategory));
     try {
       languageModelList = await _languageResponseListRepository.getLanguage();

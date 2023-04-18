@@ -1,4 +1,6 @@
+
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -43,10 +45,10 @@ import '../bloc/hospital_list_block.dart';
 export '../models/hospital_list_response.dart';
 
 class SearchSpecificList extends StatefulWidget {
-  SearchArguments arguments;
+  SearchArguments? arguments;
 
-  bool toPreviousScreen;
-  bool isSkipUnknown;
+  bool? toPreviousScreen;
+  bool? isSkipUnknown;
   bool isFromCreateTicket;
 
   SearchSpecificList(
@@ -62,20 +64,20 @@ class SearchSpecificList extends StatefulWidget {
 }
 
 class SearchSpecificListState extends State<SearchSpecificList> {
-  HealthReportListForUserBlock _healthReportListForUserBlock;
+  late HealthReportListForUserBlock _healthReportListForUserBlock;
 
-  DoctorsListBlock _doctorsListBlock;
+  DoctorsListBlock? _doctorsListBlock;
 
-  HospitalListBlock _hospitalListBlock;
+  HospitalListBlock? _hospitalListBlock;
 
-  LabsListBlock _labsListBlock;
+  LabsListBlock? _labsListBlock;
 
   final TextEditingController _textFieldController =
       TextEditingController(text: '');
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  String value;
+  String? value;
 
   final mobileNoController = TextEditingController();
   FocusNode mobileNoFocus = FocusNode();
@@ -102,16 +104,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
-  MyProfileModel myProfile;
+  MyProfileModel? myProfile;
   final doctorController = TextEditingController();
-  FamilyListBloc _familyListBloc;
+  FamilyListBloc? _familyListBloc;
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  String updatedProfilePic;
-  String selectedFamilyMemberName, switchedUserId;
-  String USERID;
+  String? updatedProfilePic;
+  String? selectedFamilyMemberName, switchedUserId;
+  String? USERID;
   FlutterToast toast = FlutterToast();
-  UpdateProvidersBloc updateProvidersBloc;
-  bool teleHealthAlertShown = false;
+  late UpdateProvidersBloc updateProvidersBloc;
+  bool? teleHealthAlertShown = false;
 
   var regController = CommonUtil().onInitQurhomeRegimenController();
 
@@ -133,26 +135,26 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       value = _textFieldController.text.toString();
 
       _familyListBloc = FamilyListBloc();
-      _familyListBloc.getFamilyMembersListNew();
+      _familyListBloc!.getFamilyMembersListNew();
 
       if (value != '') {
-        _doctorsListBlock.getDoctorsListNew(
-            _textFieldController.text.toString() ?? '', widget.isSkipUnknown);
+        _doctorsListBlock!.getDoctorsListNew(
+            _textFieldController.text.toString(), widget.isSkipUnknown);
       } else {
-        if (widget.arguments.searchWord == CommonConstants.doctors) {
-          _doctorsListBlock.getExistingDoctorList('40');
-        } else if (widget.arguments.searchWord == CommonConstants.hospitals) {
-          _hospitalListBlock
+        if (widget.arguments!.searchWord == CommonConstants.doctors) {
+          _doctorsListBlock!.getExistingDoctorList('40');
+        } else if (widget.arguments!.searchWord == CommonConstants.hospitals) {
+          _hospitalListBlock!
               .getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
-        } else if (widget.arguments.searchWord == CommonConstants.labs ||
-            widget.arguments.searchWord == CommonConstants.lab) {
-          _labsListBlock.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID,widget.isFromCreateTicket);
+        } else if (widget.arguments!.searchWord == CommonConstants.labs ||
+            widget.arguments!.searchWord == CommonConstants.lab) {
+          _labsListBlock!.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID,widget.isFromCreateTicket);
         }
-        else if (widget.arguments.searchWord == CommonConstants.keyCity) {
-          _labsListBlock.getCityList('a');
+        else if (widget.arguments!.searchWord == CommonConstants.keyCity) {
+          _labsListBlock!.getCityList('a');
         }
       }
-      WidgetsBinding.instance.addPostFrameCallback(
+      WidgetsBinding.instance!.addPostFrameCallback(
           (_) => _refreshIndicatorKey.currentState?.show());
     } catch (e) {
       //print(e);
@@ -185,7 +187,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               Navigator.pop(context, [1]);
             },
           ),
-          title: Text('${widget.arguments.searchWord} ' + variable.strSearch)),
+          title: Text('${widget.arguments!.searchWord} ' + variable.strSearch)),
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.
@@ -222,32 +224,32 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 onChanged: (editedValue) {
                   if (editedValue != '') {
                     value = editedValue;
-                    widget.arguments.searchWord == CommonConstants.doctors
-                        ? _doctorsListBlock.getDoctorsListNew(
+                    widget.arguments!.searchWord == CommonConstants.doctors
+                        ? _doctorsListBlock!.getDoctorsListNew(
                             value, widget.isSkipUnknown)
-                        : widget.arguments.searchWord ==
+                        : widget.arguments!.searchWord ==
                                 CommonConstants.hospitals
-                            ? _hospitalListBlock.getHospitalListNew(value)
-                            : widget.arguments.searchWord ==
+                            ? _hospitalListBlock!.getHospitalListNew(value)
+                            : widget.arguments!.searchWord! ==
                         CommonConstants.labs ||
-                        widget.arguments.searchWord ==
+                        widget.arguments!.searchWord ==
                             CommonConstants.lab
-                        ? _labsListBlock.getLabsListNew(value,widget.isFromCreateTicket):_labsListBlock.getCityList(value);
+                        ? _labsListBlock!.getLabsListNew(value!,widget.isFromCreateTicket):_labsListBlock!.getCityList(value!);
                     setState(() {});
                   } else {
-                    widget.arguments.searchWord == CommonConstants.doctors
-                        ? _doctorsListBlock.getExistingDoctorList('50')
-                        : widget.arguments.searchWord ==
+                    widget.arguments!.searchWord == CommonConstants.doctors
+                        ? _doctorsListBlock!.getExistingDoctorList('50')
+                        : widget.arguments!.searchWord ==
                                 CommonConstants.hospitals
-                            ? _hospitalListBlock.getExistingHospitalListNew(
+                            ? _hospitalListBlock!.getExistingHospitalListNew(
                                 Constants.STR_HEALTHORG_HOSPID)
-                            : widget.arguments.searchWord ==
+                            : widget.arguments!.searchWord ==
                                         CommonConstants.labs ||
-                                    widget.arguments.searchWord ==
+                                    widget.arguments!.searchWord ==
                                         CommonConstants.lab
-                                ? _labsListBlock.getExistingLabsListNew(
+                                ? _labsListBlock!.getExistingLabsListNew(
                                     Constants.STR_HEALTHORG_LABID,widget.isFromCreateTicket)
-                                : _labsListBlock.getCityList('a');
+                                : _labsListBlock!.getCityList('a');
                     setState(() {});
                   }
                 },
@@ -274,23 +276,23 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         child: Text(variable.strNodata),
                       ),
                     )*/
-                  widget.arguments.searchWord == CommonConstants.doctors
+                  widget.arguments!.searchWord == CommonConstants.doctors
                       ? getResponseFromApiWidgetForDoctors()
-                      : widget.arguments.searchWord == CommonConstants.hospitals
+                      : widget.arguments!.searchWord == CommonConstants.hospitals
                           ? getResponseFromApiWidgetForHospital()
-                          : widget.arguments.searchWord ==
+                          : widget.arguments!.searchWord ==
                       CommonConstants.labs ||
-                                  widget.arguments.searchWord ==
+                                  widget.arguments!.searchWord ==
                                       CommonConstants.lab
                               ? getResponseFromApiWidgetForLabs()
                               : getResponseFromApiWidgetForCity()
-                  : widget.arguments.searchWord == CommonConstants.doctors
+                  : widget.arguments!.searchWord == CommonConstants.doctors
                       ? getResponseFromApiWidgetForDoctors()
-                      : widget.arguments.searchWord == CommonConstants.hospitals
+                      : widget.arguments!.searchWord == CommonConstants.hospitals
                           ? getResponseFromApiWidgetForHospital()
-                          : widget.arguments.searchWord ==
+                          : widget.arguments!.searchWord ==
                                       CommonConstants.labs ||
-                                  widget.arguments.searchWord ==
+                                  widget.arguments!.searchWord ==
                                       CommonConstants.lab
                               ? getResponseFromApiWidgetForLabs()
                               : getResponseFromApiWidgetForCity()),
@@ -301,11 +303,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   Widget getResponseFromApiWidgetForDoctors() {
     return StreamBuilder<ApiResponse<DoctorsSearchListResponse>>(
-      stream: _doctorsListBlock.doctorsNewStream,
+      stream: _doctorsListBlock!.doctorsNewStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data.status) {
+        switch (snapshot.data!.status) {
           case Status.LOADING:
             rebuildBlockObject();
             return Center(
@@ -326,20 +328,20 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.COMPLETED:
             rebuildBlockObject();
-            return (snapshot.data.data.isSuccess == false &&
+            return (snapshot.data!.data!.isSuccess == false &&
                     widget.isSkipUnknown == true)
                 ? Container(
                     margin: EdgeInsets.all(5),
-                    child: getAllDatasInDoctorsListScrap(snapshot.data.data),
+                    child: getAllDatasInDoctorsListScrap(snapshot.data!.data!),
                   )
-                : (snapshot.data.data.result == null)
+                : (snapshot.data!.data!.result == null)
                     ? /*Container(
                         child: Center(
                           child: Text(variable.strNodata),
                         ),
                       )*/
-                    getEmptyCard(snapshot.data.data.diagnostics)
-                    : snapshot.data.data.result.isEmpty
+                    getEmptyCard(snapshot.data!.data!.diagnostics)
+                    : snapshot.data!.data!.result!.isEmpty
                         ? Container(
                             child: Center(
                               child: Text(variable.strNodata),
@@ -349,7 +351,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         : Container(
                             margin: EdgeInsets.all(5),
                             child: getAllDatasInDoctorsList(
-                                snapshot.data.data.result),
+                                snapshot.data!.data!.result),
                           );
             break;
         }
@@ -359,11 +361,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   Widget getResponseFromApiWidgetForHospital() {
     return StreamBuilder<ApiResponse<HospitalsSearchListResponse>>(
-      stream: _hospitalListBlock.hospitalNewStream,
+      stream: _hospitalListBlock!.hospitalNewStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data.status) {
+        switch (snapshot.data!.status) {
           case Status.LOADING:
             rebuildBlockObject();
             return Center(
@@ -385,14 +387,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           case Status.COMPLETED:
             rebuildBlockObject();
 
-            return snapshot.data.data.result == null
+            return snapshot.data!.data!.result == null
                 ? /*Container(
                     child: Center(
                       child: Text(variable.strNodata),
                     ),
                   )*/
-                getEmptyCard(snapshot.data.data.diagnostics)
-                : snapshot.data.data.result.isEmpty
+                getEmptyCard(snapshot.data!.data!.diagnostics)
+                : snapshot.data!.data!.result!.isEmpty
                     ? Container(
                         child: Center(
                           child: Text(variable.strNodata),
@@ -401,7 +403,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     //getEmptyCard()
                     : Container(
                         child: getAllDatasInHospitalList(
-                            snapshot.data.data.result),
+                            snapshot.data!.data!.result),
                         margin: EdgeInsets.all(5),
                       );
             break;
@@ -412,12 +414,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   Widget getResponseFromApiWidgetForLabs() {
     return StreamBuilder<ApiResponse<LabsSearchListResponse>>(
-      stream: _labsListBlock.labNewStream,
+      stream: _labsListBlock!.labNewStream,
       builder: (context, snapshot) {
         String strText = value ?? "";
         if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data.status) {
+        switch (snapshot.data!.status) {
           case Status.LOADING:
             rebuildBlockObject();
             return Center(
@@ -443,16 +445,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 ? Container(
                     margin: EdgeInsets.all(5),
                     child: getAllDatasInLabsList(
-                        snapshot?.data?.data?.result ?? []),
+                        snapshot.data?.data?.result ?? []),
                   )
-                : snapshot.data.data.result == null
+                : snapshot.data!.data!.result == null
                     ? Container(
                     child: Center(
                       child: Text(variable.strNodata),
                     ),
                   )
                 //getEmptyCard()
-                : snapshot.data.data.result.isEmpty
+                : snapshot.data!.data!.result!.isEmpty
                     ? Container(
                         child: Center(
                           child: Text(variable.strNodata),
@@ -461,7 +463,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     //getEmptyCard()
                     : Container(
                         margin: EdgeInsets.all(5),
-                        child: getAllDatasInLabsList(snapshot.data.data.result),
+                        child: getAllDatasInLabsList(snapshot.data!.data!.result),
                       );
 
             break;
@@ -469,6 +471,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           default:
             break;
         }
+        // }
+       return Container();
+    
+        
       },
     );
   }
@@ -484,8 +490,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     _labsListBlock = LabsListBlock();
   }
 
-  Widget getEmptyCard(Diagnostics diagnostics) {
-    return !widget.toPreviousScreen
+  Widget getEmptyCard(Diagnostics? diagnostics) {
+    return !widget.toPreviousScreen!
         ? Center(
             child: Text(
               'No Records Found ',
@@ -512,15 +518,15 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   height: 10,
                 ),
                 fhbBasicWidget.getSaveButton(() {
-                  if (widget.toPreviousScreen) {
-                    widget.arguments.searchWord == CommonConstants.doctors
+                  if (widget.toPreviousScreen!) {
+                    widget.arguments!.searchWord == CommonConstants.doctors
                         ? saveMediaDialog(context)
-                        : widget.arguments.searchWord ==
+                        : widget.arguments!.searchWord ==
                                 CommonConstants.hospitals
                             ? saveHospitalDialog(context)
-                            : widget.arguments.searchWord ==
+                            : widget.arguments!.searchWord ==
                         CommonConstants.labs ||
-                        widget.arguments.searchWord ==
+                        widget.arguments!.searchWord ==
                             CommonConstants.lab
                         ? passLaboratoryValue(null, context):passCityValue(null, context);
                   }
@@ -538,14 +544,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showAddButton(Diagnostics diagnostics) {
     final loginButtonWithGesture = GestureDetector(
       onTap: () {
-        if (widget.toPreviousScreen) {
-          widget.arguments.searchWord == CommonConstants.doctors
+        if (widget.toPreviousScreen!) {
+          widget.arguments!.searchWord == CommonConstants.doctors
               ? passDoctorsValue(diagnostics.errorData, context)
-              : widget.arguments.searchWord == CommonConstants.hospitals
+              : widget.arguments!.searchWord == CommonConstants.hospitals
                   ? passHospitalValue(null, context)
-                  : widget.arguments.searchWord ==
+                  : widget.arguments!.searchWord ==
               CommonConstants.labs ||
-              widget.arguments.searchWord ==
+              widget.arguments!.searchWord ==
                   CommonConstants.lab
               ? passLaboratoryValue(null, context):passCityValue(null, context);
         }
@@ -582,7 +588,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         child: loginButtonWithGesture);
   }
 
-  Widget getAllDatasInDoctorsList(List<DoctorsListResult> data) {
+  Widget getAllDatasInDoctorsList(List<DoctorsListResult>? data) {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
@@ -594,10 +600,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
                       (data[i].name != null && data[i].name != '')
-                          ? data[i]?.name?.capitalizeFirstofEach
-                          : data[i]?.firstName?.capitalizeFirstofEach +
+                          ? data[i].name!.capitalizeFirstofEach
+                          : data[i].firstName!.capitalizeFirstofEach +
                               ' ' +
-                              data[i]?.lastName?.capitalizeFirstofEach,
+                              data[i].lastName!.capitalizeFirstofEach,
                       getDoctorsAddress(data[i]),
                       data[i].doctorId,
                       data[i].profilePicThumbnailUrl,
@@ -622,7 +628,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       onRefresh: _refresh,
       child: (data.isSuccess == false &&
               widget.isSkipUnknown == true &&
-              data?.diagnostics?.errorData != null)
+              data.diagnostics?.errorData != null)
           ? Container(
               color: Color(fhbColors.bgColorContainer),
               child: getEmptyCard(data.diagnostics),
@@ -634,22 +640,22 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     itemBuilder: (c, i) => Container(
                       padding: EdgeInsets.only(top: 2, bottom: 2),
                       child: getCardToDisplaySearchList(
-                          (data.result[i].name != null &&
-                                  data.result[i].name != '')
-                              ? data?.result[i]?.name?.capitalizeFirstofEach
-                              : data?.result[i]?.firstName
-                                      ?.capitalizeFirstofEach +
+                          (data.result![i].name != null &&
+                                  data.result![i].name != '')
+                              ? data.result![i].name!.capitalizeFirstofEach
+                              : data.result![i].firstName
+                                      !.capitalizeFirstofEach +
                                   ' ' +
-                                  data?.result[i]?.lastName
-                                      ?.capitalizeFirstofEach,
-                          getDoctorsAddress(data.result[i]),
-                          data.result[i].doctorId,
-                          data.result[i].profilePicThumbnailUrl,
-                          data.result[i],
+                                  data.result![i].lastName
+                                      !.capitalizeFirstofEach,
+                          getDoctorsAddress(data.result![i]),
+                          data.result![i].doctorId,
+                          data.result![i].profilePicThumbnailUrl,
+                          data.result![i],
                           HospitalsListResult(),
                           LabListResult()),
                     ),
-                    itemCount: data.result.length,
+                    itemCount: data.result!.length,
                   ))
               : Container(
                   color: Color(fhbColors.bgColorContainer),
@@ -660,7 +666,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
-  getAllDatasInHospitalList(List<HospitalsListResult> data) {
+  getAllDatasInHospitalList(List<HospitalsListResult>? data) {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
@@ -695,12 +701,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
-  Widget getAllDatasInLabsList(List<LabListResult> data) {
+  Widget getAllDatasInLabsList(List<LabListResult>? data) {
     try {
       if (widget.isFromCreateTicket) {
-        Location locationModel = regController.locationModel;
+        Location? locationModel = regController.locationModel;
 
-        List<LabListResult> tempLabListResult = data;
+        List<LabListResult>? tempLabListResult = data;
 
         //print("tempLabListResult length ${tempLabListResult.length}");
 
@@ -767,7 +773,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           labListResult.healthOrganizationName =
               toBeginningOfSentenceCase(strOthers);
           labListResult.healthOrganizationId = strOthers;
-          data.add(labListResult);
+          data!.add(labListResult);
         }
       }
     } catch (e) {
@@ -784,7 +790,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
-                      data[i].healthOrganizationName,
+                      data![i].healthOrganizationName,
                       data[i].addressLine1,
                       data[i].healthOrganizationId ??
                           data[i].healthOrganizationReferenceId,
@@ -805,14 +811,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getCardToDisplaySearchList(
-      String name,
-      String address,
-      String id,
-      String logo,
+      String? name,
+      String? address,
+      String? id,
+      String? logo,
       DoctorsListResult data,
       HospitalsListResult hospitalData,
       LabListResult labData,
-      {String cityAndState}) {
+      {String? cityAndState}) {
     return GestureDetector(
         child: Padding(
             padding: EdgeInsets.only(bottom: 4, left: 10, right: 10),
@@ -832,7 +838,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     width: 50.0.h,
                     color: Color(fhbColors.bgColorContainer),
                     child:
-                        widget.arguments.searchWord == CommonConstants.doctors
+                        widget.arguments!.searchWord == CommonConstants.doctors
                             ? getHospitalLogoImage(logo, data)
                             : getHospitalLogoImage(logo, data),
                   )),
@@ -842,16 +848,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       child: Padding(
                         padding: EdgeInsets.all(10),
                         child: getDataToView(
-                          widget.arguments.searchWord == CommonConstants.doctors
+                          widget.arguments!.searchWord == CommonConstants.doctors
                               ? name
-                              : widget.arguments.searchWord ==
+                              : widget.arguments!.searchWord ==
                                       CommonConstants.hospitals
                                   ? name
                                   : labData.healthOrganizationName,
                           address,
                           id,
                           data,
-                          specialization: widget.arguments.searchWord ==
+                          specialization: widget.arguments!.searchWord ==
                                   CommonConstants.hospitals
                               ? hospitalData.specialization
                               : null,
@@ -859,14 +865,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       ))
                 ]))),
         onTap: () {
-          if (widget.toPreviousScreen) {
-            widget.arguments.searchWord == CommonConstants.doctors
+          if (widget.toPreviousScreen!) {
+            widget.arguments!.searchWord == CommonConstants.doctors
                 ? passDoctorsValue(data, context)
-                : widget.arguments.searchWord == CommonConstants.hospitals
+                : widget.arguments!.searchWord == CommonConstants.hospitals
                     ? passHospitalValue(hospitalData, context)
                     : passLaboratoryValue(labData, context);
           } else {
-            passdataToNextScreen(data?.name.capitalizeFirstofEach, context,
+            passdataToNextScreen(data.name, context,
                 data, hospitalData, labData);
           }
         });
@@ -876,31 +882,31 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return Icon(Icons.verified_user);
   }
 
-  void passDoctorsValue(DoctorsListResult doctorData, BuildContext context) {
+  void passDoctorsValue(DoctorsListResult? doctorData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyDoctor: json.encode(doctorData)});
   }
 
   void passHospitalValue(
-      HospitalsListResult hospitaData, BuildContext context) {
+      HospitalsListResult? hospitaData, BuildContext context) {
     Navigator.of(context)
         .maybePop({Constants.keyHospital: json.encode(hospitaData)});
   }
 
-  void passLaboratoryValue(LabListResult laboratoryData, BuildContext context) {
+  void passLaboratoryValue(LabListResult? laboratoryData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
-  void passCityValue(cityListModel.CityListData cityData, BuildContext context) {
+  void passCityValue(cityListModel.CityListData? cityData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyCity: cityData});
   }
 
   getDataToView(
-    String name,
-    String address,
-    String id,
+    String? name,
+    String? address,
+    String? id,
     DoctorsListResult data, {
-    String cityAndState,
-    String specialization,
+    String? cityAndState,
+    String? specialization,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -934,10 +940,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.lightgraycolor),
           ),
-        widget.arguments.searchWord == CommonConstants.doctors
+        widget.arguments!.searchWord == CommonConstants.doctors
             ? (data.specialty != null && data.specialty != '')
                 ? Text(
-                    toBeginningOfSentenceCase(data.specialty ?? ''),
+                    toBeginningOfSentenceCase(data.specialty ?? '')!,
                     style: TextStyle(
                         fontSize: 15.0.sp,
                         fontWeight: FontWeight.w400,
@@ -948,7 +954,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 : SizedBox(height: 10.0.h)
             : (specialization != null && specialization != '')
                 ? Text(
-                    toBeginningOfSentenceCase(specialization ?? ''),
+                    toBeginningOfSentenceCase(specialization)!,
                     style: TextStyle(
                         fontSize: 15.0.sp,
                         fontWeight: FontWeight.w400,
@@ -967,7 +973,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Image.memory(
-            snapshot.data,
+            snapshot.data as Uint8List,
             height: 50.0.h,
             width: 50.0.h,
             fit: BoxFit.cover,
@@ -983,7 +989,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
-  Widget getHospitalLogoImage(String logo, DoctorsListResult docs) {
+  Widget getHospitalLogoImage(String? logo, DoctorsListResult docs) {
     if (logo == null || logo == '') {
       return Container();
     } else {
@@ -1006,9 +1012,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         myProfile.firstName != null &&
         myProfile.lastName != null) {
       return Text(
-        myProfile.firstName[0].toUpperCase() +
-            (myProfile.lastName.length > 0
-                ? myProfile.lastName[0].toUpperCase()
+        myProfile.firstName![0].toUpperCase() +
+            (myProfile.lastName!.length > 0
+                ? myProfile.lastName![0].toUpperCase()
                 : ''),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
@@ -1018,7 +1024,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       );
     } else if (myProfile != null && myProfile.firstName != null) {
       return Text(
-        myProfile.firstName[0].toUpperCase(),
+        myProfile.firstName![0].toUpperCase(),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
@@ -1038,13 +1044,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   void passdataToNextScreen(
-      String name,
+      String? name,
       BuildContext context,
       DoctorsListResult data,
       HospitalsListResult hospitalData,
       LabListResult labData) {
-    if (widget.arguments.searchWord == CommonConstants.doctors) {
-      if (data.patientAssociationRequest) {
+    if (widget.arguments!.searchWord == CommonConstants.doctors) {
+      if (data.patientAssociationRequest!) {
         selectedFamilyMemberName = null;
         showDialogBoxToAddDoctorWhenPermissionRequired(context, data);
       } else {
@@ -1054,8 +1060,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           arguments: AddProvidersArguments(
               data: data,
               searchKeyWord: CommonConstants.doctors,
-              fromClass: widget.arguments.fromClass == router.cn_AddProvider
-                  ? widget.arguments.fromClass
+              fromClass: widget.arguments!.fromClass == router.cn_AddProvider
+                  ? widget.arguments!.fromClass
                   : router.rt_TelehealthProvider,
               hasData: true),
         ).then((value) {
@@ -1064,15 +1070,15 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           }
         });
       }
-    } else if (widget.arguments.searchWord == CommonConstants.hospitals) {
+    } else if (widget.arguments!.searchWord == CommonConstants.hospitals) {
       Navigator.pushNamed(
         context,
         router.rt_AddProvider,
         arguments: AddProvidersArguments(
             hospitalData: hospitalData,
             searchKeyWord: CommonConstants.hospitals,
-            fromClass: widget.arguments.fromClass == router.cn_AddProvider
-                ? widget.arguments.fromClass
+            fromClass: widget.arguments!.fromClass == router.cn_AddProvider
+                ? widget.arguments!.fromClass
                 : router.rt_TelehealthProvider,
             hasData: true),
       ).then((value) {
@@ -1087,8 +1093,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         arguments: AddProvidersArguments(
             labData: labData,
             searchKeyWord: CommonConstants.labs,
-            fromClass: widget.arguments.fromClass == router.cn_AddProvider
-                ? widget.arguments.fromClass
+            fromClass: widget.arguments!.fromClass == router.cn_AddProvider
+                ? widget.arguments!.fromClass
                 : router.rt_TelehealthProvider,
             hasData: true),
       ).then((value) {
@@ -1122,63 +1128,63 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       }
     });*/
 
-    if (widget.toPreviousScreen) {
-      widget.arguments.searchWord == CommonConstants.doctors
+    if (widget.toPreviousScreen!) {
+      widget.arguments!.searchWord == CommonConstants.doctors
           ? passDoctorsValue(diagnostics.errorData, context)
-          : widget.arguments.searchWord == CommonConstants.hospitals
+          : widget.arguments!.searchWord == CommonConstants.hospitals
               ? passHospitalValue(null, context)
-              : widget.arguments.searchWord ==
+              : widget.arguments!.searchWord ==
           CommonConstants.labs ||
-          widget.arguments.searchWord ==
+          widget.arguments!.searchWord ==
               CommonConstants.lab
           ? passLaboratoryValue(null, context):passCityValue(null, context);
     }
   }
 
   passDoctorsValueSample(results, BuildContext context) {
-    final DoctorsListResult jsonDecodeForDoctor = results[Constants.keyDoctor];
+    final DoctorsListResult? jsonDecodeForDoctor = results[Constants.keyDoctor];
 
     passDoctorsValue(jsonDecodeForDoctor, context);
   }
 
   passHospitalValueSample(results, BuildContext context) {
-    final HospitalsListResult jsonDecodeForDoctor =
+    final HospitalsListResult? jsonDecodeForDoctor =
         results[Constants.keyHospital];
 
     passHospitalValue(jsonDecodeForDoctor, context);
   }
 
   passLaboratoryValueSample(results, BuildContext context) {
-    final LabListResult jsonDecodeForDoctor = results[Constants.keyLab];
+    final LabListResult? jsonDecodeForDoctor = results[Constants.keyLab];
 
     passLaboratoryValue(jsonDecodeForDoctor, context);
   }
 
-  String getDoctorsAddress(DoctorsListResult data) {
-    var address = '';
+  String? getDoctorsAddress(DoctorsListResult data) {
+    String? address = '';
     if (data.addressLine1 != '' && data.addressLine1 != null) {
       address = toBeginningOfSentenceCase(data.addressLine1);
     }
     if (data.addressLine2 != '' && data.addressLine2 != null) {
-      address = address + ',' + toBeginningOfSentenceCase(data.addressLine2);
+      address = address! + ',' + toBeginningOfSentenceCase(data.addressLine2)!;
     }
     if (data.city != '' && data.city != null) {
-      address = address + '\n' + toBeginningOfSentenceCase(data.city);
+      address = address! + '\n' + toBeginningOfSentenceCase(data.city)!;
     }
     if (data.state != '' && data.state != null) {
-      address = address + ',' + toBeginningOfSentenceCase(data.state);
+      address = address! + ',' + toBeginningOfSentenceCase(data.state)!;
     }
     return address;
   }
 
-  String getHospitalCityAndState(HospitalsListResult data) {
-    var city = '';
+  String? getHospitalCityAndState(HospitalsListResult data) {
+    String? city = '';
 
     if (data.cityName != '' && data.cityName != null) {
       city = toBeginningOfSentenceCase(data.cityName);
     }
     if (data.stateName != '' && data.stateName != null) {
-      city = city + ',' + toBeginningOfSentenceCase(data.stateName);
+      city = city! + ',' + toBeginningOfSentenceCase(data.stateName)!;
     }
     return city;
   }
@@ -1674,13 +1680,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       print(params.toString());
 
       hospitalListRepository.addHospitalList(params).then((value) {
-        if (value.isSuccess) {
+        if (value!.isSuccess!) {
           Navigator.pop(context);
           HospitalsListResult hospitaData = new HospitalsListResult();
           hospitaData.name = '';
-          hospitaData.healthOrganizationName = value.result?.name;
+          hospitaData.healthOrganizationName = value.result!.name;
           hospitaData.healthOrganizationId = null;
-          hospitaData.healthOrganizationReferenceId = value.result?.id;
+          hospitaData.healthOrganizationReferenceId = value.result!.id;
           hospitaData.healthOrganizationTypeId = Constants.STR_HEALTHORG_HOSPID;
           hospitaData.healthOrganizationTypeName = 'Hospital';
           hospitaData.pincode = null;
@@ -1717,7 +1723,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   showDialogBoxToAddDoctorWhenPermissionRequired(
       BuildContext context, DoctorsListResult data) {
-    if (data?.isTelehealthEnabled != null) {
+    if (data.isTelehealthEnabled != null) {
       teleHealthAlertShown = data.isTelehealthEnabled;
     }
     var dialog = StatefulBuilder(builder: (context, setState) {
@@ -1728,7 +1734,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                ' Add ' + widget.arguments.searchWord,
+                ' Add ' + widget.arguments!.searchWord!,
                 style: TextStyle(
                     fontSize: 18.0.sp,
                     fontWeight: FontWeight.w500,
@@ -1755,10 +1761,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      _ShowDoctorTextField(data.name != null
-                          ? data?.name
+                      _ShowDoctorTextField((data.name != null
+                          ? data.name
                               ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.data.name)
-                          : ''),
+                          : '')!),
                       SizedBox(height: 10.0.h),
                       Text(
                         variable.strAssociateMember,
@@ -1804,8 +1810,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
     updateProvidersBloc.isPreferred = false;
 
-    if (widget.arguments.searchWord == CommonConstants.doctors) {
-      if (teleHealthAlertShown) {
+    if (widget.arguments!.searchWord == CommonConstants.doctors) {
+      if (teleHealthAlertShown!) {
         if (switchedUserId != USERID) {
           updateProvidersBloc.userId = switchedUserId;
           updateProvidersBloc.providerId = doctorModel.doctorId;
@@ -1849,7 +1855,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     updateProvidersBloc
         .updateDoctorsIdWithUserDetails(isPAR: true)
         .then((value) async {
-      if (value.success) {
+      if (value!.success!) {
         // set up the button
         Navigator.pop(context);
         Widget okButton = TextButton(
@@ -1857,10 +1863,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           onPressed: () {
             var routeClassName = '';
 
-            if (widget.arguments.fromClass == router.cn_AddProvider ||
-                widget.arguments.fromClass == router.rt_myprovider) {
+            if (widget.arguments!.fromClass == router.cn_AddProvider ||
+                widget.arguments!.fromClass == router.rt_myprovider) {
               routeClassName = router.rt_UserAccounts;
-            } else if (widget.arguments.fromClass ==
+            } else if (widget.arguments!.fromClass ==
                 router.rt_TelehealthProvider) {
               routeClassName = router.rt_TelehealthProvider;
             }
@@ -1879,10 +1885,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         showAlertDialog(
             context,
             okButton,
-            (value?.message != null &&
-                    value?.message !=
+            (value.message != null &&
+                    value.message !=
                         "New Provider Request has been created successfully.")
-                ? value?.message ?? ""
+                ? value.message ?? ""
                 : "Request sent successfully");
       } else {
         Navigator.pop(context);
@@ -1893,7 +1899,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               Navigator.pop(context);
             });
 
-        showAlertDialog(context, okButton, value.message);
+        showAlertDialog(context, okButton, value.message!);
       }
     });
   }
@@ -1978,7 +1984,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               borderSide:
                   BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
             ),
-            labelText: widget.arguments.searchWord,
+            labelText: widget.arguments!.searchWord,
             labelStyle: TextStyle(
                 fontSize: 16.0.sp,
                 fontWeight: FontWeight.w400,
@@ -1992,7 +1998,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget _showUser(StateSetter setState) {
-    MyProfileModel primaryUserProfile;
+    MyProfileModel? primaryUserProfile;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       primaryUserProfile =
@@ -2007,9 +2013,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             _familyListBloc = null;
             _familyListBloc = FamilyListBloc();
           }
-          _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
+          _familyListBloc!.getFamilyMembersListNew().then((familyMembersList) {
             // Hide Loading
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
 
             if (familyMembersList != null &&
                 familyMembersList.result != null &&
@@ -2046,13 +2052,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     color: Colors.white,
                   ),
                   child: updatedProfilePic != null
-                      ? updatedProfilePic.length > 5
+                      ? updatedProfilePic!.length > 5
                           ? getProfilePicWidget(updatedProfilePic)
                           : Center(
                               child: Text(
-                                selectedFamilyMemberName == null
-                                    ? myProfile.result?.lastName.toUpperCase()
-                                    : selectedFamilyMemberName[0].toUpperCase(),
+                                (selectedFamilyMemberName == null
+                                    ? myProfile!.result?.lastName!.toUpperCase()
+                                    : selectedFamilyMemberName![0].toUpperCase())!,
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
                                     color: Color(
@@ -2064,14 +2070,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                               ? myProfile?.result?.profilePicThumbnailUrl !=
                                       null
                                   ? getProfilePicWidget(
-                                      myProfile.result.profilePicThumbnailUrl)
+                                      myProfile!.result!.profilePicThumbnailUrl)
                                   : Center(
                                       child: Text(
-                                        selectedFamilyMemberName == null
-                                            ? myProfile?.result?.lastName
+                                        (selectedFamilyMemberName == null
+                                            ? myProfile?.result?.lastName!
                                                 .toUpperCase()
-                                            : selectedFamilyMemberName[0]
-                                                .toUpperCase(),
+                                            : selectedFamilyMemberName![0]
+                                                .toUpperCase())!,
                                         style: TextStyle(
                                             fontSize: 16.0.sp,
                                             color: Color(CommonUtil()
@@ -2082,9 +2088,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   child: Text(
                                     selectedFamilyMemberName == null
                                         ? myProfile?.result != null
-                                            ? myProfile?.result.lastName ?? ''
+                                            ? myProfile?.result!.lastName ?? ''
                                             : ''
-                                        : selectedFamilyMemberName[0]
+                                        : selectedFamilyMemberName![0]
                                             .toUpperCase(),
                                     style: TextStyle(
                                         fontSize: 16.0.sp,
@@ -2107,11 +2113,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   margin: EdgeInsets.only(right: 10),
                   child: Text(
                     selectedFamilyMemberName == null
-                        ? myProfile?.result?.id ==
+                        ? (myProfile?.result?.id ==
                                 primaryUserProfile?.result?.id
                             ? variable.Self
-                            : myProfile?.result?.firstName
-                        : selectedFamilyMemberName
+                            : myProfile?.result?.firstName!)!
+                        : selectedFamilyMemberName!
                             .capitalizeFirstofEach, //toBeginningOfSentenceCase(selectedFamilyMemberName),
                     softWrap: true,
                     textAlign: TextAlign.left,
@@ -2128,8 +2134,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         ));
   }
 
-  Future<Widget> getDialogBoxWithFamilyMemberScrap(
-      FamilyMemberResult familyData, StateSetter setState) {
+  Future<Widget?> getDialogBoxWithFamilyMemberScrap(
+      FamilyMemberResult? familyData, StateSetter setState) {
     return FamilyListView(familyData)
         .getDialogBoxWithFamilyMember(familyData, context, _keyLoader,
             (context, userId, userName, profilePic) {
@@ -2142,7 +2148,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     }, removeDuplicate: true);
   }
 
-  Widget getProfilePicWidget(String profilePicThumbnail) {
+  Widget getProfilePicWidget(String? profilePicThumbnail) {
     return profilePicThumbnail != null
         ? Image.network(
             profilePicThumbnail,
@@ -2196,11 +2202,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   Widget getResponseFromApiWidgetForCity() {
     return StreamBuilder<ApiResponse<cityListModel.CityListModel>>(
-      stream: _labsListBlock.cityNewStream,
+      stream: _labsListBlock!.cityNewStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data.status) {
+        switch (snapshot.data!.status) {
           case Status.LOADING:
             rebuildBlockObject();
             return Center(
@@ -2221,14 +2227,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.COMPLETED:
             rebuildBlockObject();
-            return snapshot.data.data.result == null
+            return snapshot.data!.data!.result == null
                 ? Container(
               child: Center(
                 child: Text(variable.strNodata),
               ),
             )
             //getEmptyCard()
-                : snapshot.data.data.result.isEmpty
+                : snapshot.data!.data!.result!.isEmpty
                 ? Container(
               child: Center(
                 child: Text(variable.strNodata),
@@ -2237,7 +2243,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             //getEmptyCard()
                 : Container(
               margin: EdgeInsets.all(5),
-              child: getAllDatasInCityList(snapshot.data.data.result),
+              child: getAllDatasInCityList(snapshot.data!.data!.result!),
             );
 
             break;
@@ -2245,6 +2251,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           default:
             break;
         }
+        return Container();
       },
     );
   }
@@ -2263,8 +2270,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   child: InkWell(
                     onTap: () {
                       try {
-                        if (widget.toPreviousScreen) {
-                          passCityValue(data[index] ?? null, context);
+                        if (widget.toPreviousScreen!) {
+                          passCityValue(data[index], context);
                         }
                       } catch (e) {}
                     },
@@ -2308,7 +2315,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   ),
                                   child: Text(
                                     CommonUtil()
-                                        .validString(data[index]?.name ?? ""),
+                                        .validString(data[index].name ?? ""),
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16.0.sp,

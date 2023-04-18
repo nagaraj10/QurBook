@@ -11,7 +11,7 @@ import '../../src/resources/network/ApiBaseHelper.dart';
 class ChatSocketService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<ChatHistoryModel> getChatHistory(
+  Future<ChatHistoryModel?> getChatHistory(
       String userId,
       String peerId,
       String familyUserId,
@@ -49,9 +49,9 @@ class ChatSocketService {
   }
 
   initRRTNotification({
-    String userId,
-    String peerId,
-    String selectedDate,
+    String? userId,
+    String? peerId,
+    String? selectedDate,
   }) async {
     final body = {
       "ccId": peerId,

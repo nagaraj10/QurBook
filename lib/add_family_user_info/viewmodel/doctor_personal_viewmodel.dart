@@ -13,6 +13,6 @@ class DoctorPersonalViewModel {
     final resposiory = AddFamilyUserInfoRepository();
     addressTypeResult =
         await resposiory.getAddressTypeResult(addressQuery.toString());
-    return addressTypeResult.result;
+    return addressTypeResult.result!;
   }
 }

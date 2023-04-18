@@ -1,11 +1,12 @@
+
 class Role {
   Role({
-    String id,
-    String name,
-    String description,
-    String normalized,
-    bool isAdmin,
-    bool isAgent,
+    String? id,
+    String? name,
+    String? description,
+    String? normalized,
+    bool? isAdmin,
+    bool? isAgent,
   }) {
     _id = id;
     _name = name;
@@ -23,19 +24,19 @@ class Role {
     _isAdmin = json['isAdmin'];
     _isAgent = json['isAgent'];
   }
-  String _id;
-  String _name;
-  String _description;
-  String _normalized;
-  bool _isAdmin;
-  bool _isAgent;
+  String? _id;
+  String? _name;
+  String? _description;
+  String? _normalized;
+  bool? _isAdmin;
+  bool? _isAgent;
 
-  String get id => _id;
-  String get name => _name;
-  String get description => _description;
-  String get normalized => _normalized;
-  bool get isAdmin => _isAdmin;
-  bool get isAgent => _isAgent;
+  String? get id => _id;
+  String? get name => _name;
+  String? get description => _description;
+  String? get normalized => _normalized;
+  bool? get isAdmin => _isAdmin;
+  bool? get isAgent => _isAgent;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

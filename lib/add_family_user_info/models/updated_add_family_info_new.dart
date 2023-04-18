@@ -1,7 +1,8 @@
+
 class UpdateAddFamilyInfo {
-  bool isSuccess;
-  String message;
-  Result result;
+  bool? isSuccess;
+  String? message;
+  Result? result;
 
   UpdateAddFamilyInfo({this.isSuccess, this.message, this.result});
 
@@ -17,14 +18,14 @@ class UpdateAddFamilyInfo {
     data['isSuccess'] = isSuccess;
     data['message'] = message;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
+  String? id;
 
   Result({this.id});
 

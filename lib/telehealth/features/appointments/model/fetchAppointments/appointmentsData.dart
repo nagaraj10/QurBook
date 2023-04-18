@@ -1,3 +1,4 @@
+
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 
@@ -7,8 +8,8 @@ class AppointmentsData {
     this.past,
   });
 
-  List<Past> upcoming;
-  List<Past> past;
+  List<Past>? upcoming;
+  List<Past>? past;
 
   AppointmentsData.fromJson(Map<String, dynamic> json) {
     upcoming = json[parameters.strUpcoming] == null
@@ -24,8 +25,8 @@ class AppointmentsData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[parameters.strUpcoming] =
-        List<dynamic>.from(upcoming.map((x) => x.toJson()));
-    data[parameters.strPast] = List<dynamic>.from(past.map((x) => x));
+        List<dynamic>.from(upcoming!.map((x) => x.toJson()));
+    data[parameters.strPast] = List<dynamic>.from(past!.map((x) => x));
 
     return data;
   }

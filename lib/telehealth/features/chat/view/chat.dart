@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data' show Uint8List;
@@ -45,8 +46,9 @@ import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/ShowImage.dart';
-import 'package:open_file/open_file.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:open_filex/open_filex.dart';
+//import 'package:open_file/open_file.dart'; FU2.5
+//import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';  FU2.5
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -57,27 +59,27 @@ import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'ChooseDateSlot.dart';
 
 class Chat extends StatefulWidget {
-  final String peerId;
-  final String peerAvatar;
-  final String peerName;
-  final String lastDate;
-  final String patientId;
-  final String patientName;
-  final String patientPicture;
-  final bool isFromVideoCall;
-  final String message;
-  final bool isCareGiver;
+  final String? peerId;
+  final String? peerAvatar;
+  final String? peerName;
+  final String? lastDate;
+  final String? patientId;
+  final String? patientName;
+  final String? patientPicture;
+  final bool? isFromVideoCall;
+  final String? message;
+  final bool? isCareGiver;
 
   Chat(
-      {Key key,
-      @required this.peerId,
-      @required this.peerAvatar,
-      @required this.peerName,
-      @required this.lastDate,
-      @required this.patientId,
-      @required this.patientName,
-      @required this.patientPicture,
-      @required this.isFromVideoCall,
+      {Key? key,
+       this.peerId,
+       this.peerAvatar,
+       this.peerName,
+     this.lastDate,
+       this.patientId,
+       this.patientName,
+       this.patientPicture,
+       this.isFromVideoCall,
       this.message,
       this.isCareGiver})
       : super(key: key);
@@ -91,14 +93,14 @@ class ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChatScreen(
-        peerId: widget.peerId,
+        peerId: widget.peerId!,
         peerAvatar: widget.peerAvatar,
         peerName: widget.peerName,
-        lastDate: widget.lastDate,
-        patientId: widget.patientId,
-        patientName: widget.patientName,
-        patientPicture: widget.patientPicture,
-        isFromVideoCall: widget.isFromVideoCall,
+        lastDate: widget.lastDate!,
+        patientId: widget.patientId!,
+        patientName: widget.patientName!,
+        patientPicture: widget.patientPicture!,
+        isFromVideoCall: widget.isFromVideoCall!,
         message: widget?.message,
         isCareGiver: widget?.isCareGiver,
       ),
@@ -113,78 +115,78 @@ class ChatState extends State<Chat> {
 }
 
 class ChatScreen extends StatefulWidget {
-  final String peerId;
-  final String peerAvatar;
-  final String peerName;
-  final String lastDate;
-  final String patientId;
-  final String patientName;
-  final String patientPicture;
-  final bool isFromVideoCall;
-  final String message;
-  final bool isCareGiver;
+  final String? peerId;
+  final String? peerAvatar;
+  final String? peerName;
+  final String? lastDate;
+  final String? patientId;
+  final String? patientName;
+  final String? patientPicture;
+  final bool? isFromVideoCall;
+  final String? message;
+  final bool? isCareGiver;
 
   ChatScreen(
-      {Key key,
-      @required this.peerId,
-      @required this.peerAvatar,
-      @required this.peerName,
-      @required this.lastDate,
-      @required this.patientId,
-      @required this.patientName,
-      @required this.patientPicture,
-      @required this.isFromVideoCall,
+      {Key? key,
+       this.peerId,
+       this.peerAvatar,
+       this.peerName,
+       this.lastDate,
+       this.patientId,
+       this.patientName,
+       this.patientPicture,
+       this.isFromVideoCall,
       this.message,
       this.isCareGiver})
       : super(key: key);
 
   @override
   State createState() => ChatScreenState(
-      peerId: peerId,
+      peerId: peerId!,
       peerAvatar: peerAvatar,
       peerName: peerName,
-      lastDate: lastDate,
+      lastDate: lastDate!,
       patientId: patientId,
-      patientName: patientName,
+      patientName: patientName!,
       patientPicUrl: patientPicture,
-      isFromVideoCall: isFromVideoCall);
+      isFromVideoCall: isFromVideoCall!);
 }
 
 class ChatScreenState extends State<ChatScreen> {
   ChatScreenState(
-      {Key key,
-      @required this.peerId,
-      @required this.peerAvatar,
-      @required this.peerName,
-      @required this.lastDate,
-      @required this.patientId,
-      @required this.patientName,
-      @required this.patientPicUrl,
-      @required this.isFromVideoCall});
+      {Key? key,
+       this.peerId,
+       this.peerAvatar,
+       this.peerName,
+       this.lastDate,
+       this.patientId,
+       this.patientName,
+       this.patientPicUrl,
+       this.isFromVideoCall});
 
-  String peerId;
-  String peerAvatar;
-  String peerName;
+  String? peerId;
+  String? peerAvatar;
+  String? peerName;
 
   //String id;
-  String lastDate;
+  String? lastDate;
 
   var listMessage;
-  String groupChatId;
-  SharedPreferences prefs;
+  String? groupChatId;
+  SharedPreferences? prefs;
 
-  File imageFile;
-  bool isLoading;
-  bool isShowSticker;
-  String imageUrl;
+  File? imageFile;
+  late bool isLoading;
+  late bool isShowSticker;
+  String? imageUrl;
 
-  String patientId;
-  String patientName;
-  String patientPicUrl;
-  bool isFromVideoCall;
+  String? patientId;
+  String? patientName;
+  String? patientPicUrl;
+  bool? isFromVideoCall;
   var pdfFile;
-  String jpefFile;
-  String authToken;
+  String? jpefFile;
+  String? authToken;
 
   //final TextEditingController textEditingController = TextEditingController();
 
@@ -197,10 +199,10 @@ class ChatScreenState extends State<ChatScreen> {
   var chatEnterMessageController = TextEditingController();
 
   /*final ScrollController listScrollController = ScrollController();*/
-  final ItemScrollController listScrollController = ItemScrollController();
+  //final ItemScrollController listScrollController = ItemScrollController();  FU2.5
   final FocusNode focusNode = FocusNode();
   var healthRecordList;
-  List<String> recordIds = new List();
+  List<String> recordIds = [];
   FlutterToast toast = new FlutterToast();
 
   var isSearchVisible = false;
@@ -212,22 +214,22 @@ class ChatScreenState extends State<ChatScreen> {
   bool firstTime = true;
   int commonIndex = 0;
   List<int> indexList = [];
-  FlutterSoundPlayer _mPlayer = FlutterSoundPlayer();
+  FlutterSoundPlayer? _mPlayer = FlutterSoundPlayer();
 
   bool isPlaying = false;
   ChatViewModel chatViewModel = new ChatViewModel();
 
   String textValue = '';
-  AppointmentResult appointmentResult;
+  AppointmentResult? appointmentResult;
 
-  String bookingId = '-';
-  String lastAppointmentDate = '';
-  String nextAppointmentDate = '';
-  String doctorDeviceToken = '';
-  String patientDeviceToken = '';
-  String currentPlayedVoiceURL = '';
+  String? bookingId = '-';
+  String? lastAppointmentDate = '';
+  String? nextAppointmentDate = '';
+  String? doctorDeviceToken = '';
+  String? patientDeviceToken = '';
+  String? currentPlayedVoiceURL = '';
 
-  bool isCareGiver = false;
+  bool? isCareGiver = false;
   bool isChatDisable = true;
 
   bool isCareGiverApi = true;
@@ -279,7 +281,7 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     chatViewModel.setCurrentChatRoomID('none');
-    _mPlayer.closeAudioSession();
+    _mPlayer!.closeAudioSession();
     _mPlayer = null;
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
@@ -291,9 +293,9 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   set_up_audios() async {
-    _mPlayer.openAudioSession().then(
+    _mPlayer!.openAudioSession().then(
       (value) {
-        _mPlayer.setSubscriptionDuration(
+        _mPlayer!.setSubscriptionDuration(
           Duration(
             seconds: 1,
           ),
@@ -314,7 +316,7 @@ class ChatScreenState extends State<ChatScreen> {
         if (value != null) {
           if (value?.data != null) {
             setState(() {
-              isChatDisable = value?.data()[STR_IS_DISABLE] ?? false;
+              isChatDisable = value?.data()![STR_IS_DISABLE] ?? false;
             });
           } else {
             setState(() {
@@ -347,9 +349,9 @@ class ChatScreenState extends State<ChatScreen> {
 
     if (patientName == null || patientName == '') {
       MyProfileModel myProfile =
-          PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
       patientName = myProfile.result != null
-          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
+          ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
           : '';
     }
 
@@ -364,10 +366,10 @@ class ChatScreenState extends State<ChatScreen> {
     parseData();
   }
 
-  String getProfileURL() {
+  String? getProfileURL() {
     MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    String patientPicURL = myProfile.result.profilePicThumbnailUrl;
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
+    String? patientPicURL = myProfile.result!.profilePicThumbnailUrl;
 
     return patientPicURL;
   }
@@ -394,7 +396,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   parseData() async {
     await chatViewModel
-        .fetchAppointmentDetail(widget.peerId, patientId, '', '')
+        .fetchAppointmentDetail(widget.peerId!, patientId!, '', '')
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
@@ -417,30 +419,30 @@ class ChatScreenState extends State<ChatScreen> {
           nextAppointmentDate = appointmentResult?.upcoming != null
               ? appointmentResult?.upcoming?.plannedStartDateTime
               : '';
-          doctorDeviceToken = appointmentResult?.deviceToken != null
-              ? appointmentResult?.deviceToken?.doctor?.payload?.isNotEmpty
-                  ? appointmentResult
-                      .deviceToken?.doctor?.payload[0]?.deviceTokenId
+          doctorDeviceToken = appointmentResult!.deviceToken != null
+              ? appointmentResult!.deviceToken!.doctor!.payload!.isNotEmpty
+                  ? appointmentResult!
+                      .deviceToken!.doctor!.payload![0].deviceTokenId
                   : ''
               : '';
           patientDeviceToken = '';
-          if (appointmentResult?.deviceToken != null) {
-            if (appointmentResult?.deviceToken?.patient?.isSuccess &&
-                appointmentResult?.deviceToken?.patient?.payload?.isNotEmpty &&
+          if (appointmentResult!.deviceToken != null) {
+            if (appointmentResult!.deviceToken!.patient!.isSuccess! &&
+                appointmentResult!.deviceToken!.patient!.payload!.isNotEmpty &&
                 appointmentResult
-                        ?.deviceToken?.patient?.payload[0]?.deviceTokenId !=
+                        ?.deviceToken?.patient?.payload![0]?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
-                  ?.deviceToken?.patient?.payload[0]?.deviceTokenId;
+                  ?.deviceToken?.patient?.payload![0]?.deviceTokenId;
             } else if (appointmentResult
-                    ?.deviceToken?.parentMember?.isSuccess &&
+                    !.deviceToken!.parentMember!.isSuccess! &&
                 appointmentResult
-                    ?.deviceToken?.parentMember?.payload?.isNotEmpty &&
-                appointmentResult?.deviceToken?.parentMember?.payload[0]
+                    !.deviceToken!.parentMember!.payload!.isNotEmpty &&
+                appointmentResult?.deviceToken?.parentMember?.payload![0]
                         ?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
-                  ?.deviceToken?.parentMember?.payload[0]?.deviceTokenId;
+                  ?.deviceToken?.parentMember?.payload![0]?.deviceTokenId;
             }
           }
           // patientDeviceToken = appointmentResult.deviceToken != null
@@ -505,7 +507,7 @@ class ChatScreenState extends State<ChatScreen> {
       isPlaying = false;
     });
     currentPlayedVoiceURL = '';
-    await _mPlayer.stopPlayer().then((value) {
+    await _mPlayer!.stopPlayer().then((value) {
       //flutterPlaySound(url);
     });
   }
@@ -516,7 +518,7 @@ class ChatScreenState extends State<ChatScreen> {
       isPlaying = true;
     });
     // final file = await CommonUtil.downloadFile(url, 'mp3');
-    await _mPlayer.startPlayer(fromURI: url).whenComplete(
+    await _mPlayer!.startPlayer(fromURI: url).whenComplete(
       () {
         setState(() {
           isPlaying = false;
@@ -539,7 +541,7 @@ class ChatScreenState extends State<ChatScreen> {
           .doc(patientId)
           .get();
       if (snapShot.data() != null) {
-        isMuted = snapShot.data()[STR_IS_MUTED] ?? false;
+        isMuted = snapShot.data()![STR_IS_MUTED] ?? false;
       }
       final snapShotDisable = await FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
@@ -548,14 +550,14 @@ class ChatScreenState extends State<ChatScreen> {
           .doc(peerId)
           .get();
       if (snapShotDisable.data() != null) {
-        isTempChatDisable = snapShotDisable.data()[STR_IS_DISABLE] ?? false;
+        isTempChatDisable = snapShotDisable.data()![STR_IS_DISABLE] ?? false;
       }
       textValue = textEditingController.text;
       textEditingController.clear();
       var documentReference = FirebaseFirestore.instance
           .collection(STR_MESSAGES)
           .doc(groupChatId)
-          .collection(groupChatId)
+          .collection(groupChatId!)
           .doc(DateTime.now().millisecondsSinceEpoch.toString());
 
       FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -582,7 +584,7 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   getReadCount() async {
-    int count = 0;
+    int? count = 0;
     try {
       final snapShot = await FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
@@ -592,7 +594,7 @@ class ChatScreenState extends State<ChatScreen> {
           .get();
 
       if (snapShot.data != null) {
-        count = snapShot.data()[STR_IS_READ_COUNT];
+        count = snapShot.data()![STR_IS_READ_COUNT];
       }
     } catch (ex) {
       count = 0;
@@ -637,7 +639,7 @@ class ChatScreenState extends State<ChatScreen> {
     });
 
     if (doctorDeviceToken != null && doctorDeviceToken != '' && !isMuted) {
-      _pushNotification(type, patientName);
+      _pushNotification(type, patientName!);
     }
   }
 
@@ -655,7 +657,7 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   openDownloadAlert(
-      String fileUrl, BuildContext contxt, bool isPdf, String type) {
+      String? fileUrl, BuildContext contxt, bool isPdf, String type) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -685,7 +687,7 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void saveImageToGallery(String fileUrl, BuildContext contxt,
+  void saveImageToGallery(String? fileUrl, BuildContext contxt,
       bool isPdfPresent, String fileType) async {
     //check the storage permission for both android and ios!
     //request gallery permission
@@ -700,7 +702,7 @@ class ChatScreenState extends State<ChatScreen> {
           : await Permission.photos.request();
     }
 
-    String _currentImage;
+    String? _currentImage;
     Scaffold.of(contxt).showSnackBar(SnackBar(
       content: Text(
         variable.strDownloadStart,
@@ -713,7 +715,7 @@ class ChatScreenState extends State<ChatScreen> {
 
     if (isPdfPresent) {
       if (Platform.isIOS) {
-        final file = await CommonUtil.downloadFile(fileUrl, fileType);
+        final file = await CommonUtil.downloadFile(fileUrl!, fileType);
         Scaffold.of(contxt).showSnackBar(
           SnackBar(
             content: Text(
@@ -726,19 +728,19 @@ class ChatScreenState extends State<ChatScreen> {
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
-                await OpenFile.open(
-                  file.path,
-                );
-                // final controller = Get.find<PDFViewController>();
-                // final data = OpenPDF(type: PDFLocation.Path, path: file.path);
-                // controller.data = data;
-                // Get.to(() => PDFView());
+                await OpenFilex.open(
+                  file?.path,
+                );//FU2.5
+                final controller = Get.find<PDFViewController>();
+                final data = OpenPDF(type: PDFLocation.Path, path: file?.path);
+                controller.data = data;
+                Get.to(() => PDFView());
               },
             ),
           ),
         );
       } else {
-        await downloadFile(fileType, fileUrl);
+        await downloadFile(fileType, fileUrl!);
         await ImageGallerySaver.saveFile(fileUrl).then((res) {
           setState(() {
             downloadStatus = true;
@@ -752,18 +754,18 @@ class ChatScreenState extends State<ChatScreen> {
           action: SnackBarAction(
             label: 'Open',
             onPressed: () async {
-              await OpenFile.open(
+              await OpenFilex.open(
                 pdfFile,
-              );
+              );//FU2.5
             },
           ),
         ));
       }
     } else {
       _currentImage = fileUrl;
-      List<String> imageList = new List();
+      List<String> imageList = [];
       try {
-        await downloadFile(fileType, fileUrl);
+        await downloadFile(fileType, fileUrl!);
         //final file = await CommonUtil.downloadFile(fileUrl, fileType);
         if (Platform.isAndroid) {
           Scaffold.of(contxt).showSnackBar(SnackBar(
@@ -798,7 +800,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<bool> downloadFile(String fileType, String fileUrl) async {
+  Future<bool?> downloadFile(String fileType, String fileUrl) async {
     await FHBUtils.createFolderInAppDocDirClone(
             variable.stAudioPath, fileUrl.split('/').last)
         .then((filePath) async {
@@ -811,11 +813,11 @@ class ChatScreenState extends State<ChatScreen> {
       final request = await ApiServices.get(
         fileUrl,
         headers: {
-          HttpHeaders.authorizationHeader: authToken,
+          HttpHeaders.authorizationHeader: authToken!,
           Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
       );
-      final bytes = request.bodyBytes; //close();
+      final bytes = request!.bodyBytes; //close();
       await file.writeAsBytes(bytes);
 
       setState(() {
@@ -999,7 +1001,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     children: <Widget>[
                                       CircleAvatar(
                                           child: Text(
-                                        patientName.substring(0, 1),
+                                        patientName!.substring(0, 1),
                                         style: TextStyle(
                                           fontSize: 16.0.sp,
                                         ),
@@ -1055,7 +1057,7 @@ class ChatScreenState extends State<ChatScreen> {
                                   height: 35.0.h,
                                   padding: EdgeInsets.all(10.0),
                                 ),
-                            imageUrl: peerAvatar,
+                            imageUrl: peerAvatar!,
                             width: 35.0.h,
                             height: 35.0.h,
                             fit: BoxFit.cover,
@@ -1066,7 +1068,7 @@ class ChatScreenState extends State<ChatScreen> {
                                   child: Center(
                                       child: Text(
                                     peerName != null && peerName != ''
-                                        ? peerName[0].toString().toUpperCase()
+                                        ? peerName![0].toString().toUpperCase()
                                         : '',
                                     style: TextStyle(
                                       color: Color(
@@ -1237,7 +1239,7 @@ class ChatScreenState extends State<ChatScreen> {
                                             CircleAvatar(
                                                 child: Text(peerName != null &&
                                                         peerName != ''
-                                                    ? peerName.substring(0, 1)
+                                                    ? peerName!.substring(0, 1)
                                                     : '')),
                                             IconButton(
                                               icon: Icon(currentPlayedVoiceURL ==
@@ -1321,7 +1323,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  goToPDFViewBasedonURL(String url) {
+  goToPDFViewBasedonURL(String? url) {
     final controller = Get.find<PDFViewController>();
     final data = OpenPDF(type: PDFLocation.URL, path: url);
     controller.data = data;
@@ -1334,7 +1336,7 @@ class ChatScreenState extends State<ChatScreen> {
     return formattedDate;
   }
 
-  String getFormattedDateTimeAppbar(String datetime) {
+  String getFormattedDateTimeAppbar(String? datetime) {
     String formattedDate = '-';
     if (datetime != null && datetime != '') {
       DateTime dateTimeStamp = DateTime.parse(datetime);
@@ -1440,7 +1442,7 @@ class ChatScreenState extends State<ChatScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        !isChatDisable && isCareGiver
+                        !isChatDisable && isCareGiver!
                             ? IconButton(
                                 onPressed: () {
                                   CommonUtil().CallbackAPIFromChat(
@@ -1550,7 +1552,7 @@ class ChatScreenState extends State<ChatScreen> {
       ),
       color: Colors.white,
       padding: EdgeInsets.only(left: 1, right: 2),
-      onSelected: (newValue) {
+      onSelected: (dynamic newValue) {
         if (newValue == 0) {
           isSearchVisible = true;
           showSearch();
@@ -1596,8 +1598,8 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Widget _patientDetailOrSearch() {
-    var resultWidget = null;
+  Widget? _patientDetailOrSearch() {
+    dynamic resultWidget = null;
     setState(() {
       if (isSearchVisible) {
         resultWidget = AnimatedSwitcher(
@@ -1643,11 +1645,11 @@ class ChatScreenState extends State<ChatScreen> {
           child: Row(
             children: <Widget>[
               ClipOval(
-                child: Image.network(widget.peerAvatar,
+                child: Image.network(widget.peerAvatar!,
                     height: 40.0.h,
                     width: 40.0.h,
                     fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                        Object exception, StackTrace stackTrace) {
+                        Object exception, StackTrace? stackTrace) {
                   return Container(
                     height: 50.0.h,
                     width: 50.0.h,
@@ -1655,7 +1657,7 @@ class ChatScreenState extends State<ChatScreen> {
                     child: Center(
                         child: Text(
                       widget.peerName != null && widget.peerName != ''
-                          ? widget.peerName[0].toString().toUpperCase()
+                          ? widget.peerName![0].toString().toUpperCase()
                           : '',
                       style: TextStyle(
                         color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -1675,9 +1677,9 @@ class ChatScreenState extends State<ChatScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                        widget.peerName != null && widget.peerName != ''
+                        (widget.peerName != null && widget.peerName != ''
                             ? widget.peerName?.capitalizeFirstofEach
-                            : '' /* toBeginningOfSentenceCase(widget.peerName) */,
+                            : '')! /* toBeginningOfSentenceCase(widget.peerName) */,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -1690,7 +1692,7 @@ class ChatScreenState extends State<ChatScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Booking Id: ' + bookingId,
+                                Text('Booking Id: ' + bookingId!,
                                     textAlign: TextAlign.left,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
@@ -1713,7 +1715,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     toBeginningOfSentenceCase(
                                         'Last Appointment: ' +
                                             getFormattedDateTimeAppbar(
-                                                lastAppointmentDate)),
+                                                lastAppointmentDate))!,
                                     textAlign: TextAlign.left,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
@@ -1727,7 +1729,7 @@ class ChatScreenState extends State<ChatScreen> {
                         : SizedBox.shrink(),
                     Text(
                       widget.lastDate != null
-                          ? LAST_RECEIVED + widget.lastDate
+                          ? LAST_RECEIVED + widget.lastDate!
                           : '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -1775,9 +1777,9 @@ class ChatScreenState extends State<ChatScreen> {
                           firstTime = false;
                           if (commonIndex < indexList.length - 1) {
                             commonIndex = commonIndex + 1;
-                            listScrollController.scrollTo(
-                                index: indexList[commonIndex],
-                                duration: Duration(milliseconds: 100));
+                            // listScrollController.scrollTo(
+                            //     index: indexList[commonIndex],
+                            //     duration: Duration(milliseconds: 100));  FU2.5
                           } else {
                             toast.getToast('No more data', Colors.red);
                           }
@@ -1802,9 +1804,9 @@ class ChatScreenState extends State<ChatScreen> {
                           firstTime = false;
                           if (commonIndex > 0) {
                             commonIndex = commonIndex - 1;
-                            listScrollController.scrollTo(
-                                index: indexList[commonIndex],
-                                duration: Duration(milliseconds: 100));
+                            // listScrollController.scrollTo(
+                            //     index: indexList[commonIndex],
+                                // duration: Duration(milliseconds: 100));  FU2.5
                           } else {
                             toast.getToast('No more data', Colors.red);
                           }
@@ -2067,7 +2069,7 @@ class ChatScreenState extends State<ChatScreen> {
                 child: RawMaterialButton(
                   onPressed: () {
                     onSendMessage(
-                        textEditingController.text?.replaceAll("#", ""), 0);
+                        textEditingController.text.replaceAll("#", ""), 0);
                   },
                   elevation: 2.0,
                   fillColor: Colors.white,
@@ -2079,7 +2081,7 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
               ),
             ),
-            !isFromVideoCall
+            !isFromVideoCall!
                 ? Flexible(
                     flex: 1,
                     child: new Container(
@@ -2096,7 +2098,7 @@ class ChatScreenState extends State<ChatScreen> {
                             ),
                           )
                               .then((results) {
-                            String audioPath = results[Constants.keyAudioFile];
+                            String? audioPath = results[Constants.keyAudioFile];
                             if (audioPath != null && audioPath != '') {
                               setState(() {
                                 isLoading = true;
@@ -2132,7 +2134,7 @@ class ChatScreenState extends State<ChatScreen> {
               stream: FirebaseFirestore.instance
                   .collection(STR_MESSAGES)
                   .doc(groupChatId)
-                  .collection(groupChatId)
+                  .collection(groupChatId!)
                   .orderBy(STR_TIME_STAMP, descending: true)
                   .limit(50)
                   .snapshots(),
@@ -2143,8 +2145,8 @@ class ChatScreenState extends State<ChatScreen> {
                       child: CircularProgressIndicator(
                           color: Color(CommonUtil().getMyPrimaryColor())));
                 } else {
-                  listMessage = snapshot.data.docs;
-                  for (var data in snapshot.data.docs) {
+                  listMessage = snapshot.data!.docs;
+                  for (var data in snapshot.data!.docs) {
                     if (data.data()[STR_ID_TO] == patientId &&
                         data.data()[STR_IS_READ] == false) {
                       if (data.reference != null) {
@@ -2156,14 +2158,15 @@ class ChatScreenState extends State<ChatScreen> {
                       }
                     }
                   }
-                  return ScrollablePositionedList.builder(
-                    padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) =>
-                        buildItem(index, snapshot.data.docs[index]),
-                    itemCount: snapshot.data.docs.length,
-                    reverse: true,
-                    itemScrollController: listScrollController,
-                  );
+                  // return ScrollablePositionedList.builder(
+                  //   padding: EdgeInsets.all(10.0),
+                  //   itemBuilder: (context, index) =>
+                  //       buildItem(index, snapshot.data.docs[index]),
+                  //   itemCount: snapshot.data.docs.length,
+                  //   reverse: true,
+                  //   itemScrollController: listScrollController,
+                  // );  FU2.5
+                  return Container();
                 }
               },
             ),
@@ -2189,7 +2192,7 @@ class ChatScreenState extends State<ChatScreen> {
         .then((results) {
       if (results != null) {
         if (results.containsKey(STR_META_ID)) {
-          healthRecordList = results[STR_META_ID] as List;
+          healthRecordList = results[STR_META_ID] as List?;
           if (healthRecordList != null) {
             getAlertForFileSend(healthRecordList);
           }
@@ -2201,19 +2204,19 @@ class ChatScreenState extends State<ChatScreen> {
 
   getMediaURL(List<HealthRecordCollection> healthRecordCollection) {
     for (int i = 0; i < healthRecordCollection.length; i++) {
-      String fileType = healthRecordCollection[i].fileType;
-      String fileURL = healthRecordCollection[i].healthRecordUrl;
+      String? fileType = healthRecordCollection[i].fileType;
+      String? fileURL = healthRecordCollection[i].healthRecordUrl;
       if ((fileType == STR_JPG) ||
           (fileType == STR_PNG) ||
           (fileType == STR_JPEG)) {
         //getAlertForFileSend(fileURL, 1);
-        onSendMessage(fileURL, 1);
+        onSendMessage(fileURL!, 1);
       } else if ((fileType == STR_PDF)) {
         //getAlertForFileSend(fileURL, 2);
-        onSendMessage(fileURL, 2);
+        onSendMessage(fileURL!, 2);
       } else if ((fileType == STR_AAC)) {
         //getAlertForFileSend(fileURL, 3);
-        onSendMessage(fileURL, 3);
+        onSendMessage(fileURL!, 3);
       }
     }
   }
@@ -2223,7 +2226,7 @@ class ChatScreenState extends State<ChatScreen> {
       context: context,
       builder: (context) => AlertDialog(
         content: Text(
-          'Send to Dr. ' + peerName != null && peerName != '' ? peerName : '',
+          'Send to Dr. ' + peerName! != null && peerName != '' ? peerName! : '',
           style: TextStyle(
             fontSize: 16.0.sp,
           ),
@@ -2316,7 +2319,7 @@ class ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 onTap: () async {
-                  FocusManager.instance.primaryFocus.unfocus();
+                  FocusManager.instance.primaryFocus!.unfocus();
                   //tapDatePicker();
                   //Get.to(ChooseDateSlot());
                   Navigator.push(
@@ -2327,7 +2330,7 @@ class ChatScreenState extends State<ChatScreen> {
                       List<String> result = [];
                       result.add(value);
                       try {
-                        if (result?.length > 0) {
+                        if (result.length > 0) {
                           final removedBrackets = result
                               .toString()
                               .substring(2, result.toString().length - 2);
@@ -2352,8 +2355,8 @@ class ChatScreenState extends State<ChatScreen> {
     final RegExp linkRegExp = RegExp('($urlPattern)', caseSensitive: false);
 
     final List<InlineSpan> list = <InlineSpan>[];
-    final RegExpMatch dateMatch = dateRegExp.firstMatch(text);
-    final RegExpMatch match = linkRegExp.firstMatch(text);
+    final RegExpMatch? dateMatch = dateRegExp.firstMatch(text);
+    final RegExpMatch? match = linkRegExp.firstMatch(text);
 
     if (match == null && dateMatch == null) {
       list.add(TextSpan(children: getSplittedTextWidget(text, index)));
@@ -2363,13 +2366,13 @@ class ChatScreenState extends State<ChatScreen> {
     if ((match?.start ?? 0) > 0) {
       list.add(TextSpan(
           children:
-              getSplittedTextWidget(text.substring(0, match.start), index)));
+              getSplittedTextWidget(text.substring(0, match!.start), index)));
     }
 
     if ((dateMatch?.start ?? 0) > 0) {
       list.add(TextSpan(
           children: getSplittedTextWidget(
-              text.substring(0, dateMatch.start), index)));
+              text.substring(0, dateMatch!.start), index)));
     }
 
     final String linkText = match?.group(0) ?? '';
@@ -2384,8 +2387,8 @@ class ChatScreenState extends State<ChatScreen> {
 
     list.addAll(linkify(
         text.substring(match != null
-            ? match?.start + linkText?.length
-            : (dateMatch != null ? dateMatch?.start + dateText?.length : 0)),
+            ? match.start + linkText.length
+            : (dateMatch != null ? dateMatch.start + dateText.length : 0)),
         index,
         isPatient));
 
@@ -2496,7 +2499,7 @@ class TextFieldColorizer extends TextEditingController {
             multiLine: true);
 
   @override
-  set text(String newText) {
+  set text(String? newText) {
     value = value.copyWith(
       text: newText,
       selection: TextSelection.collapsed(offset: newText?.length ?? 0),
@@ -2505,25 +2508,25 @@ class TextFieldColorizer extends TextEditingController {
   }
 
   @override
-  TextSpan buildTextSpan(
-      {BuildContext context, TextStyle style, bool withComposing}) {
+   TextSpan  buildTextSpan(
+      {BuildContext? context, TextStyle? style, bool? withComposing}) {
     final List<InlineSpan> children = [];
-    String patternMatched;
-    String formatText;
-    TextStyle myStyle;
+    String? patternMatched;
+    String? formatText;
+    TextStyle? myStyle;
     text.splitMapJoin(
       pattern,
       onMatch: (Match match) {
-        myStyle = map[match[0]] ??
+        myStyle = map[match[0]!] ??
             map[map.keys.firstWhere(
               (e) {
                 bool ret = false;
                 RegExp(e).allMatches(text)
                   ..forEach((element) {
-                    if (element.group(0) == match[0]) {
+                    if (element.group(0) == match[0]  ) {
                       patternMatched = e;
                       ret = true;
-                      return true;
+                      return ;  // return true;
                     }
                   });
                 return ret;
@@ -2531,13 +2534,13 @@ class TextFieldColorizer extends TextEditingController {
             )];
 
         if (patternMatched == "#(.*?)#") {
-          formatText = match[0].replaceAll("#", " ");
+          formatText = match[0]!.replaceAll("#", " ");
         } else {
           formatText = match[0];
         }
         children.add(TextSpan(
           text: formatText,
-          style: style.merge(myStyle),
+          style: style!.merge(myStyle),
         ));
         return "";
       },

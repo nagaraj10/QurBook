@@ -1,9 +1,10 @@
+
 import 'dart:core';
 
 
 class SOSCallAgentNumberData {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   SOSCallAgentNumberData({this.isSuccess, this.result});
 
@@ -22,7 +23,7 @@ class SOSCallAgentNumberData {
     try {
       data['isSuccess'] = this.isSuccess;
       if (this.result != null) {
-        data['result'] = this.result.toJson();
+        data['result'] = this.result!.toJson();
       }
     } catch (e) {
       print(e);
@@ -33,8 +34,8 @@ class SOSCallAgentNumberData {
 }
 
 class Result {
-  String exoPhoneNumber;
-  String verificationPin;
+  String? exoPhoneNumber;
+  String? verificationPin;
 
   Result({this.exoPhoneNumber, this.verificationPin});
 

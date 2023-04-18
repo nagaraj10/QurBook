@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:ui';
 
@@ -39,12 +40,12 @@ import 'CartIconWithBadge.dart';
 
 class CheckoutPage extends StatefulWidget {
   //final CartType cartType;
-  final String cartUserId;
+  final String? cartUserId;
   final bool isFromNotification;
-  final String bookingId;
-  final String notificationListId;
-  final String cartId;
-  final String patientName;
+  final String? bookingId;
+  final String? notificationListId;
+  final String? cartId;
+  final String? patientName;
 
   //CheckoutPage({this.cartType = CartType.DEFAULT_CART, this.cartUserId});
   CheckoutPage(
@@ -68,12 +69,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.initState();
     mInitialTime = DateTime.now();
     // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
-    //     widget?.cartType;
+    //     widget.cartType;
     Provider.of<CheckoutPageProvider>(context, listen: false).fetchCartItems(
         isNeedRelod: true,
-        cartUserId: widget?.cartUserId,
-        notificationListId: widget?.notificationListId,
-        isPaymentLinkViaPush: widget?.isFromNotification,
+        cartUserId: widget.cartUserId,
+        notificationListId: widget.notificationListId,
+        isPaymentLinkViaPush: widget.isFromNotification,
         cartId: widget.cartId,
         firstTym: true);
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -103,8 +104,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     // }
     // Navigator.of(context).pop(true);
 
-    if (widget?.isFromNotification) {
-      Get.offAll(NotificationMain());
+    if (widget.isFromNotification) {
+       Get.offAll(NotificationMain());
     } else if (Navigator.canPop(context)) {
       Get.back();
     } else {
@@ -115,6 +116,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
       );
     }
+    return true;
   }
 
   @override
@@ -146,7 +148,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
         body: Consumer<CheckoutPageProvider>(
           builder: (context, value, widgetObj) {
-            if (value?.cartStatus == CartStatus.LOADING) {
+            if (value.cartStatus == CartStatus.LOADING) {
               return SafeArea(
                 child: SizedBox(
                   height: 1.sh / 4.5,
@@ -164,10 +166,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
               // if (value.cartType == CartType.DEFAULT_CART ||
               //     value.cartType == CartType.RETRY_CART) {
               //default cart with items
-              var cartCount =
-                  value?.fetchingCartItemsModel?.result?.productsCount ?? 0;
+              int? cartCount =           // FUcrash var to int?
+                  value.fetchingCartItemsModel!.result?.productsCount ?? 0;
               //value?.updateCartCount(cartCount,isNeedRelod: true);
-              return (!(value?.fetchingCartItemsModel?.isSuccess ?? false) ||
+              return (!(value.fetchingCartItemsModel!.isSuccess ?? false) ||
                       cartCount == 0)
                   ? widget.isFromNotification
                       ? Container(
@@ -201,12 +203,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   if (widget.isFromNotification == false) {
                                     Provider.of<PlanWizardViewModel>(context,
                                             listen: false)
-                                        ?.changeCurrentPage(0);
+                                        .changeCurrentPage(0);
                                     if (Provider.of<PlanWizardViewModel>(
                                                 context,
                                                 listen: false)
-                                            ?.isPlanWizardActive ??
-                                        false) {
+                                            .isPlanWizardActive) {
                                       Get.back();
                                     } else {
                                       Get.offAndToNamed(router.rt_PlanWizard);
@@ -268,7 +269,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     showDialog(
                                                         barrierDismissible:
                                                             false,
-                                                        context: Get.context,
+                                                        context: Get.context!,
                                                         builder: (context) {
                                                           return AlertDialog(
                                                             insetPadding:
@@ -320,8 +321,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                                 children: <Widget>[
                                                                                   SizedBoxWithChild(
-                                                                                    width: CommonUtil().isTablet ? 120 : 90,
-                                                                                    height: CommonUtil().isTablet ? 50 : 40,
+                                                                                    width: CommonUtil().isTablet! ? 120 : 90,
+                                                                                    height: CommonUtil().isTablet! ? 50 : 40,
                                                                                     child: FlatButton(
                                                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
                                                                                       color: Colors.transparent,
@@ -341,8 +342,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                     ),
                                                                                   ),
                                                                                   SizedBoxWithChild(
-                                                                                    width: CommonUtil().isTablet ? 120 : 90,
-                                                                                    height: CommonUtil().isTablet ? 50 : 40,
+                                                                                    width: CommonUtil().isTablet! ? 120 : 90,
+                                                                                    height: CommonUtil().isTablet! ? 50 : 40,
                                                                                     child: FlatButton(
                                                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
                                                                                       color: Colors.transparent,
@@ -366,7 +367,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                   ),
                                                                                 ],
                                                                               ),
-                                                                              CommonUtil().isTablet
+                                                                              CommonUtil().isTablet!
                                                                                   ? SizedBoxWidget(
                                                                                       height: 8.0.h,
                                                                                     )
@@ -388,7 +389,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                   'Clear cart',
                                                   style: TextStyle(
                                                       color: widget
-                                                              ?.isFromNotification
+                                                              .isFromNotification
                                                           ? Colors.grey
                                                           : Colors
                                                               .redAccent[700]),
@@ -416,7 +417,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         SizedBox(
                                                           width: 10,
                                                         ),
-                                                        Text(widget.patientName,
+                                                        Text(widget.patientName!,
                                                             style: TextStyle(
                                                                 fontSize:
                                                                     18.0.sp,
@@ -436,19 +437,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           physics:
                                               NeverScrollableScrollPhysics(),
                                           itemCount: value
-                                                  ?.fetchingCartItemsModel
-                                                  ?.result
-                                                  ?.productsCount ??
+                                                  .fetchingCartItemsModel
+                                                  !.result
+                                                  !.productsCount ??
                                               0,
                                           shrinkWrap: true,
                                           itemBuilder: (context, index) {
                                             return _cartItem(
                                                 context,
                                                 value
-                                                    ?.fetchingCartItemsModel
-                                                    ?.result
-                                                    ?.cart
-                                                    ?.productList[index]);
+                                                    .fetchingCartItemsModel
+                                                    !.result
+                                                    !.cart
+                                                    !.productList![index]);
                                           },
                                         ),
                                       ],
@@ -484,14 +485,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         Row(
                                           children: [
                                             Text(
-                                                'Price \(${value?.fetchingCartItemsModel?.result?.productsCount ?? 0} items\)'),
+                                                'Price \(${value.fetchingCartItemsModel?.result!.productsCount ?? 0} items\)'),
                                             Spacer(),
                                             Text(
-                                                '${CommonUtil.CURRENCY}${value?.totalProductCount ?? 0}'),
+                                                '${CommonUtil.CURRENCY}${value.totalProductCount}'),
                                           ],
                                         ),
                                         DottedLine(
-                                            height: 1, color: Colors.grey[400]),
+                                            height: 1, color: Colors.grey[400]!),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -507,7 +508,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               width: 20.0.w,
                                             ),
                                             Text(
-                                              '${CommonUtil.CURRENCY}${value?.totalProductCount ?? 0}',
+                                              '${CommonUtil.CURRENCY}${value.totalProductCount}',
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
@@ -550,7 +551,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${CommonUtil.CURRENCY}${value?.totalProductCount ?? 0}',
+                                        '${CommonUtil.CURRENCY}${value.totalProductCount}',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -562,7 +563,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   Row(
                                     children: [
                                       InkWell(
-                                        onTap: value?.isLoading
+                                        onTap: value.isLoading
                                             ? null
                                             : () async {
                                                 AuthenticationValidator()
@@ -614,7 +615,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 ],
                                               ),
                                             ),
-                                            child: value?.isLoading
+                                            child: value.isLoading
                                                 ? SizedBox(
                                                     width: 20,
                                                     height: 20,
@@ -624,8 +625,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     value.cartType ==
                                                             CartType.RETRY_CART
                                                         ? strRetryPay
-                                                        : (value?.totalProductCount ??
-                                                                    0) >
+                                                        : (value.totalProductCount) >
                                                                 0
                                                             ? strReviewPay
                                                             : strFreePlan,
@@ -667,33 +667,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
-    var mCartTotal = value?.totalProductCount ?? 0;
+    var mCartTotal = value.totalProductCount;
     var firebase = FirebaseAnalyticsService();
     firebase.trackEvent("on_pay_clicked", {
       "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
       "total": mCartTotal
     });
     var body = {
-      "cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}",
+      "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
     };
-    FetchingCartItemsModel fetchingCartItemsModel =
-        await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+    FetchingCartItemsModel? fetchingCartItemsModel =
+        await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
                 isNeedRelod: false,
-                cartUserId: widget?.cartUserId,
-                notificationListId: widget?.notificationListId,
-                isPaymentLinkViaPush: widget?.isFromNotification,
+                cartUserId: widget.cartUserId,
+                notificationListId: widget.notificationListId,
+                isPaymentLinkViaPush: widget.isFromNotification,
                 cartId: widget.cartId);
 
     if (mCartTotal > 0) {
       CheckoutPageWidgets().showPaymentConfirmationDialog(
           body: body,
           totalCartAmount: mCartTotal,
-          isPaymentNotification: widget?.isFromNotification,
+          isPaymentNotification: widget.isFromNotification,
           fetchingCartItemsModel: fetchingCartItemsModel,
           isSuccess: (value) {
-            if (value) {
+            if (value!) {
               Provider.of<CheckoutPageProvider>(context, listen: false)
                   .loader(false, isNeedRelod: true);
               Provider.of<CheckoutPageProvider>(context, listen: false)
@@ -705,12 +705,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       cartUserId: widget.cartUserId,
                       firstTym: false);
 
-              Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+              Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
                   .fetchCartItems(
                       isNeedRelod: true,
-                      cartUserId: widget?.cartUserId,
-                      notificationListId: widget?.notificationListId,
-                      isPaymentLinkViaPush: widget?.isFromNotification,
+                      cartUserId: widget.cartUserId,
+                      notificationListId: widget.notificationListId,
+                      isPaymentLinkViaPush: widget.isFromNotification,
                       cartId: widget.cartId,
                       firstTym: false);
             }
@@ -718,27 +718,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
     } else {
       ApiBaseHelper().makePayment(body).then((value) {
         if (value != null) {
-          if (value?.isSuccess && !(value?.result != null)) {
-            Alert.displayConfirmation(Get.context,
+          if (value.isSuccess! && !(value.result != null)) {
+            Alert.displayConfirmation(Get.context!,
                 confirm: "Update Cart",
                 title: "Update",
-                content: value?.message ?? '', onPressedConfirm: () {
+                content: value.message!, onPressedConfirm: () {
               ApiBaseHelper()
                   .updateCartIcon(fetchingCartItemsModel?.result)
                   .then((value) {
                 Provider.of<CheckoutPageProvider>(context, listen: false)
                     .loader(false, isNeedRelod: true);
-                Navigator.of(Get.context).pop();
+                Navigator.of(Get.context!).pop();
                 if (value['isSuccess']) {
                   Navigator.pop(context);
                 }
               });
             });
-          } else if ((value?.isSuccess ?? false) && value?.result != null) {
+          } else if ((value.isSuccess ?? false) && value.result != null) {
             Get.off(
               PaymentResultPage(
-                refNo: value?.result?.orderId,
-                status: value?.isSuccess,
+                refNo: value.result!.orderId,
+                status: value.isSuccess,
                 isFreePlan: true,
                 isPaymentFromNotification: widget.isFromNotification,
               ),
@@ -758,41 +758,41 @@ class _CheckoutPageState extends State<CheckoutPage> {
     int productValue = 0;
 
     if (!isFirsTym) {
-      if (item?.productDetail?.planSubscriptionFee != null &&
-          item?.productDetail?.planSubscriptionFee != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      if (item.productDetail?.planSubscriptionFee != null &&
+          item.productDetail?.planSubscriptionFee != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
           productValue =
-              double.parse(item?.productDetail?.planSubscriptionFee).toInt();
+              double.parse(item.productDetail!.planSubscriptionFee!).toInt();
         }
       }
     } else {
-      if (item?.additionalInfo?.newFee != null &&
-          item?.additionalInfo?.newFee != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      if (item.additionalInfo?.newFee != null &&
+          item.additionalInfo?.newFee != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item?.additionalInfo?.newFee).toInt();
+          productValue = double.parse(item.additionalInfo?.newFee).toInt();
         }
-      } else if (item?.additionalInfo?.actualFee != null &&
-          item?.additionalInfo?.actualFee != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      } else if (item.additionalInfo?.actualFee != null &&
+          item.additionalInfo?.actualFee != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item?.additionalInfo?.actualFee).toInt();
+          productValue = double.parse(item.additionalInfo?.actualFee).toInt();
         }
-      } else if (item?.paidAmount.contains(".")) {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      } else if (item.paidAmount!.contains(".")) {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.paidAmount).toInt();
+          productValue = double.parse(item.paidAmount!).toInt();
         }
       } else {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = int.parse(item.paidAmount);
+          productValue = int.parse(item.paidAmount!);
         }
       }
     }
@@ -800,7 +800,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       padding: EdgeInsets.only(top: 10),
       child: Column(
         children: [
-          item?.additionalInfo?.isMembershipAvail ?? false
+          item.additionalInfo?.isMembershipAvail ?? false
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -836,13 +836,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       //mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '${item?.productDetail?.planName}',
+                          '${item.productDetail?.planName}',
                           style: TextStyle(
                               color: Colors.black54,
                               // fontWeight: FontWeight.bold,
                               fontSize: 13),
                         ),
-                        item.additionalInfo.isRenewal
+                        item.additionalInfo!.isRenewal!
                             ? Text(
                                 strRenewal,
                                 style: TextStyle(
@@ -863,7 +863,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           fontSize: 9),
                     ),
                     Text(
-                      'Offered By: ${item?.productDetail?.healthOrganizationName}',
+                      'Offered By: ${item.productDetail?.healthOrganizationName}',
                       style: TextStyle(
                           color: Colors.black54,
                           // fontWeight: FontWeight.bold,
@@ -888,13 +888,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         ic_cart_delete,
                         width: 20.0.sp,
                         height: 20.0.sp,
-                        color: widget?.isFromNotification ? Colors.grey : null,
+                        color: widget.isFromNotification ? Colors.grey : null,
                       ),
                       onPressed: () {
                         if (widget.isFromNotification == false) {
                           showDialog(
                               barrierDismissible: false,
-                              context: Get.context,
+                              context: Get.context!,
                               builder: (context) => AlertDialog(
                                     insetPadding:
                                         EdgeInsets.symmetric(horizontal: 8),
@@ -942,7 +942,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 TextSpan>[
                                                               TextSpan(
                                                                 text:
-                                                                    '${(item?.productDetail?.planName).toLowerCase()}',
+                                                                    '${item.productDetail?.planName!.toLowerCase()}',
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
@@ -985,11 +985,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         children: <Widget>[
                                                           SizedBoxWithChild(
                                                             width: CommonUtil()
-                                                                    .isTablet
+                                                                    .isTablet!
                                                                 ? 120
                                                                 : 90,
                                                             height: CommonUtil()
-                                                                    .isTablet
+                                                                    .isTablet!
                                                                 ? 50
                                                                 : 40,
                                                             child: FlatButton(
@@ -1027,11 +1027,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           ),
                                                           SizedBoxWithChild(
                                                             width: CommonUtil()
-                                                                    .isTablet
+                                                                    .isTablet!
                                                                 ? 120
                                                                 : 90,
                                                             height: CommonUtil()
-                                                                    .isTablet
+                                                                    .isTablet!
                                                                 ? 50
                                                                 : 40,
                                                             child: FlatButton(
@@ -1062,16 +1062,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                               false)
                                                                       .fetchCartItem();
 
-                                                                  ProductList productList = Provider.of<
+                                                                  ProductList? productList = Provider.of<
                                                                               CheckoutPageProvider>(
                                                                           context,
                                                                           listen:
                                                                               false)
-                                                                      ?.getProductListUsingPackageId(
-                                                                          '${item?.productDetail?.id}');
+                                                                      .getProductListUsingPackageId(
+                                                                          '${item.productDetail?.id}');
                                                                   await Provider.of<CheckoutPageProvider>(context, listen: false).removeCartItem(
                                                                       productId:
-                                                                          '${item?.productDetail?.id}',
+                                                                          '${item.productDetail?.id}',
                                                                       isNeedRelod:
                                                                           true,
                                                                       productList:
@@ -1094,7 +1094,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           ),
                                                         ],
                                                       ),
-                                                      CommonUtil().isTablet
+                                                      CommonUtil().isTablet!
                                                           ? SizedBoxWidget(
                                                               height: 8.0.h,
                                                             )
@@ -1131,30 +1131,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  int getDurationBasedOnCondition(ProductList item, {bool firstTym = true}) {
-    int planDuration = 0;
+  int? getDurationBasedOnCondition(ProductList item, {bool firstTym = true}) {
+    int? planDuration = 0;
     if (!firstTym) {
-      if (item?.productDetail?.packageDuration != null &&
-          item?.productDetail?.packageDuration != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      if (item.productDetail?.packageDuration != null &&
+          item.productDetail?.packageDuration != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           planDuration = 0;
         } else {
-          planDuration = item?.productDetail?.packageDuration;
+          planDuration = item.productDetail?.packageDuration;
         }
       }
     } else {
-      if (item?.additionalInfo?.duration != null &&
-          item?.additionalInfo?.duration != "") {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+      if (item.additionalInfo?.duration != null &&
+          item.additionalInfo?.duration != "") {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           planDuration = 0;
         } else {
-          planDuration = item?.additionalInfo?.duration.toInt();
+          planDuration = item.additionalInfo?.duration!.toInt();
         }
       } else {
-        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+        if (item.additionalInfo?.isMembershipAvail ?? false) {
           planDuration = 0;
         } else {
-          planDuration = item?.productDetail?.packageDuration;
+          planDuration = item.productDetail?.packageDuration;
         }
       }
     }
@@ -1170,50 +1170,50 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
-    var mCartTotal = value?.totalProductCount ?? 0;
+    var mCartTotal = value.totalProductCount;
     var firebase = FirebaseAnalyticsService();
     firebase.trackEvent("on_pay_clicked", {
       "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
       "total": mCartTotal
     });
     var body = {
-      "cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}",
+      "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
     };
 
-    FetchingCartItemsModel fetchingCartItemsModel =
-        await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+    FetchingCartItemsModel? fetchingCartItemsModel =
+        await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
                 isNeedRelod: false,
-                cartUserId: widget?.cartUserId,
-                notificationListId: widget?.notificationListId,
-                isPaymentLinkViaPush: widget?.isFromNotification,
+                cartUserId: widget.cartUserId,
+                notificationListId: widget.notificationListId,
+                isPaymentLinkViaPush: widget.isFromNotification,
                 cartId: widget.cartId);
 
     ApiBaseHelper().makePayment(body).then((result) async {
       await Provider.of<CheckoutPageProvider>(context, listen: false)
           .loader(false, isNeedRelod: false);
       if (result != null) {
-        if (result?.isSuccess) {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        if (result.isSuccess!) {
+          Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
 
-          if (result?.result != null) {
+          if (result.result != null) {
             var checkValidation = await CheckoutPageWidgets()
                 .profileValidationCheckOnCart(context,
                     feeZero:
-                        (value?.totalProductCount ?? 0) > 0 ? false : true);
+                        (value.totalProductCount) > 0 ? false : true);
             if (checkValidation ?? false) {
               planSubLogic(value);
             }
           } else {
-            Alert.displayConfirmProceed(Get.context,
+            Alert.displayConfirmProceed(Get.context!,
                 confirm: "Update Cart",
                 title: "Update",
-                content: result?.message ?? '', onPressedConfirm: () {
+                content: result.message ?? '', onPressedConfirm: () {
               ApiBaseHelper()
                   .updateCartIcon(fetchingCartItemsModel?.result)
                   .then((value) {
-                Navigator.of(Get.context).pop();
+                Navigator.of(Get.context!).pop();
                 if (value['isSuccess']) {
                   Provider.of<CheckoutPageProvider>(context, listen: false)
                       .loader(false, isNeedRelod: true);
@@ -1226,12 +1226,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           cartUserId: widget.cartUserId,
                           firstTym: false);
 
-                  Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+                  Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
                       .fetchCartItems(
                           isNeedRelod: true,
-                          cartUserId: widget?.cartUserId,
-                          notificationListId: widget?.notificationListId,
-                          isPaymentLinkViaPush: widget?.isFromNotification,
+                          cartUserId: widget.cartUserId,
+                          notificationListId: widget.notificationListId,
+                          isPaymentLinkViaPush: widget.isFromNotification,
                           cartId: widget.cartId,
                           firstTym: false);
                 }
@@ -1239,13 +1239,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
             });
           }
         } else {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
           FlutterToast()..getToast('Subscribe Failed', Colors.red);
         }
       } else {
         var result = await CheckoutPageWidgets().profileValidationCheckOnCart(
             context,
-            feeZero: (value?.totalProductCount ?? 0) > 0 ? false : true);
+            feeZero: (value.totalProductCount) > 0 ? false : true);
         if (result ?? false) {
           planSubLogic(value);
         }

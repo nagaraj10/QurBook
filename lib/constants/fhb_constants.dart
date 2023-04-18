@@ -1,3 +1,4 @@
+
 library fhb_constants;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -679,7 +680,7 @@ const String strThereAreNoPreferredLabsInYourProfile =
 const String strPreferredDoctors = 'Preferred Doctors';
 
 var tckTitle = '';
-var tckTitleOpt = '';
+String? tckTitleOpt = '';
 var tckDesc = '';
 var tckPrefDate = 'pref_date';
 var tckPrefTime = 'pref_time';
@@ -687,15 +688,15 @@ var tckPrefLab = 'pref_lab';
 var tckPrefLabId = 'pref_lab_id';
 var tckPrefMOSId = 'pref_mos_id';
 var tckPrefMOSName = 'pref_mos_name';
-var ticketType = 'ticket type';
-var tckPriority = 'ticket priority';
+String? ticketType = 'ticket type';
+String? tckPriority = 'ticket priority';
 var tckID = 'ticket_id';
 var tckComment = 'ticket_comment';
 var tckSelectedDoctor = 'Doctor';
-var tckSelectedDoctorId = 'DoctorId';
+String? tckSelectedDoctorId = 'DoctorId';
 var tckSelectedHospital = 'Hospital';
-var tckSelectedHospitalId = 'HospitalId';
-var tckSelectedCategory = 'Category';
+String? tckSelectedHospitalId = 'HospitalId';
+String? tckSelectedCategory = 'Category';
 var tckPackageName = '';
 
 var tckTypeTitle = 'text';
@@ -787,7 +788,7 @@ double itemHeight = (height - kToolbarHeight - 24) / 8;
 double itemWidth = width / 2;
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
-var mInitialTime;
+late var mInitialTime;
 
 const String address = 'Address';
 const String city = 'City';
@@ -825,7 +826,7 @@ const String strSymptomsModule = 'Symptoms';
 const String strFeatureNotEnable =
     'This feature is not enabled for you by your primary provider';
 
-Future<void> fbaLog({String eveName, eveParams}) async {
+Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(
         name: eveName ?? 'qurbook_ns_event',

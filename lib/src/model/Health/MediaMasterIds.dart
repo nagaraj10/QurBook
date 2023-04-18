@@ -1,8 +1,9 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class MediaMasterIds {
-  String id;
-  String fileType;
+  String? id;
+  String? fileType;
 
   MediaMasterIds({this.id, this.fileType});
 

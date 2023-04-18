@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 FeedbackTypeModel feedbackTypeModelFromJson(String str) =>
@@ -12,8 +13,8 @@ class FeedbackTypeModel {
     this.result,
   });
 
-  bool isSuccess;
-  List<FeedbackCategroy> result;
+  bool? isSuccess;
+  List<FeedbackCategroy>? result;
 
   factory FeedbackTypeModel.fromJson(Map<String, dynamic> json) =>
       FeedbackTypeModel(
@@ -28,7 +29,7 @@ class FeedbackTypeModel {
         "isSuccess": isSuccess == null ? null : isSuccess,
         "result": result == null
             ? null
-            : List<dynamic>.from(result.map((x) => x.toJson())),
+            : List<dynamic>.from(result!.map((x) => x.toJson())),
       };
 }
 
@@ -47,17 +48,17 @@ class FeedbackCategroy {
     this.healthRecordTypeCollection,
   });
 
-  String id;
-  String categoryName;
-  String categoryDescription;
-  String logo;
-  bool isDisplay;
-  bool isActive;
-  DateTime createdOn;
+  String? id;
+  String? categoryName;
+  String? categoryDescription;
+  String? logo;
+  bool? isDisplay;
+  bool? isActive;
+  DateTime? createdOn;
   dynamic lastModifiedOn;
-  CreatedBy createdBy;
-  List<dynamic> healthRecordShareDetailCollection;
-  List<HealthRecordTypeCollection> healthRecordTypeCollection;
+  CreatedBy? createdBy;
+  List<dynamic>? healthRecordShareDetailCollection;
+  List<HealthRecordTypeCollection>? healthRecordTypeCollection;
 
   factory FeedbackCategroy.fromJson(Map<String, dynamic> json) =>
       FeedbackCategroy(
@@ -97,7 +98,7 @@ class FeedbackCategroy {
         "logo": logo == null ? null : logo,
         "isDisplay": isDisplay == null ? null : isDisplay,
         "isActive": isActive == null ? null : isActive,
-        "createdOn": createdOn == null ? null : createdOn.toIso8601String(),
+        "createdOn": createdOn == null ? null : createdOn!.toIso8601String(),
         "lastModifiedOn": lastModifiedOn,
         // "createdBy": createdBy == null ? null : createdBy.toJson(),
         // "healthRecordShareDetailCollection":
@@ -145,12 +146,12 @@ class CreatedBy {
     this.additionalInfo,
   });
 
-  String id;
-  String name;
-  String userName;
-  String firstName;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
   dynamic middleName;
-  String lastName;
+  String? lastName;
   dynamic gender;
   dynamic dateOfBirth;
   dynamic bloodGroup;
@@ -161,18 +162,18 @@ class CreatedBy {
   dynamic isVirtualUser;
   dynamic isMigrated;
   dynamic isClaimed;
-  bool isIeUser;
+  bool? isIeUser;
   dynamic isEmailVerified;
-  bool isCpUser;
+  bool? isCpUser;
   dynamic communicationPreferences;
   dynamic medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
+  bool? isSignedIn;
+  bool? isActive;
   dynamic createdBy;
-  DateTime createdOn;
+  DateTime? createdOn;
   dynamic lastModifiedBy;
   dynamic lastModifiedOn;
-  String providerId;
+  String? providerId;
   dynamic additionalInfo;
 
   factory CreatedBy.fromJson(Map<String, dynamic> json) => CreatedBy(
@@ -234,7 +235,7 @@ class CreatedBy {
         "isSignedIn": isSignedIn == null ? null : isSignedIn,
         "isActive": isActive == null ? null : isActive,
         "createdBy": createdBy,
-        "createdOn": createdOn == null ? null : createdOn.toIso8601String(),
+        "createdOn": createdOn == null ? null : createdOn!.toIso8601String(),
         "lastModifiedBy": lastModifiedBy,
         "lastModifiedOn": lastModifiedOn,
         "providerId": providerId == null ? null : providerId,
@@ -255,15 +256,15 @@ class HealthRecordTypeCollection {
     this.lastModifiedOn,
   });
 
-  String id;
-  String name;
-  String description;
-  String logo;
-  bool isDisplay;
-  bool isAiTranscription;
-  bool isActive;
-  DateTime createdOn;
-  DateTime lastModifiedOn;
+  String? id;
+  String? name;
+  String? description;
+  String? logo;
+  bool? isDisplay;
+  bool? isAiTranscription;
+  bool? isActive;
+  DateTime? createdOn;
+  DateTime? lastModifiedOn;
 
   factory HealthRecordTypeCollection.fromJson(Map<String, dynamic> json) =>
       HealthRecordTypeCollection(
@@ -293,8 +294,8 @@ class HealthRecordTypeCollection {
         "isAiTranscription":
             isAiTranscription == null ? null : isAiTranscription,
         "isActive": isActive == null ? null : isActive,
-        "createdOn": createdOn == null ? null : createdOn.toIso8601String(),
+        "createdOn": createdOn == null ? null : createdOn!.toIso8601String(),
         "lastModifiedOn":
-            lastModifiedOn == null ? null : lastModifiedOn.toIso8601String(),
+            lastModifiedOn == null ? null : lastModifiedOn!.toIso8601String(),
       };
 }

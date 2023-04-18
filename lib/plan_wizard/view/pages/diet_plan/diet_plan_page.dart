@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -23,28 +24,28 @@ class DietPlanPage extends StatefulWidget {
 }
 
 class _DietPlanPageState extends State<DietPlanPage> {
-  Future<DietPlanModel> planListModel;
+  Future<DietPlanModel>? planListModel;
 
-  DietPlanModel myPlanListModel;
+  DietPlanModel? myPlanListModel;
 
   PlanWizardViewModel planWizardViewModel = new PlanWizardViewModel();
 
   bool isSearch = false;
 
-  List<List<DietPlanResult>> planSearchList = List();
+  List<List<DietPlanResult>> planSearchList = [];
 
-  String _selectedView = popUpChoiceDefault;
+  String? _selectedView = popUpChoiceDefault;
 
   List<String> listCategories = ['Recommended Plans', 'All Plans'];
 
   int dietPlanListLength = 0;
 
-  PlanWizardViewModel planListProvider;
+  PlanWizardViewModel? planListProvider;
 
   bool isSwitched = false;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
+  ValueNotifier<String?> _selectedItem = new ValueNotifier<String?>('Default');
 
   @override
   void initState() {
@@ -52,7 +53,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageIdDiet = '';
 
-    planListModel = planWizardViewModel.getDietPlanList();
+    planListModel = planWizardViewModel.getDietPlanList() as Future<DietPlanModel>?;
   }
   @override
   void dispose() {
@@ -134,7 +135,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
         ));
   }
 
-  onSearched(String title, String filterBy) async {
+  onSearched(String? title, String filterBy) async {
     planSearchList.clear();
     /*if (filterBy == popUpChoicePrice) {
       planSearchList =
@@ -175,20 +176,20 @@ class _DietPlanPageState extends State<DietPlanPage> {
           return ErrorsWidget();
         } else {
           int totalListCount = 0;
-          totalListCount = (snapshot?.data?.result?.length ?? 0) > 0
-              ? snapshot?.data?.result?.length
+          totalListCount = (snapshot.data!.result!.length) > 0
+              ? snapshot.data!.result!.length
               : 0;
-          if (totalListCount > 0) {
+          if (totalListCount > 0 ) {
             totalListCount = 0;
-            snapshot?.data?.result?.forEach((element) {
-              totalListCount += element?.length ?? 0;
+            snapshot.data!.result!.forEach((element) {
+              totalListCount += element.length;
             });
           }
           if (totalListCount > 0) {
             dietPlanListLength =
-                isSearch ? planSearchList.length : totalListCount ?? 0;
+                isSearch ? planSearchList.length : totalListCount;
             return carePlanList(
-                isSearch ? planSearchList : snapshot?.data?.result ?? []);
+                isSearch ? planSearchList : snapshot.data?.result ?? []);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -259,8 +260,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool);
   }
 
   /* Widget popMenuItem() {
@@ -329,7 +329,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
               child: new AnimatedBuilder(
                 child: new Text(sortType[index]),
                 animation: _selectedItem,
-                builder: (BuildContext context, Widget child) {
+                builder: (BuildContext context, Widget? child) {
                   return new RadioListTile<String>(
                     value: sortType[index],
                     groupValue: _selectedItem.value,
@@ -337,7 +337,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
                     onChanged: (value) {
                       setState(() {
                         _selectedItem.value = value;
-                        FocusManager.instance.primaryFocus.unfocus();
+                        FocusManager.instance.primaryFocus!.unfocus();
                         _selectedView = value;
                         if (value == popUpChoicePrice) {
                           isSearch = true;
@@ -381,12 +381,12 @@ class _DietPlanPageState extends State<DietPlanPage> {
     if (isSwitched == false) {
       setState(() {
         isSwitched = true;
-        planListModel = planWizardViewModel.getDietPlanList(isVeg: true);
+        planListModel = planWizardViewModel.getDietPlanList(isVeg: true) as Future<DietPlanModel>?;
       });
     } else {
       setState(() {
         isSwitched = false;
-        planListModel = planWizardViewModel.getDietPlanList();
+        planListModel = planWizardViewModel.getDietPlanList() as Future<DietPlanModel>?;
       });
     }
   }

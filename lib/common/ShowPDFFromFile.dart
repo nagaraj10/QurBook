@@ -1,4 +1,5 @@
 
+
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,10 @@ class ShowPDFFromFile extends StatelessWidget {
     this.document,
   });
 
-  final PDFDocument document;
+  final PDFDocument? document;
 
   @override
   Widget build(BuildContext context) {
-    return PDFViewer(document: document);
+    return PDFViewer(document: document!);
   }
 }

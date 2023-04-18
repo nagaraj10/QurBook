@@ -1,11 +1,12 @@
+
 class CreditBalanceResult {
-  String userId;
-  String balanceAmount;
-  String balanceDoctorAppointments;
-  String balanceDieticianAppointments;
-  String balanceCarePlans;
-  String balanceDietPlans;
-  bool isMembershipUser;
+  String? userId;
+  String? balanceAmount;
+  String? balanceDoctorAppointments;
+  String? balanceDieticianAppointments;
+  String? balanceCarePlans;
+  String? balanceDietPlans;
+  bool? isMembershipUser;
 
   CreditBalanceResult(
       {this.userId,

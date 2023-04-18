@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../models/regiment_data_model.dart';
 import '../../models/field_response_model.dart';
@@ -8,9 +9,9 @@ import 'form_data_radio.dart';
 
 class FormFieldWidget extends StatelessWidget {
   const FormFieldWidget({
-    @required this.fieldData,
-    @required this.updateValue,
-    @required this.canEdit,
+    required this.fieldData,
+    required this.updateValue,
+    required this.canEdit,
     this.isFromQurHomeSymptom = false,
     this.isFromQurHomeRegimen = false,
   });
@@ -18,8 +19,8 @@ class FormFieldWidget extends StatelessWidget {
   final FieldModel fieldData;
   final Function(
     FieldModel updatedFieldData, {
-    bool isAdd,
-    String title,
+    bool? isAdd,
+    String? title,
   }) updateValue;
   final bool canEdit;
   final bool isFromQurHomeSymptom;

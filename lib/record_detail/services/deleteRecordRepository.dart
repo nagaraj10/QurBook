@@ -6,7 +6,7 @@ import '../../constants/fhb_query.dart' as query;
 
 class DeleteRecordRepository {
   final ApiBaseHelper _helper = ApiBaseHelper();
-  String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
   Future<DeleteRecordResponse> deleteRecordForIds(String json) async {
     final response = await _helper

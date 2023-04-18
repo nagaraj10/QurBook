@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -7,14 +8,14 @@ import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 
 class CorpUsersWelcomeDialog extends StatelessWidget {
-  const CorpUsersWelcomeDialog(this.cpUser, this.result, {Key key})
+  const CorpUsersWelcomeDialog(this.cpUser, this.result, {Key? key})
       : super(key: key);
   final Result result;
-  final MyProfileResult cpUser;
+  final MyProfileResult? cpUser;
   @override
   Widget build(BuildContext context) {
-    String firstName=cpUser.firstName??'';
-    String lastName=cpUser.lastName??'';
+    String firstName=cpUser!.firstName??'';
+    String lastName=cpUser!.lastName??'';
     return Dialog(
       insetPadding: EdgeInsets.only(left: 25, right: 25),
       shape: RoundedRectangleBorder(
@@ -50,7 +51,7 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
                   SizedBox(height: 8),
                   Center(
                     child: Text(
-                      result.healthOrganizationName,
+                      result.healthOrganizationName!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Colors.black,
@@ -79,7 +80,7 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
                   // ),
                   SizedBox(height: 5),
                   Text(
-                    result.planName,
+                    result.planName!,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,

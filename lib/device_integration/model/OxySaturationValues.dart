@@ -1,8 +1,9 @@
+
 import '../../constants/fhb_parameters.dart';
 
 class OxySaturationValues {
-  bool isSuccess;
-  List<OxyResult> result;
+  bool? isSuccess;
+  List<OxyResult>? result;
 
   OxySaturationValues({this.isSuccess, this.result});
 
@@ -11,7 +12,7 @@ class OxySaturationValues {
     if (json[dataResult] != null) {
       result = <OxyResult>[];
       json[dataResult].forEach((oxygenvalue) {
-        result.add(OxyResult.fromJson(oxygenvalue));
+        result!.add(OxyResult.fromJson(oxygenvalue));
       });
     }
   }
@@ -20,20 +21,20 @@ class OxySaturationValues {
     data[is_Success] = isSuccess;
     if (result != null) {
       data[dataResult] =
-          result.map((oxygenvalue) => oxygenvalue.toJson()).toList();
+          result!.map((oxygenvalue) => oxygenvalue.toJson()).toList();
     }
     return data;
   }
 }
 
 class OxyResult {
-  String sourceType;
-  String startDateTime;
-  String endDateTime;
-  int oxygenSaturation;
-  String deviceId;
-  DateTime dateTimeValue;
-  String bpm;
+  String? sourceType;
+  String? startDateTime;
+  String? endDateTime;
+  int? oxygenSaturation;
+  String? deviceId;
+  DateTime? dateTimeValue;
+  String? bpm;
   OxyResult(
       {this.sourceType,
       this.startDateTime,

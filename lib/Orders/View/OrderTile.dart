@@ -1,3 +1,4 @@
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 class OrderTile extends StatelessWidget {
   final OrderModel order;
   const OrderTile({
-    @required this.order,
+    required this.order,
   });
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class OrderTile extends StatelessWidget {
           children: [
             Text(
               'Order id : ${order.orderId}',
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -32,14 +33,14 @@ class OrderTile extends StatelessWidget {
             ),
             order.date != null
                 ? Text(
-                    "${DateFormat('MMMM dd, hh:mm a').format(order.date)}",
+                    "${DateFormat('MMMM dd, hh:mm a').format(order.date!)}",
                     style: Theme.of(context).textTheme.bodyText2,
                   )
                 : Container(),
             const SizedBox(
               height: 4,
             ),
-            order.patientFirstName.isNotEmpty
+            order.patientFirstName!.isNotEmpty
                 ? Text(
                     "Patient name : ${order.patientFirstName} ${order.patientLastName} ",
                     style: Theme.of(context).textTheme.bodyText2,
@@ -58,7 +59,7 @@ class OrderTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                (order.feePaid != null && order.feePaid.isNotEmpty)
+                (order.feePaid != null && order.feePaid!.isNotEmpty)
                     ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -67,9 +68,9 @@ class OrderTile extends StatelessWidget {
                             style: Theme.of(context).textTheme.subtitle1,
                           ),
                           Text(
-                            '${CommonUtil.CURRENCY}${double.parse(order.feePaid)}',
+                            '${CommonUtil.CURRENCY}${double.parse(order.feePaid!)}',
                             style:
-                                Theme.of(context).textTheme.subtitle1.copyWith(
+                                Theme.of(context).textTheme.subtitle1!.copyWith(
                                       color: Color(
                                         CommonUtil().getMyPrimaryColor(),
                                       ),
@@ -78,7 +79,7 @@ class OrderTile extends StatelessWidget {
                         ],
                       )
                     : Container(),
-                (order.paymentStatus != null && order.paymentStatus.isNotEmpty)
+                (order.paymentStatus != null && order.paymentStatus!.isNotEmpty)
                     ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -87,9 +88,9 @@ class OrderTile extends StatelessWidget {
                           //   style: Theme.of(context).textTheme.bodyText2,
                           // ),
                           Text(
-                            order.paymentStatus,
+                            order.paymentStatus!,
                             style:
-                                Theme.of(context).textTheme.bodyText2.copyWith(
+                                Theme.of(context).textTheme.bodyText2!.copyWith(
                                       color: getColor(order.paymentStatus),
                                     ),
                           ),
@@ -110,7 +111,7 @@ class OrderTile extends StatelessWidget {
     );
   }
 
-  Color getColor(String status) {
+  Color getColor(String? status) {
     switch (status) {
       case 'Payment Initiated':
       case 'Payment Pending':
@@ -132,7 +133,7 @@ class OrderTile extends StatelessWidget {
   List<Widget> getPlans(BuildContext context) {
     List<Widget> plans = [];
 
-    for (var i = 0; i < order.plans.length; i++) {
+    for (var i = 0; i < order.plans!.length; i++) {
       final widget = Padding(
         padding: const EdgeInsets.all(4),
         child: Row(
@@ -161,7 +162,7 @@ class OrderTile extends StatelessWidget {
             //     : Container(),
             Expanded(
               child: Text(
-                order.plans[i],
+                order.plans![i],
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.bodyText1,
               ),

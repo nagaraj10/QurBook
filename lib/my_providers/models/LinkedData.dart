@@ -1,10 +1,11 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class LinkedData {
-  String nickName;
-  String customRoleId;
-  String roleName;
-  String modeOfShare;
+  String? nickName;
+  String? customRoleId;
+  String? roleName;
+  String? modeOfShare;
 
   LinkedData(
       {this.nickName, this.customRoleId, this.roleName, this.modeOfShare});

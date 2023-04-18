@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -30,7 +31,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'widgets/regiment_data_card.dart';
 
 class RegimentTab extends StatefulWidget {
-  final String eventId;
+  final String? eventId;
 
   const RegimentTab({this.eventId});
 
@@ -39,7 +40,7 @@ class RegimentTab extends StatefulWidget {
 }
 
 class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
-  RegimentViewModel _regimentViewModel;
+  late RegimentViewModel _regimentViewModel;
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   final scrollController =
@@ -49,22 +50,22 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   final GlobalKey _cardKey = GlobalKey();
   final GlobalKey _SymptomsCardKey = GlobalKey();
 
-  bool isFirst;
-  bool isFirstSymptom;
+  late bool isFirst;
+  late bool isFirstSymptom;
   bool isSettingsOpen = false;
 
-  BuildContext _myContext;
-  ProfileResponseModel profileResponseModel;
+  late BuildContext _myContext;
+  ProfileResponseModel? profileResponseModel;
 
   final qurhomeDashboardController = Get.put(QurhomeDashboardController());
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
     getProfile();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     Provider.of<RegimentViewModel>(context, listen: false).getRegimentDate(
       dateTime: DateTime.now(),
       isInitial: true,
@@ -90,7 +91,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
           ? 0
           : null,
       isInitial: true,
-      eventId: widget?.eventId,
+      eventId: widget.eventId,
     );
 
     Provider.of<RegimentViewModel>(context, listen: false).resetRegimenTab(
@@ -102,7 +103,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
     PreferenceUtil.init();
 
-    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+    Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents =
         [];
   }
 
@@ -140,13 +141,13 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     isFirstSymptom = PreferenceUtil.isKeyValid(KEY_SHOWCASE_Symptom);
 
     try {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (!isFirst) _regimentViewModel.updateInitialShowIndex(index: 0);
         Future.delayed(
             Duration(milliseconds: 1000),
             () => isFirst || isSettingsOpen
                 ? null
-                : ShowCaseWidget.of(_myContext)
+                : ShowCaseWidget.of(_myContext)!
                     .startShowCase([_DailyKey, _cardKey, _SymptomsKey]));
       });
     } catch (e) {}
@@ -165,7 +166,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   }
 
   openScheduleDialog() async {
-    if (profileResponseModel.isSuccess &&
+    if (profileResponseModel!.isSuccess! &&
         profileResponseModel?.result?.profileData != null &&
         _regimentViewModel.regimentStatus != RegimentStatus.DialogOpened) {
       _regimentViewModel.updateRegimentStatus(RegimentStatus.DialogOpened);
@@ -173,7 +174,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         context: context,
         barrierDismissible: false,
         builder: (context) => EventListWidget(
-          profileResultModel: profileResponseModel.result,
+          profileResultModel: profileResponseModel!.result,
         ),
       );
       _regimentViewModel.updateRegimentStatus(RegimentStatus.DialogClosed);
@@ -200,17 +201,17 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
-    scrollController?.dispose();
-    WidgetsBinding.instance.removeObserver(this);
+    scrollController.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
   Color getColor(
-      Activityname activityname, Uformname uformName, Metadata metadata) {
+      Activityname? activityname, Uformname? uformName, Metadata? metadata) {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(int.parse(metadata?.color.replaceFirst('#', '0xFF')));
+        cardColor = Color(int.parse(metadata!.color!.replaceFirst('#', '0xFF')));
       } else {
         switch (activityname) {
           case Activityname.DIET:
@@ -244,22 +245,22 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   }
 
   dynamic getIcon(
-      Activityname activityname, Uformname uformName, Metadata metadata) {
+      Activityname? activityname, Uformname? uformName, Metadata? metadata) {
     final iconSize = (_regimentViewModel.regimentMode == RegimentMode.Schedule)
         ? 40.0.sp
         : 40.0.sp;
     try {
       if (metadata?.icon != null) {
-        if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
+        if (metadata?.icon?.toLowerCase().contains('.svg') ?? false) {
           return SvgPicture.network(
-            metadata?.icon,
+            metadata!.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,
           );
         } else {
           return CachedNetworkImage(
-            imageUrl: metadata?.icon,
+            imageUrl: metadata!.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,
@@ -277,8 +278,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   }
 
   dynamic getDefaultIcon(
-    Activityname activityname,
-    Uformname uformName,
+    Activityname? activityname,
+    Uformname? uformName,
     double iconSize,
   ) {
     var isDefault = true;
@@ -442,7 +443,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                     Future.delayed(
                                         Duration(milliseconds: 1000),
                                         () => ShowCaseWidget.of(_myContext)
-                                            .startShowCase([_SymptomsCardKey]));
+                                            ?.startShowCase([_SymptomsCardKey]));
                                   }
                                 }
                               },
@@ -600,13 +601,13 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 if (regimentViewModel.regimentStatus ==
                     RegimentStatus.Loading) {
                   return CommonCircularIndicator();
-                } else if ((regimentViewModel.regimentsList?.length ?? 0) > 0) {
+                } else if ((regimentViewModel.regimentsList.length) > 0) {
                   final regimentsList = regimentViewModel.regimentsList;
-                  if ((regimentsList?.length ?? 0) > 0) {
+                  if ((regimentsList.length) > 0) {
                     if (regimentViewModel.initialShowIndex != null) {
                       Future.delayed(Duration(microseconds: 1), () {
                         scrollController.scrollToIndex(
-                          regimentViewModel.initialShowIndex,
+                          regimentViewModel.initialShowIndex!,
                           preferPosition: AutoScrollPosition.begin,
                           duration: const Duration(
                             milliseconds: 1,
@@ -624,7 +625,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         bottom: 10.0.h,
                       ),
                       // physics: NeverScrollableScrollPhysics(),
-                      itemCount: regimentsList?.length ?? 0,
+                      itemCount: regimentsList.length,
                       itemBuilder: (context, index) {
                         final regimentData = (index < regimentsList.length)
                             ? regimentsList[index]
@@ -637,9 +638,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                 ? RegimentDataCard(
                                     index: index,
                                     title: regimentData.title,
-                                    time: regimentData?.estart != null
+                                    time: regimentData.estart != null
                                         ? DateFormat('hh:mm\na')
-                                            .format(regimentData?.estart)
+                                            .format(regimentData.estart!)
                                         : '',
                                     color: getColor(
                                         regimentData.activityname,
@@ -668,9 +669,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                     RegimentDataCard(
                                       index: index,
                                       title: regimentData.title,
-                                      time: regimentData?.estart != null
+                                      time: regimentData.estart != null
                                           ? DateFormat('hh:mm\na')
-                                              .format(regimentData?.estart)
+                                              .format(regimentData.estart!)
                                           : '',
                                       color: getColor(
                                           regimentData.activityname,
@@ -771,9 +772,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
           return ErrorsWidget();
         } else {
           if (snapshot.hasData) {
-            if (snapshot?.data != null) {
-              if (snapshot?.data?.regimentsList.length > 0) {
-                final regimentsList = snapshot?.data?.regimentsList;
+            if (snapshot.data != null) {
+              if (snapshot.data!.regimentsList!.length > 0) {
+                final regimentsList = snapshot.data!.regimentsList;
                 return Expanded(
                   child: ListView.builder(
                     controller: scrollController,
@@ -784,15 +785,15 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     // physics: NeverScrollableScrollPhysics(),
                     itemCount: regimentsList?.length ?? 0,
                     itemBuilder: (context, index) {
-                      final regimentData = (index < regimentsList.length)
+                      final regimentData = (index < regimentsList!.length)
                           ? regimentsList[index]
                           : RegimentDataModel();
                       return RegimentDataCard(
                         index: index,
                         title: regimentData.title,
-                        time: regimentData?.estart != null
+                        time: regimentData.estart != null
                             ? DateFormat('hh:mm\na')
-                                .format(regimentData?.estart)
+                                .format(regimentData.estart!)
                             : '',
                         color: getColor(regimentData.activityname,
                             regimentData.uformname, regimentData.metadata),

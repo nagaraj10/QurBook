@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -25,12 +26,12 @@ import '../Models/sheela_arguments.dart';
 import '../Views/SheelaAIMainScreen.dart';
 
 class SheelaBLEController extends GetxController {
-  SheelaAIController SheelaController;
-  HubListViewController hublistController;
+  late SheelaAIController SheelaController;
+  late HubListViewController hublistController;
   Stream stream = EventChannel('QurbookBLE/stream').receiveBroadcastStream();
-  StreamSubscription timerSubscription;
+  StreamSubscription? timerSubscription;
 
-  Timer timeOutTimer;
+  Timer? timeOutTimer;
   final String conversationType = "BLESheelaConversations";
   List<SheelaResponse> playConversations = [];
   bool isPlaying = false;
@@ -39,7 +40,7 @@ class SheelaBLEController extends GetxController {
   bool isFromRegiment = false;
   bool addingDevicesInHublist = false;
   bool receivedData = false;
-  AudioPlayer player;
+  late AudioPlayer player;
   int randomNum = 0;
   String weightUnit = "";
   String filteredDeviceType = '';
@@ -58,12 +59,12 @@ class SheelaBLEController extends GetxController {
       (event) async {
         if (event == PlayerState.COMPLETED) {
           isPlaying = false;
-          if ((playConversations ?? []).isNotEmpty) {
+          if ((playConversations).isNotEmpty) {
             playTTS();
           } else if (isCompleted) {
             await Future.delayed(const Duration(seconds: 4));
             stopTTS();
-            if (SheelaController?.isSheelaScreenActive ?? false) Get.back();
+            if (SheelaController.isSheelaScreenActive) Get.back();
           }
         }
       },
@@ -115,9 +116,9 @@ class SheelaBLEController extends GetxController {
         }
 
         print("Val in " + val.toString());
-        final List<String> receivedValues = val.split('|');
+        final List<String>? receivedValues = val.split('|');
         if ((receivedValues ?? []).length > 0) {
-          switch (receivedValues.first ?? "") {
+          switch (receivedValues!.first) {
             case "enablebluetooth":
               FlutterToast().getToast(
                 receivedValues.last ?? 'Please enable the Bluetooth and re-try',
@@ -170,7 +171,7 @@ class SheelaBLEController extends GetxController {
                 return;
               }
               String deviceType =
-                  hublistController.bleDeviceType?.toLowerCase() ?? '';
+                  hublistController.bleDeviceType!.toLowerCase();
               if (deviceType.isNotEmpty &&
                   (deviceType == "spo2" ||
                       deviceType == "bp" ||
@@ -186,7 +187,7 @@ class SheelaBLEController extends GetxController {
                       takeActiveDeviceReadings: true,
                     ),
                   ),
-                ).then((_) {
+                )?.then((_) {
                   Future.delayed(const Duration(seconds: 1)).then((_) {
                     if (Get.isRegistered<VitalDetailController>())
                       Get.find<VitalDetailController>().getData();
@@ -195,7 +196,7 @@ class SheelaBLEController extends GetxController {
                   Future.delayed(const Duration(seconds: 1)).then((_) {
                     if (Get.isRegistered<QurhomeRegimenController>()) {
                       Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController?.eid ?? '';
+                          hublistController.eid ?? '';
                       Get.find<QurhomeRegimenController>().getRegimenList();
                     }
                   });
@@ -225,7 +226,7 @@ class SheelaBLEController extends GetxController {
                       takeActiveDeviceReadings: true,
                     ),
                   ),
-                ).then((_) {
+                )?.then((_) {
                   if (Get.isRegistered<VitalDetailController>())
                     Future.delayed(const Duration(seconds: 1)).then((value) {
                       if (Get.isRegistered<VitalDetailController>())
@@ -235,7 +236,7 @@ class SheelaBLEController extends GetxController {
                   Future.delayed(const Duration(seconds: 1)).then((value) {
                     if (Get.isRegistered<QurhomeRegimenController>()) {
                       Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController?.eid ?? '';
+                          hublistController.eid ?? '';
                       Get.find<QurhomeRegimenController>().getRegimenList();
                     }
                   });
@@ -273,14 +274,14 @@ class SheelaBLEController extends GetxController {
   bool checkForParedDevice() {
     try {
       final devicesList =
-          (hublistController.hubListResponse.result.userDeviceCollection ?? []);
+          (hublistController.hubListResponse!.result!.userDeviceCollection ?? []);
       if (devicesList.isEmpty) {
         //no paired devices
         return false;
       }
       var index = -1;
       index = devicesList.indexWhere(
-        (element) => (CommonUtil().validString(element.device.serialNumber) ==
+        (element) => (CommonUtil().validString(element.device!.serialNumber) ==
             hublistController.bleMacId),
       );
       String deviceType = hublistController.bleDeviceType?.toLowerCase() ?? '';
@@ -301,9 +302,9 @@ class SheelaBLEController extends GetxController {
     try {
       if (Platform.isAndroid) {
         bool serviceEnabled = await CommonUtil().checkGPSIsOn();
-        bool isBluetoothEnable = false;
-        isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
-        if (!isBluetoothEnable) {
+        bool? isBluetoothEnable = false;
+        isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
+        if (!isBluetoothEnable!) {
           FlutterToast().getToast(
               'Please turn on your bluetooth and try again', Colors.red);
           return false;
@@ -324,12 +325,12 @@ class SheelaBLEController extends GetxController {
   }
 
   startSheelaBLEDeviceReadings() {
-    final arguments = SheelaController.arguments;
+    final arguments = SheelaController.arguments!;
     isCompleted = false;
     var msg = '';
     if ((arguments.deviceType ?? '').isNotEmpty) {
       String strText = CommonUtil().validString(arguments.deviceType);
-      if (strText?.toLowerCase() == "weight") {
+      if (strText.toLowerCase() == "weight") {
         strText = "Weighing scale";
       }
       msg = "Your $strText device is connected & reading values. Please wait";
@@ -372,7 +373,7 @@ class SheelaBLEController extends GetxController {
         seconds: 2,
       ),
     );
-    if ((data ?? '').isNotEmpty &&
+    if ((data).isNotEmpty &&
         SheelaController.canSpeak &&
         (SheelaController.arguments?.takeActiveDeviceReadings ?? false)) {
       // _disableTimer();
@@ -381,12 +382,12 @@ class SheelaBLEController extends GetxController {
           jsonDecode(data),
         );
         if (model.deviceType?.toLowerCase() == "weight" &&
-            (model.data.weight ?? '').isNotEmpty) {
+            (model.data!.weight ?? '').isNotEmpty) {
           model.deviceType = model.deviceType?.toUpperCase();
           try {
-            weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT);
+            weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT)!;
           } catch (e) {}
-          if ((weightUnit ?? '').isEmpty) {
+          if ((weightUnit).isEmpty) {
             weightUnit = CommonUtil.REGION_CODE == "IN"
                 ? STR_VAL_WEIGHT_IND
                 : STR_VAL_WEIGHT_US;
@@ -394,11 +395,11 @@ class SheelaBLEController extends GetxController {
           if (weightUnit == STR_VAL_WEIGHT_US) {
             double convertedWeight = 1;
             try {
-              convertedWeight = double.parse(model.data.weight);
+              convertedWeight = double.parse(model.data!.weight!);
             } catch (e) {
               convertedWeight = 1;
             }
-            model.data.weight = (convertedWeight * 2.205).toStringAsFixed(2);
+            model.data!.weight = (convertedWeight * 2.205).toStringAsFixed(2);
           }
         }
         // model.hubId = hublistController.virtualHubId;
@@ -419,8 +420,8 @@ class SheelaBLEController extends GetxController {
           receivedData = false;
           showFailure();
         } else if (model.deviceType == "SPO2") {
-          if ((model.data.sPO2 ?? '').isNotEmpty &&
-              (model.data.pulse ?? '').isNotEmpty) {
+          if ((model.data!.sPO2 ?? '').isNotEmpty &&
+              (model.data!.pulse ?? '').isNotEmpty) {
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -434,7 +435,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your last reading for SPO2 ${model.data.sPO2} and Pulse ${model.data.pulse} are successfully recorded. Bye!.",
+                    "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye!.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -443,15 +444,15 @@ class SheelaBLEController extends GetxController {
             showFailure();
           }
         } else if (model.deviceType == "BP") {
-          if ((model.data.systolic ?? '').isNotEmpty &&
-              (model.data.diastolic ?? '').isNotEmpty &&
-              (model.data.pulse ?? '').isNotEmpty) {
+          if ((model.data!.systolic ?? '').isNotEmpty &&
+              (model.data!.diastolic ?? '').isNotEmpty &&
+              (model.data!.pulse ?? '').isNotEmpty) {
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
-                text: "Thank you. Your BP systolic ${model.data.systolic} "
-                    ", Diastolic ${model.data.diastolic} "
-                    "and Pulse ${model.data.pulse} are successfully recorded. Bye!.",
+                text: "Thank you. Your BP systolic ${model.data!.systolic} "
+                    ", Diastolic ${model.data!.diastolic} "
+                    "and Pulse ${model.data!.pulse} are successfully recorded. Bye!.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -460,12 +461,12 @@ class SheelaBLEController extends GetxController {
             showFailure();
           }
         } else if (model.deviceType?.toLowerCase() == "weight") {
-          if ((model.data.weight ?? '').isNotEmpty) {
+          if ((model.data!.weight ?? '').isNotEmpty) {
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your Weight ${model.data.weight} ${weightUnit} is successfully recorded. Bye!.",
+                    "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye!.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -483,7 +484,7 @@ class SheelaBLEController extends GetxController {
   }
 
   playTTS() async {
-    if ((playConversations ?? []).isEmpty || isPlaying) {
+    if ((playConversations).isEmpty || isPlaying) {
       return;
     }
     final currentPlayingConversation = playConversations.first;
@@ -506,7 +507,7 @@ class SheelaBLEController extends GetxController {
 
             stopTTS();
           }
-          if ((playConversations ?? []).isNotEmpty) {
+          if ((playConversations).isNotEmpty) {
             playTTS();
           }
         }
@@ -514,18 +515,18 @@ class SheelaBLEController extends GetxController {
         stopTTS();
       }
     } else {
-      String textForPlaying;
+      String? textForPlaying;
       if ((currentPlayingConversation.text ?? '').isNotEmpty) {
         final result = await SheelaController.getGoogleTTSForText(
             currentPlayingConversation.text);
-        if ((result.payload?.audioContent ?? '').isNotEmpty) {
-          textForPlaying = result.payload.audioContent;
+        if ((result!.payload!.audioContent ?? '').isNotEmpty) {
+          textForPlaying = result.payload!.audioContent;
         }
       }
       playConversations.removeAt(0);
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
-          final bytes = base64Decode(textForPlaying);
+          final bytes = base64Decode(textForPlaying!);
           if (bytes != null) {
             final dir = await getTemporaryDirectory();
             randomNum++;
@@ -534,7 +535,7 @@ class SheelaBLEController extends GetxController {
             }
             final tempFile =
                 await File('${dir.path}/tempAudioFile$randomNum.mp3').create();
-            await tempFile.writeAsBytesSync(
+             tempFile.writeAsBytesSync(
               bytes,
             );
             SheelaController.conversations.add(currentPlayingConversation);
@@ -574,7 +575,7 @@ class SheelaBLEController extends GetxController {
         if (Get.isRegistered<QurhomeRegimenController>())
           Future.delayed(const Duration(seconds: 1)).then((value) {
             Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                hublistController.eid;
+                hublistController.eid!;
             Get.find<QurhomeRegimenController>().getRegimenList();
           });
       }
@@ -587,7 +588,7 @@ class SheelaBLEController extends GetxController {
 
   removeTimeOutTimer() {
     if (timeOutTimer != null) {
-      timeOutTimer.cancel();
+      timeOutTimer!.cancel();
       timeOutTimer = null;
     }
   }
@@ -598,7 +599,7 @@ class SheelaBLEController extends GetxController {
     isFromVitals = false;
     filteredDeviceType = '';
     if (timerSubscription != null) {
-      timerSubscription.cancel();
+      timerSubscription!.cancel();
       timerSubscription = null;
     }
     removeTimeOutTimer();

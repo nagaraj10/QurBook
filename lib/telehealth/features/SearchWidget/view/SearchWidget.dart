@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import '../../../../common/CommonConstants.dart';
@@ -8,15 +9,15 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class SearchWidget extends StatefulWidget {
-  final void Function(String) onChanged;
-  final TextEditingController searchController;
-  final FocusNode searchFocus;
-  final double padding;
-  final String hintText;
-  final Function() onClosePress;
+  final void Function(String)? onChanged;
+  final TextEditingController? searchController;
+  final FocusNode? searchFocus;
+  final double? padding;
+  final String? hintText;
+  final Function()? onClosePress;
 
   const SearchWidget({
-    Key key,
+    Key? key,
     this.onChanged,
     this.searchController,
     this.searchFocus,
@@ -30,7 +31,7 @@ class SearchWidget extends StatefulWidget {
 }
 
 class SearchWdigetState extends State<SearchWidget> {
-  TextEditingController _searchQueryController;
+  TextEditingController? _searchQueryController;
 
   @override
   void initState() {
@@ -70,7 +71,7 @@ class SearchWdigetState extends State<SearchWidget> {
                         size: 24.0.sp,
                       ),
                       suffixIcon: Visibility(
-                        visible: _searchQueryController.text.length >= 3
+                        visible: _searchQueryController!.text.length >= 3
                             ? true
                             : false,
                         child: IconButton(
@@ -80,9 +81,9 @@ class SearchWdigetState extends State<SearchWidget> {
                             size: 24.0.sp,
                           ),
                           onPressed: () {
-                            _searchQueryController.clear();
-                            widget.onChanged('');
-                            widget.onClosePress();
+                            _searchQueryController!.clear();
+                            widget.onChanged!('');
+                            widget.onClosePress!();
                           },
                         ),
                       ),
@@ -97,7 +98,7 @@ class SearchWdigetState extends State<SearchWidget> {
                       fontSize: 16.0.sp,
                     ),
                     onChanged: (editedValue) {
-                      widget.onChanged(editedValue);
+                      widget.onChanged!(editedValue);
                     },
                   ),
                 ),

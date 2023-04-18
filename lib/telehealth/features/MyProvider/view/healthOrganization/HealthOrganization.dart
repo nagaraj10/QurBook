@@ -1,4 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
+
+//import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
@@ -32,9 +33,9 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/errors_widget.dart';
 
 class HealthOrganization extends StatefulWidget {
-  final List<Doctors> doctors;
-  final int index;
-  Function(String) closePage;
+  final List<Doctors?>? doctors;
+  final int? index;
+  Function(String)? closePage;
 
   @override
   _HealthOrganizationState createState() => _HealthOrganizationState();
@@ -44,20 +45,20 @@ class HealthOrganization extends StatefulWidget {
 
 class _HealthOrganizationState extends State<HealthOrganization> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  MyProviderViewModel providerViewModel;
+  late MyProviderViewModel providerViewModel;
   DateTime _selectedValue = DateTime.now();
   int selectedPosition = 0;
   bool firstTym = false;
-  String doctorsName;
+  String? doctorsName;
   CommonWidgets commonWidgets = new CommonWidgets();
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
-      new List<AvailableTimeSlotsModel>();
-  List<SlotSessionsModel> sessionTimeModel = new List<SlotSessionsModel>();
-  List<Slots> slotsModel = new List<Slots>();
-  ProvidersBloc _providersBloc;
-  MyProvidersResponse myProvidersResponseList;
-  MyProfileModel myProfile;
+      <AvailableTimeSlotsModel>[];
+  List<SlotSessionsModel> sessionTimeModel = <SlotSessionsModel>[];
+  List<Slots> slotsModel = <Slots>[];
+  ProvidersBloc? _providersBloc;
+  MyProvidersResponse? myProvidersResponseList;
+  MyProfileModel? myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
@@ -85,7 +86,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(1.sh * 0.12),
-          child: getDoctorBar(widget.doctors, widget.index)),
+          child: getDoctorBar(widget.doctors!, widget.index!)),
       body: Container(
           child: Column(
         children: [
@@ -100,11 +101,11 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       child: (providerViewModel.healthOrganizationResult != null &&
               providerViewModel.healthOrganizationResult.length > 0)
           ? providerListWidget(providerViewModel.healthOrganizationResult)
-          : getHospitalProviderList(widget.doctors[widget.index].id),
+          : getHospitalProviderList(widget.doctors![widget.index!]!.id!),
     );
   }
 
-  Widget getDoctorBar(List<Doctors> doctors, int index) {
+  Widget getDoctorBar(List<Doctors?> doctors, int index) {
     return AppBar(
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
@@ -144,20 +145,20 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                   ),
                   ClipOval(
                     child: Image.network(
-                        doctors[index].user.profilePicThumbnailUrl != null
-                            ? doctors[index].user.profilePicThumbnailUrl
+                        doctors[index]!.user!.profilePicThumbnailUrl != null
+                            ? doctors[index]!.user!.profilePicThumbnailUrl!
                             : '',
                         height: 40.0.h,
                         width: 40.0.h,
                         fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                            Object exception, StackTrace stackTrace) {
+                            Object exception, StackTrace? stackTrace) {
                       return Container(
                         height: 40.0.h,
                         width: 40.0.h,
                         color: Colors.grey[200],
                         child: Center(
                           child: commonWidgets
-                              .getFirstLastNameText(doctors[index]),
+                              .getFirstLastNameText(doctors[index]!),
                         ),
                       );
                     }),
@@ -171,25 +172,25 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         commonWidgets
-                            .setDoctornameForTabBar(doctors[index].user),
+                            .setDoctornameForTabBar(doctors[index]!.user),
                         Text(
-                          (doctors[index].doctorProfessionalDetailCollection !=
+                          (doctors[index]!.doctorProfessionalDetailCollection !=
                                       null &&
-                                  doctors[index]
-                                          .doctorProfessionalDetailCollection
+                                  doctors[index]!
+                                          .doctorProfessionalDetailCollection!
                                           .length >
                                       0)
-                              ? doctors[index]
-                                          .doctorProfessionalDetailCollection[0]
+                              ? doctors[index]!
+                                          .doctorProfessionalDetailCollection![0]
                                           .specialty !=
                                       null
-                                  ? doctors[index]
-                                              .doctorProfessionalDetailCollection[
+                                  ? doctors[index]!
+                                              .doctorProfessionalDetailCollection![
                                                   0]
-                                              .specialty
+                                              .specialty!
                                               .name !=
                                           null
-                                      ? '${doctors[index].doctorProfessionalDetailCollection[0].specialty.name}'
+                                      ? '${doctors[index]!.doctorProfessionalDetailCollection![0].specialty!.name}'
                                       : ''
                                   : ''
                               : '',
@@ -200,7 +201,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                         ),
                         Text(
                           '' +
-                              commonWidgets.getCityDoctorsModel(doctors[index]),
+                              commonWidgets.getCityDoctorsModel(doctors[index]!)!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
@@ -253,7 +254,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       padding: EdgeInsets.all(10.0),
       child: ExpandableButton(
         child: getHospitalWidget(
-            i, docs, widget.doctors[widget.index], widget.index),
+            i, docs, widget.doctors![widget.index!]!, widget.index),
       ),
     );
   }
@@ -267,21 +268,21 @@ class _HealthOrganizationState extends State<HealthOrganization> {
         child: Column(
           children: [
             getHospitalWidget(
-                i, docs, widget.doctors[widget.index], widget.index),
+                i, docs, widget.doctors![widget.index!]!, widget.index),
             commonWidgets.getSizedBox(20.0),
             DoctorSessionTimeSlot(
               date: _selectedValue.toString(),
-              doctorId: widget.doctors[widget.index].id,
+              doctorId: widget.doctors![widget.index!]!.id,
               docs: widget.doctors,
               isReshedule: false,
               i: i,
-              healthOrganizationId: docs[i].healthOrganization.id,
+              healthOrganizationId: docs[i].healthOrganization!.id,
               healthOrganizationResult: docs,
               resultFromHospitalList: [],
               doctorListPos: widget.index,
               onChanged: (value) {},
               closePage: (value) {
-                widget.closePage(value);
+                widget.closePage!(value);
                 Navigator.pop(context);
               },
               refresh: () {
@@ -307,7 +308,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       int i,
       List<HealthOrganizationResult> eachHospitalModel,
       Doctors doctors,
-      int index) {
+      int? index) {
     return Row(
       children: <Widget>[
         CircleAvatar(
@@ -323,12 +324,12 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                             child: Text(
                               eachHospitalModel[i].healthOrganization != null
                                   ? eachHospitalModel[i]
-                                              .healthOrganization
+                                              .healthOrganization!
                                               .name !=
                                           null
                                       ? eachHospitalModel[i]
-                                          .healthOrganization
-                                          .name[0]
+                                          .healthOrganization!
+                                          .name![0]
                                           .toUpperCase()
                                       : ''
                                   : '',
@@ -362,9 +363,9 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                 children: [
                   Expanded(
                     child: Text(
-                      eachHospitalModel[i].healthOrganization.name != null
+                      eachHospitalModel[i].healthOrganization!.name != null
                           ? toBeginningOfSentenceCase(
-                              eachHospitalModel[i].healthOrganization.name)
+                              eachHospitalModel[i].healthOrganization!.name)!
                           : '',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -378,16 +379,17 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                 ],
               ),
               SizedBox(height: 5.0.h),
-              AutoSizeText(
+             // AutoSizeText( FU2.5
+              Text( // FU2.5
                 (doctors.doctorProfessionalDetailCollection != null &&
-                        doctors.doctorProfessionalDetailCollection.length > 0)
-                    ? doctors.doctorProfessionalDetailCollection[0].specialty !=
+                        doctors.doctorProfessionalDetailCollection!.length > 0)
+                    ? doctors.doctorProfessionalDetailCollection![0].specialty !=
                             null
-                        ? doctors.doctorProfessionalDetailCollection[0]
-                                    .specialty.name !=
+                        ? doctors.doctorProfessionalDetailCollection![0]
+                                    .specialty!.name !=
                                 null
-                            ? doctors.doctorProfessionalDetailCollection[0]
-                                .specialty.name
+                            ? doctors.doctorProfessionalDetailCollection![0]
+                                .specialty!.name!
                             : ''
                         : ''
                     : '',
@@ -398,10 +400,11 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                     color: ColorUtils.lightgraycolor),
               ),
               SizedBox(height: 5.0.h),
-              AutoSizeText(
-                '' + commonWidgets.getCity(eachHospitalModel[i]) == ''
+              //AutoSizeText(  FU2.5
+              Text(  //  FU2.5
+                '' + commonWidgets.getCity(eachHospitalModel[i])! == ''
                     ? commonWidgets
-                        .getCityDoctorsModel(widget.doctors[widget.index])
+                        .getCityDoctorsModel(widget.doctors![widget.index!]!)!
                     : '',
                 maxLines: 1,
                 style: TextStyle(
@@ -447,7 +450,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     }
   }
 
-  Widget getCSRDiscount(String fees) {
+  Widget getCSRDiscount(String? fees) {
     Widget widget;
     if (fees != null && fees != '') {
       if (fees != '0.00' && fees != '0') {
@@ -460,7 +463,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
         }
         widget = Container(
           child: Center(
-            child: Text('Discount ' + fees + '%',
+            child: Text('Discount ' + fees! + '%',
                 style: TextStyle(
                     fontSize: 16.0.sp,
                     fontWeight: FontWeight.w500,
@@ -477,20 +480,20 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     return widget;
   }
 
-  String getFees(HealthOrganizationResult result, bool isCSRDiscount) {
-    String fees = '';
-    if (result?.doctorFeeCollection?.isNotEmpty) {
-      if (result?.doctorFeeCollection?.length > 0) {
-        for (int i = 0; i < result?.doctorFeeCollection?.length; i++) {
-          String feesCode = result?.doctorFeeCollection[i]?.feeType?.code;
-          bool isActive = result?.doctorFeeCollection[i]?.isActive;
+  String? getFees(HealthOrganizationResult result, bool isCSRDiscount) {
+    String? fees = '';
+    if (result.doctorFeeCollection!.isNotEmpty) {
+      if (result.doctorFeeCollection!.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection!.length; i++) {
+          String? feesCode = result.doctorFeeCollection![i].feeType?.code;
+          bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }
@@ -504,7 +507,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   }
 
   Widget getHospitalProviderList(String doctorId) {
-    return new FutureBuilder<HealthOrganizationModel>(
+    return new FutureBuilder<HealthOrganizationModel?>(
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -515,21 +518,21 @@ class _HealthOrganizationState extends State<HealthOrganization> {
           final items = snapshot.data ??
               <DoctorIds>[]; // handle the case that data is null
 
-          return (snapshot?.data?.isSuccess != null &&
-                  !snapshot?.data?.isSuccess &&
-                  (snapshot?.data?.message ?? '').isNotEmpty)
+          return (snapshot.data!.isSuccess != null &&
+                  !snapshot.data!.isSuccess! &&
+                  (snapshot.data!.message ?? '').isNotEmpty)
               ? Container(
                   child: Center(
-                    child: Text(snapshot?.data?.message),
+                    child: Text(snapshot.data!.message!),
                   ),
                 )
-              : providerListWidget(snapshot.data.result);
+              : providerListWidget(snapshot.data!.result);
         }
       },
     );
   }
 
-  Widget providerListWidget(List<HealthOrganizationResult> hospitalList) {
+  Widget providerListWidget(List<HealthOrganizationResult>? hospitalList) {
     return (hospitalList != null && hospitalList.length > 0)
         ? new ListView.builder(
             itemBuilder: (BuildContext ctx, int i) =>

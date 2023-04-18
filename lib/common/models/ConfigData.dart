@@ -1,7 +1,8 @@
+
 class ConfigData {
   ConfigData({
-      String name, 
-      String value,}){
+      String? name, 
+      String? value,}){
     _name = name;
     _value = value;
 }
@@ -10,11 +11,11 @@ class ConfigData {
     _name = json['name'];
     _value = json['value'];
   }
-  String _name;
-  String _value;
+  String? _name;
+  String? _value;
 
-  String get name => _name;
-  String get value => _value;
+  String? get name => _name;
+  String? get value => _value;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

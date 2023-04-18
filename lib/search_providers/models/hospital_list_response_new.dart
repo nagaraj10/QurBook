@@ -1,18 +1,19 @@
+
 import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
 
 class HospitalsSearchListResponse {
-  bool isSuccess;
-  List<HospitalsListResult> result;
-  Diagnostics diagnostics;
+  bool? isSuccess;
+  List<HospitalsListResult>? result;
+  Diagnostics? diagnostics;
 
   HospitalsSearchListResponse({this.isSuccess, this.result,this.diagnostics});
 
   HospitalsSearchListResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = List<HospitalsListResult>();
+      result = <HospitalsListResult>[];
       json['result'].forEach((v) {
-        result.add(HospitalsListResult.fromJson(v));
+        result!.add(HospitalsListResult.fromJson(v));
       });
     }
     if (json.containsKey('diagnostics')) {
@@ -27,31 +28,31 @@ class HospitalsSearchListResponse {
     final data = <String, dynamic>{};
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     if (diagnostics != null) {
-      data['diagnostics'] = diagnostics.toJson();
+      data['diagnostics'] = diagnostics!.toJson();
     }
     return data;
   }
 }
 
 class HospitalsListResult {
-  String healthOrganizationReferenceId;
-  String healthOrganizationName;
-  String name;
-  String addressLine1;
-  String addressLine2;
-  String cityName;
-  String stateName;
-  String pincode;
-  String healthOrganizationId;
-  String healthOrganizationTypeId;
-  String healthOrganizationTypeName;
-  String phoneNumber;
-  String phoneNumberTypeId;
-  String phoneNumberTypeName;
-  String specialization;
+  String? healthOrganizationReferenceId;
+  String? healthOrganizationName;
+  String? name;
+  String? addressLine1;
+  String? addressLine2;
+  String? cityName;
+  String? stateName;
+  String? pincode;
+  String? healthOrganizationId;
+  String? healthOrganizationTypeId;
+  String? healthOrganizationTypeName;
+  String? phoneNumber;
+  String? phoneNumberTypeId;
+  String? phoneNumberTypeName;
+  String? specialization;
 
   HospitalsListResult({
     this.healthOrganizationReferenceId,

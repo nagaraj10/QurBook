@@ -1,8 +1,9 @@
+
 class Slots {
-  String startTime;
-  String endTime;
-  String isAvailable;
-  int slotNumber;
+  String? startTime;
+  String? endTime;
+  String? isAvailable;
+  int? slotNumber;
 
   Slots({this.startTime, this.endTime, this.isAvailable, this.slotNumber});
 

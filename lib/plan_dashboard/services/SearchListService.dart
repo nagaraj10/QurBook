@@ -15,7 +15,7 @@ class SearchListService {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final body = {};
     body['method'] = qr_get;
-    body['data'] = qr_getSearchList+qr_qEqaul+title+qr_patientEqaul+userid;
+    body['data'] = qr_getSearchList+qr_qEqaul+title+qr_patientEqaul+userid!;
     final jsonString = convert.jsonEncode(body);
     var response = await _helper.getSearchListApi(qr_plan_list,jsonString);
     return SearchListModel.fromJson(response);

@@ -1,10 +1,11 @@
+
 import 'add_more_data.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 class AddHospitalsProvidersId {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   AddHospitalsProvidersId(
       {this.status, this.success, this.message, this.response});
@@ -20,18 +21,18 @@ class AddHospitalsProvidersId {
 }
 
 class Response {
-  int count;
-  AddMoreData data;
+  int? count;
+  AddMoreData? data;
 
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
     count = json[parameters.strCount];
 
-    Map<String, dynamic> dic;
+    Map<String, dynamic>? dic;
     if (json[parameters.strData] != null) {
       dic = json[parameters.strData];
-      data = AddMoreData.fromJson(dic);
+      data = AddMoreData.fromJson(dic!);
     } 
   }
 }

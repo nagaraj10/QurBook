@@ -1,12 +1,13 @@
+
 import 'owner.dart';
 
 class History {
   History({
-    String id,
-    String action,
-    String description,
-    Owner owner,
-    String date,
+    String? id,
+    String? action,
+    String? description,
+    Owner? owner,
+    String? date,
   }) {
     _id = id;
     _action = action;
@@ -22,17 +23,17 @@ class History {
     _owner = json['owner'] != null ? Owner.fromJson(json['owner']) : null;
     _date = json['date'];
   }
-  String _id;
-  String _action;
-  String _description;
-  Owner _owner;
-  String _date;
+  String? _id;
+  String? _action;
+  String? _description;
+  Owner? _owner;
+  String? _date;
 
-  String get id => _id;
-  String get action => _action;
-  String get description => _description;
-  Owner get owner => _owner;
-  String get date => _date;
+  String? get id => _id;
+  String? get action => _action;
+  String? get description => _description;
+  Owner? get owner => _owner;
+  String? get date => _date;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -40,7 +41,7 @@ class History {
     map['action'] = _action;
     map['description'] = _description;
     if (_owner != null) {
-      map['owner'] = _owner.toJson();
+      map['owner'] = _owner!.toJson();
     }
     map['date'] = _date;
     return map;

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -25,13 +26,13 @@ class SearchProviderList extends StatefulWidget {
 
   final String diseases;
 
-  final List<PlanListResult> planListResult;
+  final List<PlanListResult>? planListResult;
 
   const SearchProviderList(this.diseases, this.planListResult);
 }
 
 class _SearchProviderList extends State<SearchProviderList> {
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
   PlanViewModel myPlanViewModel = PlanViewModel();
   bool isSearch = false;
   List<PlanListResult> myPLanListResult = [];
@@ -41,18 +42,18 @@ class _SearchProviderList extends State<SearchProviderList> {
   String diseases = '';
   String hosIcon = '';
   String catIcon = '';
-  List<PlanListResult> planListResult;
+  List<PlanListResult>? planListResult;
   List<PlanListResult> planListUniq = [];
 
   //final GlobalKey _searchKey = GlobalKey();
   //final GlobalKey _hospitalKey = GlobalKey();
   final GlobalKey _subscribeKey = GlobalKey();
-  bool isFirst;
-  BuildContext _myContext;
+  bool? isFirst;
+  late BuildContext _myContext;
 
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
     // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
     //   isInitial: true,
@@ -67,19 +68,19 @@ class _SearchProviderList extends State<SearchProviderList> {
 
     final isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_Plan);
     try {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         Future.delayed(
             Duration(milliseconds: 1000),
             () => isFirst
                 ? null
-                : ShowCaseWidget.of(_myContext).startShowCase([_subscribeKey]));
+                : ShowCaseWidget.of(_myContext)!.startShowCase([_subscribeKey]));
       });
     } catch (e) {}
   }
 
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.dispose();
   }
 
@@ -143,7 +144,7 @@ class _SearchProviderList extends State<SearchProviderList> {
     setState(() {});
   }
 
-  Widget planList(List<PlanListResult> planList) {
+  Widget planList(List<PlanListResult>? planList) {
     planListUniq = [];
     /*if (planList != null && planList.length > 0) {
       planList.forEach((element) {
@@ -163,11 +164,11 @@ class _SearchProviderList extends State<SearchProviderList> {
 
     if (planList != null && planList.isNotEmpty) {
       planList.where((element1) {
-        return (element1?.metadata?.diseases ?? '') == diseases;
+        return (element1.metadata?.diseases ?? '') == diseases;
       }).forEach((element) {
         var keysUniq = true;
         planListUniq.forEach((catElement) {
-          if (catElement?.plinkid == element.plinkid) {
+          if (catElement.plinkid == element.plinkid) {
             keysUniq = false;
           }
         });
@@ -249,8 +250,8 @@ class _SearchProviderList extends State<SearchProviderList> {
           MaterialPageRoute(
               builder: (context) => CategoryList(
                   planList[i].providerid,
-                  planList[i]?.metadata?.icon,
-                  planList[i]?.metadata?.diseases)),
+                  planList[i].metadata?.icon,
+                  planList[i].metadata?.diseases)),
         ).then((value) {
           setState(() {});
         });
@@ -284,8 +285,8 @@ class _SearchProviderList extends State<SearchProviderList> {
                       backgroundColor: Colors.grey[200],
                       radius: 20,
                       child: CommonUtil().customImage(
-                        planList[i]?.providerMetadata?.icon ?? '',
-                        planInitial: planList[i]?.providerName,
+                        planList[i].providerMetadata?.icon ?? '',
+                        planInitial: planList[i].providerName,
                       )),
                   SizedBox(
                     width: 20.0.w,
@@ -298,7 +299,7 @@ class _SearchProviderList extends State<SearchProviderList> {
                         Text(
                           planList[i].providerName != null
                               ? toBeginningOfSentenceCase(
-                                  planList[i].providerName)
+                                  planList[i].providerName)!
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
@@ -311,7 +312,7 @@ class _SearchProviderList extends State<SearchProviderList> {
                         Text(
                           planList[i].providerDesc != null
                               ? toBeginningOfSentenceCase(
-                                  planList[i].providerDesc)
+                                  planList[i].providerDesc)!
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
@@ -349,13 +350,13 @@ class _SearchProviderList extends State<SearchProviderList> {
     );
   }
 
-  String getImage(int i, List<PlanListResult> planList) {
-    String image;
+  String? getImage(int i, List<PlanListResult> planList) {
+    String? image;
     if (planList[i] != null) {
       if (planList[i].metadata != null && planList[i].metadata != '') {
-        if (planList[i].metadata.icon != null &&
-            planList[i].metadata.icon != '') {
-          image = planList[i].metadata.icon;
+        if (planList[i].metadata!.icon != null &&
+            planList[i].metadata!.icon != '') {
+          image = planList[i].metadata!.icon;
         } else {
           if (catIcon != null && catIcon != '') {
             image = catIcon;

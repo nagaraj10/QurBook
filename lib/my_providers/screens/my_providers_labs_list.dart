@@ -1,3 +1,4 @@
+// import 'package:auto_size_text/auto_size_text.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,10 +19,10 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import 'my_provider.dart';
 
 class MyProvidersLabsList extends StatefulWidget {
-  final List<Hospitals> labsModel;
-  final ProvidersBloc providersBloc;
-  final MyProviderState myProviderState;
-  Function isRefresh;
+  final List<Hospitals>? labsModel;
+  final ProvidersBloc? providersBloc;
+  final MyProviderState? myProviderState;
+  Function? isRefresh;
 
   MyProvidersLabsList(
       {this.labsModel,
@@ -34,10 +35,10 @@ class MyProvidersLabsList extends StatefulWidget {
 }
 
 class _MyProvidersLabsList extends State<MyProvidersLabsList> {
-  List<Hospitals> labsModel;
-  ProvidersBloc providersBloc;
-  MyProviderState myProviderState;
-  MyProviderViewModel providerViewModel;
+  List<Hospitals>? labsModel;
+  ProvidersBloc? providersBloc;
+  late MyProviderState myProviderState;
+  late MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = CommonWidgets();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
@@ -68,15 +69,15 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
   Widget buildPlayersList() {
     return RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () {
+        onRefresh: () async {
           _refreshIndicatorKey.currentState?.show(atTop: true);
-          widget.isRefresh();
+          widget.isRefresh!();
           _refreshIndicatorKey.currentState?.show(atTop: false);
         },
         child: ListView.separated(
           padding: EdgeInsets.only(bottom: 200),
           itemBuilder: (context, index) {
-            final eachLabModel = widget.labsModel[index];
+            final eachLabModel = widget.labsModel![index];
             return InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, router.rt_AddProvider,
@@ -87,7 +88,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                           hasData: true,
                           labsDataList: widget.labsModel,
                           isRefresh: () {
-                            widget.isRefresh();
+                            widget.isRefresh!();
                           })).then((value) {
 //                providersBloc.getMedicalPreferencesList();
                     myProviderState.refreshPage();
@@ -99,8 +100,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                         right: 10,
                         top: 10,
                         bottom: CommonUtil.isUSRegion() &&
-                                    eachLabModel?.isPrimaryProvider ??
-                                false
+                                    eachLabModel.isPrimaryProvider !
                             ? 0
                             : 10),
                     margin: EdgeInsets.only(left: 12, right: 12, top: 12),
@@ -136,7 +136,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                           child: Center(
                                             child: Text(
                                               eachLabModel.name != null
-                                                  ? eachLabModel.name[0]
+                                                  ? eachLabModel.name![0]
                                                       .toUpperCase()
                                                   : '',
                                               style: TextStyle(
@@ -163,9 +163,9 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                   SizedBox(height: 5.0.h),
                                   AutoSizeText(
                                     eachLabModel.name != null
-                                        ? eachLabModel?.name
-                                            ?.capitalizeFirstofEach //toBeginningOfSentenceCase(eachLabModel.name)
-                                        : '',
+                                        ? eachLabModel.name!
+                                            .capitalizeFirstofEach //toBeginningOfSentenceCase(eachLabModel.name)
+                                        : "",
                                     maxLines: 1,
                                     style: TextStyle(
                                       fontSize: 16.0.sp,
@@ -177,7 +177,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                   AutoSizeText(
                                     '' +
                                         commonWidgets
-                                            .getCityHospital(eachLabModel),
+                                            .getCityHospital(eachLabModel)!,
                                     maxLines: 1,
                                     style: TextStyle(
                                         fontSize: 15.0.sp,
@@ -200,8 +200,8 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                         .bookMarkHealthOrg(eachLabModel, false,
                                             'ListItem', null)
                                         .then((status) {
-                                      if (status) {
-                                        widget.isRefresh();
+                                      if (status!) {
+                                        widget.isRefresh!();
                                       }
                                     });
                                   }),
@@ -211,8 +211,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                           ],
                         ),
                         if (CommonUtil.isUSRegion() &&
-                                eachLabModel?.isPrimaryProvider ??
-                            false)
+                                eachLabModel.isPrimaryProvider!)
                           CommonUtil().primaryProviderIndication(),
                       ],
                     )));
@@ -223,7 +222,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
               color: Colors.transparent,
             );
           },
-          itemCount: widget.labsModel.length,
+          itemCount: widget.labsModel!.length,
         ));
   }
 }

@@ -1,10 +1,13 @@
+
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flutter_geocoder/geocoder.dart';
+
 import '../../common/CommonUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder/geocoder.dart';
+// import 'package:geocoder/geocoder.dart';  FU2.5
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
 import '../../common/CommonConstants.dart';
@@ -15,7 +18,7 @@ import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class ConfirmLocationScreen extends StatefulWidget {
-  ConfirmLocationArguments arguments;
+  ConfirmLocationArguments? arguments;
 
   ConfirmLocationScreen({this.arguments});
 
@@ -29,7 +32,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   final searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
 
-  GoogleMapController googleMapControll;
+  GoogleMapController? googleMapControll;
   final List<Marker> _markers = [];
   static const double _lat = 12.861693;
   static const double _lang = 80.227242;
@@ -38,25 +41,26 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
     target: LatLng(_lat, _lang),
     zoom: _zoom,
   );
-  LatLng lastMapPosition;
+  LatLng? lastMapPosition;
   LatLng center = LatLng(0, 0);
 
-  Address address;
+ // Address address;  FU2.5
+ var address;
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
 
-    searchController.text = widget.arguments.place.description;
+    searchController.text = widget.arguments!.place!.description!;
 
     center = LatLng(
-        widget.arguments.placeDetail.lat, widget.arguments.placeDetail.lng);
+        widget.arguments!.placeDetail!.lat!, widget.arguments!.placeDetail!.lng!);
     lastMapPosition = center;
 
     kGooglePlex = CameraPosition(
       target: LatLng(
-          widget.arguments.placeDetail.lat, widget.arguments.placeDetail.lng),
+          widget.arguments!.placeDetail!.lat!, widget.arguments!.placeDetail!.lng!),
       zoom: 12,
     );
     addMarker();
@@ -114,7 +118,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
             color: ColorUtils.darkbluecolor,
             child: Center(
               child: Text(
-                  CommonConstants.locate_your + widget.arguments.providerType,
+                  CommonConstants.locate_your + widget.arguments!.providerType!,
                   style: TextStyle(
                       fontSize: 15.0.sp,
                       fontWeight: FontWeight.w400,
@@ -215,9 +219,9 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
       var shouldPop = false;
       if (route.settings.name == rt_AddProvider) {
         (route.settings.arguments as AddProvidersArguments).placeDetail =
-            widget.arguments.placeDetail;
+            widget.arguments!.placeDetail;
         (route.settings.arguments as AddProvidersArguments).place =
-            widget.arguments.place;
+            widget.arguments!.place;
         (route.settings.arguments as AddProvidersArguments)
             .confirmAddressDescription = searchController.text;
         shouldPop = true;
@@ -238,8 +242,8 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
           markerId: MarkerId(center.toString()),
           position: center,
           infoWindow: InfoWindow(
-            title: widget.arguments.placeDetail.name,
-            snippet: widget.arguments.placeDetail.formattedAddress,
+            title: widget.arguments!.placeDetail!.name,
+            snippet: widget.arguments!.placeDetail!.formattedAddress,
           ),
           icon: descriptor,
           onDragEnd: (value) {
@@ -248,7 +252,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
               center = LatLng(value.latitude, value.longitude);
 
-              googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
+              googleMapControll!.animateCamera(CameraUpdate.newCameraPosition(
                   CameraPosition(
                       target: center, zoom: 12, bearing: 45, tilt: 45)));
             }
@@ -261,7 +265,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
     var codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
         targetWidth: width);
     var fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
         .buffer
         .asUint8List();
   }
@@ -271,6 +275,6 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
     final addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
-    searchController.text = address.addressLine;
+    searchController.text = address.addressLine; // FU2.5
   }
 }

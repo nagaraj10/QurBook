@@ -1,10 +1,11 @@
+
 import 'dart:convert';
 
 import 'MetaDataForHospitalLogo.dart';
 
 class SearchListModel {
-  bool isSuccess;
-  List<SearchListResult> result;
+  bool? isSuccess;
+  List<SearchListResult>? result;
 
   SearchListModel({this.isSuccess, this.result});
 
@@ -13,7 +14,7 @@ class SearchListModel {
     if (json['result'] != null) {
       result = <SearchListResult>[];
       json['result'].forEach((v) {
-        result.add(SearchListResult.fromJson(v));
+        result!.add(SearchListResult.fromJson(v));
       });
     }
   }
@@ -22,18 +23,18 @@ class SearchListModel {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class SearchListResult {
-  String providerid;
-  String title;
-  String description;
-  String linkid;
-  MetaDataForHospitalLogo metadata;
+  String? providerid;
+  String? title;
+  String? description;
+  String? linkid;
+  MetaDataForHospitalLogo? metadata;
 
   SearchListResult({this.providerid, this.title, this.description, this.linkid,this.metadata});
 

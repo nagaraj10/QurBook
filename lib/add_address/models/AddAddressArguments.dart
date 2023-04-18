@@ -1,5 +1,6 @@
+
 class AddAddressArguments {
-  String providerType;
+  String? providerType;
 
   AddAddressArguments({this.providerType});
 }

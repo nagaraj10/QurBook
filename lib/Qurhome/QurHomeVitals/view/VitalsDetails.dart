@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -21,6 +22,7 @@ import 'package:myfhb/device_integration/model/GulcoseValues.dart';
 import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
 import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 
@@ -55,10 +57,10 @@ class VitalsDetails extends StatefulWidget {
       this.sheelaRequestString,
       this.deviceNameForAdding});
 
-  final String device_name;
-  final String device_icon;
-  final String sheelaRequestString;
-  final String deviceNameForAdding;
+  final String? device_name;
+  final String? device_icon;
+  final String? sheelaRequestString;
+  final String? deviceNameForAdding;
 
   @override
   _VitalsDetailsState createState() => _VitalsDetailsState();
@@ -73,9 +75,9 @@ class _VitalsDetailsState extends State<VitalsDetails>
   String categoryName = STR_DEVICES;
 
   final CategoryListBlock _categoryListBlock = CategoryListBlock();
-  List<CategoryResult> catgoryDataList = List();
+  List<CategoryResult> catgoryDataList = [];
   final MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
-  MediaDataList mediaTypesResponse = MediaDataList();
+  MediaDataList? mediaTypesResponse = MediaDataList();
 
   CategoryResult categoryDataObj = CategoryResult();
   String categoryID = '14c3f2a1-70d3-49dd-a922-6bee255eed26';
@@ -86,30 +88,30 @@ class _VitalsDetailsState extends State<VitalsDetails>
   TextEditingController memoController = TextEditingController(text: '');
   TextEditingController diaStolicPressure = TextEditingController(text: '');
 
-  List<bool> isSelected = List(3);
+  List<bool?> isSelected = List.filled(3, null, growable: false);
 
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
 
-  List<String> imagePathMain = List();
+  List<String> imagePathMain = [];
 
   FlutterToast toast = FlutterToast();
 
-  String validationMsg;
+  late String validationMsg;
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   var commonConstants = CommonConstants();
   final controllerGetx = Get.put(VitalDetailController());
   // var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
-  AnimationController animationController;
+  late AnimationController animationController;
 
   int _counter = 0;
   StreamController<int> _events = StreamController<int>();
-  Timer _timer;
+  Timer? _timer;
 
-  String tempUnit = 'C';
-  String weightUnit = 'kg';
+  String? tempUnit = 'C';
+  String? weightUnit = 'kg';
 
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
@@ -119,11 +121,11 @@ class _VitalsDetailsState extends State<VitalsDetails>
       mInitialTime = DateTime.now();
       super.initState();
       _events.add(180);
-      catgoryDataList = PreferenceUtil.getCategoryType();
+      catgoryDataList = PreferenceUtil.getCategoryType()!;
       if (catgoryDataList == null) {
         _categoryListBlock.getCategoryLists().then((value) {
-          catgoryDataList = value.result;
-        });
+          catgoryDataList = value.result!;
+        } as FutureOr Function(CategoryDataList?));
       }
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
@@ -152,11 +154,11 @@ class _VitalsDetailsState extends State<VitalsDetails>
     try {
       _counter = 180;
       if (_timer != null) {
-        _timer.cancel();
+        _timer!.cancel();
       }
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (!_events.isClosed) {
-          (_counter > 0) ? _counter-- : _timer.cancel();
+          (_counter > 0) ? _counter-- : _timer!.cancel();
           _events.add(_counter);
           notify();
         } else {
@@ -201,7 +203,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
         }
       });
       _events.close();
-      Navigator.pop(Get.context);
+      Navigator.pop(Get.context!);
     } catch (e) {
       print(e);
     }
@@ -264,11 +266,11 @@ class _VitalsDetailsState extends State<VitalsDetails>
                       print(snapshot.data.toString());
                       return Container(
                           width: orientation == Orientation.landscape &&
-                                  CommonUtil().isTablet
+                                  CommonUtil().isTablet!
                               ? 0.7.sw
                               : 1.sw,
                           height: orientation == Orientation.landscape &&
-                                  CommonUtil().isTablet
+                                  CommonUtil().isTablet!
                               ? 1.sh / 2
                               : 1.sh / 2.7,
                           child: Column(
@@ -341,8 +343,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   @override
   void dispose() {
     try {
-      animationController?.dispose();
-      _events?.close();
+      animationController.dispose();
+      _events.close();
       super.dispose();
       fbaLog(eveName: 'qurbook_screen_event', eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -360,15 +362,15 @@ class _VitalsDetailsState extends State<VitalsDetails>
     return Scaffold(
       key: scaffold_state,
       appBar: AppBar(
-        toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+        toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
         title: Text(
           getStringValue(),
-          style: TextStyle(fontSize: CommonUtil().isTablet ? 22.0.sp : 18.0.sp),
+          style: TextStyle(fontSize: CommonUtil().isTablet! ? 22.0.sp : 18.0.sp),
         ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            size: CommonUtil().isTablet ? 38.0 : 24.0,
+            size: CommonUtil().isTablet! ? 38.0 : 24.0,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -376,12 +378,12 @@ class _VitalsDetailsState extends State<VitalsDetails>
         ),
         actions: <Widget>[
           Image.asset(
-            widget.device_icon,
-            height: CommonUtil().isTablet ? 43.0.h : 45.0.h,
-            width: CommonUtil().isTablet ? 43.0.h : 45.0.h,
+            widget.device_icon!,
+            height: CommonUtil().isTablet! ? 43.0.h : 45.0.h,
+            width: CommonUtil().isTablet! ? 43.0.h : 45.0.h,
           ),
           SizedBoxWidget(
-            width: CommonUtil().isTablet ? 18.0.w : 15.0.w,
+            width: CommonUtil().isTablet! ? 18.0.w : 15.0.w,
           )
         ],
         flexibleSpace: GradientAppBarQurhome(),
@@ -425,21 +427,21 @@ class _VitalsDetailsState extends State<VitalsDetails>
                         ),
                       )
                     : Expanded(
-                        child: getValues(context),
+                        child: getValues(context)!,
                       ),
               ],
             ),
           )),
       floatingActionButton: IconButton(
         icon: Image.asset(icon_mayaMain),
-        iconSize: CommonUtil().isTablet ? 90 : 60,
+        iconSize: CommonUtil().isTablet! ? 90 : 60,
         onPressed: () {
           Get.toNamed(
             rt_Sheela,
             arguments: SheelaArgument(
               sheelaInputs: widget.sheelaRequestString,
             ),
-          ).then((value) {
+          )!.then((value) {
             controllerGetx.onTapFilterBtn(0);
           });
           /* Navigator.of(context).push(
@@ -543,7 +545,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
         .deleteDeviceRecords(deviceId)
         .then((value) {
       deviceHealthRecord = value;
-      if (deviceHealthRecord.isSuccess) {
+      if (deviceHealthRecord.isSuccess!) {
         toast.getToast('Deleted Successfully', Colors.green);
         // setState(() {});
 
@@ -562,33 +564,33 @@ class _VitalsDetailsState extends State<VitalsDetails>
 
       final userID = PreferenceUtil.getStringValue(KEY_USERID);
       try {
-        catgoryDataList = PreferenceUtil.getCategoryType();
+        catgoryDataList = PreferenceUtil.getCategoryType()!;
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
       } catch (e) {
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
-            catgoryDataList = value.result;
+            catgoryDataList = value.result!;
             categoryDataObj = CommonUtil()
                 .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
             postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-          });
+          } as FutureOr Function(CategoryDataList?));
         }
       }
 
-      var metaDataFromSharedPrefernce = List<MediaResult>();
+      List<MediaResult>? metaDataFromSharedPrefernce = <MediaResult>[];
       if (mediaTypesResponse != null &&
-          mediaTypesResponse.result != null &&
-          mediaTypesResponse.result.isNotEmpty) {
-        metaDataFromSharedPrefernce = mediaTypesResponse.result;
+          mediaTypesResponse!.result != null &&
+          mediaTypesResponse!.result!.isNotEmpty) {
+        metaDataFromSharedPrefernce = mediaTypesResponse!.result;
       } else {
         mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
 
-        metaDataFromSharedPrefernce = mediaTypesResponse.result;
+        metaDataFromSharedPrefernce = mediaTypesResponse!.result;
       }
       mediaDataObj = CommonUtil().getMediaTypeInfoForParticularDevice(
-          deviceName, metaDataFromSharedPrefernce);
+          deviceName, metaDataFromSharedPrefernce!);
 
       postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
 
@@ -694,7 +696,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
         await _healthReportListForUserBlock
             .createHealtRecords(params.toString(), imagePathMain, '')
             .then((value) {
-          if (value != null && value.isSuccess) {
+          if (value != null && value.isSuccess!) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
               /*Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();*/
@@ -935,7 +937,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                     commonConstants.bpDPUNIT,
                                     deviceController, (errorValue) {
                                   setState(() {
-                                    errorMsgSys = errorValue ?? "";
+                                    errorMsgSys = errorValue;
                                     errorMsg = errorMsgSys;
                                   });
                                 }, errorMsgSys, variable.strbpunit, deviceName,
@@ -1176,7 +1178,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: InkWell(
                           child: Text(
-                            tempUnit != null ? tempUnit : 'c',
+                            tempUnit != null ? tempUnit! : 'c',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 14.0.sp,
@@ -1389,7 +1391,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   Column(
                     children: <Widget>[
                       Text(
-                        weightUnit != null ? weightUnit : 'kg',
+                        weightUnit != null ? weightUnit! : 'kg',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1599,25 +1601,25 @@ class _VitalsDetailsState extends State<VitalsDetails>
     return formattedDate;
   }
 
-  Widget getValues(BuildContext context) {
+  Widget? getValues(BuildContext context) {
     final todayDate = getFormattedDateTime(DateTime.now().toString());
     switch (widget.device_name) {
       case strDataTypeBP:
         {
-          final translis = controllerGetx?.bpList?.value;
+          final translis = controllerGetx.bpList.value;
           //List<WVResult> translist = translis.first;
           final List<BPResult> bpResultNew =
-              translis?.isNotEmpty ? translis?.first : [];
-          bpResultNew?.sort((translisCopy, translisClone) {
-            return translisClone.dateTimeValue
-                .compareTo(translisCopy.dateTimeValue);
+              translis.isNotEmpty ? translis.first : [];
+          bpResultNew.sort((translisCopy, translisClone) {
+            return translisClone.dateTimeValue!
+                .compareTo(translisCopy.dateTimeValue!);
           });
           final bpResult = bpResultNew;
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
-          return bpResult?.isNotEmpty
+          return bpResult.isNotEmpty
               ? GroupedListView<BPResult, String>(
                   groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
+                      getFormattedDateTime(element.startDateTime!),
                   elements: bpResult,
                   sort: false,
                   groupSeparatorBuilder: (value) => Padding(
@@ -1638,14 +1640,14 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   indexedItemBuilder: (context, i, index) {
                     return buildRowForBp(
                         bpResult[index].sourceType,
-                        getFormattedDateTime(bpResult[index].startDateTime),
+                        getFormattedDateTime(bpResult[index].startDateTime!),
                         '${bpResult[index].systolic}',
                         '${bpResult[index].diastolic}',
                         '',
                         'Systolic',
                         'Diastolic',
                         '',
-                        getFormattedTime(bpResult[index].startDateTime),
+                        getFormattedTime(bpResult[index].startDateTime!),
                         bpResult[index].bpm != null
                             ? bpResult[index].bpm.toString()
                             : '',
@@ -1668,20 +1670,20 @@ class _VitalsDetailsState extends State<VitalsDetails>
         break;
       case strGlusoceLevel:
         {
-          var translis = controllerGetx?.gulList?.value;
+          var translis = controllerGetx.gulList.value;
           //List<WVResult> translist = translis.first;
           final List<GVResult> translistNew =
-              translis?.isNotEmpty ? translis?.first : [];
-          translistNew?.sort((translisCopy, translisClone) {
-            return translisClone.dateTimeValue
-                .compareTo(translisCopy.dateTimeValue);
+              translis.isNotEmpty ? translis.first : [];
+          translistNew.sort((translisCopy, translisClone) {
+            return translisClone.dateTimeValue!
+                .compareTo(translisCopy.dateTimeValue!);
           });
           final translist = translistNew;
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
-          return translist?.isNotEmpty
+          return translist.isNotEmpty
               ? GroupedListView<GVResult, String>(
                   groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
+                      getFormattedDateTime(element.startDateTime!),
                   elements: translist,
                   sort: false,
                   groupSeparatorBuilder: (value) => Padding(
@@ -1702,7 +1704,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   indexedItemBuilder: (context, i, index) {
                     return buildRowForGulcose(
                         translist[index].sourceType,
-                        getFormattedDateTime(translist[index].startDateTime),
+                        getFormattedDateTime(translist[index].startDateTime!),
                         '${translist[index].bloodGlucoseLevel}',
                         translist[index].mealContext == null ||
                                 translist[index].mealContext == ''
@@ -1712,7 +1714,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                         'Blood Glucose',
                         'Meal Type',
                         '',
-                        getFormattedTime(translist[index].startDateTime),
+                        getFormattedTime(translist[index].startDateTime!),
                         translist[index].bgUnit,
                         translist[index].deviceId);
                   },
@@ -1733,20 +1735,20 @@ class _VitalsDetailsState extends State<VitalsDetails>
         break;
       case strOxgenSaturation:
         {
-          var translis = controllerGetx?.oxyList?.value;
+          var translis = controllerGetx.oxyList.value;
           //List<WVResult> translist = translis.first;
           final List<OxyResult> translistNew =
-              translis?.isNotEmpty ? translis?.first : [];
-          translistNew?.sort((translisCopy, translisClone) {
-            return translisClone.dateTimeValue
-                .compareTo(translisCopy.dateTimeValue);
+              translis.isNotEmpty ? translis.first : [];
+          translistNew.sort((translisCopy, translisClone) {
+            return translisClone.dateTimeValue!
+                .compareTo(translisCopy.dateTimeValue!);
           });
           var translist = translistNew;
           // final List<DeviceIntervalData> deviceFullList = translis.last;
-          return translist?.isNotEmpty
+          return translist.isNotEmpty
               ? GroupedListView<OxyResult, String>(
                   groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
+                      getFormattedDateTime(element.startDateTime!),
                   elements: translist,
                   sort: false,
                   groupSeparatorBuilder: (value) => Padding(
@@ -1767,14 +1769,14 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   indexedItemBuilder: (context, i, index) {
                     return buildRowForOxygen(
                         translist[index].sourceType,
-                        getFormattedDateTime(translist[index].startDateTime),
+                        getFormattedDateTime(translist[index].startDateTime!),
                         '${translist[index].oxygenSaturation}',
                         '',
                         '',
                         'SpO2',
                         '',
                         '',
-                        getFormattedTime(translist[index].startDateTime),
+                        getFormattedTime(translist[index].startDateTime!),
                         '',
                         translist[index].bpm,
                         translist[index].deviceId);
@@ -1796,20 +1798,20 @@ class _VitalsDetailsState extends State<VitalsDetails>
         break;
       case strWeight:
         {
-          var translis = controllerGetx?.weightList?.value;
+          var translis = controllerGetx.weightList.value;
           //List<WVResult> translist = translis.first;
           final List<WVResult> translistNew =
-              translis?.isNotEmpty ? translis?.first : [];
-          translistNew?.sort((translisCopy, translisClone) {
-            return translisClone.dateTimeValue
-                .compareTo(translisCopy.dateTimeValue);
+              translis.isNotEmpty ? translis.first : [];
+          translistNew.sort((translisCopy, translisClone) {
+            return translisClone.dateTimeValue!
+                .compareTo(translisCopy.dateTimeValue!);
           });
           var translist = translistNew;
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
-          return translist?.isNotEmpty
+          return translist.isNotEmpty
               ? GroupedListView<WVResult, String>(
                   groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
+                      getFormattedDateTime(element.startDateTime!),
                   elements: translist,
                   sort: false,
                   groupSeparatorBuilder: (value) => Padding(
@@ -1830,14 +1832,14 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   indexedItemBuilder: (context, i, index) {
                     return buildRowForTempWeight(
                         translist[index].sourceType,
-                        getFormattedDateTime(translist[index].startDateTime),
+                        getFormattedDateTime(translist[index].startDateTime!),
                         translist[index].weight,
                         '',
                         '',
                         'Weight',
                         '',
                         '',
-                        getFormattedTime(translist[index].startDateTime),
+                        getFormattedTime(translist[index].startDateTime!),
                         weightUnit,
                         translist[index].deviceId);
                   },
@@ -1858,23 +1860,23 @@ class _VitalsDetailsState extends State<VitalsDetails>
         break;
       case strTemperature:
         {
-          var translis = controllerGetx?.tempList?.value;
+          var translis = controllerGetx.tempList.value;
           //List<WVResult> translist = translis.first;
-          final List<TMPResult> translistNew = translis?.isNotEmpty
-              ? translis?.isNotEmpty
-                  ? translis?.first
+          final List<TMPResult> translistNew = translis.isNotEmpty
+              ? translis.isNotEmpty
+                  ? translis.first
                   : []
               : [];
-          translistNew?.sort((translisCopy, translisClone) {
-            return translisClone.dateTimeValue
-                .compareTo(translisCopy.dateTimeValue);
+          translistNew.sort((translisCopy, translisClone) {
+            return translisClone.dateTimeValue!
+                .compareTo(translisCopy.dateTimeValue!);
           });
           var translist = translistNew;
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
-          return translist?.isNotEmpty
+          return translist.isNotEmpty
               ? GroupedListView<TMPResult, String>(
                   groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
+                      getFormattedDateTime(element.startDateTime!),
                   elements: translist,
                   sort: false,
                   groupSeparatorBuilder: (value) => Padding(
@@ -1895,14 +1897,14 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   indexedItemBuilder: (context, i, index) {
                     return buildRowForTempWeight(
                         translist[index].sourceType,
-                        getFormattedDateTime(translist[index].startDateTime),
+                        getFormattedDateTime(translist[index].startDateTime!),
                         translist[index].temperature,
                         '',
                         '',
                         'Temperature',
                         '',
                         '',
-                        getFormattedTime(translist[index].startDateTime),
+                        getFormattedTime(translist[index].startDateTime!),
                         tempUnit,
                         translist[index].deviceId);
                   },
@@ -1965,7 +1967,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
   }
 
   Widget buildRowForBp(
-      String type,
+      String? type,
       String date,
       String value1,
       String value2,
@@ -1975,7 +1977,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
       String valuename3,
       String time,
       String bpm,
-      String deviceId) {
+      String? deviceId) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
@@ -2208,17 +2210,17 @@ class _VitalsDetailsState extends State<VitalsDetails>
   }
 
   Widget buildRowForGulcose(
-      String type,
+      String? type,
       String date,
       String value1,
-      String value2,
+      String? value2,
       String value3,
       String valuename1,
       String valuename2,
       String valuename3,
       String time,
-      String unit,
-      String deviceId) {
+      String? unit,
+      String? deviceId) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
@@ -2279,7 +2281,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             width: 2,
                           ),
                           Text(
-                            value1 == '' ? '' : unit,
+                            value1 == '' ? '' : unit!,
                             style: TextStyle(
                                 color: Color(
                                     CommonUtil().getQurhomePrimaryColor()),
@@ -2352,7 +2354,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
     );
   }
 
-  getMealText(String mealText) {
+  getMealText(String? mealText) {
     if (mealText != null) {
       if (mealText == 'After Meal') {
         mealText = 'PP';
@@ -2370,17 +2372,17 @@ class _VitalsDetailsState extends State<VitalsDetails>
   }
 
   Widget buildRowForTempWeight(
-      String type,
+      String? type,
       String date,
-      String value1,
+      String? value1,
       String value2,
       String value3,
       String valuename1,
       String valuename2,
       String valuename3,
       String time,
-      String unit,
-      String deviceId) {
+      String? unit,
+      String? deviceId) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
@@ -2449,7 +2451,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      value1 == '' ? '' : value1,
+                                      value1 == '' ? '' : value1!,
                                       style: TextStyle(
                                           color: Color(CommonUtil()
                                               .getQurhomePrimaryColor()),
@@ -2485,7 +2487,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
   }
 
   Widget buildRowForOxygen(
-      String type,
+      String? type,
       String date,
       String value1,
       String value2,
@@ -2495,8 +2497,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
       String valuename3,
       String time,
       String unit,
-      String bpm,
-      String deviceId) {
+      String? bpm,
+      String? deviceId) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
@@ -2608,7 +2610,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      bpm == '' ? '' : bpm,
+                                      bpm == '' ? '' : bpm!,
                                       style: TextStyle(
                                           color: Color(CommonUtil()
                                               .getQurhomePrimaryColor()),

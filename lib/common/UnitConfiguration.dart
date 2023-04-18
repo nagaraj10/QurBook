@@ -1,6 +1,7 @@
+
 class UnitConfiguration {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   UnitConfiguration({this.isSuccess, this.result});
 
@@ -25,13 +26,13 @@ class UnitConfiguration {
 }
 
 class Result {
-  String id;
-  String code;
-  String name;
-  ConfigurationData configurationData;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  ConfigurationData? configurationData;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   Result(
       {this.id,
@@ -70,9 +71,9 @@ class Result {
 }
 
 class ConfigurationData {
-  UnitSystemList unitSystemList;
-  DbDefaultUnitSystem dbDefaultUnitSystem;
-  DbDefaultUnitSystem unitConversion;
+  UnitSystemList? unitSystemList;
+  DbDefaultUnitSystem? dbDefaultUnitSystem;
+  DbDefaultUnitSystem? unitConversion;
 
   ConfigurationData(
       {this.unitSystemList, this.dbDefaultUnitSystem, this.unitConversion});
@@ -105,8 +106,8 @@ class ConfigurationData {
 }
 
 class UnitSystemList {
-  India india;
-  India us;
+  India? india;
+  India? us;
 
   UnitSystemList({this.india, this.us});
 
@@ -128,9 +129,9 @@ class UnitSystemList {
 }
 
 class India {
-  List<Height> height;
-  List<Height> weight;
-  List<Height> temperature;
+  List<Height>? height;
+  List<Height>? weight;
+  List<Height>? temperature;
 
   India({this.height, this.weight, this.temperature});
 
@@ -171,8 +172,8 @@ class India {
 }
 
 class Height {
-  String unitCode;
-  String unitName;
+  String? unitCode;
+  String? unitName;
 
   Height({this.unitCode, this.unitName});
 
@@ -190,9 +191,9 @@ class Height {
 }
 
 class DbDefaultUnitSystem {
-  HeightDefault height;
-  HeightDefault weight;
-  HeightDefault temperature;
+  HeightDefault? height;
+  HeightDefault? weight;
+  HeightDefault? temperature;
 
   DbDefaultUnitSystem({this.height, this.weight, this.temperature});
 
@@ -224,8 +225,8 @@ class DbDefaultUnitSystem {
 }
 
 class HeightDefault {
-  FInCm fInCm;
-  CmFIn cmFIn;
+  FInCm? fInCm;
+  CmFIn? cmFIn;
 
   HeightDefault({this.fInCm, this.cmFIn});
 
@@ -249,7 +250,7 @@ class HeightDefault {
 }
 
 class FInCm {
-  String conversionFormula;
+  String? conversionFormula;
 
   FInCm({this.conversionFormula});
 
@@ -265,8 +266,8 @@ class FInCm {
 }
 
 class CmFIn {
-  String conversionFormulaToFeet;
-  String conversionFormulaToInches;
+  String? conversionFormulaToFeet;
+  String? conversionFormulaToInches;
 
   CmFIn({this.conversionFormulaToFeet, this.conversionFormulaToInches});
 
@@ -284,8 +285,8 @@ class CmFIn {
 }
 
 class Weight {
-  FInCm kgLb;
-  FInCm lbKg;
+  FInCm? kgLb;
+  FInCm? lbKg;
 
   Weight({this.kgLb, this.lbKg});
 
@@ -307,8 +308,8 @@ class Weight {
 }
 
 class Temperature {
-  FInCm cF;
-  FInCm fC;
+  FInCm? cF;
+  FInCm? fC;
 
   Temperature({this.cF, this.fC});
 

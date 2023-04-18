@@ -1,6 +1,7 @@
+
 class GetEventIdModel {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   GetEventIdModel({this.isSuccess, this.result});
 
@@ -14,7 +15,7 @@ class GetEventIdModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }

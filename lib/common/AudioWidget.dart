@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'dart:typed_data' show Uint8List;
 import 'package:flutter/material.dart';
@@ -21,13 +22,13 @@ enum t_MEDIA {
 }
 
 class AudioWidget extends StatefulWidget {
-  String audioFile;
-  String audioUrl;
+  String? audioFile;
+  String? audioUrl;
   bool isFromChat;
   bool isFromSheela;
   bool isPlayAudioUrl;
 
-  Function(bool, String) deleteAudioFile;
+  Function(bool, String?)? deleteAudioFile;
 
   AudioWidget(
     this.audioFile,
@@ -43,15 +44,15 @@ class AudioWidget extends StatefulWidget {
 
 class AudioWidgetState extends State<AudioWidget> {
   final bool _isRecording = false;
-  final List<String> _path = [null, null, null, null, null, null, null];
-  StreamSubscription _recorderSubscription;
-  StreamSubscription _dbPeakSubscription;
-  StreamSubscription _playerSubscription;
-  FlutterSoundPlayer flutterSound;
-  String _pathOfFile;
+  final List<String?> _path = [null, null, null, null, null, null, null];
+  StreamSubscription? _recorderSubscription;
+  StreamSubscription? _dbPeakSubscription;
+  StreamSubscription? _playerSubscription;
+  FlutterSoundPlayer? flutterSound;
+  String? _pathOfFile;
   final String _recorderTxt = '00:00';
   String _playerTxt = '00:00';
-  double _dbLevel;
+  double? _dbLevel;
 
   double sliderCurrentPosition = 0;
   double maxDuration = 1;
@@ -59,9 +60,9 @@ class AudioWidgetState extends State<AudioWidget> {
   final Codec _codec = Codec.aacADTS;
 
   bool isPlaying = false;
-  SheelaAIController _sheelaAIController;
+  late SheelaAIController _sheelaAIController;
 
-  String audioUrl = '';
+  String? audioUrl = '';
 
   @override
   void initState() {
@@ -84,9 +85,9 @@ class AudioWidgetState extends State<AudioWidget> {
 
   set_up_audios() async {
     flutterSound = FlutterSoundPlayer();
-    flutterSound.openAudioSession().then(
+    flutterSound!.openAudioSession().then(
       (value) {
-        flutterSound.setSubscriptionDuration(
+        flutterSound!.setSubscriptionDuration(
           Duration(
             seconds: 1,
           ),
@@ -98,7 +99,7 @@ class AudioWidgetState extends State<AudioWidget> {
   @override
   void dispose() {
     stopPlayer();
-    flutterSound.closeAudioSession();
+    flutterSound!.closeAudioSession();
     flutterSound = null;
     super.dispose();
   }
@@ -171,7 +172,7 @@ class AudioWidgetState extends State<AudioWidget> {
                 min: 0,
                 max: maxDuration,
                 onChanged: (value) async {
-                  await flutterSound.seekToPlayer(
+                  await flutterSound!.seekToPlayer(
                     Duration(
                       seconds: value.round(),
                     ),
@@ -237,7 +238,7 @@ class AudioWidgetState extends State<AudioWidget> {
                 min: 0,
                 max: maxDuration,
                 onChanged: (value) async {
-                  await flutterSound.seekToPlayer(
+                  await flutterSound!.seekToPlayer(
                     Duration(
                       seconds: value.round(),
                     ),
@@ -267,18 +268,18 @@ class AudioWidgetState extends State<AudioWidget> {
                 onPressed: () {
                   widget.audioFile = '';
 
-                  if (flutterSound.playerState == PlayerState.isPlaying ||
-                      flutterSound.playerState == PlayerState.isPaused) {
-                    flutterSound.stopPlayer();
+                  if (flutterSound!.playerState == PlayerState.isPlaying ||
+                      flutterSound!.playerState == PlayerState.isPaused) {
+                    flutterSound!.stopPlayer();
                     setState(
                       () {
-                        widget.deleteAudioFile(false, widget.audioFile);
+                        widget.deleteAudioFile!(false, widget.audioFile);
                       },
                     );
                   } else {
                     setState(
                       () {
-                        widget.deleteAudioFile(false, widget.audioFile);
+                        widget.deleteAudioFile!(false, widget.audioFile);
                       },
                     );
                   }
@@ -291,7 +292,7 @@ class AudioWidgetState extends State<AudioWidget> {
     );
 
   onStartPlayerPressed() {
-    return flutterSound.playerState == PlayerState.isPaused
+    return flutterSound!.playerState == PlayerState.isPaused
         ? pausePlayer()
         : startPlayer();
   }
@@ -303,30 +304,30 @@ class AudioWidgetState extends State<AudioWidget> {
     }
 
     try {
-      var path = widget.audioFile;
+      var path = widget.audioFile!;
       final file = File(path);
       var fileExention = extension(file.path);
       if (_media == t_MEDIA.FILE && fileExention == '.mp3') {
         // Do we want to play from buffer or from file ?
-        if (await fileExists(widget.audioFile)) {
-          var buffer = await makeBuffer(widget.audioFile);
+        if (await fileExists(widget.audioFile!)) {
+          var buffer = await makeBuffer(widget.audioFile!);
           if (buffer != null) {
-            final DuarationOfFile = await flutterSound.startPlayer(
+            final DuarationOfFile = await (flutterSound!.startPlayer(
               fromDataBuffer: buffer,
               whenFinished: () {
                 stopPlayer();
               },
-            );
+            ) as FutureOr<Duration>);
             maxDuration = DuarationOfFile.inSeconds.toDouble();
           }
         }
       } else {
-        final DuarationOfFile = await flutterSound.startPlayer(
+        final DuarationOfFile = await (flutterSound!.startPlayer(
           fromURI: path,
           whenFinished: () {
             stopPlayer();
           },
-        );
+        ) as FutureOr<Duration>);
         maxDuration = DuarationOfFile.inSeconds.toDouble();
       }
       // if (_media == t_MEDIA.ASSET) {
@@ -365,9 +366,9 @@ class AudioWidgetState extends State<AudioWidget> {
       // if (path == null) {
       //   return;
       // }
-      await flutterSound.setVolume(1.0);
+      await flutterSound!.setVolume(1.0);
 
-      _playerSubscription = flutterSound.onProgress.listen(
+      _playerSubscription = flutterSound!.onProgress!.listen(
         (e) {
           if (e != null) {
             setState(
@@ -403,7 +404,7 @@ class AudioWidgetState extends State<AudioWidget> {
     return await File(path).exists();
   }
 
-  Future<Uint8List> makeBuffer(String path) async {
+  Future<Uint8List?> makeBuffer(String path) async {
     try {
       if (!await fileExists(path)) return null;
       var file = File(path);
@@ -417,8 +418,8 @@ class AudioWidgetState extends State<AudioWidget> {
   }
 
   onPausePlayerPressed() {
-    return flutterSound.playerState == PlayerState.isPlaying ||
-            flutterSound.playerState == PlayerState.isPaused
+    return flutterSound!.playerState == PlayerState.isPlaying ||
+            flutterSound!.playerState == PlayerState.isPaused
         ? pausePlayer()
         : startPlayer();
   }
@@ -426,8 +427,8 @@ class AudioWidgetState extends State<AudioWidget> {
   void pausePlayer() async {
     String result;
     try {
-      if (flutterSound.playerState == PlayerState.isPaused) {
-        await flutterSound.resumePlayer();
+      if (flutterSound!.playerState == PlayerState.isPaused) {
+        await flutterSound!.resumePlayer();
         if (widget.isFromSheela) {
           _sheelaAIController.isLoading.value = true;
         }
@@ -435,7 +436,7 @@ class AudioWidgetState extends State<AudioWidget> {
         print("Inside pause player resume");
         isPlaying = true;
       } else {
-        await flutterSound.pausePlayer();
+        await flutterSound!.pausePlayer();
         if (widget.isFromSheela) {
           _sheelaAIController.isLoading.value = false;
         }
@@ -450,8 +451,8 @@ class AudioWidgetState extends State<AudioWidget> {
   }
 
   onStopPlayerPressed() {
-    return flutterSound.playerState == PlayerState.isPlaying ||
-            flutterSound.playerState == PlayerState.isPaused
+    return flutterSound!.playerState == PlayerState.isPlaying ||
+            flutterSound!.playerState == PlayerState.isPaused
         ? stopPlayer()
         : null;
   }
@@ -462,9 +463,9 @@ class AudioWidgetState extends State<AudioWidget> {
         _sheelaAIController.isLoading.value = false;
       }
 
-      await flutterSound.stopPlayer();
+      await flutterSound!.stopPlayer();
       if (_playerSubscription != null) {
-        await _playerSubscription.cancel();
+        await _playerSubscription!.cancel();
         _playerSubscription = null;
       }
       sliderCurrentPosition = 0.0;

@@ -1,3 +1,4 @@
+
 class RefrenceValueMeta {
   RefrenceValueMeta({
     this.id,
@@ -11,14 +12,14 @@ class RefrenceValueMeta {
     this.lastModifiedOn,
   });
 
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  DateTime createdOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  DateTime? createdOn;
   dynamic lastModifiedOn;
 
   factory RefrenceValueMeta.fromJson(Map<String, dynamic> json) =>

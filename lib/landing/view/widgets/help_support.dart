@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
@@ -147,8 +148,8 @@ class HelpSupport extends StatelessWidget {
   }
 
   void launchWhatsApp({
-    @required String phone,
-    @required String message,
+    required String phone,
+    required String message,
   }) async {
     String url() {
       if (Platform.isIOS) {

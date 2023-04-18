@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -33,10 +34,10 @@ class ClaimList extends StatefulWidget {
 }
 
 class _ClaimListState extends State<ClaimList> {
-  ClaimListRepository claimListRepository;
-  ClaimListBloc claimListBloc;
-  ClaimListResponse claimListResponse;
-  String memberShipType = "",
+  late ClaimListRepository claimListRepository;
+  ClaimListBloc? claimListBloc;
+  ClaimListResponse? claimListResponse;
+  String? memberShipType = "",
       memberShipEndDate = "",
       memberShipStartDate = "",
       ClaimAmount = "",
@@ -45,15 +46,15 @@ class _ClaimListState extends State<ClaimList> {
 
   bool isCreditBalnceZero = false;
 
-  List<CategoryResult> categoryDataList = new List();
-  CategoryResponseListRepository _categoryResponseListRepository;
-  CategoryListBlock _categoryListBlock;
+  List<CategoryResult> categoryDataList = [];
+  late CategoryResponseListRepository _categoryResponseListRepository;
+  late CategoryListBlock _categoryListBlock;
 
   FlutterToast toast = FlutterToast();
-  List<ClaimExpiryResult> claimExpiryList = new List();
-  int _selected;
-  ClaimListBloc _claimListBloc;
-  Future<ClaimExpiryResponse> claimExpiryResponse;
+  List<ClaimExpiryResult>? claimExpiryList = [];
+  int? _selected;
+  late ClaimListBloc _claimListBloc;
+  Future<ClaimExpiryResponse?>? claimExpiryResponse;
 
   List<String> exercises = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -84,8 +85,8 @@ class _ClaimListState extends State<ClaimList> {
           children: [
             Expanded(
                 child: (claimListResponse != null &&
-                        claimListResponse?.result != null &&
-                        claimListResponse?.result.length > 0)
+                        claimListResponse!.result != null &&
+                        claimListResponse!.result!.length > 0)
                     ? getCliamList()
                     : getClaimListFromFutureBuilder()),
           ],
@@ -94,7 +95,7 @@ class _ClaimListState extends State<ClaimList> {
           child: FloatingActionButton(
             heroTag: "btn2",
             onPressed: () {
-              FocusManager.instance.primaryFocus.unfocus();
+              FocusManager.instance.primaryFocus!.unfocus();
               alertDialogWithMemberShip();
             },
             child: Icon(
@@ -120,9 +121,9 @@ class _ClaimListState extends State<ClaimList> {
 
   getCliamList() {
     return (claimListResponse != null &&
-            (claimListResponse?.isSuccess ?? false) &&
-            claimListResponse?.result != null &&
-            claimListResponse?.result.length > 0)
+            (claimListResponse!.isSuccess ?? false) &&
+            claimListResponse!.result != null &&
+            claimListResponse!.result!.length > 0)
         ? ClaimWidget()
         : Expanded(
             child: Container(
@@ -217,7 +218,7 @@ class _ClaimListState extends State<ClaimList> {
 
   getMemberTypeAndEndDate() {
     String memberShipValue = (memberShipType != null && memberShipType != "")
-        ? (memberShipType + " ( " + memberShipName + " )")
+        ? (memberShipType! + " ( " + memberShipName! + " )")
         : " ";
 
     return Column(
@@ -261,17 +262,17 @@ class _ClaimListState extends State<ClaimList> {
       future: claimListRepository.getMemberShip(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
-            if (snapshot.data.isSuccess) {
-              memberShipType = snapshot.data.result[0].planName;
-              memberShipName = snapshot.data.result[0].healthOrganizationName;
-              memberShipEndDate = snapshot.data.result[0].planEndDate;
-              memberShipStartDate = snapshot.data.result[0].planStartDate;
-              memberShipId = snapshot.data.result[0].id;
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
+            if (snapshot.data!.isSuccess!) {
+              memberShipType = snapshot.data!.result![0].planName;
+              memberShipName = snapshot.data!.result![0].healthOrganizationName;
+              memberShipEndDate = snapshot.data!.result![0].planEndDate;
+              memberShipStartDate = snapshot.data!.result![0].planStartDate;
+              memberShipId = snapshot.data!.result![0].id;
               PreferenceUtil.save(Constants.keyMembeShipID, memberShipId);
               PreferenceUtil.save(Constants.keyHealthOrganizationId,
-                  snapshot.data.result[0].healthOrganizationId);
+                  snapshot.data!.result![0].healthOrganizationId);
               PreferenceUtil.save(
                   Constants.keyMembershipStartDate, memberShipStartDate);
               PreferenceUtil.save(
@@ -298,10 +299,10 @@ class _ClaimListState extends State<ClaimList> {
       future: claimListRepository.getCreditBalance(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
-            if (snapshot.data.isSuccess) {
-              ClaimAmount = snapshot.data.result?.balanceAmount;
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
+            if (snapshot.data!.isSuccess!) {
+              ClaimAmount = snapshot.data!.result?.balanceAmount;
               PreferenceUtil.save(Constants.keyClaimAmount, ClaimAmount);
 
               return getClaimAmount();
@@ -322,15 +323,15 @@ class _ClaimListState extends State<ClaimList> {
 
   getClaimAmount() {
     try {
-      String claimAmountTotal;
-      if (ClaimAmount.contains(".")) {
+      String? claimAmountTotal;
+      if (ClaimAmount!.contains(".")) {
         claimAmountTotal =
-            ClaimAmount.contains(".") ? ClaimAmount.split(".")[0] : ClaimAmount;
+            ClaimAmount!.contains(".") ? ClaimAmount!.split(".")[0] : ClaimAmount;
       } else {
         claimAmountTotal = ClaimAmount;
       }
 
-      if (int.parse(claimAmountTotal) > 0) {
+      if (int.parse(claimAmountTotal!) > 0) {
         isCreditBalnceZero = false;
       } else {
         isCreditBalnceZero = false;
@@ -340,7 +341,7 @@ class _ClaimListState extends State<ClaimList> {
       isCreditBalnceZero = false;
     }
     String claimAmountValue = (ClaimAmount != null && ClaimAmount != "")
-        ? (CommonUtil.REGION_CODE != "IN"?variable.strDollar+" ":'\u{20B9} ') + ClaimAmount
+        ? (CommonUtil.REGION_CODE != "IN"?variable.strDollar+" ":'\u{20B9} ') + ClaimAmount!
         : "";
     return Text(
       "Claim Amount Balance : " + claimAmountValue,
@@ -356,9 +357,9 @@ class _ClaimListState extends State<ClaimList> {
       future: claimListRepository.getClaimList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
-            if (snapshot.data.isSuccess) {
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
+            if (snapshot.data!.isSuccess!) {
               claimListResponse = snapshot.data;
               return getCliamList();
             } else {
@@ -381,10 +382,10 @@ class _ClaimListState extends State<ClaimList> {
       future: claimListRepository.getClaimExpiryResponseList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
-            if (snapshot.data.isSuccess) {
-              claimExpiryList = snapshot?.data?.result;
+          if (snapshot.data?.isSuccess != null &&
+              snapshot.data?.result != null) {
+            if (snapshot.data!.isSuccess!) {
+              claimExpiryList = snapshot.data?.result;
               return getWidgetForMemberShipList();
             } else {
               return getWidgetForMemberShipList();
@@ -403,14 +404,14 @@ class _ClaimListState extends State<ClaimList> {
 
   void callImportantMethods() async {
     try {
-      categoryDataList = await PreferenceUtil.getCategoryType();
+      categoryDataList = (await PreferenceUtil.getCategoryType())!;
       if (categoryDataList == null && categoryDataList.length < 0) {
         _categoryListBlock = new CategoryListBlock();
         _categoryListBlock.getCategoryLists();
 
         CategoryDataList categoryDataListObj =
             await _categoryResponseListRepository.getCategoryLists();
-        setCategoryId(categoryDataListObj.result);
+        setCategoryId(categoryDataListObj.result!);
       } else {
         setCategoryId(categoryDataList);
       }
@@ -420,7 +421,7 @@ class _ClaimListState extends State<ClaimList> {
 
       CategoryDataList categoryDataListObj =
           await _categoryResponseListRepository.getCategoryLists();
-      setCategoryId(categoryDataListObj.result);
+      setCategoryId(categoryDataListObj.result!);
     }
   }
 
@@ -429,9 +430,9 @@ class _ClaimListState extends State<ClaimList> {
       if (dataObj.categoryName == Constants.STR_CLAIMSRECORD) {
         PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
           PreferenceUtil.saveString(
-                  Constants.KEY_CATEGORYNAME, dataObj.categoryName)
+                  Constants.KEY_CATEGORYNAME, dataObj.categoryName!)
               .then((onValue) {
-            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, dataObj.id)
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, dataObj.id!)
                 .then((value) {});
           });
         });
@@ -442,28 +443,28 @@ class _ClaimListState extends State<ClaimList> {
   ClaimWidget() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) =>
-          cliamWidgetList(index, claimListResponse.result),
+          cliamWidgetList(index, claimListResponse!.result!),
       separatorBuilder: (BuildContext context, index) {
         return Divider(
           height: 0.0.h,
           color: Colors.transparent,
         );
       },
-      itemCount: claimListResponse.result.length,
+      itemCount: claimListResponse!.result!.length,
     );
   }
 
   cliamWidgetList(int index, List<ClaimListResult> claimResultList) {
     if (claimResultList[index].documentMetadata != null &&
-        claimResultList[index].documentMetadata.length > 0) {
+        claimResultList[index].documentMetadata!.length > 0) {
       return InkWell(
           onTap: () {
-            FocusManager.instance.primaryFocus.unfocus();
+            FocusManager.instance.primaryFocus!.unfocus();
             Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ClaimRecordDisplay(
-                    claimID: claimResultList[index]?.id,
+                    claimID: claimResultList[index].id,
                     closePage: (value) {},
                   ),
                 ));
@@ -500,15 +501,15 @@ class _ClaimListState extends State<ClaimList> {
                                 Text(
                                     toBeginningOfSentenceCase(
                                             claimResultList[index]
-                                                    ?.submittedFor
+                                                    .submittedFor
                                                     ?.firstName ??
-                                                '') +
+                                                '')! +
                                         " " +
                                         toBeginningOfSentenceCase(
                                             claimResultList[index]
-                                                    ?.submittedFor
+                                                    .submittedFor
                                                     ?.lastName ??
-                                                ''),
+                                                '')!,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w800,
                                         fontSize: fhbStyles.fnt_doc_name))
@@ -520,8 +521,7 @@ class _ClaimListState extends State<ClaimList> {
                                   Text(
                                       " " +
                                               claimResultList[index]
-                                                  ?.claimNumber ??
-                                          '',
+                                                  .claimNumber!,
                                       style: getTextStyleForValue())
                                 ],
                               ),
@@ -530,13 +530,13 @@ class _ClaimListState extends State<ClaimList> {
                                   Text("Membership : ",
                                       style: getTextStyleForTags()),
                                   Text(
-                                      (claimResultList[index]?.planName !=
+                                      (claimResultList[index].planName !=
                                                   null &&
                                               claimResultList[index]
-                                                      ?.planName !=
+                                                      .planName !=
                                                   '')
-                                          ? claimResultList[index]?.planName
-                                          : memberShipType,
+                                          ? claimResultList[index].planName!
+                                          : memberShipType!,
                                       style: getTextStyleForValue())
                                 ],
                               ),
@@ -547,9 +547,8 @@ class _ClaimListState extends State<ClaimList> {
                                   Text(
                                       " " +
                                               claimResultList[index]
-                                                  ?.documentMetadata[0]
-                                                  ?.billName ??
-                                          '',
+                                                  .documentMetadata![0]
+                                                  .billName,
                                       style: getTextStyleForValue())
                                 ],
                               ),
@@ -563,22 +562,21 @@ class _ClaimListState extends State<ClaimList> {
                             children: [
                               Text(
                                    CommonUtil.getDateStringFromDateTime(claimResultList[index]
-                                          ?.documentMetadata[0]
-                                          ?.billDate ??
-                                      ''),
+                                          .documentMetadata![0]
+                                          .billDate),
                                   style: getTextStyleForTags()),
                               Text("status",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: fhbStyles.fnt_day,
                                       color: Colors.grey[600])),
-                              Text(claimResultList[index]?.status?.name ?? '',
+                              Text(claimResultList[index].status?.name ?? '',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: fhbStyles.fnt_day,
                                       color: getColorBasedOnSatus(
                                           claimResultList[index]
-                                                  ?.status
+                                                  .status
                                                   ?.code ??
                                               ''))),
                             ],
@@ -618,7 +616,7 @@ class _ClaimListState extends State<ClaimList> {
     }
   }
 
-  String getFormattedBillDateForMember(String billDate) {
+  String getFormattedBillDateForMember(String? billDate) {
     if (billDate != "" && billDate != null) {
       try {
         DateFormat format = DateFormat("yyyy-MM-dd");
@@ -650,7 +648,7 @@ class _ClaimListState extends State<ClaimList> {
     }
   }
 
-  Future<Widget> alertDialogWithMemberShip() {
+  Future<Widget?> alertDialogWithMemberShip() {
     final dialog = StatefulBuilder(builder: (context, setState) {
       Widget cancelButton = TextButton(
         child: Text("Cancel"),
@@ -682,7 +680,7 @@ class _ClaimListState extends State<ClaimList> {
                     maxHeight: MediaQuery.of(context).size.height * 0.4,
                   ),
                   child:
-                      (claimExpiryList != null && claimExpiryList?.length > 0)
+                      (claimExpiryList != null && claimExpiryList!.length > 0)
                           ? getWidgetForMemberShipList()
                           : getClaimMemberShipListFromFutureBuilder(),
                 ),
@@ -701,10 +699,10 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   getWidgetForMemberShipList() {
-    return claimExpiryList.length > 0
+    return claimExpiryList!.length > 0
         ? ListView.builder(
             shrinkWrap: true,
-            itemCount: claimExpiryList.length,
+            itemCount: claimExpiryList!.length,
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
                   onTap: () async {
@@ -712,9 +710,9 @@ class _ClaimListState extends State<ClaimList> {
                   },
                   child: Container(
                       padding: EdgeInsets.all(10),
-                      child: Text(claimExpiryList[index].planName +
+                      child: Text(claimExpiryList![index].planName! +
                           " (" +
-                          claimExpiryList[index].healthOrganizationName +
+                          claimExpiryList![index].healthOrganizationName! +
                           " )")));
             })
         : Container(child: getLoadingText("No MemberShip Found"));
@@ -723,18 +721,18 @@ class _ClaimListState extends State<ClaimList> {
   void convertStringToInt(String balanceAmt, int index) {
     if (int.parse(balanceAmt) > 0) {
       PreferenceUtil.save(
-          Constants.keyMembeShipID, claimExpiryList[index]?.membershipId);
+          Constants.keyMembeShipID, claimExpiryList![index].membershipId);
       PreferenceUtil.save(Constants.keyHealthOrganizationId,
-          claimExpiryList[index]?.healthOrganizationId);
+          claimExpiryList![index].healthOrganizationId);
       PreferenceUtil.save(Constants.keyPlanSubscriptionInfoId,
-          claimExpiryList[index]?.planSubscriptionInfoId);
+          claimExpiryList![index].planSubscriptionInfoId);
       PreferenceUtil.save(Constants.keyMembershipStartDate,
-          claimExpiryList[index]?.additionalInfo?.planStartDate);
+          claimExpiryList![index].additionalInfo?.planStartDate);
       PreferenceUtil.save(Constants.keyMembershipEndDate,
-          claimExpiryList[index]?.additionalInfo?.planEndDate);
+          claimExpiryList![index].additionalInfo?.planEndDate);
       PreferenceUtil.save(
-          Constants.keyClaimAmount, claimExpiryList[index]?.balanceAmount);
-      if (claimExpiryList[index]?.membershipStatus.toLowerCase() == "active") {
+          Constants.keyClaimAmount, claimExpiryList![index].balanceAmount);
+      if (claimExpiryList![index].membershipStatus!.toLowerCase() == "active") {
         PreferenceUtil.saveIfMemberShipIsActive(true);
       } else {
         PreferenceUtil.saveIfMemberShipIsActive(false);
@@ -750,7 +748,7 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   void conditionToCheckAmt(int index) {
-    String balanceAmt = claimExpiryList[index]?.balanceAmount;
+    String balanceAmt = claimExpiryList![index].balanceAmount!;
     if (balanceAmt.contains(".")) {
       balanceAmt =
           balanceAmt.contains(".") ? balanceAmt.split(".")[0] : balanceAmt;
@@ -761,7 +759,7 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   void showSnackBar(String msg) {
-    _scaffoldKey.currentState.showSnackBar(
+    _scaffoldKey.currentState!.showSnackBar(
       SnackBar(
         duration: Duration(milliseconds: 5),
         content: Text(
@@ -773,7 +771,7 @@ class _ClaimListState extends State<ClaimList> {
         action: SnackBarAction(
           label: 'Dismiss',
           onPressed: () {
-            _scaffoldKey.currentState.hideCurrentSnackBar();
+            _scaffoldKey.currentState!.hideCurrentSnackBar();
           },
         ),
       ),

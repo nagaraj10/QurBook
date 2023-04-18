@@ -1,6 +1,7 @@
+
 class RawMessage {
-  String messageTitle;
-  String messageBody;
+  String? messageTitle;
+  String? messageBody;
 
   RawMessage({this.messageTitle, this.messageBody});
 

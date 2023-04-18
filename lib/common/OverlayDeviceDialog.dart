@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'CommonUtil.dart';
@@ -21,7 +22,7 @@ class OverlayDeviceDialog extends ModalRoute<void> {
   Color get barrierColor => Colors.black.withOpacity(0.5);
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   bool get maintainState => true;
@@ -101,7 +102,7 @@ class OverlayDeviceDialog extends ModalRoute<void> {
         ))));
   }
 
-  List<Widget> getWidgetsFordevices(BuildContext context) {
+  List<Widget> getWidgetsFordevices(BuildContext? context) {
     final List<Widget> deviceWidgetList = [];
     final mediaDataForDevice =
         CommonUtil().getAllDevices(PreferenceUtil.getMediaType());
@@ -154,10 +155,10 @@ class OverlayDeviceDialog extends ModalRoute<void> {
     return deviceWidgetList;
   }
 
-  callBackPage(String deviceName, BuildContext context) {
+  callBackPage(String deviceName, BuildContext? context) {
     PreferenceUtil.saveString(Constants.KEY_DEVICENAME, deviceName)
         .then((onValue) {
-      Navigator.pop(context);
+      Navigator.pop(context!);
     });
   }
 

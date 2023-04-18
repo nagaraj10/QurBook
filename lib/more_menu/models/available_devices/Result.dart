@@ -1,11 +1,12 @@
+
 import 'SystemConfiguration.dart';
 
 class Result {
   Result({
-      String name, 
-      bool isPaired, 
-      String externalSourceId, 
-      List<SystemConfiguration> systemConfiguration,}){
+      String? name, 
+      bool? isPaired, 
+      String? externalSourceId, 
+      List<SystemConfiguration>? systemConfiguration,}){
     _name = name;
     _isPaired = isPaired;
     _externalSourceId = externalSourceId;
@@ -19,19 +20,19 @@ class Result {
     if (json['systemConfiguration'] != null) {
       _systemConfiguration = [];
       json['systemConfiguration'].forEach((v) {
-        _systemConfiguration.add(SystemConfiguration.fromJson(v));
+        _systemConfiguration!.add(SystemConfiguration.fromJson(v));
       });
     }
   }
-  String _name;
-  bool _isPaired;
-  String _externalSourceId;
-  List<SystemConfiguration> _systemConfiguration;
+  String? _name;
+  bool? _isPaired;
+  String? _externalSourceId;
+  List<SystemConfiguration>? _systemConfiguration;
 
-  String get name => _name;
-  bool get isPaired => _isPaired;
-  String get externalSourceId => _externalSourceId;
-  List<SystemConfiguration> get systemConfiguration => _systemConfiguration;
+  String? get name => _name;
+  bool? get isPaired => _isPaired;
+  String? get externalSourceId => _externalSourceId;
+  List<SystemConfiguration>? get systemConfiguration => _systemConfiguration;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -39,7 +40,7 @@ class Result {
     map['isPaired'] = _isPaired;
     map['externalSourceId'] = _externalSourceId;
     if (_systemConfiguration != null) {
-      map['systemConfiguration'] = _systemConfiguration.map((v) => v.toJson()).toList();
+      map['systemConfiguration'] = _systemConfiguration!.map((v) => v.toJson()).toList();
     }
     return map;
   }

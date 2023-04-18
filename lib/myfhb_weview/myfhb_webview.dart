@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,21 +11,21 @@ import '../constants/variable_constant.dart' as variable;
 import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyFhbWebView extends StatefulWidget {
-  final String title;
-  final String selectedUrl;
+  final String? title;
+  final String? selectedUrl;
   final bool isLocalAsset;
 
   const MyFhbWebView(
-      {@required this.title,
-      @required this.selectedUrl,
-      @required this.isLocalAsset});
+      {required this.title,
+      required this.selectedUrl,
+      required this.isLocalAsset});
 
   @override
   _MyFhbWebViewState createState() => _MyFhbWebViewState();
 }
 
 class _MyFhbWebViewState extends State<MyFhbWebView> {
-  WebViewController _controller;
+  late WebViewController _controller;
   bool isLoading = true;
 
   @override
@@ -58,7 +59,7 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
               Navigator.of(context).pop();
             },
           ),
-          title: Text(widget.title),
+          title: Text(widget.title!),
         ),
         body: Stack(
           children: <Widget>[
@@ -68,8 +69,8 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
               onWebViewCreated: (webViewController) {
                 _controller = webViewController;
                 widget.isLocalAsset
-                    ? _loadHtmlFromAssets(widget.selectedUrl)
-                    : _controller.loadUrl(widget.selectedUrl);
+                    ? _loadHtmlFromAssets(widget.selectedUrl!)
+                    : _controller.loadUrl(widget.selectedUrl!);
               },
               onPageFinished: (_) {
                 setState(() {

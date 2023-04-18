@@ -1,21 +1,22 @@
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 class AudioCallScreen extends StatelessWidget {
-  final String avatar;
-  String patName;
+  final String? avatar;
+  String? patName;
   AudioCallScreen({this.avatar, this.patName});
   var regController = CommonUtil().onInitQurhomeRegimenController();
 
   @override
   Widget build(BuildContext context) {
     if (patName != null && patName != '') {
-      if (patName?.toUpperCase()?.split(' ').length == 2) {
-        patName = patName?.toUpperCase()?.split(' ')[0][0] +
-            patName?.toUpperCase()?.split(' ')[1][0];
+      if (patName!.toUpperCase().split(' ').length == 2) {
+        patName = patName!.toUpperCase().split(' ')[0][0] +
+            patName!.toUpperCase().split(' ')[1][0];
       } else {
-        patName = patName?.toUpperCase()?.split(' ')[0][0];
+        patName = patName!.toUpperCase().split(' ')[0][0];
       }
     }
 

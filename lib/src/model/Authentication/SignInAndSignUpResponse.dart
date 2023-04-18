@@ -1,8 +1,9 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class SignInAndSignUpResponse {
-  String createdTimeString;
-  String expiryTimeString;
+  String? createdTimeString;
+  String? expiryTimeString;
 
   SignInAndSignUpResponse({this.createdTimeString, this.expiryTimeString});
 

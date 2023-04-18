@@ -1,7 +1,8 @@
+
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class CreatedBy {
-  String id;
+  String? id;
 
   CreatedBy({this.id});
 

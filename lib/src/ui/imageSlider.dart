@@ -1,3 +1,4 @@
+
 import 'dart:typed_data';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -11,8 +12,8 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 
 class ImageSlider extends StatefulWidget {
-  final List<HealthRecordCollection> imageList;
-  final String imageURl;
+  final List<HealthRecordCollection>? imageList;
+  final String? imageURl;
 
   ImageSlider({this.imageList, this.imageURl});
   @override
@@ -42,8 +43,8 @@ class _ImageSliderState extends State<ImageSlider> {
             Expanded(
                 flex: 7,
                 child: widget.imageURl != null
-                    ? ImageWidget(widget.imageURl)
-                    : showPhotoView(widget.imageList)),
+                    ? ImageWidget(widget.imageURl!)
+                    : showPhotoView(widget.imageList!)),
           ],
         ),
       ),
@@ -56,7 +57,7 @@ class _ImageSliderState extends State<ImageSlider> {
       scrollPhysics: const BouncingScrollPhysics(),
       builder: (BuildContext context, int index) {
         return PhotoViewGalleryPageOptions(
-            imageProvider: NetworkImage(imageList[index].healthRecordUrl),
+            imageProvider: NetworkImage(imageList[index].healthRecordUrl!),
             initialScale: PhotoViewComputedScale.contained * 1.0,
             minScale: PhotoViewComputedScale.contained * 1.0,
             maxScale: PhotoViewComputedScale.contained * 2.0);
@@ -69,7 +70,7 @@ class _ImageSliderState extends State<ImageSlider> {
           child: CircularProgressIndicator(
             value: event == null
                 ? 0
-                : event.cumulativeBytesLoaded / event.expectedTotalBytes,
+                : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
           ),
         ),
       ),

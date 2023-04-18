@@ -1,3 +1,4 @@
+
 import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
@@ -8,7 +9,7 @@ import '../models/tensorflow_model.dart';
 import 'package:tflite/tflite.dart';
 
 typedef Callback = void Function(
-    List<dynamic> list, int h, int w, CameraController controller);
+    List<dynamic>? list, int h, int w, CameraController? controller);
 
 class Camera extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -22,7 +23,7 @@ class Camera extends StatefulWidget {
 }
 
 class _CameraState extends State<Camera> {
-  CameraController controller;
+  CameraController? controller;
   bool isDetecting = false;
 
   String stryolo = 'YOLO';
@@ -38,19 +39,19 @@ class _CameraState extends State<Camera> {
         widget.cameras[0],
         ResolutionPreset.high,
       );
-      controller.initialize().then((_) {
+      controller!.initialize().then((_) {
         if (!mounted) {
           return;
         }
         setState(() {
           var startTime = DateTime.now().millisecondsSinceEpoch;
-          controller.startImageStream((img) {
+          controller!.startImageStream((img) {
             if (!isDetecting) {
               var stopDetect =
                   PreferenceUtil.getStringValue(Constants.stop_detecting);
 
               if (stopDetect == 'YES') {
-                controller.stopImageStream();
+                controller!.stopImageStream();
               }
 
 
@@ -145,7 +146,7 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
-    if (controller == null || !controller.value.isInitialized) {
+    if (controller == null || !controller!.value.isInitialized) {
       return Container();
     }
 //
@@ -156,7 +157,7 @@ class _CameraState extends State<Camera> {
     var tmp = MediaQuery.of(context).size;
     final screenH = math.max(tmp.height, tmp.width);
     final screenW = math.min(tmp.height, tmp.width);
-    tmp = controller.value.previewSize;
+    tmp = controller!.value.previewSize!;
     final previewH = math.max(tmp.height, tmp.width);
     final previewW = math.min(tmp.height, tmp.width);
     final screenRatio = screenH / screenW;
@@ -167,7 +168,7 @@ class _CameraState extends State<Camera> {
           screenRatio > previewRatio ? screenH : screenW / previewW * previewH,
       maxWidth:
           screenRatio > previewRatio ? screenH / previewH * previewW : screenW,
-      child: CameraPreview(controller),
+      child: CameraPreview(controller!),
     );
   }
 }

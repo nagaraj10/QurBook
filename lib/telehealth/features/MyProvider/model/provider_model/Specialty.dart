@@ -1,12 +1,13 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Specialty {
-  String name;
-  String isActive;
-  String createdOn;
-  String description;
-  String lastModifiedBy;
-  String lastModifiedOn;
+  String? name;
+  String? isActive;
+  String? createdOn;
+  String? description;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
 
   Specialty(
       {this.name,

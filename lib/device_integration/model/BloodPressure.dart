@@ -1,3 +1,4 @@
+
 import '../../constants/fhb_parameters.dart' as param;
 
 class BloodPressure {
@@ -6,8 +7,8 @@ class BloodPressure {
     this.entities,
   });
 
-  bool isSuccess;
-  List<BloodPressureEntity> entities;
+  bool? isSuccess;
+  List<BloodPressureEntity>? entities;
 
   factory BloodPressure.fromJson(Map<String, dynamic> json) => BloodPressure(
         isSuccess: json[param.is_Success],
@@ -17,7 +18,7 @@ class BloodPressure {
 
   Map<String, dynamic> toJson() => {
         param.is_Success: isSuccess,
-        param.strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
+        param.strentities: List<dynamic>.from(entities!.map((x) => x.toJson())),
       };
 }
 
@@ -33,12 +34,12 @@ class BloodPressureEntity {
   });
 
   // String id;
-  DateTime startDateTime;
-  DateTime endDateTime;
-  int systolic;
-  int diastolic;
-  DeviceHealthRecord deviceHealthRecord;
-  AverageAsOfNow averageAsOfNow;
+  DateTime? startDateTime;
+  DateTime? endDateTime;
+  int? systolic;
+  int? diastolic;
+  DeviceHealthRecord? deviceHealthRecord;
+  AverageAsOfNow? averageAsOfNow;
 
   factory BloodPressureEntity.fromJson(Map<String, dynamic> json) =>
       BloodPressureEntity(
@@ -58,20 +59,20 @@ class BloodPressureEntity {
 
   Map<String, dynamic> toJson() => {
         // "id": id,
-        param.strsyncStartDate: startDateTime.toIso8601String(),
-        param.strsyncEndDate : endDateTime.toIso8601String(),
+        param.strsyncStartDate: startDateTime!.toIso8601String(),
+        param.strsyncEndDate : endDateTime!.toIso8601String(),
         param.strParamSystolic: systolic,
         param.strParamDiastolic: diastolic,
-        param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
-        param.strParamAverageAsOfNow:averageAsOfNow.toJson(),
+        param.strParamDeviceHealthRecord:deviceHealthRecord!.toJson(),
+        param.strParamAverageAsOfNow:averageAsOfNow!.toJson(),
 
       };
 }
 
 class DeviceHealthRecord {
-  SourceType sourceType;
-  List<HeartRateCollection> heartRateCollection;
-  DateTime createdOn;
+  SourceType? sourceType;
+  List<HeartRateCollection>? heartRateCollection;
+  DateTime? createdOn;
 
   DeviceHealthRecord({this.sourceType,this.heartRateCollection,this.createdOn});
 
@@ -80,9 +81,9 @@ class DeviceHealthRecord {
         ? SourceType.fromJson(json['sourceType'])
         : null;
     if (json['heartRateCollection'] != null) {
-      heartRateCollection = List<HeartRateCollection>();
+      heartRateCollection = <HeartRateCollection>[];
       json['heartRateCollection'].forEach((v) {
-        heartRateCollection.add(HeartRateCollection.fromJson(v));
+        heartRateCollection!.add(HeartRateCollection.fromJson(v));
       });
     }
     createdOn = DateTime.parse(json[param.strCreatedOn]);
@@ -92,13 +93,13 @@ class DeviceHealthRecord {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (sourceType != null) {
-      data['sourceType'] = sourceType.toJson();
+      data['sourceType'] = sourceType!.toJson();
     }
     if (heartRateCollection != null) {
       data['heartRateCollection'] =
-          heartRateCollection.map((v) => v.toJson()).toList();
+          heartRateCollection!.map((v) => v.toJson()).toList();
     }
-    data[param.strCreatedOn] = createdOn.toIso8601String();
+    data[param.strCreatedOn] = createdOn!.toIso8601String();
 
     return data;
   }
@@ -106,11 +107,11 @@ class DeviceHealthRecord {
 
 
 class HeartRateCollection {
-  String id;
-  String startDateTime;
-  String endDateTime;
-  int bpm;
-  AverageAsOfNowPulse averageAsOfNow;
+  String? id;
+  String? startDateTime;
+  String? endDateTime;
+  int? bpm;
+  AverageAsOfNowPulse? averageAsOfNow;
 
   HeartRateCollection(
       {this.id,
@@ -136,7 +137,7 @@ class HeartRateCollection {
     data['endDateTime'] = endDateTime;
     data['bpm'] = bpm;
     if (averageAsOfNow != null) {
-      data['averageAsOfNow'] = averageAsOfNow.toJson();
+      data['averageAsOfNow'] = averageAsOfNow!.toJson();
     }
     return data;
   }
@@ -178,7 +179,7 @@ class AverageAsOfNow {
 }
 
 class SourceType {
-  String code;
+  String? code;
 
   SourceType({this.code});
 

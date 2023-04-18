@@ -1,3 +1,6 @@
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -29,7 +32,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 
 class CheckoutPageWidgets {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  MyProfileModel myProfile;
+  MyProfileModel? myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
   CommonUtil commonUtil = CommonUtil();
@@ -37,12 +40,12 @@ class CheckoutPageWidgets {
   Future<dynamic> showPaymentConfirmationDialog(
       {dynamic body,
       dynamic totalCartAmount,
-      Function(String) closePage,
+      Function(String)? closePage,
       bool isPaymentNotification = false,
-      FetchingCartItemsModel fetchingCartItemsModel,
-      Function(bool) isSuccess}) {
+      FetchingCartItemsModel? fetchingCartItemsModel,
+      Function(bool?)? isSuccess}) {
     return showDialog(
-        context: Get.context,
+        context: Get.context!,
         builder: (context) {
           return AlertDialog(
             insetPadding: EdgeInsets.symmetric(horizontal: 8),
@@ -123,7 +126,7 @@ class CheckoutPageWidgets {
                                         Navigator.pop(context);
                                         CommonUtil.showLoadingDialog(context,
                                             _keyLoader, variable.Please_Wait);
-                                        String userId =
+                                        String? userId =
                                             PreferenceUtil.getStringValue(
                                                 Constants.KEY_USERID);
 
@@ -131,56 +134,56 @@ class CheckoutPageWidgets {
                                             .makePayment(body)
                                             .then((value) {
                                           if (value != null) {
-                                            if (value?.isSuccess) {
-                                              if (value?.result != null) {
-                                                if (value?.result?.payment !=
+                                            if (value.isSuccess!) {
+                                              if (value.result != null) {
+                                                if (value.result?.payment !=
                                                     null) {
                                                   if (value
-                                                          ?.result
+                                                          .result
                                                           ?.payment
                                                           ?.paymentStatus
                                                           ?.code ==
                                                       'PAYITA') {
-                                                    if (value?.result
+                                                    if (value.result
                                                             ?.paymentGatewayDetail !=
                                                         null) {
                                                       if (value
-                                                              ?.result
+                                                              .result
                                                               ?.paymentGatewayDetail
                                                               ?.responseInfo !=
                                                           null) {
                                                         if (value
-                                                                ?.result
+                                                                .result
                                                                 ?.paymentGatewayDetail
                                                                 ?.responseInfo
                                                                 ?.paymentGateWay ==
                                                             STR_RAZOPAY) {
                                                           if (value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.shorturl !=
                                                                   null &&
                                                               value
-                                                                      ?.result
+                                                                    .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.shorturl !=
                                                                   '') {
                                                             Navigator
                                                                 .pushReplacement(
-                                                              Get.context,
+                                                              Get.context!,
                                                               MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
                                                                         PaymentGatwayPage(
                                                                   redirectUrl: value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.shorturl,
                                                                   paymentId: value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.payment
                                                                       ?.id
                                                                       ?.toString(),
@@ -206,31 +209,31 @@ class CheckoutPageWidgets {
                                                           }
                                                         } else {
                                                           if (value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.longurl !=
                                                                   null &&
                                                               value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.longurl !=
                                                                   '') {
                                                             Navigator
                                                                 .pushReplacement(
-                                                              Get.context,
+                                                              Get.context!,
                                                               MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
                                                                         PaymentGatwayPage(
                                                                   redirectUrl: value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.paymentGatewayDetail
                                                                       ?.responseInfo
                                                                       ?.longurl,
                                                                   paymentId: value
-                                                                      ?.result
+                                                                      .result
                                                                       ?.payment
                                                                       ?.id
                                                                       ?.toString(),
@@ -258,7 +261,7 @@ class CheckoutPageWidgets {
                                                       } else {
                                                         Navigator.of(
                                                                 _keyLoader
-                                                                    .currentContext,
+                                                                    .currentContext!,
                                                                 rootNavigator:
                                                                     true)
                                                             .pop();
@@ -271,7 +274,7 @@ class CheckoutPageWidgets {
                                                   } else {
                                                     Navigator.of(
                                                             _keyLoader
-                                                                .currentContext,
+                                                                .currentContext!,
                                                             rootNavigator: true)
                                                         .pop();
                                                     FlutterToast()
@@ -282,7 +285,7 @@ class CheckoutPageWidgets {
                                                 } else {
                                                   Navigator.of(
                                                           _keyLoader
-                                                              .currentContext,
+                                                              .currentContext!,
                                                           rootNavigator: true)
                                                       .pop();
                                                   FlutterToast()
@@ -293,26 +296,26 @@ class CheckoutPageWidgets {
                                               } else {
                                                 Navigator.of(
                                                         _keyLoader
-                                                            .currentContext,
+                                                            .currentContext!,
                                                         rootNavigator: true)
                                                     .pop();
 
                                                 Alert.displayConfirmProceed(
-                                                    Get.context,
+                                                    Get.context!,
                                                     confirm: "Update Cart",
                                                     title: "Update",
                                                     content:
-                                                        value?.message ?? '',
+                                                        value.message ?? '',
                                                     onPressedConfirm: () {
                                                   ApiBaseHelper()
                                                       .updateCartIcon(
                                                           fetchingCartItemsModel
                                                               ?.result)
                                                       .then((value) {
-                                                    Navigator.of(Get.context)
+                                                    Navigator.of(Get.context!)
                                                         .pop();
                                                     if (value['isSuccess']) {
-                                                      isSuccess(
+                                                      isSuccess!(
                                                           value['isSuccess']);
                                                     }
                                                   });
@@ -320,7 +323,7 @@ class CheckoutPageWidgets {
                                               }
                                             } else {
                                               Navigator.of(
-                                                      _keyLoader.currentContext,
+                                                      _keyLoader.currentContext!,
                                                       rootNavigator: true)
                                                   .pop();
                                               FlutterToast()
@@ -351,17 +354,17 @@ class CheckoutPageWidgets {
         });
   }
 
-  Future<bool> profileValidationCheckOnCart(BuildContext context,
-      {String packageId,
-      String isSubscribed,
-      String providerId,
-      String isFrom,
-      bool feeZero,
-      Function() refresh}) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  Future<bool?> profileValidationCheckOnCart(BuildContext context,
+      {String? packageId,
+      String? isSubscribed,
+      String? providerId,
+      String? isFrom,
+      bool? feeZero,
+      Function()? refresh}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
     CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
       myProfile = value;
     });
 
@@ -379,130 +382,130 @@ class CheckoutPageWidgets {
   }
 
   Future<bool> addressValidation(BuildContext context,
-      {String packageId,
-      String isSubscribed,
-      String providerId,
-      String isFrom,
-      bool feeZero,
-      Function() refresh}) async {
+      {String? packageId,
+      String? isSubscribed,
+      String? providerId,
+      String? isFrom,
+      bool? feeZero,
+      Function()? refresh}) async {
     if (myProfile != null) {
-      if (myProfile.isSuccess) {
-        if (myProfile.result != null) {
-          if (myProfile.result.gender != null &&
-              myProfile.result.gender.isNotEmpty) {
-            if (myProfile.result.dateOfBirth != null &&
-                myProfile.result.dateOfBirth.isNotEmpty) {
-              if (myProfile.result.additionalInfo != null) {
-                if (myProfile.result.userAddressCollection3 != null) {
-                  if (myProfile.result.userAddressCollection3.length > 0) {
+      if (myProfile!.isSuccess!) {
+        if (myProfile!.result != null) {
+          if (myProfile!.result!.gender != null &&
+              myProfile!.result!.gender!.isNotEmpty) {
+            if (myProfile!.result!.dateOfBirth != null &&
+                myProfile!.result!.dateOfBirth!.isNotEmpty) {
+              if (myProfile!.result!.additionalInfo != null) {
+                if (myProfile!.result!.userAddressCollection3 != null) {
+                  if (myProfile!.result!.userAddressCollection3!.length > 0) {
                     return await patientAddressCheck(
-                        myProfile.result.userAddressCollection3[0], context,
+                        myProfile!.result!.userAddressCollection3![0], context,
                         packageId: packageId,
                         isSubscribed: isSubscribed,
                         providerId: providerId,
                         feeZero: feeZero,
                         refresh: refresh);
                   } else {
-                    return await mCustomAlertDialog(context,
+                    return await (mCustomAlertDialog(context,
                         content: commonUtil.CONTENT_PROFILE_CHECK,
                         packageId: packageId,
                         isSubscribed: isSubscribed,
                         providerId: providerId,
                         feeZero: feeZero,
-                        refresh: refresh);
+                        refresh: refresh) as FutureOr<bool>);
                   }
                 } else {
-                  return await mCustomAlertDialog(context,
+                  return await (mCustomAlertDialog(context,
                       content: commonUtil.CONTENT_PROFILE_CHECK,
                       packageId: packageId,
                       isSubscribed: isSubscribed,
                       providerId: providerId,
                       feeZero: feeZero,
-                      refresh: refresh);
+                      refresh: refresh) as FutureOr<bool>);
                 }
               } else {
-                return await mCustomAlertDialog(context,
+                return await (mCustomAlertDialog(context,
                     content: commonUtil.CONTENT_PROFILE_CHECK,
                     packageId: packageId,
                     providerId: providerId,
                     isSubscribed: isSubscribed,
                     feeZero: feeZero,
-                    refresh: refresh);
+                    refresh: refresh) as FutureOr<bool>);
               }
             } else {
-              return await mCustomAlertDialog(context,
+              return await (mCustomAlertDialog(context,
                   content: commonUtil.CONTENT_PROFILE_CHECK,
                   packageId: packageId,
                   providerId: providerId,
                   isSubscribed: isSubscribed,
                   feeZero: feeZero,
-                  refresh: refresh);
+                  refresh: refresh) as FutureOr<bool>);
             }
           } else {
-            return await mCustomAlertDialog(context,
+            return await (mCustomAlertDialog(context,
                 content: commonUtil.CONTENT_PROFILE_CHECK,
                 packageId: packageId,
                 providerId: providerId,
                 isSubscribed: isSubscribed,
                 feeZero: feeZero,
-                refresh: refresh);
+                refresh: refresh) as FutureOr<bool>);
           }
         } else {
-          return await mCustomAlertDialog(context,
+          return await (mCustomAlertDialog(context,
               content: commonUtil.CONTENT_PROFILE_CHECK,
               packageId: packageId,
               providerId: providerId,
               isSubscribed: isSubscribed,
               feeZero: feeZero,
-              refresh: refresh);
+              refresh: refresh) as FutureOr<bool>);
         }
       } else {
-        return await mCustomAlertDialog(context,
+        return await (mCustomAlertDialog(context,
             content: commonUtil.CONTENT_PROFILE_CHECK,
             packageId: packageId,
             providerId: providerId,
             isSubscribed: isSubscribed,
             feeZero: feeZero,
-            refresh: refresh);
+            refresh: refresh) as FutureOr<bool>);
       }
     } else {
-      return await mCustomAlertDialog(context,
+      return await (mCustomAlertDialog(context,
           content: commonUtil.CONTENT_PROFILE_CHECK,
           packageId: packageId,
           providerId: providerId,
           isSubscribed: isSubscribed,
           feeZero: feeZero,
-          refresh: refresh);
+          refresh: refresh) as FutureOr<bool>);
     }
   }
 
   Future<bool> patientAddressCheck(
       UserAddressCollection3 userAddressCollection, BuildContext context,
-      {String packageId,
-      String isSubscribed,
-      String providerId,
-      bool feeZero,
-      Function() refresh}) async {
+      {String? packageId,
+      String? isSubscribed,
+      String? providerId,
+      bool? feeZero,
+      Function()? refresh}) async {
     /*String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';*/
     if (userAddressCollection.city != null) {
-      String city = userAddressCollection.city.name != null
-          ? userAddressCollection.city.name
+      String? city = userAddressCollection.city!.name != null
+          ? userAddressCollection.city!.name
           : '';
-      String state = userAddressCollection.state.name != null
-          ? userAddressCollection.state.name
+      String? state = userAddressCollection.state!.name != null
+          ? userAddressCollection.state!.name
           : '';
 
       if (city != '' && state != '') {
         //check if its subcribed we need not to show disclimer alert
-        return await mDisclaimerAlertDialog(
+        return await (mDisclaimerAlertDialog(
             packageId: packageId,
             isSubscribed: isSubscribed,
             providerId: providerId,
             refresh: refresh,
             feeZero: feeZero,
-            context: context);
+            context: context));
       } else {
         return mCustomAlertDialog(context,
             content: commonUtil.CONTENT_PROFILE_CHECK,
@@ -510,7 +513,7 @@ class CheckoutPageWidgets {
             isSubscribed: isSubscribed,
             providerId: providerId,
             feeZero: feeZero,
-            refresh: refresh);
+            refresh: refresh) as FutureOr<bool>;
       }
     } else {
       return mCustomAlertDialog(context,
@@ -519,18 +522,18 @@ class CheckoutPageWidgets {
           isSubscribed: isSubscribed,
           providerId: providerId,
           feeZero: feeZero,
-          refresh: refresh);
+          refresh: refresh) as FutureOr<bool>;
     }
   }
 
   Future<dynamic> mCustomAlertDialog(BuildContext context,
-      {String title,
-      String content,
-      String packageId,
-      String isSubscribed,
-      bool feeZero,
-      Function() refresh,
-      String providerId}) async {
+      {String? title,
+      String? content,
+      String? packageId,
+      String? isSubscribed,
+      bool? feeZero,
+      Function()? refresh,
+      String? providerId}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var isAccepted = false;
     await showDialog<void>(
@@ -549,7 +552,7 @@ class CheckoutPageWidgets {
                       height: 10.0.h,
                     ),
                     Text(
-                      content,
+                      content!,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.0.sp,
@@ -604,7 +607,7 @@ class CheckoutPageWidgets {
                                 await commonUtil.fetchUserProfileInfo();
                             Get.toNamed(router.rt_AddFamilyUserInfo,
                                 arguments: AddFamilyUserInfoArguments(
-                                  myProfileResult: myProfile?.result,
+                                  myProfileResult: myProfile.result,
                                   fromClass: CommonConstants.user_update,
                                   isFromCSIR: false,
                                   packageId: packageId,
@@ -639,14 +642,14 @@ class CheckoutPageWidgets {
   }
 
   Future<dynamic> mDisclaimerAlertDialog(
-      {BuildContext context,
-      String title,
-      String content,
-      String packageId,
-      String isSubscribed,
-      String providerId,
-      bool feeZero,
-      Function() refresh}) async {
+      {required BuildContext context,
+      String? title,
+      String? content,
+      String? packageId,
+      String? isSubscribed,
+      String? providerId,
+      bool? feeZero,
+      Function()? refresh}) async {
     bool isAccpted = false;
     await Get.dialog(
       AlertDialog(
@@ -716,7 +719,7 @@ class CheckoutPageWidgets {
                     //     .updateProfileVaildationStatus(true);
 
                     isAccpted = true;
-                    if (feeZero) {
+                    if (feeZero!) {
                       CommonUtil.showLoadingDialog(
                           context, _keyLoader, variable.Please_Wait,
                           isAutoDismiss: true);

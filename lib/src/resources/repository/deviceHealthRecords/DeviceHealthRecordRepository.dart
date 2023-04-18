@@ -37,7 +37,7 @@ class DeviceHealthRecord {
   }
 
   Future<dynamic> getLastsynctime(String qr_param) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
     //print('static user id ${Constants.asgurduserID}');
 
     var response = await _helper.getDeviceInfo(query.qr_DeviceInfo +
@@ -52,7 +52,7 @@ class DeviceHealthRecord {
   }
 
   Future<dynamic> getlastMeasureSync() async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     var response = await _helper.getDeviceInfo(query.qr_DeviceInfo +
         query.qr_slash +
@@ -66,7 +66,7 @@ class DeviceHealthRecord {
   }
 
   Future<dynamic> queryBydeviceInterval(String jsonString,{String filter=''}) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     var response = await _helper.getByRecordDataType(
         query.qr_DeviceInfo +

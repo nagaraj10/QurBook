@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import '../../constants/fhb_parameters.dart';
 import 'googleFitBucket.dart';
@@ -12,7 +13,7 @@ class GoogleFitResponseModel {
     this.bucket,
   });
 
-  List<Bucket> bucket;
+  List<Bucket>? bucket;
 
   factory GoogleFitResponseModel.fromJson(Map<String, dynamic> json) =>
       GoogleFitResponseModel(
@@ -21,6 +22,6 @@ class GoogleFitResponseModel {
       );
 
   Map<String, dynamic> toJson() => {
-        gfbucket: List<dynamic>.from(bucket.map((x) => x.toJson())),
+        gfbucket: List<dynamic>.from(bucket!.map((x) => x.toJson())),
       };
 }

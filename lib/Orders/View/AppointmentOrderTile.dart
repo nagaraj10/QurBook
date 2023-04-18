@@ -1,3 +1,4 @@
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 class AppointmentOrderTile extends StatelessWidget {
   final OrderModel order;
   const AppointmentOrderTile({
-    @required this.order,
+    required this.order,
   });
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class AppointmentOrderTile extends StatelessWidget {
           children: [
             Text(
               'Order id : ${order.orderId}',
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -33,14 +34,14 @@ class AppointmentOrderTile extends StatelessWidget {
             ),
             order.date != null
                 ? Text(
-                    "Date of Payment : ${DateFormat('MMMM dd, hh:mm a').format(order.date)}",
+                    "Date of Payment : ${DateFormat('MMMM dd, hh:mm a').format(order.date!)}",
                     style: Theme.of(context).textTheme.bodyText2,
                   )
                 : Container(),
             const SizedBox(
               height: 4,
             ),
-            order.patientFirstName.isNotEmpty
+            order.patientFirstName!.isNotEmpty
                 ? Text(
                     "Patient name : ${order.patientFirstName} ${order.patientLastName} ",
                     style: Theme.of(context).textTheme.bodyText2,
@@ -49,7 +50,7 @@ class AppointmentOrderTile extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            order.doctorFirstName.isNotEmpty
+            order.doctorFirstName!.isNotEmpty
                 ? Text(
                     "Doctor name : ${order.doctorFirstName} ${order.doctorLastName} ",
                     style: Theme.of(context).textTheme.bodyText2,
@@ -60,7 +61,7 @@ class AppointmentOrderTile extends StatelessWidget {
             ),
             order.appointmentDateTime != null
                 ? Text(
-                    "Appointment Date : ${DateFormat('MMMM dd, hh:mm a').format(order.appointmentDateTime)}",
+                    "Appointment Date : ${DateFormat('MMMM dd, hh:mm a').format(order.appointmentDateTime!)}",
                     style: Theme.of(context).textTheme.bodyText2,
                   )
                 : Container(),
@@ -70,7 +71,7 @@ class AppointmentOrderTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                (order.feePaid != null && order.feePaid.isNotEmpty)
+                (order.feePaid != null && order.feePaid!.isNotEmpty)
                     ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -79,9 +80,9 @@ class AppointmentOrderTile extends StatelessWidget {
                             style: Theme.of(context).textTheme.subtitle1,
                           ),
                           Text(
-                            '${CommonUtil.CURRENCY}${double.parse(order.feePaid)}',
+                            '${CommonUtil.CURRENCY}${double.parse(order.feePaid!)}',
                             style:
-                                Theme.of(context).textTheme.subtitle1.copyWith(
+                                Theme.of(context).textTheme.subtitle1!.copyWith(
                                       color: Color(
                                         CommonUtil().getMyPrimaryColor(),
                                       ),
@@ -90,14 +91,14 @@ class AppointmentOrderTile extends StatelessWidget {
                         ],
                       )
                     : Container(),
-                (order.paymentStatus != null && order.paymentStatus.isNotEmpty)
+                (order.paymentStatus != null && order.paymentStatus!.isNotEmpty)
                     ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            order.paymentStatus,
+                            order.paymentStatus!,
                             style:
-                                Theme.of(context).textTheme.bodyText2.copyWith(
+                                Theme.of(context).textTheme.bodyText2!.copyWith(
                                       color: getColor(order.paymentStatus),
                                     ),
                           ),
@@ -118,7 +119,7 @@ class AppointmentOrderTile extends StatelessWidget {
     );
   }
 
-  Color getColor(String status) {
+  Color getColor(String? status) {
     switch (status) {
       case 'Payment Initiated':
       case 'Payment Pending':

@@ -1,6 +1,7 @@
+
 class GetUnreadCountFamily {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   GetUnreadCountFamily({this.isSuccess, this.result});
 
@@ -9,7 +10,7 @@ class GetUnreadCountFamily {
     if (json['result'] != null) {
       result = <Result>[];
       json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+        result!.add(new Result.fromJson(v));
       });
     }
   }
@@ -18,14 +19,14 @@ class GetUnreadCountFamily {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Result {
-  String count;
+  String? count;
 
   Result({this.count});
 

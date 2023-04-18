@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../../constants/variable_constant.dart' as variable;
@@ -8,20 +9,20 @@ import '../../src/blocs/Authentication/LoginBloc.dart';
 import '../../src/resources/network/ApiResponse.dart';
 
 class HospitalListBlock implements BaseBloc {
-  HospitalListRepository _hospitalListRepository;
-  StreamController _hospitalListController;
-  StreamController _hospitalProfileImageControlller;
-  StreamController _hospitalListNewController;
+  late HospitalListRepository _hospitalListRepository;
+  StreamController? _hospitalListController;
+  StreamController? _hospitalProfileImageControlller;
+  late StreamController _hospitalListNewController;
 
   StreamSink<ApiResponse<HospitalListResponse>> get hospitalListSink =>
-      _hospitalListController.sink;
+      _hospitalListController!.sink as StreamSink<ApiResponse<HospitalListResponse>>;
   Stream<ApiResponse<HospitalListResponse>> get hospitalStream =>
-      _hospitalListController.stream;
+      _hospitalListController!.stream as Stream<ApiResponse<HospitalListResponse>>;
 
   StreamSink<ApiResponse<HospitalsSearchListResponse>>
-      get hospitalListNewSink => _hospitalListNewController.sink;
+      get hospitalListNewSink => _hospitalListNewController.sink as StreamSink<ApiResponse<HospitalsSearchListResponse>>;
   Stream<ApiResponse<HospitalsSearchListResponse>> get hospitalNewStream =>
-      _hospitalListNewController.stream;
+      _hospitalListNewController.stream as Stream<ApiResponse<HospitalsSearchListResponse>>;
 
   @override
   void dispose() {
@@ -49,7 +50,7 @@ class HospitalListBlock implements BaseBloc {
     }
   }
 
-  getHospitalListNew(String param) async {
+  getHospitalListNew(String? param) async {
     hospitalListNewSink.add(ApiResponse.loading(variable.strGetHospitalList));
     try {
       var hospitalListResponse =
@@ -60,9 +61,9 @@ class HospitalListBlock implements BaseBloc {
     }
   }
 
-  Future<HospitalListResponse> getHospitalObjectusingId(
+  Future<HospitalListResponse?> getHospitalObjectusingId(
       String hospitalId) async {
-    HospitalListResponse hospitalListResponse;
+    HospitalListResponse? hospitalListResponse;
     hospitalListSink.add(ApiResponse.loading(variable.strGetHospitalById));
     try {
       hospitalListResponse =

@@ -1,6 +1,7 @@
+
 class CaregiverPatientChatModel {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   CaregiverPatientChatModel({this.isSuccess, this.result});
 
@@ -9,7 +10,7 @@ class CaregiverPatientChatModel {
     if (json['result'] != null) {
       result = <Result>[];
       json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+        result!.add(new Result.fromJson(v));
       });
     }
   }
@@ -18,25 +19,25 @@ class CaregiverPatientChatModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
-  String firstName;
-  String middleName;
-  String lastName;
-  String profilePicThumbnailUrl;
-  String relationshipName;
-  bool isCarecoordinator;
-  String carecoordinatorfirstName;
-  String carecoordinatorLastName;
-  String carecoordinatorProfilePicThumbnailUrl;
-  String carecoordinatorId;
-  ChatListItem chatListItem;
+  String? id;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? profilePicThumbnailUrl;
+  String? relationshipName;
+  bool? isCarecoordinator;
+  String? carecoordinatorfirstName;
+  String? carecoordinatorLastName;
+  String? carecoordinatorProfilePicThumbnailUrl;
+  String? carecoordinatorId;
+  ChatListItem? chatListItem;
 
   Result(
       {this.id,
@@ -83,23 +84,23 @@ class Result {
     data['carecoordinatorProfilePicThumbnailUrl'] = this.carecoordinatorProfilePicThumbnailUrl;
     data['carecoordinatorId'] = this.carecoordinatorId;
     if (this.chatListItem != null) {
-      data['chatListItem'] = this.chatListItem.toJson();
+      data['chatListItem'] = this.chatListItem!.toJson();
     }
     return data;
   }
 }
 
 class ChatListItem {
-  String id;
-  String peerId;
-  String userId;
-  String createdOn;
-  bool isActive;
-  bool isDisable;
-  bool isMuted;
-  int unReadNotificationCount;
-  String lastModifiedOn;
-  String deliveredOn;
+  String? id;
+  String? peerId;
+  String? userId;
+  String? createdOn;
+  bool? isActive;
+  bool? isDisable;
+  bool? isMuted;
+  int? unReadNotificationCount;
+  String? lastModifiedOn;
+  String? deliveredOn;
 
   ChatListItem(
       {this.id,

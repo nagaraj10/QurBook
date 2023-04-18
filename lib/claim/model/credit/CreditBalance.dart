@@ -1,8 +1,9 @@
+
 import 'package:myfhb/claim/model/credit/CreditBalanceResult.dart';
 
 class CreditBalance {
-  bool isSuccess;
-  CreditBalanceResult result;
+  bool? isSuccess;
+  CreditBalanceResult? result;
 
   CreditBalance({this.isSuccess, this.result});
 
@@ -16,7 +17,7 @@ class CreditBalance {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }

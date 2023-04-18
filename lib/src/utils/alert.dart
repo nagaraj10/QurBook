@@ -1,3 +1,4 @@
+
 ///
 /// `alert.dart`
 /// Class contains static methods to show alerts
@@ -14,14 +15,14 @@ class Alert {
   static Future displayAlertPlain(
     BuildContext context, {
     String title = '',
-    String content = '',
+    String? content = '',
   }) {
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text(title),
-          content: Text(content),
+          content: Text(content!),
         );
       },
     );
@@ -32,7 +33,7 @@ class Alert {
     String title = '',
     String content = '',
     String confirm = variable.strOK,
-    Function onPressed,
+    Function? onPressed,
   }) {
     return showDialog(
       context: context,
@@ -43,7 +44,7 @@ class Alert {
           actions: <Widget>[
             FlatButton(
               child: Text(confirm),
-              onPressed: onPressed ??
+              onPressed: onPressed as void Function()? ??
                   () {
                     Navigator.of(context).pop();
                   },
@@ -57,23 +58,23 @@ class Alert {
   static Future displayConfirmProceed(
     BuildContext context, {
     String title = '',
-    String content = '',
+    String? content = '',
     String cancel = variable.strCANCEL,
     String confirm = variable.strOK,
-    Function onPressedCancel,
-    Function onPressedConfirm,
+    Function? onPressedCancel,
+    Function? onPressedConfirm,
   }) {
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text(title),
-          content: Text(content),
+          content: Text(content!),
           actions: <Widget>[
             FlatButton(
               textColor: Colors.grey,
               child: Text(cancel),
-              onPressed: onPressedCancel ??
+              onPressed: onPressedCancel as void Function()? ??
                   () {
                     Navigator.of(context).pop();
                   },
@@ -82,7 +83,7 @@ class Alert {
               textColor: Colors.white,
               color: Color(CommonUtil().getMyPrimaryColor()),
               child: Text(confirm),
-              onPressed: onPressedConfirm ??
+              onPressed: onPressedConfirm as void Function()? ??
                   () {
                     Navigator.of(context).pop();
                     Navigator.pop(context);
@@ -99,8 +100,8 @@ class Alert {
     String title = '',
     String content = '',
     String confirm = variable.strOKAY,
-    Function onPressedCancel,
-    Function onPressedConfirm,
+    Function? onPressedCancel,
+    Function? onPressedConfirm,
   }) {
     return showDialog(
       context: context,
@@ -113,7 +114,7 @@ class Alert {
               textColor: Colors.white,
               color: Color(CommonUtil().getMyPrimaryColor()),
               child: Text(confirm),
-              onPressed: onPressedConfirm ??
+              onPressed: onPressedConfirm as void Function()? ??
                   () {
                     Navigator.of(context).pop();
                     Navigator.pop(context);
@@ -130,8 +131,8 @@ class Alert {
     String title = '',
     String content = '',
     String confirm = variable.strOKAY,
-    Function onPressedCancel,
-    Function onPressedConfirm,
+    Function? onPressedCancel,
+    Function? onPressedConfirm,
   }) {
     final dialog = StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
@@ -158,7 +159,7 @@ class Alert {
             textColor: Colors.white,
             color: Color(CommonUtil().getMyPrimaryColor()),
             child: Text(confirm),
-            onPressed: onPressedConfirm ??
+            onPressed: onPressedConfirm as void Function()? ??
                 () {
                   Navigator.of(context).pop();
                   Navigator.pop(context);

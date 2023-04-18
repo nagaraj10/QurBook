@@ -1,3 +1,4 @@
+
 import 'regiment_data_model.dart';
 import 'dart:convert';
 
@@ -7,8 +8,8 @@ class FieldsResponseModel {
     this.result,
   });
 
-  final bool isSuccess;
-  final ResultDataModel result;
+  final bool? isSuccess;
+  final ResultDataModel? result;
 
   factory FieldsResponseModel.fromJson(Map<String, dynamic> json) =>
       FieldsResponseModel(
@@ -18,7 +19,7 @@ class FieldsResponseModel {
 
   Map<String, dynamic> toJson() => {
         'isSuccess': isSuccess,
-        'result': result.toJson(),
+        'result': result!.toJson(),
       };
 }
 
@@ -29,9 +30,9 @@ class ResultDataModel {
     this.value,
   });
 
-  final RowModel row;
-  final List<FieldModel> fields;
-  final ValueModel value;
+  final RowModel? row;
+  final List<FieldModel>? fields;
+  final ValueModel? value;
 
   factory ResultDataModel.fromJson(Map<String, dynamic> json) =>
       ResultDataModel(
@@ -44,9 +45,9 @@ class ResultDataModel {
       );
 
   Map<String, dynamic> toJson() => {
-        'row': row.toJson(),
-        'fields': List<dynamic>.from(fields.map((x) => x.toJson())),
-        'value': value.toJson(),
+        'row': row!.toJson(),
+        'fields': List<dynamic>.from(fields!.map((x) => x.toJson())),
+        'value': value!.toJson(),
       };
 }
 
@@ -76,20 +77,20 @@ class FieldModel {
   dynamic providerid;
   dynamic formid;
   dynamic title;
-  String description;
+  String? description;
   dynamic uomid;
   dynamic fdata;
-  FieldType ftype;
-  String vmin;
-  String vmax;
-  String amin;
-  String amax;
+  FieldType? ftype;
+  String? vmin;
+  String? vmax;
+  String? amin;
+  String? amax;
   dynamic validation;
   dynamic seq;
   dynamic depth;
-  DateTime ts;
+  DateTime? ts;
   dynamic deleted;
-  String value;
+  String? value;
 
   factory FieldModel.fromJson(Map<String, dynamic> json) => FieldModel(
         fieldid: json['fieldid'],
@@ -127,7 +128,7 @@ class FieldModel {
         'validation': validation,
         'seq': seq,
         'depth': depth,
-        'ts': ts.toIso8601String(),
+        'ts': ts!.toIso8601String(),
         'deleted': deleted,
       };
 }
@@ -142,12 +143,12 @@ class RowModel {
     this.providername,
   });
 
-  final String teidUser;
+  final String? teidUser;
   final dynamic custform;
-  final String uformid;
-  final UformData uformdata;
-  final String providerid;
-  final String providername;
+  final String? uformid;
+  final UformData? uformdata;
+  final String? providerid;
+  final String? providername;
 
   factory RowModel.fromJson(Map<String, dynamic> json) => RowModel(
         teidUser: json['teid_user'],
@@ -181,12 +182,12 @@ class ValueModel {
     this.otherdata,
   });
 
-  final VitalsData systolic;
-  final VitalsData diastolic;
-  final VitalsData pulse;
-  final VitalsData check;
-  final VitalsData radio;
-  final Otherdata otherdata;
+  final VitalsData? systolic;
+  final VitalsData? diastolic;
+  final VitalsData? pulse;
+  final VitalsData? check;
+  final VitalsData? radio;
+  final Otherdata? otherdata;
 
   factory ValueModel.fromJson(Map<String, dynamic> json) => ValueModel(
         systolic: VitalsData.fromJson(json['Systolic'] ?? {}),
@@ -198,12 +199,12 @@ class ValueModel {
       );
 
   Map<String, dynamic> toJson() => {
-        'Systolic': systolic.toJson(),
-        'Diastolic': diastolic.toJson(),
-        'Pulse': pulse.toJson(),
-        'check': check.toJson(),
-        'Radio': radio.toJson(),
-        '#otherdata': otherdata.toJson(),
+        'Systolic': systolic!.toJson(),
+        'Diastolic': diastolic!.toJson(),
+        'Pulse': pulse!.toJson(),
+        'check': check!.toJson(),
+        'Radio': radio!.toJson(),
+        '#otherdata': otherdata!.toJson(),
       };
 }
 
@@ -215,10 +216,10 @@ class Otherdata {
     this.video,
   });
 
-  final MediaModel photo;
-  final MediaModel audio;
-  final MediaModel file;
-  final MediaModel video;
+  final MediaModel? photo;
+  final MediaModel? audio;
+  final MediaModel? file;
+  final MediaModel? video;
 
   factory Otherdata.fromJson(Map<String, dynamic> json) => Otherdata(
         photo: MediaModel.fromJson(json['PHOTO'] ?? {}),
@@ -228,10 +229,10 @@ class Otherdata {
       );
 
   Map<String, dynamic> toJson() => {
-        'PHOTO': photo.toJson(),
-        'AUDIO': audio.toJson(),
-        'FILE': file.toJson(),
-        'VIDEO': video.toJson(),
+        'PHOTO': photo!.toJson(),
+        'AUDIO': audio!.toJson(),
+        'FILE': file!.toJson(),
+        'VIDEO': video!.toJson(),
       };
 }
 
@@ -241,8 +242,8 @@ class MediaModel {
     this.url,
   });
 
-  final String name;
-  final String url;
+  final String? name;
+  final String? url;
 
   factory MediaModel.fromJson(Map<String, dynamic> json) => MediaModel(
         name: json['name'],

@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,8 @@ import 'package:provider/provider.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class DoctorTimeSlotWidget extends StatefulWidget {
-  Past doc;
-  ValueChanged<String> onChanged;
+  Past? doc;
+  ValueChanged<String>? onChanged;
 
   DoctorTimeSlotWidget({this.doc, this.onChanged});
 
@@ -24,12 +25,12 @@ class DoctorTimeSlotWidget extends StatefulWidget {
 }
 
 class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
-  Timer timer;
-  String hour;
-  String minutes;
-  String days;
-  Time time;
-  AppointmentsListViewModel appointmentsViewModel;
+  late Timer timer;
+  String? hour;
+  String? minutes;
+  String? days;
+  Time? time;
+  late AppointmentsListViewModel appointmentsViewModel;
 
   @override
   void dispose() {
@@ -44,16 +45,16 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
     appointmentsViewModel =
         Provider.of<AppointmentsListViewModel>(context, listen: false);
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      if (widget.doc.plannedStartDateTime != null) {
+      if (widget.doc!.plannedStartDateTime != null) {
         setState(() {
           hour = appointmentsViewModel
-              .getTimeSlot(widget.doc.plannedStartDateTime)
+              .getTimeSlot(widget.doc!.plannedStartDateTime!)
               .hours;
           minutes = appointmentsViewModel
-              .getTimeSlot(widget.doc.plannedStartDateTime)
+              .getTimeSlot(widget.doc!.plannedStartDateTime!)
               .minutes;
           days = appointmentsViewModel
-              .getTimeSlot(widget.doc.plannedStartDateTime)
+              .getTimeSlot(widget.doc!.plannedStartDateTime!)
               .daysCount;
         });
       } else {
@@ -72,7 +73,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
     return days != Constants.ZERO && days != null
         ? TextWidget(
             fontsize: 12.0.sp,
-            text: days + TranslationConstants.days.t(),
+            text: days! + TranslationConstants.days.t(),
             fontWeight: FontWeight.w500,
             colors: Colors.black,
           )

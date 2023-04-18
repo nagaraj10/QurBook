@@ -1,3 +1,4 @@
+
 import 'RefrenceValueMeta.dart';
 import '../../constants/fhb_parameters.dart' as param;
 
@@ -7,8 +8,8 @@ class BodyTemperature {
     this.entities,
   });
 
-  bool isSuccess;
-  List<BodyTemperatureEntity> entities;
+  bool? isSuccess;
+  List<BodyTemperatureEntity>? entities;
 
   factory BodyTemperature.fromJson(Map<String, dynamic> json) =>
       BodyTemperature(
@@ -19,7 +20,7 @@ class BodyTemperature {
 
   Map<String, dynamic> toJson() => {
         param.is_Success: isSuccess,
-        param.strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
+        param.strentities: List<dynamic>.from(entities!.map((x) => x.toJson())),
       };
 }
 
@@ -35,12 +36,12 @@ class BodyTemperatureEntity {
       this.averageAsOfNow});
 
   // String id;
-  DateTime startDateTime;
-  DateTime endDateTime;
-  String temperature;
-  RefrenceValueMeta temperatureUnit;
-  DeviceHealthRecord deviceHealthRecord;
-  AverageAsOfNow averageAsOfNow;
+  DateTime? startDateTime;
+  DateTime? endDateTime;
+  String? temperature;
+  RefrenceValueMeta? temperatureUnit;
+  DeviceHealthRecord? deviceHealthRecord;
+  AverageAsOfNow? averageAsOfNow;
 
   factory BodyTemperatureEntity.fromJson(Map<String, dynamic> json) =>
       BodyTemperatureEntity(
@@ -61,18 +62,18 @@ class BodyTemperatureEntity {
 
   Map<String, dynamic> toJson() => {
         // "id": id,
-        param.strsyncStartDate: startDateTime.toIso8601String(),
-        param.strsyncEndDate: endDateTime.toIso8601String(),
+        param.strsyncStartDate: startDateTime!.toIso8601String(),
+        param.strsyncEndDate: endDateTime!.toIso8601String(),
         param.strParamTemp: temperature,
-        param.strParamTempUnit: temperatureUnit.toJson(),
-        param.strParamDeviceHealthRecord: deviceHealthRecord.toJson(),
-        param.strParamAverageAsOfNow: averageAsOfNow.toJson(),
+        param.strParamTempUnit: temperatureUnit!.toJson(),
+        param.strParamDeviceHealthRecord: deviceHealthRecord!.toJson(),
+        param.strParamAverageAsOfNow: averageAsOfNow!.toJson(),
       };
 }
 
 class DeviceHealthRecord {
-  SourceType sourceType;
-  DateTime createdOn;
+  SourceType? sourceType;
+  DateTime? createdOn;
 
   DeviceHealthRecord({this.sourceType, this.createdOn});
 
@@ -86,9 +87,9 @@ class DeviceHealthRecord {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (sourceType != null) {
-      data['sourceType'] = sourceType.toJson();
+      data['sourceType'] = sourceType!.toJson();
     }
-    data[param.strCreatedOn] = createdOn.toIso8601String();
+    data[param.strCreatedOn] = createdOn!.toIso8601String();
 
     return data;
   }
@@ -111,7 +112,7 @@ class AverageAsOfNow {
 }
 
 class SourceType {
-  String code;
+  String? code;
 
   SourceType({this.code});
 

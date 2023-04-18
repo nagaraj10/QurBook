@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -33,29 +34,29 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 // ignore: must_be_immutable
 class CallMainMakeCall extends StatelessWidget {
   /// non-modifiable channel name of the page
-  final String channelName;
+  final String? channelName;
 
   /// non-modifiable client role of the page
-  final ClientRole role;
+  final ClientRole? role;
 
-  final String bookId;
-  final String patName;
-  final String patId;
-  final String patDOB;
-  final String patPicUrl;
+  final String? bookId;
+  final String? patName;
+  final String? patId;
+  final String? patDOB;
+  final String? patPicUrl;
 
-  final String appointmentId;
-  final String healthOrganizationId;
-  final String gender;
-  final HealthRecord healthRecords;
+  final String? appointmentId;
+  final String? healthOrganizationId;
+  final String? gender;
+  final HealthRecord? healthRecords;
   final dynamic slotDuration;
 
-  User patienInfo;
-  bool isFromAppointment;
-  String startedTime;
+  User? patienInfo;
+  bool? isFromAppointment;
+  String? startedTime;
   var isDoctor;
   CallMainMakeCall({
-    Key key,
+    Key? key,
     this.channelName,
     this.role,
     this.bookId,
@@ -74,22 +75,22 @@ class CallMainMakeCall extends StatelessWidget {
     this.isDoctor,
   }) : super(key: key);
 
-  BuildContext globalContext;
+  late BuildContext globalContext;
 
   final call_start_time = DateFormat(c_yMd_Hms).format(DateTime.now());
 
   bool _isFirstTime = true;
   bool _isMute = false;
   bool _isVideoHide = false;
-  String doctor_id, mtTitle = '', specialityName = '';
-  String userIdForNotify = '';
+  String? doctor_id, mtTitle = '', specialityName = '';
+  String? userIdForNotify = '';
   PreferenceUtil prefs = new PreferenceUtil();
   var regController = Get.find<QurhomeRegimenController>();
   bool _isTimerRun = true;
 
   void listenForVideoCallRequest() {
     var rtcProvider =
-        Provider.of<RTCEngineProvider>(Get.context, listen: false);
+        Provider.of<RTCEngineProvider>(Get.context!, listen: false);
     try {
       VideoCallCommonUtils()
           .myDB
@@ -162,23 +163,23 @@ class CallMainMakeCall extends StatelessWidget {
                                       .update(newStatus.toMap());
                                 return;
                               } else {
-                                await rtcProvider?.rtcEngine?.enableVideo();
-                                await rtcProvider?.rtcEngine
+                                await rtcProvider.rtcEngine?.enableVideo();
+                                await rtcProvider.rtcEngine
                                     ?.enableLocalVideo(true);
-                                await rtcProvider?.rtcEngine
+                                await rtcProvider.rtcEngine
                                     ?.muteLocalVideoStream(false);
-                                Provider?.of<HideProvider>(Get.context,
+                                Provider.of<HideProvider>(Get.context!,
                                         listen: false)
-                                    ?.swithToVideo();
-                                Provider.of<AudioCallProvider>(Get.context,
+                                    .swithToVideo();
+                                Provider.of<AudioCallProvider>(Get.context!,
                                         listen: false)
-                                    ?.disableAudioCall();
-                                Provider?.of<VideoIconProvider>(Get.context,
+                                    .disableAudioCall();
+                                Provider.of<VideoIconProvider>(Get.context!,
                                         listen: false)
-                                    ?.turnOnVideo();
-                                Provider.of<RTCEngineProvider>(Get.context,
+                                    .turnOnVideo();
+                                Provider.of<RTCEngineProvider>(Get.context!,
                                         listen: false)
-                                    ?.changeLocalVideoStatus(false);
+                                    .changeLocalVideoStatus(false);
                                 var newStatus = VideoCallStatus();
                                 newStatus.setDefaultValues();
                                 newStatus.acceptedByMobile = 1;
@@ -203,7 +204,7 @@ class CallMainMakeCall extends StatelessWidget {
           } else if (recStatus.videoRequestFromMobile == 0 ||
               recStatus.videoRequestFromWeb == 0) {
             // need to dismiss if the video request pop is shown
-            if (Get.isDialogOpen) {
+            if (Get.isDialogOpen!) {
               Get.back();
               Get.rawSnackbar(
                 messageText: Center(
@@ -224,17 +225,17 @@ class CallMainMakeCall extends StatelessWidget {
               );
             }
             final audioStatus =
-                Provider.of<AudioCallProvider>(Get.context, listen: false);
-            if (!(audioStatus.isAudioCall ?? false)) {
-              await rtcProvider?.rtcEngine?.disableVideo();
-              await rtcProvider?.rtcEngine?.enableLocalVideo(false);
-              await rtcProvider?.rtcEngine?.muteLocalVideoStream(true);
-              Provider?.of<HideProvider>(Get.context, listen: false)
-                  ?.swithToAudio();
-              Provider.of<AudioCallProvider>(Get.context, listen: false)
-                  ?.enableAudioCall();
-              Provider?.of<VideoIconProvider>(Get.context, listen: false)
-                  ?.turnOffVideo();
+                Provider.of<AudioCallProvider>(Get.context!, listen: false);
+            if (!(audioStatus.isAudioCall)) {
+              await rtcProvider.rtcEngine?.disableVideo();
+              await rtcProvider.rtcEngine?.enableLocalVideo(false);
+              await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
+              Provider.of<HideProvider>(Get.context!, listen: false)
+                  .swithToAudio();
+              Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                  .enableAudioCall();
+              Provider.of<VideoIconProvider>(Get.context!, listen: false)
+                  .turnOffVideo();
             }
           } else if (recStatus.acceptedByMobile == 1 ||
               recStatus.acceptedByWeb == 1) {
@@ -242,20 +243,20 @@ class CallMainMakeCall extends StatelessWidget {
             if (CommonUtil.isVideoRequestSent) {
               CommonUtil.isVideoRequestSent = false;
               Get.back();
-              Provider?.of<HideProvider>(Get.context, listen: false)
-                  ?.swithToVideo();
-              Provider.of<AudioCallProvider>(Get.context, listen: false)
-                  ?.disableAudioCall();
-              Provider?.of<VideoIconProvider>(Get.context, listen: false)
-                  ?.turnOnVideo();
-              Provider.of<RTCEngineProvider>(Get.context, listen: false)
-                  ?.changeLocalVideoStatus(false);
+              Provider.of<HideProvider>(Get.context!, listen: false)
+                  .swithToVideo();
+              Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                  .disableAudioCall();
+              Provider.of<VideoIconProvider>(Get.context!, listen: false)
+                  .turnOnVideo();
+              Provider.of<RTCEngineProvider>(Get.context!, listen: false)
+                  .changeLocalVideoStatus(false);
             }
           } else if (recStatus.acceptedByMobile == 0 ||
               recStatus.acceptedByWeb == 0) {
             // video call request is reject on patient end
             CommonUtil.isVideoRequestSent = false;
-            if (Get.isDialogOpen) {
+            if (Get.isDialogOpen!) {
               Get.back();
               Get.rawSnackbar(
                 messageText: Center(
@@ -274,9 +275,9 @@ class CallMainMakeCall extends StatelessWidget {
                 ),
                 backgroundColor: Colors.red.shade400,
               );
-              await rtcProvider?.rtcEngine?.disableVideo();
-              await rtcProvider?.rtcEngine?.enableLocalVideo(false);
-              await rtcProvider?.rtcEngine?.muteLocalVideoStream(true);
+              await rtcProvider.rtcEngine?.disableVideo();
+              await rtcProvider.rtcEngine?.enableLocalVideo(false);
+              await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
             }
           }
         },
@@ -298,15 +299,15 @@ class CallMainMakeCall extends StatelessWidget {
   Widget build(BuildContext context) {
     final hideStatus = Provider.of<HideProvider>(context, listen: false);
     final videoIconStatus =
-        Provider.of<VideoIconProvider>(Get.context, listen: false);
+        Provider.of<VideoIconProvider>(Get.context!, listen: false);
     globalContext = context;
 
     final audioCallStatus =
         Provider.of<AudioCallProvider>(context, listen: false);
-    videoIconStatus?.isVideoOn = audioCallStatus?.isAudioCall ? false : true;
+    videoIconStatus.isVideoOn = audioCallStatus.isAudioCall ? false : true;
 
     /// hide controller after 5 secs
-    if (audioCallStatus?.isAudioCall) {
+    if (audioCallStatus.isAudioCall) {
       //if audio call do not hide status bar
       hideStatus.showMe();
     } else {
@@ -332,7 +333,7 @@ class CallMainMakeCall extends StatelessWidget {
               Text(
                 regController.isFromSOS.value
                     ? emergencyServices
-                    : patName,
+                    : patName!,
                 style: TextStyle(
                   color: regController.isFromSOS.value
                       ? Colors.red:Colors.white,
@@ -459,7 +460,7 @@ class CallMainMakeCall extends StatelessWidget {
                   try {
                     if (status.isAudioSwitchToVideo >= 0) {
                       _isVideoHide =
-                          status?.isAudioSwitchToVideo == 0 ? true : false;
+                          status.isAudioSwitchToVideo == 0 ? true : false;
                       hideStatus.isAudioSwitchToVideo = -1;
                     }
                   } catch (e) {
@@ -519,7 +520,7 @@ class CallMainMakeCall extends StatelessWidget {
   }
 
   Future<bool> _onBackPressed() {
-    return userAlert() ?? false;
+    return userAlert().then((value) => value as bool);
   }
 
   void prepareMyData() async {
@@ -586,7 +587,7 @@ class CallMainMakeCall extends StatelessWidget {
                     onPressed: () {
                       prepareMyData();
                       try {
-                        if (!isFromAppointment) callApiToUpdateNonAppointment();
+                        if (!isFromAppointment!) callApiToUpdateNonAppointment();
                       } catch (e) {}
                       VideoCallCommonUtils().terminate(
                           appsID: appointmentId,

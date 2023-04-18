@@ -1,12 +1,13 @@
+
 class UserRelationshipCollection {
-  String id;
-  String status;
-  String nickName;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  Parent parent;
-  Relationship relationship;
+  String? id;
+  String? status;
+  String? nickName;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  Parent? parent;
+  Relationship? relationship;
 
   UserRelationshipCollection(
       {this.id,
@@ -41,44 +42,44 @@ class UserRelationshipCollection {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (parent != null) {
-      data['parent'] = parent.toJson();
+      data['parent'] = parent!.toJson();
     }
     if (relationship != null) {
-      data['relationship'] = relationship.toJson();
+      data['relationship'] = relationship!.toJson();
     }
     return data;
   }
 }
 
 class Parent {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
-  bool communicationPreferences;
-  bool medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  String providerId;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
+  bool? communicationPreferences;
+  bool? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  String? providerId;
 
   Parent(
       {this.id,
@@ -176,15 +177,15 @@ class Parent {
 }
 
 class Relationship {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   Relationship(
       {this.id,

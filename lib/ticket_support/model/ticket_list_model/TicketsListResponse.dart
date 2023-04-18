@@ -1,3 +1,4 @@
+
 import 'Members.dart';
 import 'SendMailTo.dart';
 import 'attachments.dart';
@@ -6,13 +7,13 @@ import 'notes.dart';
 import 'AdditionalInfo.dart';
 
 class TicketsListResponse {
-  bool success;
-  List<Tickets> tickets;
-  int count;
-  int totalCount;
-  int page;
-  int prevPage;
-  int nextPage;
+  bool? success;
+  List<Tickets>? tickets;
+  int? count;
+  int? totalCount;
+  int? page;
+  int? prevPage;
+  int? nextPage;
 
   TicketsListResponse(
       {this.success,
@@ -26,9 +27,9 @@ class TicketsListResponse {
   TicketsListResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     if (json['tickets'] != null) {
-      tickets = new List<Tickets>();
+      tickets = <Tickets>[];
       json['tickets'].forEach((v) {
-        tickets.add(new Tickets.fromJson(v));
+        tickets!.add(new Tickets.fromJson(v));
       });
     }
     count = json['count'];
@@ -42,7 +43,7 @@ class TicketsListResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['success'] = this.success;
     if (this.tickets != null) {
-      data['tickets'] = this.tickets.map((v) => v.toJson()).toList();
+      data['tickets'] = this.tickets!.map((v) => v.toJson()).toList();
     }
     data['count'] = this.count;
     data['totalCount'] = this.totalCount;
@@ -54,28 +55,28 @@ class TicketsListResponse {
 }
 
 class Tickets {
-  bool deleted;
-  int status;
-  List<Tags> tags;
-  List<Subscribers> subscribers;
-  String sId;
-  Subscribers owner;
-  String subject;
-  Group group;
-  Type type;
-  Priority priority;
-  String issue;
-  Subscribers assignee;
-  String date;
-  String preferredDate;
-  List<Comments> comments;
-  List<Notes> notes;
-  List<Attachments> attachments;
-  AdditionalInfo additionalInfo;
+  bool? deleted;
+  int? status;
+  List<Tags>? tags;
+  List<Subscribers>? subscribers;
+  String? sId;
+  Subscribers? owner;
+  String? subject;
+  Group? group;
+  Type? type;
+  Priority? priority;
+  String? issue;
+  Subscribers? assignee;
+  String? date;
+  String? preferredDate;
+  List<Comments>? comments;
+  List<Notes>? notes;
+  List<Attachments>? attachments;
+  AdditionalInfo? additionalInfo;
 
-  List<History> history;
-  int uid;
-  int iV;
+  List<History>? history;
+  int? uid;
+  int? iV;
 
   Tickets(
       {this.deleted,
@@ -104,15 +105,15 @@ class Tickets {
     deleted = json['deleted'];
     status = json['status'];
     if (json['tags'] != null) {
-      tags = new List<Tags>();
+      tags = <Tags>[];
       json['tags'].forEach((v) {
-        tags.add(new Tags.fromJson(v));
+        tags!.add(new Tags.fromJson(v));
       });
     }
     if (json['subscribers'] != null) {
-      subscribers = new List<Subscribers>();
+      subscribers = <Subscribers>[];
       json['subscribers'].forEach((v) {
-        subscribers.add(new Subscribers.fromJson(v));
+        subscribers!.add(new Subscribers.fromJson(v));
       });
     }
     sId = json['_id'];
@@ -131,21 +132,21 @@ class Tickets {
     date = json['date'];
     preferredDate = json['preferredDate'];
     if (json['comments'] != null) {
-      comments = new List<Comments>();
+      comments = <Comments>[];
       json['comments'].forEach((v) {
-        comments.add(new Comments.fromJson(v));
+        comments!.add(new Comments.fromJson(v));
       });
     }
     if (json['notes'] != null) {
-      notes = new List<Notes>();
+      notes = <Notes>[];
       json['notes'].forEach((v) {
-        notes.add(new Notes.fromJson(v));
+        notes!.add(new Notes.fromJson(v));
       });
     }
     if (json['attachments'] != null) {
-      attachments = new List<Attachments>();
+      attachments = <Attachments>[];
       json['attachments'].forEach((v) {
-        attachments.add(new Attachments.fromJson(v));
+        attachments!.add(new Attachments.fromJson(v));
       });
     }
 
@@ -154,9 +155,9 @@ class Tickets {
         : null;
 
     if (json['history'] != null) {
-      history = new List<History>();
+      history = <History>[];
       json['history'].forEach((v) {
-        history.add(new History.fromJson(v));
+        history!.add(new History.fromJson(v));
       });
     }
     uid = json['uid'];
@@ -168,45 +169,45 @@ class Tickets {
     data['deleted'] = this.deleted;
     data['status'] = this.status;
     if (this.tags != null) {
-      data['tags'] = this.tags.map((v) => v.toJson()).toList();
+      data['tags'] = this.tags!.map((v) => v.toJson()).toList();
     }
     if (this.subscribers != null) {
-      data['subscribers'] = this.subscribers.map((v) => v.toJson()).toList();
+      data['subscribers'] = this.subscribers!.map((v) => v.toJson()).toList();
     }
     data['_id'] = this.sId;
     if (this.owner != null) {
-      data['owner'] = this.owner.toJson();
+      data['owner'] = this.owner!.toJson();
     }
     data['subject'] = this.subject;
     if (this.group != null) {
-      data['group'] = this.group.toJson();
+      data['group'] = this.group!.toJson();
     }
     if (this.type != null) {
-      data['type'] = this.type.toJson();
+      data['type'] = this.type!.toJson();
     }
     if (this.priority != null) {
-      data['priority'] = this.priority.toJson();
+      data['priority'] = this.priority!.toJson();
     }
     data['issue'] = this.issue;
     if (this.assignee != null) {
-      data['assignee'] = this.assignee.toJson();
+      data['assignee'] = this.assignee!.toJson();
     }
     data['date'] = this.date;
     data['preferredDate'] = this.preferredDate;
     if (this.comments != null) {
-      data['comments'] = this.comments.map((v) => v.toJson()).toList();
+      data['comments'] = this.comments!.map((v) => v.toJson()).toList();
     }
     if (this.notes != null) {
-      data['notes'] = this.notes.map((v) => v.toJson()).toList();
+      data['notes'] = this.notes!.map((v) => v.toJson()).toList();
     }
     if (this.attachments != null) {
-      data['attachments'] = this.attachments.map((v) => v.toJson()).toList();
+      data['attachments'] = this.attachments!.map((v) => v.toJson()).toList();
     }
     if (this.history != null) {
-      data['history'] = this.history.map((v) => v.toJson()).toList();
+      data['history'] = this.history!.map((v) => v.toJson()).toList();
     }
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo!.toJson();
     }
     data['uid'] = this.uid;
     data['__v'] = this.iV;
@@ -215,7 +216,7 @@ class Tickets {
 }
 
 class Tags {
-  String id;
+  String? id;
 
   Tags({this.id});
 
@@ -231,12 +232,12 @@ class Tags {
 }
 
 class Subscribers {
-  String sId;
-  String username;
-  String fullname;
-  String email;
-  Role role;
-  String title;
+  String? sId;
+  String? username;
+  String? fullname;
+  String? email;
+  Role? role;
+  String? title;
 
   Subscribers(
       {this.sId,
@@ -262,7 +263,7 @@ class Subscribers {
     data['fullname'] = this.fullname;
     data['email'] = this.email;
     if (this.role != null) {
-      data['role'] = this.role.toJson();
+      data['role'] = this.role!.toJson();
     }
     data['title'] = this.title;
     return data;
@@ -270,12 +271,12 @@ class Subscribers {
 }
 
 class Role {
-  String sId;
-  String name;
-  String description;
-  String normalized;
-  bool isAdmin;
-  bool isAgent;
+  String? sId;
+  String? name;
+  String? description;
+  String? normalized;
+  bool? isAdmin;
+  bool? isAgent;
 
   Role(
       {this.sId,
@@ -307,19 +308,19 @@ class Role {
 }
 
 class Group {
-  List<Members> members;
-  List<String> sendMailTo;
-  bool public;
-  String sId;
-  String name;
+  List<Members>? members;
+  List<String>? sendMailTo;
+  bool? public;
+  String? sId;
+  String? name;
 
   Group({this.members, this.sendMailTo, this.public, this.sId, this.name});
 
   Group.fromJson(Map<String, dynamic> json) {
     if (json['members'] != null) {
-      members = new List<Members>();
+      members = <Members>[];
       json['members'].forEach((v) {
-        members.add(new Members.fromJson(v));
+        members!.add(new Members.fromJson(v));
       });
     }
     sendMailTo = json['sendMailTo'].cast<String>();
@@ -331,7 +332,7 @@ class Group {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.members != null) {
-      data['members'] = this.members.map((v) => v.toJson()).toList();
+      data['members'] = this.members!.map((v) => v.toJson()).toList();
     }
     if (this.sendMailTo != null) {
       data['sendMailTo'] = this.sendMailTo;
@@ -344,18 +345,18 @@ class Group {
 }
 
 class Type {
-  List<Priorities> priorities;
-  String sId;
-  String name;
-  int iV;
+  List<Priorities>? priorities;
+  String? sId;
+  String? name;
+  int? iV;
 
   Type({this.priorities, this.sId, this.name, this.iV});
 
   Type.fromJson(Map<String, dynamic> json) {
     if (json['priorities'] != null) {
-      priorities = new List<Priorities>();
+      priorities = <Priorities>[];
       json['priorities'].forEach((v) {
-        priorities.add(new Priorities.fromJson(v));
+        priorities!.add(new Priorities.fromJson(v));
       });
     }
     sId = json['_id'];
@@ -366,7 +367,7 @@ class Type {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.priorities != null) {
-      data['priorities'] = this.priorities.map((v) => v.toJson()).toList();
+      data['priorities'] = this.priorities!.map((v) => v.toJson()).toList();
     }
     data['_id'] = this.sId;
     data['name'] = this.name;
@@ -376,13 +377,13 @@ class Type {
 }
 
 class Priorities {
-  int overdueIn;
-  String htmlColor;
-  String sId;
-  String name;
-  int migrationNum;
-  bool defaultBool;
-  String durationFormatted;
+  int? overdueIn;
+  String? htmlColor;
+  String? sId;
+  String? name;
+  int? migrationNum;
+  bool? defaultBool;
+  String? durationFormatted;
 
   Priorities(
       {this.overdueIn,
@@ -417,14 +418,14 @@ class Priorities {
 }
 
 class Priority {
-  int overdueIn;
-  String htmlColor;
-  String sId;
-  String name;
-  int migrationNum;
-  bool defaultBool;
-  int iV;
-  String durationFormatted;
+  int? overdueIn;
+  String? htmlColor;
+  String? sId;
+  String? name;
+  int? migrationNum;
+  bool? defaultBool;
+  int? iV;
+  String? durationFormatted;
 
   Priority(
       {this.overdueIn,
@@ -462,11 +463,11 @@ class Priority {
 }
 
 class History {
-  String sId;
-  String action;
-  String description;
-  Subscribers owner;
-  String date;
+  String? sId;
+  String? action;
+  String? description;
+  Subscribers? owner;
+  String? date;
 
   History({this.sId, this.action, this.description, this.owner, this.date});
 
@@ -485,7 +486,7 @@ class History {
     data['action'] = this.action;
     data['description'] = this.description;
     if (this.owner != null) {
-      data['owner'] = this.owner.toJson();
+      data['owner'] = this.owner!.toJson();
     }
     data['date'] = this.date;
     return data;

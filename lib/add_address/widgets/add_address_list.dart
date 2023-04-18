@@ -1,4 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
+
+// import 'package:auto_size_text/auto_size_text.dart'; FU2.5
 import 'package:flutter/material.dart';
 import '../models/place.dart';
 import '../services/google_map_service.dart';
@@ -10,8 +11,8 @@ import '../../constants/router_variable.dart' as router;
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class AddAddressList extends StatefulWidget {
-  List<Place> placesListArray;
-  String providerType;
+  List<Place>? placesListArray;
+  String? providerType;
 
   AddAddressList({this.placesListArray, this.providerType});
 
@@ -23,11 +24,11 @@ class AddAddressList extends StatefulWidget {
 
 class AddAddressListState extends State<AddAddressList> {
   bool keyboardIsOpen = false;
-  var googleMapServices;
+  late var googleMapServices;
   var sessionToken;
   var uuid = Uuid();
 
-  Future<PlaceDetail> futurePlaceDetail;
+  Future<PlaceDetail>? futurePlaceDetail;
 
   @override
   void initState() {
@@ -42,7 +43,7 @@ class AddAddressListState extends State<AddAddressList> {
   Widget buildGooglePlacesList() {
     return ListView.builder(
       itemBuilder: (context, index) {
-        var eachPlaceModel = widget.placesListArray[index];
+        var eachPlaceModel = widget.placesListArray![index];
         return InkWell(
           onTap: () {
             sessionToken ??= uuid.v4();
@@ -52,7 +53,7 @@ class AddAddressListState extends State<AddAddressList> {
               sessionToken,
             );
 
-            futurePlaceDetail.then((value) {
+            futurePlaceDetail!.then((value) {
               Navigator.pushNamed(
                 context,
                 router.rt_ConfirmLocation,
@@ -86,8 +87,9 @@ class AddAddressListState extends State<AddAddressList> {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      AutoSizeText(
-                        eachPlaceModel.title,
+                     //  AutoSizeText( FU2.5
+                     Text( // FU2.5
+                        eachPlaceModel.title!,
                         maxLines: 1,
                         style: TextStyle(
                           fontSize: 16.0.sp,
@@ -95,12 +97,13 @@ class AddAddressListState extends State<AddAddressList> {
                           color: ColorUtils.blackcolor,
                         ),
                         textAlign: TextAlign.start,
-                      ),
+                      ), 
                       SizedBox(
                         height: 3.0.h,
                       ),
-                      AutoSizeText(
-                        eachPlaceModel.description,
+                     // AutoSizeText( FU2.5
+                     Text( //FU2.5
+                        eachPlaceModel.description!,
                         maxLines: 1,
                         style: TextStyle(
                           fontSize: 15.0.sp,
@@ -124,7 +127,7 @@ class AddAddressListState extends State<AddAddressList> {
           ),
         );
       },
-      itemCount: widget.placesListArray.length,
+      itemCount: widget.placesListArray!.length,
     );
   }
 }

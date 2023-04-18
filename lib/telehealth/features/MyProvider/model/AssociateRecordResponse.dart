@@ -1,8 +1,9 @@
+
 class AssociateRecordsResponse {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   AssociateRecordsResponse(
       {this.status, this.success, this.message, this.response});
@@ -22,24 +23,24 @@ class AssociateRecordsResponse {
     data['success'] = this.success;
     data['message'] = this.message;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  int count;
-  List<Data> data;
+  int? count;
+  List<Data>? data;
 
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
     count = json['count'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      data = <Data>[];
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data!.add(new Data.fromJson(v));
       });
     }
   }
@@ -48,16 +49,16 @@ class Response {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['count'] = this.count;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Data {
-  String mediaMetaId;
-  bool success;
-  AssociateData data;
+  String? mediaMetaId;
+  bool? success;
+  AssociateData? data;
 
   Data({this.mediaMetaId, this.success, this.data});
 
@@ -73,16 +74,16 @@ class Data {
     data['mediaMetaId'] = this.mediaMetaId;
     data['success'] = this.success;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class AssociateData {
-  String id;
-  bool isActive;
-  String approvedOn;
+  String? id;
+  bool? isActive;
+  String? approvedOn;
 
   AssociateData({this.id, this.isActive, this.approvedOn});
 

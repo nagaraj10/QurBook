@@ -1,16 +1,17 @@
+
 class ClaimExpiryAdditionalInfo {
-  String remarks;
-  String planTags;
-  int actualFee;
-  bool isRenewal;
-  String paymentId;
-  String planEndDate;
-  bool isTerminated;
-  String planStartDate;
-  int packageDuration;
-  String terminationDate;
-  String prescribedDoctor;
-  String planPackageCategoryName;
+  String? remarks;
+  String? planTags;
+  int? actualFee;
+  bool? isRenewal;
+  String? paymentId;
+  String? planEndDate;
+  bool? isTerminated;
+  String? planStartDate;
+  int? packageDuration;
+  String? terminationDate;
+  String? prescribedDoctor;
+  String? planPackageCategoryName;
 
   ClaimExpiryAdditionalInfo(
       {this.remarks,

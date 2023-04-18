@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -28,12 +29,12 @@ import '../../../constants/router_variable.dart' as router;
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer(
-      {@required this.myProfile,
-      @required this.moveToLoginPage,
-      @required this.refresh,
-      @required this.userChangedbool});
+      {required this.myProfile,
+      required this.moveToLoginPage,
+      required this.refresh,
+      required this.userChangedbool});
 
-  final MyProfileModel myProfile;
+  final MyProfileModel? myProfile;
   final Function moveToLoginPage;
   final Function(bool userChanged) refresh;
   final bool userChangedbool;
@@ -43,7 +44,7 @@ class NavigationDrawer extends StatelessWidget {
     // print('*********************************');
     // print(userChangedbool);
     return Container(
-      width: CommonUtil().isTablet
+      width: CommonUtil().isTablet!
           ? MediaQuery.of(context).size.width * 0.75
           : null,
       child: Drawer(
@@ -70,8 +71,8 @@ class NavigationDrawer extends StatelessWidget {
                           children: [
                             AssetImageWidget(
                               icon: myFHB_logo,
-                              height: CommonUtil().isTablet ? 110.0.h : 100.0.h,
-                              width: CommonUtil().isTablet ? 110.0.h : 100.0.h,
+                              height: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
+                              width: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
                             ),
                             SizedBox(
                               height: 20.0.h,
@@ -80,9 +81,9 @@ class NavigationDrawer extends StatelessWidget {
                               children: [
                                 Container(
                                   height:
-                                      CommonUtil().isTablet ? 75.0.h : 70.0.h,
+                                      CommonUtil().isTablet! ? 75.0.h : 70.0.h,
                                   width:
-                                      CommonUtil().isTablet ? 75.0.h : 70.0.h,
+                                      CommonUtil().isTablet! ? 75.0.h : 70.0.h,
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                   ),
@@ -347,7 +348,7 @@ class NavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () {
                           FHBBasicWidget().exitApp(context, () {
-                            CommonUtil().logout(moveToLoginPage);
+                            CommonUtil().logout(moveToLoginPage as dynamic Function());
                           });
                         },
                       ),
@@ -364,20 +365,20 @@ class NavigationDrawer extends StatelessWidget {
 
   Widget getNameWidget() {
     MyProfileModel myProfile;
-    var name = "";
-    var phoneNumber = "";
+    String? name = "";
+    String? phoneNumber = "";
 
     try {
-      myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
-      name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
-              myProfile?.result?.name != '')
-          ? myProfile?.result?.name?.capitalizeFirstofEach
-          : myProfile?.result?.firstName != null &&
-                  myProfile?.result?.lastName != null
-              ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
+      myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
+      name = toBeginningOfSentenceCase((myProfile.result?.name != null &&
+              myProfile.result?.name != '')
+          ? myProfile.result?.name?.capitalizeFirstofEach
+          : myProfile.result?.firstName != null &&
+                  myProfile.result?.lastName != null
+              ? ('${myProfile.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile.result?.lastName?.capitalizeFirstofEach}')
               : '');
-      phoneNumber = (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
-          ? myProfile?.result?.userContactCollection3[0].phoneNumber
+      phoneNumber = (myProfile.result?.userContactCollection3?.length ?? 0) > 0
+          ? myProfile.result?.userContactCollection3![0]!.phoneNumber
           : '';
     } catch (e) {
       //print(e);
@@ -389,7 +390,7 @@ class NavigationDrawer extends StatelessWidget {
           text: name,
           style: TextStyle(
             color: Colors.black,
-            fontSize: CommonUtil().isTablet ? 20.0.sp : 18.0.sp,
+            fontSize: CommonUtil().isTablet! ? 20.0.sp : 18.0.sp,
           ),
           children: ((phoneNumber != null && phoneNumber != ''))
               ? [
@@ -397,7 +398,7 @@ class NavigationDrawer extends StatelessWidget {
                     text: '\n$phoneNumber',
                     style: TextStyle(
                       color: Colors.black54,
-                      fontSize: CommonUtil().isTablet ? 18.0.sp : 16.0.sp,
+                      fontSize: CommonUtil().isTablet! ? 18.0.sp : 16.0.sp,
                     ),
                   ),
                 ]

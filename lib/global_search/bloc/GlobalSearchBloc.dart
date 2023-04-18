@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../model/GlobalSearch.dart';
@@ -6,15 +7,15 @@ import '../../src/resources/network/ApiResponse.dart';
 import '../../constants/variable_constant.dart' as variable;
 
 class GlobalSearchBloc implements BaseBloc {
-  GlobalSearchrepository _globalSearchrepository;
+  late GlobalSearchrepository _globalSearchrepository;
 
   // 1
-  StreamController _globalSearchController;
+  StreamController? _globalSearchController;
 
   StreamSink<ApiResponse<GlobalSearch>> get globalSearchSink =>
-      _globalSearchController.sink;
+      _globalSearchController!.sink as StreamSink<ApiResponse<GlobalSearch>>;
   Stream<ApiResponse<GlobalSearch>> get globalSearchStream =>
-      _globalSearchController.stream;
+      _globalSearchController!.stream as Stream<ApiResponse<GlobalSearch>>;
 
   GlobalSearchBloc() {
     _globalSearchController = StreamController<ApiResponse<GlobalSearch>>();

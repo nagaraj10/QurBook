@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:io';
 
@@ -22,10 +23,10 @@ class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
   static const streamAppointment = EventChannel('ScheduleAppointment/stream');
-  StreamSubscription _appointmentSubscription;
-  HubListViewController hubController;
-  SheelaBLEController _sheelaBLEController;
-  Timer _bleTimer;
+  StreamSubscription? _appointmentSubscription;
+  late HubListViewController hubController;
+  late SheelaBLEController _sheelaBLEController;
+  Timer? _bleTimer=null;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
   var isLoading = false.obs;
   var isActive = false.obs;
@@ -51,7 +52,7 @@ class QurhomeDashboardController extends GetxController {
     super.onInit();
   }
 
-  setActiveQurhomeTo({bool status}) {
+  setActiveQurhomeTo({required bool status}) {
     PreferenceUtil.saveIfQurhomeisAcive(
       qurhomeStatus: status,
     );
@@ -96,9 +97,9 @@ class QurhomeDashboardController extends GetxController {
     MyProfileModel myProfile;
     String firstName = '';
     try {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE)!;
       firstName = myProfile.result != null
-          ? myProfile.result.firstName.capitalizeFirstofEach
+          ? myProfile.result!.firstName!.capitalizeFirstofEach
           : '';
     } catch (e) {}
     switch (currentSelectedIndex.value) {
@@ -126,18 +127,18 @@ class QurhomeDashboardController extends GetxController {
     _appointmentSubscription ??=
         streamAppointment.receiveBroadcastStream().listen((val) {
       print(val);
-      List<String> receivedValues = val.split('|');
+      List<String>? receivedValues = val.split('|');
       if ((receivedValues ?? []).length > 0) {
-        switch ((receivedValues.first ?? "")) {
+        switch ((receivedValues!.first)) {
           case "scheduleAppointment":
             if (isFirstTime) {
               isFirstTime = false;
               if (sheelaAIController.isSheelaScreenActive) {
                 var reqJson = {
                   KIOSK_task: KIOSK_appointment_avail,
-                  KIOSK_appoint_id: receivedValues[1] ?? ''.toString(),
-                  KIOSK_eid: receivedValues[2] ?? ''.toString(),
-                  KIOSK_say_text: receivedValues[3] ?? ''.toString(),
+                  KIOSK_appoint_id: receivedValues[1],
+                  KIOSK_eid: receivedValues[2],
+                  KIOSK_say_text: receivedValues[3],
                 };
                 CommonUtil().callQueueNotificationPostApi(reqJson);
               } else if (PreferenceUtil.getIfQurhomeisAcive()) {
@@ -167,7 +168,7 @@ class QurhomeDashboardController extends GetxController {
             redirectToSheelaScheduleAppointment();
           }
         }
-      });
+      } as Future<dynamic> Function(MethodCall)?);
     }
   }
 
@@ -180,26 +181,26 @@ class QurhomeDashboardController extends GetxController {
 
   updateModuleAccess(List<SelectionResult> selectionResult) {
     try {
-      for (var i = 0; i < selectionResult?.length; i++) {
-        if (selectionResult[i]?.primaryProvider != null) {
-          if (selectionResult[i]?.primaryProvider?.additionalInfo != null) {
+      for (var i = 0; i < selectionResult.length; i++) {
+        if (selectionResult[i].primaryProvider != null) {
+          if (selectionResult[i].primaryProvider?.additionalInfo != null) {
             if (selectionResult[i]
-                    ?.primaryProvider
+                    .primaryProvider
                     ?.additionalInfo
                     ?.moduleAccess !=
                 null) {
               for (var j = 0;
                   j <
                       selectionResult[i]
-                          ?.primaryProvider
-                          ?.additionalInfo
-                          ?.moduleAccess
+                          .primaryProvider
+                          !.additionalInfo
+                          !.moduleAccess!
                           .length;
                   j++) {
                 var isAccess = selectionResult[i]
-                        ?.primaryProvider
-                        ?.additionalInfo
-                        ?.moduleAccess[j]
+                        .primaryProvider
+                        !.additionalInfo
+                        !.moduleAccess![j]
                         .name ??
                     '';
                 if (isAccess == strVitalsModule) {

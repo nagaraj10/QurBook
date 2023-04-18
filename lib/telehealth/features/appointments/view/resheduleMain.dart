@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -8,12 +9,12 @@ import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppoin
 import 'package:provider/provider.dart';
 
 class ResheduleMain extends StatefulWidget {
-  Past doc;
-  bool isReshedule;
-  String bookId, id;
-  Function(String) closePage;
-  bool isFromNotification;
-  bool isFromFollowUpApp;
+  Past? doc;
+  bool? isReshedule;
+  String? bookId, id;
+  Function(String)? closePage;
+  bool? isFromNotification;
+  bool? isFromFollowUpApp;
   dynamic body;
   ResheduleMain(
       {this.doc, this.isReshedule, this.closePage, this.isFromNotification,this.isFromFollowUpApp,this.body});
@@ -44,7 +45,7 @@ class _ResheduleMainState extends State<ResheduleMain> {
         doc: widget.doc,
         isReshedule: widget.isReshedule,
         closePage: (value) {
-          widget.closePage(value);
+          widget.closePage!(value);
         },
         isFromNotification: widget.isFromNotification,
         isFromFollowUpApp: widget.isFromFollowUpApp,

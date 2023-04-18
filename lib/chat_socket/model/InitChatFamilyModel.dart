@@ -1,6 +1,7 @@
+
 class InitChatFamilyModel {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   InitChatFamilyModel({this.isSuccess, this.result});
 
@@ -14,14 +15,14 @@ class InitChatFamilyModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String chatListId;
+  String? chatListId;
 
   Result({this.chatListId});
 

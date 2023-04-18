@@ -1,3 +1,4 @@
+
 class OtpResponseModel {
   OtpResponseModel({
     this.isSuccess,
@@ -5,9 +6,9 @@ class OtpResponseModel {
     this.otpData,
   });
 
-  final bool isSuccess;
-  final String message;
-  final OtpModel otpData;
+  final bool? isSuccess;
+  final String? message;
+  final OtpModel? otpData;
 
   factory OtpResponseModel.fromJson(Map<String, dynamic> json) =>
       OtpResponseModel(
@@ -20,7 +21,7 @@ class OtpResponseModel {
   Map<String, dynamic> toJson() => {
         'isSuccess': isSuccess,
         'message': message,
-        'result': otpData.toJson(),
+        'result': otpData!.toJson(),
       };
 }
 
@@ -29,7 +30,7 @@ class OtpModel {
     this.otpCode,
   });
 
-  final String otpCode;
+  final String? otpCode;
 
   factory OtpModel.fromJson(Map<String, dynamic> json) => OtpModel(
         otpCode: json['code'],

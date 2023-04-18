@@ -1,9 +1,10 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class VirtualUserParent {
-  String countryCode;
-  String phoneNumber;
-  String email;
+  String? countryCode;
+  String? phoneNumber;
+  String? email;
 
   VirtualUserParent({this.countryCode, this.phoneNumber, this.email});
 

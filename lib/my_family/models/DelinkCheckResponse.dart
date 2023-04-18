@@ -1,6 +1,7 @@
+
 class DelinkCheckResponse {
-  bool isSuccess;
-  String message;
+  bool? isSuccess;
+  String? message;
 
   DelinkCheckResponse({this.isSuccess, this.message});
 

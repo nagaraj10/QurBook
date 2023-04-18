@@ -16,7 +16,7 @@ import 'dart:convert';
 
 class FetchNotificationService {
   final String _baseUrl = Constants.BASE_URL;
-  String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+  String? authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
   HeaderRequest headerRequest = new HeaderRequest();
   final ApiBaseHelper _helper = ApiBaseHelper();
@@ -50,7 +50,7 @@ class FetchNotificationService {
         headers: await headerRequest.getRequestHeadersAuthContent(),
         body: json.encode(body));
 
-    if (response.statusCode == 200) {
+    if (response!.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return null;
@@ -63,7 +63,7 @@ class FetchNotificationService {
         headers: await headerRequest.getRequestHeadersAuthContent(),
         body: json.encode(body));
 
-    if (response.statusCode == 200) {
+    if (response!.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return null;
@@ -80,7 +80,7 @@ class FetchNotificationService {
       body: json.encode(body),
     );
 
-    if (response.statusCode == 200) {
+    if (response!.statusCode == 200) {
       FlutterToast().getToast(
         'Deleted Notifications successfully.',
         Colors.green,
@@ -100,7 +100,7 @@ class FetchNotificationService {
         _baseUrl + in_app_unread + notificationListId,
         headers: await headerRequest.getRequestHeadersAuthContent());
 
-    if (response.statusCode == 200) {
+    if (response!.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return null;

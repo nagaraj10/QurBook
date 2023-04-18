@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:myfhb/add_provider_plan/model/AddProviderPlanResponse.dart';
 import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
@@ -11,7 +12,7 @@ import 'package:scroll_to_index/util.dart';
 
 class PlanProviderViewModel extends ChangeNotifier {
   AddProviderService _addProviderService = new AddProviderService();
-  List<Result> providerPlanResult;
+  List<Result>? providerPlanResult;
   bool hasSelectAllData = false;
 
   void updateBool(bool condition) {
@@ -22,13 +23,13 @@ class PlanProviderViewModel extends ChangeNotifier {
     });
   }
 
-  Future<ProviderOrganisationResponse> getCarePlanList(
+  Future<ProviderOrganisationResponse?> getCarePlanList(
       String selectedTag) async {
     try {
-      var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
       ProviderOrganisationResponse myPlanListModel = await _addProviderService
           .getUnassociatedProvider(userId, selectedTag);
-      if (myPlanListModel.isSuccess) {
+      if (myPlanListModel.isSuccess!) {
         providerPlanResult = myPlanListModel.result;
       } else {
         providerPlanResult = [];
@@ -38,7 +39,7 @@ class PlanProviderViewModel extends ChangeNotifier {
   }
 
   Future<AddProviderPlanResponse> addproviderPlan(
-      List<String> healthOrganization) async {
+      List<String?> healthOrganization) async {
     final addProvider = {};
 
     var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -52,10 +53,10 @@ class PlanProviderViewModel extends ChangeNotifier {
   }
 
   List<Result> getProviderSearch(String providerName) {
-    var filterDoctorData = List<Result>();
-    for (final doctorData in providerPlanResult) {
+    var filterDoctorData = <Result>[];
+    for (final doctorData in providerPlanResult!) {
       if (doctorData.name != null && doctorData.name != '') {
-        if (doctorData.name
+        if (doctorData.name!
             .toLowerCase()
             .trim()
             .contains(providerName.toLowerCase().trim())) {

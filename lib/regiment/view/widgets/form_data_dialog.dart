@@ -34,33 +34,33 @@ import 'media_icon_widget.dart';
 
 class FormDataDialog extends StatefulWidget {
   FormDataDialog(
-      {@required this.fieldsData,
-      @required this.eid,
-      @required this.color,
-      @required this.mediaData,
-      @required this.formTitle,
-      @required this.canEdit,
-      @required this.triggerAction,
-      @required this.introText,
+      {required this.fieldsData,
+      required this.eid,
+      required this.color,
+      required this.mediaData,
+      required this.formTitle,
+      required this.canEdit,
+      required this.triggerAction,
+      required this.introText,
       this.isFollowEvent,
       this.followEventContext,
       this.isFromQurHomeSymptom = false,
       this.isFromQurHomeRegimen = false,
       @required this.providerId});
 
-  final List<FieldModel> fieldsData;
-  final String eid;
+  final List<FieldModel>? fieldsData;
+  final String? eid;
   final Color color;
-  final Otherinfo mediaData;
-  final String formTitle;
+  final Otherinfo? mediaData;
+  final String? formTitle;
   final bool canEdit;
-  final Function(String eventId, String followContext, String activityName)
+  final Function(String? eventId, String? followContext, String? activityName)
       triggerAction;
-  final bool isFollowEvent;
+  final bool? isFollowEvent;
   final bool isFromQurHomeSymptom;
   final bool isFromQurHomeRegimen;
-  final String followEventContext;
-  final String providerId;
+  final String? followEventContext;
+  final String? providerId;
   final String introText;
 
   @override
@@ -68,10 +68,10 @@ class FormDataDialog extends StatefulWidget {
 }
 
 class FormDataDialogState extends State<FormDataDialog> {
-  List<FieldModel> fieldsData;
-  String eid;
-  Color color;
-  Otherinfo mediaData;
+  List<FieldModel>? fieldsData;
+  String? eid;
+  Color? color;
+  Otherinfo? mediaData;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String videoFileName = 'Add Video';
@@ -86,13 +86,12 @@ class FormDataDialogState extends State<FormDataDialog> {
   ValueNotifier isUploading = ValueNotifier(false);
 
   String timeText = '';
-  TimeOfDay _currentTime = new TimeOfDay.now();
+  TimeOfDay? _currentTime = new TimeOfDay.now();
 
-  DateTime initDate;
-  String providerId;
+  DateTime? initDate;
+  String? providerId;
 
   var saveResponse;
-
 
   var actvityStatus = '';
 
@@ -100,7 +99,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   void initState() {
     super.initState();
     try {
-      widget.fieldsData?.sort((a, b) => (a?.seq ?? 0).compareTo(b?.seq ?? 0));
+      widget.fieldsData?.sort((a, b) => (a.seq ?? 0).compareTo(b.seq ?? 0));
     } catch (e) {}
     fieldsData = widget.fieldsData;
     eid = widget.eid;
@@ -109,9 +108,9 @@ class FormDataDialogState extends State<FormDataDialog> {
     providerId = widget.providerId;
 
     if (eid != null && eid != '') {
-      RegimentService.getActivityStatus(eid: eid).then((value) {
-        if (value?.isSuccess ?? false) {
-          actvityStatus = value?.result[0]?.planStatus ?? '';
+      RegimentService.getActivityStatus(eid: eid!).then((value) {
+        if (value.isSuccess ?? false) {
+          actvityStatus = value.result![0].planStatus ?? '';
         }
       });
     }
@@ -127,11 +126,11 @@ class FormDataDialogState extends State<FormDataDialog> {
     initDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     setCurrentTime();
-    return widget.isFromQurHomeRegimen ?? false
+    return widget.isFromQurHomeRegimen
         ? Scaffold(
             appBar: AppBar(
               backgroundColor: Color(CommonUtil().getQurhomePrimaryColor()),
-              toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+              toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
               elevation: 0,
               centerTitle: false,
               titleSpacing: 0,
@@ -147,7 +146,7 @@ class FormDataDialogState extends State<FormDataDialog> {
               leading: IconWidget(
                 icon: Icons.arrow_back_ios,
                 colors: Colors.white,
-                size: CommonUtil().isTablet ? 38.0 : 24.0,
+                size: CommonUtil().isTablet! ? 38.0 : 24.0,
                 onTap: () {
                   Get.back(result: false);
                 },
@@ -214,8 +213,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Container(
-        width: widget.isFromQurHomeRegimen??false
-            ? double.infinity:0.75.sw,
+        width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
         child: getListView(),
       );
     });
@@ -224,12 +222,12 @@ class FormDataDialogState extends State<FormDataDialog> {
   getListView() {
     return ListView(
       shrinkWrap: true,
-      padding: EdgeInsets.only(bottom: widget.isFromQurHomeRegimen??false
-          ? 100:0),
+      padding: EdgeInsets.only(
+          bottom: widget.isFromQurHomeRegimen ? 100 : 0),
       children: [
         Container(
-          width: widget.isFromQurHomeRegimen??false
-              ? double.infinity:0.75.sw,
+          width:
+              widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
           padding: EdgeInsets.only(
             bottom: 10.0.h,
             left: 10.0.w,
@@ -244,16 +242,16 @@ class FormDataDialogState extends State<FormDataDialog> {
                 top: 0.0.h,
               ),
               physics: NeverScrollableScrollPhysics(),
-              itemCount: fieldsData.length,
+              itemCount: fieldsData!.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: EdgeInsets.only(
                     bottom: 10.0.h,
                   ),
                   child: FormFieldWidget(
-                    canEdit: widget.canEdit ?? false,
-                    fieldData: fieldsData[index],
-                    isFromQurHomeRegimen:widget.isFromQurHomeRegimen,
+                    canEdit: widget.canEdit,
+                    fieldData: fieldsData![index],
+                    isFromQurHomeRegimen: widget.isFromQurHomeRegimen,
                     isFromQurHomeSymptom: widget.isFromQurHomeSymptom ||
                         widget.isFromQurHomeRegimen,
                     updateValue: (
@@ -284,13 +282,13 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
         ),
         Container(
-          width: widget.isFromQurHomeRegimen??false
-              ? double.infinity:0.75.sw,
+          width:
+              widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Visibility(
-                visible: mediaData.needPhoto == '1',
+                visible: mediaData!.needPhoto == '1',
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
@@ -299,7 +297,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                       : null,
                   child: ValueListenableBuilder(
                     valueListenable: isUploading,
-                    builder: (contxt, val, child) {
+                    builder: (contxt, dynamic val, child) {
                       return Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -345,7 +343,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                 ),
               ),
               Visibility(
-                visible: mediaData.needAudio == '1',
+                visible: mediaData!.needAudio == '1',
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
@@ -360,7 +358,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                             ),
                           )
                               .then((results) {
-                            final String audioPath =
+                            final String? audioPath =
                                 results[Constants.keyAudioFile];
                             if (audioPath != null && audioPath != '') {
                               imagePaths = audioPath;
@@ -370,16 +368,17 @@ class FormDataDialogState extends State<FormDataDialog> {
                               if (imagePaths != null && imagePaths != '') {
                                 saveMediaRegiment(imagePaths, providerId)
                                     .then((value) {
-                                  if (value.isSuccess) {
+                                  if (value.isSuccess!) {
                                     setState(() {
                                       audioFileName = audioPath.split('/').last;
                                     });
                                     final oldValue = saveMap.putIfAbsent(
                                       'audio',
-                                      () => value.result.accessUrl,
+                                      () => value.result!.accessUrl,
                                     );
                                     if (oldValue != null) {
-                                      saveMap['audio'] = value.result.accessUrl;
+                                      saveMap['audio'] =
+                                          value.result!.accessUrl;
                                     }
                                   } else {
                                     setState(() {
@@ -415,7 +414,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                 ),
               ),
               Visibility(
-                visible: mediaData.needVideo == '1',
+                visible: mediaData!.needVideo == '1',
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
@@ -445,7 +444,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                 ),
               ),
               Visibility(
-                visible: mediaData.needFile == '1',
+                visible: mediaData!.needFile == '1',
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
@@ -478,8 +477,9 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
         ),
         Container(
-            width: widget.isFromQurHomeRegimen??false
-                ? double.infinity:0.75.sw,
+            width: widget.isFromQurHomeRegimen
+                ? double.infinity
+                : 0.75.sw,
             padding: EdgeInsets.only(
               bottom: 4.0.h,
               left: 10.0.w,
@@ -507,7 +507,7 @@ class FormDataDialogState extends State<FormDataDialog> {
               children: [
                 InkWell(
                   onTap: () async {
-                    initDate = await selectDate(context, initDate);
+                    initDate = await selectDate(context, initDate!);
                     setState(() {});
                   },
                   child: Container(
@@ -527,12 +527,12 @@ class FormDataDialogState extends State<FormDataDialog> {
                         IconButton(
                           icon: Icon(Icons.calendar_today, size: 16.sp),
                           onPressed: () async {
-                            initDate = await selectDate(context, initDate);
+                            initDate = await selectDate(context, initDate!);
                             setState(() {});
                           },
                         ),
                         Text(
-                          '${CommonUtil.dateConversionToApiFormat(initDate)}',
+                          '${CommonUtil.dateConversionToApiFormat(initDate!)}',
                           style: TextStyle(fontSize: 15.sp),
                         ),
                       ],
@@ -575,17 +575,16 @@ class FormDataDialogState extends State<FormDataDialog> {
               ],
             ),
           ),
-        widget.isFromQurHomeRegimen??false
-            ? SizedBox.shrink():onSaveBtn(),
+        widget.isFromQurHomeRegimen ? SizedBox.shrink() : onSaveBtn(),
       ],
     );
   }
 
   Widget onSaveBtn() {
     return Container(
-      width: widget.isFromQurHomeRegimen ?? false ? double.infinity : 0.75.sw,
+      width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
       margin: EdgeInsets.only(
-        bottom: widget.isFromQurHomeRegimen ?? false ? 5.0.h : 0.0,
+        bottom: widget.isFromQurHomeRegimen ? 5.0.h : 0.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -594,10 +593,10 @@ class FormDataDialogState extends State<FormDataDialog> {
               valueListenable: isUploading,
               builder: (contxt, val, child) {
                 return RaisedButton(
-                    onPressed: (!val)
+                    onPressed: val == false
                         ? () async {
                             if (widget.canEdit) {
-                              if (_formKey.currentState.validate()) {
+                              if (_formKey.currentState!.validate()) {
                                 if (actvityStatus == UnSubscribed ||
                                     actvityStatus == Expired) {
                                   var message = (actvityStatus == UnSubscribed)
@@ -653,17 +652,17 @@ class FormDataDialogState extends State<FormDataDialog> {
     saveMap.forEach((key, value) {
       events += '&$key=$value';
       var provider = Provider.of<RegimentViewModel>(context, listen: false);
-      provider.cachedEvents?.removeWhere((element) => element?.contains(key));
+      provider.cachedEvents.removeWhere((element) => element.contains(key));
       provider.cachedEvents.add('&$key=$value'.toString());
     });
     if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
       LoaderQurHome.showLoadingDialog(
-        Get.context,
+        Get.context!,
         canDismiss: false,
       );
     } else {
       LoaderClass.showLoadingDialog(
-        Get.context,
+        Get.context!,
         canDismiss: false,
       );
     }
@@ -678,22 +677,22 @@ class FormDataDialogState extends State<FormDataDialog> {
       selectedDate: initDate,
       selectedTime: _currentTime,
     );
-    if (saveResponse?.isSuccess ?? false) {
+    if (saveResponse.isSuccess ?? false) {
       QurPlanReminders.getTheRemindersFromAPI();
       if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
-        LoaderQurHome.hideLoadingDialog(Get.context);
+        LoaderQurHome.hideLoadingDialog(Get.context!);
       } else {
-        LoaderClass.hideLoadingDialog(Get.context);
+        LoaderClass.hideLoadingDialog(Get.context!);
       }
       if (Provider.of<RegimentViewModel>(context, listen: false)
               .regimentStatus ==
           RegimentStatus.DialogOpened) {
         Navigator.pop(context, true);
-      } else if (widget.isFromQurHomeRegimen ?? false) {
+      } else if (widget.isFromQurHomeRegimen) {
         Get.back(result: true);
       }
       checkForReturnActions(
-        returnAction: saveResponse?.result?.actions?.returnData,
+        returnAction: saveResponse.result?.actions?.returnData,
       );
     }
   }
@@ -707,7 +706,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           children: [
             Flexible(
               child: Text(
-                widget.formTitle??'',
+                widget.formTitle!,
                 style: TextStyle(
                   fontSize: 16.0.sp,
                 ),
@@ -723,7 +722,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           ],
         ),
         Text(
-          widget.introText ?? '',
+          widget.introText,
           maxLines: 10,
           style: TextStyle(color: Colors.black, fontSize: 16.h),
         ),
@@ -732,7 +731,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   checkForReturnActions({
-    ReturnModel returnAction,
+    ReturnModel? returnAction,
   }) async {
     if ((returnAction?.action ?? '').isNotEmpty &&
         (returnAction?.message ?? '').isNotEmpty) {
@@ -742,10 +741,10 @@ class FormDataDialogState extends State<FormDataDialog> {
           builder: (context) {
             return WillPopScope(
               onWillPop: () {
-                Provider.of<RegimentViewModel>(Get.context, listen: false)
+                Provider.of<RegimentViewModel>(Get.context!, listen: false)
                     .cachedEvents = [];
                 Get.back();
-              },
+              } as Future<bool> Function()?,
               child: AlertDialog(
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -756,7 +755,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           size: 24.0.sp,
                         ),
                         onPressed: () {
-                          Provider.of<RegimentViewModel>(Get.context,
+                          Provider.of<RegimentViewModel>(Get.context!,
                                   listen: false)
                               .cachedEvents = [];
                           Navigator.pop(context);
@@ -769,8 +768,9 @@ class FormDataDialogState extends State<FormDataDialog> {
                   left: 15.0.w,
                 ),
                 content: Container(
-                  width: widget.isFromQurHomeRegimen??false
-                      ? double.infinity:0.75.sw,
+                  width: widget.isFromQurHomeRegimen
+                      ? double.infinity
+                      : 0.75.sw,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -796,7 +796,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                                       startActivity) {
                                 if (returnAction?.activityName == '' ||
                                     returnAction?.activityName == null) {
-                                  Provider.of<RegimentViewModel>(Get.context,
+                                  Provider.of<RegimentViewModel>(Get.context!,
                                           listen: false)
                                       .cachedEvents = [];
                                 }
@@ -806,7 +806,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                                   returnAction?.activityName,
                                 );
                               } else {
-                                Provider.of<RegimentViewModel>(Get.context,
+                                Provider.of<RegimentViewModel>(Get.context!,
                                         listen: false)
                                     .cachedEvents = [];
                                 Get.back();
@@ -831,7 +831,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                               ),
                             ),
                           ),
-                          getLaterButton(returnAction),
+                          getLaterButton(returnAction)!,
                         ],
                       ),
                       SizedBox(height: 5.h),
@@ -851,12 +851,12 @@ class FormDataDialogState extends State<FormDataDialog> {
             );
           });
     } else {
-      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+      Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents =
           [];
     }
   }
 
-  Widget getLaterButton(ReturnModel returnAction) {
+  Widget? getLaterButton(ReturnModel? returnAction) {
     if ((returnAction?.eid != null) && (returnAction?.activityName != '')) {
       if (returnAction?.action == startActivity) {
         return Padding(
@@ -865,7 +865,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
           child: RaisedButton(
             onPressed: () {
-              Provider.of<RegimentViewModel>(Get.context, listen: false)
+              Provider.of<RegimentViewModel>(Get.context!, listen: false)
                   .cachedEvents = [];
               Get.back();
             },
@@ -895,7 +895,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   Future<AddMediaRegimentModel> saveMediaRegiment(
-      String imagePaths, String providerId) async {
+      String imagePaths, String? providerId) async {
     var patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.saveRegimentMedia(
@@ -924,7 +924,7 @@ class FormDataDialogState extends State<FormDataDialog> {
 
         if (imagePaths != null && imagePaths != '') {
           saveMediaRegiment(imagePaths, providerId).then((value) {
-            if (value.isSuccess) {
+            if (value.isSuccess!) {
               var file = File(croppedFile.path);
               setState(() {
                 if (fromPath == strGallery) {
@@ -941,10 +941,10 @@ class FormDataDialogState extends State<FormDataDialog> {
 
               final oldValue = saveMap.putIfAbsent(
                 fromPath,
-                () => value.result.accessUrl,
+                () => value.result!.accessUrl,
               );
               if (oldValue != null) {
-                saveMap[fromPath] = value.result.accessUrl;
+                saveMap[fromPath] = value.result!.accessUrl;
               }
             } else {
               setState(() {
@@ -967,7 +967,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   imgFromCamera(String fromPath) async {
-    File _image;
+    late File _image;
     var picker = ImagePicker();
     var pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
@@ -980,7 +980,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     });
     if (imagePaths != null && imagePaths != '') {
       await saveMediaRegiment(imagePaths, providerId).then((value) {
-        if (value.isSuccess) {
+        if (value.isSuccess!) {
           isUploading.value = false;
           setState(() {
             imageFileName = _image.path.split('/').last;
@@ -988,10 +988,10 @@ class FormDataDialogState extends State<FormDataDialog> {
 
           final oldValue = saveMap.putIfAbsent(
             fromPath,
-            () => value.result.accessUrl,
+            () => value.result!.accessUrl,
           );
           if (oldValue != null) {
-            saveMap[fromPath] = value.result.accessUrl;
+            saveMap[fromPath] = value.result!.accessUrl;
           }
         } else {
           isUploading.value = false;
@@ -1037,7 +1037,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     firstDate = DateTime(
         DateTime.now().year, DateTime.now().month - 1, DateTime.now().day);
 
-    final DateTime picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _date,
       firstDate: firstDate,
@@ -1051,9 +1051,9 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   Future<String> selectTime(BuildContext context) async {
-    TimeOfDay selectedTime = await showTimePicker(
+    TimeOfDay? selectedTime = await showTimePicker(
       context: context,
-      initialTime: _currentTime,
+      initialTime: _currentTime!,
     );
 
     _currentTime = selectedTime;

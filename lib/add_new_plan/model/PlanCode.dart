@@ -1,15 +1,16 @@
+
 class PlanCode {
-  bool isSuccess;
-  List<PlanCodeResult> result;
+  bool? isSuccess;
+  List<PlanCodeResult>? result;
 
   PlanCode({this.isSuccess, this.result});
 
   PlanCode.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<PlanCodeResult>();
+      result =  <PlanCodeResult>[];
       json['result'].forEach((v) {
-        result.add(new PlanCodeResult.fromJson(v));
+        result!.add(new PlanCodeResult.fromJson(v));
       });
     }
   }
@@ -18,16 +19,16 @@ class PlanCode {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class PlanCodeResult {
-  String id;
-  String code;
-  String name;
+  String? id;
+  String? code;
+  String? name;
 
   PlanCodeResult({this.id, this.code, this.name});
 

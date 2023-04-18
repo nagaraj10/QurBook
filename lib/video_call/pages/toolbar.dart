@@ -1,3 +1,4 @@
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,19 +23,19 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 // ignore: must_be_immutable
 class Toolbar extends StatefulWidget {
-  final ClientRole role;
+  final ClientRole? role;
   Function(bool, bool) controllerState;
   bool muted;
   bool _isHideMyVideo;
-  String patId;
-  String patName;
-  String appointmentId;
-  String patPicUrl;
-  String bookId;
+  String? patId;
+  String? patName;
+  String? appointmentId;
+  String? patPicUrl;
+  String? bookId;
   String callStartTime;
-  String healthOrganizationId;
-  HealthRecord healthRecords;
-  bool isFromAppointment;
+  String? healthOrganizationId;
+  HealthRecord? healthRecords;
+  bool? isFromAppointment;
 
   Toolbar(
       this.role,
@@ -65,17 +66,17 @@ class _ToolbarState extends State<Toolbar> {
   String callStartTime = '';
   String callEndTime = '';
   //ApiResponse _apiResponse = ApiResponse();
-  String doctor_id, mtTitle = '', specialityName = '';
+  String? doctor_id, mtTitle = '', specialityName = '';
   String userIdForNotify = '';
 
   final audioCallStatus =
-      Provider.of<AudioCallProvider>(Get.context, listen: false);
+      Provider.of<AudioCallProvider>(Get.context!, listen: false);
   final videoIconStatus =
-      Provider.of<VideoIconProvider>(Get.context, listen: false);
+      Provider.of<VideoIconProvider>(Get.context!, listen: false);
   final videoRequestStatus =
-      Provider.of<VideoRequestProvider>(Get.context, listen: false);
+      Provider.of<VideoRequestProvider>(Get.context!, listen: false);
 
-  var rtcProvider = Provider.of<RTCEngineProvider>(Get.context, listen: false);
+  var rtcProvider = Provider.of<RTCEngineProvider>(Get.context!, listen: false);
   var regController = Get.find<QurhomeRegimenController>();
 
   @override
@@ -104,7 +105,7 @@ class _ToolbarState extends State<Toolbar> {
       alignment: Alignment.bottomCenter,
       child: Container(
         decoration: BoxDecoration(
-          color: audioCallStatus?.isAudioCall
+          color: audioCallStatus.isAudioCall
               ? Colors.white.withOpacity(0.5)
               : Colors.black.withOpacity(0.5),
           borderRadius: BorderRadius.all(
@@ -274,7 +275,7 @@ class _ToolbarState extends State<Toolbar> {
   void _onCallEnd(BuildContext context) {
     prepareMyData();
     try {
-      if (!widget.isFromAppointment) {
+      if (!widget.isFromAppointment!) {
         callApiToUpdateNonAppointment();
       }
     } catch (e) {}
@@ -292,8 +293,8 @@ class _ToolbarState extends State<Toolbar> {
         widget.muted = !widget.muted;
       });
       widget.controllerState(widget.muted, widget._isHideMyVideo);
-      Provider.of<RTCEngineProvider>(Get.context, listen: false)
-          ?.rtcEngine
+      Provider.of<RTCEngineProvider>(Get.context!, listen: false)
+          .rtcEngine
           ?.muteLocalAudioStream(widget.muted);
     } catch (e) {
       print(e);
@@ -303,7 +304,7 @@ class _ToolbarState extends State<Toolbar> {
   Future<void> _onToggleVideo() async {
     try {
       /// switch to audio call if remote user also in audio call
-      if (audioCallStatus?.isAudioCall) {
+      if (audioCallStatus.isAudioCall) {
         //if it's a audio call want switch to video call, request remote user
         //check for camera permission
         var permissionStatus =
@@ -315,11 +316,11 @@ class _ToolbarState extends State<Toolbar> {
           return;
         } else {
           // open request dialog for requesting
-          await rtcProvider?.rtcEngine?.enableVideo();
-          await rtcProvider?.rtcEngine?.enableLocalVideo(true);
-          await rtcProvider?.rtcEngine?.muteLocalVideoStream(false);
+          await rtcProvider.rtcEngine?.enableVideo();
+          await rtcProvider.rtcEngine?.enableLocalVideo(true);
+          await rtcProvider.rtcEngine?.muteLocalVideoStream(false);
           Provider.of<RTCEngineProvider>(context, listen: false)
-              ?.changeLocalVideoStatus(false);
+              .changeLocalVideoStatus(false);
           requestingDialog();
           var newStatus = VideoCallStatus();
           newStatus.setDefaultValues();
@@ -332,23 +333,23 @@ class _ToolbarState extends State<Toolbar> {
         }
       } else {
         if (CommonUtil.isRemoteUserOnPause) {
-          await rtcProvider?.rtcEngine?.disableVideo();
-          await rtcProvider?.rtcEngine?.enableLocalVideo(false);
-          await rtcProvider?.rtcEngine?.muteLocalVideoStream(true);
+          await rtcProvider.rtcEngine?.disableVideo();
+          await rtcProvider.rtcEngine?.enableLocalVideo(false);
+          await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
 
-          Provider?.of<HideProvider>(context, listen: false)?.swithToAudio();
+          Provider.of<HideProvider>(context, listen: false).swithToAudio();
           Provider.of<AudioCallProvider>(context, listen: false)
-              ?.enableAudioCall();
-          Provider?.of<VideoIconProvider>(context, listen: false)
-              ?.turnOffVideo();
+              .enableAudioCall();
+          Provider.of<VideoIconProvider>(context, listen: false)
+              .turnOffVideo();
         } else {
-          await rtcProvider?.rtcEngine
-              ?.muteLocalVideoStream(videoIconStatus?.isVideoOn);
+          await rtcProvider.rtcEngine
+              ?.muteLocalVideoStream(videoIconStatus.isVideoOn);
           Provider.of<RTCEngineProvider>(context, listen: false)
-              ?.changeLocalVideoStatus(videoIconStatus?.isVideoOn);
-          CommonUtil.isLocalUserOnPause = videoIconStatus?.isVideoOn;
-          videoIconStatus?.swapVideo();
-          widget.controllerState(widget.muted, videoIconStatus?.isVideoOn);
+              .changeLocalVideoStatus(videoIconStatus.isVideoOn);
+          CommonUtil.isLocalUserOnPause = videoIconStatus.isVideoOn;
+          videoIconStatus.swapVideo();
+          widget.controllerState(widget.muted, videoIconStatus.isVideoOn);
         }
       }
     } catch (e) {
@@ -468,13 +469,13 @@ class _ToolbarState extends State<Toolbar> {
                       onPressed: () async {
                         try {
                           CommonUtil.isVideoRequestSent = false;
-                          await rtcProvider?.rtcEngine?.disableVideo();
-                          await rtcProvider?.rtcEngine?.enableLocalVideo(false);
-                          await rtcProvider?.rtcEngine
+                          await rtcProvider.rtcEngine?.disableVideo();
+                          await rtcProvider.rtcEngine?.enableLocalVideo(false);
+                          await rtcProvider.rtcEngine
                               ?.muteLocalVideoStream(true);
-                          Provider.of<RTCEngineProvider>(Get.context,
+                          Provider.of<RTCEngineProvider>(Get.context!,
                                   listen: false)
-                              ?.changeLocalVideoStatus(true);
+                              .changeLocalVideoStatus(true);
                           var newStatus = VideoCallStatus();
                           newStatus.setDefaultValues();
                           newStatus.videoRequestFromMobile = 0;

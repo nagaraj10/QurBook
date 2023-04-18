@@ -9,9 +9,9 @@ class SheelaBadgeServices {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<SheelaBadgeModel> getSheelaBadgeCount() async {
-    String userId = PreferenceUtil.getStringValue(KEY_USERID);
+    String? userId = PreferenceUtil.getStringValue(KEY_USERID);
     final response =
-    await _helper.getSheelaBadgeCount(qr_sheela_badge_icon_count+userId);
+    await _helper.getSheelaBadgeCount(qr_sheela_badge_icon_count+userId!);
     return SheelaBadgeModel.fromJson(response);
   }
 

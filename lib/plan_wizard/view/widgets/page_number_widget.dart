@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -12,8 +13,8 @@ class PageNumberWidget extends StatelessWidget {
 
   final bool isSelected;
   final bool isLastItem;
-  final String pageNumber;
-  final String pageName;
+  final String? pageNumber;
+  final String? pageName;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class PageNumberWidget extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  pageNumber,
+                  pageNumber!,
                   style: TextStyle(
                     fontSize: 20.0.sp,
                     fontWeight: FontWeight.bold,

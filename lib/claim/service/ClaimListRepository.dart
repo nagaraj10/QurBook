@@ -1,3 +1,4 @@
+
 import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryResponse.dart';
 import 'package:myfhb/claim/model/claimmodel/ClaimListResponse.dart';
 import 'package:myfhb/claim/model/claimmodel/ClaimRecordDetail.dart';
@@ -15,7 +16,7 @@ class ClaimListRepository{
 
 
   Future<MemberShipDetails> getMemberShip() async {
-    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    String? userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     final responseQuery =
         '${variable.qr_membership}$userId';
     var  response = await _helper.getMemberShipDetails(responseQuery);
@@ -23,7 +24,7 @@ class ClaimListRepository{
     return MemberShipDetails.fromJson(response);
   }
   Future<CreditBalance> getCreditBalance() async {
-    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    String? userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     final responseQuery =
         '${variable.qr_user}${variable.getCreditBalnce}$userId';
     final  response =
@@ -32,7 +33,7 @@ class ClaimListRepository{
     return CreditBalance.fromJson(response);
   }
   Future<ClaimListResponse> getClaimList() async {
-    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    String? userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     final responseQuery =
         '${variable.getClaimWithQues}$userId';
     final  response =
@@ -40,10 +41,10 @@ class ClaimListRepository{
 
     return ClaimListResponse.fromJson(response);
   }
-  Future<GetRecordIdsFilter> getHealthRecordDetailViaId(String healthRecordID) async {
-    List<String> recordId=new List();
+  Future<GetRecordIdsFilter> getHealthRecordDetailViaId(String? healthRecordID) async {
+    List<String?> recordId=[];
     recordId.add(healthRecordID);
-    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    String? userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     final  response =
     await _helper.getMetaIdURL(recordId,userId);
@@ -51,7 +52,7 @@ class ClaimListRepository{
     return GetRecordIdsFilter.fromJson(response);
   }
 
-  Future<ClaimRecordDetails> getClaimRecordDetails(String claimID) async {
+  Future<ClaimRecordDetails> getClaimRecordDetails(String? claimID) async {
     final responseQuery =
         '${variable.qr_claim_with_slash}$claimID';
     final  response =
@@ -61,7 +62,7 @@ class ClaimListRepository{
   }
 
   Future<ClaimExpiryResponse> getClaimExpiryResponseList() async {
-    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    String? userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     final responseQuery =
         '${variable.qr_expiry_claim_list}$userId';
     final  response =

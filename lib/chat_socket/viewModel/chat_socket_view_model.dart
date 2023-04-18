@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
@@ -13,21 +14,21 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatSocketViewModel extends ChangeNotifier {
-  ChatSocketService chocketService = new ChatSocketService();
+  ChatSocketService? chocketService = new ChatSocketService();
 
   final String _baseUrl = BASE_URL;
 
-  List<PayloadChat> userChatList = [];
-  List<ChatHistoryResult> chatHistoryList = [];
+  //List<PayloadChat>? userChatList = [];
+  List<ChatHistoryResult?>? chatHistoryList = [];
   List<PayloadChat> chatHistoryCount = [];
 
-  IO.Socket socket;
+ IO.Socket? socket;
 
   int chatTotalCount = 0;
 
   Future<void> initSocket() async {
-    String token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
-    String userId = PreferenceUtil.getStringValue(KEY_USERID);
+    String? token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
+    String? userId = PreferenceUtil.getStringValue(KEY_USERID);
 
     String _socketEndPoint = '';
 
@@ -49,35 +50,35 @@ class ChatSocketViewModel extends ChangeNotifier {
               .build());
 
       //socket.io.options['extraHeaders'] = {'Authorization': 'Bearer ' + token,'userId': userId};
-      socket.io.options['query'] = 'userId=' + userId.toString();
+      socket?.io.options['query'] = 'userId=' + userId.toString();
 
-      socket.connect();
+      socket?.connect();
 
-      socket.on('connect_error', (data) => print(data));
-      socket.on('connect_timeout', (data) => print(data));
-      socket.on('connecting', (data) => print(data));
-      socket.on('disconnect', (data) => print(data));
-      socket.on('error', (data) => print(data));
-      socket.on('reconnect', (data) => print(data));
-      socket.on('reconnect_attempt', (data) => print(data));
-      socket.on('reconnect_failed', (_) => print(_));
-      socket.on('reconnect_error', (_) => print(_));
+      socket?.on('connect_error', (data) => print(data));
+      socket?.on('connect_timeout', (data) => print(data));
+      socket?.on('connecting', (data) => print(data));
+      socket?.on('disconnect', (data) => print(data));
+      socket?.on('error', (data) => print(data));
+      socket?.on('reconnect', (data) => print(data));
+      socket?.on('reconnect_attempt', (data) => print(data));
+      socket?.on('reconnect_failed', (_) => print(_));
+      socket?.on('reconnect_error', (_) => print(_));
 
-      socket.on('reconnecting', (_) => print(_));
-      socket.on('ping', (_) => print(_));
-      socket.on('pong', (_) => print(_));
+      socket?.on('reconnecting', (_) => print(_));
+      socket?.on('ping', (_) => print(_));
+      socket?.on('pong', (_) => print(_));
 
-      socket.on('connect', (_) {
+      socket?.on('connect', (_) {
         print('socket_chat_connected');
       });
     }
   }
 
-  void updateChatUserList(UserChatListModel userChatListModel) {
+  /*void updateChatUserList(UserChatListModel userChatListModel) {
     userChatList = userChatListModel?.payload;
 
     notifyListeners();
-  }
+  }*/
 
   /*void updateChatTotalCount(UserChatListModel userChatListModelCount) {
     chatTotalCount  = 0;
@@ -102,11 +103,11 @@ class ChatSocketViewModel extends ChangeNotifier {
     chatTotalCount = 0;
 
     if (totalCountModel != null) {
-      if (totalCountModel?.isSuccess && totalCountModel?.payload != null) {
-        if (totalCountModel?.payload?.isNotEmpty) {
-          if (totalCountModel?.payload[0]?.count != null &&
-              totalCountModel?.payload[0]?.count != '') {
-            chatTotalCount = int.parse(totalCountModel?.payload[0]?.count ?? 0);
+      if (totalCountModel.isSuccess! && totalCountModel.payload != null) {
+        if (totalCountModel.payload!.isNotEmpty) {
+          if (totalCountModel.payload![0].count != null &&
+              totalCountModel.payload![0].count != '') {
+            chatTotalCount = int.parse(totalCountModel.payload![0].count ?? 0 as String);
           }
         }
       }
@@ -115,7 +116,7 @@ class ChatSocketViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateChatHistoryList(List<ChatHistoryResult> list,
+  void updateChatHistoryList(List<ChatHistoryResult?>? list,
       {bool shouldUpdate: true}) {
     chatHistoryList = list;
 
@@ -124,80 +125,82 @@ class ChatSocketViewModel extends ChangeNotifier {
     }
   }
 
-  void messageEmit(ChatHistoryResult list) {
-    chatHistoryList.add(list);
+  void messageEmit(ChatHistoryResult? list) {
+    chatHistoryList!.add(list);
 
     notifyListeners();
   }
 
   void onReceiveMessage(ChatHistoryResult list) {
-    chatHistoryList.add(list);
+    chatHistoryList!.add(list);
 
     notifyListeners();
   }
 
-  Future<ChatHistoryModel> getChatHistory(
-      String peerId,
-      String familyUserId,
-      bool isCareCoordinator,
-      String careCoordiantorId,
-      bool isFromFamilyList) async {
+  Future<ChatHistoryModel?> getChatHistory(
+      String? peerId,
+      String? familyUserId,
+      bool? isCareCoordinator,
+      String? careCoordiantorId,
+      bool? isFromFamilyList) async {
     try {
-      var userId = PreferenceUtil.getStringValue(KEY_USERID);
+      var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
-      ChatHistoryModel chatHistoryModel = await chocketService.getChatHistory(
+      ChatHistoryModel? chatHistoryModel = await chocketService!.getChatHistory(
           userId,
-          peerId,
-          familyUserId,
-          isCareCoordinator,
-          careCoordiantorId,
-          isFromFamilyList);
+          peerId??'',
+          familyUserId??'',
+          isCareCoordinator??false,
+          careCoordiantorId??'',
+          isFromFamilyList??false);
 
       return chatHistoryModel;
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
-  Future<InitChatModel> initNewChat(String peerId) async {
+  Future<InitChatModel?> initNewChat(String peerId) async {
     try {
-      var userId = PreferenceUtil.getStringValue(KEY_USERID);
+      var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
       InitChatModel chatHistoryModel =
-          await chocketService.initNewChat(userId, peerId);
+          await chocketService!.initNewChat(userId, peerId);
 
       return chatHistoryModel;
     } catch (e) {}
   }
 
-  Future<InitChatFamilyModel> initNewFamilyChat(String peerId,
+  Future<InitChatFamilyModel?> initNewFamilyChat(String peerId,
       String familyName, bool isCareCoordinator, String careCooId) async {
     try {
-      var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+      var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN)!;
 
       InitChatFamilyModel chatHistoryModel =
-          await chocketService.initNewFamilyChat(
+          await chocketService!.initNewFamilyChat(
               userId, peerId, familyName, isCareCoordinator, careCooId);
 
       return chatHistoryModel;
     } catch (e) {}
   }
 
-  initRRTNotificaiton({String peerId, String selectedDate}) {
+  initRRTNotificaiton({String? peerId, String? selectedDate}) {
     try {
       var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-      chocketService.initRRTNotification(
-        userId: userId,
-        peerId: peerId,
-        selectedDate: selectedDate,
+      chocketService!.initRRTNotification(
+        userId: userId!,
+        peerId: peerId!,
+        selectedDate: selectedDate!,
       );
     } catch (e) {
       if (kDebugMode) print(e.toString());
     }
   }
 
-  Future<GetUserIdModel> getUserIdFromDocId(String docId) async {
+  Future<GetUserIdModel?> getUserIdFromDocId(String? docId) async {
     try {
       GetUserIdModel getUserIdModel =
-          await chocketService.getUserIdFromDocId(docId);
+          await chocketService!.getUserIdFromDocId(docId!);
 
       return getUserIdModel;
     } catch (e) {}

@@ -1,23 +1,24 @@
+
 import 'package:flutter/material.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 
 class MediaIconWidget extends StatelessWidget {
   const MediaIconWidget({
-    @required this.color,
-    @required this.icon,
+    required this.color,
+    required this.icon,
     this.onPressed,
     this.padding,
   });
 
-  final Color color;
+  final Color? color;
   final IconData icon;
-  final Function onPressed;
-  final double padding;
+  final Function? onPressed;
+  final double? padding;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed,
+      onTap: onPressed as void Function()?,
       child: Padding(
         padding: padding != null
             ? EdgeInsets.all(padding ?? 5.0.sp)

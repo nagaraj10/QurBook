@@ -1,7 +1,8 @@
+
 class DigitRecogResponse {
-  bool isSuccess;
-  String message;
-  Result result;
+  bool? isSuccess;
+  String? message;
+  Result? result;
 
   DigitRecogResponse({this.isSuccess, this.message, this.result});
 
@@ -17,16 +18,16 @@ class DigitRecogResponse {
     data['isSuccess'] = isSuccess;
     data['message'] = message;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  DeviceMeasurementsHead deviceMeasurementsHead;
-  String healthRecordDocumentId;
-  String healthRecordMetaId;
+  DeviceMeasurementsHead? deviceMeasurementsHead;
+  String? healthRecordDocumentId;
+  String? healthRecordMetaId;
 
   Result(
       {this.deviceMeasurementsHead,
@@ -44,7 +45,7 @@ class Result {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (deviceMeasurementsHead != null) {
-      data['deviceMeasurements'] = deviceMeasurementsHead.toJson();
+      data['deviceMeasurements'] = deviceMeasurementsHead!.toJson();
     }
     data['healthRecordDocumentId'] = healthRecordDocumentId;
     data['healthRecordMetaId'] = healthRecordMetaId;
@@ -53,8 +54,8 @@ class Result {
 }
 
 class DeviceMeasurementsHead {
-  String deviceClass;
-  List<DeviceMeasurements> deviceMeasurements;
+  String? deviceClass;
+  List<DeviceMeasurements>? deviceMeasurements;
 
   DeviceMeasurementsHead({this.deviceClass, this.deviceMeasurements});
 
@@ -63,7 +64,7 @@ class DeviceMeasurementsHead {
     if (json['deviceMeasurements'] != null) {
       deviceMeasurements = <DeviceMeasurements>[];
       json['deviceMeasurements'].forEach((v) {
-        deviceMeasurements.add(DeviceMeasurements.fromJson(v));
+        deviceMeasurements!.add(DeviceMeasurements.fromJson(v));
       });
     }
   }
@@ -73,17 +74,17 @@ class DeviceMeasurementsHead {
     data['deviceClass'] = deviceClass;
     if (deviceMeasurements != null) {
       data['deviceMeasurements'] =
-          deviceMeasurements.map((v) => v.toJson()).toList();
+          deviceMeasurements!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class DeviceMeasurements {
-  Coordinates coordinates;
-  String parameter;
-  String unit;
-  String values;
+  Coordinates? coordinates;
+  String? parameter;
+  String? unit;
+  String? values;
 
   DeviceMeasurements(
       {this.coordinates, this.parameter, this.unit, this.values});
@@ -100,7 +101,7 @@ class DeviceMeasurements {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (coordinates != null) {
-      data['coordinates'] = coordinates.toJson();
+      data['coordinates'] = coordinates!.toJson();
     }
     data['parameter'] = parameter;
     data['unit'] = unit;
@@ -110,10 +111,10 @@ class DeviceMeasurements {
 }
 
 class Coordinates {
-  int height;
-  int width;
-  int x;
-  int y;
+  int? height;
+  int? width;
+  int? x;
+  int? y;
 
   Coordinates({this.height, this.width, this.x, this.y});
 

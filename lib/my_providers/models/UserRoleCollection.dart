@@ -1,8 +1,9 @@
+
 class UserRoleCollection3 {
-  String id;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   UserRoleCollection3(
       {this.id, this.isActive, this.createdOn, this.lastModifiedOn});

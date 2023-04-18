@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -19,17 +20,17 @@ import 'package:myfhb/landing/view_model/landing_view_model.dart';
 
 class VideoScreen extends StatefulWidget {
   VideoScreen({
-    @required this.videoList,
+  this.videoList,
   });
 
-  List<HelperVideo> videoList;
+  List<HelperVideo>? videoList;
 
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
 
 class _VideoScreenState extends State<VideoScreen> {
-  var videoList;
+  late var videoList;
   @override
   void initState() {
     super.initState();
@@ -141,7 +142,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                     .isNotEmpty
                                                 ? videoList[index]?.thumbnail
                                                 : YoutubePlayer.getThumbnail(
-                                                    videoId: videoId,
+                                                    videoId: videoId!,
                                                     quality:
                                                         ThumbnailQuality.high,
                                                   ),

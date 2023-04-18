@@ -1,7 +1,8 @@
+
 class CommonResponse {
-  bool isSuccess;
-  String message;
-  String result;
+  bool? isSuccess;
+  String? message;
+  String? result;
 
   CommonResponse({this.isSuccess, this.message, this.result});
 

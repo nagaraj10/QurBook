@@ -1,8 +1,9 @@
+
 import 'package:myfhb/common/keysofmodel.dart';
 
 class Content {
-  String messageTitle;
-  String messageBody;
+  String? messageTitle;
+  String? messageBody;
 
   Content({this.messageTitle, this.messageBody});
 

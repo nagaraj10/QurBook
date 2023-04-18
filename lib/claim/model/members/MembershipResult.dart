@@ -1,14 +1,15 @@
+
 import 'package:myfhb/claim/model/members/MembershipAdditionInfo.dart';
 
 class MemberShipResult {
-  String id;
-  String healthOrganizationName;
-  String healthOrganizationId;
-  String planName;
-  MemberShipAdditionalInfo additionalInfo;
-  String planStartDate;
-  String planEndDate;
-  String planSubscriptionInfoId;
+  String? id;
+  String? healthOrganizationName;
+  String? healthOrganizationId;
+  String? planName;
+  MemberShipAdditionalInfo? additionalInfo;
+  String? planStartDate;
+  String? planEndDate;
+  String? planSubscriptionInfoId;
 
   MemberShipResult(
       {this.id,
@@ -40,7 +41,7 @@ class MemberShipResult {
     data['healthOrganizationId'] = this.healthOrganizationId;
     data['planName'] = this.planName;
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo!.toJson();
     }
     data['planStartDate'] = this.planStartDate;
     data['planEndDate'] = this.planEndDate;

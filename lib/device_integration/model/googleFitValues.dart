@@ -1,3 +1,4 @@
+
 import '../../constants/fhb_parameters.dart';
 
 class Value {
@@ -6,7 +7,7 @@ class Value {
     this.fpVal,
   });
 
-  List<dynamic> mapVal;
+  List<dynamic>? mapVal;
   var fpVal;
 
   factory Value.fromJson(Map<String, dynamic> json) => Value(
@@ -15,7 +16,7 @@ class Value {
       );
 
   Map<String, dynamic> toJson() => {
-        gfmapVal: List<dynamic>.from(mapVal.map((x) => x)),
+        gfmapVal: List<dynamic>.from(mapVal!.map((x) => x)),
         gffpVal: fpVal,
       };
 }

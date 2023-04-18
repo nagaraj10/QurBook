@@ -1,10 +1,11 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class VerifyEmailResponse {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   VerifyEmailResponse({this.status, this.success, this.message, this.response});
 
@@ -23,15 +24,15 @@ class VerifyEmailResponse {
     data[parameters.strSuccess] = success;
     data[parameters.strMessage] = message;
     if (response != null) {
-      data[parameters.strResponse] = response.toJson();
+      data[parameters.strResponse] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  String creationTime;
-  String expirationTime;
+  String? creationTime;
+  String? expirationTime;
 
   Response({this.creationTime, this.expirationTime});
 

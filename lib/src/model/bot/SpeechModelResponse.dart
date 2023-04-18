@@ -1,12 +1,13 @@
 
+
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/bot/video_links.dart';
 
 import 'button_model.dart';
 
 class SpeechModelResponse {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   SpeechModelResponse({this.isSuccess, this.result});
 
@@ -20,34 +21,34 @@ class SpeechModelResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String recipientId;
-  String text;
-  bool endOfConv;
-  List<Buttons> buttons;
+  String? recipientId;
+  String? text;
+  bool? endOfConv;
+  List<Buttons>? buttons;
   var imageURL;
   var searchURL;
-  String lang;
+  String? lang;
   var postId;
   var matchedQuestion;
-  List<VideoLinks> videoLinks;
+  List<VideoLinks>? videoLinks;
   var translatedUserText;
-  bool redirect;
-  bool enableMic;
-  bool providerMsg;
+  bool? redirect;
+  bool? enableMic;
+  bool? providerMsg;
   var redirectTo;
-  bool singleuse;
-  bool isActionDone;
+  bool? singleuse;
+  bool? isActionDone;
   var eid;
-  String conversationFlag;
-  String sessionId;
-  String relationshipId;
+  String? conversationFlag;
+  String? sessionId;
+  String? relationshipId;
 
   Result(
       {this.recipientId,
@@ -79,9 +80,9 @@ class Result {
     text = json['text'];
     endOfConv = json['endOfConv'];
     if (json[strButtons] != null) {
-      buttons = List<Buttons>();
+      buttons = <Buttons>[];
       json[strButtons].forEach((v) {
-        buttons.add(Buttons.fromJson(v));
+        buttons!.add(Buttons.fromJson(v));
       });
     }
     imageURL = json['imageURL'];
@@ -92,7 +93,7 @@ class Result {
     if (json[strVideoLinks] != null) {
       videoLinks = <VideoLinks>[];
       json[strVideoLinks].forEach((v) {
-        videoLinks.add(VideoLinks.fromJson(v));
+        videoLinks!.add(VideoLinks.fromJson(v));
       });
     }
     translatedUserText = json['translated_user_text'];
@@ -119,11 +120,11 @@ class Result {
     data['postId'] = this.postId;
     data['matchedQuestion'] = this.matchedQuestion;
     if (buttons != null) {
-      data[strButtons] = buttons.map((v) => v.toJson()).toList();
+      data[strButtons] = buttons!.map((v) => v.toJson()).toList();
     }
     if (videoLinks != null) {
       data[strVideoLinks] =
-          videoLinks.map((v) => v.toJson()).toList();
+          videoLinks!.map((v) => v.toJson()).toList();
     }
     data['translated_user_text'] = this.translatedUserText;
     data['redirect'] = this.redirect;

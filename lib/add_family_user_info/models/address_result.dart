@@ -1,11 +1,12 @@
 
 
+
 import '../../common/CommonConstants.dart';
 
 class AddressResult {
-  String id;
-  String code;
-  String name;
+  String? id;
+  String? code;
+  String? name;
 
   AddressResult({this.id, this.code, this.name});
 

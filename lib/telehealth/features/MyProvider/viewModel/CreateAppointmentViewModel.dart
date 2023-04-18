@@ -1,3 +1,4 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/services/createAppointmentService.dart';
@@ -10,17 +11,17 @@ class CreateAppointMentViewModel {
   AppointmentNotificationPayment appointmentNotification = AppointmentNotificationPayment();
 
 
-  Future<CreateAppointmentModel> putBookAppointment(
-    String createdBy,
-    String bookedFor,
-    String doctorSessionId,
-    String scheduleDate,
-    String slotNumber,
+  Future<CreateAppointmentModel?> putBookAppointment(
+    String? createdBy,
+    String? bookedFor,
+    String? doctorSessionId,
+    String? scheduleDate,
+    String? slotNumber,
     bool isMedicalShared,
     bool isFollowUp,
     List<String> healthRecords,
-    bool isCSRDiscount, {
-    Past doc,
+    bool? isCSRDiscount, {
+    Past? doc,
     bool isResidentDoctorMembership = false,
   }) async {
     try {
@@ -43,7 +44,7 @@ class CreateAppointMentViewModel {
     } catch (e) {}
   }
 
-  Future<AppointmentNotificationPayment> getAppointmentDetailsUsingId(String appointmentId)async{
+  Future<AppointmentNotificationPayment?> getAppointmentDetailsUsingId(String appointmentId)async{
     try {
       AppointmentNotificationPayment appointmentNotificationModel = await createAppointmentService
           .getAppointmentDetailsUsingId(appointmentId);

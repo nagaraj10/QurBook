@@ -1,15 +1,16 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class Doctor {
-  int localDoctorId;
-  String city;
-  String description;
-  String email;
-  String id;
-  bool isUserDefined;
-  String name;
-  String specialization;
-  String state;
+  int? localDoctorId;
+  String? city;
+  String? description;
+  String? email;
+  String? id;
+  bool? isUserDefined;
+  String? name;
+  String? specialization;
+  String? state;
 
   Doctor(
       {this.localDoctorId,

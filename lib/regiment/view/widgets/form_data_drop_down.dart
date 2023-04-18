@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
@@ -6,9 +7,9 @@ import '../../../constants/fhb_constants.dart' as Constants;
 
 class FormDataDropDown extends StatefulWidget {
   const FormDataDropDown({
-    @required this.fieldData,
-    @required this.updateValue,
-    @required this.canEdit,
+    required this.fieldData,
+    required this.updateValue,
+    required this.canEdit,
     this.isFromQurHomeSymptom = false,
   });
 
@@ -32,7 +33,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
   }
 
   loadComboItems() {
-    final comboItemsList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    final comboItemsList = (widget.fieldData.fdata ?? '')?.split('|');
     if (comboItemsList.isNotEmpty && comboItemsList.length.isEven) {
       comboItems.clear();
       for (var i = 0; i < comboItemsList.length; i++) {
@@ -81,7 +82,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
             /*(widget.fieldData?.title ?? '').isNotEmpty
                 ? '${Constants.select} ${widget.fieldData?.title}'
                 : '',*/
-            (widget.fieldData?.title ?? '').isNotEmpty
+            (widget.fieldData.title ?? '').isNotEmpty
                 ? '${Constants.select}'
                 : '',
             style: TextStyle(

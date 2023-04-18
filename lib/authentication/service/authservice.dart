@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:myfhb/src/resources/network/api_services.dart';
@@ -26,7 +27,7 @@ class AuthService {
         },
         body: json.encode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         final String responseString = responseResult[strResult][strUserId];
         await PreferenceUtil.saveString(
@@ -50,7 +51,7 @@ class AuthService {
         },
         body: jsonEncode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
@@ -58,7 +59,7 @@ class AuthService {
         return responseResult;
       } else if (response.statusCode == 500) {
         final responseResult = jsonDecode(response.body);
-        final String responseString = responseResult[strResult];
+        final String? responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString ?? '');
         return responseResult;
@@ -80,7 +81,7 @@ class AuthService {
         },
         body: jsonEncode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
@@ -98,7 +99,7 @@ class AuthService {
     try {
       final response = await ApiServices.post(path,
           headers: headers, body: jsonEncode(params));
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
@@ -119,7 +120,7 @@ class AuthService {
         },
         body: jsonEncode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
@@ -141,7 +142,7 @@ class AuthService {
         },
         body: jsonEncode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
@@ -162,7 +163,7 @@ class AuthService {
         },
         body: jsonEncode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
@@ -188,7 +189,7 @@ class AuthService {
         headers: await headerRequest.getRequestHeadersAuthContents(),
         body: jsonEncode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
@@ -214,7 +215,7 @@ class AuthService {
         },
         body: jsonEncode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
@@ -237,7 +238,7 @@ class AuthService {
         },
         body: jsonEncode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
@@ -275,7 +276,7 @@ class AuthService {
         headers: await headerRequest.getRequestHeadersAuthContents(),
         body: jsonEncode(params),
       );
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         //String responseString = responseResult[strResult];
         // await PreferenceUtil.saveString(
@@ -292,7 +293,7 @@ class AuthService {
   Future<dynamic> addDoctorAsProvider(String jsonBody) async {
     var responseJson;
     var requestHeaders = <String, String>{
-      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
       'Content-Type': 'application/json',
       Constants.KEY_OffSet: CommonUtil().setTimeZone()
     };
@@ -302,7 +303,7 @@ class AuthService {
           body: jsonBody,
           headers: requestHeaders);
 
-      responseJson = jsonDecode(response.body);
+      responseJson = jsonDecode(response!.body);
     } on SocketException {
       return spocketException();
     }
@@ -312,7 +313,7 @@ class AuthService {
   Future<IvrNumberModel> getIVRNumbers() async {
     var responseJson;
     var requestHeaders = <String, String>{
-      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
       'Content-Type': 'application/json',
       Constants.KEY_OffSet: CommonUtil().setTimeZone()
     };
@@ -320,7 +321,7 @@ class AuthService {
       var response = await ApiServices.get(
           Constants.BASE_URL + 'authentication-log/get-ivr-number/',
           headers: requestHeaders);
-      responseJson = IvrNumberModel.fromJson(jsonDecode(response.body));
+      responseJson = IvrNumberModel.fromJson(jsonDecode(response!.body));
     } on SocketException {
       return spocketException();
     }
@@ -332,7 +333,7 @@ class AuthService {
     try {
       var response = await ApiServices.get(
         Constants.BASE_URL +
-            'authentication-log/polling/?phone=${phoneNumber ?? ''}&source=myFHB',
+            'authentication-log/polling/?phone=${phoneNumber}&source=myFHB',
         headers: headerRequest,
       );
       if (response != null) {
@@ -357,7 +358,7 @@ class AuthService {
           headers: headerRequest, body: jsonBody);
       // final response = await ApiServices.post('https://c0f6a853-f0e6-4a92-89b3-8e6cf34f9834.mock.pstmn.io/user/refer-friend',
       //     headers: await headerRequest, body: jsonBody);
-      responseJson = jsonDecode(response?.body);
+      responseJson = jsonDecode(response!.body);
     } on SocketException {
       return spocketException();
     }

@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+// import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+// import 'package:flutter_absolute_path/flutter_absolute_path.dart';  FU2.5
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -26,11 +28,11 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
-  final bool isFromSignUpPage;
+  final bool? isFromSignUpPage;
   const TakePictureScreen({
-    Key key,
+    Key? key,
     this.isFromSignUpPage,
-    @required this.camera,
+    required this.camera,
   }) : super(key: key);
 
   @override
@@ -38,13 +40,13 @@ class TakePictureScreen extends StatefulWidget {
 }
 
 class TakePictureScreenState extends State<TakePictureScreen> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
+  late CameraController _controller;
+  Future<void>? _initializeControllerFuture;
   bool isMultipleImages = false;
   bool isThumbnails = false;
-  List<String> imagePaths = new List();
+  List<String?> imagePaths = [];
 
-  BuildContext _cameraScreenContext;
+  BuildContext? _cameraScreenContext;
   //final GlobalKey _titleCategory = GlobalKey();
   final GlobalKey _singleMultiImg = GlobalKey();
   final GlobalKey _attachments = GlobalKey();
@@ -54,16 +56,16 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   bool selectSingleImage = false;
   String _platformMessage = 'No Error';
 
-  List<Asset> images = List<Asset>();
+  List<Asset> images = <Asset>[];
   String _error = 'No Error Dectected';
 
-  String categoryName;
-  String categoryID;
-  BuildContext _context;
+  String? categoryName;
+  String? categoryID;
+  late BuildContext _context;
 
   bool isFlash = false;
   bool _hasFlashlight = false;
-  String deviceName;
+  String? deviceName;
   @override
   void initState() {
     Constants.mInitialTime = DateTime.now();
@@ -197,7 +199,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                               alignment: Alignment.topRight,
                               children: <Widget>[
                                 Image.file(
-                                  File(imagePaths[imagePaths.length - 1]),
+                                  File(imagePaths[imagePaths.length - 1]!),
                                   width: 30,
                                   height: 40,
                                   fit: BoxFit.cover,
@@ -253,8 +255,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                                 allowedExtensions: [
                                               variable.strpdf
                                             ]);
-                                        if ((image?.files?.length ?? 0) > 0) {
-                                          imagePaths.add(image.files[0].path);
+                                        if ((image?.files.length ?? 0) > 0) {
+                                          imagePaths.add(image!.files[0].path);
                                         }
                                         callDisplayPictureScreen(context);
                                       } catch (e) {
@@ -288,14 +290,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       // Store the picture in the temp directory.
                                       // Find the temp directory using the `path_provider` plugin.
                                       (await getTemporaryDirectory()).path,
-                                      setFileName() +
+                                      setFileName()! +
                                           '${DateTime.now().second}.jpg'.trim(),
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
                                     XFile xpath =
                                         await _controller.takePicture();
-                                    imagePaths.add(xpath?.path);
+                                    imagePaths.add(xpath.path);
                                     setState(() {});
                                   } catch (e) {
                                     // If an error occurs, log the error to the console.
@@ -363,9 +365,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       } else {
                                         try {
                                           String filePath;
-                                          var image = await ImagePicker.platform
-                                              .pickImage(
-                                                  source: ImageSource.gallery);
+                                          var image = await (ImagePicker
+                                                  .platform
+                                                  .pickImage(
+                                                      source:
+                                                          ImageSource.gallery)
+                                              as Future<PickedFile>);
                                           filePath = image.path;
                                           imagePaths.add(filePath);
                                           callDisplayPictureScreen(context);
@@ -402,9 +407,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                             var image = await FilePicker
                                                 .platform
                                                 .pickFiles();
-                                            if ((image?.files?.length ?? 0) > 0)
+                                            if ((image?.files.length ?? 0) > 0)
                                               imagePaths
-                                                  .add(image.files[0].path);
+                                                  .add(image!.files[0].path);
                                             callDisplayPictureScreen(context);
                                           } catch (e) {
                                             // If an error occurs, log the error to the console.
@@ -438,7 +443,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       // Store the picture in the temp directory.
                                       // Find the temp directory using the `path_provider` plugin.
                                       (await getTemporaryDirectory()).path,
-                                      setFileName() +
+                                      setFileName()! +
                                           '${DateTime.now().second}.jpg'.trim(),
                                     );
 
@@ -448,12 +453,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
                                     if (isMultipleImages) {
                                       isThumbnails = true;
-                                      imagePaths.add(xpath?.path);
+                                      imagePaths.add(xpath.path);
 
                                       setState(() {});
                                     } else {
                                       // If the picture was taken, display it on a new screen.
-                                      imagePaths.add(xpath?.path);
+                                      imagePaths.add(xpath.path);
                                       callDisplayPictureScreen(context);
                                     }
                                   } catch (e) {
@@ -539,7 +544,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> loadAssets() async {
-    List<Asset> resultList = List<Asset>();
+    List<Asset> resultList = <Asset>[];
 
     try {
       resultList = await MultiImagePicker.pickImages(
@@ -561,9 +566,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     if (!mounted) return;
 
     for (Asset asset in resultList) {
+      // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
+      // if(filePath!=null)imagePaths.add(filePath);
       String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      imagePaths.add(filePath);
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
+      imagePaths.add(filePath); //FU2.5
     }
 
     setState(() {
@@ -588,7 +595,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     }
   }
 
-  String setFileName() {
+  String? setFileName() {
     if (categoryName == variable.strDevices) {
       return categoryName;
     } else {
@@ -598,7 +605,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   getWidgetForTitle(BuildContext context) {
     return InkWell(
-      child: Text(categoryName),
+      child: Text(categoryName!),
       onTap: () {
         _showOverlay(context);
       },
@@ -632,14 +639,17 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> getFilePath() async {
-    FilePickerResult filePaths = await FilePicker.platform.pickFiles(
+    FilePickerResult? filePaths = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: [variable.strpdf],
     );
-    if ((filePaths?.files?.length ?? 0) > 0) {
-      for (PlatformFile file in filePaths?.files) {
-        String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);
-        imagePaths.add(filePath);
+    if ((filePaths?.files.length ?? 0) > 0) {
+      for (PlatformFile file in filePaths!.files) {
+        // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: file.path??'');
+        // if(filePath!=null)imagePaths.add(filePath);
+        String filePath =
+            await FlutterAbsolutePath.getAbsolutePath(file.path ?? '');
+        imagePaths.add(filePath); //FU2.5
       }
     }
   }

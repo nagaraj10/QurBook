@@ -1,11 +1,12 @@
+
 class CaregiverAssosicationModel {
   CaregiverAssosicationModel({
     this.isSuccess,
     this.message,
   });
 
-  bool isSuccess;
-  String message;
+  bool? isSuccess;
+  String? message;
 
   factory CaregiverAssosicationModel.fromMap(Map<String, dynamic> json) =>
       CaregiverAssosicationModel(

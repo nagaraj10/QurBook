@@ -1,10 +1,11 @@
+
 import 'DeviceMeasurement.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class Data {
-  String mediaMetaId;
-  String mediaMasterId;
-  DeviceMeasurements deviceMeasurements;
+  String? mediaMetaId;
+  String? mediaMasterId;
+  DeviceMeasurements? deviceMeasurements;
 
   Data({this.mediaMetaId, this.mediaMasterId, this.deviceMeasurements});
 

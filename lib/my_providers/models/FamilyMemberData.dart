@@ -1,25 +1,26 @@
+
 import 'ProfilePicThumbnail.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class FamilyMemberData {
-  String id;
-  String phoneNumber;
-  String email;
-  String createdOn;
-  bool isActive;
-  String lastModifiedOn;
-  String name;
-  String gender;
-  bool isTempUser;
-  bool isVirtualUser;
-  String createdBy;
-  ProfilePicThumbnail profilePicThumbnail;
-  String bloodGroup;
-  String  dateOfBirth;
-  bool isTokenRefresh;
-  String countryCode;
-  bool isEmailVerified;
-  String status;
+  String? id;
+  String? phoneNumber;
+  String? email;
+  String? createdOn;
+  bool? isActive;
+  String? lastModifiedOn;
+  String? name;
+  String? gender;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  String? createdBy;
+  ProfilePicThumbnail? profilePicThumbnail;
+  String? bloodGroup;
+  String?  dateOfBirth;
+  bool? isTokenRefresh;
+  String? countryCode;
+  bool? isEmailVerified;
+  String? status;
 
   FamilyMemberData(
       {this.id,
@@ -78,7 +79,7 @@ class FamilyMemberData {
     data[parameters.strisVirtualUser] = isVirtualUser;
     data[parameters.strCreatedBy] = createdBy;
     if (profilePicThumbnail != null) {
-      data[parameters.strprofilePicThumbnail] = profilePicThumbnail.toJson();
+      data[parameters.strprofilePicThumbnail] = profilePicThumbnail!.toJson();
     }
     data[parameters.strbloodGroup] = bloodGroup;
     data[parameters.strdateOfBirth] = dateOfBirth;

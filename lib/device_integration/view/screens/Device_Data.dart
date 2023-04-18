@@ -1,15 +1,16 @@
+
 import 'package:flutter/cupertino.dart';
 
 class DeviceData {
-  final String title;
-  final String icon;
-  final String icon_new;
-  int status;
-  bool isSelected;
-  String value_name;
-  String value1;
-  String value2;
-  List<Color> color;
+  final String? title;
+  final String? icon;
+  final String? icon_new;
+  int? status;
+  bool? isSelected;
+  String? value_name;
+  String? value1;
+  String? value2;
+  List<Color?>? color;
   DeviceData(
       {this.title,
       this.icon,

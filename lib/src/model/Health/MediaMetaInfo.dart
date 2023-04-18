@@ -1,21 +1,22 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'MediaMasterIds.dart';
 import 'MetaInfo.dart';
 
 class MediaMetaInfo {
-  String id;
-  String metaTypeId;
-  String userId;
-  MetaInfo metaInfo;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
-  bool isBookmarked;
-  bool isDraft;
-  String createdByUser;
-  List<MediaMasterIds> mediaMasterIds;
-  bool isSelected = false;
+  String? id;
+  String? metaTypeId;
+  String? userId;
+  MetaInfo? metaInfo;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isBookmarked;
+  bool? isDraft;
+  String? createdByUser;
+  List<MediaMasterIds>? mediaMasterIds;
+  bool? isSelected = false;
 
   MediaMetaInfo(
       {this.id,
@@ -49,7 +50,7 @@ class MediaMetaInfo {
     if (json[parameters.strmediaMasterIds] != null) {
       mediaMasterIds = <MediaMasterIds>[];
       json[parameters.strmediaMasterIds].forEach((v) {
-        mediaMasterIds.add(MediaMasterIds.fromJson(v));
+        mediaMasterIds!.add(MediaMasterIds.fromJson(v));
       });
     }
   }
@@ -60,7 +61,7 @@ class MediaMetaInfo {
     data[parameters.strmetaTypeId] = metaTypeId;
     data[parameters.struserId] = userId;
     if (metaInfo != null) {
-      data[parameters.strmetaInfo] = metaInfo.toJson();
+      data[parameters.strmetaInfo] = metaInfo!.toJson();
     }
     data[parameters.strIsActive] = isActive;
     data[parameters.strCreatedBy] = createdBy;
@@ -71,7 +72,7 @@ class MediaMetaInfo {
     data[parameters.strcreatedByUser] = createdByUser;
     if (mediaMasterIds != null) {
       data[parameters.strmediaMasterIds] =
-          mediaMasterIds.map((v) => v.toJson()).toList();
+          mediaMasterIds!.map((v) => v.toJson()).toList();
     }
     return data;
   }

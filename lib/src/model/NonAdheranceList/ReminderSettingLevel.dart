@@ -1,13 +1,14 @@
+
 class ReminderSettingLevel {
   ReminderSettingLevel({
-      String id, 
-      String code, 
-      String name, 
-      String description, 
-      int sortOrder, 
-      bool isActive, 
-      String createdBy, 
-      String createdOn, 
+      String? id, 
+      String? code, 
+      String? name, 
+      String? description, 
+      int? sortOrder, 
+      bool? isActive, 
+      String? createdBy, 
+      String? createdOn, 
       dynamic lastModifiedOn,}){
     _id = id;
     _code = code;
@@ -31,24 +32,24 @@ class ReminderSettingLevel {
     _createdOn = json['createdOn'];
     _lastModifiedOn = json['lastModifiedOn'];
   }
-  String _id;
-  String _code;
-  String _name;
-  String _description;
-  int _sortOrder;
-  bool _isActive;
-  String _createdBy;
-  String _createdOn;
+  String? _id;
+  String? _code;
+  String? _name;
+  String? _description;
+  int? _sortOrder;
+  bool? _isActive;
+  String? _createdBy;
+  String? _createdOn;
   dynamic _lastModifiedOn;
 
-  String get id => _id;
-  String get code => _code;
-  String get name => _name;
-  String get description => _description;
-  int get sortOrder => _sortOrder;
-  bool get isActive => _isActive;
-  String get createdBy => _createdBy;
-  String get createdOn => _createdOn;
+  String? get id => _id;
+  String? get code => _code;
+  String? get name => _name;
+  String? get description => _description;
+  int? get sortOrder => _sortOrder;
+  bool? get isActive => _isActive;
+  String? get createdBy => _createdBy;
+  String? get createdOn => _createdOn;
   dynamic get lastModifiedOn => _lastModifiedOn;
 
   Map<String, dynamic> toJson() {

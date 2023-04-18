@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -21,14 +22,14 @@ import 'package:provider/provider.dart';
 
 class DynamicLinks {
   static void initDynamicLinks() async {
-    final PendingDynamicLinkData data =
+    final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
+    final Uri? deepLink = data?.link;
     await processDynamicLink(deepLink);
 
     FirebaseDynamicLinks.instance.onLink(
-      onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        final Uri deepLink = dynamicLink?.link;
+      onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+        final Uri? deepLink = dynamicLink?.link;
         await processDynamicLink(deepLink);
       },
       onError: (OnLinkErrorException e) async {
@@ -38,10 +39,10 @@ class DynamicLinks {
     );
   }
 
-  static Future<void> processDynamicLink(Uri deepLink) async {
+  static Future<void> processDynamicLink(Uri? deepLink) async {
     if ((PreferenceUtil.getStringValue(KEY_USERID) ?? '').isNotEmpty) {
       await PreferenceUtil.saveString(KEY_DYNAMIC_URL, '');
-      if ((deepLink?.queryParameters?.length ?? 0) > 0 &&
+      if ((deepLink?.queryParameters.length ?? 0) > 0 &&
           (deepLink?.queryParameters['module'] ?? '').isNotEmpty) {
         var firebase=FirebaseAnalyticsService();
         firebase.trackEvent("on_deep_link_clicked",
@@ -53,8 +54,8 @@ class DynamicLinks {
         switch (deepLink?.queryParameters['module']) {
           case 'qurplan':
             var planWizardViewModel =
-                Provider.of<PlanWizardViewModel>(Get.context, listen: false);
-            int currentPage;
+                Provider.of<PlanWizardViewModel>(Get.context!, listen: false);
+            int? currentPage;
             if ((deepLink?.queryParameters['packageId'] ?? '').isNotEmpty) {
               Get.offAll(
                 MyPlanDetailView(
@@ -73,30 +74,30 @@ class DynamicLinks {
 
               if ((deepLink?.queryParameters['freePlans'] ?? '').isNotEmpty) {
                 if (deepLink?.queryParameters['freePlans'] == '1') {
-                  planWizardViewModel?.dynamicLinkTabIndex = 1;
+                  planWizardViewModel.dynamicLinkTabIndex = 1;
                 } else {
-                  planWizardViewModel?.dynamicLinkTabIndex = 0;
+                  planWizardViewModel.dynamicLinkTabIndex = 0;
                 }
               }
 
               if ((deepLink?.queryParameters['provider'] ?? '').isNotEmpty) {
-                planWizardViewModel?.dynamicLinkSearchText =
+                planWizardViewModel.dynamicLinkSearchText =
                     deepLink?.queryParameters['provider'];
               }
 
               if ((deepLink?.queryParameters['plan'] ?? '').isNotEmpty) {
-                planWizardViewModel?.dynamicLinkSearchText =
+                planWizardViewModel.dynamicLinkSearchText =
                     deepLink?.queryParameters['plan'];
               }
 
               if ((deepLink?.queryParameters['diseaseCondition'] ?? '')
                   .isNotEmpty) {
-                planWizardViewModel?.selectedTag =
+                planWizardViewModel.selectedTag =
                     deepLink?.queryParameters['diseaseCondition'];
               }
 
               planWizardViewModel.isDynamicLink = true;
-              planWizardViewModel?.dynamicLinkPage = currentPage ?? 0;
+              planWizardViewModel.dynamicLinkPage = currentPage ?? 0;
               Get.offAllNamed(rt_PlanWizard);
             }
             break;
@@ -129,18 +130,18 @@ class DynamicLinks {
             break;
           case 'symptoms':
             Provider.of<RegimentViewModel>(
-              Get.context,
+              Get.context!,
               listen: false,
             ).regimentMode = RegimentMode.Symptoms;
             Provider.of<RegimentViewModel>(
-              Get.context,
+              Get.context!,
               listen: false,
             ).regimentFilter = RegimentFilter.Scheduled;
             Get.offAllNamed(rt_Regimen);
             break;
           case 'caregivers_chat':
             var widgetsData =
-                await Provider.of<LandingViewModel>(Get.context, listen: false)
+                await Provider.of<LandingViewModel>(Get.context!, listen: false)
                     .getQurPlanWidgetsData(
               needNotify: true,
               includeText: qr_careGiverList,

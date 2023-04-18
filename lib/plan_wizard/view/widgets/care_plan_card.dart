@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -23,24 +24,24 @@ import '../../../constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
 class CarePlanCard extends StatelessWidget {
-  final PlanListResult planList;
-  final Function() onClick;
-  final String isFrom;
+  final PlanListResult? planList;
+  final Function()? onClick;
+  final String? isFrom;
 
   CarePlanCard({this.planList, this.onClick, this.isFrom});
 
   PlanWizardViewModel planWizardViewModel = new PlanWizardViewModel();
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   TextEditingController memoController = TextEditingController();
-  bool isCheckbox = false;
+  bool? isCheckbox = false;
 
   @override
   Widget build(BuildContext context) {
-    String orginalPrice = planList.price;
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
+    String? orginalPrice = planList!.price;
+    Provider.of<PlanWizardViewModel>(context, listen: false).fetchCartItem();
     return InkWell(
       onTap: () {
-        onClick();
+        onClick!();
         onCardTapped(context);
       },
       child: Container(
@@ -51,7 +52,7 @@ class CarePlanCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey[400],
+                color: Colors.grey[400]!,
                 blurRadius: 5.0,
                 spreadRadius: 2.0,
                 offset: Offset(2.0, 2.0), // shadow direction: bottom right
@@ -83,8 +84,8 @@ class CarePlanCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          planList.title != null
-                              ? toBeginningOfSentenceCase(planList.title)
+                          planList!.title != null
+                              ? toBeginningOfSentenceCase(planList!.title)!
                               : '',
                           style: TextStyle(
                             fontSize: 16.0.sp,
@@ -95,8 +96,8 @@ class CarePlanCard extends StatelessWidget {
                           maxLines: 2,
                         ),
                         Text(
-                          planList.providerName != null
-                              ? toBeginningOfSentenceCase(planList.providerName)
+                          planList!.providerName != null
+                              ? toBeginningOfSentenceCase(planList!.providerName)!
                               : '',
                           style: TextStyle(
                               fontSize: 15.0.sp,
@@ -115,9 +116,9 @@ class CarePlanCard extends StatelessWidget {
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black),
                                 ),
-                                planList.packageDuration != null
+                                planList!.packageDuration != null
                                     ? Text(
-                                        planList.packageDuration + ' days',
+                                        planList!.packageDuration! + ' days',
                                         maxLines: 1,
                                         style: TextStyle(
                                             fontSize: 12.0.sp,
@@ -134,13 +135,13 @@ class CarePlanCard extends StatelessWidget {
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black),
                                 ),
-                                planList.price != null
+                                planList!.price != null
                                     ? Visibility(
-                                        visible: planList.price.isNotEmpty &&
-                                            planList.price != '0',
+                                        visible: planList!.price!.isNotEmpty &&
+                                            planList!.price != '0',
                                         child: TextWidget(
                                             text: CommonUtil.CURRENCY +
-                                                planList.price,
+                                                planList!.price!,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
                                             colors: Color(new CommonUtil()
@@ -182,49 +183,49 @@ class CarePlanCard extends StatelessWidget {
                               isSelected: isFrom == strProviderCare
                                   ? Provider.of<PlanWizardViewModel>(context)
                                           .checkItemInCart(
-                                              planList.packageid, isFrom,
+                                              planList!.packageid, isFrom,
                                               providerId:
-                                                  planList.providerid) ||
+                                                  planList!.providerid) ||
                                       Provider.of<PlanWizardViewModel>(context)
                                               .currentPackageProviderCareId ==
-                                          planList.packageid
+                                          planList!.packageid
                                   : Provider.of<PlanWizardViewModel>(context)
                                           .checkItemInCart(
-                                              planList.packageid, isFrom,
+                                              planList!.packageid, isFrom,
                                               providerId:
-                                                  planList.providerid) ||
+                                                  planList!.providerid) ||
                                       Provider.of<PlanWizardViewModel>(context)
                                               .currentPackageFreeCareId ==
-                                          planList.packageid,
+                                          planList!.packageid,
                               onTap: () async {
                                 var firebase = FirebaseAnalyticsService();
                                 firebase.trackEvent("on_plan_selected", {
                                   "user_id": PreferenceUtil.getStringValue(
                                       KEY_USERID_MAIN),
-                                  "planId": planList.packageid,
+                                  "planId": planList!.packageid,
                                   "type": "add or remove",
-                                  "name": planList.title
+                                  "name": planList!.title
                                 });
-                                if (planList.isSubscribed == '1') {
-                                  if (planList.isExtendable == '1') {
+                                if (planList!.isSubscribed == '1') {
+                                  if (planList!.isExtendable == '1') {
                                     var isSelected =
                                         Provider.of<PlanWizardViewModel>(
                                                 context,
                                                 listen: false)
                                             .checkItemInCart(
-                                                planList.packageid, isFrom,
+                                                planList!.packageid, isFrom,
                                                 providerId:
-                                                    planList.providerid);
+                                                    planList!.providerid);
                                     if (isSelected) {
                                       commonRemoveCartDialog(context, planList,
-                                          planList.packageid, orginalPrice);
+                                          planList!.packageid!, orginalPrice);
                                       firebase.trackEvent("on_plan_selected", {
                                         "user_id":
                                             PreferenceUtil.getStringValue(
                                                 KEY_USERID_MAIN),
-                                        "planId": planList.packageid,
+                                        "planId": planList!.packageid,
                                         "type": "remove",
-                                        "name": planList.title
+                                        "name": planList!.title
                                       });
                                     } else {
                                       _alertForSubscribedPlan(
@@ -233,9 +234,9 @@ class CarePlanCard extends StatelessWidget {
                                         "user_id":
                                             PreferenceUtil.getStringValue(
                                                 KEY_USERID_MAIN),
-                                        "planId": planList.packageid,
+                                        "planId": planList!.packageid,
                                         "type": "add",
-                                        "name": planList.title
+                                        "name": planList!.title
                                       });
                                     }
                                   } else {
@@ -246,20 +247,20 @@ class CarePlanCard extends StatelessWidget {
                                   firebase.trackEvent("on_plan_selected", {
                                     "user_id": PreferenceUtil.getStringValue(
                                         KEY_USERID_MAIN),
-                                    "planId": planList.packageid,
+                                    "planId": planList!.packageid,
                                     "type": "add or remove",
-                                    "name": planList.title
+                                    "name": planList!.title
                                   });
                                   var isSelected =
                                       Provider.of<PlanWizardViewModel>(
                                               context,
                                               listen: false)
                                           .checkItemInCart(
-                                              planList.packageid, isFrom,
-                                              providerId: planList.providerid);
+                                              planList!.packageid, isFrom,
+                                              providerId: planList!.providerid);
                                   if (isSelected) {
                                     commonRemoveCartDialog(context, planList,
-                                        planList.packageid, orginalPrice);
+                                        planList!.packageid!, orginalPrice);
                                   } else {
                                     bool canProceed =
                                         await Provider.of<PlanWizardViewModel>(
@@ -271,7 +272,7 @@ class CarePlanCard extends StatelessWidget {
                                         if (Provider.of<PlanWizardViewModel>(
                                                     context,
                                                     listen: false)
-                                                ?.currentPackageProviderCareId !=
+                                                .currentPackageProviderCareId !=
                                             '') {
                                           commonRemoveCartDialog(
                                               context,
@@ -279,7 +280,7 @@ class CarePlanCard extends StatelessWidget {
                                               Provider.of<PlanWizardViewModel>(
                                                       context,
                                                       listen: false)
-                                                  ?.currentPackageProviderCareId,
+                                                  .currentPackageProviderCareId!,
                                               orginalPrice);
                                         }
 
@@ -295,16 +296,16 @@ class CarePlanCard extends StatelessWidget {
                                               Provider.of<PlanWizardViewModel>(
                                                       context,
                                                       listen: false)
-                                                  ?.currentCartProviderCarePackageId,
+                                                  .currentCartProviderCarePackageId,
                                               orginalPrice);
                                         }
                                         checkIfMemberShipIsAvailable(
-                                            context, planList, planList.price);
+                                            context, planList, planList!.price!);
                                       } else if (isFrom == strFreeCare) {
                                         if (Provider.of<PlanWizardViewModel>(
                                                     context,
                                                     listen: false)
-                                                ?.currentPackageFreeCareId !=
+                                                .currentPackageFreeCareId !=
                                             '') {
                                           commonRemoveCartDialog(
                                               context,
@@ -312,7 +313,7 @@ class CarePlanCard extends StatelessWidget {
                                               Provider.of<PlanWizardViewModel>(
                                                       context,
                                                       listen: false)
-                                                  ?.currentPackageFreeCareId,
+                                                  .currentPackageFreeCareId!,
                                               orginalPrice);
                                         }
 
@@ -328,11 +329,11 @@ class CarePlanCard extends StatelessWidget {
                                               Provider.of<PlanWizardViewModel>(
                                                       context,
                                                       listen: false)
-                                                  ?.currentCartFreeCarePackageId,
+                                                  .currentCartFreeCarePackageId,
                                               orginalPrice);
                                         }
                                         checkIfMemberShipIsAvailable(
-                                            context, planList, planList.price);
+                                            context, planList, planList!.price!);
                                       }
                                     }
                                   }
@@ -355,9 +356,9 @@ class CarePlanCard extends StatelessWidget {
     var firebase = FirebaseAnalyticsService();
     firebase.trackEvent("on_plan_view", {
       "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-      "planId": planList.packageid,
+      "planId": planList!.packageid,
       "type": "plan view",
-      "name": planList.title
+      "name": planList!.title
     });
     Navigator.push(
       context,
@@ -384,7 +385,7 @@ class CarePlanCard extends StatelessWidget {
   }
 
   Future<bool> _alertForSubscribedPlan(
-      BuildContext context, String orginalPrice) {
+      BuildContext context, String? orginalPrice) {
     return showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -400,73 +401,73 @@ class CarePlanCard extends StatelessWidget {
                   Navigator.pop(context);
 
                   bool canProceed = await Provider.of<PlanWizardViewModel>(
-                          Get.context,
+                          Get.context!,
                           listen: false)
                       .handleBundlePlans();
 
                   /// provider care plan
                   if (canProceed) {
                     if (isFrom == strProviderCare) {
-                      if (Provider.of<PlanWizardViewModel>(Get.context,
+                      if (Provider.of<PlanWizardViewModel>(Get.context!,
                                   listen: false)
-                              ?.currentPackageProviderCareId !=
+                              .currentPackageProviderCareId !=
                           '') {
                         commonRemoveCartDialog(
                             context,
                             planList,
                             Provider.of<PlanWizardViewModel>(context,
                                     listen: false)
-                                ?.currentPackageProviderCareId,
+                                .currentPackageProviderCareId!,
                             orginalPrice);
                       }
 
                       bool isItemInCart = Provider.of<PlanWizardViewModel>(
-                              Get.context,
+                              Get.context!,
                               listen: false)
                           .checkAllItemsForProviderCare();
                       if (isItemInCart) {
                         commonRemoveCartDialog(
                             context,
                             planList,
-                            Provider.of<PlanWizardViewModel>(Get.context,
+                            Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                ?.currentCartProviderCarePackageId,
+                                .currentCartProviderCarePackageId,
                             orginalPrice);
                       }
                       checkIfMemberShipIsAvailable(
-                          context, planList, planList.price);
+                          context, planList, planList!.price!);
                     }
 
                     /// free care plans
                     else {
-                      if (Provider.of<PlanWizardViewModel>(Get.context,
+                      if (Provider.of<PlanWizardViewModel>(Get.context!,
                                   listen: false)
-                              ?.currentPackageFreeCareId !=
+                              .currentPackageFreeCareId !=
                           '') {
                         commonRemoveCartDialog(
                             context,
                             planList,
-                            Provider.of<PlanWizardViewModel>(Get.context,
+                            Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                ?.currentPackageFreeCareId,
+                                .currentPackageFreeCareId!,
                             orginalPrice);
                       }
 
                       bool isItemInCart = Provider.of<PlanWizardViewModel>(
-                              Get.context,
+                              Get.context!,
                               listen: false)
                           .checkAllItemsForFreeCare();
                       if (isItemInCart) {
                         commonRemoveCartDialog(
                             context,
                             planList,
-                            Provider.of<PlanWizardViewModel>(Get.context,
+                            Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                ?.currentCartFreeCarePackageId,
+                                .currentCartFreeCarePackageId,
                             orginalPrice);
                       }
                       checkIfMemberShipIsAvailable(
-                          context, planList, planList.price);
+                          context, planList, planList!.price!);
                     }
                   }
                 },
@@ -474,13 +475,12 @@ class CarePlanCard extends StatelessWidget {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool);
   }
 
   Future<bool> _alertForMemberShip(
       BuildContext context, PlanListResult planList, bool isMemberShip) {
-    String originalPrice = planList.price;
+    String? originalPrice = planList.price;
     return showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -506,46 +506,45 @@ class CarePlanCard extends StatelessWidget {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool);
   }
 
   void addToCartCommonMethod(PlanListResult planList, BuildContext context,
-      String orginalPrice, String remark, bool isMemberShipAvailable) async {
+      String? orginalPrice, String remark, bool isMemberShipAvailable) async {
     await Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.addToCartItem(
+        .addToCartItem(
             packageId: planList.packageid,
             price: orginalPrice,
             isRenew: planList.isexpired == '1' ? true : false,
             providerId: planList.providerid,
             isFromAdd: isFrom,
-            isMemberShipAvail: isMemberShipAvailable ?? false,
+            isMemberShipAvail: isMemberShipAvailable,
             actualFee: orginalPrice,
             remarks: remark,
             planType: isFrom == strProviderCare ? "CARE" : "",
-            packageDuration: planList?.packageDuration);
+            packageDuration: planList.packageDuration);
   }
 
   void checkIfMemberShipIsAvailable(
-      BuildContext context, PlanListResult planList, String price) async {
+      BuildContext context, PlanListResult? planList, String price) async {
     bool isMemberShip =
         await Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.isMembershipAVailable;
+            .isMembershipAVailable!;
     int careCount =
         await Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.carePlanCount;
+            .carePlanCount;
     int priceValue = int.parse(price);
     if (isMemberShip && priceValue > 0 && careCount > 0) {
-      _alertForMemberShip(context, planList, isMemberShip);
+      _alertForMemberShip(context, planList!, isMemberShip);
     } else {
-      addToCartCommonMethod(planList, context, planList.price, "", false);
+      addToCartCommonMethod(planList!, context, planList.price, "", false);
     }
   }
 
-  Future<Widget> _alertBoxforCheckMemberShip(
+  Future<Widget?> _alertBoxforCheckMemberShip(
       BuildContext context, PlanListResult planList, bool showCheckBox) {
-    String originalPrice = planList.price;
-    String priceSet = planList.price;
+    String? originalPrice = planList.price;
+    String? priceSet = planList.price;
     var dialog = StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
           shape:
@@ -614,9 +613,9 @@ class CarePlanCard extends StatelessWidget {
                                     activeColor:
                                         Color(CommonUtil().getThemeColor()),
                                     value: isCheckbox,
-                                    onChanged: (bool value) {
+                                    onChanged: (bool? value) {
                                       setState(() {
-                                        if (value) {
+                                        if (value!) {
                                           priceSet = 0.toString();
                                         } else {
                                           priceSet = originalPrice;
@@ -682,15 +681,15 @@ class CarePlanCard extends StatelessWidget {
         barrierDismissible: false);
   }
 
-  void commonRemoveCartDialog(BuildContext context, PlanListResult planList,
-      String packageId, String orginalPrice) async {
+  void commonRemoveCartDialog(BuildContext context, PlanListResult? planList,
+      String packageId, String? orginalPrice) async {
     await Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.fetchCartItem();
+        .fetchCartItem();
 
-    ProductList productList =
+    ProductList? productList =
         Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.getProductListUsingPackageId(packageId);
-    await Provider.of<PlanWizardViewModel>(context, listen: false)?.removeCart(
+            .getProductListUsingPackageId(packageId);
+    await Provider.of<PlanWizardViewModel>(context, listen: false).removeCart(
         packageId: packageId, isFrom: isFrom, productList: productList);
   }
 }

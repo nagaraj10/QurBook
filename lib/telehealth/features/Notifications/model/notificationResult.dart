@@ -1,20 +1,21 @@
+
 import 'package:myfhb/telehealth/features/Notifications/model/messageDetails.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notificationResponseText.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/recipientUser.dart';
 
 class NotificationResult {
-  String id;
-  MessageDetails messageDetails;
-  String transportMedium;
+  String? id;
+  MessageDetails? messageDetails;
+  String? transportMedium;
   var responseText;
-  String deliveredDateTime;
-  String createdOn;
+  String? deliveredDateTime;
+  String? createdOn;
   var recipientUserDetails;
-  RecipientUser recipientUser;
+  RecipientUser? recipientUser;
   var scheduler;
-  RecipientUser senderUser;
-  bool isActionDone;
-  bool isUnread;
+  RecipientUser? senderUser;
+  bool? isActionDone;
+  bool? isUnread;
   bool deleteSelected = false;
 
   NotificationResult({
@@ -57,7 +58,7 @@ class NotificationResult {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     if (this.messageDetails != null) {
-      data['messageDetails'] = this.messageDetails.toJson();
+      data['messageDetails'] = this.messageDetails!.toJson();
     }
     data['transportMedium'] = this.transportMedium;
     if (this.responseText != null) {
@@ -67,11 +68,11 @@ class NotificationResult {
     data['createdOn'] = this.createdOn;
     data['recipientUserDetails'] = this.recipientUserDetails;
     if (this.recipientUser != null) {
-      data['recipientUser'] = this.recipientUser.toJson();
+      data['recipientUser'] = this.recipientUser!.toJson();
     }
     data['scheduler'] = this.scheduler;
     if (this.senderUser != null) {
-      data['senderUser'] = this.senderUser.toJson();
+      data['senderUser'] = this.senderUser!.toJson();
     }
     data['isActionDone'] = this.isActionDone;
     data['isUnread'] = this.isUnread;

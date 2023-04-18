@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -24,7 +25,7 @@ class FirebaseAnalyticsService {
     return observer;
   }
 
-  Future<void> setUserId(String uId) async {
+  Future<void> setUserId(String? uId) async {
     await analytics.setUserId(uId);
   }
 
@@ -44,7 +45,7 @@ class FirebaseAnalyticsService {
           screenName: currentScreen, screenClassOverride: classOverrides);
       print("user prop analytics");
     }catch(e){
-      print("error: "+e);
+      print("error: "+e.toString());
     }
 
   }

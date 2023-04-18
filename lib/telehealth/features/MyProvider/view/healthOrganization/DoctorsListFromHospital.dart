@@ -1,4 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
+
+//import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
@@ -36,9 +37,9 @@ import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/common/errors_widget.dart';
 
 class DoctorListFromHospital extends StatefulWidget {
-  final List<Hospitals> hospitals;
-  final int index;
-  Function(String) closePage;
+  final List<Hospitals>? hospitals;
+  final int? index;
+  Function(String)? closePage;
 
   @override
   _HealthOrganizationState createState() => _HealthOrganizationState();
@@ -48,20 +49,20 @@ class DoctorListFromHospital extends StatefulWidget {
 
 class _HealthOrganizationState extends State<DoctorListFromHospital> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  MyProviderViewModel providerViewModel;
+  late MyProviderViewModel providerViewModel;
   DateTime _selectedValue = DateTime.now();
   int selectedPosition = 0;
   bool firstTym = false;
-  String doctorsName;
+  String? doctorsName;
   CommonWidgets commonWidgets = new CommonWidgets();
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
-      new List<AvailableTimeSlotsModel>();
-  List<SlotSessionsModel> sessionTimeModel = new List<SlotSessionsModel>();
-  List<Slots> slotsModel = new List<Slots>();
-  ProvidersBloc _providersBloc;
-  MyProvidersResponse myProvidersResponseList;
-  MyProfileModel myProfile;
+      <AvailableTimeSlotsModel>[];
+  List<SlotSessionsModel> sessionTimeModel = <SlotSessionsModel>[];
+  List<Slots> slotsModel = <Slots>[];
+  ProvidersBloc? _providersBloc;
+  MyProvidersResponse? myProvidersResponseList;
+  MyProfileModel? myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
@@ -89,7 +90,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(1.sh * 0.12),
-          child: getDoctorBar(widget.hospitals, widget.index)),
+          child: getDoctorBar(widget.hospitals!, widget.index!)),
       body: Container(
           child: Column(
         children: [
@@ -104,7 +105,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
       child: (providerViewModel.healthOrganizationResult != null &&
               providerViewModel.healthOrganizationResult.length > 0)
           ? providerListWidget(providerViewModel.doctorsFromHospital)
-          : getHospitalProviderList(widget.hospitals[widget.index].id),
+          : getHospitalProviderList(widget.hospitals![widget.index!].id!),
     );
   }
 
@@ -159,7 +160,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                       child: Text(
                                         hospitals[index].name != null
                                             ? hospitals[index]
-                                                .name[0]
+                                                .name![0]
                                                 .toUpperCase()
                                             : '',
                                         style: TextStyle(
@@ -188,7 +189,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                       children: <Widget>[
                         Text(
                             hospitals[index].name != null
-                                ? hospitals[index].name
+                                ? hospitals[index].name!
                                 : '',
                             textAlign: TextAlign.left,
                             overflow: TextOverflow.ellipsis,
@@ -226,7 +227,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                             ),*/
                         commonWidgets.getCityHospital(hospitals[index]) != ''
                             ? Text(
-                                commonWidgets.getCityHospital(hospitals[index]),
+                                commonWidgets.getCityHospital(hospitals[index])!,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
@@ -296,17 +297,17 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
             commonWidgets.getSizedBox(20.0.h),
             DoctorSessionTimeSlot(
               date: _selectedValue.toString(),
-              doctorId: docs[i].doctor.id,
+              doctorId: docs[i].doctor!.id,
               isReshedule: false,
               i: i,
               doctorListIndex: i,
-              healthOrganizationId: docs[i].healthOrganization.id,
+              healthOrganizationId: docs[i].healthOrganization!.id,
               healthOrganizationResult: [],
               resultFromHospitalList: docs,
               doctorListPos: widget.index,
               onChanged: (value) {},
               closePage: (value) {
-                widget.closePage(value);
+                widget.closePage!(value);
                 Navigator.pop(context);
               },
               refresh: () {
@@ -336,7 +337,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              child: commonWidgets.getClipOvalImageForHos(docs[i].doctor),
+              child: commonWidgets.getClipOvalImageForHos(docs[i].doctor!),
             ),
             new Positioned(
               bottom: 0.0,
@@ -362,7 +363,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                           constraints: BoxConstraints(
                                maxWidth: 160.w),
                           child: commonWidgets
-                              .setDoctornameForHos(docs[i].doctor.user)),
+                              .setDoctornameForHos(docs[i].doctor!.user)),
                       commonWidgets.getSizeBoxWidth(10.0.w),
                       commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
@@ -407,7 +408,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                   SizedBoxWidget(
                     width: 10,
                   ),
-                  docs[i].doctor.isTelehealthEnabled
+                  docs[i].doctor!.isTelehealthEnabled!
                       ? commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
@@ -422,26 +423,26 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
               commonWidgets.getSizedBox(5.0),
               Row(children: [
                 Expanded(
-                    child: (docs[i].doctor.doctorProfessionalDetailCollection !=
+                    child: (docs[i].doctor!.doctorProfessionalDetailCollection !=
                                 null &&
                             docs[i]
-                                    .doctor
-                                    .doctorProfessionalDetailCollection
+                                    .doctor!
+                                    .doctorProfessionalDetailCollection!
                                     .length >
                                 0)
                         ? docs[i]
-                                    .doctor
-                                    .doctorProfessionalDetailCollection[0]
+                                    .doctor!
+                                    .doctorProfessionalDetailCollection![0]
                                     .specialty !=
                                 null
                             ? docs[i]
-                                        .doctor
-                                        .doctorProfessionalDetailCollection[0]
-                                        .specialty
+                                        .doctor!
+                                        .doctorProfessionalDetailCollection![0]
+                                        .specialty!
                                         .name !=
                                     null
                                 ? commonWidgets.getDoctoSpecialist(
-                                    '${docs[i].doctor.doctorProfessionalDetailCollection[0].specialty.name}')
+                                    '${docs[i].doctor!.doctorProfessionalDetailCollection![0].specialty!.name}')
                                 : SizedBox()
                             : SizedBox()
                         : SizedBox()),
@@ -455,7 +456,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                   Expanded(
                       child: Text(
                     '' +
-                        commonWidgets.getCityDoctorsModelForHos(docs[i].doctor),
+                        commonWidgets.getCityDoctorsModelForHos(docs[i].doctor!)!,
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
                     style: TextStyle(
@@ -463,11 +464,11 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                         color: Colors.grey[600],
                         fontSize: fhbStyles.fnt_city),
                   )),
-                  docs[i].doctor.isMciVerified
+                  docs[i].doctor!.isMciVerified!
                       ? commonWidgets.getMCVerified(
-                          docs[i].doctor.isMciVerified, STR_MY_VERIFIED)
+                          docs[i].doctor!.isMciVerified!, STR_MY_VERIFIED)
                       : commonWidgets.getMCVerified(
-                          docs[i].doctor.isMciVerified, STR_NOT_VERIFIED),
+                          docs[i].doctor!.isMciVerified!, STR_NOT_VERIFIED),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               )
@@ -485,7 +486,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
     }
   }
 
-  Widget getCSRDiscount(String fees) {
+  Widget getCSRDiscount(String? fees) {
     Widget widget;
     if (fees != null && fees != '') {
       if (fees != '0.00' && fees != '0') {
@@ -516,20 +517,20 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
     return widget;
   }
 
-  String getFees(ResultFromHospital result, bool isCSRDiscount) {
-    String fees = '';
-    if (result?.doctorFeeCollection?.isNotEmpty) {
-      if (result?.doctorFeeCollection?.length > 0) {
-        for (int i = 0; i < result?.doctorFeeCollection?.length; i++) {
-          String feesCode = result?.doctorFeeCollection[i]?.feeType?.code;
-          bool isActive = result?.doctorFeeCollection[i]?.isActive;
+  String? getFees(ResultFromHospital result, bool isCSRDiscount) {
+    String? fees = '';
+    if (result.doctorFeeCollection!.isNotEmpty) {
+      if (result.doctorFeeCollection!.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection!.length; i++) {
+          String? feesCode = result.doctorFeeCollection![i].feeType?.code;
+          bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }
@@ -543,7 +544,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
   }
 
   Widget getHospitalProviderList(String healthOrgId) {
-    return new FutureBuilder<List<ResultFromHospital>>(
+    return new FutureBuilder<List<ResultFromHospital>?>(
       future: providerViewModel.getDoctorsFromHospital(healthOrgId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -560,7 +561,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
     );
   }
 
-  Widget providerListWidget(List<ResultFromHospital> doctorList) {
+  Widget providerListWidget(List<ResultFromHospital>? doctorList) {
     return (doctorList != null && doctorList.length > 0)
         ? new ListView.builder(
             itemBuilder: (BuildContext ctx, int i) =>

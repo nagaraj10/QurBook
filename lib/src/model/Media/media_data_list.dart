@@ -1,9 +1,10 @@
+
 import 'media_result.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class MediaDataList {
-  bool isSuccess;
-  List<MediaResult> result;
+  bool? isSuccess;
+  List<MediaResult>? result;
 
   MediaDataList({this.isSuccess, this.result});
 
@@ -12,7 +13,7 @@ class MediaDataList {
     if (json[parameters.strResult] != null) {
       result = <MediaResult>[];
       json[parameters.strResult].forEach((v) {
-        result.add(MediaResult.fromJson(v));
+        result!.add(MediaResult.fromJson(v));
       });
     }
   }
@@ -21,7 +22,7 @@ class MediaDataList {
     final data = Map<String, dynamic>();
     data[parameters.strIsSuccess] = isSuccess;
     if (result != null) {
-      data[parameters.strResult] = result.map((v) => v.toJson()).toList();
+      data[parameters.strResult] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
