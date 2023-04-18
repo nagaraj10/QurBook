@@ -101,6 +101,19 @@ class FormDataDialogState extends State<FormDataDialog> {
     try {
       widget.fieldsData?.sort((a, b) => (a.seq ?? 0).compareTo(b.seq ?? 0));
     } catch (e) {}
+    if ((widget.fieldsData?.length ?? 0) > 1) {
+      widget.fieldsData?.forEach((fieldData) {
+        String strSeq =
+            CommonUtil().validString((fieldData.seq ?? 0).toString());
+        if (strSeq != null && strSeq != '0' && strSeq.trim().isNotEmpty) {
+          String desc = CommonUtil().showDescriptionTextForm(fieldData);
+          if (desc != null && desc.trim().isNotEmpty) {
+            desc = strSeq + ". " + desc;
+            fieldData.description = desc;
+          }
+        }
+      });
+    }
     fieldsData = widget.fieldsData;
     eid = widget.eid;
     color = widget.color;
