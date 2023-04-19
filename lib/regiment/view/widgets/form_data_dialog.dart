@@ -101,7 +101,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     try {
       widget.fieldsData?.sort((a, b) => (a.seq ?? 0).compareTo(b.seq ?? 0));
     } catch (e) {}
-    if ((widget.fieldsData?.length ?? 0) > 1) {
+    if ((widget.fieldsData?.length ?? 0) > 1 && CommonUtil.isUSRegion()) {
       widget.fieldsData?.forEach((fieldData) {
         String strSeq =
             CommonUtil().validString((fieldData.seq ?? 0).toString());
