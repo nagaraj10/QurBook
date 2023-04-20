@@ -2268,13 +2268,13 @@ class CommonUtil {
       final deviceVersionModel = DeviceVersion.fromJson(response);
       var newVersion;
       var isForceUpdate = false;
-      if (deviceVersionModel?.isSuccess) {
+      if (deviceVersionModel.isSuccess!) {
         if (deviceVersionModel?.result != null) {
           newVersion = double.parse(
-              deviceVersionModel.result.versionName.trim().replaceAll('.', ''));
-          if (deviceVersionModel.result.additionalInfo != null) {
+              deviceVersionModel.result!.versionName!.trim().replaceAll('.', ''));
+          if (deviceVersionModel.result!.additionalInfo! != null) {
             isForceUpdate =
-                deviceVersionModel.result.additionalInfo.qurbook.isForceUpdate;
+                deviceVersionModel.result!.additionalInfo!.qurbook!.isForceUpdate!;
           }
         }
       }
