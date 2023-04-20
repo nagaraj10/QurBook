@@ -365,13 +365,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       } else {
                                         try {
                                           String filePath;
-                                          var image = await (ImagePicker
-                                                  .platform
-                                                  .pickImage(
-                                                      source:
-                                                          ImageSource.gallery)
-                                              as Future<PickedFile>);
-                                          filePath = image.path;
+                                          var image = await ImagePicker.platform
+                                              .pickImage(
+                                                  source: ImageSource.gallery);
+                                          filePath = image!.path;
                                           imagePaths.add(filePath);
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
