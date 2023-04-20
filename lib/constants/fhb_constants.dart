@@ -496,6 +496,8 @@ const String STR_FIREBASE_REMOTE_KEY_IOS =
     'force_update_current_version_myfhb_ios';
 const String STR_IS_FORCE = 'is_force_update_myfhb';
 const String STR_IS_FORCE_IOS = 'is_force_update_myfhb_ios';
+const String QURBOOK_ANDROID = 'qurbookandroid';
+const String QURBOOK_iOS = 'qurbookios';
 
 const APP_STORE_URL = 'https://apps.apple.com/in/app/qurbook/id1526444520';
 const PLAY_STORE_URL =
