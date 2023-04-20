@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/CalendarMonth.dart';
@@ -124,7 +125,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       initSocketCountUnread();
       WidgetsBinding.instance?.addObserver(this);
       controller.timer?.cancel();
-      controller.timer=null;
+      controller.timer = null;
       controller.startTimer();
       super.initState();
     } catch (e) {
@@ -230,12 +231,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return GestureDetector(
-        onPanUpdate: (dragUpdateDetails) {
-        },
-        onPanEnd: (panEndDetails) {
-        },
+        onPanUpdate: (dragUpdateDetails) {},
+        onPanEnd: (panEndDetails) {},
         onPanCancel: () {
-          if(CommonUtil.isUSRegion()){
+          if (CommonUtil.isUSRegion()) {
             controller.restartTimer();
           }
         },
@@ -352,7 +351,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                           ),
                                         ),
                                       ));
-                                }): Container(),
+                                })
+                            : Container(),
                       )),
                       if (!widget.addAppBar)
                         GestureDetector(
@@ -598,19 +598,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             SizedBox(
                               width: 2,
                             ),
-                            Text(
-                              '${CommonUtil().regimentDateFormatV2(
-                                regimen.asNeeded
-                                    ? regimen.ack ?? DateTime.now()
-                                    : regimen.ack ?? DateTime.now(),
-                                isAck: true,
-                              )}',
-                              style: TextStyle(
-                                fontSize: 11.0,
-                                color: getTextAndIconColor(
-                                    itemIndex, nextRegimenPosition),
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -821,6 +808,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             Center(
                               child: Text(
                                 regimen.title.toString().trim(),
+                                overflow: TextOverflow.fade,
+                                maxLines: 2,
                                 style: TextStyle(
                                     color: Color(
                                       CommonUtil().getQurhomeGredientColor(),
@@ -843,63 +832,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             ),
                           ])),
                           if (regimen.activityOrgin != strAppointmentRegimen)
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10.0,
-                              ),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () async {
-                                    if (CommonUtil.isUSRegion() &&
-                                        regimen.activityOrgin != strDiet) {
-                                      if (checkCanEdit(regimen)) {
-                                        Navigator.pop(context);
-                                        redirectToSheelaScreen(regimen);
-                                      } else {
-                                        onErrorMessage();
-                                      }
-                                    } else {
-                                      if (regimen.isPlaying.value) {
-                                        stopRegimenTTS();
-                                        regimen.isPlaying.value = false;
-                                        setState(() {});
-                                      } else {
-                                        stopRegimenTTS();
-                                        regimen.isPlaying.value = true;
-                                        setState(() {});
-                                        await sheelaController
-                                            .playTTS(regimen.title ?? '', () {
-                                          sheelaController.stopTTS();
-                                          regimen.isPlaying.value = false;
-                                          setState(() {});
-                                        });
-                                      }
-                                    }
-                                  },
-                                  child: CommonUtil.isUSRegion() &&
-                                          regimen.activityOrgin != strDiet
-                                      ? Image.asset(
-                                          icon_mayaMain,
-                                          height:
-                                              CommonUtil().isTablet! ? 60 : 50,
-                                          width:
-                                              CommonUtil().isTablet! ? 60 : 50,
-                                        )
-                                      : Obx(() {
-                                          return Icon(
-                                            (regimen.isPlaying.value)
-                                                ? Icons.stop_circle_outlined
-                                                : Icons
-                                                    .play_circle_fill_rounded,
-                                            size: 30.0,
-                                            color: Color(CommonUtil()
-                                                .getQurhomePrimaryColor()),
-                                          );
-                                        }),
-                                ),
-                              ),
-                            ),
+                            getSheelaIcon(regimen)
                         ],
                       ),
                     ),
@@ -1080,6 +1013,247 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               );
             });
           });
+    else {
+      final iconSize = 50.0.sp;
+      if (CommonUtil.REGION_CODE != "IN")
+        showDialog(
+            context: context,
+            builder: (__) {
+              return StatefulBuilder(builder: (_, setState) {
+                return AlertDialog(
+                  contentPadding: EdgeInsets.all(0),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                              padding: EdgeInsets.all(8.0),
+                              icon: Icon(
+                                Icons.close,
+                                size: 30.0.sp,
+                              ),
+                              onPressed: () {
+                                try {
+                                  Navigator.pop(context);
+                                } catch (e) {
+                                  print(e);
+                                }
+                              })
+                        ],
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(
+                            left: 15.0,
+                            right: 15.0,
+                            bottom: 15.0,
+                          ),
+                          child: Row(
+                            children: [
+                              getIcon(regimen.activityname, regimen.uformname,
+                                  regimen.metadata, index, 0,
+                                  sizeOfIcon: 30),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                  child: Column(children: [
+                                Center(
+                                  child: Text(
+                                    regimen.title.toString().trim(),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        color: Color(
+                                          CommonUtil()
+                                              .getQurhomeGredientColor(),
+                                        ),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    regimen.estart != null
+                                        ? DateFormat('hh:mm a')
+                                            .format(regimen.estart!)
+                                        : '',
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ])),
+                              if (regimen.activityOrgin !=
+                                  strAppointmentRegimen)
+                                getSheelaIcon(regimen),
+                            ],
+                          )),
+                      Divider(
+                        height: CommonUtil().isTablet! ? 3.0.h : 4.0.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 30.0,
+                          left: 15.0,
+                          right: 15.0,
+                          bottom: 30.0,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(strRecorded,
+                                style: TextStyle(
+                                    fontSize: 24.0.sp,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400)),
+                            Text(
+                              '${CommonUtil().regimentDateFormat(
+                                regimen.asNeeded
+                                    ? regimen.ack_local ?? DateTime.now()
+                                    : regimen.ack_local ?? DateTime.now(),
+                                isAck: true,
+                                ackDate: true,
+                              )}',
+                              style: TextStyle(
+                                  fontSize: 26.0.sp,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        height: CommonUtil().isTablet! ? 3.0.h : 4.0.h,
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(
+                            top: 30.0,
+                            left: 15.0,
+                            right: 15.0,
+                            bottom: 30.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  LoaderQurHome.showLoadingDialog(
+                                    Get.context!,
+                                    canDismiss: false,
+                                  );
+                                  var saveResponse =
+                                      await Provider.of<RegimentViewModel>(
+                                              context,
+                                              listen: false)
+                                          .undoSaveFormData(
+                                    eid: regimen.eid,
+                                  );
+                                  if (saveResponse.isSuccess ?? false) {
+                                    Future.delayed(Duration(milliseconds: 300),
+                                        () async {
+                                      await controller.getRegimenList();
+                                      Navigator.pop(context);
+                                      LoaderQurHome.hideLoadingDialog(
+                                          Get.context!);
+                                    });
+                                  } else {
+                                    LoaderQurHome.hideLoadingDialog(
+                                        Get.context!);
+                                  }
+                                },
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: Image.asset(icon_undo_reg,
+                                          height: 30,
+                                          width: 30,
+                                          color: Color(CommonUtil()
+                                              .getQurhomePrimaryColor())),
+                                    ),
+                                    Text(strUndo,
+                                        style: TextStyle(
+                                            fontSize: 20.0.sp,
+                                            color: Color(CommonUtil()
+                                                .getQurhomePrimaryColor()))),
+                                  ],
+                                ),
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    if (regimen.hasform!) {
+                                      onCardPressed(context, regimen,
+                                          aid: regimen.aid,
+                                          uid: regimen.uid,
+                                          formId: regimen.uformid,
+                                          formName: regimen.uformname,
+                                          canEditMain: true);
+                                    } else {
+                                      callLogApi(regimen);
+                                    }
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(5.0),
+                                        child: Image.asset(icon_edit,
+                                            height: 30,
+                                            width: 30,
+                                            color: Color(CommonUtil()
+                                                .getQurhomePrimaryColor())),
+                                      ),
+                                      Text(strEdit,
+                                          style: TextStyle(
+                                              fontSize: 20.0.sp,
+                                              color: Color(CommonUtil()
+                                                  .getQurhomePrimaryColor()))),
+                                    ],
+                                  )),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  if (regimen.hasform!) {
+                                    onCardPressed(context, regimen,
+                                        aid: regimen.aid,
+                                        uid: regimen.uid,
+                                        formId: regimen.uformid,
+                                        formName: regimen.uformname,
+                                        canEditMain: false,
+                                        fromView: true);
+                                  } else {
+                                    callLogApi(regimen);
+                                  }
+                                },
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: Image.asset(
+                                        icon_view_eye,
+                                        height: 30,
+                                        width: 30,
+                                        color: Color(CommonUtil()
+                                            .getQurhomePrimaryColor()),
+                                      ),
+                                    ),
+                                    Text(strView,
+                                        style: TextStyle(
+                                            fontSize: 20.0.sp,
+                                            color: Color(CommonUtil()
+                                                .getQurhomePrimaryColor()))),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ))
+                    ],
+                  ),
+                );
+              });
+            });
+    }
   }
 
   String removeAllWhitespaces(String string) {
@@ -1097,7 +1271,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       dynamic uid,
       dynamic aid,
       dynamic formId,
-      dynamic formName}) async {
+      dynamic formName,
+      bool canEditMain = false,
+      bool fromView = false}) async {
     stopRegimenTTS();
     var eventId = eventIdReturn ?? regimen!.eid;
     if (eventId == null || eventId == '' || eventId == 0) {
@@ -1112,6 +1288,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     var canEdit = regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
         Provider.of<RegimentViewModel>(context!, listen: false).regimentMode ==
             RegimentMode.Schedule;
+
+    if (regimen!.ack != null && regimen.ack != "") {
+      if (fromView) {
+        canEditMain = false;
+      } else {
+        canEditMain = true;
+      }
+    }
     // if (canEdit || isValidSymptom(context)) {
     final fieldsResponseModel =
         await Provider.of<RegimentViewModel>(context!, listen: false)
@@ -1120,8 +1304,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     if (fieldsResponseModel.isSuccess! &&
         (fieldsResponseModel.result!.fields!.isNotEmpty ||
             regimen.otherinfo!.toJson().toString().contains('1')) &&
-        Provider.of<RegimentViewModel>(context, listen: false)
-                .regimentStatus !=
+        Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
             RegimentStatus.DialogOpened) {
       if (!Get.isRegistered<SheelaBLEController>()) {
         Get.put(SheelaBLEController());
@@ -1246,7 +1429,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           color: Color(CommonUtil().getQurhomePrimaryColor()),
           mediaData: regimen.otherinfo,
           formTitle: getDialogTitle(context, regimen, activityName),
-          canEdit: canEdit || isValidSymptom(context),
+          showEditIcon: canEditMain,
+          fromView: fromView,
+          canEdit: regimen?.ack == null
+              ? (canEdit || isValidSymptom(context))
+              : canEditMain,
           isFromQurHomeSymptom: false,
           isFromQurHomeRegimen: true,
           triggerAction: (String? triggerEventId, String? followContext,
@@ -1260,16 +1447,19 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 activityName: activityName);
           },
           followEventContext: followEventContext,
+          uformData: regimen.uformdata,
           isFollowEvent: eventIdReturn != null,
-        ))?.then((value) {
-          if (value != null && (value ?? false)) {
-            FlutterToast().getToast(
-              'Logged Successfully',
-              Colors.red,
-            );
-            controller.showCurrLoggedRegimen(regimen);
-          }
-        });
+        ))?.then(
+          (value) {
+            if (value != null && (value ?? false)) {
+              FlutterToast().getToast(
+                'Logged Successfully',
+                Colors.red,
+              );
+              controller.showCurrLoggedRegimen(regimen);
+            }
+          },
+        );
 
         /*var value = await showDialog(
           context: context,
@@ -1434,10 +1624,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Info'),
-          content:Text(text),
+          content: Text(text),
           actions: <Widget>[
             TextButton(
-              child: Text('OK',style: TextStyle(fontSize:18,color:Color(CommonUtil().getQurhomePrimaryColor())),),
+              child: Text(
+                'OK',
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Color(CommonUtil().getQurhomePrimaryColor())),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -1883,16 +2078,21 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   onErrorMessage() {
-    if(((Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-        RegimentMode.Symptoms)? symptomsError: activitiesError).toLowerCase().contains('future activi')){
-      _showErrorAlert((Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-          RegimentMode.Symptoms)
+    if (((Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                RegimentMode.Symptoms)
+            ? symptomsError
+            : activitiesError)
+        .toLowerCase()
+        .contains('future activi')) {
+      _showErrorAlert((Provider.of<RegimentViewModel>(context, listen: false)
+                  .regimentMode ==
+              RegimentMode.Symptoms)
           ? symptomsError
           : activitiesError);
-    }else{
+    } else {
       FlutterToast().getToast(
         (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-            RegimentMode.Symptoms)
+                RegimentMode.Symptoms)
             ? symptomsError
             : activitiesError,
         Colors.red,
@@ -1951,6 +2151,59 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         printError(info: e.toString());
       }
     }
+  }
+
+  getSheelaIcon(RegimentDataModel regimen) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: 10.0,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () async {
+            if (CommonUtil.isUSRegion() && regimen.activityOrgin != strDiet) {
+              if (checkCanEdit(regimen)) {
+                Navigator.pop(context);
+                redirectToSheelaScreen(regimen);
+              } else {
+                onErrorMessage();
+              }
+            } else {
+              if (regimen.isPlaying.value) {
+                stopRegimenTTS();
+                regimen.isPlaying.value = false;
+                setState(() {});
+              } else {
+                stopRegimenTTS();
+                regimen.isPlaying.value = true;
+                setState(() {});
+                await sheelaController.playTTS(regimen.title ?? '', () {
+                  sheelaController.stopTTS();
+                  regimen.isPlaying.value = false;
+                  setState(() {});
+                });
+              }
+            }
+          },
+          child: CommonUtil.isUSRegion() && regimen.activityOrgin != strDiet
+              ? Image.asset(
+                  icon_mayaMain,
+                  height: CommonUtil().isTablet! ? 60 : 50,
+                  width: CommonUtil().isTablet! ? 60 : 50,
+                )
+              : Obx(() {
+                  return Icon(
+                    (regimen.isPlaying.value)
+                        ? Icons.stop_circle_outlined
+                        : Icons.play_circle_fill_rounded,
+                    size: 30.0,
+                    color: Color(CommonUtil().getQurhomePrimaryColor()),
+                  );
+                }),
+        ),
+      ),
+    );
   }
 }
 
