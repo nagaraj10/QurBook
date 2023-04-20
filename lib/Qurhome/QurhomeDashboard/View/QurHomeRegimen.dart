@@ -549,6 +549,21 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   Widget _buildCarouselItem(BuildContext context, int itemIndex,
       RegimentDataModel regimen, int nextRegimenPosition, bool isPortrait) {
+    String strTitle = "";
+    try {
+      if (regimen.activityOrgin == strAppointmentRegimen) {
+        String strServiceType = regimen.additionalInfo?.serviceType ?? "";
+        if (strServiceType.toLowerCase() == variable.strOthers.toLowerCase()) {
+          strTitle = regimen.additionalInfo?.title ?? "";
+        } else {
+          strTitle = strServiceType;
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
     return InkWell(
       onTap: () {
         if (regimen.activityOrgin != strAppointmentRegimen) {
@@ -640,7 +655,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         ),
                         Expanded(
                           child: Text(
-                            regimen.title.toString().trim(),
+                            strTitle.trim().isNotEmpty
+                                ? strTitle
+                                : regimen.title.toString().trim(),
                             maxLines: 2,
                             style: TextStyle(
                                 color: getTextAndIconColor(
