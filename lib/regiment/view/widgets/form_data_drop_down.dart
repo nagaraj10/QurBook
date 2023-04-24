@@ -1,22 +1,23 @@
-
 import 'package:flutter/material.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 import '../../models/field_response_model.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 
 class FormDataDropDown extends StatefulWidget {
-  const FormDataDropDown({
-    required this.fieldData,
-    required this.updateValue,
-    required this.canEdit,
-    this.isFromQurHomeSymptom = false,
-  });
+  const FormDataDropDown(
+      {required this.fieldData,
+      required this.updateValue,
+      required this.canEdit,
+      this.isFromQurHomeSymptom = false,
+      this.vitalsData});
 
   final FieldModel fieldData;
   final Function(FieldModel updatedfieldData) updateValue;
   final bool canEdit;
   final bool isFromQurHomeSymptom;
+  final VitalsData? vitalsData;
 
   @override
   _FormDataDropDownState createState() => _FormDataDropDownState();
@@ -29,6 +30,9 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
   @override
   void initState() {
     super.initState();
+    if (widget.vitalsData?.value != null && widget.vitalsData?.value != "") {
+      setValuesInMap(widget.vitalsData?.value);
+    }
     loadComboItems();
   }
 
@@ -91,20 +95,27 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
           ),
           isExpanded: true,
           //TODO: Need to update the items based on the API
-          value: comboValue,
+          value: widget.vitalsData?.value != null
+              ? widget.vitalsData?.value
+              : comboValue,
           items: comboItems,
           onChanged: (value) {
             if (widget.canEdit) {
               setState(() {
                 comboValue = value;
+                widget.vitalsData?.value = comboValue;
               });
-              var updatedFieldData = widget.fieldData;
-              updatedFieldData.value = (value).toString();
-              widget.updateValue(updatedFieldData);
+              setValuesInMap(value);
             }
           },
         ),
       ],
     );
+  }
+
+  void setValuesInMap(value) {
+    var updatedFieldData = widget.fieldData;
+    updatedFieldData.value = (value).toString();
+    widget.updateValue(updatedFieldData);
   }
 }

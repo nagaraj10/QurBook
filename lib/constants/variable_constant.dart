@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
@@ -202,6 +201,8 @@ const String icon_something_wrong = 'assets/something-wrong.png';
 const String icon_refresh_dash = 'assets/icons/refresh_dash.png';
 const String icon_appointment_regimen = 'assets/icons/appointment_regimen.png';
 const String icon_undo = 'assets/icons/ic_undo.png';
+const String icon_undo_reg = 'assets/icons/ic_undo_reg.png';
+const String icon_view_eye = 'assets/icons/ic_view_eye.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
@@ -257,7 +258,8 @@ const String strBookmarkRecord = 'bookmark record';
 //lockscreen
 const String strQurbookLocked = 'Qurbook is locked';
 const String strUnlock = 'Unlock';
-const String strQurbookLockDescription = 'For your security, you can only use Qurbook when its unlocked';
+const String strQurbookLockDescription =
+    'For your security, you can only use Qurbook when its unlocked';
 
 //for feedback
 const String strChat = 'Chats';
@@ -866,6 +868,14 @@ const String strPastActivityMsgThree = ' from menu.';
 const String strLocationLink = "Location link";
 const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';
+
+//for regimen
+const String strRecorded = 'Recorded at';
+const String strUndo = 'Undo';
+const String strEdit = 'Edit';
+const String strView = 'View';
+const String strConfirms = 'Are you sure?';
+const String strUpdateMsg = 'Do you want to update the changes';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

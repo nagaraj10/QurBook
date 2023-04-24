@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../models/regiment_data_model.dart';
 import '../../models/field_response_model.dart';
@@ -8,13 +7,13 @@ import 'form_data_drop_down.dart';
 import 'form_data_radio.dart';
 
 class FormFieldWidget extends StatelessWidget {
-  const FormFieldWidget({
-    required this.fieldData,
-    required this.updateValue,
-    required this.canEdit,
-    this.isFromQurHomeSymptom = false,
-    this.isFromQurHomeRegimen = false,
-  });
+  const FormFieldWidget(
+      {required this.fieldData,
+      required this.updateValue,
+      required this.canEdit,
+      this.isFromQurHomeSymptom = false,
+      this.isFromQurHomeRegimen = false,
+      this.vitalsData});
 
   final FieldModel fieldData;
   final Function(
@@ -25,6 +24,7 @@ class FormFieldWidget extends StatelessWidget {
   final bool canEdit;
   final bool isFromQurHomeSymptom;
   final bool isFromQurHomeRegimen;
+  final VitalsData? vitalsData;
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +36,17 @@ class FormFieldWidget extends StatelessWidget {
           updateValue: updateValue,
           canEdit: canEdit,
           isFromQurHomeSymptom: isFromQurHomeSymptom,
+          vitalsData: vitalsData,
         );
         break;
       case FieldType.CHECKBOX:
         return FormDataCheckbox(
-            fieldData: fieldData,
-            updateValue: updateValue,
-            isFromQurHomeSymptom: isFromQurHomeSymptom,
-            canEdit: canEdit);
+          fieldData: fieldData,
+          updateValue: updateValue,
+          isFromQurHomeSymptom: isFromQurHomeSymptom,
+          canEdit: canEdit,
+          vitalsData: vitalsData,
+        );
         break;
       case FieldType.TEXT:
         return FormDataTextField(
@@ -51,6 +54,7 @@ class FormFieldWidget extends StatelessWidget {
           updateValue: updateValue,
           canEdit: canEdit,
           isFromQurHomeSymptom: isFromQurHomeSymptom,
+          vitalsData: vitalsData,
         );
         break;
       case FieldType.LOOKUP:
@@ -59,6 +63,7 @@ class FormFieldWidget extends StatelessWidget {
           updateValue: updateValue,
           canEdit: canEdit,
           isFromQurHomeSymptom: isFromQurHomeSymptom,
+          vitalsData: vitalsData,
         );
         break;
       case FieldType.RADIO:
@@ -66,6 +71,7 @@ class FormFieldWidget extends StatelessWidget {
           fieldData: fieldData,
           updateValue: updateValue,
           canEdit: canEdit,
+          vitalsData: vitalsData,
         );
         break;
       default:
