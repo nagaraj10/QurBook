@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -336,8 +335,10 @@ class CommonUtil {
             await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
                     configurationData.unitSystemList!.us!.height![0].unitCode!)
                 .then((value) {
-              PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      configurationData.unitSystemList!.us!.weight![0].unitCode!)
+              PreferenceUtil.saveString(
+                      Constants.STR_KEY_WEIGHT,
+                      configurationData
+                          .unitSystemList!.us!.weight![0].unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(
                         Constants.STR_KEY_TEMP,
@@ -491,7 +492,8 @@ class CommonUtil {
 
     mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
       return mediaMetaInfoObjCopy.metadata!.healthRecordType!.createdOn!
-          .compareTo(mediaMetaInfoObjClone.metadata!.healthRecordType!.createdOn!);
+          .compareTo(
+              mediaMetaInfoObjClone.metadata!.healthRecordType!.createdOn!);
     });
     return mediaMetaInfoObj;
   }
@@ -513,7 +515,8 @@ class CommonUtil {
 
     mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
       return mediaMetaInfoObjCopy.metadata!.healthRecordType!.createdOn!
-          .compareTo(mediaMetaInfoObjClone.metadata!.healthRecordType!.createdOn!);
+          .compareTo(
+              mediaMetaInfoObjClone.metadata!.healthRecordType!.createdOn!);
     });
     return mediaMetaInfoObj;
   }
@@ -598,7 +601,7 @@ class CommonUtil {
     HealthReportListForUserBlock _healthReportListForUserBlock;
     _healthReportListForUserBlock = HealthReportListForUserBlock();
 
-    var imageList =<dynamic>[];
+    var imageList = <dynamic>[];
     if (data.healthRecordCollection!.isNotEmpty) {
       var mediMasterId = CommonUtil().getMetaMasterIdList(data);
       var k = 0;
@@ -698,7 +701,7 @@ class CommonUtil {
       }
     } catch (e) {}
 
-    return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList :[];
+    return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList : [];
   }
 
   MediaMasterIds getMediaMasterIDForPdfType(
@@ -795,7 +798,8 @@ class CommonUtil {
     var linkedData =
         LinkedData(roleName: variable.Self, nickName: variable.Self);
 
-    final fullName = myProfileResult.firstName! + ' ' + myProfileResult.lastName!;
+    final fullName =
+        myProfileResult.firstName! + ' ' + myProfileResult.lastName!;
     final profileData = ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
@@ -819,7 +823,7 @@ class CommonUtil {
     return Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
 
-  Future<void> getMedicalPreference({ Function? callBackToRefresh}) async {
+  Future<void> getMedicalPreference({Function? callBackToRefresh}) async {
     /* MyProfileBloc _myProfileBloc = new MyProfileBloc();
     try {
       _myProfileBloc
@@ -974,7 +978,8 @@ class CommonUtil {
 
     for (var dataObj in data) {
       final List<MediaMasterIds> mediaMasterIdsList = [];
-      if (dataObj.mediaMasterIds != null && dataObj.mediaMasterIds!.isNotEmpty) {
+      if (dataObj.mediaMasterIds != null &&
+          dataObj.mediaMasterIds!.isNotEmpty) {
         for (final mediaMasterIds in dataObj.mediaMasterIds!) {
           mediaMasterIdsList.add(MediaMasterIds(
               id: mediaMasterIds.id, fileType: mediaMasterIds.fileType));
@@ -1519,7 +1524,9 @@ class CommonUtil {
     try {
       if (PreferenceUtil.getMediaType() != null) {
       } else {
-        await _mediaTypeBlock.getMediTypesList().then((value) {} as FutureOr Function(MediaDataList?));
+        await _mediaTypeBlock
+            .getMediTypesList()
+            .then((value) {} as FutureOr Function(MediaDataList?));
       }
     } catch (e) {
       await _mediaTypeBlock.getMediTypesList().then((value) {});
@@ -1550,11 +1557,8 @@ class CommonUtil {
     return date;
   }
 
-  regimentDateFormat(
-    DateTime newDateTime, {
-    bool isAck = false,
-    bool isLanding = false,
-  }) {
+  regimentDateFormat(DateTime newDateTime,
+      {bool isAck = false, bool isLanding = false, bool ackDate = false}) {
     DateFormat newFormat;
     var updatedDate = '';
     final currentTime = DateTime.now();
@@ -1575,7 +1579,10 @@ class CommonUtil {
       }
     } else {
       if (isAck) {
-        newFormat = DateFormat("MMM d, yyyy hh:mm a");
+        if (ackDate)
+          newFormat = DateFormat('MMM d, hh:mm a');
+        else
+          newFormat = DateFormat("MMM d, yyyy hh:mm a");
       } else if (isLanding) {
         newFormat = DateFormat('MMM d, HH:mm');
       } else {
@@ -1980,10 +1987,9 @@ class CommonUtil {
     String? token = '';
     try {
       token = await _firebaseMessaging.getToken();
-    } catch (e) {
-
-    }
-    await PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token??'not available');
+    } catch (e) {}
+    await PreferenceUtil.saveString(
+        Constants.STR_PUSH_TOKEN, token ?? 'not available');
     var deviceInfo = Map<String, dynamic>();
     var user = Map<String, dynamic>();
     var jsonData = Map<String, dynamic>();
@@ -1993,7 +1999,7 @@ class CommonUtil {
     deviceInfo['phoneNumber'] = userMobileNo;
     deviceInfo['email'] = email;
     deviceInfo['isActive'] = isActive;
-    deviceInfo['deviceTokenId'] = token??'NOT AVAILABLE';
+    deviceInfo['deviceTokenId'] = token ?? 'NOT AVAILABLE';
 
     jsonData['deviceInfo'] = deviceInfo;
     if (Platform.isIOS) {
@@ -2604,8 +2610,9 @@ class CommonUtil {
                     : filteredCategoryData.length);
             i++) {
           if (categoryName == filteredCategoryData[i].categoryName) {
-            print(
-                categoryName! + ' ****' + filteredCategoryData[i].categoryName!);
+            print(categoryName! +
+                ' ****' +
+                filteredCategoryData[i].categoryName!);
             position = i;
           }
         }
@@ -2772,7 +2779,8 @@ class CommonUtil {
                   if (myProfile!.result!.userAddressCollection3 != null) {
                     if (myProfile!.result!.userAddressCollection3!.isNotEmpty) {
                       patientAddressCheck(
-                          myProfile!.result!.userAddressCollection3![0], context,
+                          myProfile!.result!.userAddressCollection3![0],
+                          context,
                           packageId: packageId,
                           isSubscribed: isSubscribed,
                           providerId: providerId,
@@ -3893,7 +3901,7 @@ class CommonUtil {
   static Future<void> saveLog({
     String? message,
     bool isError = false,
-  }) async{
+  }) async {
     if (Platform.isAndroid) {
       var userIdMain = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
       var userIdCurrent = PreferenceUtil.getStringValue(KEY_USERID);
@@ -4133,7 +4141,8 @@ class CommonUtil {
     return response;
   }
 
-  Future<ResultFromResponse> loadPdf({required String url, String? fileName}) async {
+  Future<ResultFromResponse> loadPdf(
+      {required String url, String? fileName}) async {
     try {
       FlutterToast().getToast('Download Started', Colors.green);
       var response = await ApiServices.get(url);
@@ -4177,7 +4186,7 @@ class CommonUtil {
             onPressed: () async {
               await OpenFilex.open(
                 response.result,
-              );//FU2.5
+              ); //FU2.5
               final controller = Get.find<PDFViewController>();
               final data =
                   OpenPDF(type: PDFLocation.Path, path: response.result);
@@ -4339,7 +4348,8 @@ class CommonUtil {
                                                 Constants.KEY_USERID);
                                         if (isFromRenew) {
                                           subscribeViewModel
-                                              .createSubscribePayment(packageId!)
+                                              .createSubscribePayment(
+                                                  packageId!)
                                               .then((value) {
                                             if (value != null) {
                                               if (value.isSuccess!) {
@@ -4659,7 +4669,8 @@ class CommonUtil {
                                               }
                                             } else {
                                               Navigator.of(
-                                                      _keyLoader.currentContext!,
+                                                      _keyLoader
+                                                          .currentContext!,
                                                       rootNavigator: true)
                                                   .pop();
                                               FlutterToast().getToast(
@@ -5019,9 +5030,8 @@ class CommonUtil {
         .trim()
         .toLowerCase()
         .split(' ')
-        .map((str) => str.length > 0
-            ? '${str[0].toUpperCase()}${str.substring(1)}'
-            : '')
+        .map((str) =>
+            str.length > 0 ? '${str[0].toUpperCase()}${str.substring(1)}' : '')
         .join(' ');
   }
 
@@ -5123,7 +5133,9 @@ class CommonUtil {
           " million " +
           generate(number % 1000000)!;
     } else if (number >= 1000) {
-      return generate(number ~/ 1000)! + " thousand " + generate(number % 1000)!;
+      return generate(number ~/ 1000)! +
+          " thousand " +
+          generate(number % 1000)!;
     } else if (number >= 100) {
       return generate(number ~/ 100)! + " hundred " + generate(number % 100)!;
     }
@@ -5426,7 +5438,8 @@ class CommonUtil {
       bool? serviceEnabled = false;
       if (Platform.isAndroid) {
         const platform = MethodChannel(IS_LOCATION_SERVICE_CHECK);
-        serviceEnabled = await (platform.invokeMethod(IS_LOCATION_SERVICE_CHECK));
+        serviceEnabled =
+            await (platform.invokeMethod(IS_LOCATION_SERVICE_CHECK));
       } else {
         serviceEnabled = await Geolocator.isLocationServiceEnabled();
       }
@@ -5940,8 +5953,6 @@ class VideoCallCommonUtils {
       String? patientPrescriptionId,
       required String callType,
       required String isFrom}) async {
-
-
     try {
       //bool isCallSent = false;
       final apiResponse = QurHomeApiProvider();
@@ -5953,8 +5964,9 @@ class VideoCallCommonUtils {
       var randomMID = getMyMeetingID();
       var mID = (bookId.isNotEmpty || bookId != null) ? bookId : randomMID;
       vsPayLoad.Payload payLoad = vsPayLoad.Payload(
-          type:
-          regController.isFromSOS.value ? "sos" : keysConstant.c_ns_type_call,
+          type: regController.isFromSOS.value
+              ? "sos"
+              : keysConstant.c_ns_type_call,
           //type: keysConstant.c_ns_type_call,
           priority: regController.isFromSOS.value ? "high" : "",
           userId: regController.careCoordinatorId.value,
@@ -5976,7 +5988,7 @@ class VideoCallCommonUtils {
       );
 
       MessageDetails msg =
-      new MessageDetails(content: _content, payload: payLoad);
+          new MessageDetails(content: _content, payload: payLoad);
 
       CallPushNSModel callModel = CallPushNSModel(
           recipients: [
@@ -6011,11 +6023,21 @@ class VideoCallCommonUtils {
             slotDuration: slotDuration,
           );
         } else {
-          callMeta = CallMetaData(mID as String, '', patName??"", patId??"", patientDOB ?? '',
-              patientPicUrl??"", '', docName, healthRecord!=null?healthRecord:null, patientPrescriptionId??"");
+          callMeta = CallMetaData(
+              mID as String,
+              '',
+              patName ?? "",
+              patId ?? "",
+              patientDOB ?? '',
+              patientPicUrl ?? "",
+              '',
+              docName,
+              healthRecord != null ? healthRecord : null,
+              patientPrescriptionId ?? "");
         }
         regController.loadingData.value = false;
-        regController.meetingId.value = CommonUtil().validString(mID.toString());
+        regController.meetingId.value =
+            CommonUtil().validString(mID.toString());
         Navigator.push(
           context!,
           MaterialPageRoute(
@@ -6039,11 +6061,10 @@ class VideoCallCommonUtils {
 
       //return isCallSent;
     } catch (e) {
-      if(kDebugMode){
-      print(e);
+      if (kDebugMode) {
+        print(e);
       }
     }
-
   }
 
   String capitalizeFirstofEach(String data) {
@@ -6389,8 +6410,7 @@ class VideoCallCommonUtils {
           await rtcProvider.rtcEngine?.disableVideo();
           await rtcProvider.rtcEngine?.enableLocalVideo(false);
           await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
-          Provider.of<HideProvider>(Get.context!, listen: false)
-              .swithToAudio();
+          Provider.of<HideProvider>(Get.context!, listen: false).swithToAudio();
           Provider.of<AudioCallProvider>(Get.context!, listen: false)
               .enableAudioCall();
           Provider.of<VideoIconProvider>(Get.context!, listen: false)
@@ -6853,7 +6873,8 @@ class VideoCallCommonUtils {
       dynamic isCallActualTime,
       HealthRecord? healthRecord,
       User? patienInfo,
-      bool? isFromAppointment,bool? isFromSOS,
+      bool? isFromAppointment,
+      bool? isFromSOS,
       dynamic isDoctor}) {
     try {
       FlutterToast toast = new FlutterToast();
@@ -6947,8 +6968,7 @@ class VideoCallCommonUtils {
                   ? callMetaData.mappointmentId
                   : '',
               healthOrganizationId: healthOrganizationId,
-              gender:
-                  callMetaData.mgender != null ? callMetaData.mgender : '',
+              gender: callMetaData.mgender != null ? callMetaData.mgender : '',
               patId: callMetaData.patientPrescriptionId != null
                   ? callMetaData.patientPrescriptionId
                   : '',
@@ -7074,7 +7094,8 @@ class VideoCallCommonUtils {
     } catch (e) {}
   }
 
-  createMissedCallNS({String? docName, String? patId, String? bookingId}) async {
+  createMissedCallNS(
+      {String? docName, String? patId, String? bookingId}) async {
     try {
       String callStartTime = '';
       callStartTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
