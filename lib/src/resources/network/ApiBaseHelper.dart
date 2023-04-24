@@ -2043,6 +2043,24 @@ class ApiBaseHelper {
     }
   }
 
+  Future<dynamic> getAppVersion(String endpoint) async {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!;
+    final response = (await ApiServices.get(
+      _baseUrl + 'app-update?appName=$endpoint',
+      headers: {
+        HttpHeaders.authorizationHeader: authToken,
+        Constants.KEY_OffSet: CommonUtil().setTimeZone()
+      },
+    ))!;
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      return body;
+    } else {
+      //throw Exception("Unable to perform request!");
+      throw InnerException('No Data Found');
+    }
+  }
+
   Future<dynamic> createSubscribe(String url, String jsonString) async {
     var responseJson;
     try {

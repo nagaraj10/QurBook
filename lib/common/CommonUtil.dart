@@ -153,6 +153,7 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import '../../constants/fhb_constants.dart' as constants;
 import 'package:local_auth/error_codes.dart' as auth_error;
+import 'package:myfhb/authentication/model/device_version.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -2254,31 +2255,46 @@ class CommonUtil {
     } catch (e) {}
   }
 
-  versionCheck(context) async {
+   versionCheck(context) async {
     //Get Current installed version of app
     final info = await PackageInfo.fromPlatform();
     var currentVersion = double.parse(info.version.trim().replaceAll('.', ''));
 
-    //Get Latest version info from firebase config
-    final remoteConfig = RemoteConfig.instance;
-
     try {
       // Using default duration to force fetching from remote server.
-      await remoteConfig.fetch();
-      await remoteConfig.activate();
-      remoteConfig.getString(Platform.isIOS
-          ? STR_FIREBASE_REMOTE_KEY_IOS
-          : STR_FIREBASE_REMOTE_KEY);
-      remoteConfig.getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
-      final newVersion = double.parse(remoteConfig
-          .getString(Platform.isIOS
-              ? STR_FIREBASE_REMOTE_KEY_IOS
-              : STR_FIREBASE_REMOTE_KEY)
-          .trim()
-          .replaceAll('.', ''));
+      var apiBaseHelper = ApiBaseHelper();
+      var endPoint = Platform.isIOS ? QURBOOK_iOS : QURBOOK_ANDROID;
+      var response = await apiBaseHelper.getAppVersion(endPoint);
+      final deviceVersionModel = DeviceVersion.fromJson(response);
+      var newVersion;
+      var isForceUpdate = false;
+      if (deviceVersionModel.isSuccess!) {
+        if (deviceVersionModel?.result != null) {
+          newVersion = double.parse(
+              deviceVersionModel.result!.versionName!.trim().replaceAll('.', ''));
+          if (deviceVersionModel.result!.additionalInfo! != null) {
+            isForceUpdate =
+                deviceVersionModel.result!.additionalInfo!.qurbook!.isForceUpdate!;
+          }
+        }
+      }
 
-      var isForceUpdate = remoteConfig
-          .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
+      // //Get Latest version info from firebase config
+      // final remoteConfig = RemoteConfig.instance;
+      // await remoteConfig.fetch();
+      // await remoteConfig.activate();
+      // remoteConfig.getString(Platform.isIOS
+      //     ? STR_FIREBASE_REMOTE_KEY_IOS
+      //     : STR_FIREBASE_REMOTE_KEY);
+      //remoteConfig.getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
+      // final newVersion = double.parse(remoteConfig
+      //     .getString(Platform.isIOS
+      //         ? STR_FIREBASE_REMOTE_KEY_IOS
+      //         : STR_FIREBASE_REMOTE_KEY)
+      //     .trim()
+      //     .replaceAll('.', ''));
+      // var isForceUpdate = remoteConfig
+      //     .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
 
       if (newVersion > currentVersion) {
         _showVersionDialog(context, isForceUpdate);
@@ -2405,38 +2421,41 @@ class CommonUtil {
                     SizedBox.shrink(),*/
                 ],
               )
-            : AlertDialog(
-                title: Text(
-                  title,
-                  style: TextStyle(fontSize: 16),
-                ),
-                content: Text(
-                  message,
-                  style: TextStyle(fontSize: 14),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    onPressed: () => launchURL(PLAY_STORE_URL),
-                    child: Text(
-                      btnLabel,
-                      style: TextStyle(
-                        color: Color(getMyPrimaryColor()),
-                      ),
-                    ),
+            : WillPopScope(
+                onWillPop: () async => isForceUpdate ? false : true,
+                child: AlertDialog(
+                  title: Text(
+                    title,
+                    style: TextStyle(fontSize: 16),
                   ),
-                  if (!isForceUpdate)
+                  content: Text(
+                    message,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  actions: <Widget>[
                     FlatButton(
+                      onPressed: () => launchURL(PLAY_STORE_URL),
                       child: Text(
-                        btnLabelCancel,
+                        btnLabel,
                         style: TextStyle(
                           color: Color(getMyPrimaryColor()),
                         ),
                       ),
-                      onPressed: () => Navigator.pop(context),
-                    )
-                  /*else
-                    SizedBox.shrink(),*/
-                ],
+                    ),
+                    if (!isForceUpdate)
+                      FlatButton(
+                        child: Text(
+                          btnLabelCancel,
+                          style: TextStyle(
+                            color: Color(getMyPrimaryColor()),
+                          ),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    /*else
+                      SizedBox.shrink(),*/
+                  ],
+                ),
               );
       },
     );
