@@ -552,7 +552,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     String strTitle = "";
     try {
       if (regimen.activityOrgin == strAppointmentRegimen) {
-        String strServiceType = regimen.additionalInfo?.serviceType ?? "";
+        String strServiceType = CommonUtil()
+                .validString(regimen.doctorSessionId ?? "")
+                .trim()
+                .isNotEmpty
+            ? regimen.serviceCategory?.name ?? ""
+            : regimen.additionalInfo?.serviceType ?? "";
         if (strServiceType.toLowerCase() == variable.strOthers.toLowerCase()) {
           strTitle = regimen.additionalInfo?.title ?? "";
         } else {
