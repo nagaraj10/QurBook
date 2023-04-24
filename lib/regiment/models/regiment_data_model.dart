@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/Status.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 
 class RegimentDataModel {
@@ -65,7 +65,7 @@ class RegimentDataModel {
       this.modeOfService,
       this.isEndTimeOptional,
       this.code,
-      this.dayrepeat});
+      this.dayrepeat,this.additionalInfo});
 
   final dynamic eid;
   final dynamic id;
@@ -125,6 +125,7 @@ class RegimentDataModel {
   final ServiceCategory? serviceCategory;
   final ServiceCategory? modeOfService;
   final dynamic dayrepeat;
+  AdditionalInfo? additionalInfo;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -209,6 +210,9 @@ class RegimentDataModel {
             ? new ServiceCategory.fromJson(json['modeOfService'])
             : null,
         dayrepeat: json['hour_repeat'],
+        additionalInfo: json['additionalInfo'] != null
+            ? AdditionalInfo.fromJson(json['additionalInfo'])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -261,6 +265,7 @@ class RegimentDataModel {
         'serviceCategory': serviceCategory!.toJson(),
         'modeOfService': modeOfService!.toJson(),
         'hour_repeat': dayrepeat,
+        'additionalInfo': additionalInfo!.toJson(),
       };
 }
 
