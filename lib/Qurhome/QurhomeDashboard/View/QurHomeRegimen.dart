@@ -598,6 +598,21 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             SizedBox(
                               width: 2,
                             ),
+                            CommonUtil.isUSRegion()
+                                ? SizedBox()
+                                : Text(
+                                    '${CommonUtil().regimentDateFormatV2(
+                                      regimen.asNeeded
+                                          ? regimen.ack ?? DateTime.now()
+                                          : regimen.ack ?? DateTime.now(),
+                                      isAck: true,
+                                    )}',
+                                    style: TextStyle(
+                                      fontSize: 11.0,
+                                      color: getTextAndIconColor(
+                                          itemIndex, nextRegimenPosition),
+                                    ),
+                                  ),
                           ],
                         ),
                       ),
