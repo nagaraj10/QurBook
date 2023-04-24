@@ -385,7 +385,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                             child: SizedBox(
                               //width: 250.0.w,
                               child: Text(
-                                imageFileName,
+                                widget.canEdit ? imageFileName : "View Image",
                                 style: TextStyle(
                                   fontSize: 14.0.sp,
                                   color: Colors.grey[500],
