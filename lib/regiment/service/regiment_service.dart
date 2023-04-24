@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -88,20 +87,23 @@ class RegimentService {
 
   static Future<RegimentResponseModel> getRegimentDataCalendar(
       {String? startDate,
-        String? endDate,
-        int isSymptoms = 0,
-        bool isForMasterData = false,
-        String searchText = ''}) async {
+      String? endDate,
+      int isSymptoms = 0,
+      bool isForMasterData = false,
+      String searchText = ''}) async {
     var response;
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    var urlForRegiment = Constants.BASE_URL+'qurplan-node-mysql/regimen-calendar-filter/'+ userId!+'?startDate=${startDate}%2000%3A00%3A00&endDate=${endDate}%2000%3A00%3A00';
+    var urlForRegiment = Constants.BASE_URL +
+        'qurplan-node-mysql/regimen-calendar-filter/' +
+        userId! +
+        '?startDate=${startDate}%2000%3A00%3A00&endDate=${endDate}%2000%3A00%3A00';
     try {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
 
-        response = await ApiServices.get(
-          urlForRegiment,
-          headers: headerRequest,
-        );
+      response = await ApiServices.get(
+        urlForRegiment,
+        headers: headerRequest,
+      );
 
       if (response != null && response.statusCode == 200) {
         print(response.body);
@@ -176,6 +178,8 @@ class RegimentService {
         followEventParams =
             '&followevent=1&context=${followEventContext ?? ''}';
       }
+      print(
+          "Parvathi Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK");
       var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
@@ -268,7 +272,8 @@ class RegimentService {
     }
   }
 
-  static Future<SaveResponseModel> updatePhoto({String? eid, String? url}) async {
+  static Future<SaveResponseModel> updatePhoto(
+      {String? eid, String? url}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -502,10 +507,7 @@ class RegimentService {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
       var currentDate = CommonUtil().getCurrentDateForStatusActivity();
       var response = await ApiServices.get(
-        urlForRegiment +
-            eid +
-            user_activity_status_date +
-            currentDate,
+        urlForRegiment + eid + user_activity_status_date + currentDate,
         headers: headerRequest,
       );
       if (response != null && response.statusCode == 200) {
