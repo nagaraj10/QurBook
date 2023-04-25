@@ -11,7 +11,8 @@ class FormDataCheckbox extends StatefulWidget {
       required this.updateValue,
       required this.canEdit,
       this.isFromQurHomeSymptom = false,
-      this.vitalsData});
+      this.vitalsData,
+      required this.isChanged});
 
   final FieldModel fieldData;
   final Function(
@@ -22,6 +23,7 @@ class FormDataCheckbox extends StatefulWidget {
   final bool canEdit;
   final bool isFromQurHomeSymptom;
   final VitalsData? vitalsData;
+  final Function(bool isChanged) isChanged;
 
   @override
   _FormDataCheckboxState createState() => _FormDataCheckboxState();
@@ -60,6 +62,7 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
                 getCondition(checkBoxListSelected, checkboxList[index]),
             onSelected: (selectedValue, valueText) {
               setValuesInCheckbox(selectedValue, valueText);
+              widget.isChanged(true);
             },
           ),
         );

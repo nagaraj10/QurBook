@@ -12,7 +12,8 @@ class FormDataTextField extends StatelessWidget {
       this.isFromQurHomeSymptom = false,
       required this.updateValue,
       required this.canEdit,
-      this.vitalsData});
+      this.vitalsData,
+      required this.isChanged});
 
   final FieldModel fieldData;
   final bool isNumberOnly;
@@ -20,6 +21,7 @@ class FormDataTextField extends StatelessWidget {
   final bool canEdit;
   final bool isFromQurHomeSymptom;
   final VitalsData? vitalsData;
+  final Function(bool isChanged) isChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,7 @@ class FormDataTextField extends StatelessWidget {
             final updatedFieldData = fieldData;
             updatedFieldData.value = value;
             updateValue(updatedFieldData);
+            isChanged(true);
           },
           inputFormatters: [
             // if (isNumberOnly) FilteringTextInputFormatter.digitsOnly,
