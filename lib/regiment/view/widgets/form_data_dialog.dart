@@ -35,23 +35,24 @@ import 'form_field_widget.dart';
 import 'media_icon_widget.dart';
 
 class FormDataDialog extends StatefulWidget {
-  FormDataDialog(
-      {required this.fieldsData,
-      required this.eid,
-      required this.color,
-      required this.mediaData,
-      required this.formTitle,
-      required this.canEdit,
-      required this.triggerAction,
-      required this.introText,
-      this.isFollowEvent,
-      this.followEventContext,
-      this.isFromQurHomeSymptom = false,
-      this.isFromQurHomeRegimen = false,
-      @required this.providerId,
-      this.uformData,
-      this.showEditIcon,
-      this.fromView = false});
+  FormDataDialog({
+    required this.fieldsData,
+    required this.eid,
+    required this.color,
+    required this.mediaData,
+    required this.formTitle,
+    required this.canEdit,
+    required this.triggerAction,
+    required this.introText,
+    this.isFollowEvent,
+    this.followEventContext,
+    this.isFromQurHomeSymptom = false,
+    this.isFromQurHomeRegimen = false,
+    @required this.providerId,
+    this.uformData,
+    this.showEditIcon,
+    this.fromView = false,
+  });
 
   final List<FieldModel>? fieldsData;
   final String? eid;
@@ -77,6 +78,7 @@ class FormDataDialog extends StatefulWidget {
 
 class FormDataDialogState extends State<FormDataDialog> {
   List<FieldModel>? fieldsData;
+
   String? eid;
   Color? color;
   Otherinfo? mediaData;
@@ -105,6 +107,10 @@ class FormDataDialogState extends State<FormDataDialog> {
   bool isTouched = true;
   bool isSettingChanged = false;
   bool isUpdatePressed = false;
+
+  VitalsData? vitalData;
+  VitalsData? vitalDataClone;
+
   @override
   void initState() {
     super.initState();
@@ -124,6 +130,7 @@ class FormDataDialogState extends State<FormDataDialog> {
         }
       });
     }
+
     fieldsData = widget.fieldsData;
     eid = widget.eid;
     color = widget.color;
@@ -214,7 +221,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           padding: EdgeInsets.only(
                             right: 7.0.w,
                           ),
-                          child: (widget.showEditIcon! || widget.fromView!)
+                          child: (widget.fromView!)
                               ? Image.asset(
                                   icon_edit,
                                   height: 20.sp,
@@ -311,17 +318,14 @@ class FormDataDialogState extends State<FormDataDialog> {
                     isFromQurHomeRegimen: widget.isFromQurHomeRegimen,
                     isFromQurHomeSymptom: widget.isFromQurHomeSymptom ||
                         widget.isFromQurHomeRegimen,
+                    isChanged: (settings) {
+                      isSettingChanged = settings;
+                    },
                     updateValue: (
                       updatedFieldData, {
                       isAdd,
                       title,
                     }) {
-                      if (!widget.fromView! &&
-                          widget.canEdit! &&
-                          widget.showEditIcon!) {
-                        isSettingChanged = true;
-                      }
-
                       if (isAdd == null || isAdd) {
                         isAdd = isAdd ?? false;
                         final oldValue = saveMap.putIfAbsent(

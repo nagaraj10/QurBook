@@ -1189,7 +1189,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                   if (saveResponse.isSuccess ?? false) {
                                     Future.delayed(Duration(milliseconds: 300),
                                         () async {
-                                      await controller.getRegimenList();
+                                      await controller.getRegimenList(
+                                          isLoading: true,
+                                          date: controller.selectedDate.value
+                                              .toString());
                                       Navigator.pop(context);
                                       LoaderQurHome.hideLoadingDialog(
                                           Get.context!);
@@ -1219,15 +1222,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                               ),
                               InkWell(
                                   onTap: () {
-                                    Navigator.pop(context);
                                     if (regimen.hasform!) {
+                                      Navigator.pop(context);
+
                                       onCardPressed(context, regimen,
                                           aid: regimen.aid,
                                           uid: regimen.uid,
                                           formId: regimen.uformid,
                                           formName: regimen.uformname,
                                           canEditMain: true);
+                                    } else if (regimen?.hasform == false) {
+                                      Navigator.pop(context);
                                     } else {
+                                      Navigator.pop(context);
+
                                       callLogApi(regimen);
                                     }
                                   },
@@ -1238,20 +1246,25 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         child: Image.asset(icon_edit,
                                             height: 30,
                                             width: 30,
-                                            color: Color(CommonUtil()
-                                                .getQurhomePrimaryColor())),
+                                            color: (regimen?.hasform == false)
+                                                ? Colors.grey
+                                                : Color(CommonUtil()
+                                                    .getQurhomePrimaryColor())),
                                       ),
                                       Text(strEdit,
                                           style: TextStyle(
                                               fontSize: 20.0.sp,
-                                              color: Color(CommonUtil()
-                                                  .getQurhomePrimaryColor()))),
+                                              color: (regimen?.hasform == false)
+                                                  ? Colors.grey
+                                                  : Color(CommonUtil()
+                                                      .getQurhomePrimaryColor()))),
                                     ],
                                   )),
                               InkWell(
                                 onTap: () {
-                                  Navigator.pop(context);
                                   if (regimen.hasform!) {
+                                    Navigator.pop(context);
+
                                     onCardPressed(context, regimen,
                                         aid: regimen.aid,
                                         uid: regimen.uid,
@@ -1259,7 +1272,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         formName: regimen.uformname,
                                         canEditMain: false,
                                         fromView: true);
+                                  } else if (regimen?.hasform == false) {
+                                    Navigator.pop(context);
                                   } else {
+                                    Navigator.pop(context);
+
                                     callLogApi(regimen);
                                   }
                                 },
@@ -1271,15 +1288,19 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         icon_view_eye,
                                         height: 30,
                                         width: 30,
-                                        color: Color(CommonUtil()
-                                            .getQurhomePrimaryColor()),
+                                        color: (regimen?.hasform == false)
+                                            ? Colors.grey
+                                            : Color(CommonUtil()
+                                                .getQurhomePrimaryColor()),
                                       ),
                                     ),
                                     Text(strView,
                                         style: TextStyle(
                                             fontSize: 20.0.sp,
-                                            color: Color(CommonUtil()
-                                                .getQurhomePrimaryColor()))),
+                                            color: (regimen?.hasform == false)
+                                                ? Colors.grey
+                                                : Color(CommonUtil()
+                                                    .getQurhomePrimaryColor()))),
                                   ],
                                 ),
                               ),
@@ -1329,11 +1350,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     if (regimen!.ack != null && regimen.ack != "") {
       if (fromView) {
         canEditMain = false;
-      } else {
-        canEditMain = true;
       }
     }
-    // if (canEdit || isValidSymptom(context)) {
     final fieldsResponseModel =
         await Provider.of<RegimentViewModel>(context!, listen: false)
             .getFormData(eid: eventId);
