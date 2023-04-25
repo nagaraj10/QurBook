@@ -40,6 +40,7 @@ class FormFieldWidget extends StatelessWidget {
           canEdit: canEdit,
           isFromQurHomeSymptom: isFromQurHomeSymptom,
           vitalsData: vitalsData,
+          isChanged: isChanged,
         );
         break;
       case FieldType.CHECKBOX:
@@ -59,6 +60,7 @@ class FormFieldWidget extends StatelessWidget {
           canEdit: canEdit,
           isFromQurHomeSymptom: isFromQurHomeSymptom,
           vitalsData: vitalsData,
+          isChanged: isChanged,
         );
         break;
       case FieldType.LOOKUP:
