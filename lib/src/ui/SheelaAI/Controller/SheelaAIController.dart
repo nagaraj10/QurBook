@@ -369,7 +369,9 @@ class SheelaAIController extends GetxController {
           }
           playTTS();
           callToCC(currentResponse);
-          PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang??"");
+          if(currentResponse.lang!=null && currentResponse.lang!=''){
+            PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang??"");
+          }
           scrollToEnd();
         } else {
           //Received a wrong format data
