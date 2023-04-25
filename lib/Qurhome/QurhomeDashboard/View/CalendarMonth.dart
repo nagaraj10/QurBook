@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -9,16 +8,13 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CalendarMonth extends StatefulWidget {
-
-
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<CalendarMonth> {
   late Map<DateTime, List<dynamic>> _events;
-  bool onPageChanged=false;
+  bool onPageChanged = false;
   DateTime monthToday = DateTime.now();
   var str_doctorId;
   final controller = CommonUtil().onInitQurhomeRegimenController();
@@ -51,17 +47,20 @@ class _HomePageState extends State<CalendarMonth> {
         children: <Widget>[
           TableCalendar(
             onPageChanged: (dateTime) {
-              controller.selectedDate.value=dateTime;
-              onPageChanged=true;
+              controller.selectedDate.value = dateTime;
+              onPageChanged = true;
               controller.getCalendarRegimenList();
             },
             eventLoader: (DateTime dateTime) {
-              return _events[
-                  DateTime(dateTime.year, dateTime.month, dateTime.day, 12)]!;
+              return _events[DateTime(
+                      dateTime.year, dateTime.month, dateTime.day, 12)] ??
+                  [];
             },
             calendarFormat: CalendarFormat.month,
             firstDay: DateTime(2010),
-            focusedDay: onPageChanged?controller.selectedDate.value:controller.selectedCalendar.value,
+            focusedDay: onPageChanged
+                ? controller.selectedDate.value
+                : controller.selectedCalendar.value,
             lastDay: DateTime(2200),
             // currentDay: controller.selectedCalendar.value,
             daysOfWeekHeight: 50.0.h,
@@ -135,7 +134,7 @@ class _HomePageState extends State<CalendarMonth> {
             startingDayOfWeek: StartingDayOfWeek.sunday,
             onDaySelected: (day, events) {
               controller.selectedDate.value = day;
-              controller.selectedCalendar.value=DateTime.now();
+              controller.selectedCalendar.value = DateTime.now();
               // controller.selectedCalendar.value = day;
               Get.back(result: day.toString());
             },
