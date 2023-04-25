@@ -43,7 +43,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.arguments = widget.arguments;
     controller.setDefaultValues();
     controller.bleController = null;
-    controller.bleController = CommonUtil().onInitSheelaBLEController();
+    //controller.bleController = CommonUtil().onInitSheelaBLEController();
 
     controller.startSheelaConversation();
     controller.isSheelaScreenActive = true;
