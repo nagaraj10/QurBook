@@ -157,103 +157,114 @@ class FormDataDialogState extends State<FormDataDialog> {
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     setCurrentTime();
     return widget.isFromQurHomeRegimen
-        ? Scaffold(
-            appBar: AppBar(
-              backgroundColor: Color(CommonUtil().getQurhomePrimaryColor()),
-              toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
-              elevation: 0,
-              centerTitle: false,
-              titleSpacing: 0,
-              title: Text(
-                widget.formTitle ?? '',
-                style: TextStyle(
-                  color: Colors.white,
+        ? WillPopScope(
+            onWillPop: () async {
+              isTouched
+                  ? isSettingChanged
+                      ? _onWillPop()
+                      : Get.back(result: false)
+                  : Get.back(result: false);
+
+              return Future.value(true);
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Color(CommonUtil().getQurhomePrimaryColor()),
+                toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
+                elevation: 0,
+                centerTitle: false,
+                titleSpacing: 0,
+                title: Text(
+                  widget.formTitle ?? '',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.fade,
+                  maxLines: 2,
                 ),
-                textAlign: TextAlign.start,
-                overflow: TextOverflow.fade,
-                maxLines: 2,
+                leading: IconWidget(
+                  icon: Icons.arrow_back_ios,
+                  colors: Colors.white,
+                  size: CommonUtil().isTablet! ? 38.0 : 24.0,
+                  onTap: () {
+                    isTouched
+                        ? isSettingChanged
+                            ? _onWillPop()
+                            : Get.back(result: false)
+                        : Get.back(result: false);
+                  },
+                ),
               ),
-              leading: IconWidget(
-                icon: Icons.arrow_back_ios,
-                colors: Colors.white,
-                size: CommonUtil().isTablet! ? 38.0 : 24.0,
-                onTap: () {
-                  isTouched
-                      ? isSettingChanged
-                          ? _onWillPop()
-                          : Get.back(result: false)
-                      : Get.back(result: false);
-                },
-              ),
-            ),
-            body: Container(
-              padding: EdgeInsets.only(
-                top: 5.0.h,
-                left: 15.0.w,
-                right: 15.0.w,
-                //bottom: 15.0.w,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.formTitle ?? '',
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.fade,
-                          maxLines: 2,
-                          style: TextStyle(
-                              color:
-                                  Color(CommonUtil().getQurhomePrimaryColor()),
-                              fontSize: 18.h),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            widget.canEdit = true;
-                            widget.fromView = false;
-                          });
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            right: 7.0.w,
+              body: Container(
+                padding: EdgeInsets.only(
+                  top: 5.0.h,
+                  left: 15.0.w,
+                  right: 15.0.w,
+                  //bottom: 15.0.w,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.formTitle ?? '',
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.fade,
+                            maxLines: 2,
+                            style: TextStyle(
+                                color: Color(
+                                    CommonUtil().getQurhomePrimaryColor()),
+                                fontSize: 18.h),
                           ),
-                          child: (widget.fromView!)
-                              ? Image.asset(
-                                  icon_edit,
-                                  height: 20.sp,
-                                  width: 20.sp,
-                                  color: Colors.black,
-                                )
-                              : Container(),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5.0),
-                  Text(
-                    widget.introText ?? '',
-                    maxLines: 10,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.fade,
-                    style: TextStyle(
-                        color: Color(CommonUtil().getQurhomePrimaryColor()),
-                        fontSize: 18.h),
-                  ),
-                  if ((widget.introText ?? '').trim().isNotEmpty)
-                    SizedBox(height: 5.0)
-                  else
-                    SizedBox.shrink(),
-                  Expanded(child: getBody()),
-                ],
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              widget.canEdit = true;
+                              widget.fromView = false;
+                            });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: 7.0.w,
+                            ),
+                            child: (widget.fromView!)
+                                ? Image.asset(
+                                    icon_edit,
+                                    height: 20.sp,
+                                    width: 20.sp,
+                                    color: Colors.black,
+                                  )
+                                : Container(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5.0),
+                    Text(
+                      widget.introText ?? '',
+                      maxLines: 10,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.fade,
+                      style: TextStyle(
+                          color: Color(CommonUtil().getQurhomePrimaryColor()),
+                          fontSize: 18.h),
+                    ),
+                    if ((widget.introText ?? '').trim().isNotEmpty)
+                      SizedBox(height: 5.0)
+                    else
+                      SizedBox.shrink(),
+                    Expanded(child: getBody()),
+                  ],
+                ),
               ),
+              floatingActionButton: onSaveBtn(),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
             ),
-            floatingActionButton: onSaveBtn(),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
           )
         : AlertDialog(
             title: getTitle(),

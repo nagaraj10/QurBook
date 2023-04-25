@@ -1232,7 +1232,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                           formName: regimen.uformname,
                                           canEditMain: true);
                                     } else if (regimen?.hasform == false) {
-                                      Navigator.pop(context);
                                     } else {
                                       Navigator.pop(context);
 
@@ -1273,7 +1272,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         canEditMain: false,
                                         fromView: true);
                                   } else if (regimen?.hasform == false) {
-                                    Navigator.pop(context);
                                   } else {
                                     Navigator.pop(context);
 
