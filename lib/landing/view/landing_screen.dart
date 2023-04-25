@@ -145,9 +145,9 @@ class _LandingScreenState extends State<LandingScreen> {
       }
       checkIfUserIdSame();
       if (widget.landingArguments?.needFreshLoad ?? true) {
-        try {
-          commonUtil.versionCheck(context);
-        } catch (e) {}
+        // try {
+        //   commonUtil.versionCheck(context);
+        // } catch (e) {}
         profileData = getMyProfile();
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
@@ -856,6 +856,13 @@ class _LandingScreenState extends State<LandingScreen> {
         );
       }
     }
+
+    if (widget.landingArguments?.needFreshLoad ?? true) {
+      try {
+        commonUtil.versionCheck(context);
+      } catch (e) {}
+    }
+
   }
 
   void dbInitialize() {
