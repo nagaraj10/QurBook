@@ -90,7 +90,7 @@ class ProvidersListRepository {
       bool? isPreferred, String isFrom, List<String?>? selectedCategories) async {
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final bookMark = {};
-    bookMark[parameters.strpatient] = userID;
+    bookMark[parameters.strPatientId] = userID;
     bookMark[parameters.strdoctor] = doctorIds.id;
     bookMark[parameters.healthOrganization] = null;
     if (isFrom == 'ListItem') {
@@ -124,7 +124,7 @@ class ProvidersListRepository {
       List<String?>? selectedCategories) async {
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final bookMark = {};
-    bookMark[parameters.strpatient] = userID;
+    bookMark[parameters.strPatientId] = userID;
     bookMark[parameters.strdoctor] = null;
     bookMark[parameters.healthOrganization] = hospitals.id;
     if (isFrom == 'ListItem') {
