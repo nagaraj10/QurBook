@@ -10,12 +10,15 @@ class FormDataRadio extends StatefulWidget {
       {required this.fieldData,
       required this.updateValue,
       required this.canEdit,
-      this.vitalsData});
+      this.vitalsData,
+      required this.isChanged});
 
   final FieldModel fieldData;
+
   final Function(FieldModel updatedFieldData) updateValue;
   final bool canEdit;
   final VitalsData? vitalsData;
+  final Function(bool isChanged) isChanged;
 
   @override
   _FormDataRadioState createState() => _FormDataRadioState();
@@ -36,23 +39,21 @@ class _FormDataRadioState extends State<FormDataRadio> {
   List<Widget> loadRadioItems() {
     final radioList = (widget.fieldData.fdata ?? '')?.split('|');
     if (radioList.isNotEmpty && radioList.length.isEven) {
-      radioGroupValue ??= radioList.isNotEmpty ? radioList[0] : null;
+      radioGroupValue ??= getRadioGroupValueNew(radioList);
       radioWidget.clear();
       for (var index = 0; index < radioList.length; index++) {
         radioWidget.add(
           RadioTileWidget(
             title: radioList[index + 1] ?? '',
             value: radioList[index],
-            radioGroupValue: widget.vitalsData?.value != null
-                ? widget.vitalsData?.value
-                : radioGroupValue,
+            radioGroupValue: radioGroupValue,
             onSelected: widget.canEdit
                 ? (selectedValue) {
                     setState(() {
                       radioGroupValue = selectedValue;
-                      widget.vitalsData?.value = radioGroupValue;
                     });
                     setValuesInMap(radioGroupValue);
+                    widget.isChanged(true);
                   }
                 : null,
           ),
@@ -81,5 +82,13 @@ class _FormDataRadioState extends State<FormDataRadio> {
     var updatedFieldData = widget.fieldData;
     updatedFieldData.value = radioGroupValue.toString();
     widget.updateValue(updatedFieldData);
+  }
+
+  getRadioGroupValueNew(radioList) {
+    return radioList.isNotEmpty
+        ? (widget.vitalsData?.value != null && widget.vitalsData?.value != "")
+            ? widget.vitalsData?.value
+            : null
+        : null;
   }
 }

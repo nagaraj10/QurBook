@@ -11,13 +11,15 @@ class FormDataDropDown extends StatefulWidget {
       required this.updateValue,
       required this.canEdit,
       this.isFromQurHomeSymptom = false,
-      this.vitalsData});
+      this.vitalsData,
+      required this.isChanged});
 
   final FieldModel fieldData;
   final Function(FieldModel updatedfieldData) updateValue;
   final bool canEdit;
   final bool isFromQurHomeSymptom;
   final VitalsData? vitalsData;
+  final Function(bool isChanged) isChanged;
 
   @override
   _FormDataDropDownState createState() => _FormDataDropDownState();
@@ -39,6 +41,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
   loadComboItems() {
     final comboItemsList = (widget.fieldData.fdata ?? '')?.split('|');
     if (comboItemsList.isNotEmpty && comboItemsList.length.isEven) {
+      comboValue = getComboValue(comboItemsList);
       comboItems.clear();
       for (var i = 0; i < comboItemsList.length; i++) {
         comboItems.add(
@@ -95,17 +98,15 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
           ),
           isExpanded: true,
           //TODO: Need to update the items based on the API
-          value: widget.vitalsData?.value != null
-              ? widget.vitalsData?.value
-              : comboValue,
+          value: comboValue,
           items: comboItems,
           onChanged: (value) {
             if (widget.canEdit) {
               setState(() {
                 comboValue = value;
-                widget.vitalsData?.value = comboValue;
               });
               setValuesInMap(value);
+              widget.isChanged(true);
             }
           },
         ),
@@ -117,5 +118,13 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
     var updatedFieldData = widget.fieldData;
     updatedFieldData.value = (value).toString();
     widget.updateValue(updatedFieldData);
+  }
+
+  getComboValue(comboItemsList) {
+    return comboItemsList.isNotEmpty
+        ? widget.vitalsData?.value != null
+            ? widget.vitalsData?.value
+            : comboValue
+        : null;
   }
 }
