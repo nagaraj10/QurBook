@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -18,7 +17,7 @@ class HealthConditionPage extends StatefulWidget {
 }
 
 class _HealthConditionPageState extends State<HealthConditionPage> {
- late Future<Map<String?, List<MenuItem>>?> healthConditions;
+  late Future<Map<String?, List<MenuItem>>?> healthConditions;
 
   @override
   void initState() {
@@ -27,15 +26,15 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
         false;
 
     Provider.of<PlanWizardViewModel>(context, listen: false).isListEmpty =
-    false;
+        false;
 
     healthConditions = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getHealthConditions() as Future<Map<String?, List<MenuItem>>>;
+        .getHealthConditions();
 
     Provider.of<PlanWizardViewModel>(context, listen: false).currentTab = 0;
     Provider.of<PlanWizardViewModel>(context, listen: false).currentPage = 0;
-    Provider.of<PlanWizardViewModel>(context, listen: false).isListEmpty = false;
-
+    Provider.of<PlanWizardViewModel>(context, listen: false).isListEmpty =
+        false;
   }
 
   @override
@@ -70,13 +69,13 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
                   } else {
                     var healthConditionsList =
                         (Provider.of<PlanWizardViewModel>(context)
-                                    .isHealthSearch)
+                                .isHealthSearch)
                             ? (Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    .filteredHealthConditions)
+                                    listen: false)
+                                .filteredHealthConditions)
                             : (Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    .healthConditions);
+                                    listen: false)
+                                .healthConditions);
                     if ((healthConditionsList.length) > 0) {
                       return SingleChildScrollView(
                         child: Column(

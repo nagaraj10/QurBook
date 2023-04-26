@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
@@ -441,8 +440,7 @@ class SymptomItemCard extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Visibility(
-                                        visible:
-                                            regimentData.isModifiedToday,
+                                        visible: regimentData.isModifiedToday,
                                         child: SvgPicture.asset(
                                           icon_modified,
                                           width: 20.0.sp,
@@ -653,8 +651,7 @@ class SymptomItemCard extends StatelessWidget {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Visibility(
-                                          visible:
-                                              regimentData.isModifiedToday,
+                                          visible: regimentData.isModifiedToday,
                                           child: SvgPicture.asset(
                                             icon_modified,
                                             width: 20.0.sp,
@@ -1125,7 +1122,8 @@ class SymptomItemCard extends StatelessWidget {
     if (fieldsResponseModel.isSuccess! &&
         (fieldsResponseModel.result!.fields!.isNotEmpty ||
             mediaData!.toJson().toString().contains('1')) &&
-        Provider.of<RegimentViewModel>(context!, listen: false).regimentStatus !=
+        Provider.of<RegimentViewModel>(context!, listen: false)
+                .regimentStatus !=
             RegimentStatus.DialogOpened) {
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogOpened);
@@ -1149,7 +1147,7 @@ class SymptomItemCard extends StatelessWidget {
                 followEventContext: followContext,
                 activityName: activityName);
           },
-          followEventContext: followEventContext!,
+          followEventContext: followEventContext,
           isFollowEvent: eventIdReturn != null,
           isFromQurHomeSymptom: true,
         ),
