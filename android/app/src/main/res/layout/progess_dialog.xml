@@ -90,7 +90,7 @@
                         android:background="@drawable/edit_text_border"
                         android:orientation="horizontal"
                         android:padding="5dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:weightSum="5">
 
                         <EditText
