@@ -214,7 +214,8 @@ class SheelaAIController extends GetxController {
     if (PreferenceUtil.getIfQurhomeisAcive() &&
         (arguments?.takeActiveDeviceReadings ?? false)) {
       //BLE devices handling
-      bleController = Get.find();
+      //bleController = Get.find();
+      bleController = CommonUtil().onInitSheelaBLEController();
       bleController!.startSheelaBLEDeviceReadings();
       isLoading(true);
     } else {

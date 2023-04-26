@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +29,7 @@ class SymptomListController extends GetxController {
       if (isLoading) {
         loadingData.value = true;
       }
-      http.Response? response = (await (_apiProvider.getSymptomList() as Future<Response?>)) as http.Response?;
+      http.Response? response = await _apiProvider.getSymptomList();
       if (response == null) {
         loadingData.value = false;
         return RegimentResponseModel(
