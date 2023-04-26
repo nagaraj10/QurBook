@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -124,7 +123,7 @@ class SheelaAIController extends GetxController {
                   !currentPlayingConversation!.isButtonNumber!) {
                 if (currentPlayingConversation!.currentButtonPlayingIndex !=
                     null) {
-                      index ++;
+                  index++;
                   currentPlayingConversation!.currentButtonPlayingIndex = index;
                 }
               }
@@ -167,11 +166,11 @@ class SheelaAIController extends GetxController {
   checkForButtonsAndPlay() {
     final buttons = currentPlayingConversation!.buttons;
     if (currentPlayingConversation!.currentButtonPlayingIndex != null) {
-      var  index = currentPlayingConversation!.currentButtonPlayingIndex;
-      if (index! < (buttons!.length - 1) ) {
+      var index = currentPlayingConversation!.currentButtonPlayingIndex;
+      if (index! < (buttons!.length - 1)) {
         buttons[index].isPlaying.value = false;
-        index ++;
-        currentPlayingConversation!.currentButtonPlayingIndex = index ;
+        index++;
+        currentPlayingConversation!.currentButtonPlayingIndex = index;
         buttons[currentPlayingConversation!.currentButtonPlayingIndex!]
             .isPlaying
             .value = true;
@@ -331,7 +330,8 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.recipientId ?? '').isEmpty) {
             currentResponse.recipientId = "Sheela Response";
           }
-          currentResponse = (await getGoogleTTSForConversation(currentResponse))!;
+          currentResponse =
+              (await getGoogleTTSForConversation(currentResponse))!;
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
           if ((currentResponse.buttons ?? []).length > 0) {
@@ -370,8 +370,8 @@ class SheelaAIController extends GetxController {
           }
           playTTS();
           callToCC(currentResponse);
-          if(currentResponse.lang!=null && currentResponse.lang!=''){
-            PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang??"");
+          if (currentResponse.lang != null && currentResponse.lang != '') {
+            PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang ?? "");
           }
           scrollToEnd();
         } else {
@@ -425,9 +425,10 @@ class SheelaAIController extends GetxController {
       try {
         if ((currentPlayingConversation!.text ?? '').isNotEmpty) {
           currentPlayingConversation!.isPlaying.value = true;
-          final status =
-              await playUsingLocalTTSEngineFor(currentPlayingConversation!.text);
-          if (status && (currentPlayingConversation!.buttons ?? []).isNotEmpty) {
+          final status = await playUsingLocalTTSEngineFor(
+              currentPlayingConversation!.text);
+          if (status &&
+              (currentPlayingConversation!.buttons ?? []).isNotEmpty) {
             for (final button in currentPlayingConversation!.buttons!) {
               if ((button.title ?? '').isNotEmpty && !button.skipTts!) {
                 button.isPlaying.value = true;
@@ -635,15 +636,19 @@ class SheelaAIController extends GetxController {
           isMicListening.value = true;
           if (Platform.isIOS) {
             await _audioCache.play('raw/Positive.mp3');
-            await Future.delayed(Duration(seconds: 1));
+            await Future.delayed(const Duration(seconds: 1));
           }
           await voice_platform.invokeMethod(
             strspeakAssistant,
             {
               'langcode': getCurrentLanCode(),
             },
-          ).then((response) {
+          ).then((response) async {
             isMicListening.value = false;
+            if (Platform.isIOS) {
+              await Future.delayed(const Duration(seconds: 1));
+            }
+
             if ((response ?? '').toString().isNotEmpty) {
               final newConversation = SheelaResponse(text: response);
               if (conversations.isNotEmpty &&
@@ -658,10 +663,8 @@ class SheelaAIController extends GetxController {
                     if (responseRecived == carGiverSheela) {
                       responseRecived = careGiverSheela;
                     }
-                    button = conversations.last?.buttons.firstWhere(
-                        (element) =>
-                            (element.title ?? "").toLowerCase() ==
-                            responseRecived);
+                    button = conversations.last?.buttons.firstWhere((element) =>
+                        (element.title ?? "").toLowerCase() == responseRecived);
                   } else if (conversations.last?.isButtonNumber) {
                     bool isDigit = CommonUtil().isNumeric(responseRecived);
                     for (int i = 0;
@@ -669,8 +672,8 @@ class SheelaAIController extends GetxController {
                         i++) {
                       var temp =
                           conversations.last?.buttons[i].title.split(".");
-                      var realNumber = CommonUtil().realNumber(
-                          int.tryParse(temp[0].toString().trim()));
+                      var realNumber = CommonUtil()
+                          .realNumber(int.tryParse(temp[0].toString().trim()));
                       var optionWithRealNumber =
                           "Option ${realNumber.toString().trim()}";
                       var optionWithDigit =
@@ -904,7 +907,8 @@ class SheelaAIController extends GetxController {
                       arguments: SheelaArgument(
                         rawMessage: sheelaQueueShowRemind,
                       ),
-                    )!.then((value) {
+                    )!
+                        .then((value) {
                       getSheelaBadgeCount(isNeedSheelaDialog: true);
                     });
                   });
