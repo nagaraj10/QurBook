@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -38,7 +37,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     super.initState();
     mInitialTime = DateTime.now();
     if (!(Provider.of<PlanWizardViewModel>(context, listen: false)
-            .isDynamicLink)) {
+        .isDynamicLink)) {
       Provider.of<PlanWizardViewModel>(context, listen: false).currentPage = 0;
     } else {
       Future.delayed(Duration(), () {
@@ -108,7 +107,8 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                 PlanNavigationWidget(),
                 Expanded(
                   child: PageView(
-                    controller: planWizardViewModel.pageController,
+                    controller:
+                        planWizardViewModel.pageController ?? PageController(),
                     scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
                     onPageChanged: (int pageNumber) {
@@ -168,7 +168,6 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                                   Get.to(AddProviderPlan(
                                       planWizardViewModel.selectedTag));
                                 } else {
-
                                   new AddNewPlan().addNewPlan(
                                       context,
                                       feedbackCode,
