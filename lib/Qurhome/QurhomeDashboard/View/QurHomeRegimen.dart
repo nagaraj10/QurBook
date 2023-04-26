@@ -1507,7 +1507,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             if (value != null && (value ?? false)) {
               FlutterToast().getToast(
                 'Logged Successfully',
-                Colors.red,
+                Colors.green,
               );
               controller.showCurrLoggedRegimen(regimen);
             }
@@ -1657,7 +1657,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (saveResponse.isSuccess ?? false) {
         FlutterToast().getToast(
           'Logged Successfully',
-          Colors.red,
+          Colors.green,
         );
         controller.showCurrLoggedRegimen(regimen);
 
