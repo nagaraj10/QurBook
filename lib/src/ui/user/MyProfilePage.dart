@@ -256,7 +256,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3!.length > 0) {
-          mobile.text = data.userContactCollection3![0]!.phoneNumber!;
+          mobile.text = data.userContactCollection3![0]!.phoneNumber??'';
         }
       }
       if (data != null) {
@@ -267,7 +267,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3!.length > 0) {
-          email.text = data.userContactCollection3![0]!.email!;
+          email.text = data.userContactCollection3![0]!.email??'';
         }
       }
 
@@ -279,12 +279,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
               data.additionalInfo?.heightObj?.valueInches ?? '';
         } else {
           heightController.text = data.additionalInfo!.height != null
-              ? data.additionalInfo!.height!
+              ? data.additionalInfo!.height??''
               : '';
         }
 
         weightController.text = data.additionalInfo!.weight != null
-            ? data.additionalInfo!.weight!
+            ? data.additionalInfo!.weight??''
             : '';
       }
       if (data.gender != null) {
@@ -315,17 +315,17 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
 
       if (data.userAddressCollection3 != null) {
-        if (data.userAddressCollection3!.length > 0) {
-          cntrlr_addr_one.text = data.userAddressCollection3![0].addressLine1!;
-          cntrlr_addr_two.text = data.userAddressCollection3![0].addressLine2!;
-          cntrlr_addr_zip.text = data.userAddressCollection3![0].pincode!;
-          cntrlr_addr_city.text = data.userAddressCollection3![0].city!.name!;
-          cntrlr_addr_state.text = data.userAddressCollection3![0].state!.name!;
+        if ((data.userAddressCollection3?.length??0) > 0) {
+          cntrlr_addr_one.text = data.userAddressCollection3![0].addressLine1??'';
+          cntrlr_addr_two.text = data.userAddressCollection3![0].addressLine2??'';
+          cntrlr_addr_zip.text = data.userAddressCollection3![0].pincode??'';
+          cntrlr_addr_city.text = data.userAddressCollection3![0].city!.name??'';
+          cntrlr_addr_state.text = data.userAddressCollection3![0].state!.name??'';
         }
       }
 
       if (data.membershipOfferedBy != null && data.membershipOfferedBy != '') {
-        cntrlr_corp_name.text = data.membershipOfferedBy!;
+        cntrlr_corp_name.text = data.membershipOfferedBy??'';
       }
     }
     try {
