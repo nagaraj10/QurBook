@@ -160,15 +160,13 @@ class HubListViewController extends GetxController {
   unPairDevice(String deviceId) async {
     try {
       loadingData.value = true;
-      http.Response? response = (await (_apiProvider.unPairDevice(deviceId)
-          as FutureOr<Response?>)) as http.Response?;
+      http.Response? response = (await _apiProvider.unPairDevice(deviceId));
       if (response == null) {
         FlutterToast().getToast('Oops Something went wrong', Colors.red);
       }
       loadingData.value = false;
-      Future.delayed(const Duration(microseconds: 10)).then((value) {
-        getHubList();
-      });
+      await Future.delayed(Duration(microseconds: 10));
+      getHubList();
     } catch (e) {
       printError(info: e.toString());
       loadingData.value = false;
