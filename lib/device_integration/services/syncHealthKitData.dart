@@ -9,9 +9,9 @@ class SyncHealthKitData {
   FetchHealthKitData? _hkHelper;
   DeviceHealthRecord? _deviceHealthRecord;
 
-  // SyncHealthKitData() {
-  //   _hkHelper = FetchHealthKitData();
-  // }
+  SyncHealthKitData() {
+    _hkHelper = FetchHealthKitData();
+  }
 
   Future<void> activateHealthKit() async {
     try {
@@ -29,7 +29,7 @@ class SyncHealthKitData {
     DateTime startDate;
     var endDate = DateTime.now();
 
-    final DateTime lastSynctime = await getLastSynctime();
+    final DateTime? lastSynctime = await getLastSynctime();
 
     endDate = DateTime.now();
     final currentdate = DateTime.now();
@@ -110,7 +110,7 @@ class SyncHealthKitData {
       var lastSync = latestSyncFromJson(jsonstr);
 
       if (!lastSync.isSuccess!) return null;
-      return lastSync.result!.lastSyncDateTime;
+      if (lastSync.result != null) return lastSync.result!.lastSyncDateTime;
     } catch (e) {}
   }
 }
