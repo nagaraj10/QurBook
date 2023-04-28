@@ -833,11 +833,12 @@ class FormDataDialogState extends State<FormDataDialog> {
           barrierDismissible: false,
           builder: (context) {
             return WillPopScope(
-              onWillPop: () {
+              onWillPop: () async {
                 Provider.of<RegimentViewModel>(Get.context!, listen: false)
                     .cachedEvents = [];
                 Get.back();
-              } as Future<bool> Function()?,
+                return true;
+              },
               child: AlertDialog(
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
