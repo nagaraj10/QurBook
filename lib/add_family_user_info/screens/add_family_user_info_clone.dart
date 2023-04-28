@@ -927,10 +927,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 );
               },
               onSuggestionSelected: (suggestion) {
-                cntrlr_addr_city.text = suggestion.name!;
+                cntrlr_addr_city.text = suggestion.name??'';
                 cityVal = suggestion;
                 if (cityVal != null && cityVal?.state != null) {
-                  cntrlr_addr_state.text = suggestion.state!.name!;
+                  cntrlr_addr_state.text = suggestion.state!.name??'';
                   stateVal = suggestion.state;
                 }
                 //stateVal = suggestion.state;
@@ -973,7 +973,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               itemBuilder: (context, suggestion) {
                 return ListTile(
                   title: Text(
-                    suggestion.name!,
+                    suggestion.name??'',
                     style: TextStyle(
                       fontSize: 16.0.sp,
                     ),
@@ -995,7 +995,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 );
               },
               onSuggestionSelected: (suggestion) {
-                cntrlr_addr_state.text = suggestion.name!;
+                cntrlr_addr_state.text = suggestion.name??'';
                 stateVal = suggestion;
                 cntrlr_addr_city.text = "";
                 cityVal = null;
@@ -1491,9 +1491,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (widget.arguments!.sharedbyme!.child!.userContactCollection3!
               .isNotEmpty) {
             mobileNoController.text = widget.arguments!.sharedbyme!.child!
-                .userContactCollection3![0].phoneNumber!;
+                .userContactCollection3![0].phoneNumber??'';
             emailController.text = widget.arguments!.sharedbyme!.child!
-                .userContactCollection3![0].email!;
+                .userContactCollection3![0].email??'';
           }
         } catch (e) {
           mobileNoController.text = '';
@@ -1505,9 +1505,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             if (widget.arguments!.myProfileResult!.userContactCollection3!
                 .isNotEmpty) {
               mobileNoController.text = widget.arguments!.myProfileResult!
-                  .userContactCollection3![0]!.phoneNumber!;
+                  .userContactCollection3![0]!.phoneNumber??'';
               emailController.text = widget.arguments!.myProfileResult!
-                  .userContactCollection3![0]!.email!;
+                  .userContactCollection3![0]!.email??'';
             }
           } catch (e) {
             mobileNoController.text = '';
@@ -1522,9 +1522,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 myProf.result!.userContactCollection3!.length > 0) {
               if (myProf.result!.userContactCollection3!.isNotEmpty) {
                 mobileNoController.text =
-                    myProf.result!.userContactCollection3![0]!.phoneNumber!;
+                    myProf.result!.userContactCollection3![0]!.phoneNumber??'';
                 emailController.text =
-                    myProf.result!.userContactCollection3![0]!.email!;
+                    myProf.result!.userContactCollection3![0]!.email??'';
               }
             } else {
               var myProf = await PreferenceUtil.getProfileData(
@@ -1533,9 +1533,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   myProf.result!.userContactCollection3!.length > 0) {
                 if (myProf.result!.userContactCollection3!.isNotEmpty) {
                   mobileNoController.text =
-                      myProf.result!.userContactCollection3![0]!.phoneNumber!;
+                      myProf.result!.userContactCollection3![0]!.phoneNumber??'';
                   emailController.text =
-                      myProf.result!.userContactCollection3![0]!.email!;
+                      myProf.result!.userContactCollection3![0]!.email??'';
                 }
               }
             }
@@ -1548,9 +1548,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               if (widget.arguments!.myProfileResult!.userContactCollection3!
                   .isNotEmpty) {
                 mobileNoController.text = widget.arguments!.myProfileResult!
-                    .userContactCollection3![0]!.phoneNumber!;
+                    .userContactCollection3![0]!.phoneNumber??'';
                 emailController.text = widget.arguments!.myProfileResult!
-                    .userContactCollection3![0]!.email!;
+                    .userContactCollection3![0]!.email??'';
               }
             }
           }
@@ -1569,15 +1569,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             widget.arguments!.myProfileResult!.userAddressCollection3!.length >
                 0) {
           cntrlr_addr_one.text = widget.arguments!.myProfileResult!
-              .userAddressCollection3![0].addressLine1!;
+              .userAddressCollection3![0].addressLine1??'';
           cntrlr_addr_two.text = widget.arguments!.myProfileResult!
-              .userAddressCollection3![0].addressLine2!;
+              .userAddressCollection3![0].addressLine2??'';
           cntrlr_addr_city.text = widget.arguments!.myProfileResult!
-              .userAddressCollection3![0].city!.name!;
+              .userAddressCollection3![0].city!.name??'';
           cntrlr_addr_state.text = widget.arguments!.myProfileResult!
-              .userAddressCollection3![0].state!.name!;
+              .userAddressCollection3![0].state!.name??'';
           cntrlr_addr_zip.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].pincode!;
+              .arguments!.myProfileResult!.userAddressCollection3![0].pincode??'';
 
           cityVal = widget
               .arguments!.myProfileResult!.userAddressCollection3![0].city;
@@ -1586,11 +1586,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           setState(() {
             _addressResult = AddressResult(
                 id: widget.arguments!.myProfileResult!
-                    .userAddressCollection3![0].addressType!.id,
+                    .userAddressCollection3![0].addressType!.id??'',
                 code: widget.arguments!.myProfileResult!
-                    .userAddressCollection3![0].addressType!.code,
+                    .userAddressCollection3![0].addressType!.code??'',
                 name: widget.arguments!.myProfileResult!
-                    .userAddressCollection3![0].addressType!.name);
+                    .userAddressCollection3![0].addressType!.name??'');
           });
         } else {
           try {
@@ -1648,13 +1648,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         if (widget.arguments!.myProfileResult!.gender != null) {
-          selectedGender = widget.arguments!.myProfileResult!.gender;
+          selectedGender = widget.arguments!.myProfileResult!.gender??'';
         }
 
         if (widget.arguments!.myProfileResult!.membershipOfferedBy != null &&
             widget.arguments!.myProfileResult!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget.arguments!.myProfileResult!.membershipOfferedBy!;
+              widget.arguments!.myProfileResult!.membershipOfferedBy??'';
         }
         selectedTags = addFamilyUserInfoBloc!.tagsList != null &&
                 addFamilyUserInfoBloc!.tagsList!.length > 0
@@ -1684,9 +1684,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               if (myProf!.result!.userContactCollection3 != null) {
                 if (myProf.result!.userContactCollection3!.isNotEmpty) {
                   mobileNoController.text =
-                      myProf.result!.userContactCollection3![0]!.phoneNumber!;
+                      myProf.result!.userContactCollection3![0]!.phoneNumber??'';
                   emailController.text =
-                      myProf.result!.userContactCollection3![0]!.email!;
+                      myProf.result!.userContactCollection3![0]!.email??'';
                 }
               }
             } catch (e) {
@@ -1710,9 +1710,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             if (widget.arguments!.sharedbyme!.child!.userContactCollection3!
                 .isNotEmpty) {
               mobileNoController.text = widget.arguments!.sharedbyme!.child!
-                  .userContactCollection3![0].phoneNumber!;
+                  .userContactCollection3![0].phoneNumber??'';
               emailController.text = widget.arguments!.sharedbyme!.child!
-                  .userContactCollection3![0].email!;
+                  .userContactCollection3![0].email??'';
             } else {
               mobileNoController.text = '';
               emailController.text = '';
@@ -1726,20 +1726,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments!.sharedbyme!.membershipOfferedBy != null &&
             widget.arguments!.sharedbyme!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget.arguments!.sharedbyme!.membershipOfferedBy!;
+              widget.arguments!.sharedbyme!.membershipOfferedBy??'';
         }
       } else {
         if (widget
             .arguments!.sharedbyme!.child!.userContactCollection3!.isNotEmpty) {
           mobileNoController.text = widget.arguments!.sharedbyme!.child!
-              .userContactCollection3![0].phoneNumber!;
+              .userContactCollection3![0].phoneNumber??'';
           emailController.text = widget
-              .arguments!.sharedbyme!.child!.userContactCollection3![0].email!;
+              .arguments!.sharedbyme!.child!.userContactCollection3![0].email??'';
         }
         if (widget.arguments!.sharedbyme!.membershipOfferedBy != null &&
             widget.arguments!.sharedbyme!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget.arguments!.sharedbyme!.membershipOfferedBy!;
+              widget.arguments!.sharedbyme!.membershipOfferedBy??'';
         }
       }
       if (widget.arguments!.sharedbyme != null) {
@@ -1803,23 +1803,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         if (widget.arguments!.sharedbyme!.child!.gender != null) {
-          selectedGender = widget.arguments!.sharedbyme!.child!.gender;
+          selectedGender = widget.arguments!.sharedbyme!.child!.gender??'';
         }
 
         if (widget
             .arguments!.sharedbyme!.child!.userAddressCollection3!.isNotEmpty) {
           var currentAddress =
               widget.arguments!.sharedbyme!.child!.userAddressCollection3![0];
-          cntrlr_addr_one.text = currentAddress.addressLine1!;
-          cntrlr_addr_two.text = currentAddress.addressLine2!;
-          cntrlr_addr_city.text = currentAddress.city!.name!;
-          cntrlr_addr_state.text = currentAddress.state!.name!;
-          cntrlr_addr_zip.text = currentAddress.pincode!;
+          cntrlr_addr_one.text = currentAddress.addressLine1??'';
+          cntrlr_addr_two.text = currentAddress.addressLine2??'';
+          cntrlr_addr_city.text = currentAddress.city!.name??'';
+          cntrlr_addr_state.text = currentAddress.state!.name??'';
+          cntrlr_addr_zip.text = currentAddress.pincode??'';
           setState(() {
             _addressResult = AddressResult(
-                id: currentAddress.addressType!.id,
-                code: currentAddress.addressType!.code,
-                name: currentAddress.addressType!.name);
+                id: currentAddress.addressType!.id??'',
+                code: currentAddress.addressType!.code??'',
+                name: currentAddress.addressType!.name??'');
           });
 
           cityVal = currentAddress.city;
@@ -1834,9 +1834,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (widget.arguments!.sharedbyme!.child!.dateOfBirth != null) {
           dateofBirthStr = FHBUtils().getFormattedDateForUserBirth(
-              widget.arguments!.sharedbyme!.child!.dateOfBirth!);
+              widget.arguments!.sharedbyme!.child!.dateOfBirth??'');
           dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
-              widget.arguments!.sharedbyme!.child!.dateOfBirth)!;
+              widget.arguments!.sharedbyme!.child!.dateOfBirth)??'';
         }
       }
     } else {
@@ -1852,19 +1852,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             var myProf =
                 PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
             mobileNoController.text =
-                myProf!.result!.userContactCollection3![0]!.phoneNumber!;
+                myProf!.result!.userContactCollection3![0]!.phoneNumber??'';
             emailController.text =
-                myProf.result!.userContactCollection3![0]!.email!;
+                myProf.result!.userContactCollection3![0]!.email??'';
           } catch (e) {
             setMobileAndEmail();
           }
         } else {
           mobileNoController.text =
-              value!.result!.userContactCollection3![0]!.phoneNumber!;
+              value!.result!.userContactCollection3![0]!.phoneNumber??'';
           if (value.result?.userContactCollection3![0]!.email != null &&
               value.result?.userContactCollection3![0]!.email != '') {
             emailController.text =
-                value.result!.userContactCollection3![0]!.email!;
+                value.result!.userContactCollection3![0]!.email??'';
           }
 
           mContactInfo = value.result?.userContactCollection3![0];
@@ -1873,16 +1873,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (value!.result!.userAddressCollection3!.isNotEmpty) {
           UserAddressCollection3 currentAddress =
               value.result!.userAddressCollection3![0];
-          cntrlr_addr_one.text = currentAddress.addressLine1!;
-          cntrlr_addr_two.text = currentAddress.addressLine2!;
-          cntrlr_addr_city.text = currentAddress.city!.name!;
-          cntrlr_addr_state.text = currentAddress.state!.name!;
-          cntrlr_addr_zip.text = currentAddress.pincode!;
+          cntrlr_addr_one.text = currentAddress.addressLine1??'';
+          cntrlr_addr_two.text = currentAddress.addressLine2??'';
+          cntrlr_addr_city.text = currentAddress.city!.name??'';
+          cntrlr_addr_state.text = currentAddress.state!.name??'';
+          cntrlr_addr_zip.text = currentAddress.pincode??'';
           setState(() {
             _addressResult = AddressResult(
-                id: currentAddress.addressType!.id,
-                code: currentAddress.addressType!.code,
-                name: currentAddress.addressType!.name);
+                id: currentAddress.addressType!.id??'',
+                code: currentAddress.addressType!.code??'',
+                name: currentAddress.addressType!.name??'');
           });
 
           cityVal = currentAddress.city;
@@ -1891,23 +1891,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         firstNameController.text =
-            value.result!.firstName!.capitalizeFirstofEach;
+            value.result!.firstName!.capitalizeFirstofEach??'';
         middleNameController.text =
-            value.result!.middleName!.capitalizeFirstofEach;
-        lastNameController.text = value.result!.lastName!.capitalizeFirstofEach;
+            value.result!.middleName!.capitalizeFirstofEach??'';
+        lastNameController.text = value.result!.lastName!.capitalizeFirstofEach??'';
         //? check relatioship id against logged in user
         if (value.result!.userRelationshipCollection!.isNotEmpty) {
           for (var cRelationship in value.result!.userRelationshipCollection!) {
             if (cRelationship.parent?.id ==
                 PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-              relationShipController.text = cRelationship.relationship!.name!;
+              relationShipController.text = cRelationship.relationship!.name??'';
             } else {
               relationShipController.text =
-                  widget.arguments!.relationShip!.name!;
+                  widget.arguments!.relationShip!.name??'';
             }
           }
         } else {
-          relationShipController.text = widget.arguments!.relationShip!.name!;
+          relationShipController.text = widget.arguments!.relationShip!.name??'';
         }
         try {
           setState(() {
@@ -1928,10 +1928,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         dateofBirthStr = value.result!.dateOfBirth != null
             ? FHBUtils()
-                .getFormattedDateForUserBirth(value.result!.dateOfBirth!)
+                .getFormattedDateForUserBirth(value.result!.dateOfBirth??'')
             : '';
         dateOfBirthController.text = value.result!.dateOfBirth != null
-            ? FHBUtils().getFormattedDateOnlyNew(value.result!.dateOfBirth)!
+            ? FHBUtils().getFormattedDateOnlyNew(value.result!.dateOfBirth)??''
             : '';
 
         if (value.result?.additionalInfo != null) {
@@ -1941,7 +1941,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (value.result!.membershipOfferedBy != null &&
             value.result!.membershipOfferedBy != '') {
-          cntrlr_corp_name.text = value.result!.membershipOfferedBy!;
+          cntrlr_corp_name.text = value.result!.membershipOfferedBy??'';
         }
       });
     }
@@ -2875,8 +2875,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   void setMobileAndEmail() {
     mobileNoController.text =
-        myProfile.result!.userContactCollection3![0]!.phoneNumber!;
-    emailController.text = myProfile.result!.userContactCollection3![0]!.email!;
+        myProfile.result!.userContactCollection3![0]!.phoneNumber??'';
+    emailController.text = myProfile.result!.userContactCollection3![0]!.email??'';
   }
 
   Future<String?> setValueLanguages() async {
@@ -3273,9 +3273,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (profileSetting?.preferredMeasurement != null) {
       try {
         heightUnit =
-            await profileSetting?.preferredMeasurement?.height?.unitCode;
+            await profileSetting?.preferredMeasurement?.height?.unitCode??'';
         weightUnit =
-            await profileSetting?.preferredMeasurement?.weight?.unitCode;
+            await profileSetting?.preferredMeasurement?.weight?.unitCode??'';
         setHeightAndWeightUnit();
       } catch (e) {
         setUnitBasedOnRegion();
