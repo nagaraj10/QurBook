@@ -168,10 +168,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         visible: !Platform.isIOS,
                         child: PopupMenuButton<String>(
                           onSelected: (languageCode) {
-                            PreferenceUtil.saveString(
-                                SHEELA_LANG,
-                                CommonUtil
-                                    .langaugeCodes[languageCode]!);
+                            PreferenceUtil.saveString(SHEELA_LANG,
+                                CommonUtil.langaugeCodes[languageCode]!);
                             controller.getDeviceSelectionValues(
                               preferredLanguage: languageCode,
                             );
@@ -253,15 +251,15 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   onPressed: () {
                     if (controller.isLoading.isFalse) {
                       if (controller.currentPlayingConversation != null &&
-                              controller.currentPlayingConversation!.isPlaying
-                                  .value) {
+                          controller
+                              .currentPlayingConversation!.isPlaying.value) {
                         controller.stopTTS();
                       } else {
                         controller.gettingReposnseFromNative();
                       }
                     }
                   },
-                  elevation: 10,
+                  elevation: 0,
                   backgroundColor: controller.isLoading.value
                       ? Colors.black45
                       : PreferenceUtil.getIfQurhomeisAcive()
@@ -269,8 +267,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                           : Color(CommonUtil().getMyPrimaryColor()),
                   child: Icon(
                     (controller.currentPlayingConversation != null &&
-                                controller.currentPlayingConversation!.isPlaying
-                                    .value)
+                            controller
+                                .currentPlayingConversation!.isPlaying.value)
                         ? Icons.pause
                         : controller.isLoading.isTrue
                             ? Icons.mic_off
