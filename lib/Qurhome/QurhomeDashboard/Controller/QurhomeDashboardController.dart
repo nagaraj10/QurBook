@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 
@@ -26,7 +25,7 @@ class QurhomeDashboardController extends GetxController {
   StreamSubscription? _appointmentSubscription;
   late HubListViewController hubController;
   late SheelaBLEController _sheelaBLEController;
-  Timer? _bleTimer=null;
+  Timer? _bleTimer = null;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
   var isLoading = false.obs;
   var isActive = false.obs;
@@ -46,7 +45,7 @@ class QurhomeDashboardController extends GetxController {
     if (!Get.isRegistered<HubListViewController>()) {
       Get.put(HubListViewController());
     }
-    _sheelaBLEController = Get.find();
+    _sheelaBLEController = Get.find<SheelaBLEController>();
     getHubDetails();
     // updateBLETimer();
     super.onInit();
@@ -192,15 +191,15 @@ class QurhomeDashboardController extends GetxController {
               for (var j = 0;
                   j <
                       selectionResult[i]
-                          .primaryProvider
-                          !.additionalInfo
-                          !.moduleAccess!
+                          .primaryProvider!
+                          .additionalInfo!
+                          .moduleAccess!
                           .length;
                   j++) {
                 var isAccess = selectionResult[i]
-                        .primaryProvider
-                        !.additionalInfo
-                        !.moduleAccess![j]
+                        .primaryProvider!
+                        .additionalInfo!
+                        .moduleAccess![j]
                         .name ??
                     '';
                 if (isAccess == strVitalsModule) {
