@@ -297,7 +297,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
         //renameBloodGroup(data.bloodGroup);
       }
       if (data.dateOfBirth != null) {
-        dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth)!;
+        if (CommonUtil.isUSRegion()) {
+          dob.text = new FHBUtils().getFormattedDateOnly(data.dateOfBirth??"");
+        } else {
+          dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth)!;
+        }
       }
       if (data != null) {
         firstName.text = data.firstName!.capitalizeFirstofEach;
@@ -672,9 +676,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     controller: dob,
                     enabled: false,
                     decoration: InputDecoration(
-                        hintText: CommonConstants.year_of_birth,
+                        hintText: CommonUtil.isUSRegion()?CommonConstants.date_of_birth:CommonConstants.year_of_birth,
                         hintStyle: TextStyle(fontSize: 16.0.sp),
-                        labelText: CommonConstants.year_of_birth_with_star),
+                        labelText: CommonUtil.isUSRegion()?CommonConstants.date_of_birthWithStar:CommonConstants.year_of_birth_with_star),
                   ),
                 ),
                 cntrlr_corp_name.text != ''
