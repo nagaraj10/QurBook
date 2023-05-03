@@ -1,11 +1,11 @@
-
 library fhb_constants;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import '../common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
-
+const String prodINURL = "https://tmg1j2slpamjkzvrjs.vsolgmi.com/api/";
+const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String APP_NAME = 'myFHB';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
@@ -778,9 +778,9 @@ const String strWrapperCall = 'wrapperCall';
 
 const String IND_REG = 'IN';
 
-String strMicPermission =  'Microphone permission is required';
-String strCameraPermission =   'Camera permission is required';
-String strCallPermission =   'Camera or Microphone permission is required';
+String strMicPermission = 'Microphone permission is required';
+String strCameraPermission = 'Camera permission is required';
+String strCallPermission = 'Camera or Microphone permission is required';
 
 double height = 0.0;
 double width = 0.0;
