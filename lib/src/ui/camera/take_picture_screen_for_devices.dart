@@ -1,7 +1,5 @@
 import 'dart:io';
-// import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-// import 'package:auto_size_text/auto_size_text.dart';  FU2.5
+
 import 'package:camera/camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -9,27 +7,25 @@ import 'package:flutter_absolute_path/flutter_absolute_path.dart'; //FU2.5
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/OverLayCategoryDialog.dart';
-import 'package:myfhb/common/OverlayDeviceDialog.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/devices_tensorflow/widgets/camera.dart';
-import 'package:myfhb/exception/FetchException.dart';
-import 'package:myfhb/src/utils/alert.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:tflite/tflite.dart';
 
+import '../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/OverLayCategoryDialog.dart';
+import '../../../common/OverlayDeviceDialog.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../common/common_circular_indicator.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/router_variable.dart' as router;
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../devices_tensorflow/widgets/camera.dart';
+import '../../../exception/FetchException.dart';
+import '../../../widgets/GradientAppBar.dart';
+import '../../utils/alert.dart';
+import '../../utils/screenutils/size_extensions.dart';
 import 'CropAndRotateScreen.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/router_variable.dart' as router;
-
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/common_circular_indicator.dart';
 
 class TakePictureScreenForDevices extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -100,14 +96,7 @@ class TakePictureScreenForDevicesState
         ResolutionPreset.medium,
       );
 
-//      _controller.initialize().then((value) {
-//        setState(() {});
-//      });
-
-      //  Next, initialize the controller. This returns a Future.
       _initializeControllerFuture = _controller.initialize();
-    } else {
-      loadModel();
     }
   }
 
@@ -130,11 +119,6 @@ class TakePictureScreenForDevicesState
           '${DateTime.now().difference(Constants.mInitialTime).inSeconds} secs'
     });
     super.dispose();
-  }
-
-  loadModel() async {
-    await Tflite.loadModel(
-        model: variable.strdflit, labels: variable.file_device);
   }
 
   @override

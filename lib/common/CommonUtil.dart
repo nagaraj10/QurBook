@@ -10,43 +10,42 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
-import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
-import 'package:myfhb/regiment/service/regiment_service.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/Media/media_data_list.dart';
-import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
-import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
-import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
-import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
-import 'package:myfhb/video_call/model/UpdatedInfo.dart';
-import 'package:myfhb/video_call/model/messagedetails.dart';
-import 'package:myfhb/video_call/model/msgcontent.dart';
-import 'package:myfhb/video_call/model/payload.dart' as vsPayLoad;
-import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
-import 'package:myfhb/common/ShowPDFFromFile.dart';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:flutter_logs/flutter_logs.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+import '../Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
+import '../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import '../Qurhome/QurhomeDashboard/model/calldata.dart';
+import '../Qurhome/QurhomeDashboard/model/calllogmodel.dart';
+import '../Qurhome/QurhomeDashboard/model/callpushmodel.dart';
+import '../authentication/view/authentication_validator.dart';
+import '../regiment/models/regiment_response_model.dart';
+import '../regiment/service/regiment_service.dart';
+import '../regiment/view_model/regiment_view_model.dart';
+import '../src/model/GetDeviceSelectionModel.dart';
+import '../src/model/Media/media_data_list.dart';
+import '../src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import '../src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
+import '../src/ui/SheelaAI/Services/SheelaQueueServices.dart';
+import '../src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
+import '../src/utils/PageNavigator.dart';
+import '../telehealth/features/chat/view/PDFModel.dart';
+import '../telehealth/features/chat/view/PDFView.dart';
+import '../telehealth/features/chat/view/PDFViewerController.dart';
+import '../telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import '../telehealth/features/appointments/view/AppointmentDetailScreen.dart';
+import '../video_call/model/UpdatedInfo.dart';
+import '../video_call/model/messagedetails.dart';
+import '../video_call/model/msgcontent.dart';
+import '../video_call/model/payload.dart' as vsPayLoad;
+import '../chat_socket/viewModel/chat_socket_view_model.dart';
+import 'ShowPDFFromFile.dart';
+import '../constants/fhb_query.dart';
+import '../constants/variable_constant.dart';
+import '../record_detail/screens/record_detail_screen.dart';
+import '../regiment/models/field_response_model.dart';
+import '../regiment/models/regiment_data_model.dart';
+import '../src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../src/utils/language/language_utils.dart';
+import 'common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -61,19 +60,19 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
+import '../src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
-import 'package:myfhb/video_call/pages/calling_page.dart';
-import 'package:myfhb/video_call/pages/callmain.dart';
-import 'package:myfhb/video_call/pages/callmain_makecall.dart';
-import 'package:myfhb/video_call/utils/audiocall_provider.dart';
-import 'package:myfhb/video_call/utils/hideprovider.dart';
-import 'package:myfhb/video_call/utils/rtc_engine.dart';
-import 'package:myfhb/video_call/utils/settings.dart';
-import 'package:myfhb/video_call/utils/videoicon_provider.dart';
-import 'package:myfhb/widgets/device_type.dart';
+import '../telehealth/features/Notifications/services/notification_services.dart';
+import '../telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
+import '../video_call/pages/calling_page.dart';
+import '../video_call/pages/callmain.dart';
+import '../video_call/pages/callmain_makecall.dart';
+import '../video_call/utils/audiocall_provider.dart';
+import '../video_call/utils/hideprovider.dart';
+import '../video_call/utils/rtc_engine.dart';
+import '../video_call/utils/settings.dart';
+import '../video_call/utils/videoicon_provider.dart';
+import '../widgets/device_type.dart';
 import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
@@ -142,17 +141,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import '../plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
-import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
-import 'package:myfhb/chat_socket/constants/const_socket.dart';
+import '../widgets/checkout_page.dart';
+import '../chat_socket/model/TotalCountModel.dart';
+import '../chat_socket/constants/const_socket.dart';
 import 'keysofmodel.dart' as keysConstant;
 import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
+import '../chat_socket/viewModel/getx_chat_view_model.dart';
 import '../../constants/fhb_constants.dart' as constants;
 import 'package:local_auth/error_codes.dart' as auth_error;
-import 'package:myfhb/authentication/model/device_version.dart';
+import '../authentication/model/device_version.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -2261,7 +2260,7 @@ class CommonUtil {
     } catch (e) {}
   }
 
-   versionCheck(context) async {
+  versionCheck(context) async {
     //Get Current installed version of app
     final info = await PackageInfo.fromPlatform();
     var currentVersion = double.parse(info.version.trim().replaceAll('.', ''));
@@ -2276,11 +2275,12 @@ class CommonUtil {
       var isForceUpdate = false;
       if (deviceVersionModel.isSuccess!) {
         if (deviceVersionModel?.result != null) {
-          newVersion = double.parse(
-              deviceVersionModel.result!.versionName!.trim().replaceAll('.', ''));
+          newVersion = double.parse(deviceVersionModel.result!.versionName!
+              .trim()
+              .replaceAll('.', ''));
           if (deviceVersionModel.result!.additionalInfo! != null) {
-            isForceUpdate =
-                deviceVersionModel.result!.additionalInfo!.qurbook!.isForceUpdate!;
+            isForceUpdate = deviceVersionModel
+                .result!.additionalInfo!.qurbook!.isForceUpdate!;
           }
         }
       }
@@ -3898,29 +3898,6 @@ class CommonUtil {
     );
   }
 
-  static Future<void> saveLog({
-    String? message,
-    bool isError = false,
-  }) async {
-    if (Platform.isAndroid) {
-      var userIdMain = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-      var userIdCurrent = PreferenceUtil.getStringValue(KEY_USERID);
-      if (isError) {
-        FlutterLogs.logError(
-          'MainUser- $userIdMain',
-          'CurrentUser- $userIdCurrent',
-          '$message',
-        );
-      } else {
-        FlutterLogs.logInfo(
-          'MainUser- $userIdMain',
-          'CurrentUser- $userIdCurrent',
-          '$message',
-        );
-      }
-    }
-  }
-
   Future<void> CallbackAPIFromChat(
     String? patId,
     String? careProviderId,
@@ -4008,61 +3985,6 @@ class CommonUtil {
           snackStyle: SnackStyle.GROUNDED,
           duration: Duration(seconds: 3),
           backgroundColor: Colors.red.shade500);
-    }
-  }
-
-  static Future<void> sendLogToServer() async {
-    if (Platform.isAndroid) {
-      FlutterLogs.exportLogs(
-        exportType: ExportType.ALL,
-      );
-    }
-
-    //createComputeFunction();
-    // FlutterLogs.exportAllFileLogs();
-    //
-    // FlutterLogs.exportFileLogForName();
-    //TODO: SendToServer From Here
-  }
-
-  // static createComputeFunction() async {
-  //   bool answer;
-  //   answer = await compute(sayHelloFromCompute, 'Hello');
-  //   print("Answer from compute: $answer");
-  // }
-
-  // static bool sayHelloFromCompute(String string) {
-
-  //   return true;
-  // }
-
-  static uploadTheLog(String value) async {
-    var dir = await (getDir() as FutureOr<Directory>);
-    try {
-      File file = File("${dir.path}/" + value);
-      if (file.existsSync()) {
-        print("Found the file");
-        print(file.path);
-        final res = await ApiBaseHelper().uploadLogData(
-          file.path,
-          value,
-        );
-        if (res) {
-          FlutterToast().getToast(
-            'Log uploaded successful',
-            Colors.green,
-          );
-        } else {
-          FlutterToast().getToast(
-            'Log uploaded failed',
-            Colors.red,
-          );
-        }
-      } else {
-        print("not Found the file");
-      }
-    } catch (e) {
-      print("not Found the file : $e");
     }
   }
 
@@ -5465,26 +5387,6 @@ class CommonUtil {
   }
 
   bool? get isTablet {
-    /*bool isTablet;
-    bool isPhone;
-
-    final double devicePixelRatio = ui.window.devicePixelRatio;
-    final ui.Size size = ui.window.physicalSize;
-    final double width = size.width;
-    final double height = size.height;
-
-    if (devicePixelRatio < 2 && (width >= 1000 || height >= 1000)) {
-      isTablet = true;
-      isPhone = false;
-    } else if (devicePixelRatio == 2 && (width >= 1920 || height >= 1920)) {
-      isTablet = true;
-      isPhone = false;
-    } else {
-      isTablet = false;
-      isPhone = true;
-    }*/
-    // print("<<<<<<");
-    // print(Device.get().isTablet);
     return Device.get().isTablet;
   }
 
