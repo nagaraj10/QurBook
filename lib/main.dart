@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
@@ -58,30 +57,57 @@ import 'widgets/checkout_page.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'IntroScreens/IntroductionScreen.dart';
+import 'QurHub/Controller/HubListViewController.dart';
+import 'Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
+import 'add_provider_plan/service/PlanProviderViewModel.dart';
+import 'my_family_detail/screens/my_family_detail_screen.dart';
+import 'src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
+import 'src/ui/settings/CaregiverSettng.dart';
+import 'telehealth/features/MyProvider/view/BookingConfirmation.dart';
+import 'telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import 'telehealth/features/appointments/view/AppointmentDetailScreen.dart';
+import 'ticket_support/view/detail_ticket_view_screen.dart';
 import 'authentication/service/authservice.dart';
 import 'authentication/view_model/otp_view_model.dart';
+import 'caregiverAssosication/caregiverAPIProvider.dart';
+import 'chat_socket/view/ChatDetail.dart';
+import 'chat_socket/view/ChatUserList.dart';
+import 'chat_socket/viewModel/chat_socket_view_model.dart';
+import 'claim/screen/ClaimRecordDisplay.dart';
+import 'common/CommonConstants.dart';
+import 'common/CommonUtil.dart';
 import 'common/DatabseUtil.dart';
 import 'common/PreferenceUtil.dart';
+import 'common/firebase_analytics_service.dart';
 import 'constants/fhb_constants.dart' as Constants;
 import 'constants/fhb_constants.dart';
+import 'constants/fhb_parameters.dart';
 import 'constants/fhb_router.dart' as router;
-import 'constants/router_variable.dart' as routervariable;
 import 'constants/router_variable.dart' as router;
+import 'constants/router_variable.dart' as routervariable;
+import 'constants/router_variable.dart';
 import 'constants/variable_constant.dart' as variable;
+import 'device_integration/viewModel/Device_model.dart';
 import 'landing/view_model/landing_view_model.dart';
+import 'myPlan/view/myPlanDetail.dart';
+import 'my_family/viewmodel/my_family_view_model.dart';
+import 'my_family_detail/models/my_family_detail_arguments.dart';
 import 'plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'regiment/models/regiment_arguments.dart';
-
-//import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
-// import 'package:awesome_notifications/awesome_notifications.dart';
+import 'regiment/view/manage_activities/manage_activities_screen.dart';
 import 'regiment/view_model/regiment_view_model.dart';
 import 'schedules/add_reminders.dart';
 import 'src/model/home_screen_arguments.dart';
@@ -119,36 +145,42 @@ import 'constants/variable_constant.dart' as variable;
 import 'schedules/add_reminders.dart';
 import 'src/blocs/Category/CategoryListBlock.dart';
 import 'src/model/home_screen_arguments.dart';
+import 'src/model/user/user_accounts_arguments.dart';
 import 'src/resources/network/ApiBaseHelper.dart';
 import 'src/ui/MyRecord.dart';
-import 'src/ui/SplashScreen.dart';
-import 'src/utils/PageNavigator.dart';
-import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'telehealth/features/Notifications/services/notification_services.dart';
-import 'telehealth/features/appointments/model/fetchAppointments/doctor.dart'
-    as doc;
-import 'telehealth/features/appointments/view/resheduleMain.dart';
-import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'video_call/pages/callmain.dart';
-import 'video_call/services/iOS_Notification_Handler.dart';
-import 'video_call/utils/hideprovider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart' as provider;
-import 'package:provider/provider.dart';
-import 'constants/router_variable.dart' as router;
-import 'common/CommonConstants.dart';
-import 'common/CommonUtil.dart';
-import 'my_family/viewmodel/my_family_view_model.dart';
+import 'src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'src/ui/SplashScreen.dart';
 import 'src/ui/connectivity_bloc.dart';
-import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
-import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'src/utils/FHBUtils.dart';
+import 'src/utils/PageNavigator.dart';
+import 'src/utils/dynamic_links.dart';
+import 'src/utils/language/app_localizations.dart';
+import 'src/utils/language/language_utils.dart';
+import 'src/utils/language/languages.dart';
+import 'src/utils/language/view_model/language_view_model.dart';
 import 'src/utils/screenutils/screenutil.dart';
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
-import 'src/model/user/user_accounts_arguments.dart';
-import 'authentication/view_model/otp_view_model.dart';
-import 'landing/view_model/landing_view_model.dart';
-import 'package:facebook_app_events/facebook_app_events.dart';
+import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'telehealth/features/Notifications/services/notification_services.dart';
+import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
+import 'telehealth/features/appointments/model/fetchAppointments/doctor.dart'
+    as doc;
+import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'telehealth/features/appointments/view/resheduleMain.dart';
+import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'user_plans/view_model/user_plans_view_model.dart';
+import 'video_call/pages/callmain.dart';
+import 'video_call/services/iOS_Notification_Handler.dart';
+import 'video_call/utils/audiocall_provider.dart';
+import 'video_call/utils/callstatus.dart';
+import 'video_call/utils/hideprovider.dart';
+import 'video_call/utils/rtc_engine.dart';
+import 'video_call/utils/videoicon_provider.dart';
+import 'video_call/utils/videorequest_provider.dart';
+import 'widgets/checkout_page.dart';
+import 'widgets/checkout_page_provider.dart';
+import 'widgets/shopping_card_provider.dart';
 
 var firstCamera;
 late List<CameraDescription> listOfCameras;
@@ -208,42 +240,6 @@ Future<void> main() async {
     //   CommonUtil().initQurHomePortraitLandScapeMode();
     // } else {
     CommonUtil().initPortraitMode();
-    // }
-
-    Map appsFlyerOptions;
-    if (Platform.isIOS) {
-      appsFlyerOptions = {
-        'afDevKey': 'wAZtv6sqho7WqLGgTAAqFV',
-        'afAppId': '1526444520',
-        'isDebug': true
-      };
-    } else {
-      appsFlyerOptions = {
-        'afDevKey': 'UJdqFKHff633D3TcaZ5d55',
-        'afAppId': '',
-        'isDebug': true
-      };
-    }
-
-    final appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-
-    await appsflyerSdk.initSdk(
-        registerConversionDataCallback: true,
-        registerOnAppOpenAttributionCallback: true,
-        registerOnDeepLinkingCallback: true);
-
-    // appsflyerSdk.onDeepLinkingStream!.forEach((element) {
-    //   final facebookAppEvents = FacebookAppEvents();
-    //   facebookAppEvents.logEvent(name: "deeplinkclicked", parameters: {
-    //     "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-    //     "data": element.toString()
-    //   });
-    //   var firebase = FirebaseAnalyticsService();
-    //   firebase.trackEvent("on_deep_link_clicked", {
-    //     "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-    //     "type": "facebookdeeplink"
-    //   });
-    // });
 
     if (Platform.isAndroid) {
       await FlutterDownloader.initialize(
@@ -266,64 +262,32 @@ Future<void> main() async {
         print(e.toString());
       }
     }
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   const SystemUiOverlayStyle(
-    //     statusBarIconBrightness: Brightness.light,
-    //     statusBarBrightness: Brightness.light,
-    //   ),
-    // );
-
-    await applog.FlutterLogs.initLogs(
-      logLevelsEnabled: [
-        applog.LogLevel.INFO,
-        applog.LogLevel.WARNING,
-        applog.LogLevel.ERROR,
-        applog.LogLevel.SEVERE,
-      ],
-      timeStampFormat: applog.TimeStampFormat.TIME_FORMAT_READABLE,
-      directoryStructure: applog.DirectoryStructure.SINGLE_FILE_FOR_DAY,
-      logTypesEnabled: ['device', 'network', 'errors'],
-      logFileExtension: applog.LogFileExtension.TXT,
-      logsWriteDirectoryName: 'Logs',
-      logsExportDirectoryName: 'Shared',
-      debugFileOperations: true,
-      isDebuggable: true,
-      singleLogFileSize: 10,
-    );
-    // applog.FlutterLogs.channel.setMethodCallHandler((call) {
-    //   if (call.method == 'logsExported') {
-    //     print(call.arguments);
-    //     CommonUtil.uploadTheLog(
-    //       call.arguments.toString(),
-    //     );
-    //   }
-    // } as Future<dynamic> Function(MethodCall)?);
 
     var firebase = FirebaseAnalyticsService();
     firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
     firebase.trackCurrentScreen("startScreen", "classOverride");
     runApp(
-      provider.MultiProvider(
+      MultiProvider(
         providers: [
-          provider.ChangeNotifierProvider<RegimentViewModel>(
+          ChangeNotifierProvider<RegimentViewModel>(
             create: (_) => RegimentViewModel(),
           ),
-          provider.ChangeNotifierProvider<PlanWizardViewModel>(
+          ChangeNotifierProvider<PlanWizardViewModel>(
             create: (_) => PlanWizardViewModel(),
           ),
-          provider.ChangeNotifierProvider<RTCEngineProvider>(
+          ChangeNotifierProvider<RTCEngineProvider>(
             create: (_) => RTCEngineProvider(),
           ),
-          provider.ChangeNotifierProvider<PlanProviderViewModel>(
+          ChangeNotifierProvider<PlanProviderViewModel>(
             create: (_) => PlanProviderViewModel(),
           ),
-          provider.ChangeNotifierProvider<UserPlansViewModel>(
+          ChangeNotifierProvider<UserPlansViewModel>(
             create: (_) => UserPlansViewModel(),
           ),
-          provider.ChangeNotifierProvider<LanguageProvider>(
+          ChangeNotifierProvider<LanguageProvider>(
             create: (_) => LanguageProvider(),
           ),
-          provider.ChangeNotifierProvider<DevicesViewModel>(
+          ChangeNotifierProvider<DevicesViewModel>(
             create: (_) => DevicesViewModel(),
           ),
         ],
@@ -331,18 +295,12 @@ Future<void> main() async {
       ),
     );
   }, (Object error, StackTrace stack) async {
-    await CommonUtil.saveLog(
-      isError: true,
-      message: 'RunZonedGuarded Error - $error \nStackTrace - ${stack}',
-    );
+    debugPrint(error.toString());
   });
-
-  // await saveToPreference();
-  //await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.AuthToken);
 }
 
 void saveUnitSystemToPreference() async {
-  new CommonUtil().commonMethodToSetPreference();
+  CommonUtil().commonMethodToSetPreference();
 }
 
 void saveToPreference() async {
@@ -436,9 +394,6 @@ class _MyFHBState extends State<MyFHB> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    /*NotificationController.instance.takeFCMTokenWhenAppLaunch();
-    NotificationController.instance.initLocalNotification();*/
     PreferenceUtil.saveString(KEY_DYNAMIC_URL, '');
     DynamicLinks.initDynamicLinks();
     CheckForShowingTheIntroScreens();
@@ -459,10 +414,6 @@ class _MyFHBState extends State<MyFHB> {
     }
     FirebaseMessaging.instance.onTokenRefresh
         .listen(CommonUtil().saveTokenToDatabase);
-
-    //gettingResponseFromNative();
-    ///un comment this while on production mode for enabling security.
-    //showSecurityWall();
     Get.put(
       HubListViewController(),
     );
@@ -530,9 +481,7 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Tele Health Chat list',
         });
         Get.to(ChatUserList());
-      } else if (cMsg == 'FETCH_LOG') {
-        CommonUtil.sendLogToServer();
-      }
+      } else if (cMsg == 'FETCH_LOG') {}
       final passedValArr = cMsg.split('&');
       if (passedValArr[0] == 'facebookdeeplink') {
         var firebase = FirebaseAnalyticsService();
@@ -804,7 +753,7 @@ class _MyFHBState extends State<MyFHB> {
             var qurhomeDashboardController =
                 CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = passedValArr[2];
-            if(!qurhomeDashboardController.isActive.value){
+            if (!qurhomeDashboardController.isActive.value) {
               Get.to(QurhomeDashboard());
             }
             qurhomeDashboardController.isLoading.value = true;
@@ -907,8 +856,9 @@ class _MyFHBState extends State<MyFHB> {
           Get.toNamed(
             router.rt_HomeScreen,
             arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
-          )!.then((value) =>
-              PageNavigator.goToPermanent(context, router.rt_Landing));
+          )!
+              .then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'bills') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -918,25 +868,15 @@ class _MyFHBState extends State<MyFHB> {
           Get.toNamed(
             router.rt_HomeScreen,
             arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
-          )!.then((value) =>
-              PageNavigator.goToPermanent(context, router.rt_Landing));
+          )!
+              .then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'chat') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'initiate screen',
             'navigationPage': 'Chat Screen',
           });
-          /*Get.to(ChatDetail(
-            peerId: passedValArr[2],
-            peerName: passedValArr[3],
-            peerAvatar: passedValArr[4],
-            patientId: '',
-            patientName: '',
-            patientPicture: '',
-            isFromVideoCall: false,
-            isCareGiver: false,
-          )).then((value) =>
-              PageNavigator.goToPermanent(context, router.rt_Landing));*/
           Get.to(() => ChatDetail(
                     peerId: passedValArr[2],
                     peerName: passedValArr[3],
@@ -969,11 +909,12 @@ class _MyFHBState extends State<MyFHB> {
                       notificationListId: passedValArr[3],
                       cartId: passedValArr[4],
                       patientName: passedValArr[6],
-                    ))!.then((value) => PageNavigator.goToPermanent(
-                        context, router.rt_Landing)));
+                    ))!
+                        .then((value) => PageNavigator.goToPermanent(
+                            context, router.rt_Landing)));
           });
         } else if (passedValArr[1] == 'familyProfile') {
-          new CommonUtil()
+          CommonUtil()
               .getDetailsOfAddedFamilyMember(Get.context!, passedValArr[2]);
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
@@ -1245,48 +1186,48 @@ class _MyFHBState extends State<MyFHB> {
 
     flutterLocalNotificationsPlugin.initialize(platform,
         onSelectNotification: notificationAction);
-    return provider.MultiProvider(
+    return MultiProvider(
       providers: [
-        provider.ChangeNotifierProvider<ConnectivityBloc>(
+        ChangeNotifierProvider<ConnectivityBloc>(
           create: (_) => ConnectivityBloc(),
         ),
-        provider.ChangeNotifierProvider<CallStatus>(
+        ChangeNotifierProvider<CallStatus>(
           create: (_) => CallStatus(),
         ),
-        provider.ChangeNotifierProvider<HideProvider>(
+        ChangeNotifierProvider<HideProvider>(
           create: (_) => HideProvider(),
         ),
-        provider.ChangeNotifierProvider<MyFamilyViewModel>(
+        ChangeNotifierProvider<MyFamilyViewModel>(
           create: (_) => MyFamilyViewModel(),
         ),
-        // provider.ChangeNotifierProvider<ChatScreenViewModel>(
+        // ChangeNotifierProvider<ChatScreenViewModel>(
         //   create: (_) => ChatScreenViewModel(),
         // ),
-        // provider.ChangeNotifierProvider<RegimentViewModel>(
+        // ChangeNotifierProvider<RegimentViewModel>(
         //   create: (_) => RegimentViewModel(),
         // ),
-        provider.ChangeNotifierProvider<OtpViewModel>(
+        ChangeNotifierProvider<OtpViewModel>(
           create: (_) => OtpViewModel(),
         ),
-        provider.ChangeNotifierProvider<LandingViewModel>(
+        ChangeNotifierProvider<LandingViewModel>(
           create: (_) => LandingViewModel(),
         ),
-        provider.ChangeNotifierProvider<ShoppingCardProvider>(
+        ChangeNotifierProvider<ShoppingCardProvider>(
           create: (_) => ShoppingCardProvider(),
         ),
-        provider.ChangeNotifierProvider<CheckoutPageProvider>(
+        ChangeNotifierProvider<CheckoutPageProvider>(
           create: (_) => CheckoutPageProvider(),
         ),
-        provider.ChangeNotifierProvider<AudioCallProvider>(
+        ChangeNotifierProvider<AudioCallProvider>(
           create: (_) => AudioCallProvider(),
         ),
-        provider.ChangeNotifierProvider<VideoIconProvider>(
+        ChangeNotifierProvider<VideoIconProvider>(
           create: (_) => VideoIconProvider(),
         ),
-        provider.ChangeNotifierProvider<VideoRequestProvider>(
+        ChangeNotifierProvider<VideoRequestProvider>(
           create: (_) => VideoRequestProvider(),
         ),
-        provider.ChangeNotifierProvider<ChatSocketViewModel>(
+        ChangeNotifierProvider<ChatSocketViewModel>(
           create: (_) => ChatSocketViewModel(),
         ),
       ],
@@ -1317,7 +1258,7 @@ class _MyFHBState extends State<MyFHB> {
             navigatorKey: Get.key,
             supportedLocales:
                 Languages.languages.map((e) => Locale(e.code)).toList(),
-            locale: provider.Provider.of<LanguageProvider>(context).locale,
+            locale: Provider.of<LanguageProvider>(context).locale,
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -1345,7 +1286,6 @@ class _MyFHBState extends State<MyFHB> {
         final parsedData = navRoute.split('&');
 
         if (navRoute == 'FETCH_LOG') {
-          CommonUtil.sendLogToServer();
           return SplashScreen(
             nsRoute: '',
           );

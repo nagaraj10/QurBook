@@ -547,7 +547,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   )
                 else
                   Container(),
-                _showDateOfBirthTextFieldNew(),
+
+                CommonUtil.isUSRegion()?_showDateOfBirthTextField():_showDateOfBirthTextFieldNew(),
                 cntrlr_corp_name.text != ''
                     ? Padding(
                         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
@@ -653,6 +654,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
             readOnly: true,
+            onTap: dateOfBirthTapped,
             keyboardType: TextInputType.text,
             focusNode: dateOfBirthFocus,
             textInputAction: TextInputAction.done,
@@ -720,8 +722,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         dateofBirthStr =
             FHBUtils().getFormattedDateForUserBirth(dateTime.toString());
-        dateOfBirthController.text =
-            FHBUtils().getFormattedDateOnlyNew(dateTime.toString())!;
+        if (CommonUtil.isUSRegion())
+        {
+          dateOfBirthController.text =
+          FHBUtils().getFormattedDateOnly(dateTime.toString())!;
+        }else {
+          dateOfBirthController.text =
+          FHBUtils().getFormattedDateOnlyNew(dateTime.toString())!;
+        }
       });
     }
   }
@@ -1394,13 +1402,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (selectedGender == null) {
       isValid = false;
       strErrorMsg = variable.selectGender;
-    } else if (dateOfBirthController.text.isEmpty) {
+    } else if (dateOfBirthController.text.toString().trim().isEmpty) {
       isValid = false;
-      strErrorMsg = variable.selectYOB;
-    } else if (dateOfBirthController.text.length < 4) {
+      strErrorMsg = CommonUtil.isUSRegion()
+          ? variable.selectDateOfBirth
+          : variable.selectYOB;
+    } else if (!CommonUtil.isUSRegion()&&dateOfBirthController.text.length < 4) {
       isValid = false;
       strErrorMsg = "Enter a Valid Year";
-    } else if (checkIfYearIsGreaterThanCurrentYear(
+    } else if (!CommonUtil.isUSRegion()&&checkIfYearIsGreaterThanCurrentYear(
         int.parse(dateOfBirthController.text))) {
       isValid = false;
     } else if (_addressResult == null || _addressResult.id == null) {
@@ -1512,8 +1522,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments!.myProfileResult!.dateOfBirth != null) {
           dateofBirthStr = FHBUtils().getFormattedDateForUserBirth(
               widget.arguments!.myProfileResult!.dateOfBirth!);
-          dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
-              widget.arguments!.myProfileResult!.dateOfBirth)!;
+          if(CommonUtil.isUSRegion()){
+          dateOfBirthController.text = FHBUtils().getFormattedDateOnly(
+              widget.arguments!.myProfileResult!.dateOfBirth??"");
+          }else{
+            dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
+                widget.arguments!.myProfileResult!.dateOfBirth)!;
+          }
         }
 
         if (widget.arguments!.myProfileResult!.userAddressCollection3 != null &&
@@ -1788,8 +1803,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments!.sharedbyme!.child!.dateOfBirth != null) {
           dateofBirthStr = FHBUtils().getFormattedDateForUserBirth(
               widget.arguments!.sharedbyme!.child!.dateOfBirth??'');
-          dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
-              widget.arguments!.sharedbyme!.child!.dateOfBirth)??'';
+          if(CommonUtil.isUSRegion()) {
+            dateOfBirthController.text = FHBUtils().getFormattedDateOnly(
+                widget.arguments!.sharedbyme!.child!.dateOfBirth??"") ?? '';
+          }else{
+            dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
+                widget.arguments!.sharedbyme!.child!.dateOfBirth) ?? '';
+          }
         }
       }
     } else {
@@ -1884,7 +1904,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 .getFormattedDateForUserBirth(value.result!.dateOfBirth??'')
             : '';
         dateOfBirthController.text = value.result!.dateOfBirth != null
-            ? FHBUtils().getFormattedDateOnlyNew(value.result!.dateOfBirth)??''
+            ? CommonUtil.isUSRegion()?FHBUtils().getFormattedDateOnly(value.result!.dateOfBirth??"")??'':FHBUtils().getFormattedDateOnlyNew(value.result!.dateOfBirth)??''
             : '';
 
         if (value.result?.additionalInfo != null) {

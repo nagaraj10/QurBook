@@ -1,30 +1,28 @@
 import 'dart:io';
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';
-// import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_absolute_path/flutter_absolute_path.dart';  FU2.5
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/OverLayCategoryDialog.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/exception/FetchException.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'CropAndRotateScreen.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/common/common_circular_indicator.dart';
 
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import '../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../common/CommonUtil.dart';
+import '../../../common/FHBBasicWidget.dart';
+import '../../../common/OverLayCategoryDialog.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../common/common_circular_indicator.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/router_variable.dart' as router;
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../exception/FetchException.dart';
+import '../../../widgets/GradientAppBar.dart';
+import '../../utils/screenutils/size_extensions.dart';
+import 'CropAndRotateScreen.dart';
 
 class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -63,8 +61,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   String? categoryID;
   late BuildContext _context;
 
-  bool isFlash = false;
-  bool _hasFlashlight = false;
   String? deviceName;
   @override
   void initState() {
@@ -101,12 +97,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   initFlashlight() async {
-    // bool hasFlash = await Flashlight.hasFlashlight;
     categoryName =
         await PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-    setState(() {
-      _hasFlashlight = false;
-    });
+    setState(() {});
   }
 
   @override
@@ -143,20 +136,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               },
             ),
             title: getWidgetForTitle(context),
-            actions: <Widget>[
-              IconButton(
-                  icon: isFlash ? Icon(Icons.flash_off) : Icon(Icons.flash_on),
-                  onPressed: () {
-                    //isFlash ? Flashlight.lightOff() : Flashlight.lightOn();
-                    setState(() {
-                      if (isFlash) {
-                        isFlash = false;
-                      } else {
-                        isFlash = true;
-                      }
-                    });
-                  })
-            ],
           ),
 
           //appBar: AppBar(title: Text('Take a picture')),
