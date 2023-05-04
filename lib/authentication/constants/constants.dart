@@ -131,6 +131,7 @@ const String strResendConfirmCode = 'resend-confirm-code';
 const String strResendGenerateOTP = 'user-relationship/generate-otp';
 const String strAdditionalInstructions = 'Additional Instructions';
 const String noMoreActivites = 'No more activites for the day';
+const String strDeleteAccountOtpVerifyEndpoint = 'user/verify-otp';
 
 //tickets
 const String ticketCreatedSuccessfully = 'Ticket Created Successfully';

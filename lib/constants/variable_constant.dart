@@ -187,6 +187,7 @@ const String icon_provider = 'assets/navicons/my_providers.png';
 const String icon_orderHistory = 'assets/navicons/orderHistory.png';
 const String icon_lock = 'assets/settings/unlock.png';
 const String lock_icon = 'assets/lock_icon.png';
+const String remove_user = 'assets/settings/remove_user.png';
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';
@@ -403,6 +404,13 @@ const String strDisplayPreferences = 'Display Preferences';
 const String strSkillsIntegration = 'Skills/Integration';
 const String strIntegration = 'Integration';
 const String strPrivacyAndSecurity = 'Privacy and Security';
+
+// User account
+const String strUserAccount = 'User Account';
+const String strDeleteAccountTitle = 'Delete Account';
+const String strDeleteAccountDes = 'Are you sure, you want to delete the account?';
+const String strNotRetrieveDataDes = "Please note that you'll not be able to retrieve any of your data further, Confirm delete";
+const String strCancel = 'Cancel';
 
 // for my family
 

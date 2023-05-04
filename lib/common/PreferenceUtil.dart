@@ -493,6 +493,24 @@ class PreferenceUtil {
     );
   }
 
+
+  static Future<bool> saveEnableDeleteAccount({
+    bool deleteAccountStatus = false,
+  }) async {
+    final instance = await _prefs;
+    return instance!.setBool(
+      Constants.enableDeleteAccount,
+      deleteAccountStatus,
+    );
+  }
+
+  static bool getEnableDeleteAccount() {
+    return _prefsInstance!.getBool(
+          Constants.enableDeleteAccount,
+        ) ??
+        false;
+  }
+
   static bool getEnableAppLock() {
     return _prefsInstance!.getBool(
           Constants.enableAppLock,
