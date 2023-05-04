@@ -1,9 +1,6 @@
-
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:math' as Math;
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Device {
   static double devicePixelRatio = ui.window.devicePixelRatio;

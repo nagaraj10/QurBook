@@ -1,23 +1,5 @@
 // import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/authentication/model/Country.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import '../../common/CommonUtil.dart';
-import '../../constants/fhb_constants.dart';
-import '../viewmodel/referafriend_vm.dart';
-import '../model/referafriendrequest.dart';
-import '../model/referafriendresponse.dart';
-import '../../src/ui/loader_class.dart';
-import 'package:provider/provider.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 
 class InviteContactsScreen extends StatefulWidget {
   const InviteContactsScreen();

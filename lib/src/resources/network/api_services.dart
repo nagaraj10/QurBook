@@ -1,15 +1,11 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_logs/flutter_logs.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
+import '../../../common/CommonUtil.dart';
 
 class ApiServices {
   static Future<Response?> get(String path,
@@ -25,24 +21,10 @@ class ApiServices {
             headers: headers,
           )
           .timeout(Duration(seconds: timeout));
-      await CommonUtil.saveLog(
-        message:
-            'Request - ${response.request ?? ''} || Response(${response.statusCode}) - ${response.body}',
-      );
-
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response;
-      // } else {
       return response;
-      // }
     } on TimeoutException {
       FlutterToast().getToast('Request Timeout', Colors.red);
     } catch (exception) {
-      await CommonUtil.saveLog(
-        isError: true,
-        message:
-            'Path - ${path} || Header - ${headers ?? ''}\n Exception - ${exception}',
-      );
       if (exception is SocketException) {
         //TODO: handle connection error
       } else {
@@ -76,20 +58,11 @@ class ApiServices {
               seconds: timeOutSeconds,
             ),
           );
-      CommonUtil.saveLog(
-        message:
-            'Request - ${response.request ?? ''} || Response(${response.statusCode}) - ${response.body}',
-      );
-      // if (response.statusCode == 200 || response.statusCode == 201) {
+
       return response;
     } on TimeoutException {
       FlutterToast().getToast('Request Timeout', Colors.red);
     } catch (exception) {
-      CommonUtil.saveLog(
-        isError: true,
-        message:
-            'Path - ${path} || Body - ${body}\n Exception - ${exception}',
-      );
       if (exception is SocketException) {
         //TODO: handle connection error
       } else {
@@ -117,21 +90,10 @@ class ApiServices {
             encoding: encoding,
           )
           .timeout(Duration(seconds: 20));
-      CommonUtil.saveLog(
-        message:
-            'Request - ${response.request ?? ''} || Response(${response.statusCode}) - ${response.body}',
-      );
-
-      // if (response.statusCode == 200 || response.statusCode == 201) {
       return response;
     } on TimeoutException {
       FlutterToast().getToast('Request Timeout', Colors.red);
     } catch (exception) {
-      CommonUtil.saveLog(
-        isError: true,
-        message:
-            'Path - ${path} || Header - ${headers} || Body - ${body}\n Exception - ${exception}',
-      );
       if (exception is SocketException) {
         //TODO: handle connection error
       } else {
@@ -160,20 +122,10 @@ class ApiServices {
           )
           .timeout(Duration(seconds: 20));
 
-      CommonUtil.saveLog(
-        message:
-            'Request - ${response.request ?? ''} || Response(${response.statusCode}) - ${response.body}',
-      );
-      // if (response.statusCode == 200 || response.statusCode == 201) {
       return response;
     } on TimeoutException {
       FlutterToast().getToast('Request Timeout', Colors.red);
     } catch (exception) {
-      CommonUtil.saveLog(
-        isError: true,
-        message:
-            'Path - ${path} || Header - ${headers} || Body - ${body}\n Exception - ${exception}',
-      );
       if (exception is SocketException) {
         //TODO: handle connection error
       } else {

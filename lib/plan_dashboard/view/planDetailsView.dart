@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -6,7 +5,6 @@ import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -61,7 +59,7 @@ class MyPlanDetailView extends StatefulWidget {
     // @required this.description,
     // @required this.price,
     // @required this.issubscription,
-     this.packageId,
+    this.packageId,
     // @required this.providerName,
     // @required this.packageDuration,
     // @required this.providerId,
@@ -70,7 +68,7 @@ class MyPlanDetailView extends StatefulWidget {
     // @required this.iconApi,
     // @required this.catIcon,
     // @required this.isRenew,
-     this.isFrom,
+    this.isFrom,
     // @required this.isExtendable,
     // @required this.metaDataForURL,
   }) : super(key: key);
@@ -107,7 +105,8 @@ class PlanDetail extends State<MyPlanDetailView> {
     super.initState();
     mInitialTime = DateTime.now();
     // setValues();
-    planListModel = PlanViewModel().getPlanDetail(widget.packageId) as Future<PlanListModel?>;
+    planListModel = PlanViewModel().getPlanDetail(widget.packageId)
+        as Future<PlanListModel?>;
   }
 
   @override
