@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 //import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:flutter/cupertino.dart';
@@ -148,7 +147,8 @@ class CommonWidgets {
 
     if (result
         .healthOrganization!.healthOrganizationAddressCollection!.isNotEmpty) {
-      if (result.healthOrganization!.healthOrganizationAddressCollection!.length >
+      if (result
+              .healthOrganization!.healthOrganizationAddressCollection!.length >
           0) {
         if (result.healthOrganization!.healthOrganizationAddressCollection![0]
                 .city !=
@@ -594,7 +594,8 @@ class CommonWidgets {
                                     ? getDoctoSpecialist((docs
                                                     .professionalDetails !=
                                                 null &&
-                                            docs.professionalDetails!.length > 0)
+                                            docs.professionalDetails!.length >
+                                                0)
                                         ? docs.professionalDetails![0]
                                                     .specialty !=
                                                 null
@@ -895,8 +896,9 @@ class CommonWidgets {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 setDoctorname(docs!.user),
-                                Text( //FU2.5
-                                //AutoSizeText( FU2.5
+                                Text(
+                                  //FU2.5
+                                  //AutoSizeText( FU2.5
                                   (docs.doctorProfessionalDetailCollection !=
                                               null &&
                                           docs.doctorProfessionalDetailCollection!
@@ -926,13 +928,13 @@ class CommonWidgets {
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
-                                ),  
-                                getDoctorsAddress(
-                                    docs.user!.userAddressCollection3![0].city !=
-                                            null
-                                        ? docs.user!.userAddressCollection3![0]
-                                            .city!.name
-                                        : ''),
+                                ),
+                                getDoctorsAddress(docs.user!
+                                            .userAddressCollection3![0].city !=
+                                        null
+                                    ? docs.user!.userAddressCollection3![0]
+                                        .city!.name
+                                    : ''),
                                 (docs.doctorLanguageCollection != null &&
                                         docs.doctorLanguageCollection!.length >
                                             0)
@@ -950,8 +952,8 @@ class CommonWidgets {
                       ),
                       getSizedBox(15),
                       getTextForDoctors('About: '),
-                      getTextAbout((docs.doctorProfessionalDetailCollection!
-                                  .isNotEmpty)
+                      getTextAbout((docs
+                              .doctorProfessionalDetailCollection!.isNotEmpty)
                           ? docs.doctorProfessionalDetailCollection![0].aboutMe
                           : ''),
                     ],
@@ -1008,8 +1010,9 @@ class CommonWidgets {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 setDoctornameForHos(docs.user),
-                               // AutoSizeText( FU2.5
-                                Text( // FU2.5
+                                // AutoSizeText( FU2.5
+                                Text(
+                                  // FU2.5
                                   (docs.doctorProfessionalDetailCollection !=
                                               null &&
                                           docs.doctorProfessionalDetailCollection!
@@ -1040,12 +1043,12 @@ class CommonWidgets {
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
                                 ),
-                                getDoctorsAddress(
-                                    docs.user!.userAddressCollection3![0].city !=
-                                            null
-                                        ? docs.user!.userAddressCollection3![0]
-                                            .city!.name
-                                        : ''),
+                                getDoctorsAddress(docs.user!
+                                            .userAddressCollection3![0].city !=
+                                        null
+                                    ? docs.user!.userAddressCollection3![0]
+                                        .city!.name
+                                    : ''),
                                 (docs.doctorLanguageCollection != null &&
                                         docs.doctorLanguageCollection!.length >
                                             0)
@@ -1063,8 +1066,8 @@ class CommonWidgets {
                       ),
                       getSizedBox(15),
                       getTextForDoctors('About: '),
-                      getTextAbout((docs.doctorProfessionalDetailCollection!
-                                  .isNotEmpty)
+                      getTextAbout((docs
+                              .doctorProfessionalDetailCollection!.isNotEmpty)
                           ? docs.doctorProfessionalDetailCollection![0].aboutMe
                           : ''),
                     ],
@@ -1121,8 +1124,9 @@ class CommonWidgets {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 setDoctorname(docs.user),
-                               // AutoSizeText(  FU2.5
-                               Text( // FU2.5
+                                // AutoSizeText(  FU2.5
+                                Text(
+                                  // FU2.5
                                   (docs.doctorProfessionalDetailCollection !=
                                               null &&
                                           docs.doctorProfessionalDetailCollection!
@@ -1153,12 +1157,12 @@ class CommonWidgets {
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
                                 ),
-                                getDoctorsAddress(
-                                    docs.user!.userAddressCollection3![0].city !=
-                                            null
-                                        ? docs.user!.userAddressCollection3![0]
-                                            .city!.name
-                                        : ''),
+                                getDoctorsAddress(docs.user!
+                                            .userAddressCollection3![0].city !=
+                                        null
+                                    ? docs.user!.userAddressCollection3![0]
+                                        .city!.name
+                                    : ''),
                                 (docs.doctorLanguageCollection != null &&
                                         docs.doctorLanguageCollection!.length >
                                             0)
@@ -1178,8 +1182,8 @@ class CommonWidgets {
                       ),
                       getSizedBox(15),
                       getTextForDoctors('About: '),
-                      getTextAbout((docs.doctorProfessionalDetailCollection!
-                                  .isNotEmpty)
+                      getTextAbout((docs
+                              .doctorProfessionalDetailCollection!.isNotEmpty)
                           ? docs.doctorProfessionalDetailCollection![0].aboutMe
                           : ''),
                     ],
@@ -1194,11 +1198,8 @@ class CommonWidgets {
   String getMoneyWithForamt(String? amount) {
     if (amount != null && amount != '') {
       var amountDouble = double.parse(amount);
-
       MoneyFormatter fmf = MoneyFormatter(amount: amountDouble);
-
       MoneyFormatterOutput fo = fmf.output;
-
       return fo.withoutFractionDigits.toString();
     } else {
       return amount = '0';
