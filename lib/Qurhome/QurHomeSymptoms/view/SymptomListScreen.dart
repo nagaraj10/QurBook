@@ -1,5 +1,6 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -29,6 +30,9 @@ class _SymptomListScreen extends State<SymptomListScreen> {
 
   // Future<RegimentResponseModel> symptomsList;
 
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
+
   @override
   void initState() {
     super.initState();
@@ -37,8 +41,21 @@ class _SymptomListScreen extends State<SymptomListScreen> {
         [];
     controller.getSymptomList(isLoading: true);
 
+    //onInit();
+
     /* symptomsList = Provider.of<SymptomViewModel>(context, listen: false)
         .getSymptomListData();*/
+  }
+
+  onInit() async {
+    try {
+      qurhomeDashboardController.enableModuleAccess();
+      qurhomeDashboardController.getModuleAccess();
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
   }
 
   @override

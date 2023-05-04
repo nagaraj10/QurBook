@@ -1,5 +1,4 @@
 
-import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +17,7 @@ import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/landing/view/widgets/qurhome_nav_drawer.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -62,11 +59,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
-  HealthReportListForUserRepository healthReportListForUserRepository =
-      HealthReportListForUserRepository();
-
-  GetDeviceSelectionModel? selectionResult;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -98,8 +90,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
 
-        enableModuleAccess();
-        getModuleAccess();
+        controller.enableModuleAccess();
+        controller.getModuleAccess();
 
         await CommonUtil().getUserProfileData();
       }
@@ -692,8 +684,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     try {
       if (userChanged) {
         //profileData = getMyProfile();
+        controller.enableModuleAccess();
+        controller.getModuleAccess();
       }
-      setState(() {});
+      //setState(() {});
     } catch (e) {
       print(e);
     }
@@ -711,20 +705,4 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     }
   }
 
-  Future<GetDeviceSelectionModel> getModuleAccess() async {
-    await healthReportListForUserRepository.getDeviceSelection().then((value) {
-      selectionResult = value;
-      if (selectionResult!.isSuccess!) {
-        if (selectionResult?.result != null) {
-          controller.updateModuleAccess(selectionResult!.result!);
-        }
-      }
-    });
-    return selectionResult!;
-  }
-
-  enableModuleAccess() {
-    controller.isVitalModuleDisable.value = true;
-    controller.isSymptomModuleDisable.value = true;
-  }
 }
