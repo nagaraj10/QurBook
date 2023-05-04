@@ -69,7 +69,7 @@ class SheelaAIController extends GetxController {
   Timer? _popTimer;
   var sheelaIconBadgeCount = 0.obs;
   bool isUnAvailableCC = false;
-
+  bool isProd = false;
   SheelaBadgeServices sheelaBadgeServices = SheelaBadgeServices();
 
   @override
@@ -79,6 +79,11 @@ class SheelaAIController extends GetxController {
   }
 
   setDefaultValues() async {
+    if (BASE_URL == prodINURL) {
+      isProd = true;
+    } else if (BASE_URL == prodUSURL) {
+      isProd = true;
+    }
     if (Platform.isIOS) {
       _audioCache = AudioCache();
       _audioCache.loadAll(['raw/Negative.mp3', 'raw/Positive.mp3']);
