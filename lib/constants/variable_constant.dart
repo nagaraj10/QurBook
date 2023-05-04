@@ -89,6 +89,7 @@ const String enterLastName = 'Enter Last Name';
 const String selectGender = 'Select Gender';
 const String selectDOB = 'Select DOB';
 const String selectYOB = 'Enter year of birth';
+const String selectDateOfBirth = 'Enter Date of birth';
 const String selectRHType = 'Select Rh type';
 const String selectBloodGroup = 'Select Blood group';
 
