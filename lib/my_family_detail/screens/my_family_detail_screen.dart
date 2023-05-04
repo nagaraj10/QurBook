@@ -315,8 +315,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           sharedbyme.child!.lastName != null) {
         firstNameController.text =
             sharedbyme.child!.firstName!.capitalizeFirstofEach;
-        middleNameController.text =
-            sharedbyme.child!.middleName!.capitalizeFirstofEach;
+        if (sharedbyme.child!.middleName != null) {
+          middleNameController.text =
+              sharedbyme.child!.middleName!.capitalizeFirstofEach;
+        }
         lastNameController.text =
             sharedbyme.child!.lastName!.capitalizeFirstofEach;
       }
@@ -451,21 +453,27 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.child!.dateOfBirth != null) {
-      dateOfBirthController.text =
-          FHBUtils().getFormattedDateOnlyNew(sharedbyme.child!.dateOfBirth)!;
+      if (CommonUtil.isUSRegion())
+      {
+        dateOfBirthController.text =
+        FHBUtils().getFormattedDateOnly(sharedbyme.child!.dateOfBirth??"");
+      }else {
+        dateOfBirthController.text =
+        FHBUtils().getFormattedDateOnlyNew(sharedbyme.child!.dateOfBirth)!;
+      }
     }
 
     if (sharedbyme.child!.userAddressCollection3!.isNotEmpty) {
       cntrlr_addr_one.text =
-          sharedbyme.child!.userAddressCollection3![0].addressLine1!;
+          sharedbyme.child!.userAddressCollection3![0].addressLine1??"";
       cntrlr_addr_two.text =
-          sharedbyme.child!.userAddressCollection3![0].addressLine2!;
+          sharedbyme.child!.userAddressCollection3![0].addressLine2??"";
       cntrlr_addr_city.text =
-          sharedbyme.child!.userAddressCollection3![0].city!.name!;
+          sharedbyme.child!.userAddressCollection3![0].city?.name??"";
       cntrlr_addr_state.text =
-          sharedbyme.child!.userAddressCollection3![0].state!.name!;
+          sharedbyme.child!.userAddressCollection3![0].state?.name??"";
       cntrlr_addr_zip.text =
-          sharedbyme.child!.userAddressCollection3![0].pincode!;
+          sharedbyme.child!.userAddressCollection3![0].pincode??"";
     }
 
     if (sharedbyme.membershipOfferedBy != null &&
@@ -1206,8 +1214,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 icon: Icon(Icons.calendar_today),
                 onPressed: () {},
               ),
-              labelText: CommonConstants.year_of_birth_with_star,
-              hintText: CommonConstants.year_of_birth,
+              labelText: CommonUtil.isUSRegion()?CommonConstants.date_of_birthWithStar:CommonConstants.year_of_birth_with_star,
+              hintText: CommonUtil.isUSRegion()?CommonConstants.date_of_birth:CommonConstants.year_of_birth,
               labelStyle: TextStyle(
                   fontSize: 14.0.sp,
                   fontWeight: FontWeight.w400,
