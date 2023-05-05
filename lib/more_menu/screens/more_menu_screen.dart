@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -14,6 +13,10 @@ import 'package:local_auth/auth_strings.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/authentication/view/otp_remove_account_screen.dart';
+import 'package:myfhb/authentication/view/verifypatient_screen.dart';
+import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -34,7 +37,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/errors_widget.dart';
-import '../../constants/fhb_constants.dart' as Constants; 
+import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
@@ -68,6 +71,8 @@ class MoreMenuScreen extends StatefulWidget {
 class _MoreMenuScreenState extends State<MoreMenuScreen> {
   MyProfileModel? myProfile;
   File? profileImage;
+  late AuthViewModel authViewModel;
+  FlutterToast toast = FlutterToast();
 
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
@@ -124,6 +129,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool isDisplayDevices = false;
   bool isPrivacyAndSecurity = false;
   bool isBiometric = false;
+  bool isDeleteAccount = false;
 
   bool isDisplayPreference = false;
   bool isIntegration = false;
@@ -146,6 +152,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     });
     selectedList = [];
     _deviceModel = new DevicesViewModel();
+    authViewModel = AuthViewModel();
   }
 
   @override
@@ -182,6 +189,17 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     return myProfile;
   }
 
+  _sendOtpDetails() async {
+    var response = await authViewModel.getDeleteAccountOtp(isResend: false);
+    if (response.isSuccess!) {
+      toast.getToast('One Time Password sent successfully', Colors.green);
+    } else {
+      if (response.message != null) {
+        toast.getToast(response.message!, Colors.red);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,24 +230,24 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text('Do you want to update the changes'),
-            actions: <Widget>[
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('No'),
-              ),
-              TextButton(
-                onPressed: () => createAppColorSelection(preColor, greColor),
-                child: Text('Yes'),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text('Do you want to update the changes'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('No'),
           ),
-        ).then((value) => value as bool);
+          TextButton(
+            onPressed: () => createAppColorSelection(preColor, greColor),
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   void openWebView(String title, String url, bool isLocal) {
@@ -271,8 +289,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 Text(
                   (myProfile!.result!.userContactCollection3 != null &&
                           myProfile!.result!.userContactCollection3!.isNotEmpty)
-                      ? myProfile!
-                              .result!.userContactCollection3![0]!.phoneNumber ??
+                      ? myProfile!.result!.userContactCollection3![0]!
+                              .phoneNumber ??
                           ''
                       : '',
                   style: TextStyle(fontSize: 14.0.sp),
@@ -280,7 +298,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 Text(
                   (myProfile!.result!.userContactCollection3 != null &&
                           myProfile!.result!.userContactCollection3!.isNotEmpty)
-                      ? myProfile!.result!.userContactCollection3![0]!.email ?? ''
+                      ? myProfile!.result!.userContactCollection3![0]!.email ??
+                          ''
                       : '',
                   style: TextStyle(fontSize: 13.0.sp),
                 )
@@ -580,12 +599,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     preColor = getDeviceSelectionModel.result![0].profileSetting!.preColor;
     greColor = getDeviceSelectionModel.result![0].profileSetting!.greColor;
 
-    _isdeviceRecognition =
-        getDeviceSelectionModel.result![0].profileSetting!.allowDevice != null &&
-                getDeviceSelectionModel.result![0].profileSetting!.allowDevice !=
-                    ''
-            ? getDeviceSelectionModel.result![0].profileSetting!.allowDevice
-            : true;
+    _isdeviceRecognition = getDeviceSelectionModel
+                    .result![0].profileSetting!.allowDevice !=
+                null &&
+            getDeviceSelectionModel.result![0].profileSetting!.allowDevice != ''
+        ? getDeviceSelectionModel.result![0].profileSetting!.allowDevice
+        : true;
     _isdigitRecognition =
         getDeviceSelectionModel.result![0].profileSetting!.allowDigit != null &&
                 getDeviceSelectionModel.result![0].profileSetting!.allowDigit !=
@@ -594,41 +613,47 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             : true;
     _isGFActive =
         getDeviceSelectionModel.result![0].profileSetting!.googleFit != null &&
-                getDeviceSelectionModel.result![0].profileSetting!.googleFit != ''
+                getDeviceSelectionModel.result![0].profileSetting!.googleFit !=
+                    ''
             ? getDeviceSelectionModel.result![0].profileSetting!.googleFit
             : false;
     _isHKActive =
         getDeviceSelectionModel.result![0].profileSetting!.healthFit != null &&
-                getDeviceSelectionModel.result![0].profileSetting!.healthFit != ''
+                getDeviceSelectionModel.result![0].profileSetting!.healthFit !=
+                    ''
             ? getDeviceSelectionModel.result![0].profileSetting!.healthFit
             : false;
     _isBPActive =
         getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != null &&
-                getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != ''
+                getDeviceSelectionModel.result![0].profileSetting!.bpMonitor !=
+                    ''
             ? getDeviceSelectionModel.result![0].profileSetting!.bpMonitor
             : true;
-    _isGLActive = getDeviceSelectionModel.result![0].profileSetting!.glucoMeter !=
-                null &&
-            getDeviceSelectionModel.result![0].profileSetting!.glucoMeter != ''
-        ? getDeviceSelectionModel.result![0].profileSetting!.glucoMeter
-        : true;
+    _isGLActive =
+        getDeviceSelectionModel.result![0].profileSetting!.glucoMeter != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.glucoMeter !=
+                    ''
+            ? getDeviceSelectionModel.result![0].profileSetting!.glucoMeter
+            : true;
     _isOxyActive = getDeviceSelectionModel
                     .result![0].profileSetting!.pulseOximeter !=
                 null &&
-            getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter != ''
+            getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter !=
+                ''
         ? getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter
         : true;
-    _isWSActive = getDeviceSelectionModel.result![0].profileSetting!.weighScale !=
-                null &&
-            getDeviceSelectionModel.result![0].profileSetting!.weighScale != ''
-        ? getDeviceSelectionModel.result![0].profileSetting!.weighScale
-        : true;
-    _isTHActive =
-        getDeviceSelectionModel.result![0].profileSetting!.thermoMeter != null &&
-                getDeviceSelectionModel.result![0].profileSetting!.thermoMeter !=
+    _isWSActive =
+        getDeviceSelectionModel.result![0].profileSetting!.weighScale != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.weighScale !=
                     ''
-            ? getDeviceSelectionModel.result![0].profileSetting!.thermoMeter
+            ? getDeviceSelectionModel.result![0].profileSetting!.weighScale
             : true;
+    _isTHActive = getDeviceSelectionModel
+                    .result![0].profileSetting!.thermoMeter !=
+                null &&
+            getDeviceSelectionModel.result![0].profileSetting!.thermoMeter != ''
+        ? getDeviceSelectionModel.result![0].profileSetting!.thermoMeter
+        : true;
 
     preferred_language = getDeviceSelectionModel
                     .result![0].profileSetting!.preferred_language !=
@@ -639,13 +664,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         ? getDeviceSelectionModel.result![0].profileSetting!.preferred_language
         : 'undef';
 
-    qa_subscription = getDeviceSelectionModel
-                    .result![0].profileSetting!.qa_subscription !=
-                null &&
-            getDeviceSelectionModel.result![0].profileSetting!.qa_subscription !=
-                ''
-        ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
-        : 'Y';
+    qa_subscription =
+        getDeviceSelectionModel.result![0].profileSetting!.qa_subscription !=
+                    null &&
+                getDeviceSelectionModel
+                        .result![0].profileSetting!.qa_subscription !=
+                    ''
+            ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
+            : 'Y';
 
     selectedPrimaryColor =
         PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? preColor;
@@ -685,10 +711,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             .result![0].profileSetting!.caregiverCommunicationSetting?.symptoms
         : true;
 
-    preferredMeasurement = getDeviceSelectionModel.result![0].profileSetting !=
-            null
-        ? getDeviceSelectionModel.result![0].profileSetting!.preferredMeasurement
-        : null;
+    preferredMeasurement =
+        getDeviceSelectionModel.result![0].profileSetting != null
+            ? getDeviceSelectionModel
+                .result![0].profileSetting!.preferredMeasurement
+            : null;
   }
 
   Future<CreateDeviceSelectionModel?> createAppColorSelection(
@@ -857,8 +884,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 Text(
                   (myProfile!.result!.userContactCollection3 != null &&
                           myProfile!.result!.userContactCollection3!.isNotEmpty)
-                      ? myProfile!
-                              .result!.userContactCollection3![0]!.phoneNumber ??
+                      ? myProfile!.result!.userContactCollection3![0]!
+                              .phoneNumber ??
                           ''
                       : '',
                   style: TextStyle(fontSize: 14.0.sp),
@@ -866,7 +893,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 Text(
                   (myProfile!.result!.userContactCollection3 != null &&
                           myProfile!.result!.userContactCollection3!.isNotEmpty)
-                      ? myProfile!.result!.userContactCollection3![0]!.email ?? ''
+                      ? myProfile!.result!.userContactCollection3![0]!.email ??
+                          ''
                       : '',
                   style: TextStyle(fontSize: 13.0.sp),
                 )
@@ -1329,10 +1357,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                                       setState(() {
                                                         if (value!) {
                                                           selectedList.add(
-                                                              snapshot.data![i]);
+                                                              snapshot
+                                                                  .data![i]);
                                                         } else {
                                                           selectedList.remove(
-                                                              snapshot.data![i]);
+                                                              snapshot
+                                                                  .data![i]);
                                                         }
                                                       });
 
@@ -1605,6 +1635,54 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               ],
             )),
         Divider(),
+        // User account
+        Theme(
+            data: theme,
+            child: ExpansionTile(
+              backgroundColor: const Color(fhbColors.bgColorContainer),
+              iconColor: Colors.black,
+              initiallyExpanded: isDeleteAccount,
+              onExpansionChanged: (value) {
+                isDeleteAccount = value;
+              },
+              title: Text(variable.strUserAccount,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500, color: Colors.black)),
+              children: [
+                ListTile(
+                    leading: ImageIcon(
+                      AssetImage(variable.remove_user),
+                      //size: 30,
+                      color: Colors.black,
+                    ),
+                    title: Text(variable.strDeleteAccountTitle),
+                    trailing: Transform.scale(
+                      scale: 0.8,
+                      child: Switch(
+                        value: PreferenceUtil.getEnableDeleteAccount(),
+                        activeColor:
+                            Color(new CommonUtil().getMyPrimaryColor()),
+                        onChanged: (bool newValue) async {
+                          if (newValue) {
+                            _confirmDeletion();
+                            setState(() {
+                              PreferenceUtil.saveEnableDeleteAccount(
+                                deleteAccountStatus: true,
+                              );
+                            });
+                          } else {
+                            setState(() {
+                              PreferenceUtil.saveEnableDeleteAccount(
+                                deleteAccountStatus: false,
+                              );
+                            });
+                          }
+                        },
+                      ),
+                    )),
+              ],
+            )),
+        Divider(),
         Center(
             child: Text(
           version != null ? 'v' + version : '',
@@ -1628,5 +1706,90 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     }
     PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
     return ret;
+  }
+
+  Future _confirmDeletion() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text(strDeleteAccountDes),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() {
+                PreferenceUtil.saveEnableDeleteAccount(
+                  deleteAccountStatus: false,
+                );
+              });
+            },
+            child: Text(strNo),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _retrieveData();
+            },
+            child: Text(strYes),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future _retrieveData() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text(strNotRetrieveDataDes),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() {
+                PreferenceUtil.saveEnableDeleteAccount(
+                  deleteAccountStatus: false,
+                );
+              });
+            },
+            child: Text(strCancel),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              _sendOtpDetails();
+              var res = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OTPRemoveAccount(
+                            PhoneNumber:
+                                (myProfile!.result!.userContactCollection3 !=
+                                            null &&
+                                        myProfile!.result!
+                                            .userContactCollection3!.isNotEmpty)
+                                    ? myProfile!
+                                            .result!
+                                            .userContactCollection3![0]!
+                                            .phoneNumber ??
+                                        ''
+                                    : '',
+                            from: strFromLogin,
+                            userConfirm: false,
+                            // dataForResendOtp: dataForResendOtp,
+                            forFamilyMember: false,
+                            // isVirtualNumber: isVirtualNumber,
+                          )));
+              // Reset the toggle
+              setState(() {
+                PreferenceUtil.saveEnableDeleteAccount(
+                  deleteAccountStatus: false,
+                );
+              });
+            },
+            child: Text(strConfirm),
+          ),
+        ],
+      ),
+    );
   }
 }

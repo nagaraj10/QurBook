@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/authentication/model/otp_response_model.dart';
 import '../../add_family_otp/models/add_family_otp_response.dart';
 import '../model/change_password_model.dart';
 import '../model/confirm_password_model.dart';
@@ -34,6 +35,21 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<PatientSignupOtp> verifyOtp(Map<String, dynamic> params) async {
     final otpResponse = await _authService.verifyOtpService(params);
+    var otp = PatientSignupOtp.fromJson(otpResponse);
+    return otp;
+  }
+
+// Delete Account
+// 1 - GET
+  Future<OtpResponseModel> getDeleteAccountOtp({bool isResend = false}) async {
+    return await _authService.getDeleteAccountOtpService(isResend: isResend);
+  }
+
+// Delete Account
+// 2 - PUT
+  Future<PatientSignupOtp> verifyDeleteAccountOtp(
+      Map<String, dynamic> params) async {
+    final otpResponse = await _authService.verifyDeleteAccountOtpService(params);
     var otp = PatientSignupOtp.fromJson(otpResponse);
     return otp;
   }
