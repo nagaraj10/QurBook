@@ -136,6 +136,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   onInit() async {
     try {
       await controller.getRegimenList();
+      qurhomeDashboardController.enableModuleAccess();
+      qurhomeDashboardController.getModuleAccess();
       bool isFirstTime = true;
       if (CommonUtil.isUSRegion()) {
         if (qurhomeDashboardController.eventId.value != null &&

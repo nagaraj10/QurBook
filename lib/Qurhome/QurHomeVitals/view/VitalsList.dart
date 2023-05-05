@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -118,14 +119,29 @@ class _VitalsListState extends State<VitalsList> {
   var unitForWeight;
   var unitForTemp;
 
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
+
   @override
   void initState() {
     try {
       FocusManager.instance.primaryFocus!.unfocus();
       mInitialTime = DateTime.now();
+      //onInit();
       super.initState();
     } catch (e) {
       print(e);
+    }
+  }
+
+  onInit() async {
+    try {
+      qurhomeDashboardController.enableModuleAccess();
+      qurhomeDashboardController.getModuleAccess();
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
