@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -76,7 +74,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    MyFHB.routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
+    MyFHB.routeObserver
+        .subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
     controller.isActive.value = true;
   }
 
@@ -317,7 +316,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                               color:
                                   Color(CommonUtil().getQurhomePrimaryColor()),
                               iconSize:
-                                  CommonUtil().isTablet!? 34.0.sp : 24.0.sp,
+                                  CommonUtil().isTablet! ? 34.0.sp : 24.0.sp,
                               onPressed: () {
                                 _scaffoldKey.currentState?.openDrawer();
                               },
@@ -403,8 +402,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         backgroundColor: Colors.transparent,
                         elevation: 0,
                         onPressed: () {
-                          if (sheelBadgeController
-                                  .sheelaIconBadgeCount.value >
+                          if (sheelBadgeController.sheelaIconBadgeCount.value >
                               0) {
                             Get.toNamed(
                               rt_Sheela,
@@ -421,8 +419,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             Get.toNamed(
                               rt_Sheela,
                               arguments: SheelaArgument(
-                                isSheelaAskForLang:
-                                    !((sheela_lang).isNotEmpty),
+                                isSheelaAskForLang: !((sheela_lang).isNotEmpty),
                                 langCode: (sheela_lang),
                               ),
                             )?.then((value) {
@@ -456,8 +453,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       ),
                     ),
                   ),
-                  if ((sheelBadgeController.sheelaIconBadgeCount.value) >
-                      0)
+                  if ((sheelBadgeController.sheelaIconBadgeCount.value) > 0)
                     badge(
                       sheelBadgeController.sheelaIconBadgeCount.value,
                     ),
@@ -684,7 +680,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     try {
       if (userChanged) {
         //profileData = getMyProfile();
-        controller.enableModuleAccess();
         controller.getModuleAccess();
       }
       //setState(() {});
@@ -704,5 +699,4 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       return SizedBox(width: 70.w);
     }
   }
-
 }
