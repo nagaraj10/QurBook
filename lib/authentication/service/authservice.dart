@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:myfhb/src/resources/network/api_services.dart';
@@ -140,6 +139,49 @@ class AuthService {
           c_content_type_key: c_content_type_val,
           Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
+        body: jsonEncode(params),
+      );
+      if (response!.statusCode == 200) {
+        final responseResult = jsonDecode(response.body);
+        return responseResult;
+      } else {
+        return createErrorJsonString(response);
+      }
+    } on SocketException {
+      return spocketException();
+    }
+  }
+
+  // Delete Account
+  // 1 - GET
+  Future<OtpResponseModel> getDeleteAccountOtpService(
+      {bool isResend = false}) async {
+    var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+    try {
+      var response = await ApiServices.get(
+        Constants.BASE_URL + 'user/send-otp?isResend=$isResend',
+        headers: headerRequest,
+      );
+      if (response != null) {
+        return OtpResponseModel.fromJson(jsonDecode(response.body) ?? {});
+      } else {
+        return OtpResponseModel(
+          isSuccess: false,
+        );
+      }
+    } on SocketException {
+      return spocketException();
+    }
+  }
+
+  // Delete Account
+  // 2 - PUT
+  Future<dynamic> verifyDeleteAccountOtpService(
+      Map<String, dynamic> params) async {
+    try {
+      var response = await ApiServices.put(
+        Constants.BASE_URL + strDeleteAccountOtpVerifyEndpoint,
+        headers: await headerRequest.getRequestHeadersAuthContents(),
         body: jsonEncode(params),
       );
       if (response!.statusCode == 200) {

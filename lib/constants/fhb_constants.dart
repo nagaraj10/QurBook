@@ -51,6 +51,7 @@ const String KEY_CATEGORYLIST = 'categoryList';
 const String KEY_PROFILE = 'profile';
 const String KEY_PREFERREDMEASUREMENT = 'preferredMeasurement';
 const String enableAppLock = 'enableAppLock';
+const String enableDeleteAccount = 'enableDeleteAccount';
 const String notificationCalled = 'notificationCalled';
 const String callNotificationReceived = 'callNotificationReceived';
 const String isCallRecieved = 'isCallRecieved';
@@ -82,7 +83,8 @@ const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 const String KEY_MEMBERSHIP = 'membership';
 const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
 const String KEY_DYNAMIC_URL = 'dynamicURL';
-
+const String SUCCESSFULLY_DELETED = 'User account has been successfully deleted';
+const String OTP_SUCCESS = 'One Time Password sent successfully';
 const String STR_KEY_HEIGHT = 'height';
 const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
