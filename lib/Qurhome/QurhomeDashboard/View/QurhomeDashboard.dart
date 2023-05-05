@@ -1,6 +1,3 @@
-
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -18,9 +15,7 @@ import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/landing/view/widgets/qurhome_nav_drawer.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -62,11 +57,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
-  HealthReportListForUserRepository healthReportListForUserRepository =
-      HealthReportListForUserRepository();
-
-  GetDeviceSelectionModel? selectionResult;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -84,7 +74,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    MyFHB.routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
+    MyFHB.routeObserver
+        .subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
     controller.isActive.value = true;
   }
 
@@ -98,8 +89,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
 
-        enableModuleAccess();
-        getModuleAccess();
+        controller.enableModuleAccess();
+        controller.getModuleAccess();
 
         await CommonUtil().getUserProfileData();
       }
@@ -325,7 +316,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                               color:
                                   Color(CommonUtil().getQurhomePrimaryColor()),
                               iconSize:
-                                  CommonUtil().isTablet!? 34.0.sp : 24.0.sp,
+                                  CommonUtil().isTablet! ? 34.0.sp : 24.0.sp,
                               onPressed: () {
                                 _scaffoldKey.currentState?.openDrawer();
                               },
@@ -411,8 +402,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         backgroundColor: Colors.transparent,
                         elevation: 0,
                         onPressed: () {
-                          if (sheelBadgeController
-                                  .sheelaIconBadgeCount.value >
+                          if (sheelBadgeController.sheelaIconBadgeCount.value >
                               0) {
                             Get.toNamed(
                               rt_Sheela,
@@ -429,8 +419,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             Get.toNamed(
                               rt_Sheela,
                               arguments: SheelaArgument(
-                                isSheelaAskForLang:
-                                    !((sheela_lang).isNotEmpty),
+                                isSheelaAskForLang: !((sheela_lang).isNotEmpty),
                                 langCode: (sheela_lang),
                               ),
                             )?.then((value) {
@@ -464,8 +453,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       ),
                     ),
                   ),
-                  if ((sheelBadgeController.sheelaIconBadgeCount.value) >
-                      0)
+                  if ((sheelBadgeController.sheelaIconBadgeCount.value) > 0)
                     badge(
                       sheelBadgeController.sheelaIconBadgeCount.value,
                     ),
@@ -692,8 +680,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     try {
       if (userChanged) {
         //profileData = getMyProfile();
+        controller.getModuleAccess();
       }
-      setState(() {});
+      //setState(() {});
     } catch (e) {
       print(e);
     }
@@ -709,22 +698,5 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     } else {
       return SizedBox(width: 70.w);
     }
-  }
-
-  Future<GetDeviceSelectionModel> getModuleAccess() async {
-    await healthReportListForUserRepository.getDeviceSelection().then((value) {
-      selectionResult = value;
-      if (selectionResult!.isSuccess!) {
-        if (selectionResult?.result != null) {
-          controller.updateModuleAccess(selectionResult!.result!);
-        }
-      }
-    });
-    return selectionResult!;
-  }
-
-  enableModuleAccess() {
-    controller.isVitalModuleDisable.value = true;
-    controller.isSymptomModuleDisable.value = true;
   }
 }

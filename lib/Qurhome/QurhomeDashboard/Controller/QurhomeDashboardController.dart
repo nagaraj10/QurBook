@@ -17,6 +17,7 @@ import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import '../../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../../src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 
 class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
@@ -214,5 +215,29 @@ class QurhomeDashboardController extends GetxController {
         }
       }
     } catch (e) {}
+  }
+
+  getModuleAccess() async {
+    if (CommonUtil.isUSRegion()) {
+      HealthReportListForUserRepository healthReportListForUserRepository =
+          HealthReportListForUserRepository();
+      await healthReportListForUserRepository
+          .getDeviceSelection()
+          .then((value) {
+        GetDeviceSelectionModel? selectionResult = value;
+        if (selectionResult!.isSuccess!) {
+          if (selectionResult?.result != null) {
+            updateModuleAccess(selectionResult!.result!);
+          }
+        }
+      });
+    }
+  }
+
+  enableModuleAccess() {
+    if (CommonUtil.isUSRegion()) {
+      isVitalModuleDisable.value = true;
+      isSymptomModuleDisable.value = true;
+    }
   }
 }
