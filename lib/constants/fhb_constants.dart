@@ -832,6 +832,8 @@ const String strSymptomsModule = 'Symptoms';
 const String strFeatureNotEnable =
     'This feature is not enabled for you by your primary provider';
 
+const String sheela_hdn_btn_yes = 'yes';
+
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(
