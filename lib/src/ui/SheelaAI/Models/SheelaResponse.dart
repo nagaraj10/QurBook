@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/GoogleTTSResponseModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -63,39 +62,38 @@ class SheelaResponse {
   bool? playAudioInit = false;
   bool? isButtonNumber;
 
-  SheelaResponse({
-    this.recipientId,
-    this.text,
-    this.audioURL,
-    this.endOfConv,
-    this.buttons,
-    this.imageURL,
-    this.searchURL,
-    this.lang,
-    this.postId,
-    this.matchedQuestion,
-    this.videoLinks,
-    this.translatedUserText,
-    this.redirect,
-    this.enableMic,
-    this.providerMsg,
-    this.redirectTo,
-    this.singleuse,
-    this.isActionDone,
-    this.eid,
-    this.directCall,
-    this.recipient,
-    this.ttsResponse,
-    this.loading,
-    this.conversationFlag,
-    this.additionalInfo,
-    this.sessionId,
-    this.relationshipId,
-    this.imageURLS,
-    this.audioFile,
-    this.playAudioInit,
-    this.isButtonNumber
-  });
+  SheelaResponse(
+      {this.recipientId,
+      this.text,
+      this.audioURL,
+      this.endOfConv,
+      this.buttons,
+      this.imageURL,
+      this.searchURL,
+      this.lang,
+      this.postId,
+      this.matchedQuestion,
+      this.videoLinks,
+      this.translatedUserText,
+      this.redirect,
+      this.enableMic,
+      this.providerMsg,
+      this.redirectTo,
+      this.singleuse,
+      this.isActionDone,
+      this.eid,
+      this.directCall,
+      this.recipient,
+      this.ttsResponse,
+      this.loading,
+      this.conversationFlag,
+      this.additionalInfo,
+      this.sessionId,
+      this.relationshipId,
+      this.imageURLS,
+      this.audioFile,
+      this.playAudioInit,
+      this.isButtonNumber});
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     recipientId = json['recipient_id'];
@@ -131,13 +129,13 @@ class SheelaResponse {
     singleuse = json['singleuse'];
     isActionDone = json['isActionDone'];
     eid = json['eid'];
-    directCall = (json['directCall']?? false);
+    directCall = (json['directCall'] ?? false);
     recipient = json['recipient'];
     conversationFlag = json['conversationFlag'];
     additionalInfo = json['additionalInfo'];
     sessionId = json['sessionId'];
     relationshipId = json['relationshipId'];
-    isButtonNumber = (json['IsButtonNumber']?? false);
+    isButtonNumber = (json['IsButtonNumber'] ?? false);
   }
 
   Map<String, dynamic> toJson() {
@@ -179,6 +177,7 @@ class SheelaResponse {
 class Buttons {
   String? payload;
   String? title;
+  String? hidden;
   bool? skipTts;
   bool? relationshipIdNotRequired;
   GoogleTTSResponseModel? ttsResponse;
@@ -188,6 +187,7 @@ class Buttons {
   Buttons({
     this.payload,
     this.title,
+    this.hidden,
     this.skipTts,
     this.relationshipIdNotRequired = false,
     this.ttsResponse,
@@ -196,6 +196,7 @@ class Buttons {
   Buttons.fromJson(Map<String, dynamic> json) {
     payload = json['payload'];
     title = json['title'];
+    hidden = (json['hidden'] ?? '');
     skipTts = (json['skip_tts'] ?? false);
     relationshipIdNotRequired = (json['relationshipIdNotRequired'] ?? false);
   }
@@ -204,6 +205,7 @@ class Buttons {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['payload'] = this.payload;
     data['title'] = this.title;
+    data['hidden'] = this.hidden;
     data['skip_tts'] = this.skipTts;
     data['relationshipIdNotRequired'] = this.relationshipIdNotRequired;
     return data;
