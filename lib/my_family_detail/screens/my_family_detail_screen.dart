@@ -1210,10 +1210,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontSize: 16.0.sp,
                 color: ColorUtils.blackcolor),
             decoration: InputDecoration(
-              suffixIcon: IconButton(
+              suffixIcon: CommonUtil.isUSRegion()?IconButton(
                 icon: Icon(Icons.calendar_today),
                 onPressed: () {},
-              ),
+              ):null,
               labelText: CommonUtil.isUSRegion()?CommonConstants.date_of_birthWithStar:CommonConstants.year_of_birth_with_star,
               hintText: CommonUtil.isUSRegion()?CommonConstants.date_of_birth:CommonConstants.year_of_birth,
               labelStyle: TextStyle(
