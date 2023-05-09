@@ -314,6 +314,7 @@ class SheelaAIController extends GetxController {
       } else if (arguments?.eventType != null &&
           arguments?.eventType == strWrapperCall) {
         sheelaRequest.additionalInfo = arguments?.others ?? "";
+        arguments?.eventType = null;
       }
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;

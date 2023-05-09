@@ -57,10 +57,12 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   late BuildContext _myContext;
   ProfileResponseModel? profileResponseModel;
 
-  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
 
   @override
   void initState() {
+    qurhomeDashboardController.getModuleAccess();
     mInitialTime = DateTime.now();
     FocusManager.instance.primaryFocus!.unfocus();
     super.initState();

@@ -122,9 +122,12 @@ class _MyRecordsState extends State<MyRecords> {
   static bool audioPage = false;
   LandingViewModel? landingViewModel;
  late BuildContext context;
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
 
   @override
   void initState() {
+    qurhomeDashboardController.getModuleAccess();
     mInitialTime = DateTime.now();
     initPosition = widget.argument!.categoryPosition;
     rebuildAllBlocks();
