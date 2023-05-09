@@ -189,6 +189,7 @@ class QurhomeDashboardController extends GetxController {
                     ?.additionalInfo
                     ?.moduleAccess !=
                 null) {
+              enableModuleAccess();
               for (var j = 0;
                   j <
                       selectionResult[i]
