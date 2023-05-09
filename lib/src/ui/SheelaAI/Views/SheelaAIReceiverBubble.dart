@@ -294,9 +294,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: chat.buttons!
             .map(
-              (buttonData) => (buttonData.hidden ?? '') == sheela_hdn_btn_yes
-                  ? SizedBox.shrink()
-                  : InkWell(
+              (buttonData) => InkWell(
                       onTap: ((chat.singleuse != null && chat.singleuse!) &&
                               (chat.isActionDone != null && chat.isActionDone!))
                           ? null
