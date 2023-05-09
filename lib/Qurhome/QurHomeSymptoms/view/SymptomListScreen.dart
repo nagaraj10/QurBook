@@ -49,7 +49,6 @@ class _SymptomListScreen extends State<SymptomListScreen> {
 
   onInit() async {
     try {
-      qurhomeDashboardController.enableModuleAccess();
       qurhomeDashboardController.getModuleAccess();
     } catch (e) {
       if (kDebugMode) {
