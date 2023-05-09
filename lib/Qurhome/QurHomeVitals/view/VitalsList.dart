@@ -136,7 +136,6 @@ class _VitalsListState extends State<VitalsList> {
 
   onInit() async {
     try {
-      qurhomeDashboardController.enableModuleAccess();
       qurhomeDashboardController.getModuleAccess();
     } catch (e) {
       if (kDebugMode) {

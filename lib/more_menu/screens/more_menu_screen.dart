@@ -135,10 +135,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool loading = false;
   PreferredMeasurement? preferredMeasurement;
 
-  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+  var qurhomeDashboardController =
+      CommonUtil().onInitQurhomeDashboardController();
 
   @override
   void initState() {
+    qurhomeDashboardController.getModuleAccess();
     mInitialTime = DateTime.now();
     //getProfileImage();
     //getAppColorValues();

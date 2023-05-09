@@ -78,7 +78,8 @@ class QurhomeRegimenController extends GetxController {
   Location? locationModel;
 
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
-  var qurhomeDashboardController = Get.put(QurhomeDashboardController());
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
   Duration duration = CommonUtil.isUSRegion()?Duration(minutes: 2):Duration(seconds: 30);
   Timer? timer;
 
@@ -460,11 +461,13 @@ class QurhomeRegimenController extends GetxController {
               dateHeader.value = getFormatedDate();
               //selectedCalendar.value = DateTime.now();
               getRegimenList(isLoading: false);
+              qurhomeDashboardController.getModuleAccess();
               if(CommonUtil.isUSRegion()){
                 duration = Duration(minutes: 2);
               }else{
                 duration = Duration(seconds: 30);
               }
+              startTimer();
             }else if(seconds<11){
               if(!isTodaySelected.value){
                 statusText.value='${strRegimenRedirection} ${seconds.toString()}';
