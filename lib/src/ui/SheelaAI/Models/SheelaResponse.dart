@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/GoogleTTSResponseModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:rxdart/streams.dart';
@@ -136,6 +137,17 @@ class SheelaResponse {
     sessionId = json['sessionId'];
     relationshipId = json['relationshipId'];
     isButtonNumber = (json['IsButtonNumber'] ?? false);
+
+    if(buttons!=null && buttons!.length>0){
+      List<Buttons>? buttonsList = [];
+      buttons!.forEach((element) {
+        if (element.hidden != sheela_hdn_btn_yes) {
+          buttonsList.add(element);
+        }
+      });
+      buttons = buttonsList;
+    }
+
   }
 
   Map<String, dynamic> toJson() {
@@ -178,6 +190,7 @@ class Buttons {
   String? payload;
   String? title;
   String? hidden;
+  String? sayText;
   bool? skipTts;
   bool? relationshipIdNotRequired;
   GoogleTTSResponseModel? ttsResponse;
@@ -188,6 +201,7 @@ class Buttons {
     this.payload,
     this.title,
     this.hidden,
+    this.sayText,
     this.skipTts,
     this.relationshipIdNotRequired = false,
     this.ttsResponse,
@@ -197,6 +211,7 @@ class Buttons {
     payload = json['payload'];
     title = json['title'];
     hidden = (json['hidden'] ?? '');
+    sayText = (json['saytext'] ?? '');
     skipTts = (json['skip_tts'] ?? false);
     relationshipIdNotRequired = (json['relationshipIdNotRequired'] ?? false);
   }
@@ -206,6 +221,7 @@ class Buttons {
     data['payload'] = this.payload;
     data['title'] = this.title;
     data['hidden'] = this.hidden;
+    data['saytext'] = this.sayText;
     data['skip_tts'] = this.skipTts;
     data['relationshipIdNotRequired'] = this.relationshipIdNotRequired;
     return data;
