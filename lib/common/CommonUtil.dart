@@ -5937,6 +5937,9 @@ class VideoCallCommonUtils {
               healthRecord != null ? healthRecord : null,
               patientPrescriptionId ?? "");
         }
+        var qurhomeDashboardController =
+        CommonUtil().onInitQurhomeDashboardController();
+        qurhomeDashboardController.getModuleAccess();
         regController.loadingData.value = false;
         regController.meetingId.value =
             CommonUtil().validString(mID.toString());

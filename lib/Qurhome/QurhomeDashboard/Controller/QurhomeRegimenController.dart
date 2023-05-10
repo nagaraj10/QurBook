@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_geocoder/geocoder.dart';
-// import 'package:geocoder/geocoder.dart';  FU2.5
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
@@ -28,7 +27,6 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/fhb_constants.dart' as constants;
-import 'QurhomeDashboardController.dart';
 
 class QurhomeRegimenController extends GetxController {
   final _apiProvider = QurHomeApiProvider();
@@ -175,6 +173,7 @@ class QurhomeRegimenController extends GetxController {
           }
         }
       }
+      await qurhomeDashboardController.getModuleAccess();
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
       qurhomeDashboardController.getValuesNativeAppointment();
@@ -424,6 +423,7 @@ class QurhomeRegimenController extends GetxController {
       SOSAgentNumber = "".obs;
       http.Response response = await _apiProvider.getSOSAgentNumber();
       if (isLoading) {
+        await qurhomeDashboardController.getModuleAccess();
         loadingData.value = false;
       }
       if (response == null) {
