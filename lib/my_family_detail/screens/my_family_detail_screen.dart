@@ -21,11 +21,8 @@ import '../../my_family/models/relationships.dart';
 import '../models/my_family_detail_arguments.dart';
 import '../../my_family_detail_view/models/my_family_detail_view_arguments.dart';
 import '../../src/model/user/MyProfileModel.dart';
-import '../../src/model/user/UserAddressCollection.dart';
-import '../../src/resources/network/ApiResponse.dart';
 import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/colors_utils.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
 
 class MyFamilyDetailScreen extends StatefulWidget {
   MyFamilyDetailArguments? arguments;
