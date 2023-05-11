@@ -107,7 +107,7 @@ class ChatState extends State<ChatDetail> {
 
   //IO.Socket socket;
 
-  late Future<ChatHistoryModel?> chatHistoryModel;
+  Future<ChatHistoryModel?>? chatHistoryModel;
 
   ChatViewModel chatViewModel = new ChatViewModel();
   AppointmentResult? appointmentResult;
