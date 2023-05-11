@@ -245,6 +245,8 @@ const String file_img_all = 'image/*';
 const String file_audio_mp = 'audio/mp3';
 const String file_terms = 'assets/help_docs/myfhb_terms_of_use.html';
 const String file_faq = 'assets/help_docs/myfhb_faq.html';
+const String file_terms_us = 'assets/help_docs/myfhb_us_terms_of_use.html';
+const String file_privacy_us = 'assets/help_docs/myfhb_us_privacy_policy.html';
 
 //for Family Font
 const String font_poppins = 'Poppins';

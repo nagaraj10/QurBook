@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
@@ -66,7 +66,7 @@ class HelpSupport extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           openWebView(
-                              terms_of_service, file_terms, true, context);
+                              terms_of_service, CommonUtil.isUSRegion()?file_terms_us:file_terms, true, context);
                         },
                         child: ListTile(
                             leading: ImageIcon(
@@ -82,7 +82,7 @@ class HelpSupport extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           openWebView(
-                              privacy_policy, file_privacy, true, context);
+                              privacy_policy, CommonUtil.isUSRegion()?file_privacy_us:file_privacy, true, context);
                         },
                         child: ListTile(
                             leading: ImageIcon(
