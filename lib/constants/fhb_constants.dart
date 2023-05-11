@@ -501,9 +501,9 @@ const String STR_IS_FORCE_IOS = 'is_force_update_myfhb_ios';
 const String QURBOOK_ANDROID = 'qurbookandroid';
 const String QURBOOK_iOS = 'qurbookios';
 
-const APP_STORE_URL = 'https://apps.apple.com/in/app/qurbook/id1526444520';
+const APP_STORE_URL = 'https://apps.apple.com/us/app/qurbook-us/id1592260464';
 const PLAY_STORE_URL =
-    'https://play.google.com/store/apps/details?id=com.ventechsolutions.myFHB';
+    'https://play.google.com/store/apps/details?id=com.qurhealth.qurbook.us';
 
 const String STR_HOS_ID = 'Hospital IDs';
 const String STR_OTHER_ID = 'Other IDs';
