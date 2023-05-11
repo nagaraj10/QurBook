@@ -100,16 +100,15 @@ class SheelaAIController extends GetxController {
     player = AudioPlayer();
     listnerForAudioPlayer();
     if (Platform.isIOS) {
-      tts_platform.setMethodCallHandler(
-        (call) {
-          if (call.method == tts_platform_closeMic) {
-            if (isMicListening.isTrue) {
-              isMicListening.value = false;
-              _audioCache.play('raw/Negative.mp3');
-            }
+      tts_platform.setMethodCallHandler((call) {
+        if (call.method == tts_platform_closeMic) {
+          if (isMicListening.isTrue) {
+            isMicListening.value = false;
+            _audioCache.play('raw/Negative.mp3');
           }
-        } as Future<dynamic> Function(MethodCall)?,
-      );
+        }
+        return Future.value("");
+      });
     }
   }
 

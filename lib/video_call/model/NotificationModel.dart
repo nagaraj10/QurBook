@@ -1,4 +1,3 @@
-
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'CallArguments.dart';
@@ -38,7 +37,7 @@ class NotificationModel {
   String? caregiverRequestor;
   String? caregiverReceiver;
   CallArguments? callArguments;
-  bool?isWeb;
+  bool? isWeb;
   bool? isCaregiver;
   String? deliveredDateTime;
   bool? isFromCareCoordinator;
@@ -221,6 +220,10 @@ class NotificationModel {
         if (message[parameters.username] != null) {
           username = message[parameters.username];
         }
+        if (message[parameters.userNameparam] != null) {
+          username = message[parameters.userNameparam];
+        }
+
         if (message[parameters.strtype] != null) {
           type = message[parameters.strtype];
         }
@@ -406,6 +409,10 @@ class NotificationModel {
         userName: username ?? doctorName,
         doctorId: doctorId,
         doctorName: doctorName,
+        doctorPicture: doctorPicture,
+        patientId: patientId,
+        patientName: patientName,
+        patientPicture: patientPicture,
         isWeb: isWeb ?? false,
       );
     }
@@ -502,6 +509,10 @@ class NotificationModel {
     if (message[parameters.username] != null) {
       username = message[parameters.username];
     }
+    if (message[parameters.userNameparam] != null) {
+      username = message[parameters.userNameparam];
+    }
+
     if (message[parameters.strtype] != null) {
       type = message[parameters.strtype];
     }
@@ -584,7 +595,14 @@ class NotificationModel {
       careGiverName = message[parameters.CARE_GIVER_NAME];
     }
     if (message[parameters.strIsCaregiver] != null) {
-      isCaregiver = message[parameters.strIsCaregiver];
+      if (message[parameters.strIsCaregiver].runtimeType == String) {
+        if ((message[parameters.strIsCaregiver] ?? '').isNotEmpty) {
+          isCaregiver =
+              message[parameters.strIsCaregiver].toLowerCase() == "true";
+        }
+      } else {
+        isCaregiver = message[parameters.strIsCaregiver];
+      }
     }
     if (message[parameters.strDeliveredDateTime] != null) {
       deliveredDateTime = message[parameters.strDeliveredDateTime];

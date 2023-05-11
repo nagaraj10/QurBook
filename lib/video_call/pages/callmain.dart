@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -92,11 +91,9 @@ class _CallMainState extends State<CallMain> {
   }
 
   checkPermission() async {
-    var permissionStatus =
-        await CommonUtil.askPermissionForCameraAndMic();
+    var permissionStatus = await CommonUtil.askPermissionForCameraAndMic();
     if (!permissionStatus) {
-      FlutterToast().getToast(
-          strCallPermission, Colors.black);
+      FlutterToast().getToast(strCallPermission, Colors.black);
     }
   }
 
@@ -165,8 +162,8 @@ class _CallMainState extends State<CallMain> {
                         rtcEngine: rtcEngine,
                       ),
                       CustomAppBar(Platform.isIOS
-                          ? widget.arguments!.userName!
-                          : widget.doctorName!),
+                          ? widget.arguments?.userName ?? "Dr"
+                          : widget.doctorName ?? "Dr"),
                       Consumer<HideProvider>(builder: (context, status, child) {
                         if (status.isAudioSwitchToVideo >= 0) {
                           _isVideoHide =
@@ -187,23 +184,29 @@ class _CallMainState extends State<CallMain> {
                                     widget.role,
                                     widget.isAppExists,
                                     Platform.isIOS
-                                        ? widget.arguments!.doctorId != null
-                                            ? widget.arguments!.doctorId
-                                            : ""
-                                        : widget.doctorId != null
-                                            ? widget.doctorId
-                                            : "",
+                                        ? widget.arguments?.doctorId ?? ''
+                                        : widget.doctorId ?? '',
                                     (isMute, isVideoHide) {
                                       _isMute = isMute;
                                       _isVideoHide = isVideoHide;
                                     },
                                     _isMute,
                                     _isVideoHide,
-                                    widget.doctorName,
-                                    widget.doctorPic,
-                                    widget.patientId,
-                                    widget.patientName,
-                                    widget.patientPicUrl,
+                                    Platform.isIOS
+                                        ? widget.arguments?.userName ?? ''
+                                        : widget.doctorName ?? '',
+                                    Platform.isIOS
+                                        ? widget.arguments?.doctorPicture ?? ''
+                                        : widget.doctorPic ?? '',
+                                    Platform.isIOS
+                                        ? widget.arguments?.patientId ?? ''
+                                        : widget.patientId ?? '',
+                                    Platform.isIOS
+                                        ? widget.arguments?.patientName ?? ''
+                                        : widget.patientName ?? '',
+                                    Platform.isIOS
+                                        ? widget.arguments?.patientPicture ?? ''
+                                        : widget.patientPicUrl ?? '',
                                     Platform.isIOS
                                         ? widget.arguments!.channelName
                                         : widget.channelName,
@@ -219,8 +222,14 @@ class _CallMainState extends State<CallMain> {
                       SizedBoxWidget(
                         height: 20.0.h,
                       ),
-                      PrescriptionModule(isPatientSwitched, widget.patientName!,
-                          widget.patientId!),
+                      PrescriptionModule(
+                          isPatientSwitched,
+                          Platform.isIOS
+                              ? widget.arguments?.patientName ?? ''
+                              : widget.patientName ?? '',
+                          Platform.isIOS
+                              ? widget.arguments?.patientId ?? ''
+                              : widget.patientId ?? ''),
                     ],
                   )
                 : CommonCircularIndicator(),

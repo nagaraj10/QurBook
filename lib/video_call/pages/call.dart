@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 import 'package:agora_rtc_engine/rtc_channel.dart';
@@ -117,7 +116,7 @@ class _CallPageState extends State<CallPage> {
 
     // initialize agora sdk
     initialize();
-   // Screen.keepOn(true);  FU2.5
+    // Screen.keepOn(true);  FU2.5
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     listenForVideoCallRequest();
@@ -198,7 +197,11 @@ class _CallPageState extends State<CallPage> {
       configuration.frameRate = VideoFrameRate.Fps15;
       configuration.bitrate = 200;
       await widget.rtcEngine?.setVideoEncoderConfiguration(configuration);
-      await widget.rtcEngine?.enableVideo();
+      Future.delayed(const Duration(seconds: 5)).then((value) {
+        setState(() {
+          widget.rtcEngine?.enableVideo();
+        });
+      });
     } else {
       //* audio call
 
@@ -206,6 +209,11 @@ class _CallPageState extends State<CallPage> {
     await widget.rtcEngine?.setEnableSpeakerphone(true);
     await widget.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await widget.rtcEngine?.setClientRole(widget.role!);
+    Future.delayed(const Duration(seconds: 5)).then((value) {
+      setState(() {
+        widget.rtcEngine?.muteLocalAudioStream(false);
+      });
+    });
   }
 
   /// Add agora event handlers
@@ -487,8 +495,7 @@ class _CallPageState extends State<CallPage> {
           Provider.of<HideProvider>(context, listen: false).swithToAudio();
           Provider.of<AudioCallProvider>(context, listen: false)
               .enableAudioCall();
-          Provider.of<VideoIconProvider>(context, listen: false)
-              .turnOffVideo();
+          Provider.of<VideoIconProvider>(context, listen: false).turnOffVideo();
         } else {
           if (!(Provider.of<AudioCallProvider>(Get.context!, listen: false)
               .isAudioCall)) {
