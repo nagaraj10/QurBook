@@ -161,21 +161,25 @@ class QurhomeRegimenController extends GetxController {
                   qurHomeRegimenResponseModel!.regimentsList![i].eid != '') {
                 var apiReminder = qurHomeRegimenResponseModel!.regimentsList![i];
                 const platform = MethodChannel(APPOINTMENT_DETAILS);
-                if (Platform.isIOS) {
-                  platform.invokeMethod(
-                      APPOINTMENT_DETAILS, apiReminder.toJson());
-                } else {
-                  await platform.invokeMethod(APPOINTMENT_DETAILS,
-                      {'data': jsonEncode(apiReminder.toJson())});
+                try {
+                  if (Platform.isIOS) {
+                    platform.invokeMethod(
+                        APPOINTMENT_DETAILS, apiReminder.toJson());
+                  } else {
+                    await platform.invokeMethod(APPOINTMENT_DETAILS,
+                        {'data': jsonEncode(apiReminder.toJson())});
+                  }
+                } catch (e) {
+                  if (kDebugMode) {
+                    print(e);
+                  }
                 }
               }
             }
           }
         }
       }
-      await qurhomeDashboardController.getModuleAccess();
-      loadingData.value = false;
-      loadingDataWithoutProgress.value = false;
+      onStopLoadingCircle();
       qurhomeDashboardController.getValuesNativeAppointment();
 
       update(["newUpdate"]);
@@ -188,8 +192,7 @@ class QurhomeRegimenController extends GetxController {
       if (kDebugMode) {
         printError(info: e.toString());
       }
-      loadingData.value = false;
-      loadingDataWithoutProgress.value = false;
+      onStopLoadingCircle();
     }
   }
 
@@ -559,5 +562,17 @@ class QurhomeRegimenController extends GetxController {
   int calculateDifference(DateTime date) {
     DateTime now = DateTime.now();
     return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
+  }
+
+  onStopLoadingCircle() async {
+    try {
+      await qurhomeDashboardController.getModuleAccess();
+      loadingData.value = false;
+      loadingDataWithoutProgress.value = false;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 }

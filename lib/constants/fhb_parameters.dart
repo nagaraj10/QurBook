@@ -1,4 +1,3 @@
-
 library fhb_parmeters;
 
 import '../telehealth/features/appointments/view/appointments.dart';
@@ -674,6 +673,7 @@ const String externalLink = 'externalLink';
 const String onresume = 'OnResume New';
 const String onlaunch = 'OnLaunch New';
 const String username = 'username';
+const String userNameparam = 'userName';
 const String meeting_id = 'meeting_id';
 const String doctorId = 'doctorId';
 const String aps = 'aps';
@@ -796,10 +796,8 @@ const String claimList = 'claimList';
 const String claimId = 'claimId';
 const String strPatientReferralAcceptToPatient =
     'patientReferralAcceptToPatient';
-const String strNotificationChat =
-    'chat';
-const String strChoosePrefDate =
-    'apptChoosePreferredDate';
+const String strNotificationChat = 'chat';
+const String strChoosePrefDate = 'apptChoosePreferredDate';
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
 const String strDoctorSession = 'doctorSession';

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:get/get.dart';
@@ -65,7 +64,8 @@ class RegimentDataModel {
       this.modeOfService,
       this.isEndTimeOptional,
       this.code,
-      this.dayrepeat,this.additionalInfo});
+      this.dayrepeat,
+      this.additionalInfo});
 
   final dynamic eid;
   final dynamic id;
@@ -135,8 +135,12 @@ class RegimentDataModel {
         uid: json['uid'],
         title: json['title'],
         description: json['description'],
-        isEndTimeOptional: json['additionalInfo']!=null?json['additionalInfo']['isEndTimeOptional']:null,
-        code: json['serviceCategory']!=null?json['serviceCategory']['code']:null,
+        isEndTimeOptional: json['additionalInfo'] != null
+            ? json['additionalInfo']['isEndTimeOptional']
+            : null,
+        code: json['serviceCategory'] != null
+            ? json['serviceCategory']['code']
+            : null,
         tplanid: json['tplanid'],
         teidUser: json['teid_user'],
         aid: json['aid'],
@@ -148,14 +152,17 @@ class RegimentDataModel {
         eend: DateTime.tryParse(json['eend'] ?? ''),
         html: json['html'] != null ? json['html'] : '',
         otherinfo: json['otherinfo'] != null
-            ? Otherinfo.fromJson(
-                json['otherinfo'] is List ? {} : (json['otherinfo'] ?? '{}' as Map<String, dynamic>))
+            ? Otherinfo.fromJson(json['otherinfo'] is List
+                ? {}
+                : (json['otherinfo'] ?? '{}' as Map<String, dynamic>))
             : null,
         remindin: json['remindin'],
         remindinType: json['remindin_type'],
         ack: DateTime.tryParse(json['ack_utc'] ?? '')?.toLocal(),
         ackIST: DateTime.tryParse(json['ack'] ?? ''),
-        ack_local: DateTime.tryParse(json['ack_local'] ?? ''),
+        ack_local: (json['ack_local'] ?? '').isEmpty
+            ? null
+            : DateTime.tryParse(json['ack_local']!),
         alarm: json['alarm'],
         uformdata:
             json['uformdata'] != null && json['uformdata'].toString().isNotEmpty
@@ -265,7 +272,7 @@ class RegimentDataModel {
         'serviceCategory': serviceCategory!.toJson(),
         'modeOfService': modeOfService!.toJson(),
         'hour_repeat': dayrepeat,
-        'additionalInfo': additionalInfo!.toJson(),
+        'additionalInfo': additionalInfo?.toJson()??new Map<String, dynamic>(),
       };
 }
 
@@ -392,14 +399,15 @@ class VitalsData {
       };
 }
 
-enum Activityname { DIET, VITALS, MEDICATION, SCREENING, SYMPTOM }
+enum Activityname { DIET, VITALS, MEDICATION, SCREENING, SYMPTOM,APPOINTMENT }
 
 final activitynameValues = EnumValues({
   'diet': Activityname.DIET,
   'medication': Activityname.MEDICATION,
   'screening': Activityname.SCREENING,
   'vitals': Activityname.VITALS,
-  'symptom': Activityname.SYMPTOM
+  'symptom': Activityname.SYMPTOM,
+  'appointment':Activityname.APPOINTMENT
 });
 
 enum FieldType { NUMBER, CHECKBOX, TEXT, LOOKUP, RADIO }

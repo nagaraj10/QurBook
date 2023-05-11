@@ -70,6 +70,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   List<HealthRecordCollection> mediMasterId = [];
 
   FlutterToast toast = new FlutterToast();
+  String? authToken;
 
   bool _enabled = true;
   @override
@@ -80,7 +81,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     _bookmarkRecordBloc = BookmarkRecordBloc();
 
     PreferenceUtil.init();
-
+    setAuthToken();
     super.initState();
   }
 
@@ -214,13 +215,12 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             child: Row(
               children: <Widget>[
                 ClipOval(
-                    child: mediaMetaInfoObj.metadata!.doctor != null
+                    child: mediaMetaInfoObj?.metadata?.doctor != null
                         ? getProfilePicWidget(
-                            mediaMetaInfoObj
-                                .metadata!.doctor!.profilePicThumbnailUrl!,
-                            mediaMetaInfoObj.metadata!.doctor!.firstName!,
-                            mediaMetaInfoObj.metadata!.doctor!.lastName!,
-                            Color(CommonUtil().getMyPrimaryColor()))
+                            mediaMetaInfoObj?.metadata?.doctor?.profilePicThumbnailUrl??"",
+                            mediaMetaInfoObj?.metadata?.doctor?.firstName??"",
+                            mediaMetaInfoObj?.metadata?.doctor?.lastName??"",
+                            Color(CommonUtil().getMyPrimaryColor()),authtoken: authToken??"")
                         : Container(
                             width: 50,
                             height: 50,
@@ -463,5 +463,9 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
         _refresh();
       }
     });
+  }
+
+  void setAuthToken() async {
+    authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 }

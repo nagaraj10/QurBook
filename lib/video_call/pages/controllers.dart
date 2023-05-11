@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -280,18 +279,21 @@ class _MyControllersState extends State<MyControllers> {
                         context,
                         true);*/
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatDetail(
-                                peerId: widget.doctorId,
-                                peerAvatar: widget.doctorPicUrl,
-                                peerName: widget.doctorName,
-                                patientId: widget.patientId,
-                                patientName: widget.patientName,
-                                patientPicture: widget.patientPicUrl,
-                                isFromVideoCall: true,
-                                isCareGiver: false,
-                                isForGetUserId: true)));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatDetail(
+                          peerId: widget.doctorId ?? '',
+                          peerAvatar: widget.doctorPicUrl ?? '',
+                          peerName: widget.doctorName ?? '',
+                          patientId: widget.patientId ?? '',
+                          patientName: widget.patientName ?? '',
+                          patientPicture: widget.patientPicUrl ?? '',
+                          isFromVideoCall: true,
+                          isCareGiver: false,
+                          isForGetUserId: true,
+                        ),
+                      ),
+                    );
                   },
                   icon: Image.asset('assets/icons/ic_chat.png'),
                   //iconSize: 33,
@@ -330,7 +332,11 @@ class _MyControllersState extends State<MyControllers> {
     if (Platform.isIOS) {
       if (PreferenceUtil.getCallNotificationReceived()) {
         PreferenceUtil.setCallNotificationRecieved(isCalled: false);
-         Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context) => SplashScreen(isFromCallScreen: true)), (route) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SplashScreen(isFromCallScreen: true)),
+            (route) => false);
       } else {
         Navigator.pop(context);
       }
