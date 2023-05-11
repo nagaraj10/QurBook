@@ -495,7 +495,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               InkWell(
                 onTap: () {
                   CommonUtil().openWebViewNew(
-                      Constants.terms_of_service, variable.file_terms, true);
+                      Constants.terms_of_service, CommonUtil.isUSRegion()?variable.file_terms_us:variable.file_terms, true);
                 },
                 child: Text(
                   'T&C',
@@ -508,7 +508,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               InkWell(
                 onTap: () {
                   CommonUtil().openWebViewNew(
-                      Constants.privacy_policy, variable.file_privacy, true);
+                      Constants.privacy_policy, CommonUtil.isUSRegion()?variable.file_privacy_us:variable.file_privacy, true);
                 },
                 child: Text(
                   'Privacy Policy ',
