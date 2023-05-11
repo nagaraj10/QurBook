@@ -2625,6 +2625,12 @@ Widget TypeIcon(String type, Color color) {
       height: 20.0.h,
       width: 20.0.h,
       color: color,
+    ); 
+  } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) || (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
+    return Image.asset(
+      'assets/Qurhome/Qurhome.png',
+      height: 20.0.h,
+      width: 20.0.h,
     );
   } else {
     return Image.asset(
