@@ -168,26 +168,26 @@ class SheelaAIController extends GetxController {
   }
 
   checkForButtonsAndPlay() {
-    final buttons = currentPlayingConversation!.buttons;
-    if (currentPlayingConversation!.currentButtonPlayingIndex != null) {
-      var index = currentPlayingConversation!.currentButtonPlayingIndex;
-      if (index! < (buttons!.length - 1)) {
-        buttons[index].isPlaying.value = false;
-        index++;
-        currentPlayingConversation!.currentButtonPlayingIndex = index;
-        buttons[currentPlayingConversation!.currentButtonPlayingIndex!]
-            .isPlaying
-            .value = true;
-        playTTS(playButtons: true);
+      final buttons = currentPlayingConversation!.buttons;
+      if (currentPlayingConversation!.currentButtonPlayingIndex != null) {
+        var index = currentPlayingConversation!.currentButtonPlayingIndex;
+        if (index! < (buttons!.length - 1)) {
+          buttons[index].isPlaying.value = false;
+          index++;
+          currentPlayingConversation!.currentButtonPlayingIndex = index;
+          buttons[currentPlayingConversation!.currentButtonPlayingIndex!]
+              .isPlaying
+              .value = true;
+            playTTS(playButtons: true);
+        } else {
+          stopTTS();
+          gettingReposnseFromNative();
+        }
       } else {
-        stopTTS();
-        gettingReposnseFromNative();
+        currentPlayingConversation!.currentButtonPlayingIndex = 0;
+        buttons!.first.isPlaying.value = true;
+        playTTS(playButtons: true);
       }
-    } else {
-      currentPlayingConversation!.currentButtonPlayingIndex = 0;
-      buttons!.first.isPlaying.value = true;
-      playTTS(playButtons: true);
-    }
   }
 
   scrollToEnd() {
@@ -482,12 +482,22 @@ class SheelaAIController extends GetxController {
         } else if ((currentButton.title ?? '').isNotEmpty) {
           var result;
           try {
-            var stringToSpeech = currentButton.title;
-            if (currentButton.title!.contains(".")) {
-              stringToSpeech = currentButton.title!.split(".")[1];
-              result = await getGoogleTTSForText(stringToSpeech);
+            if (currentButton.sayText != null && currentButton.sayText != '') {
+              var stringToSpeech = currentButton.sayText;
+              if (currentButton.sayText!.contains(".")) {
+                stringToSpeech = currentButton.sayText!.split(".")[1];
+                result = await getGoogleTTSForText(stringToSpeech);
+              } else {
+                result = await getGoogleTTSForText(currentButton.sayText);
+              }
             } else {
-              result = await getGoogleTTSForText(currentButton.title);
+              var stringToSpeech = currentButton.title;
+              if (currentButton.title!.contains(".")) {
+                stringToSpeech = currentButton.title!.split(".")[1];
+                result = await getGoogleTTSForText(stringToSpeech);
+              } else {
+                result = await getGoogleTTSForText(currentButton.title);
+              }
             }
           } catch (e) {
             result = await getGoogleTTSForText(currentButton.title);

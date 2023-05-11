@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_geocoder/geocoder.dart';
-// import 'package:geocoder/geocoder.dart';  FU2.5
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
@@ -28,7 +27,6 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/fhb_constants.dart' as constants;
-import 'QurhomeDashboardController.dart';
 
 class QurhomeRegimenController extends GetxController {
   final _apiProvider = QurHomeApiProvider();
@@ -163,20 +161,25 @@ class QurhomeRegimenController extends GetxController {
                   qurHomeRegimenResponseModel!.regimentsList![i].eid != '') {
                 var apiReminder = qurHomeRegimenResponseModel!.regimentsList![i];
                 const platform = MethodChannel(APPOINTMENT_DETAILS);
-                if (Platform.isIOS) {
-                  platform.invokeMethod(
-                      APPOINTMENT_DETAILS, apiReminder.toJson());
-                } else {
-                  await platform.invokeMethod(APPOINTMENT_DETAILS,
-                      {'data': jsonEncode(apiReminder.toJson())});
+                try {
+                  if (Platform.isIOS) {
+                    platform.invokeMethod(
+                        APPOINTMENT_DETAILS, apiReminder.toJson());
+                  } else {
+                    await platform.invokeMethod(APPOINTMENT_DETAILS,
+                        {'data': jsonEncode(apiReminder.toJson())});
+                  }
+                } catch (e) {
+                  if (kDebugMode) {
+                    print(e);
+                  }
                 }
               }
             }
           }
         }
       }
-      loadingData.value = false;
-      loadingDataWithoutProgress.value = false;
+      onStopLoadingCircle();
       qurhomeDashboardController.getValuesNativeAppointment();
 
       update(["newUpdate"]);
@@ -189,8 +192,7 @@ class QurhomeRegimenController extends GetxController {
       if (kDebugMode) {
         printError(info: e.toString());
       }
-      loadingData.value = false;
-      loadingDataWithoutProgress.value = false;
+      onStopLoadingCircle();
     }
   }
 
@@ -424,6 +426,7 @@ class QurhomeRegimenController extends GetxController {
       SOSAgentNumber = "".obs;
       http.Response response = await _apiProvider.getSOSAgentNumber();
       if (isLoading) {
+        await qurhomeDashboardController.getModuleAccess();
         loadingData.value = false;
       }
       if (response == null) {
@@ -559,5 +562,17 @@ class QurhomeRegimenController extends GetxController {
   int calculateDifference(DateTime date) {
     DateTime now = DateTime.now();
     return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
+  }
+
+  onStopLoadingCircle() async {
+    try {
+      await qurhomeDashboardController.getModuleAccess();
+      loadingData.value = false;
+      loadingDataWithoutProgress.value = false;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 }

@@ -499,13 +499,13 @@ class UserContactCollectionFamily {
       this.email});
 
   UserContactCollectionFamily.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    phoneNumber = json['phoneNumber'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    email = json['email'];
+    id = json['id']??"";
+    phoneNumber = json['phoneNumber']??"";
+    isPrimary = json['isPrimary']??false;
+    isActive = json['isActive']??false;
+    createdOn = json['createdOn']??"";
+    lastModifiedOn = json['lastModifiedOn']??"";
+    email = json['email']??"";
   }
 
   Map<String, dynamic> toJson() {

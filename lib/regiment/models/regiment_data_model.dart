@@ -272,7 +272,7 @@ class RegimentDataModel {
         'serviceCategory': serviceCategory!.toJson(),
         'modeOfService': modeOfService!.toJson(),
         'hour_repeat': dayrepeat,
-        'additionalInfo': additionalInfo!.toJson(),
+        'additionalInfo': additionalInfo?.toJson()??new Map<String, dynamic>(),
       };
 }
 
@@ -399,14 +399,15 @@ class VitalsData {
       };
 }
 
-enum Activityname { DIET, VITALS, MEDICATION, SCREENING, SYMPTOM }
+enum Activityname { DIET, VITALS, MEDICATION, SCREENING, SYMPTOM,APPOINTMENT }
 
 final activitynameValues = EnumValues({
   'diet': Activityname.DIET,
   'medication': Activityname.MEDICATION,
   'screening': Activityname.SCREENING,
   'vitals': Activityname.VITALS,
-  'symptom': Activityname.SYMPTOM
+  'symptom': Activityname.SYMPTOM,
+  'appointment':Activityname.APPOINTMENT
 });
 
 enum FieldType { NUMBER, CHECKBOX, TEXT, LOOKUP, RADIO }

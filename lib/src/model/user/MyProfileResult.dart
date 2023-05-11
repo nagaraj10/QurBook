@@ -304,12 +304,12 @@ class UserContactCollection3 {
 
   UserContactCollection3.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    phoneNumber = json['phoneNumber'];
+    phoneNumber = json['phoneNumber']??"";
     isPrimary = json['isPrimary'];
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
-    email = json['email'];
+    email = json['email']??"";
     phoneNumberType = json['phoneNumberType'] != null
         ? AddressType.fromJson(json['phoneNumberType'])
         : null;
