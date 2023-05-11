@@ -202,14 +202,12 @@ class _CallPageState extends State<CallPage> {
           widget.rtcEngine?.enableVideo();
         });
       });
-    } else {
-      //* audio call
-
-    }
+    } 
     await widget.rtcEngine?.setEnableSpeakerphone(true);
     await widget.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await widget.rtcEngine?.setClientRole(widget.role!);
-    Future.delayed(const Duration(seconds: 5)).then((value) {
+  await widget.rtcEngine?.muteLocalAudioStream(true);
+    Future.delayed(const Duration(seconds: 3)).then((value) {
       setState(() {
         widget.rtcEngine?.muteLocalAudioStream(false);
       });
