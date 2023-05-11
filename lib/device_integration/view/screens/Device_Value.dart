@@ -2609,6 +2609,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           );
         },
       );
+    } else if (type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) {
+      return Image.asset(
+        'assets/Qurhome/Qurhome.png',
+        height: 20.0.h,
+        width: 20.0.h,
+      );
     } else {
       return Image.asset(
         'assets/icons/myfhb_source.png',
