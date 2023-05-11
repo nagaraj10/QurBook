@@ -2671,7 +2671,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
         width: 32.0.h,
         color: Color(CommonUtil().getQurhomePrimaryColor()),
       );
-  } else if (type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive() || type == strDevice && PreferenceUtil.getIfQurhomeisAcive()) {
+  } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) || (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
       return Image.asset(
         'assets/Qurhome/Qurhome.png',
         height: 20.0.h,
