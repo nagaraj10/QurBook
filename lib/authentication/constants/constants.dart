@@ -246,6 +246,8 @@ const String strNoPlansCheckFree =
 
 const String strCallMyCC = 'Call my CC';
 
+const String strSurvey = 'Survey';
+
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(
     scheme: 'mailto',
