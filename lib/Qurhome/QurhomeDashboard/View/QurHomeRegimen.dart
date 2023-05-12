@@ -46,6 +46,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
+
   QurHomeRegimenScreen({
     this.addAppBar = false,
   });
@@ -889,14 +890,24 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 child: InkWell(
                           onTap: () {
                             Navigator.pop(context);
-                            if (regimen.hasform!) {
-                              onCardPressed(context, regimen,
-                                  aid: regimen.aid,
-                                  uid: regimen.uid,
-                                  formId: regimen.uformid,
-                                  formName: regimen.uformname);
+                            if ((CommonUtil.isUSRegion()) &&
+                                (regimen.activityOrgin != strDiet) &&
+                                (regimen.activityOrgin == strSurvey)) {
+                              if (checkCanEdit(regimen)) {
+                                redirectToSheelaScreen(regimen, isSurvey: true);
+                              } else {
+                                onErrorMessage();
+                              }
                             } else {
-                              callLogApi(regimen);
+                              if (regimen.hasform!) {
+                                onCardPressed(context, regimen,
+                                    aid: regimen.aid,
+                                    uid: regimen.uid,
+                                    formId: regimen.uformid,
+                                    formName: regimen.uformname);
+                              } else {
+                                callLogApi(regimen);
+                              }
                             }
                           },
                           child: Image.asset(
@@ -2155,12 +2166,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-  redirectToSheelaScreen(RegimentDataModel regimen) {
+  redirectToSheelaScreen(RegimentDataModel regimen, {bool isSurvey = false}) {
     Get.toNamed(
       rt_Sheela,
-      arguments: SheelaArgument(
-        eId: regimen.eid ?? "",
-      ),
+      arguments: SheelaArgument(eId: regimen.eid ?? "", isSurvey: isSurvey),
     )?.then((value) => {controller.showCurrLoggedRegimen(regimen)});
   }
 
@@ -2220,7 +2229,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             if (CommonUtil.isUSRegion() && regimen.activityOrgin != strDiet) {
               if (checkCanEdit(regimen)) {
                 Navigator.pop(context);
-                redirectToSheelaScreen(regimen);
+                if (regimen.activityOrgin == strSurvey) {
+                  redirectToSheelaScreen(regimen, isSurvey: true);
+                } else {
+                  redirectToSheelaScreen(regimen);
+                }
               } else {
                 onErrorMessage();
               }
