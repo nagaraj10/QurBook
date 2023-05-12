@@ -102,6 +102,7 @@ const String KIOSK_data = 'kiosk_data';
 const String KIOSK_task = 'task';
 const String KIOSK_messages = 'messages';
 const String KIOSK_remind = 'remind';
+const String KIOSK_survey = 'starttask';
 const String KIOSK_read = 'read';
 const String KIOSK_audio = 'audio';
 const String KIOSK_audio_url = 'audioUrl';
