@@ -468,6 +468,8 @@ const String strdevicesourceName = 'sourceType';
 const String strdeviceType = 'deviceType';
 const String strdeviceDataType = 'deviceDataType';
 const String strRawData = 'rawHealthData';
+const String strQurPlan = 'QURPLAN';
+const String strDevice = 'DEVICE';
 
 const String strsyncStartDate = 'startDateTime';
 const String strsyncEndDate = 'endDateTime';

@@ -701,7 +701,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       openWebView(Constants.terms_of_service,
-                          variable.file_terms, true);
+                          CommonUtil.isUSRegion()?variable.file_terms_us:variable.file_terms, true);
                     }),
               TextSpan(text: variable.strAnd),
               TextSpan(
@@ -710,7 +710,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       openWebView(Constants.privacy_policy,
-                          variable.file_privacy, true);
+                          CommonUtil.isUSRegion()?variable.file_privacy_us:variable.file_privacy, true);
                     }),
             ],
           ),
