@@ -64,6 +64,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               }
             },
           );
+
+    controller.isMuted.value = false;
   }
 
   @override
@@ -333,6 +335,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 const Spacer(
                   flex: 2,
                 ),
+                _getMuteUnMuteIcon(),
               ],
             ),
       leading: Container(
@@ -394,6 +397,30 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           ),
           height: 1.0,
         ),
+      ),
+    );
+  }
+
+  Widget _getMuteUnMuteIcon() {
+    return Container(
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () {
+              if (controller.isMuted.value) {
+                controller.isMuted.value = false;
+              } else {
+                controller.isMuted.value = true;
+                controller.stopTTS();
+              }
+            },
+            child: Icon(
+              controller.isMuted.value ? Icons.volume_off : Icons.volume_up,
+              size: 32.sp,
+              color: Color(CommonUtil().getQurhomePrimaryColor()),
+            ),
+          )
+        ],
       ),
     );
   }
