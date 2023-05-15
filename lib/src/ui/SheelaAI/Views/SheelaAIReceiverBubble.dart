@@ -119,8 +119,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                   ),
                                   Visibility(
                                     visible:
-                                        (controller.bleController == null &&
-                                            !controller.isMuted.value),
+                                        ((controller.bleController == null) &&
+                                            (!controller.isMuted.value)),
                                     child: Container(
                                       width: 36.0,
                                       height: 30.0,

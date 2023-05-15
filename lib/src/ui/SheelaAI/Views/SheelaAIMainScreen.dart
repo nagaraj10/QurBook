@@ -65,7 +65,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             },
           );
 
-    controller.isMuted.value = false;
+    //if (CommonUtil.isUSRegion()) {
+      controller.isMuted.value = false;
+    //}
   }
 
   @override
@@ -312,6 +314,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                     color: Colors.black,
                   ),
                 ),
+                _getMuteUnMuteIcon(),
               ],
             )
           : Row(
@@ -335,7 +338,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 const Spacer(
                   flex: 2,
                 ),
-                _getMuteUnMuteIcon(),
+                if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
               ],
             ),
       leading: Container(
