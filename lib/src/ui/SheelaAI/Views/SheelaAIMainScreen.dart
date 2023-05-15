@@ -298,20 +298,29 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       elevation: 0,
       title: CommonUtil().isTablet!
           ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Image.asset(
-                  icon_mayaMain,
-                  height: 32.h,
-                  width: 32.h,
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  strMaya,
-                  style: const TextStyle(
-                    color: Colors.black,
+                Expanded(
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          icon_mayaMain,
+                          height: 32.h,
+                          width: 32.h,
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          strMaya,
+                          style: const TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
@@ -420,7 +429,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             child: Icon(
               controller.isMuted.value ? Icons.volume_off : Icons.volume_up,
               size: 32.sp,
-              color: Color(CommonUtil().getQurhomePrimaryColor()),
+              color: controller.isMuted.value
+                  ? Colors.grey
+                  : Color(CommonUtil().getQurhomePrimaryColor()),
             ),
           )
         ],
