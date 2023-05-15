@@ -72,6 +72,8 @@ class SheelaAIController extends GetxController {
   bool isProd = false;
   SheelaBadgeServices sheelaBadgeServices = SheelaBadgeServices();
 
+  Rx<bool> isMuted = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -137,7 +139,9 @@ class SheelaAIController extends GetxController {
             stopTTS();
             try {
               if (!conversations.last.endOfConv) {
-                gettingReposnseFromNative();
+                if ((CommonUtil.isUSRegion() && !isMuted.value)) {
+                  gettingReposnseFromNative();
+                }
               } else if ((conversations.last.redirectTo ?? "") ==
                   strRegimen.toLowerCase()) {
                 if (PreferenceUtil.getIfQurhomeisAcive()) {
@@ -379,7 +383,9 @@ class SheelaAIController extends GetxController {
             sessionToken = const Uuid().v1();
             relationshipId = userId;
           }
-          playTTS();
+          if ((CommonUtil.isUSRegion() && !isMuted.value)) {
+            playTTS();
+          }
           callToCC(currentResponse);
           if (currentResponse.lang != null && currentResponse.lang != '') {
             PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang ?? "");

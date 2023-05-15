@@ -64,6 +64,10 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               }
             },
           );
+
+    if (CommonUtil.isUSRegion()) {
+      controller.isMuted.value = false;
+    }
   }
 
   @override
@@ -294,22 +298,32 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       elevation: 0,
       title: CommonUtil().isTablet!
           ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Image.asset(
-                  icon_mayaMain,
-                  height: 32.h,
-                  width: 32.h,
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  strMaya,
-                  style: const TextStyle(
-                    color: Colors.black,
+                Expanded(
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          icon_mayaMain,
+                          height: 32.h,
+                          width: 32.h,
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          strMaya,
+                          style: const TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+                if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
               ],
             )
           : Row(
@@ -333,6 +347,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 const Spacer(
                   flex: 2,
                 ),
+                if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
               ],
             ),
       leading: Container(
@@ -394,6 +409,32 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           ),
           height: 1.0,
         ),
+      ),
+    );
+  }
+
+  Widget _getMuteUnMuteIcon() {
+    return Container(
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () {
+              if (controller.isMuted.value) {
+                controller.isMuted.value = false;
+              } else {
+                controller.isMuted.value = true;
+                controller.stopTTS();
+              }
+            },
+            child: Icon(
+              controller.isMuted.value ? Icons.volume_off : Icons.volume_up,
+              size: 32.sp,
+              color: controller.isMuted.value
+                  ? Colors.grey
+                  : Color(CommonUtil().getQurhomePrimaryColor()),
+            ),
+          )
+        ],
       ),
     );
   }

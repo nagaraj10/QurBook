@@ -118,7 +118,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                     ),
                                   ),
                                   Visibility(
-                                    visible: controller.bleController == null,
+                                    visible:
+                                        ((controller.bleController == null) &&
+                                            (!controller.isMuted.value)),
                                     child: Container(
                                       width: 36.0,
                                       height: 30.0,
@@ -295,63 +297,61 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         children: chat.buttons!
             .map(
               (buttonData) => InkWell(
-                      onTap: ((chat.singleuse != null && chat.singleuse!) &&
-                              (chat.isActionDone != null && chat.isActionDone!))
-                          ? null
-                          : () {
-                              if (controller.isLoading.isTrue) {
-                                return;
-                              }
-                              if (chat.singleuse != null &&
-                                  chat.singleuse! &&
-                                  chat.isActionDone != null) {
-                                chat.isActionDone = true;
-                              }
-                              buttonData.isSelected = true;
-                              controller.startSheelaFromButton(
-                                  buttonText: buttonData.title,
-                                  payload: buttonData.payload,
-                                  buttons: buttonData);
-                              Future.delayed(const Duration(seconds: 3), () {
-                                buttonData.isSelected = false;
-                              });
-                            },
-                      child: Card(
-                        color: (buttonData.isSelected ?? false)
-                            ? PreferenceUtil.getIfQurhomeisAcive()
+                onTap: ((chat.singleuse != null && chat.singleuse!) &&
+                        (chat.isActionDone != null && chat.isActionDone!))
+                    ? null
+                    : () {
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+                        if (chat.singleuse != null &&
+                            chat.singleuse! &&
+                            chat.isActionDone != null) {
+                          chat.isActionDone = true;
+                        }
+                        buttonData.isSelected = true;
+                        controller.startSheelaFromButton(
+                            buttonText: buttonData.title,
+                            payload: buttonData.payload,
+                            buttons: buttonData);
+                        Future.delayed(const Duration(seconds: 3), () {
+                          buttonData.isSelected = false;
+                        });
+                      },
+                child: Card(
+                  color: (buttonData.isSelected ?? false)
+                      ? PreferenceUtil.getIfQurhomeisAcive()
+                          ? Color(CommonUtil().getQurhomeGredientColor())
+                          : Colors.green
+                      : (buttonData.isPlaying.isTrue)
+                          ? PreferenceUtil.getIfQurhomeisAcive()
+                              ? Color(CommonUtil().getQurhomeGredientColor())
+                              : Colors.lightBlueAccent
+                          : Colors.white,
+                  margin: const EdgeInsets.only(top: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 10,
+                    ),
+                    child: Text(
+                      buttonData.title!,
+                      style: TextStyle(
+                        color: (buttonData.isPlaying.isTrue) ||
+                                (buttonData.isSelected ?? false)
+                            ? Colors.white
+                            : PreferenceUtil.getIfQurhomeisAcive()
                                 ? Color(CommonUtil().getQurhomeGredientColor())
-                                : Colors.green
-                            : (buttonData.isPlaying.isTrue)
-                                ? PreferenceUtil.getIfQurhomeisAcive()
-                                    ? Color(
-                                        CommonUtil().getQurhomeGredientColor())
-                                    : Colors.lightBlueAccent
-                                : Colors.white,
-                        margin: const EdgeInsets.only(top: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 10,
-                          ),
-                          child: Text(
-                            buttonData.title!,
-                            style: TextStyle(
-                              color: (buttonData.isPlaying.isTrue) ||
-                                      (buttonData.isSelected ?? false)
-                                  ? Colors.white
-                                  : PreferenceUtil.getIfQurhomeisAcive()
-                                      ? Color(CommonUtil()
-                                          .getQurhomeGredientColor())
-                                      : Color(CommonUtil().getMyPrimaryColor()),
-                              fontSize: 14.0.sp,
-                            ),
-                          ),
-                        ),
+                                : Color(CommonUtil().getMyPrimaryColor()),
+                        fontSize: 14.0.sp,
                       ),
                     ),
+                  ),
+                ),
+              ),
             )
             .toList(),
       );
