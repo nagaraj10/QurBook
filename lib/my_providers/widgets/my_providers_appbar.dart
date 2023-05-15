@@ -1,10 +1,11 @@
+
 import 'package:flutter/material.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
-  TabController tabController;
+  TabController? tabController;
 
   MyProvidersAppBar({this.tabController});
 

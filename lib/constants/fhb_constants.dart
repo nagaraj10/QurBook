@@ -4,7 +4,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import '../common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
-
+const String prodINURL = "https://tmg1j2slpamjkzvrjs.vsolgmi.com/api/";
+const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String APP_NAME = 'myFHB';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
@@ -50,6 +51,7 @@ const String KEY_CATEGORYLIST = 'categoryList';
 const String KEY_PROFILE = 'profile';
 const String KEY_PREFERREDMEASUREMENT = 'preferredMeasurement';
 const String enableAppLock = 'enableAppLock';
+const String enableDeleteAccount = 'enableDeleteAccount';
 const String notificationCalled = 'notificationCalled';
 const String callNotificationReceived = 'callNotificationReceived';
 const String isCallRecieved = 'isCallRecieved';
@@ -81,7 +83,8 @@ const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 const String KEY_MEMBERSHIP = 'membership';
 const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
 const String KEY_DYNAMIC_URL = 'dynamicURL';
-
+const String SUCCESSFULLY_DELETED = 'User account has been successfully deleted';
+const String OTP_SUCCESS = 'One Time Password sent successfully';
 const String STR_KEY_HEIGHT = 'height';
 const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
@@ -495,6 +498,8 @@ const String STR_FIREBASE_REMOTE_KEY_IOS =
     'force_update_current_version_myfhb_ios';
 const String STR_IS_FORCE = 'is_force_update_myfhb';
 const String STR_IS_FORCE_IOS = 'is_force_update_myfhb_ios';
+const String QURBOOK_ANDROID = 'qurbookandroid';
+const String QURBOOK_iOS = 'qurbookios';
 
 const APP_STORE_URL = 'https://apps.apple.com/in/app/qurbook/id1526444520';
 const PLAY_STORE_URL =
@@ -679,7 +684,7 @@ const String strThereAreNoPreferredLabsInYourProfile =
 const String strPreferredDoctors = 'Preferred Doctors';
 
 var tckTitle = '';
-var tckTitleOpt = '';
+String? tckTitleOpt = '';
 var tckDesc = '';
 var tckPrefDate = 'pref_date';
 var tckPrefTime = 'pref_time';
@@ -687,15 +692,15 @@ var tckPrefLab = 'pref_lab';
 var tckPrefLabId = 'pref_lab_id';
 var tckPrefMOSId = 'pref_mos_id';
 var tckPrefMOSName = 'pref_mos_name';
-var ticketType = 'ticket type';
-var tckPriority = 'ticket priority';
+String? ticketType = 'ticket type';
+String? tckPriority = 'ticket priority';
 var tckID = 'ticket_id';
 var tckComment = 'ticket_comment';
 var tckSelectedDoctor = 'Doctor';
-var tckSelectedDoctorId = 'DoctorId';
+String? tckSelectedDoctorId = 'DoctorId';
 var tckSelectedHospital = 'Hospital';
-var tckSelectedHospitalId = 'HospitalId';
-var tckSelectedCategory = 'Category';
+String? tckSelectedHospitalId = 'HospitalId';
+String? tckSelectedCategory = 'Category';
 var tckPackageName = '';
 
 var tckTypeTitle = 'text';
@@ -775,9 +780,9 @@ const String strWrapperCall = 'wrapperCall';
 
 const String IND_REG = 'IN';
 
-String strMicPermission =  'Microphone permission is required';
-String strCameraPermission =   'Camera permission is required';
-String strCallPermission =   'Camera or Microphone permission is required';
+String strMicPermission = 'Microphone permission is required';
+String strCameraPermission = 'Camera permission is required';
+String strCallPermission = 'Camera or Microphone permission is required';
 
 double height = 0.0;
 double width = 0.0;
@@ -787,7 +792,7 @@ double itemHeight = (height - kToolbarHeight - 24) / 8;
 double itemWidth = width / 2;
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
-var mInitialTime;
+late var mInitialTime;
 
 const String address = 'Address';
 const String city = 'City';
@@ -825,7 +830,9 @@ const String strSymptomsModule = 'Symptoms';
 const String strFeatureNotEnable =
     'This feature is not enabled for you by your primary provider';
 
-Future<void> fbaLog({String eveName, eveParams}) async {
+const String sheela_hdn_btn_yes = 'yes';
+
+Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(
         name: eveName ?? 'qurbook_ns_event',

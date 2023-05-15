@@ -1,13 +1,14 @@
+
 class RelationsShipModel {
-  String id;
-  String code;
-  String name;
-  String description;
-  String sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  String? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   RelationsShipModel(
       {this.id,

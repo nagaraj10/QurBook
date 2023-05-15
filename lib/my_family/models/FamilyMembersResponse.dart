@@ -3,10 +3,10 @@ import '../../constants/fhb_parameters.dart' as parameters;
 import 'FamilyData.dart';
 
 class FamilyMembersList {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   FamilyMembersList({this.status, this.success, this.message, this.response});
 
@@ -25,14 +25,14 @@ class FamilyMembersList {
     data[parameters.strSuccess] = success;
     data[parameters.strMessage] = message;
     if (response != null) {
-      data[parameters.strResponse] = response.toJson();
+      data[parameters.strResponse] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  FamilyData data;
+  FamilyData? data;
 
   Response({this.data});
 
@@ -43,7 +43,7 @@ class Response {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (this.data != null) {
-      data[parameters.strData] = this.data.toJson();
+      data[parameters.strData] = this.data!.toJson();
     }
     return data;
   }

@@ -1,15 +1,16 @@
+
 import 'package:myfhb/src/model/Health/Data.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 
 class AdditionalInfo {
   AdditionalInfo(
-      {String chooseCategory,
-      String chooseDoctor,
-      String chooseHospital,
-      String packageName,
-      String preferredLabId,
-      String preferredLabName,
-      Data ticketStatus}) {
+      {String? chooseCategory,
+      String? chooseDoctor,
+      String? chooseHospital,
+      String? packageName,
+      String? preferredLabId,
+      String? preferredLabName,
+      Data? ticketStatus}) {
     _chooseCategory = chooseCategory;
   }
 
@@ -29,25 +30,25 @@ class AdditionalInfo {
         : null;
   }
 
-  String _chooseCategory;
-  String _chooseDoctor;
-  String _chooseHospital;
-  String _packageName;
-  String _preferredLabId;
-  String _preferredLabName;
-  String _preferredTime;
-  FieldData _modeOfService;
-  Data _ticketStatus;
+  String? _chooseCategory;
+  String? _chooseDoctor;
+  String? _chooseHospital;
+  String? _packageName;
+  String? _preferredLabId;
+  String? _preferredLabName;
+  String? _preferredTime;
+  FieldData? _modeOfService;
+  Data? _ticketStatus;
 
-  String get chooseCategory => _chooseCategory;
-  String get chooseDoctor => _chooseDoctor;
-  String get chooseHospital => _chooseHospital;
-  String get packageName => _packageName;
-  String get preferredLabId => _preferredLabId;
-  String get preferredLabName => _preferredLabName;
-  String get preferredTime => _preferredTime;
-  FieldData get modeOfService => _modeOfService;
-  Data get ticketStatus => _ticketStatus;
+  String? get chooseCategory => _chooseCategory;
+  String? get chooseDoctor => _chooseDoctor;
+  String? get chooseHospital => _chooseHospital;
+  String? get packageName => _packageName;
+  String? get preferredLabId => _preferredLabId;
+  String? get preferredLabName => _preferredLabName;
+  String? get preferredTime => _preferredTime;
+  FieldData? get modeOfService => _modeOfService;
+  Data? get ticketStatus => _ticketStatus;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -59,10 +60,10 @@ class AdditionalInfo {
     map['preferredLabName'] = _preferredLabName;
     map['preferredTime'] = _preferredTime;
     if (this._modeOfService != null) {
-      map['modeOfService'] = this._modeOfService.toJson();
+      map['modeOfService'] = this._modeOfService!.toJson();
     }
     if (this.ticketStatus != null) {
-      map['ticketStatus'] = this._ticketStatus.toJson();
+      map['ticketStatus'] = this._ticketStatus!.toJson();
     }
 
     return map;
@@ -70,8 +71,8 @@ class AdditionalInfo {
 }
 
 class Data {
-  String id;
-  String name;
+  String? id;
+  String? name;
 
   Data({this.id, this.name});
 

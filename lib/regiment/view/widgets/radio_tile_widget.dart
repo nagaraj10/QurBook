@@ -1,19 +1,20 @@
+
 import 'package:flutter/material.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 
 class RadioTileWidget extends StatelessWidget {
   const RadioTileWidget({
-    @required this.title,
-    @required this.value,
-    @required this.radioGroupValue,
-    @required this.onSelected,
+    required this.title,
+    required this.value,
+    required this.radioGroupValue,
+    required this.onSelected,
   });
 
   final dynamic value;
   final dynamic radioGroupValue;
   final String title;
-  final Function(dynamic selectedValue) onSelected;
+  final Function(dynamic selectedValue)? onSelected;
 
   @override
   Widget build(BuildContext context) {

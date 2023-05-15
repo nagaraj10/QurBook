@@ -1,10 +1,11 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentResult.dart';
 
 class CreateAppointmentModel {
-  bool isSuccess;
-  String message;
-  CreateAppointmentResult result;
+  bool? isSuccess;
+  String? message;
+  CreateAppointmentResult? result;
 
   CreateAppointmentModel({this.isSuccess, this.message, this.result});
 
@@ -22,7 +23,7 @@ class CreateAppointmentModel {
     data[strIsSuccess] = this.isSuccess;
     data[strMessage] = this.message;
     if (this.result != null) {
-      data[strResult] = this.result.toJson();
+      data[strResult] = this.result!.toJson();
     }
     return data;
   }

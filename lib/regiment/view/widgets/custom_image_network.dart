@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../constants/fhb_query.dart' as variable;
@@ -9,19 +10,19 @@ class CustomImageNetwork extends StatelessWidget {
     this.defaultWidget,
   });
 
-  final String imageUrl;
-  final Widget defaultWidget;
+  final String? imageUrl;
+  final Widget? defaultWidget;
 
   @override
   Widget build(BuildContext context) {
-    if (imageUrl != null && imageUrl.isNotEmpty) {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
       try {
-        return (imageUrl.toLowerCase()?.contains('.svg') ?? false)
+        return (imageUrl!.toLowerCase().contains('.svg'))
             ? SvgPicture.network(
-                variable.regimentImagePath + imageUrl,
+                variable.regimentImagePath + imageUrl!,
               )
             : CachedNetworkImage(
-                imageUrl: variable.regimentImagePath + imageUrl,
+                imageUrl: variable.regimentImagePath + imageUrl!,
                 placeholder: (context, url) => SizedBox.shrink(),
                 errorWidget: (context, url, error) {
                   return defaultWidget ?? SizedBox.shrink();

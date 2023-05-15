@@ -8,9 +8,11 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
+import 'package:myfhb/src/utils/ImageViewer.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/CommonUtil.dart';
@@ -33,45 +35,53 @@ import 'form_field_widget.dart';
 import 'media_icon_widget.dart';
 
 class FormDataDialog extends StatefulWidget {
-  FormDataDialog(
-      {@required this.fieldsData,
-      @required this.eid,
-      @required this.color,
-      @required this.mediaData,
-      @required this.formTitle,
-      @required this.canEdit,
-      @required this.triggerAction,
-      @required this.introText,
-      this.isFollowEvent,
-      this.followEventContext,
-      this.isFromQurHomeSymptom = false,
-      this.isFromQurHomeRegimen = false,
-      @required this.providerId});
+  FormDataDialog({
+    required this.fieldsData,
+    required this.eid,
+    required this.color,
+    required this.mediaData,
+    required this.formTitle,
+    required this.canEdit,
+    required this.triggerAction,
+    required this.introText,
+    this.isFollowEvent,
+    this.followEventContext,
+    this.isFromQurHomeSymptom = false,
+    this.isFromQurHomeRegimen = false,
+    @required this.providerId,
+    this.uformData,
+    this.showEditIcon,
+    this.fromView = false,
+  });
 
-  final List<FieldModel> fieldsData;
-  final String eid;
+  final List<FieldModel>? fieldsData;
+  final String? eid;
   final Color color;
-  final Otherinfo mediaData;
-  final String formTitle;
-  final bool canEdit;
-  final Function(String eventId, String followContext, String activityName)
+  final Otherinfo? mediaData;
+  final String? formTitle;
+  bool canEdit;
+  bool? showEditIcon;
+  bool? fromView;
+  final Function(String? eventId, String? followContext, String? activityName)
       triggerAction;
-  final bool isFollowEvent;
+  final bool? isFollowEvent;
   final bool isFromQurHomeSymptom;
   final bool isFromQurHomeRegimen;
-  final String followEventContext;
-  final String providerId;
+  final String? followEventContext;
+  final String? providerId;
   final String introText;
+  final UformData? uformData;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
 }
 
 class FormDataDialogState extends State<FormDataDialog> {
-  List<FieldModel> fieldsData;
-  String eid;
-  Color color;
-  Otherinfo mediaData;
+  List<FieldModel>? fieldsData;
+
+  String? eid;
+  Color? color;
+  Otherinfo? mediaData;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String videoFileName = 'Add Video';
@@ -86,22 +96,41 @@ class FormDataDialogState extends State<FormDataDialog> {
   ValueNotifier isUploading = ValueNotifier(false);
 
   String timeText = '';
-  TimeOfDay _currentTime = new TimeOfDay.now();
+  TimeOfDay? _currentTime = new TimeOfDay.now();
 
-  DateTime initDate;
-  String providerId;
+  DateTime? initDate;
+  String? providerId;
 
   var saveResponse;
 
-
   var actvityStatus = '';
+  bool isTouched = true;
+  bool isSettingChanged = false;
+  bool isUpdatePressed = false;
+
+  VitalsData? vitalData;
+  VitalsData? vitalDataClone;
 
   @override
   void initState() {
     super.initState();
     try {
-      widget.fieldsData?.sort((a, b) => (a?.seq ?? 0).compareTo(b?.seq ?? 0));
+      widget.fieldsData?.sort((a, b) => (a.seq ?? 0).compareTo(b.seq ?? 0));
     } catch (e) {}
+    if ((widget.fieldsData?.length ?? 0) > 1 && CommonUtil.isUSRegion()) {
+      widget.fieldsData?.forEach((fieldData) {
+        String strSeq =
+            CommonUtil().validString((fieldData.seq ?? 0).toString());
+        if (strSeq != null && strSeq != '0' && strSeq.trim().isNotEmpty) {
+          String desc = CommonUtil().showDescriptionTextForm(fieldData);
+          if (desc != null && desc.trim().isNotEmpty) {
+            desc = strSeq + ". " + desc;
+            fieldData.description = desc;
+          }
+        }
+      });
+    }
+
     fieldsData = widget.fieldsData;
     eid = widget.eid;
     color = widget.color;
@@ -109,9 +138,9 @@ class FormDataDialogState extends State<FormDataDialog> {
     providerId = widget.providerId;
 
     if (eid != null && eid != '') {
-      RegimentService.getActivityStatus(eid: eid).then((value) {
-        if (value?.isSuccess ?? false) {
-          actvityStatus = value?.result[0]?.planStatus ?? '';
+      RegimentService.getActivityStatus(eid: eid!).then((value) {
+        if (value.isSuccess ?? false) {
+          actvityStatus = value.result![0].planStatus ?? '';
         }
       });
     }
@@ -127,70 +156,115 @@ class FormDataDialogState extends State<FormDataDialog> {
     initDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     setCurrentTime();
-    return widget.isFromQurHomeRegimen ?? false
-        ? Scaffold(
-            appBar: AppBar(
-              backgroundColor: Color(CommonUtil().getQurhomePrimaryColor()),
-              toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
-              elevation: 0,
-              centerTitle: false,
-              titleSpacing: 0,
-              title: Text(
-                widget.formTitle??'',
-                style: TextStyle(
-                  color: Colors.white,
+    return widget.isFromQurHomeRegimen
+        ? WillPopScope(
+            onWillPop: () async {
+              isTouched
+                  ? isSettingChanged
+                      ? _onWillPop()
+                      : Get.back(result: false)
+                  : Get.back(result: false);
+
+              return Future.value(true);
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Color(CommonUtil().getQurhomePrimaryColor()),
+                toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
+                elevation: 0,
+                centerTitle: false,
+                titleSpacing: 0,
+                title: Text(
+                  widget.formTitle ?? '',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.fade,
+                  maxLines: 2,
                 ),
-                textAlign: TextAlign.start,
-                overflow: TextOverflow.fade,
-                maxLines: 1,
+                leading: IconWidget(
+                  icon: Icons.arrow_back_ios,
+                  colors: Colors.white,
+                  size: CommonUtil().isTablet! ? 38.0 : 24.0,
+                  onTap: () {
+                    isTouched
+                        ? isSettingChanged
+                            ? _onWillPop()
+                            : Get.back(result: false)
+                        : Get.back(result: false);
+                  },
+                ),
               ),
-              leading: IconWidget(
-                icon: Icons.arrow_back_ios,
-                colors: Colors.white,
-                size: CommonUtil().isTablet ? 38.0 : 24.0,
-                onTap: () {
-                  Get.back(result: false);
-                },
+              body: Container(
+                padding: EdgeInsets.only(
+                  top: 5.0.h,
+                  left: 15.0.w,
+                  right: 15.0.w,
+                  //bottom: 15.0.w,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.formTitle ?? '',
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.fade,
+                            maxLines: 2,
+                            style: TextStyle(
+                                color: Color(
+                                    CommonUtil().getQurhomePrimaryColor()),
+                                fontSize: 18.h),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              widget.canEdit = true;
+                              widget.fromView = false;
+                            });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: 7.0.w,
+                            ),
+                            child: (widget.fromView!)
+                                ? Image.asset(
+                                    icon_edit,
+                                    height: 20.sp,
+                                    width: 20.sp,
+                                    color: Colors.black,
+                                  )
+                                : Container(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5.0),
+                    Text(
+                      widget.introText ?? '',
+                      maxLines: 10,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.fade,
+                      style: TextStyle(
+                          color: Color(CommonUtil().getQurhomePrimaryColor()),
+                          fontSize: 18.h),
+                    ),
+                    if ((widget.introText ?? '').trim().isNotEmpty)
+                      SizedBox(height: 5.0)
+                    else
+                      SizedBox.shrink(),
+                    Expanded(child: getBody()),
+                  ],
+                ),
               ),
+              floatingActionButton: onSaveBtn(),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
             ),
-            body: Container(
-              padding: EdgeInsets.only(
-                top: 5.0.h,
-                left: 15.0.w,
-                right: 15.0.w,
-                //bottom: 15.0.w,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.formTitle??'',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        color: Color(CommonUtil().getQurhomePrimaryColor()),
-                        fontSize: 18.h),
-                  ),
-                  SizedBox(height: 5.0),
-                  Text(
-                    widget.introText ?? '',
-                    maxLines: 10,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.fade,
-                    style: TextStyle(
-                        color: Color(CommonUtil().getQurhomePrimaryColor()),
-                        fontSize: 18.h),
-                  ),
-                  if ((widget.introText ?? '').trim().isNotEmpty)
-                    SizedBox(height: 5.0)
-                  else
-                    SizedBox.shrink(),
-                  Expanded(child: getBody()),
-                ],
-              ),
-            ),
-            floatingActionButton: onSaveBtn(),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
           )
         : AlertDialog(
             title: getTitle(),
@@ -214,8 +288,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Container(
-        width: widget.isFromQurHomeRegimen??false
-            ? double.infinity:0.75.sw,
+        width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
         child: getListView(),
       );
     });
@@ -224,12 +297,10 @@ class FormDataDialogState extends State<FormDataDialog> {
   getListView() {
     return ListView(
       shrinkWrap: true,
-      padding: EdgeInsets.only(bottom: widget.isFromQurHomeRegimen??false
-          ? 100:0),
+      padding: EdgeInsets.only(bottom: widget.isFromQurHomeRegimen ? 100 : 0),
       children: [
         Container(
-          width: widget.isFromQurHomeRegimen??false
-              ? double.infinity:0.75.sw,
+          width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
           padding: EdgeInsets.only(
             bottom: 10.0.h,
             left: 10.0.w,
@@ -244,18 +315,23 @@ class FormDataDialogState extends State<FormDataDialog> {
                 top: 0.0.h,
               ),
               physics: NeverScrollableScrollPhysics(),
-              itemCount: fieldsData.length,
+              itemCount: fieldsData!.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: EdgeInsets.only(
                     bottom: 10.0.h,
                   ),
                   child: FormFieldWidget(
-                    canEdit: widget.canEdit ?? false,
-                    fieldData: fieldsData[index],
-                    isFromQurHomeRegimen:widget.isFromQurHomeRegimen,
+                    canEdit: widget.canEdit,
+                    fieldData: fieldsData![index],
+                    vitalsData: getVitalsData(
+                        widget.uformData?.vitalsData!, fieldsData![index]),
+                    isFromQurHomeRegimen: widget.isFromQurHomeRegimen,
                     isFromQurHomeSymptom: widget.isFromQurHomeSymptom ||
                         widget.isFromQurHomeRegimen,
+                    isChanged: (settings) {
+                      isSettingChanged = settings;
+                    },
                     updateValue: (
                       updatedFieldData, {
                       isAdd,
@@ -284,22 +360,34 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
         ),
         Container(
-          width: widget.isFromQurHomeRegimen??false
-              ? double.infinity:0.75.sw,
+          width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Visibility(
-                visible: mediaData.needPhoto == '1',
+                visible: mediaData!.needPhoto == '1',
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
                           _showSelectionDialog(context);
                         }
-                      : null,
+                      : () {
+                          var imageUrl;
+                          widget.uformData?.vitalsData?.forEach((vital) {
+                            if ((vital.photo?.url ?? "").isNotEmpty) {
+                              imageUrl = vital.photo?.url;
+                            }
+                          });
+
+                          if (imageUrl != null)
+                            Get.to(
+                              () =>
+                                  ImageViewer(imageUrl, eid, widget.providerId),
+                            );
+                        },
                   child: ValueListenableBuilder(
                     valueListenable: isUploading,
-                    builder: (contxt, val, child) {
+                    builder: (contxt, dynamic val, child) {
                       return Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -312,7 +400,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                             child: SizedBox(
                               //width: 250.0.w,
                               child: Text(
-                                imageFileName,
+                                widget.canEdit ? imageFileName : "View Image",
                                 style: TextStyle(
                                   fontSize: 14.0.sp,
                                   color: Colors.grey[500],
@@ -345,7 +433,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                 ),
               ),
               Visibility(
-                visible: mediaData.needAudio == '1',
+                visible: mediaData!.needAudio == '1',
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
@@ -360,7 +448,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                             ),
                           )
                               .then((results) {
-                            final String audioPath =
+                            final String? audioPath =
                                 results[Constants.keyAudioFile];
                             if (audioPath != null && audioPath != '') {
                               imagePaths = audioPath;
@@ -370,16 +458,17 @@ class FormDataDialogState extends State<FormDataDialog> {
                               if (imagePaths != null && imagePaths != '') {
                                 saveMediaRegiment(imagePaths, providerId)
                                     .then((value) {
-                                  if (value.isSuccess) {
+                                  if (value.isSuccess!) {
                                     setState(() {
                                       audioFileName = audioPath.split('/').last;
                                     });
                                     final oldValue = saveMap.putIfAbsent(
                                       'audio',
-                                      () => value.result.accessUrl,
+                                      () => value.result!.accessUrl,
                                     );
                                     if (oldValue != null) {
-                                      saveMap['audio'] = value.result.accessUrl;
+                                      saveMap['audio'] =
+                                          value.result!.accessUrl;
                                     }
                                   } else {
                                     setState(() {
@@ -415,7 +504,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                 ),
               ),
               Visibility(
-                visible: mediaData.needVideo == '1',
+                visible: mediaData!.needVideo == '1',
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
@@ -445,7 +534,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                 ),
               ),
               Visibility(
-                visible: mediaData.needFile == '1',
+                visible: mediaData!.needFile == '1',
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
@@ -478,8 +567,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
         ),
         Container(
-            width: widget.isFromQurHomeRegimen??false
-                ? double.infinity:0.75.sw,
+            width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
             padding: EdgeInsets.only(
               bottom: 4.0.h,
               left: 10.0.w,
@@ -497,7 +585,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                   color: Colors.red[500],
                 ),
               ),
-              visible: widget.canEdit ? false : true,
+              visible: getVisibility(),
             )),
         if (Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentFilter ==
@@ -507,7 +595,7 @@ class FormDataDialogState extends State<FormDataDialog> {
               children: [
                 InkWell(
                   onTap: () async {
-                    initDate = await selectDate(context, initDate);
+                    initDate = await selectDate(context, initDate!);
                     setState(() {});
                   },
                   child: Container(
@@ -527,12 +615,12 @@ class FormDataDialogState extends State<FormDataDialog> {
                         IconButton(
                           icon: Icon(Icons.calendar_today, size: 16.sp),
                           onPressed: () async {
-                            initDate = await selectDate(context, initDate);
+                            initDate = await selectDate(context, initDate!);
                             setState(() {});
                           },
                         ),
                         Text(
-                          '${CommonUtil.dateConversionToApiFormat(initDate)}',
+                          '${CommonUtil.dateConversionToApiFormat(initDate!)}',
                           style: TextStyle(fontSize: 15.sp),
                         ),
                       ],
@@ -575,17 +663,16 @@ class FormDataDialogState extends State<FormDataDialog> {
               ],
             ),
           ),
-        widget.isFromQurHomeRegimen??false
-            ? SizedBox.shrink():onSaveBtn(),
+        widget.isFromQurHomeRegimen ? SizedBox.shrink() : onSaveBtn(),
       ],
     );
   }
 
   Widget onSaveBtn() {
     return Container(
-      width: widget.isFromQurHomeRegimen ?? false ? double.infinity : 0.75.sw,
+      width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
       margin: EdgeInsets.only(
-        bottom: widget.isFromQurHomeRegimen ?? false ? 5.0.h : 0.0,
+        bottom: widget.isFromQurHomeRegimen ? 5.0.h : 0.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -594,10 +681,11 @@ class FormDataDialogState extends State<FormDataDialog> {
               valueListenable: isUploading,
               builder: (contxt, val, child) {
                 return RaisedButton(
-                    onPressed: (!val)
+                    onPressed: val == false
                         ? () async {
-                            if (widget.canEdit) {
-                              if (_formKey.currentState.validate()) {
+                            if (widget.fromView!) {
+                            } else if (widget.canEdit) {
+                              if (_formKey.currentState!.validate()) {
                                 if (actvityStatus == UnSubscribed ||
                                     actvityStatus == Expired) {
                                   var message = (actvityStatus == UnSubscribed)
@@ -626,10 +714,12 @@ class FormDataDialogState extends State<FormDataDialog> {
                             }
                           }
                         : null,
-                    color: widget.isFromQurHomeSymptom ||
-                            widget.isFromQurHomeRegimen
-                        ? Color(CommonUtil().getQurhomePrimaryColor())
-                        : Color(CommonUtil().getMyPrimaryColor()),
+                    color: widget.fromView!
+                        ? Colors.grey
+                        : widget.isFromQurHomeSymptom ||
+                                widget.isFromQurHomeRegimen
+                            ? Color(CommonUtil().getQurhomePrimaryColor())
+                            : Color(CommonUtil().getMyPrimaryColor()),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(
                         5.0.sp,
@@ -653,17 +743,17 @@ class FormDataDialogState extends State<FormDataDialog> {
     saveMap.forEach((key, value) {
       events += '&$key=$value';
       var provider = Provider.of<RegimentViewModel>(context, listen: false);
-      provider.cachedEvents?.removeWhere((element) => element?.contains(key));
+      provider.cachedEvents.removeWhere((element) => element.contains(key));
       provider.cachedEvents.add('&$key=$value'.toString());
     });
     if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
       LoaderQurHome.showLoadingDialog(
-        Get.context,
+        Get.context!,
         canDismiss: false,
       );
     } else {
       LoaderClass.showLoadingDialog(
-        Get.context,
+        Get.context!,
         canDismiss: false,
       );
     }
@@ -678,22 +768,23 @@ class FormDataDialogState extends State<FormDataDialog> {
       selectedDate: initDate,
       selectedTime: _currentTime,
     );
-    if (saveResponse?.isSuccess ?? false) {
+    if (saveResponse.isSuccess ?? false) {
       QurPlanReminders.getTheRemindersFromAPI();
       if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
-        LoaderQurHome.hideLoadingDialog(Get.context);
+        LoaderQurHome.hideLoadingDialog(Get.context!);
       } else {
-        LoaderClass.hideLoadingDialog(Get.context);
+        LoaderClass.hideLoadingDialog(Get.context!);
       }
       if (Provider.of<RegimentViewModel>(context, listen: false)
               .regimentStatus ==
           RegimentStatus.DialogOpened) {
         Navigator.pop(context, true);
-      } else if (widget.isFromQurHomeRegimen ?? false) {
+      } else if (widget.isFromQurHomeRegimen) {
         Get.back(result: true);
+        if (isUpdatePressed) Navigator.pop(context, true);
       }
       checkForReturnActions(
-        returnAction: saveResponse?.result?.actions?.returnData,
+        returnAction: saveResponse.result?.actions?.returnData,
       );
     }
   }
@@ -707,10 +798,11 @@ class FormDataDialogState extends State<FormDataDialog> {
           children: [
             Flexible(
               child: Text(
-                widget.formTitle??'',
+                widget.formTitle!,
                 style: TextStyle(
                   fontSize: 16.0.sp,
                 ),
+                overflow: TextOverflow.fade,
               ),
             ),
             IconButton(
@@ -723,7 +815,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           ],
         ),
         Text(
-          widget.introText ?? '',
+          widget.introText,
           maxLines: 10,
           style: TextStyle(color: Colors.black, fontSize: 16.h),
         ),
@@ -732,7 +824,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   checkForReturnActions({
-    ReturnModel returnAction,
+    ReturnModel? returnAction,
   }) async {
     if ((returnAction?.action ?? '').isNotEmpty &&
         (returnAction?.message ?? '').isNotEmpty) {
@@ -741,10 +833,11 @@ class FormDataDialogState extends State<FormDataDialog> {
           barrierDismissible: false,
           builder: (context) {
             return WillPopScope(
-              onWillPop: () {
-                Provider.of<RegimentViewModel>(Get.context, listen: false)
+              onWillPop: () async {
+                Provider.of<RegimentViewModel>(Get.context!, listen: false)
                     .cachedEvents = [];
                 Get.back();
+                return true;
               },
               child: AlertDialog(
                 title: Row(
@@ -756,7 +849,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           size: 24.0.sp,
                         ),
                         onPressed: () {
-                          Provider.of<RegimentViewModel>(Get.context,
+                          Provider.of<RegimentViewModel>(Get.context!,
                                   listen: false)
                               .cachedEvents = [];
                           Navigator.pop(context);
@@ -769,8 +862,8 @@ class FormDataDialogState extends State<FormDataDialog> {
                   left: 15.0.w,
                 ),
                 content: Container(
-                  width: widget.isFromQurHomeRegimen??false
-                      ? double.infinity:0.75.sw,
+                  width:
+                      widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -796,7 +889,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                                       startActivity) {
                                 if (returnAction?.activityName == '' ||
                                     returnAction?.activityName == null) {
-                                  Provider.of<RegimentViewModel>(Get.context,
+                                  Provider.of<RegimentViewModel>(Get.context!,
                                           listen: false)
                                       .cachedEvents = [];
                                 }
@@ -806,7 +899,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                                   returnAction?.activityName,
                                 );
                               } else {
-                                Provider.of<RegimentViewModel>(Get.context,
+                                Provider.of<RegimentViewModel>(Get.context!,
                                         listen: false)
                                     .cachedEvents = [];
                                 Get.back();
@@ -831,7 +924,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                               ),
                             ),
                           ),
-                          getLaterButton(returnAction),
+                          getLaterButton(returnAction)!,
                         ],
                       ),
                       SizedBox(height: 5.h),
@@ -851,12 +944,12 @@ class FormDataDialogState extends State<FormDataDialog> {
             );
           });
     } else {
-      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+      Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents =
           [];
     }
   }
 
-  Widget getLaterButton(ReturnModel returnAction) {
+  Widget? getLaterButton(ReturnModel? returnAction) {
     if ((returnAction?.eid != null) && (returnAction?.activityName != '')) {
       if (returnAction?.action == startActivity) {
         return Padding(
@@ -865,7 +958,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
           child: RaisedButton(
             onPressed: () {
-              Provider.of<RegimentViewModel>(Get.context, listen: false)
+              Provider.of<RegimentViewModel>(Get.context!, listen: false)
                   .cachedEvents = [];
               Get.back();
             },
@@ -895,7 +988,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   Future<AddMediaRegimentModel> saveMediaRegiment(
-      String imagePaths, String providerId) async {
+      String imagePaths, String? providerId) async {
     var patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.saveRegimentMedia(
@@ -924,7 +1017,7 @@ class FormDataDialogState extends State<FormDataDialog> {
 
         if (imagePaths != null && imagePaths != '') {
           saveMediaRegiment(imagePaths, providerId).then((value) {
-            if (value.isSuccess) {
+            if (value.isSuccess!) {
               var file = File(croppedFile.path);
               setState(() {
                 if (fromPath == strGallery) {
@@ -941,10 +1034,10 @@ class FormDataDialogState extends State<FormDataDialog> {
 
               final oldValue = saveMap.putIfAbsent(
                 fromPath,
-                () => value.result.accessUrl,
+                () => value.result!.accessUrl,
               );
               if (oldValue != null) {
-                saveMap[fromPath] = value.result.accessUrl;
+                saveMap[fromPath] = value.result!.accessUrl;
               }
             } else {
               setState(() {
@@ -967,7 +1060,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   imgFromCamera(String fromPath) async {
-    File _image;
+    late File _image;
     var picker = ImagePicker();
     var pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
@@ -980,7 +1073,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     });
     if (imagePaths != null && imagePaths != '') {
       await saveMediaRegiment(imagePaths, providerId).then((value) {
-        if (value.isSuccess) {
+        if (value.isSuccess!) {
           isUploading.value = false;
           setState(() {
             imageFileName = _image.path.split('/').last;
@@ -988,10 +1081,10 @@ class FormDataDialogState extends State<FormDataDialog> {
 
           final oldValue = saveMap.putIfAbsent(
             fromPath,
-            () => value.result.accessUrl,
+            () => value.result!.accessUrl,
           );
           if (oldValue != null) {
-            saveMap[fromPath] = value.result.accessUrl;
+            saveMap[fromPath] = value.result!.accessUrl;
           }
         } else {
           isUploading.value = false;
@@ -1037,7 +1130,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     firstDate = DateTime(
         DateTime.now().year, DateTime.now().month - 1, DateTime.now().day);
 
-    final DateTime picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _date,
       firstDate: firstDate,
@@ -1051,9 +1144,9 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   Future<String> selectTime(BuildContext context) async {
-    TimeOfDay selectedTime = await showTimePicker(
+    TimeOfDay? selectedTime = await showTimePicker(
       context: context,
-      initialTime: _currentTime,
+      initialTime: _currentTime!,
     );
 
     _currentTime = selectedTime;
@@ -1077,6 +1170,56 @@ class FormDataDialogState extends State<FormDataDialog> {
         alwaysUse24HourFormat: false);
     if (formattedTime != null) {
       timeText = formattedTime;
+    }
+  }
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(strConfirms),
+        content: Text(strUpdateMsg),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => closeDialog(),
+            child: Text(strNO),
+          ),
+          FlatButton(
+            onPressed: () {
+              isUpdatePressed = true;
+              clickSaveButton();
+            },
+            child: Text(strYES),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
+  }
+
+  closeDialog() {
+    Navigator.of(context).pop();
+    Get.back();
+  }
+
+  getVitalsData(List<VitalsData>? vitalsData, FieldModel fieldModel) {
+    try {
+      for (VitalsData? vitalsDataObj in vitalsData!) {
+        if (vitalsDataObj?.vitalName == fieldModel.title) return vitalsDataObj;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  getVisibility() {
+    if (widget.showEditIcon == true || widget.fromView!) {
+      return false;
+    } else {
+      if (widget.canEdit) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 }

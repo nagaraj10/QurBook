@@ -1,18 +1,19 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class CategoryResult {
-  String id;
-  String categoryName;
-  String categoryDescription;
-  String logo;
-  bool isDisplay;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  bool isCreate;
-  bool isRead;
-  bool isEdit;
-  bool isDelete;
+  String? id;
+  String? categoryName;
+  String? categoryDescription;
+  String? logo;
+  bool? isDisplay;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isCreate;
+  bool? isRead;
+  bool? isEdit;
+  bool? isDelete;
 
   CategoryResult(
       {this.id,

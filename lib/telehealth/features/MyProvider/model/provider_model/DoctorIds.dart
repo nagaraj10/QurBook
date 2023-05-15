@@ -1,3 +1,4 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Fees.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Languages.dart';
@@ -7,44 +8,44 @@ import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Profil
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class DoctorIds {
-  String id;
-  String name;
-  String addressLine1;
-  String addressLine2;
-  String website;
-  String googleMapUrl;
-  String phoneNumber1;
-  String phoneNumber2;
-  String phoneNumber3;
-  String phoneNumber4;
-  String email;
-  String state;
-  String city;
-  bool isActive;
-  String specialization;
-  bool isUserDefined;
-  String description;
-  String createdBy;
-  String lastModifiedOn;
-  ProfilePic profilePic;
-  ProfilePic profilePicThumbnail;
-  String firstName;
-  String lastName;
-  String genderId;
-  String dob;
-  String cityId;
-  String stateId;
-  String pinCode;
-  String lastModifiedBy;
-  bool isTelehealthEnabled;
-  bool isMCIVerified;
-  List<Languages> languages;
-  List<ProfessionalDetails> professionalDetails;
-  Fees fees;
-  bool isDefault;
-  String doctorPatientMappingId;
-  String gender;
-  String profilePicThumbnailURL;
+  String? id;
+  String? name;
+  String? addressLine1;
+  String? addressLine2;
+  String? website;
+  String? googleMapUrl;
+  String? phoneNumber1;
+  String? phoneNumber2;
+  String? phoneNumber3;
+  String? phoneNumber4;
+  String? email;
+  String? state;
+  String? city;
+  bool? isActive;
+  String? specialization;
+  bool? isUserDefined;
+  String? description;
+  String? createdBy;
+  String? lastModifiedOn;
+  ProfilePic? profilePic;
+  ProfilePic? profilePicThumbnail;
+  String? firstName;
+  String? lastName;
+  String? genderId;
+  String? dob;
+  String? cityId;
+  String? stateId;
+  String? pinCode;
+  String? lastModifiedBy;
+  bool? isTelehealthEnabled;
+  bool? isMCIVerified;
+  List<Languages>? languages;
+  List<ProfessionalDetails>? professionalDetails;
+  Fees? fees;
+  bool? isDefault;
+  String? doctorPatientMappingId;
+  String? gender;
+  String? profilePicThumbnailURL;
 
   DoctorIds(
       {this.id,
@@ -126,15 +127,15 @@ class DoctorIds {
     isTelehealthEnabled = json[parameters.strisTelehealthEnabled];
     isMCIVerified = json[parameters.strisMCIVerified];
     if (json[parameters.strlanguages] != null) {
-      languages = new List<Languages>();
+      languages = <Languages>[];
       json[parameters.strlanguages].forEach((v) {
-        languages.add(new Languages.fromJson(v));
+        languages!.add(new Languages.fromJson(v));
       });
     }
     if (json[parameters.strprofessionalDetails] != null) {
-      professionalDetails = new List<ProfessionalDetails>();
+      professionalDetails = <ProfessionalDetails>[];
       json[parameters.strprofessionalDetails].forEach((v) {
-        professionalDetails.add(new ProfessionalDetails.fromJson(v));
+        professionalDetails!.add(new ProfessionalDetails.fromJson(v));
       });
     }
     fees = json[parameters.strfees] != null
@@ -183,14 +184,14 @@ class DoctorIds {
     data[parameters.strisMCIVerified] = this.isMCIVerified;
     if (this.languages != null) {
       data[parameters.strlanguages] =
-          this.languages.map((v) => v.toJson()).toList();
+          this.languages!.map((v) => v.toJson()).toList();
     }
     if (this.professionalDetails != null) {
       data[parameters.strprofessionalDetails] =
-          this.professionalDetails.map((v) => v.toJson()).toList();
+          this.professionalDetails!.map((v) => v.toJson()).toList();
     }
     if (this.fees != null) {
-      data[parameters.strfees] = this.fees.toJson();
+      data[parameters.strfees] = this.fees!.toJson();
     }
     data[parameters.strisDefault] = this.isDefault;
     data[parameters.strdoctorPatientMappingId] = this.doctorPatientMappingId;

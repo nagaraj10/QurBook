@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../../constants/variable_constant.dart' as variable;
@@ -9,21 +10,21 @@ import '../models/doctors_list_response.dart';
 import '../services/doctors_list_repository.dart';
 
 class DoctorsListBlock implements BaseBloc {
-  DoctorsListRepository _doctorsListRepository;
-  StreamController _doctorsListController;
-  StreamController _doctorsListNewController;
+  late DoctorsListRepository _doctorsListRepository;
+  StreamController? _doctorsListController;
+  StreamController? _doctorsListNewController;
 
-  StreamController _doctorsProfileImageControlller;
+  StreamController? _doctorsProfileImageControlller;
 
   StreamSink<ApiResponse<DoctorsListResponse>> get doctorsListSink =>
-      _doctorsListController.sink;
+      _doctorsListController!.sink as StreamSink<ApiResponse<DoctorsListResponse>>;
   Stream<ApiResponse<DoctorsListResponse>> get doctorsStream =>
-      _doctorsListController.stream;
+      _doctorsListController!.stream as Stream<ApiResponse<DoctorsListResponse>>;
 
   StreamSink<ApiResponse<DoctorsSearchListResponse>> get doctorsListNewSink =>
-      _doctorsListNewController.sink;
+      _doctorsListNewController!.sink as StreamSink<ApiResponse<DoctorsSearchListResponse>>;
   Stream<ApiResponse<DoctorsSearchListResponse>> get doctorsNewStream =>
-      _doctorsListNewController.stream;
+      _doctorsListNewController!.stream as Stream<ApiResponse<DoctorsSearchListResponse>>;
 
   @override
   void dispose() {
@@ -52,9 +53,9 @@ class DoctorsListBlock implements BaseBloc {
     }
   }
 
-  Future<DoctorsSearchListResponse> getDoctorsListNew(
-      String param, bool isSkipUnknown) async {
-    DoctorsSearchListResponse userHealthResponseList;
+  Future<DoctorsSearchListResponse?> getDoctorsListNew(
+      String? param, bool? isSkipUnknown) async {
+    DoctorsSearchListResponse? userHealthResponseList;
     doctorsListNewSink.add(ApiResponse.loading(variable.strGetDoctorsList));
     try {
       userHealthResponseList = await _doctorsListRepository
@@ -66,8 +67,8 @@ class DoctorsListBlock implements BaseBloc {
     return userHealthResponseList;
   }
 
-  Future<DoctorsListResponse> getDoctorObjUsingId(String doctorsId) async {
-    DoctorsListResponse doctorsListResponse;
+  Future<DoctorsListResponse?> getDoctorObjUsingId(String doctorsId) async {
+    DoctorsListResponse? doctorsListResponse;
     doctorsListSink.add(ApiResponse.loading(variable.strGetDoctorById));
     try {
       doctorsListResponse =
@@ -80,9 +81,9 @@ class DoctorsListBlock implements BaseBloc {
     return doctorsListResponse;
   }
 
-  Future<DoctorsSearchListResponse> getExistingDoctorList(
+  Future<DoctorsSearchListResponse?> getExistingDoctorList(
       String limit) async {
-    DoctorsSearchListResponse userHealthResponseList;
+    DoctorsSearchListResponse? userHealthResponseList;
     doctorsListNewSink.add(ApiResponse.loading(variable.strGetDoctorsList));
     try {
       userHealthResponseList = await _doctorsListRepository

@@ -1,8 +1,9 @@
+
 import '../../constants/fhb_parameters.dart';
 
 class TemperatureValues {
-  bool isSuccess;
-  List<TMPResult> result;
+  bool? isSuccess;
+  List<TMPResult>? result;
 
   TemperatureValues({this.isSuccess, this.result});
 
@@ -11,7 +12,7 @@ class TemperatureValues {
     if (json[dataResult] != null) {
       result = <TMPResult>[];
       json[dataResult].forEach((tempaturevalue) {
-        result.add(TMPResult.fromJson(tempaturevalue));
+        result!.add(TMPResult.fromJson(tempaturevalue));
       });
     }
   }
@@ -21,20 +22,20 @@ class TemperatureValues {
     data[is_Success] = isSuccess;
     if (result != null) {
       data[dataResult] =
-          result.map((tempaturevalue) => tempaturevalue.toJson()).toList();
+          result!.map((tempaturevalue) => tempaturevalue.toJson()).toList();
     }
     return data;
   }
 }
 
 class TMPResult {
-  String sourceType;
-  String startDateTime;
-  String endDateTime;
-  String temperature;
-  String temperatureUnit;
-  String deviceId;
-  DateTime dateTimeValue;
+  String? sourceType;
+  String? startDateTime;
+  String? endDateTime;
+  String? temperature;
+  String? temperatureUnit;
+  String? deviceId;
+  DateTime? dateTimeValue;
   TMPResult(
       {this.sourceType,
       this.startDateTime,

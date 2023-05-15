@@ -1,12 +1,13 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class RelationShip {
-  String id;
-  String roleName;
-  String roleDescription;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? roleName;
+  String? roleDescription;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   RelationShip(
       {this.id,

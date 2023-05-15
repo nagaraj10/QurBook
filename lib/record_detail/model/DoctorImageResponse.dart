@@ -1,7 +1,8 @@
+
 class DoctorImageResponse {
-  int status;
-  bool success;
-  String response;
+  int? status;
+  bool? success;
+  String? response;
 
   DoctorImageResponse({this.status, this.success, this.response});
 

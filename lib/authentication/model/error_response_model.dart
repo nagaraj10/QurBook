@@ -1,9 +1,10 @@
+
 import '../constants/constants.dart';
 
 class ErrorModelResponse {
-  int status;
-  bool success;
-  String message;
+  int? status;
+  bool? success;
+  String? message;
 
   ErrorModelResponse({this.status, this.success, this.message});
 

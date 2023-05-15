@@ -1,3 +1,4 @@
+
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
@@ -6,16 +7,16 @@ import 'package:flutter/material.dart';
 
 class DrawerTile extends StatelessWidget {
   const DrawerTile({
-    @required this.title,
-    @required this.onPressed,
+    required this.title,
+    required this.onPressed,
     this.icon,
     this.isGreyout = false,
     this.iconWidget,
   });
 
   final String title;
-  final String icon;
-  final Widget iconWidget;
+  final String? icon;
+  final Widget? iconWidget;
   final Function onPressed;
   final bool isGreyout;
 
@@ -23,9 +24,9 @@ class DrawerTile extends StatelessWidget {
   Widget build(BuildContext context) => Column(
         children: [
           Divider(
-            height: CommonUtil().isTablet ? 3.0.h : 1.0.h,
+            height: CommonUtil().isTablet! ? 3.0.h : 1.0.h,
           ),
-          CommonUtil().isTablet
+          CommonUtil().isTablet!
               ? SizedBoxWidget(
                   height: 4.0.h,
                 )
@@ -33,26 +34,26 @@ class DrawerTile extends StatelessWidget {
           Material(
             color: Colors.transparent,
             child: ListTile(
-              onTap: onPressed,
+              onTap: onPressed as void Function()?,
               leading: Container(
-                width: CommonUtil().isTablet ? 27.0.sp : 24.0.sp,
-                height: CommonUtil().isTablet ? 27.0.sp : 24.0.sp,
+                width: CommonUtil().isTablet! ? 27.0.sp : 24.0.sp,
+                height: CommonUtil().isTablet! ? 27.0.sp : 24.0.sp,
                 child: iconWidget ??
                     ImageIcon(
-                      AssetImage(icon),
+                      AssetImage(icon!),
                       color: Colors.black54,
                     ),
               ),
               title: Text(
-                title ?? '',
+                title,
                 style: TextStyle(
-                  fontSize: CommonUtil().isTablet ? 18.0.sp : 16.0.sp,
+                  fontSize: CommonUtil().isTablet! ? 18.0.sp : 16.0.sp,
                   color: isGreyout ? Colors.grey : Colors.black54,
                 ),
               ),
             ),
           ),
-          CommonUtil().isTablet
+          CommonUtil().isTablet!
               ? SizedBoxWidget(
                   height: 4.0.h,
                 )

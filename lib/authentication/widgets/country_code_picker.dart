@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -11,8 +12,8 @@ class CountryCodePickerPage extends StatefulWidget {
     @required this.selectedCountry,
   });
 
-  Function onValuePicked;
-  Country selectedCountry;
+  Function? onValuePicked;
+  Country? selectedCountry;
   @override
   _CountryCodePickerState createState() => _CountryCodePickerState();
 }
@@ -29,7 +30,7 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
           padding: const EdgeInsets.all(10),
           elevation: 10,
           color: Colors.grey.shade100,
-          initialValue: widget.selectedCountry.phoneCode,
+          initialValue: widget.selectedCountry!.phoneCode,
           onSelected: (item) {
             Country selected;
             if (item == CountryCode.IN) {
@@ -45,7 +46,7 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
                 name: "US",
               );
             }
-            widget.onValuePicked(selected);
+            widget.onValuePicked!(selected);
             // setState(() {
             //   widget.selectedCountry = selected;
             // });
@@ -112,7 +113,7 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
             ),
           ],
           child: Text(
-            widget.selectedCountry.phoneCode,
+            widget.selectedCountry!.phoneCode!,
             style: TextStyle(
               fontSize: 16.0.sp,
             ),

@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loading/indicator/ball_pulse_indicator.dart';
-import 'package:loading/loading.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 
@@ -18,6 +16,7 @@ import '../Models/SheelaResponse.dart';
 import 'CommonUitls.dart';
 import 'youtube_player.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SheelaAIReceiverBubble extends StatelessWidget {
   final SheelaResponse chat;
@@ -69,14 +68,15 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                     borderRadius: chatBubbleBorderRadiusFor(false),
                   ),
                   child: (chat.loading ?? false)
-                      ? Loading(
-                          indicator: BallPulseIndicator(),
-                          size: 20.0,
-                          color: PreferenceUtil.getIfQurhomeisAcive()
-                              ? Color(
-                                  CommonUtil().getQurhomeGredientColor(),
-                                )
-                              : Colors.white,
+                      ? Container(
+                          width: CommonUtil().isTablet! ? 60.0 : 40.0,
+                          child: SpinKitThreeBounce(
+                              size: CommonUtil().isTablet! ? 25.0 : 18.0,
+                              color: PreferenceUtil.getIfQurhomeisAcive()
+                                  ? Color(
+                                      CommonUtil().getQurhomeGredientColor(),
+                                    )
+                                  : Colors.white),
                         )
                       : (chat.audioFile ?? '').isNotEmpty
                           ? AudioWidget(
@@ -100,10 +100,10 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                           chat.text ?? '',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText2
+                                              .bodyText2!
                                               .apply(
                                                 fontSizeFactor:
-                                                    CommonUtil().isTablet
+                                                    CommonUtil().isTablet!
                                                         ? 1.6
                                                         : 1.0,
                                                 color: PreferenceUtil
@@ -155,14 +155,32 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }),
                 ),
               ),
-              if (!PreferenceUtil.getIfQurhomeisAcive())
-                Text(
-                  chat.timeStamp,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText2
-                      .apply(color: Colors.grey),
-                ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!controller.isProd)
+                    Text(
+                      chat.conversationFlag ?? 'Rasa',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2!
+                          .apply(color: Colors.grey),
+                    ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  if (!PreferenceUtil.getIfQurhomeisAcive())
+                    Text(
+                      chat.timeStamp,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2!
+                          .apply(color: Colors.grey),
+                    ),
+                ],
+              ),
+
               //need to add the video links here
               if ((chat.videoLinks ?? []).isNotEmpty) videoWidgets(),
             ],
@@ -176,15 +194,15 @@ class SheelaAIReceiverBubble extends StatelessWidget {
   }
 
   String videoThumbnail(VideoLinks currentVideoLink) {
-    String videoId;
-    videoId = YoutubePlayer.convertUrlToId(currentVideoLink.url);
-    final videoThumbnail = YoutubePlayer.getThumbnail(videoId: videoId);
+    String? videoId;
+    videoId = YoutubePlayer.convertUrlToId(currentVideoLink.url!);
+    final videoThumbnail = YoutubePlayer.getThumbnail(videoId: videoId!);
     return videoThumbnail;
   }
 
   Widget videoWidgets() {
     return Column(
-      children: chat.videoLinks
+      children: chat.videoLinks!
           .map(
             (currentVideoLink) => Card(
               elevation: 5,
@@ -236,9 +254,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                       return;
                                     }
                                     controller.stopTTS();
-                                    String videoId;
+                                    String? videoId;
                                     videoId = YoutubePlayer.convertUrlToId(
-                                        currentVideoLink?.url);
+                                        currentVideoLink.url!);
                                     Get.to(
                                       MyYoutubePlayer(
                                         videoId: videoId,
@@ -253,7 +271,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      currentVideoLink.title,
+                      currentVideoLink.title!,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15.0.sp,
@@ -274,64 +292,66 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     if ((chat.buttons ?? []).isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: chat.buttons
+        children: chat.buttons!
             .map(
               (buttonData) => InkWell(
-                onTap: ((chat.singleuse != null && chat.singleuse) &&
-                        (chat.isActionDone != null && chat.isActionDone))
-                    ? null
-                    : () {
-                        if (controller.isLoading.isTrue) {
-                          return;
-                        }
-                        if (chat.singleuse != null &&
-                            chat.singleuse &&
-                            chat.isActionDone != null) {
-                          chat.isActionDone = true;
-                        }
-                        buttonData.isSelected = true;
-                        controller.startSheelaFromButton(
-                            buttonText: buttonData.title,
-                            payload: buttonData.payload,
-                            buttons: buttonData);
-                        Future.delayed(const Duration(seconds: 3), () {
-                          buttonData.isSelected = false;
-                        });
-                      },
-                child: Card(
-                  color: (buttonData.isSelected ?? false)
-                      ? PreferenceUtil.getIfQurhomeisAcive()
-                          ? Color(CommonUtil().getQurhomeGredientColor())
-                          : Colors.green
-                      : (buttonData.isPlaying.isTrue)
-                          ? PreferenceUtil.getIfQurhomeisAcive()
-                              ? Color(CommonUtil().getQurhomeGredientColor())
-                              : Colors.lightBlueAccent
-                          : Colors.white,
-                  margin: const EdgeInsets.only(top: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 18,
-                      vertical: 10,
-                    ),
-                    child: Text(
-                      buttonData.title,
-                      style: TextStyle(
-                        color: (buttonData.isPlaying.isTrue) ||
-                                (buttonData.isSelected ?? false)
-                            ? Colors.white
-                            : PreferenceUtil.getIfQurhomeisAcive()
+                      onTap: ((chat.singleuse != null && chat.singleuse!) &&
+                              (chat.isActionDone != null && chat.isActionDone!))
+                          ? null
+                          : () {
+                              if (controller.isLoading.isTrue) {
+                                return;
+                              }
+                              if (chat.singleuse != null &&
+                                  chat.singleuse! &&
+                                  chat.isActionDone != null) {
+                                chat.isActionDone = true;
+                              }
+                              buttonData.isSelected = true;
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData.title,
+                                  payload: buttonData.payload,
+                                  buttons: buttonData);
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData.isSelected = false;
+                              });
+                            },
+                      child: Card(
+                        color: (buttonData.isSelected ?? false)
+                            ? PreferenceUtil.getIfQurhomeisAcive()
                                 ? Color(CommonUtil().getQurhomeGredientColor())
-                                : Color(CommonUtil().getMyPrimaryColor()),
-                        fontSize: 14.0.sp,
+                                : Colors.green
+                            : (buttonData.isPlaying.isTrue)
+                                ? PreferenceUtil.getIfQurhomeisAcive()
+                                    ? Color(
+                                        CommonUtil().getQurhomeGredientColor())
+                                    : Colors.lightBlueAccent
+                                : Colors.white,
+                        margin: const EdgeInsets.only(top: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 10,
+                          ),
+                          child: Text(
+                            buttonData.title!,
+                            style: TextStyle(
+                              color: (buttonData.isPlaying.isTrue) ||
+                                      (buttonData.isSelected ?? false)
+                                  ? Colors.white
+                                  : PreferenceUtil.getIfQurhomeisAcive()
+                                      ? Color(CommonUtil()
+                                          .getQurhomeGredientColor())
+                                      : Color(CommonUtil().getMyPrimaryColor()),
+                              fontSize: 14.0.sp,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
             )
             .toList(),
       );
@@ -361,7 +381,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         child: InkWell(
             onTap: () {
               Navigator.push(
-                  Get.context,
+                  Get.context!,
                   MaterialPageRoute(
                       builder: (context) => ImageSlider(
                             imageURl: url,
@@ -374,7 +394,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
               height: 200.0.h,
               headers: {
                 HttpHeaders.authorizationHeader:
-                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
                 Constants.KEY_OffSet: CommonUtil().setTimeZone()
               },
             )));
@@ -389,8 +409,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
 
     try {
       if (chat.imageURLS != null) {
-        if (chat.imageURLS.length > 0) {
-          for (String imgURL in chat.imageURLS) {
+        if (chat.imageURLS!.length > 0) {
+          for (String imgURL in chat.imageURLS!) {
             if (imgURL != null && imgURL != '' && imgURL != 'null') {
               column.add(getImageFromUrl(imgURL));
             }

@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import '../Authentication/LoginBloc.dart';
 import '../../model/user/MyProfileModel.dart';
@@ -8,19 +9,19 @@ import '../../resources/repository/User/MyProfileRepository.dart';
 import '../../../constants/variable_constant.dart' as variable;
 
 class MyProfileBloc implements BaseBloc {
-  MyProfileRepository _myProfileRepository;
-  StreamController _myProfileController;
-  StreamController _myCompleteProfileController;
+  late MyProfileRepository _myProfileRepository;
+  StreamController? _myProfileController;
+  StreamController? _myCompleteProfileController;
 
   StreamSink<ApiResponse<MyProfileModel>> get myProfileInfoSink =>
-      _myProfileController.sink;
+      _myProfileController!.sink as StreamSink<ApiResponse<MyProfileModel>>;
   Stream<ApiResponse<MyProfileModel>> get myProfileInfoStream =>
-      _myProfileController.stream;
+      _myProfileController!.stream as Stream<ApiResponse<MyProfileModel>>;
 
   StreamSink<ApiResponse<ProfileCompleteData>> get myCompleteProfileInfoSink =>
-      _myCompleteProfileController.sink;
+      _myCompleteProfileController!.sink as StreamSink<ApiResponse<ProfileCompleteData>>;
   Stream<ApiResponse<ProfileCompleteData>> get myCompleteProfileInfoStream =>
-      _myCompleteProfileController.stream;
+      _myCompleteProfileController!.stream as Stream<ApiResponse<ProfileCompleteData>>;
 
   @override
   void dispose() {
@@ -35,9 +36,9 @@ class MyProfileBloc implements BaseBloc {
         StreamController<ApiResponse<ProfileCompleteData>>();
   }
 
- Future<MyProfileModel> getMyProfileData(String profileKey) async {
+ Future<MyProfileModel?> getMyProfileData(String profileKey) async {
     myProfileInfoSink.add(ApiResponse.loading(variable.strGetProfileData));
-    MyProfileModel profileResponse;
+    MyProfileModel? profileResponse;
     try {
       profileResponse = await _myProfileRepository.getMyProfileInfo(profileKey);
       myProfileInfoSink.add(ApiResponse.completed(profileResponse));
@@ -48,9 +49,9 @@ class MyProfileBloc implements BaseBloc {
   }
 
 
-  Future<ProfileCompleteData> getCompleteProfileData(String profileKey) async {
+  Future<ProfileCompleteData?> getCompleteProfileData(String profileKey) async {
     myCompleteProfileInfoSink.add(ApiResponse.loading(variable.strGetProfileData));
-    ProfileCompleteData profileCompleteData;
+    ProfileCompleteData? profileCompleteData;
     try {
       profileCompleteData =
           await _myProfileRepository.getCompleteMyProfileInfo(profileKey);

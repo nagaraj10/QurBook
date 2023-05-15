@@ -33,22 +33,22 @@ import '../../../constants/router_variable.dart' as router;
 
 class QurHomeNavigationDrawer extends StatelessWidget {
   const QurHomeNavigationDrawer(
-      {@required this.myProfile,
-      @required this.moveToLoginPage,
-      @required this.refresh,
-      @required this.userChangedbool});
+      {required this.myProfile,
+       required this.moveToLoginPage,
+      required this.refresh,
+      required this.userChangedbool});
 
-  final MyProfileModel myProfile;
-  final Function moveToLoginPage;
-  final Function(bool userChanged) refresh;
-  final bool userChangedbool;
+  final MyProfileModel? myProfile;
+  final Function() moveToLoginPage;
+  final Function(bool userChanged)? refresh;
+  final bool? userChangedbool;
 
   @override
   Widget build(BuildContext context) {
     // print('*********************************');
     // print(userChangedbool);
     return Container(
-      width: CommonUtil().isTablet
+      width: CommonUtil().isTablet!
           ? MediaQuery.of(context).size.width * 0.75
           : null,
       child: Drawer(
@@ -75,8 +75,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           children: [
                             AssetImageWidget(
                               icon: myFHB_logo,
-                              height: CommonUtil().isTablet ? 110.0.h : 100.0.h,
-                              width: CommonUtil().isTablet ? 110.0.h : 100.0.h,
+                              height: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
+                              width: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
                             ),
                             SizedBox(
                               height: 20.0.h,
@@ -85,9 +85,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                               children: [
                                 Container(
                                   height:
-                                      CommonUtil().isTablet ? 75.0.h : 70.0.h,
+                                      CommonUtil().isTablet! ? 75.0.h : 70.0.h,
                                   width:
-                                      CommonUtil().isTablet ? 75.0.h : 70.0.h,
+                                      CommonUtil().isTablet! ? 75.0.h : 70.0.h,
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                   ),
@@ -124,7 +124,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                               ),
                             );
                             if (refresh != null) {
-                              refresh(true);
+                              refresh!(true)!;
                             }
                           } catch (e) {
                             //print(e);
@@ -407,7 +407,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                               }
                             },
                           ),
-                          visible: userChangedbool &&
+                          visible: userChangedbool! &&
                               CommonUtil.REGION_CODE == 'IN'),
                       DrawerTile(
                         title: variable.strLogout,
@@ -437,20 +437,20 @@ class QurHomeNavigationDrawer extends StatelessWidget {
 
   Widget getNameWidget() {
     MyProfileModel myProfile;
-    var name = "";
+    String? name = "";
     var phoneNumber = "";
 
     try {
-      myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
-      name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
-              myProfile?.result?.name != '')
-          ? myProfile?.result?.name?.capitalizeFirstofEach
-          : myProfile?.result?.firstName != null &&
-                  myProfile?.result?.lastName != null
-              ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
+      myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
+      name = toBeginningOfSentenceCase((myProfile.result!.name != null &&
+              myProfile.result!.name != '')
+          ? myProfile.result!.name!.capitalizeFirstofEach
+          : myProfile.result!.firstName != null &&
+                  myProfile.result!.lastName != null
+              ? ('${myProfile.result!.firstName!.capitalizeFirstofEach} ${myProfile.result!.lastName!.capitalizeFirstofEach}')
               : '');
-      phoneNumber = (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
-          ? myProfile?.result?.userContactCollection3[0].phoneNumber
+      phoneNumber = (myProfile.result!.userContactCollection3!.length) > 0
+          ? myProfile.result!.userContactCollection3![0]!.phoneNumber!
           : '';
     } catch (e) {
       //print(e);
@@ -462,7 +462,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
           text: name,
           style: TextStyle(
             color: Colors.black,
-            fontSize: CommonUtil().isTablet ? 20.0.sp : 18.0.sp,
+            fontSize: CommonUtil().isTablet! ? 20.0.sp : 18.0.sp,
           ),
           children: ((phoneNumber != null && phoneNumber != ''))
               ? [
@@ -470,7 +470,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                     text: '\n$phoneNumber',
                     style: TextStyle(
                       color: Colors.black54,
-                      fontSize: CommonUtil().isTablet ? 18.0.sp : 16.0.sp,
+                      fontSize: CommonUtil().isTablet! ? 18.0.sp : 16.0.sp,
                     ),
                   ),
                 ]

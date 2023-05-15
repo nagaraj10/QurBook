@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -17,18 +18,18 @@ enum LoadingStatus {
 
 class AppointmentsListViewModel extends ChangeNotifier {
   LoadingStatus loadingStatus = LoadingStatus.searching;
-  AppointmentsModel _appointmentsModel;
+  AppointmentsModel? _appointmentsModel;
   FetchAppointmentsService _fetchAppointmentsService =
       FetchAppointmentsService();
 
-  AppointmentsModel appointmentsModel;
+  AppointmentsModel? appointmentsModel;
 
-  AppointmentsListViewModel({AppointmentsModel appointmentsModel})
+  AppointmentsListViewModel({AppointmentsModel? appointmentsModel})
       : _appointmentsModel = appointmentsModel;
 
-  AppointmentsModel get appointments => _appointmentsModel;
+  AppointmentsModel? get appointments => _appointmentsModel;
 
-  Future<AppointmentsModel> fetchAppointments() async {
+  Future<AppointmentsModel?> fetchAppointments() async {
     try {
       this.loadingStatus = LoadingStatus.searching;
       AppointmentsModel appointments =
@@ -49,17 +50,17 @@ class AppointmentsListViewModel extends ChangeNotifier {
   }
 
   AppointmentsData filterSearchResults(String query) {
-    List<Past> dummySearchListUpcoming = List<Past>();
-    List<Past> dummySearchListHistory = List<Past>();
+    List<Past> dummySearchListUpcoming = <Past>[];
+    List<Past> dummySearchListHistory = <Past>[];
     AppointmentsData data = AppointmentsData();
-    AppointmentsModel appointments = _appointmentsModel;
+    AppointmentsModel appointments = _appointmentsModel!;
     if (appointments.result?.upcoming != null &&
-        appointments.result?.upcoming.length > 0) {
-      for (Past element in appointments.result?.upcoming) {
+        appointments.result!.upcoming!.length > 0) {
+      for (Past element in appointments.result!.upcoming!) {
         try {
           String name = '';
           name = methodToGetTitle(element);
-          if (name?.toLowerCase().trim().contains(query.toLowerCase().trim())) {
+          if (name.toLowerCase().trim().contains(query.toLowerCase().trim())) {
             dummySearchListUpcoming.add(element);
           }
         } catch (e) {}
@@ -67,12 +68,12 @@ class AppointmentsListViewModel extends ChangeNotifier {
     }
 
     if (appointments.result?.past != null &&
-        appointments.result?.past.length > 0) {
-      for (Past element in appointments.result?.past) {
+        appointments.result!.past!.length > 0) {
+      for (Past element in appointments.result!.past!) {
         try {
           String name = '';
           name = methodToGetTitle(element);
-          if (name?.toLowerCase().trim().contains(query.toLowerCase().trim())) {
+          if (name.toLowerCase().trim().contains(query.toLowerCase().trim())) {
             dummySearchListHistory.add(element);
           }
         } catch (e) {}
@@ -118,28 +119,28 @@ class AppointmentsListViewModel extends ChangeNotifier {
   String methodToGetTitle(Past element) {
     String name = "";
     if (element.doctorSessionId == null &&
-        element?.healthOrganization != null) {
-      name = element?.healthOrganization?.name?.capitalizeFirstofEach != null
-          ? element?.healthOrganization?.name?.capitalizeFirstofEach
+        element.healthOrganization != null) {
+      name = (element.healthOrganization!.name?.capitalizeFirstofEach) != null
+          ? element.healthOrganization!.name!.capitalizeFirstofEach
           : '';
-    } else if (element?.additionalinfo?.provider_name != null) {
-      name = element?.additionalinfo?.provider_name ?? '';
+    } else if (element.additionalinfo?.provider_name != null) {
+      name = element.additionalinfo?.provider_name ?? '';
     } else if (element.doctorSessionId == null &&
-        element?.healthOrganization == null) {
-      name = element?.additionalinfo?.title ?? '';
+        element.healthOrganization == null) {
+      name = element.additionalinfo?.title ?? '';
     } else if (element.doctorSessionId != null &&
-        element?.doctor != null &&
-        element?.doctor?.user != null) {
-      name = element?.doctor?.user?.firstName != null
-          ? element?.doctor?.user?.firstName?.capitalizeFirstofEach +
+        element.doctor != null &&
+        element.doctor?.user != null) {
+      name = element.doctor?.user?.firstName != null
+          ? element.doctor!.user!.firstName!.capitalizeFirstofEach +
               ' ' +
-              element?.doctor?.user?.lastName?.capitalizeFirstofEach
+              element.doctor!.user!.lastName!.capitalizeFirstofEach
           : '';
     }
 
     if (name == '') {
-      if (element?.serviceCategory?.code == 'LAB') {
-        name = element?.additionalinfo?.lab_name ?? '';
+      if (element.serviceCategory?.code == 'LAB') {
+        name = element.additionalinfo?.lab_name ?? '';
       }
     }
 

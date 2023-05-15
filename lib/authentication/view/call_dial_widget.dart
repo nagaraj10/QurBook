@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../src/ui/MyRecord.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -6,8 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class CallDialWidget extends StatelessWidget {
   const CallDialWidget({
-    @required this.phoneNumber,
-    @required this.phoneNumberName,
+    required this.phoneNumber,
+    required this.phoneNumberName,
   });
 
   final String phoneNumber;

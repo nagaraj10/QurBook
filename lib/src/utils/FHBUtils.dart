@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -84,7 +85,7 @@ class FHBUtils {
     return formattedDate;
   }
 
-  String getFormattedDateString(String strDate) {
+  String getFormattedDateString(String? strDate) {
     String formattedDate = '';
 
     if (strDate != null && strDate != '') {
@@ -159,18 +160,18 @@ class FHBUtils {
     return formattedDate;
   }
 
-  String getFormattedDateOnlyNew(String strDate) {
-    String formattedDate;
+  String? getFormattedDateOnlyNew(String? strDate) {
+    String? formattedDate;
     try {
       if (CURRENT_DATE_CODE == 'MDY') {
         formattedDate =
-            DateFormat('yyyy').format(DateTime.parse(strDate).toLocal());
+            DateFormat('yyyy').format(DateTime.parse(strDate!).toLocal());
       } else if (CURRENT_DATE_CODE == 'YMD') {
         formattedDate =
-            DateFormat('yyyy').format(DateTime.parse(strDate).toLocal());
+            DateFormat('yyyy').format(DateTime.parse(strDate!).toLocal());
       } else {
         formattedDate =
-            DateFormat('yyyy').format(DateTime.parse(strDate).toLocal());
+            DateFormat('yyyy').format(DateTime.parse(strDate!).toLocal());
       }
     } catch (e) {
       formattedDate = strDate;
@@ -197,14 +198,14 @@ class FHBUtils {
     return formattedDate;
   }
 
-  String getMonthDateYear(String strDate) {
+  String getMonthDateYear(String? strDate) {
     String formattedDate;
     if (CURRENT_DATE_CODE == 'MDY') {
-      formattedDate = DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate));
+      formattedDate = DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate!));
     } else if (CURRENT_DATE_CODE == 'YMD') {
-      formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.parse(strDate));
+      formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.parse(strDate!));
     } else {
-      formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate));
+      formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate!));
     }
     return formattedDate;
   }
@@ -282,7 +283,7 @@ class FHBUtils {
   }
 
   static String base64String(List<dynamic> data) {
-    return base64Encode(data);
+    return base64Encode(data as List<int>);
   }
 
   static Image getImageFromString(String data) {
@@ -314,14 +315,14 @@ class FHBUtils {
   }
 
   static Future<String> createFolderInAppDocDirClone(
-      String folderName, String fileType) async {
+      String folderName, String? fileType) async {
     return await createDir(folderName, fileType);
   }
 
-  static Future<String> createDir(String folderName, String fileType,
+  static Future<String> createDir(String folderName, String? fileType,
       {bool isTempDir = false}) async {
     try {
-      List<Directory> appDocDir = Platform.isAndroid
+      List<Directory>? appDocDir = Platform.isAndroid
           ? await getExternalCacheDirectories()
           : isTempDir
               ? [await getTemporaryDirectory()]
@@ -329,8 +330,8 @@ class FHBUtils {
 
       print(appDocDir);
       String path = Platform.isIOS
-          ? appDocDir[0].path + '/$fileType'
-          : appDocDir[0].path + '/$fileType';
+          ? appDocDir![0].path + '/$fileType'
+          : appDocDir![0].path + '/$fileType';
       print(path);
       return path;
     } catch (e) {
@@ -394,7 +395,7 @@ class FHBUtils {
     });
   }
 
-  Future<void> deleteAppointment(String id) async {
+  Future<void> deleteAppointment(String? id) async {
     // Get a reference to the database.
     final db = await getDb();
 
@@ -416,7 +417,7 @@ class FHBUtils {
         .then((res) {});
   }
 
-  Future<void> delete(String tableName, String id) async {
+  Future<void> delete(String tableName, String? id) async {
     // Get a reference to the database.
     final db = await getDb();
 

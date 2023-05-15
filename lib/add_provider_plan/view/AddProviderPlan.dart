@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class AddProviderPlan extends StatefulWidget {
-  String selectedTag;
+  String? selectedTag;
   AddProviderPlan(this.selectedTag);
 
   @override
@@ -28,13 +29,13 @@ class AddProviderPlan extends StatefulWidget {
 }
 
 class AddProviderPlanState extends State<AddProviderPlan> {
-  Future<ProviderOrganisationResponse> providerOrganizationResult;
+  Future<ProviderOrganisationResponse>? providerOrganizationResult;
   List<Result> providerMainList = [];
 
   bool isSearch = false;
 
-  PlanProviderViewModel planListProvider;
-  List<String> selectedCategories = [];
+  late PlanProviderViewModel planListProvider;
+  List<String?> selectedCategories = [];
   FlutterToast toast = new FlutterToast();
 
   bool isSelectedALL = false;
@@ -47,7 +48,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       mInitialTime = DateTime.now();
       providerOrganizationResult =
           Provider.of<PlanProviderViewModel>(context, listen: false)
-              .getCarePlanList(widget.selectedTag);
+              .getCarePlanList(widget.selectedTag!) as Future<ProviderOrganisationResponse>?;
       //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
     } catch (e) {
       print(e);
@@ -57,7 +58,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
   @override
   void dispose() {
     try {
-      FocusManager.instance.primaryFocus.unfocus();
+      FocusManager.instance.primaryFocus!.unfocus();
       super.dispose();
       fbaLog(eveName: 'qurbook_screen_event', eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -178,13 +179,13 @@ class AddProviderPlanState extends State<AddProviderPlan> {
           /*if (providerMainList != null && providerMainList.length > 0) {
             return hospitalList(providerMainList);
           } else*/
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result.isNotEmpty) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.isNotEmpty) {
             //providerMainList = snapshot.data.result;
             hasData = true;
             planListProvider.updateBool(true);
-            return hospitalList(snapshot.data.result);
+            return hospitalList(snapshot.data!.result);
           } else {
             hasData = false;
             planListProvider.updateBool(false);
@@ -216,7 +217,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     }
   }
 
-  Widget hospitalList(List<Result> providerList) {
+  Widget hospitalList(List<Result>? providerList) {
     return (providerList != null && providerList.length > 0)
         ? Column(
             children: [
@@ -232,7 +233,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                   }
                 },
                 onClosePress: () {
-                  FocusManager.instance.primaryFocus.unfocus();
+                  FocusManager.instance.primaryFocus!.unfocus();
                 },
               ),
               SizedBox(
@@ -318,7 +319,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         radius: 25,
         backgroundColor: const Color(fhbColors.bgColorContainer),
         child: Image.network(
-          planList.domainUrl,
+          planList.domainUrl!,
           height: 25.0.h,
           width: 25.0.h,
           fit: BoxFit.cover,
@@ -329,7 +330,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
               child: Center(
                 child: Text(
                   ((planList.name ?? '').isNotEmpty
-                      ? planList.name[0].toUpperCase()
+                      ? planList.name![0].toUpperCase()
                       : ''),
                   style: TextStyle(
                     color: Color(
@@ -355,11 +356,11 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     }
   }
 
-  CreateDoctorProviderCard({Result planList, Function() onClick}) {
-    String specialityName = "";
+  CreateDoctorProviderCard({required Result planList, Function()? onClick}) {
+    String? specialityName = "";
     try {
-      if (planList.specialty != null && planList.specialty.length > 0) {
-        specialityName = planList.specialty[0].name;
+      if (planList.specialty != null && planList.specialty!.length > 0) {
+        specialityName = planList.specialty![0].name;
       }
     } catch (e) {}
     return InkWell(
@@ -392,7 +393,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    planList?.name,
+                    planList.name!,
                     style: TextStyle(fontWeight: FontWeight.w500),
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -415,7 +416,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                     isSelected: planList.isBookmarked,
                     onTap: () async {
 
-                      planList.isBookmarked = !planList.isBookmarked;
+                      planList.isBookmarked = !planList.isBookmarked!;
                       setState(() {});
                     },
                   )
@@ -435,9 +436,9 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       if (selectedCategories != null && selectedCategories.length > 0) {
         LoaderClass.showLoadingDialog(context);
         AddProviderPlanResponse response =
-            await planListProvider?.addproviderPlan(selectedCategories);
+            await planListProvider.addproviderPlan(selectedCategories);
         LoaderClass.hideLoadingDialog(context);
-        if (response.isSuccess) {
+        if (response.isSuccess!) {
           toast.getToast("Added Successfully", Colors.green);
           Get.back();
         }
@@ -454,8 +455,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       selectedCategories = [];
       for (final mediaResultObj in result) {
         if (!selectedCategories
-                .contains(mediaResultObj.healthOrganizationType.id) &&
-            mediaResultObj.isBookmarked) {
+                .contains(mediaResultObj.healthOrganizationType!.id) &&
+            mediaResultObj.isBookmarked!) {
           selectedCategories.add(mediaResultObj.id);
         }
       }

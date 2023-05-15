@@ -25,20 +25,20 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyControllers extends StatefulWidget {
   CallStatus callStatus;
-  ClientRole role;
-  bool isAppExists;
+  ClientRole? role;
+  bool? isAppExists;
   Function(bool, bool) controllerState;
   bool muted;
   bool _isHideMyVideo;
-  String doctorId;
-  String doctorName;
-  String doctorPicUrl;
-  String patientId;
-  String patientName;
-  String patientPicUrl;
-  RtcEngine rtcEngine;
-  String channelName;
-  bool isWeb;
+  String? doctorId;
+  String? doctorName;
+  String? doctorPicUrl;
+  String? patientId;
+  String? patientName;
+  String? patientPicUrl;
+  RtcEngine? rtcEngine;
+  String? channelName;
+  bool? isWeb;
 
   MyControllers(
       this.rtcEngine,
@@ -63,17 +63,17 @@ class MyControllers extends StatefulWidget {
 
 class _MyControllersState extends State<MyControllers> {
   ChatViewModel chatViewModel = ChatViewModel();
-  SharedPreferences prefs;
-  String patientId;
-  String patientName;
-  String patientPicUrl;
+  SharedPreferences? prefs;
+  String? patientId;
+  String? patientName;
+  String? patientPicUrl;
 
   final audioCallStatus =
-      Provider.of<AudioCallProvider>(Get.context, listen: false);
+      Provider.of<AudioCallProvider>(Get.context!, listen: false);
   final videoIconStatus =
-      Provider.of<VideoIconProvider>(Get.context, listen: false);
+      Provider.of<VideoIconProvider>(Get.context!, listen: false);
   final videoRequestStatus =
-      Provider.of<VideoRequestProvider>(Get.context, listen: false);
+      Provider.of<VideoRequestProvider>(Get.context!, listen: false);
 
   //final myDB = Firestore.instance;
 
@@ -173,7 +173,7 @@ class _MyControllersState extends State<MyControllers> {
   Widget build(BuildContext context) => _toolbar(callStatus: widget.callStatus);
 
   /// Toolbar layout
-  Widget _toolbar({CallStatus callStatus, HideProvider hideProvider}) {
+  Widget _toolbar({CallStatus? callStatus, HideProvider? hideProvider}) {
     if (widget.role == ClientRole.Audience) return Container();
     /* return Container(
       color: Colors.black.withOpacity(0.5),
@@ -230,7 +230,7 @@ class _MyControllersState extends State<MyControllers> {
       alignment: Alignment.bottomCenter,
       child: Container(
         decoration: BoxDecoration(
-          color: audioCallStatus?.isAudioCall
+          color: audioCallStatus.isAudioCall
               ? Colors.white.withOpacity(0.5)
               : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.3),
           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -279,18 +279,21 @@ class _MyControllersState extends State<MyControllers> {
                         context,
                         true);*/
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatDetail(
-                                peerId: widget.doctorId,
-                                peerAvatar: widget.doctorPicUrl,
-                                peerName: widget.doctorName,
-                                patientId: widget.patientId,
-                                patientName: widget.patientName,
-                                patientPicture: widget.patientPicUrl,
-                                isFromVideoCall: true,
-                                isCareGiver: false,
-                                isForGetUserId: true)));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatDetail(
+                          peerId: widget.doctorId ?? '',
+                          peerAvatar: widget.doctorPicUrl ?? '',
+                          peerName: widget.doctorName ?? '',
+                          patientId: widget.patientId ?? '',
+                          patientName: widget.patientName ?? '',
+                          patientPicture: widget.patientPicUrl ?? '',
+                          isFromVideoCall: true,
+                          isCareGiver: false,
+                          isForGetUserId: true,
+                        ),
+                      ),
+                    );
                   },
                   icon: Image.asset('assets/icons/ic_chat.png'),
                   //iconSize: 33,
@@ -329,12 +332,16 @@ class _MyControllersState extends State<MyControllers> {
     if (Platform.isIOS) {
       if (PreferenceUtil.getCallNotificationReceived()) {
         PreferenceUtil.setCallNotificationRecieved(isCalled: false);
-         Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context) => SplashScreen(isFromCallScreen: true)), (route) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SplashScreen(isFromCallScreen: true)),
+            (route) => false);
       } else {
         Navigator.pop(context);
       }
     } else {
-      if (widget.isAppExists) {
+      if (widget.isAppExists!) {
         Navigator.pop(context);
       } else {
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -348,12 +355,12 @@ class _MyControllersState extends State<MyControllers> {
       widget.muted = !widget.muted;
     });
     widget.controllerState(widget.muted, widget._isHideMyVideo);
-    widget.rtcEngine.muteLocalAudioStream(widget.muted);
+    widget.rtcEngine!.muteLocalAudioStream(widget.muted);
   }
 
   void _onToggleVideo() async {
     //* this need to uncomment and check
-    if (audioCallStatus?.isAudioCall) {
+    if (audioCallStatus.isAudioCall) {
       //if it's a audio call want switch to video call, request remote user
       //check for camera permission
       var permissionStatus =
@@ -364,9 +371,9 @@ class _MyControllersState extends State<MyControllers> {
         return;
       } else {
         // open request dialog for requesting
-        await widget?.rtcEngine?.enableVideo();
-        await widget?.rtcEngine?.enableLocalVideo(true);
-        await widget?.rtcEngine?.muteLocalVideoStream(false);
+        await widget.rtcEngine?.enableVideo();
+        await widget.rtcEngine?.enableLocalVideo(true);
+        await widget.rtcEngine?.muteLocalVideoStream(false);
         requestingDialog();
         var newStatus = VideoCallStatus();
         newStatus.setDefaultValues();
@@ -378,21 +385,21 @@ class _MyControllersState extends State<MyControllers> {
       }
     } else {
       if (CommonUtil.isRemoteUserOnPause) {
-        await widget?.rtcEngine?.disableVideo();
-        await widget?.rtcEngine?.enableLocalVideo(false);
-        await widget?.rtcEngine?.muteLocalVideoStream(true);
+        await widget.rtcEngine?.disableVideo();
+        await widget.rtcEngine?.enableLocalVideo(false);
+        await widget.rtcEngine?.muteLocalVideoStream(true);
 
-        Provider?.of<HideProvider>(context, listen: false)?.swithToAudio();
+        Provider.of<HideProvider>(context, listen: false).swithToAudio();
         Provider.of<AudioCallProvider>(context, listen: false)
-            ?.enableAudioCall();
-        Provider?.of<VideoIconProvider>(context, listen: false)?.turnOffVideo();
+            .enableAudioCall();
+        Provider.of<VideoIconProvider>(context, listen: false).turnOffVideo();
       } else {
-        widget.rtcEngine.muteLocalVideoStream(videoIconStatus?.isVideoOn);
+        widget.rtcEngine!.muteLocalVideoStream(videoIconStatus.isVideoOn);
         Provider.of<RTCEngineProvider>(context, listen: false)
-            ?.changeLocalVideoStatus(videoIconStatus?.isVideoOn);
-        CommonUtil.isLocalUserOnPause = videoIconStatus?.isVideoOn;
-        videoIconStatus?.swapVideo();
-        widget.controllerState(widget.muted, videoIconStatus?.isVideoOn);
+            .changeLocalVideoStatus(videoIconStatus.isVideoOn);
+        CommonUtil.isLocalUserOnPause = videoIconStatus.isVideoOn;
+        videoIconStatus.swapVideo();
+        widget.controllerState(widget.muted, videoIconStatus.isVideoOn);
       }
     }
   }
@@ -446,9 +453,9 @@ class _MyControllersState extends State<MyControllers> {
                               .update(newStatus.toMap());
                         // }
                         CommonUtil.isVideoRequestSent = false;
-                        await widget?.rtcEngine?.disableVideo();
-                        await widget?.rtcEngine?.enableLocalVideo(false);
-                        await widget?.rtcEngine?.muteLocalVideoStream(true);
+                        await widget.rtcEngine?.disableVideo();
+                        await widget.rtcEngine?.enableLocalVideo(false);
+                        await widget.rtcEngine?.muteLocalVideoStream(true);
                         Get.back();
                       }),
                 ],

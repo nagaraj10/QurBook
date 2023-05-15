@@ -1,19 +1,20 @@
+
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 
 class MyRecordsArgument {
-  int categoryPosition;
-  bool allowSelect;
-  bool isNotesSelect;
-  bool isAudioSelect;
-  List<String> selectedMedias;
-  bool isFromChat;
-  bool showDetails;
-  List<HealthRecordCollection> selectedRecordIds;
-  bool isAssociateOrChat;
-  bool isFromBills;
-  String userID;
-  bool fromAppointments;
-  String fromClass;
+  int? categoryPosition;
+  bool? allowSelect;
+  bool? isNotesSelect;
+  bool? isAudioSelect;
+  List<String?>? selectedMedias;
+  bool? isFromChat;
+  bool? showDetails;
+  List<HealthRecordCollection>? selectedRecordIds;
+  bool? isAssociateOrChat;
+  bool? isFromBills;
+  String? userID;
+  bool? fromAppointments;
+  String? fromClass;
   bool isFromVideoCall;
 
   MyRecordsArgument(

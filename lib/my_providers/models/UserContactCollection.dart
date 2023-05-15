@@ -1,14 +1,15 @@
+
 import 'PhoneNumberType.dart';
 
 class UserContactCollection3 {
-  String id;
-  String phoneNumber;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String email;
-  PhoneNumberType phoneNumberType;
+  String? id;
+  String? phoneNumber;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? email;
+  PhoneNumberType? phoneNumberType;
 
   UserContactCollection3(
       {this.id,
@@ -43,7 +44,7 @@ class UserContactCollection3 {
     data['lastModifiedOn'] = lastModifiedOn;
     data['email'] = email;
     if (phoneNumberType != null) {
-      data['phoneNumberType'] = phoneNumberType.toJson();
+      data['phoneNumberType'] = phoneNumberType!.toJson();
     }
     return data;
   }

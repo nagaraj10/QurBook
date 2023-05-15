@@ -4,24 +4,25 @@ import '../../../common/CommonUtil.dart';
 import 'custom_image_network.dart';
 
 class CheckboxTileWidget extends StatefulWidget {
-  const CheckboxTileWidget({
-    @required this.title,
-    @required this.onSelected,
-    @required this.value,
-    @required this.canEdit,
-  });
+  CheckboxTileWidget(
+      {required this.title,
+      required this.onSelected,
+      required this.value,
+      required this.canEdit,
+      this.checkBoxValue});
 
   final String title;
-  final String value;
-  final Function(dynamic selectedValue, String valueText) onSelected;
+  final String? value;
+  final Function(dynamic selectedValue, String? valueText) onSelected;
   final bool canEdit;
+  bool? checkBoxValue;
 
   @override
   _CheckboxTileWidgetState createState() => _CheckboxTileWidgetState();
 }
 
 class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
-  bool checkboxValue = false;
+  bool? checkboxValue = false;
   @override
   Widget build(BuildContext context) {
     var titleText;
@@ -30,7 +31,7 @@ class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
     if (dataList.length == 2) {
       imagePath = dataList[0];
       titleText = dataList[1];
-    }else{
+    } else {
       titleText = widget.title;
     }
     return Padding(
@@ -40,12 +41,13 @@ class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
       child: Row(
         children: [
           Checkbox(
-            value: checkboxValue,
+            value: widget.checkBoxValue,
             activeColor: Color(CommonUtil().getMyPrimaryColor()),
             onChanged: widget.canEdit
                 ? (value) {
                     setState(() {
                       checkboxValue = value;
+                      widget.checkBoxValue = value;
                     });
                     widget.onSelected(value, widget.value);
                   }

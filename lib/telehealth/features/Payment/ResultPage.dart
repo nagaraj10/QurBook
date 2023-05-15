@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,18 +22,18 @@ import 'PaymentPage.dart';
 
 class ResultPage extends StatefulWidget {
   final bool status;
-  final bool isFromSubscribe;
-  final String refNo;
-  Function(String) closePage;
-  final String paymentRetryUrl;
-  final String paymentId;
-  final String appointmentId;
-  final bool isFromRazor;
+  final bool? isFromSubscribe;
+  final String? refNo;
+  Function(String)? closePage;
+  final String? paymentRetryUrl;
+  final String? paymentId;
+  final String? appointmentId;
+  final bool? isFromRazor;
   final bool isPaymentFromNotification;
 
   ResultPage(
-      {Key key,
-      @required this.status,
+      {Key? key,
+      required this.status,
       this.refNo,
       this.closePage,
       this.isFromSubscribe,
@@ -48,12 +49,12 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPage extends State<ResultPage> {
-  bool status;
-  bool isFromSubscribe;
+  late bool status;
+  bool? isFromSubscribe;
 
   bool isShowRetry = false;
 
-  UpdatePaymentViewModel updatePaymentViewModel;
+  late UpdatePaymentViewModel updatePaymentViewModel;
 
   @override
   void initState() {
@@ -64,9 +65,9 @@ class _ResultPage extends State<ResultPage> {
 
     if (!status) {
       if (widget.appointmentId != null && widget.appointmentId != '') {
-        checkSlotsRetry(widget.appointmentId).then((value) {
+        checkSlotsRetry(widget.appointmentId!).then((value) {
           if (value != null) {
-            if (value?.isSuccess) {
+            if (value.isSuccess!) {
               callRefreshButtonState(true);
             } else {
               callRefreshButtonState(false);
@@ -76,7 +77,7 @@ class _ResultPage extends State<ResultPage> {
           }
         });
       } else {
-        if (widget?.isPaymentFromNotification) {
+        if (widget.isPaymentFromNotification) {
           FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
         } else {
           goToSlotPage();
@@ -130,7 +131,7 @@ class _ResultPage extends State<ResultPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
-                        isFromSubscribe
+                        isFromSubscribe!
                             ? PLAN_CONFIRM
                             : status
                                 ? APPOINTMENT_CONFIRM
@@ -145,7 +146,7 @@ class _ResultPage extends State<ResultPage> {
                     status
                         ? Text(
                             widget.refNo != null
-                                ? 'Ref.no: ' + widget.refNo
+                                ? 'Ref.no: ' + widget.refNo!
                                 : '',
                             style: TextStyle(
                                 fontSize: 16.0.sp,
@@ -165,10 +166,10 @@ class _ResultPage extends State<ResultPage> {
                           padding: EdgeInsets.all(12.0),
                           onPressed: () {
                             status
-                                ? widget.closePage(STR_SUCCESS)
-                                : widget.closePage(STR_FAILED);
+                                ? widget.closePage!(STR_SUCCESS)
+                                : widget.closePage!(STR_FAILED);
                             if (widget.isPaymentFromNotification) {
-                              status && !isFromSubscribe
+                              status && !isFromSubscribe!
                                   ? Get.offAllNamed(
                                       router.rt_Landing,
                                       arguments: LandingArguments(
@@ -177,7 +178,7 @@ class _ResultPage extends State<ResultPage> {
                                     )
                                   : Get.off(NotificationMain());
                             } else {
-                              status && !isFromSubscribe
+                              status && !isFromSubscribe!
                                   ? Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -219,12 +220,12 @@ class _ResultPage extends State<ResultPage> {
         padding: EdgeInsets.all(12.0),
         onPressed: () {
           if (widget.appointmentId != null && widget.appointmentId != '') {
-            checkSlotsRetry(widget.appointmentId).then((value) {
+            checkSlotsRetry(widget.appointmentId!).then((value) {
               if (value != null) {
-                if (value?.isSuccess) {
+                if (value.isSuccess!) {
                   goToPaymentPage();
                 } else {
-                  if (widget?.isPaymentFromNotification) {
+                  if (widget.isPaymentFromNotification) {
                     FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
                   } else {
                     goToSlotPage();
@@ -233,7 +234,7 @@ class _ResultPage extends State<ResultPage> {
               }
             });
           } else {
-            if (widget?.isPaymentFromNotification) {
+            if (widget.isPaymentFromNotification) {
               FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
             } else {
               goToSlotPage();
@@ -255,7 +256,7 @@ class _ResultPage extends State<ResultPage> {
   goToPaymentPage() {
     Navigator.pop(context);
     Navigator.pushReplacement(
-      Get.context,
+      Get.context!,
       MaterialPageRoute(
         builder: (context) => PaymentPage(
           redirectUrl: widget.paymentRetryUrl,
@@ -277,13 +278,13 @@ class _ResultPage extends State<ResultPage> {
 
   goToSlotPage() {
     Navigator.pop(context);
-    widget.closePage(STR_FAILED);
+    widget.closePage!(STR_FAILED);
   }
 
   Future<PaymentFailureRetryModel> checkSlotsRetry(String appointmentId) async {
-    PaymentFailureRetryModel paymentRetry =
+    PaymentFailureRetryModel? paymentRetry =
         await updatePaymentViewModel.checkSlotsRetry(appointmentId);
 
-    return paymentRetry;
+    return paymentRetry!;
   }
 }

@@ -1,9 +1,10 @@
+
 class Secret {
-  final Map myScerets;
+  final Map? myScerets;
 
   Secret({this.myScerets});
 
-  factory Secret.fromJson(Map<String, dynamic> jsonMap) {
+  factory Secret.fromJson(Map<String, dynamic>? jsonMap) {
     return Secret(myScerets: jsonMap);
   }
 

@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,15 +19,15 @@ class UserProfileImage extends StatelessWidget {
     this.circleColor,
   });
 
-  final MyProfileModel myProfile;
-  final Color textColor;
-  final Color circleColor;
+  final MyProfileModel? myProfile;
+  final Color? textColor;
+  final Color? circleColor;
 
   @override
   Widget build(BuildContext context) =>
       LayoutBuilder(builder: (context, constraints) {
         var isGoldMember =
-            Provider.of<UserPlansViewModel>(context)?.isGoldMember ?? false;
+            Provider.of<UserPlansViewModel>(context).isGoldMember;
         return Stack(
           children: [
             LayoutBuilder(
@@ -58,13 +59,13 @@ class UserProfileImage extends StatelessWidget {
                     child: (myProfile?.result != null &&
                             myProfile?.result?.profilePicThumbnailUrl != '')
                         ? Image.network(
-                            myProfile.result.profilePicThumbnailUrl,
+                            myProfile!.result!.profilePicThumbnailUrl!,
                             height: 50.0.h,
                             width: 50.0.h,
                             fit: BoxFit.cover,
                             headers: {
                               HttpHeaders.authorizationHeader:
-                                  PreferenceUtil.getStringValue(KEY_AUTHTOKEN),
+                                  PreferenceUtil.getStringValue(KEY_AUTHTOKEN)!,
                             },
                             errorBuilder: (context, exception, stackTrace) =>
                                 Container(
@@ -74,7 +75,7 @@ class UserProfileImage extends StatelessWidget {
                                   Color(CommonUtil().getMyPrimaryColor()),
                               child: Center(
                                 child: getFirstLastNameTextForProfile(
-                                  myProfile,
+                                  myProfile!,
                                   textColor: textColor,
                                 ),
                               ),

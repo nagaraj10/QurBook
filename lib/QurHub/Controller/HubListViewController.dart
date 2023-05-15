@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -19,13 +20,13 @@ import 'AddDeviceViewController.dart';
 class HubListViewController extends GetxController {
   RxBool loadingData = false.obs;
   RxBool searchingBleDevice = false.obs;
-  HubListResponse hubListResponse;
+  HubListResponse? hubListResponse;
   final _apiProvider = HubApiProvider();
-  SheelaBLEController _bleController;
-  String bleMacId = "";
-  String bleDeviceType = "";
-  String eid;
-  String uid;
+  late SheelaBLEController _bleController;
+  String? bleMacId = "";
+  String? bleDeviceType = "";
+  String? eid;
+  String? uid;
 
   @override
   onInit() {
@@ -43,8 +44,8 @@ class HubListViewController extends GetxController {
     try {
       loadingData.value = true;
       hubListResponse = null;
-      http.Response response = await _apiProvider.getHubList();
-      if (response.statusCode != 200 || (response.body ?? "").isEmpty) {
+      http.Response response = await (_apiProvider.getHubList());
+      if (response.statusCode != 200 || (response.body).isEmpty) {
         hubListResponse = null;
         return;
       }
@@ -60,7 +61,7 @@ class HubListViewController extends GetxController {
   Future<bool> callCreateVirtualHub() async {
     try {
       http.Response response = await _apiProvider.callCreateVirtualHub();
-      if (response.statusCode != 200 || (response.body ?? "").isEmpty) {
+      if (response.statusCode != 200 || (response.body).isEmpty) {
         FlutterToast().getToast(
           CommonUtil().validString(
             response.body,
@@ -71,7 +72,7 @@ class HubListViewController extends GetxController {
       }
       AddNetworkModel addNetworkModel =
           AddNetworkModel.fromJson(json.decode(response.body));
-      if (addNetworkModel.isSuccess) {
+      if (addNetworkModel.isSuccess!) {
         return true;
       } else {
         FlutterToast().getToast(
@@ -106,9 +107,9 @@ class HubListViewController extends GetxController {
           );
           return;
         }
-        bool isBluetoothEnable = false;
-        isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
-        if (!isBluetoothEnable) {
+        bool? isBluetoothEnable = false;
+        isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
+        if (!(isBluetoothEnable ?? false)) {
           FlutterToast().getToast(
             'Please turn on your bluetooth and try again',
             Colors.red,
@@ -159,14 +160,13 @@ class HubListViewController extends GetxController {
   unPairDevice(String deviceId) async {
     try {
       loadingData.value = true;
-      http.Response response = await _apiProvider.unPairDevice(deviceId);
+      http.Response? response = (await _apiProvider.unPairDevice(deviceId));
       if (response == null) {
         FlutterToast().getToast('Oops Something went wrong', Colors.red);
       }
       loadingData.value = false;
-      Future.delayed(const Duration(microseconds: 10)).then((value) {
-        getHubList();
-      });
+      await Future.delayed(Duration(microseconds: 10));
+      getHubList();
     } catch (e) {
       printError(info: e.toString());
       loadingData.value = false;
@@ -191,7 +191,8 @@ class HubListViewController extends GetxController {
             () => AddDeviceViewController(),
           ),
         ),
-      ).then(
+      )!
+          .then(
         (value) {
           getHubList();
           bleMacId = "";

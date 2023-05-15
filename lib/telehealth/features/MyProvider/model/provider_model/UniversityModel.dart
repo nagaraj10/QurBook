@@ -1,8 +1,9 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class University {
-  String id;
-  String name;
+  String? id;
+  String? name;
 
   University({this.id, this.name});
 

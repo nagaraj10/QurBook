@@ -1,11 +1,12 @@
+
 import '../constants/constants.dart';
 
 class ResendOtpModel {
-  String userName;
-  String source;
-  String userId;
-  String message;
-  bool isSuccess;
+  String? userName;
+  String? source;
+  String? userId;
+  String? message;
+  bool? isSuccess;
   ResendOtpModel({this.userName, this.source, this.userId, this.message, this.isSuccess});
 
   ResendOtpModel.fromJson(Map<String, dynamic> json) {

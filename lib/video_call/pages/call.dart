@@ -29,24 +29,24 @@ import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/video_call/utils/videoicon_provider.dart';
 import 'package:myfhb/video_call/widgets/audiocall_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:screen/screen.dart';
+// import 'package:screen/screen.dart';  FU2.5
 import 'package:myfhb/constants/router_variable.dart' as router;
 import '../utils/settings.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
-  String channelName;
+  String? channelName;
 
   /// non-modifiable client role of the page
-  ClientRole role;
-  CallArguments arguments;
+  ClientRole? role;
+  CallArguments? arguments;
 
   ///check call is made from NS
-  bool isAppExists;
-  RtcEngine rtcEngine;
-  String doctorName;
-  bool isWeb;
+  bool? isAppExists;
+  RtcEngine? rtcEngine;
+  String? doctorName;
+  bool? isWeb;
 
   /// Creates a call page with given channel name.
   CallPage(
@@ -69,7 +69,7 @@ class _CallPageState extends State<CallPage> {
   ///create method channel for on going NS for call
   static const platform = const MethodChannel(parameters.ongoing_channel);
   final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
   bool _internetconnection = false;
   bool isCustomViewShown = false;
   int videoPauseResumeState = 0;
@@ -78,9 +78,9 @@ class _CallPageState extends State<CallPage> {
   //bool _isAudioCall = false;
   bool _isOnSpeaker = false;
   //final myDB = Firestore.instance;
-  final hideStatus = Provider.of<HideProvider>(Get.context, listen: false);
+  final hideStatus = Provider.of<HideProvider>(Get.context!, listen: false);
   final audioStatus =
-      Provider.of<AudioCallProvider>(Get.context, listen: false);
+      Provider.of<AudioCallProvider>(Get.context!, listen: false);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -92,7 +92,7 @@ class _CallPageState extends State<CallPage> {
     // widget.rtcEngine.destroy();
     cancelOnGoingNS();
     super.dispose();
-    Screen.keepOn(false);
+    //Screen.keepOn(false);  FU2.5
     videoPauseResumeState = 0;
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -108,15 +108,15 @@ class _CallPageState extends State<CallPage> {
     super.initState();
     //_isAudioCall = audioStatus?.isAudioCall;
     if (widget.arguments != null) {
-      widget.channelName = widget.arguments.channelName;
-      widget.role = widget.arguments.role;
-      widget.isAppExists = widget.arguments.isAppExists;
-      widget.doctorName = widget.arguments.userName;
+      widget.channelName = widget.arguments!.channelName;
+      widget.role = widget.arguments!.role;
+      widget.isAppExists = widget.arguments!.isAppExists;
+      widget.doctorName = widget.arguments!.userName;
     }
 
     // initialize agora sdk
     initialize();
-    Screen.keepOn(true);
+    // Screen.keepOn(true);  FU2.5
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     listenForVideoCallRequest();
@@ -178,33 +178,40 @@ class _CallPageState extends State<CallPage> {
     }
 
     //todo name has to be change with dynamic
-    widget?.rtcEngine?.setEventHandler(rtcEngineEventHandler);
+    widget.rtcEngine?.setEventHandler(rtcEngineEventHandler);
     _addAgoraEventHandlers();
     await _initAgoraRtcEngine();
-    await widget?.rtcEngine?.joinChannel(null, widget.channelName, null, 0);
+    await widget.rtcEngine?.joinChannel(null, widget.channelName!, null, 0);
     await platform.invokeMethod(
         parameters.startOnGoingNS, {parameters.mode: parameters.start});
   }
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
-    if (!audioStatus?.isAudioCall) {
+    if (!audioStatus.isAudioCall) {
       //* video call
       VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-      configuration.dimensions = widget?.isWeb
+      configuration.dimensions = widget.isWeb!
           ? VideoDimensions(width: 1280, height: 720)
           : VideoDimensions(width: 640, height: 360);
       configuration.frameRate = VideoFrameRate.Fps15;
       configuration.bitrate = 200;
-      await widget?.rtcEngine?.setVideoEncoderConfiguration(configuration);
-      await widget?.rtcEngine?.enableVideo();
-    } else {
-      //* audio call
-
-    }
-    await widget?.rtcEngine?.setEnableSpeakerphone(true);
-    await widget?.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await widget?.rtcEngine?.setClientRole(widget.role);
+      await widget.rtcEngine?.setVideoEncoderConfiguration(configuration);
+      Future.delayed(const Duration(seconds: 5)).then((value) {
+        setState(() {
+          widget.rtcEngine?.enableVideo();
+        });
+      });
+    } 
+    await widget.rtcEngine?.setEnableSpeakerphone(true);
+    await widget.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await widget.rtcEngine?.setClientRole(widget.role!);
+  await widget.rtcEngine?.muteLocalAudioStream(true);
+    Future.delayed(const Duration(seconds: 3)).then((value) {
+      setState(() {
+        widget.rtcEngine?.muteLocalAudioStream(false);
+      });
+    });
   }
 
   /// Add agora event handlers
@@ -291,7 +298,7 @@ class _CallPageState extends State<CallPage> {
               PageNavigator.goToPermanent(context, router.rt_Landing);
             }
           } else {
-            if (widget.isAppExists) {
+            if (widget.isAppExists!) {
               PageNavigator.goToPermanent(context, router.rt_Landing);
             } else {
               Navigator.of(context).pushNamedAndRemoveUntil(
@@ -479,18 +486,17 @@ class _CallPageState extends State<CallPage> {
         CommonUtil.isRemoteUserOnPause = true;
         if (CommonUtil.isLocalUserOnPause) {
           CommonUtil.isLocalUserOnPause = false;
-          await widget?.rtcEngine?.disableVideo();
-          await widget?.rtcEngine?.enableLocalVideo(false);
-          await widget?.rtcEngine?.muteLocalVideoStream(true);
+          await widget.rtcEngine?.disableVideo();
+          await widget.rtcEngine?.enableLocalVideo(false);
+          await widget.rtcEngine?.muteLocalVideoStream(true);
 
-          Provider?.of<HideProvider>(context, listen: false)?.swithToAudio();
+          Provider.of<HideProvider>(context, listen: false).swithToAudio();
           Provider.of<AudioCallProvider>(context, listen: false)
-              ?.enableAudioCall();
-          Provider?.of<VideoIconProvider>(context, listen: false)
-              ?.turnOffVideo();
+              .enableAudioCall();
+          Provider.of<VideoIconProvider>(context, listen: false).turnOffVideo();
         } else {
-          if (!(Provider?.of<AudioCallProvider>(Get.context, listen: false)
-              ?.isAudioCall)) {
+          if (!(Provider.of<AudioCallProvider>(Get.context!, listen: false)
+              .isAudioCall)) {
             FlutterToast().getToast(
                 'Doctor/Care Coordinator has paused the video', Colors.red);
           }
@@ -569,7 +575,7 @@ class _CallPageState extends State<CallPage> {
     };
 
     if (user_id != null && user_id != '') {
-      widget.rtcEngine.getUserInfoByUid(user_id).then((value) {
+      widget.rtcEngine!.getUserInfoByUid(user_id).then((value) {
         //print('connected user info ${value?.userAccount}');
       });
     }
@@ -774,7 +780,7 @@ class _CallPageState extends State<CallPage> {
             itemCount: _infoStrings.length,
             itemBuilder: (BuildContext context, int index) {
               if (_infoStrings.isEmpty) {
-                return null;
+                return Container();
               }
               return Padding(
                 padding: const EdgeInsets.symmetric(
@@ -831,7 +837,7 @@ class _CallPageState extends State<CallPage> {
                     children: [
                       Container(
                         child: Text(
-                          '${widget?.doctorName} requesting to switch to video call',
+                          '${widget.doctorName} requesting to switch to video call',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20.0.sp,
@@ -878,22 +884,22 @@ class _CallPageState extends State<CallPage> {
                                       .update(newStatus.toMap());
                                 return;
                               } else {
-                                await widget?.rtcEngine?.enableVideo();
-                                await widget?.rtcEngine?.enableLocalVideo(true);
-                                await widget?.rtcEngine
+                                await widget.rtcEngine?.enableVideo();
+                                await widget.rtcEngine?.enableLocalVideo(true);
+                                await widget.rtcEngine
                                     ?.muteLocalVideoStream(false);
-                                Provider?.of<HideProvider>(Get.context,
+                                Provider.of<HideProvider>(Get.context!,
                                         listen: false)
-                                    ?.swithToVideo();
-                                Provider.of<AudioCallProvider>(Get.context,
+                                    .swithToVideo();
+                                Provider.of<AudioCallProvider>(Get.context!,
                                         listen: false)
-                                    ?.disableAudioCall();
-                                Provider?.of<VideoIconProvider>(Get.context,
+                                    .disableAudioCall();
+                                Provider.of<VideoIconProvider>(Get.context!,
                                         listen: false)
-                                    ?.turnOnVideo();
-                                Provider.of<RTCEngineProvider>(Get.context,
+                                    .turnOnVideo();
+                                Provider.of<RTCEngineProvider>(Get.context!,
                                         listen: false)
-                                    ?.changeLocalVideoStatus(false);
+                                    .changeLocalVideoStatus(false);
                                 var newStatus = VideoCallStatus();
                                 newStatus.setDefaultValues();
                                 newStatus.acceptedByMobile = 1;
@@ -915,7 +921,7 @@ class _CallPageState extends State<CallPage> {
             } else if (recStatus.videoRequestFromMobile == 0 ||
                 recStatus.videoRequestFromWeb == 0) {
               // need to dismiss if the video request pop is shown
-              if (Get.isDialogOpen) {
+              if (Get.isDialogOpen!) {
                 Get.back();
                 Get.rawSnackbar(
                   messageText: Center(
@@ -936,17 +942,17 @@ class _CallPageState extends State<CallPage> {
                 );
               }
               final audioStatus =
-                  Provider.of<AudioCallProvider>(Get.context, listen: false);
-              if (!(audioStatus.isAudioCall ?? false)) {
-                await widget?.rtcEngine?.disableVideo();
-                await widget?.rtcEngine?.enableLocalVideo(false);
-                await widget?.rtcEngine?.muteLocalVideoStream(true);
-                Provider?.of<HideProvider>(Get.context, listen: false)
-                    ?.swithToAudio();
-                Provider.of<AudioCallProvider>(Get.context, listen: false)
-                    ?.enableAudioCall();
-                Provider?.of<VideoIconProvider>(Get.context, listen: false)
-                    ?.turnOffVideo();
+                  Provider.of<AudioCallProvider>(Get.context!, listen: false);
+              if (!(audioStatus.isAudioCall)) {
+                await widget.rtcEngine?.disableVideo();
+                await widget.rtcEngine?.enableLocalVideo(false);
+                await widget.rtcEngine?.muteLocalVideoStream(true);
+                Provider.of<HideProvider>(Get.context!, listen: false)
+                    .swithToAudio();
+                Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                    .enableAudioCall();
+                Provider.of<VideoIconProvider>(Get.context!, listen: false)
+                    .turnOffVideo();
               }
             } else if (recStatus.acceptedByMobile == 1 ||
                 recStatus.acceptedByWeb == 1) {
@@ -954,20 +960,20 @@ class _CallPageState extends State<CallPage> {
               if (CommonUtil.isVideoRequestSent) {
                 CommonUtil.isVideoRequestSent = false;
                 Get.back();
-                Provider?.of<HideProvider>(Get.context, listen: false)
-                    ?.swithToVideo();
-                Provider.of<AudioCallProvider>(Get.context, listen: false)
-                    ?.disableAudioCall();
-                Provider?.of<VideoIconProvider>(Get.context, listen: false)
-                    ?.turnOnVideo();
-                Provider.of<RTCEngineProvider>(Get.context, listen: false)
-                    ?.changeLocalVideoStatus(false);
+                Provider.of<HideProvider>(Get.context!, listen: false)
+                    .swithToVideo();
+                Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                    .disableAudioCall();
+                Provider.of<VideoIconProvider>(Get.context!, listen: false)
+                    .turnOnVideo();
+                Provider.of<RTCEngineProvider>(Get.context!, listen: false)
+                    .changeLocalVideoStatus(false);
               }
             } else if (recStatus.acceptedByMobile == 0 ||
                 recStatus.acceptedByWeb == 0) {
               // video call request is reject on patient end
               CommonUtil.isVideoRequestSent = false;
-              if (Get.isDialogOpen) {
+              if (Get.isDialogOpen!) {
                 Get.back();
                 Get.rawSnackbar(
                   messageText: Center(
@@ -986,9 +992,9 @@ class _CallPageState extends State<CallPage> {
                   ),
                   backgroundColor: Colors.red.shade400,
                 );
-                await widget?.rtcEngine?.disableVideo();
-                await widget?.rtcEngine?.enableLocalVideo(false);
-                await widget?.rtcEngine?.muteLocalVideoStream(true);
+                await widget.rtcEngine?.disableVideo();
+                await widget.rtcEngine?.enableLocalVideo(false);
+                await widget.rtcEngine?.muteLocalVideoStream(true);
               }
             }
           },
@@ -1011,7 +1017,7 @@ class _CallPageState extends State<CallPage> {
             if (status.isAudioCall) {
               return InkWell(
                 child: AudioCallScreen(
-                  patName: widget?.doctorName,
+                  patName: widget.doctorName,
                 ),
               );
             } else {
@@ -1054,7 +1060,7 @@ class _CallPageState extends State<CallPage> {
                   if (Platform.isIOS) {
                     PageNavigator.goToPermanent(context, router.rt_Landing);
                   } else {
-                    if (widget.isAppExists) {
+                    if (widget.isAppExists!) {
                       PageNavigator.goToPermanent(context, router.rt_Landing);
                     } else {
                       Navigator.of(context).pushNamedAndRemoveUntil(

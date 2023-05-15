@@ -1,10 +1,11 @@
+
 import 'package:myfhb/claim/model/claimmodel/DocumentMetadata.dart';
 
 class ClaimRecordDetailsResult {
   dynamic claimId;
   dynamic claimNumber;
   dynamic submitDate;
-  List<DocumentMetadata> documentMetadata;
+  List<DocumentMetadata>? documentMetadata;
   dynamic submittedBy;
   dynamic submittedByFirstName;
   dynamic submittedByMiddleName;
@@ -13,7 +14,7 @@ class ClaimRecordDetailsResult {
   dynamic submittedForFirstName;
   dynamic submittedForMiddleName;
   dynamic submittedForLastName;
-  bool isSignedIn;
+  bool? isSignedIn;
   dynamic healthOrganizationId;
   dynamic phoneNumber;
   dynamic status;
@@ -52,7 +53,7 @@ class ClaimRecordDetailsResult {
     if (json['documentMetadata'] != null) {
       documentMetadata = <DocumentMetadata>[];
       json['documentMetadata'].forEach((v) {
-        documentMetadata.add(new DocumentMetadata.fromJson(v));
+        documentMetadata!.add(new DocumentMetadata.fromJson(v));
       });
     }
     submittedBy = json['submittedBy'];
@@ -85,7 +86,7 @@ class ClaimRecordDetailsResult {
     data['submitDate'] = this.submitDate;
     if (this.documentMetadata != null) {
       data['documentMetadata'] =
-          this.documentMetadata.map((v) => v.toJson()).toList();
+          this.documentMetadata!.map((v) => v.toJson()).toList();
     }
     data['submittedBy'] = this.submittedBy;
     data['submittedByFirstName'] = this.submittedByFirstName;

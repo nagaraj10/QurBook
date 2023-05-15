@@ -1,21 +1,22 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class Hospital {
-  int localHospitalId;
-  String addressLine1;
-  String addressLine2;
-  String branch;
-  String city;
-  String description;
-  String email;
-  String id;
-  bool isUserDefined;
-  String latitude;
-  String logoThumbnail;
-  String longitude;
-  String name;
-  String website;
-  String zipcode;
+  int? localHospitalId;
+  String? addressLine1;
+  String? addressLine2;
+  String? branch;
+  String? city;
+  String? description;
+  String? email;
+  String? id;
+  bool? isUserDefined;
+  String? latitude;
+  String? logoThumbnail;
+  String? longitude;
+  String? name;
+  String? website;
+  String? zipcode;
 
   Hospital(
       {this.localHospitalId,

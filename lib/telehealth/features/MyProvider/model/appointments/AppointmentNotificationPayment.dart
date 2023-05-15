@@ -1,8 +1,9 @@
+
 import 'package:myfhb/my_providers/models/User.dart';
 
 class AppointmentNotificationPayment {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   AppointmentNotificationPayment({this.isSuccess, this.result});
 
@@ -16,16 +17,16 @@ class AppointmentNotificationPayment {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  Appointment appointment;
-  Doctor doctor;
-  Payment payment;
+  Appointment? appointment;
+  Doctor? doctor;
+  Payment? payment;
 
   Result({this.appointment, this.doctor});
 
@@ -45,39 +46,39 @@ class Result {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.appointment != null) {
-      data['appointment'] = this.appointment.toJson();
+      data['appointment'] = this.appointment!.toJson();
     }
     if (this.doctor != null) {
-      data['doctor'] = this.doctor.toJson();
+      data['doctor'] = this.doctor!.toJson();
     }
     if (this.payment != null) {
-      data['payment'] = this.payment.toJson();
+      data['payment'] = this.payment!.toJson();
     }
     return data;
   }
 }
 
 class Appointment {
-  String id;
-  String bookingId;
-  String doctorSessionId;
-  String plannedStartDateTime;
-  String plannedEndDateTime;
-  String actualStartDateTime;
-  String actualEndDateTime;
-  int slotNumber;
-  bool isHealthRecordShared;
-  String plannedFollowupDate;
-  bool isRefunded;
-  bool isFollowupFee;
-  bool isFollowup;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  bool isBookedByProvider;
-  bool isCallDenied;
-  AppointmentStatus status;
-  BookedFor bookedFor;
+  String? id;
+  String? bookingId;
+  String? doctorSessionId;
+  String? plannedStartDateTime;
+  String? plannedEndDateTime;
+  String? actualStartDateTime;
+  String? actualEndDateTime;
+  int? slotNumber;
+  bool? isHealthRecordShared;
+  String? plannedFollowupDate;
+  bool? isRefunded;
+  bool? isFollowupFee;
+  bool? isFollowup;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isBookedByProvider;
+  bool? isCallDenied;
+  AppointmentStatus? status;
+  BookedFor? bookedFor;
 
   Appointment(
       {this.id,
@@ -149,25 +150,25 @@ class Appointment {
     data['isBookedByProvider'] = this.isBookedByProvider;
     data['isCallDenied'] = this.isCallDenied;
     if (this.status != null) {
-      data['status'] = this.status.toJson();
+      data['status'] = this.status!.toJson();
     }
     if (this.bookedFor != null) {
-      data['bookedFor'] = this.bookedFor.toJson();
+      data['bookedFor'] = this.bookedFor!.toJson();
     }
     return data;
   }
 }
 
 class AppointmentStatus {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   AppointmentStatus(
       {this.id,
@@ -208,35 +209,35 @@ class AppointmentStatus {
 }
 
 class BookedFor {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
-  String communicationPreferences;
-  String medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  String providerId;
-  AdditionalInfo additionalInfo;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
+  String? communicationPreferences;
+  String? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  String? providerId;
+  AdditionalInfo? additionalInfo;
 
   BookedFor(
       {this.id,
@@ -334,22 +335,22 @@ class BookedFor {
     data['lastModifiedOn'] = this.lastModifiedOn;
     data['providerId'] = this.providerId;
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo!.toJson();
     }
     return data;
   }
 }
 
 class AdditionalInfo {
-  int age;
-  String height;
-  String offset;
-  String weight;
-  String language;
-  String mrdNumber;
-  String uhidNumber;
-  String visitReason;
-  String patientHistory;
+  int? age;
+  String? height;
+  String? offset;
+  String? weight;
+  String? language;
+  String? mrdNumber;
+  String? uhidNumber;
+  String? visitReason;
+  String? patientHistory;
 
   AdditionalInfo(
       {this.age,
@@ -393,18 +394,18 @@ class AdditionalInfo {
 }
 
 class Doctor {
-  String id;
-  String specialization;
-  bool isTelehealthEnabled;
-  bool isMciVerified;
-  bool isActive;
-  bool isWelcomeMailSent;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  bool isResident;
-  BusinessDetail businessDetail;
-  User user;
+  String? id;
+  String? specialization;
+  bool? isTelehealthEnabled;
+  bool? isMciVerified;
+  bool? isActive;
+  bool? isWelcomeMailSent;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  bool? isResident;
+  BusinessDetail? businessDetail;
+  User? user;
 
   Doctor(
       {this.id,
@@ -450,17 +451,17 @@ class Doctor {
     data['lastModifiedOn'] = this.lastModifiedOn;
     data['isResident'] = this.isResident;
     if (this.businessDetail != null) {
-      data['businessDetail'] = this.businessDetail.toJson();
+      data['businessDetail'] = this.businessDetail!.toJson();
     }
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user!.toJson();
     }
     return data;
   }
 }
 
 class BusinessDetail {
-  int experience;
+  int? experience;
 
   BusinessDetail({this.experience});
 
@@ -476,9 +477,9 @@ class BusinessDetail {
 }
 
 class Payment {
-  String id;
-  String longUrl;
-  String amount;
+  String? id;
+  String? longUrl;
+  String? amount;
 
   Payment({this.id, this.longUrl, this.amount});
 

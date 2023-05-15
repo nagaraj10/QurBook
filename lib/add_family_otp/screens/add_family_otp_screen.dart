@@ -1,3 +1,4 @@
+
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class AddFamilyOTPScreen extends StatefulWidget {
-  AddFamilyOTPArguments arguments;
+  AddFamilyOTPArguments? arguments;
 
   AddFamilyOTPScreen({this.arguments});
 
@@ -40,7 +41,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
   TextEditingController controller6 = TextEditingController();
   TextEditingController currController = TextEditingController();
 
-  AddFamilyOTPBloc _addFamilyOTPBloc;
+  late AddFamilyOTPBloc _addFamilyOTPBloc;
 
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
 
@@ -203,7 +204,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
               ),
               child: Text(
                 toBeginningOfSentenceCase(
-                    '${widget.arguments.enteredFirstName} ${widget.arguments.enteredMiddleName} ${widget.arguments.enteredLastName}'),
+                    '${widget.arguments!.enteredFirstName} ${widget.arguments!.enteredMiddleName} ${widget.arguments!.enteredLastName}')!,
                 style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                   fontWeight: FontWeight.w500,
@@ -261,8 +262,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                   ),
                   FlatButton(
                     onPressed: () {
-                      generateOtp(widget.arguments.selectedCountryCode,
-                          widget.arguments.enteredMobNumber);
+                      generateOtp(widget.arguments!.selectedCountryCode,
+                          widget.arguments!.enteredMobNumber);
                     },
                     child: Text(
                       variable.strResendCode,
@@ -407,8 +408,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                       CommonConstants.add_family_otp;
                                   _addFamilyOTPBloc
                                       .verifyAddFamilyOtp(
-                                          widget.arguments.enteredMobNumber,
-                                          widget.arguments.selectedCountryCode,
+                                          widget.arguments!.enteredMobNumber,
+                                          widget.arguments!.selectedCountryCode!,
                                           otp)
                                       .then(checkOTPResponse);
                                 } else {
@@ -523,8 +524,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         });
   }
 
-  void checkOTPResponse(AddFamilyOTPResponse addFamilyOTPResponse) {
-    if (addFamilyOTPResponse.isSuccess) {
+  void checkOTPResponse(AddFamilyOTPResponse? addFamilyOTPResponse) {
+    if (addFamilyOTPResponse!.isSuccess!) {
       Alert.displayConfirmation(
         context,
         title: variable.strSucess,
@@ -533,12 +534,12 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
           Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
               arguments: AddFamilyUserInfoArguments(
                 fromClass: CommonConstants.add_family,
-                enteredFirstName: widget.arguments.enteredFirstName,
-                enteredMiddleName: widget.arguments.enteredMiddleName,
-                enteredLastName: widget.arguments.enteredLastName,
-                relationShip: widget.arguments.relationShip,
-                isPrimaryNoSelected: widget.arguments.isPrimaryNoSelected,
-                addFamilyUserInfo: addFamilyOTPResponse.result ?? '',
+                enteredFirstName: widget.arguments!.enteredFirstName,
+                enteredMiddleName: widget.arguments!.enteredMiddleName,
+                enteredLastName: widget.arguments!.enteredLastName,
+                relationShip: widget.arguments!.relationShip,
+                isPrimaryNoSelected: widget.arguments!.isPrimaryNoSelected,
+                addFamilyUserInfo: addFamilyOTPResponse.result ?? '' as Result?,
                 isForFamilyAddition: false,
                 isFromAppointmentOrSlotPage: false,
                 isForFamily: false,
@@ -551,21 +552,21 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     }
   }
 
-  void generateOtp(String selectedCountryCode, String enteredMobNumber) {
+  void generateOtp(String? selectedCountryCode, String? enteredMobNumber) {
     var _familyListBloc = FamilyListBloc();
 
     final signInData = {};
     signInData[variable.strCountryCode] = '+$selectedCountryCode';
     signInData[variable.strPhoneNumber] = enteredMobNumber;
     signInData[variable.strisPrimaryUser] =
-        widget.arguments.isPrimaryNoSelected;
-    signInData[variable.strFirstName] = widget.arguments.enteredFirstName;
+        widget.arguments!.isPrimaryNoSelected;
+    signInData[variable.strFirstName] = widget.arguments!.enteredFirstName;
     signInData[variable.strMiddleName] =
-        widget.arguments.enteredMiddleName.isNotEmpty
-            ? widget.arguments.enteredMiddleName
+        widget.arguments!.enteredMiddleName!.isNotEmpty
+            ? widget.arguments!.enteredMiddleName
             : '';
-    signInData[variable.strLastName] = widget.arguments.enteredLastName;
-    signInData[variable.strRelation] = widget.arguments.relationShip.id;
+    signInData[variable.strLastName] = widget.arguments!.enteredLastName;
+    signInData[variable.strRelation] = widget.arguments!.relationShip!.id;
     signInData[variable.strOperation] = CommonConstants.user_linking;
 
     signInData[parameters.strSourceId] = parameters.strSrcIdVal;
@@ -573,11 +574,11 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     signInData[parameters.strRoleId] = parameters.strRoleIdVal;
     final jsonString = convert.jsonEncode(signInData);
 
-    if (widget.arguments.isPrimaryNoSelected) {
+    if (widget.arguments!.isPrimaryNoSelected!) {
       _familyListBloc
           .postUserLinkingForPrimaryNo(jsonString)
           .then((addFamilyOTPResponse) {
-        if (addFamilyOTPResponse.isSuccess) {
+        if (addFamilyOTPResponse!.isSuccess!) {
           FHBBasicWidget()
               .showInSnackBar('New Family has been added', scaffold_state);
         } else {
@@ -587,10 +588,10 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
       });
     } else {
       _familyListBloc.postUserLinking(jsonString).then((userLinking) {
-        if (userLinking.success && userLinking.status == 200) {
-          FHBBasicWidget().showInSnackBar(userLinking.message, scaffold_state);
+        if (userLinking!.success! && userLinking.status == 200) {
+          FHBBasicWidget().showInSnackBar(userLinking.message!, scaffold_state);
         } else {
-          FHBBasicWidget().showInSnackBar(userLinking.message, scaffold_state);
+          FHBBasicWidget().showInSnackBar(userLinking.message!, scaffold_state);
         }
       });
     }

@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -8,8 +9,8 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 
 class ShowImage extends StatefulWidget {
-  final List<String> filePathList;
-  final String filePath;
+  final List<String?>? filePathList;
+  final String? filePath;
 
   ShowImage({this.filePath,this.filePathList});
 
@@ -21,7 +22,7 @@ class _ShowImageState extends State<ShowImage> {
   int _current = 0;
   int index = 0;
   int length = 0;
-  CarouselController carouselSlider;
+  CarouselController? carouselSlider;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class _ShowImageState extends State<ShowImage> {
                       .of(context)
                       .pop),
             ),
-            Expanded(flex: 7, child: widget.filePathList.length>0?getCarousalImage(widget.filePathList):showImage(widget.filePath)),
+            Expanded(flex: 7, child: widget.filePathList!.length>0?getCarousalImage(widget.filePathList):showImage(widget.filePath!)),
           ],
         ),
       ),
@@ -70,7 +71,7 @@ class _ShowImageState extends State<ShowImage> {
       ),);
   }
 
-  Widget getCarousalImage(List<String> imagesPath) {
+  Widget getCarousalImage(List<String?>? imagesPath) {
     if (imagesPath != null && imagesPath.isNotEmpty) {
       index = _current + 1;
       _current = 0;
@@ -87,7 +88,7 @@ class _ShowImageState extends State<ShowImage> {
               items: imagesPath.map((imgUrl) {
                 return Builder(
                   builder: (context) {
-                    return showImage(imgUrl);
+                    return showImage(imgUrl!);
                   },
                 );
               }).toList(),

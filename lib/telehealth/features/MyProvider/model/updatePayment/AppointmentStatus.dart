@@ -1,7 +1,8 @@
+
 class AppointmentStatus {
-  String code;
-  String name;
-  String description;
+  String? code;
+  String? name;
+  String? description;
 
   AppointmentStatus({this.code, this.name, this.description});
 

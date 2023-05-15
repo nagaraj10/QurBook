@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -18,7 +19,7 @@ class NetworkScreen extends StatelessWidget {
               '${DateTime.now().difference(mInitialTime).inSeconds} secs'
         });
         Future.value(false);
-      },
+      } as Future<bool> Function()?,
       child: Scaffold(
         body: Center(
           child: Column(

@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 import '../../models/field_response_model.dart';
 import 'checkbox_tile_widget.dart';
 
 class FormDataCheckbox extends StatefulWidget {
-  const FormDataCheckbox({
-    @required this.fieldData,
-    @required this.updateValue,
-    @required this.canEdit,
-    this.isFromQurHomeSymptom = false,
-  });
+  const FormDataCheckbox(
+      {required this.fieldData,
+      required this.updateValue,
+      required this.canEdit,
+      this.isFromQurHomeSymptom = false,
+      this.vitalsData,
+      required this.isChanged});
 
   final FieldModel fieldData;
   final Function(
     FieldModel updatedFieldData, {
-    bool isAdd,
-    String title,
+    bool? isAdd,
+    String? title,
   }) updateValue;
   final bool canEdit;
   final bool isFromQurHomeSymptom;
+  final VitalsData? vitalsData;
+  final Function(bool isChanged) isChanged;
 
   @override
   _FormDataCheckboxState createState() => _FormDataCheckboxState();
@@ -27,14 +31,25 @@ class FormDataCheckbox extends StatefulWidget {
 
 class _FormDataCheckboxState extends State<FormDataCheckbox> {
   List<Widget> checkboxWidget = [];
+  List checkBoxListSelected = [];
 
   @override
   void initState() {
     super.initState();
+    try {
+      checkBoxListSelected = getSelectedValue(widget.vitalsData);
+      if (checkBoxListSelected != null && checkBoxListSelected.length > 0) {
+        for (String val in checkBoxListSelected) {
+          if (val != "" && val != null) {
+            setValuesInCheckbox(true, val);
+          }
+        }
+      }
+    } catch (e) {}
   }
 
   List<Widget> loadCheckboxItems() {
-    final checkboxList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    final checkboxList = (widget.fieldData.fdata ?? '')?.split('|');
     if (checkboxList.isNotEmpty && checkboxList.length.isEven) {
       checkboxWidget.clear();
       for (var index = 0; index < checkboxList.length; index++) {
@@ -43,17 +58,11 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
             canEdit: widget.canEdit,
             title: checkboxList[index + 1] ?? '',
             value: checkboxList[index],
+            checkBoxValue:
+                getCondition(checkBoxListSelected, checkboxList[index]),
             onSelected: (selectedValue, valueText) {
-              final updatedFieldData = widget.fieldData;
-              updatedFieldData.value = valueText;
-              if (selectedValue) {
-                widget.updateValue(updatedFieldData,
-                    isAdd: true, title: '${updatedFieldData.title}_$valueText');
-              } else {
-                widget.updateValue(updatedFieldData,
-                    isAdd: false,
-                    title: '${updatedFieldData.title}_$valueText');
-              }
+              setValuesInCheckbox(selectedValue, valueText);
+              widget.isChanged(true);
             },
           ),
         );
@@ -69,7 +78,7 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget?.fieldData != null)
+          if (widget.fieldData != null)
             Text(
               CommonUtil().showDescriptionTextForm(widget.fieldData),
               style: TextStyle(
@@ -89,5 +98,34 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
         ],
       ),
     );
+  }
+
+  getSelectedValue(VitalsData? vitalsData) {
+    var selectedCheckboxItems = vitalsData?.value?.toString().split("|");
+    return selectedCheckboxItems;
+  }
+
+  getCondition(var checkedList, String title) {
+    try {
+      bool condition = false;
+      if (checkedList.contains(title))
+        return true;
+      else
+        return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  void setValuesInCheckbox(selectedValue, valueText) {
+    final updatedFieldData = widget.fieldData;
+    updatedFieldData.value = valueText;
+    if (selectedValue) {
+      widget.updateValue(updatedFieldData,
+          isAdd: true, title: '${updatedFieldData.title}_$valueText');
+    } else {
+      widget.updateValue(updatedFieldData,
+          isAdd: false, title: '${updatedFieldData.title}_$valueText');
+    }
   }
 }

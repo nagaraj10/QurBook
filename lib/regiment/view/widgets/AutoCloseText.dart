@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 
 class AutoCloseText extends StatefulWidget {
-  AutoCloseText({Key key, this.needReload = false}) : super(key: key);
+  AutoCloseText({Key? key, this.needReload = false}) : super(key: key);
 
   bool needReload;
 
@@ -17,7 +18,7 @@ class AutoCloseText extends StatefulWidget {
 }
 
 class _AutoCloseTextState extends State<AutoCloseText> {
-  Timer timerRun;
+  late Timer timerRun;
   int start = 5;
 
   @override
@@ -51,7 +52,7 @@ class _AutoCloseTextState extends State<AutoCloseText> {
           });
           Get.back();
           if (widget.needReload) {
-            Provider.of<RegimentViewModel>(Get.context, listen: false)
+            Provider.of<RegimentViewModel>(Get.context!, listen: false)
                 .cachedEvents = [];
             await Provider.of<RegimentViewModel>(context, listen: false)
                 .fetchRegimentData();

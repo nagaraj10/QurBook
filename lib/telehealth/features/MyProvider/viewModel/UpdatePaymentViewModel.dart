@@ -1,3 +1,4 @@
+
 import 'package:myfhb/plan_dashboard/model/UpdatePaymentStatusSubscribe.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/PaymentFailureRetryModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
@@ -11,7 +12,7 @@ class UpdatePaymentViewModel {
   PaymentFailureRetryModel paymentFailureRetryModel =
   new PaymentFailureRetryModel();
 
-  Future<UpdatePaymentModel> updatePaymentStatus(
+  Future<UpdatePaymentModel?> updatePaymentStatus(
       String paymentId,
       String paymentOrderId,
       String paymentRequestId,
@@ -26,7 +27,7 @@ class UpdatePaymentViewModel {
     } catch (e) {}
   }
 
-  Future<UpdatePaymentStatusSubscribe> updatePaymentSubscribe(
+  Future<UpdatePaymentStatusSubscribe?> updatePaymentSubscribe(
       String paymentId,
       String paymentOrderId,
       String paymentRequestId,
@@ -41,7 +42,7 @@ class UpdatePaymentViewModel {
     } catch (e) {}
   }
 
-  Future<PaymentFailureRetryModel> checkSlotsRetry(
+  Future<PaymentFailureRetryModel?> checkSlotsRetry(
       String appointmentId,
       ) async {
     try {

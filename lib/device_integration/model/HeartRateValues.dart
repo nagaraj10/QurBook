@@ -1,17 +1,18 @@
+
 import '../../constants/fhb_parameters.dart';
 
 class HeartRateValues {
-  bool isSuccess;
-  List<HRResult> result;
+  bool? isSuccess;
+  List<HRResult>? result;
 
   HeartRateValues({this.isSuccess, this.result});
 
   HeartRateValues.fromJson(Map<String, dynamic> json) {
     isSuccess = json[is_Success];
     if (json[dataResult] != null) {
-      result = List<HRResult>();
+      result = <HRResult>[];
       json[dataResult].forEach((hrtvalue) {
-        result.add(HRResult.fromJson(hrtvalue));
+        result!.add(HRResult.fromJson(hrtvalue));
       });
     }
   }
@@ -21,17 +22,17 @@ class HeartRateValues {
     data[is_Success] = isSuccess;
     if (result != null) {
       data[dataResult] =
-          result.map((hrtvalue) => hrtvalue.toJson()).toList();
+          result!.map((hrtvalue) => hrtvalue.toJson()).toList();
     }
     return data;
   }
 }
 
 class HRResult {
-  String sourceType;
-  String startDateTime;
-  String endDateTime;
-  int bpm;
+  String? sourceType;
+  String? startDateTime;
+  String? endDateTime;
+  int? bpm;
 
   HRResult({this.sourceType, this.startDateTime, this.endDateTime, this.bpm});
 

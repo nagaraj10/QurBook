@@ -1,24 +1,25 @@
+
 class PaymentRequestModel {
-  String id;
-  String phone;
-  String email;
-  String buyerName;
-  String amount;
-  String purpose;
-  String expiresAt;
-  String status;
-  bool sendSms;
-  bool sendEmail;
-  String smsStatus;
-  String emailStatus;
-  String shorturl;
-  String longurl;
-  String redirectUrl;
-  String webhook;
-  bool allowRepeatedPayments;
-  String customerId;
-  String createdAt;
-  String modifiedAt;
+  String? id;
+  String? phone;
+  String? email;
+  String? buyerName;
+  String? amount;
+  String? purpose;
+  String? expiresAt;
+  String? status;
+  bool? sendSms;
+  bool? sendEmail;
+  String? smsStatus;
+  String? emailStatus;
+  String? shorturl;
+  String? longurl;
+  String? redirectUrl;
+  String? webhook;
+  bool? allowRepeatedPayments;
+  String? customerId;
+  String? createdAt;
+  String? modifiedAt;
 
   PaymentRequestModel(
       {this.id,

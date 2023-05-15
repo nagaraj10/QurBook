@@ -1,16 +1,17 @@
+
 import 'AdditionalInfo.dart';
 
 class Patient {
   Patient({
-      String id, 
+      String? id, 
       dynamic name, 
       dynamic userName, 
-      String firstName, 
-      String middleName, 
-      String lastName, 
-      String gender, 
-      String dateOfBirth, 
-      String bloodGroup, 
+      String? firstName, 
+      String? middleName, 
+      String? lastName, 
+      String? gender, 
+      String? dateOfBirth, 
+      String? bloodGroup, 
       dynamic countryCode, 
       dynamic profilePicUrl, 
       dynamic profilePicThumbnailUrl, 
@@ -18,19 +19,19 @@ class Patient {
       dynamic isVirtualUser, 
       dynamic isMigrated, 
       dynamic isClaimed, 
-      bool isIeUser, 
+      bool? isIeUser, 
       dynamic isEmailVerified, 
-      bool isCpUser, 
+      bool? isCpUser, 
       dynamic communicationPreferences, 
       dynamic medicalPreferences, 
-      bool isSignedIn, 
-      bool isActive, 
-      String createdBy, 
-      String createdOn, 
-      String lastModifiedBy, 
+      bool? isSignedIn, 
+      bool? isActive, 
+      String? createdBy, 
+      String? createdOn, 
+      String? lastModifiedBy, 
       dynamic lastModifiedOn, 
-      String providerId, 
-      AdditionalInfo additionalInfo,}){
+      String? providerId, 
+      AdditionalInfo? additionalInfo,}){
     _id = id;
     _name = name;
     _userName = userName;
@@ -93,15 +94,15 @@ class Patient {
     _providerId = json['providerId'];
     _additionalInfo = json['additionalInfo'] != null ? AdditionalInfo.fromJson(json['additionalInfo']) : null;
   }
-  String _id;
+  String? _id;
   dynamic _name;
   dynamic _userName;
-  String _firstName;
-  String _middleName;
-  String _lastName;
-  String _gender;
-  String _dateOfBirth;
-  String _bloodGroup;
+  String? _firstName;
+  String? _middleName;
+  String? _lastName;
+  String? _gender;
+  String? _dateOfBirth;
+  String? _bloodGroup;
   dynamic _countryCode;
   dynamic _profilePicUrl;
   dynamic _profilePicThumbnailUrl;
@@ -109,29 +110,29 @@ class Patient {
   dynamic _isVirtualUser;
   dynamic _isMigrated;
   dynamic _isClaimed;
-  bool _isIeUser;
+  bool? _isIeUser;
   dynamic _isEmailVerified;
-  bool _isCpUser;
+  bool? _isCpUser;
   dynamic _communicationPreferences;
   dynamic _medicalPreferences;
-  bool _isSignedIn;
-  bool _isActive;
-  String _createdBy;
-  String _createdOn;
-  String _lastModifiedBy;
+  bool? _isSignedIn;
+  bool? _isActive;
+  String? _createdBy;
+  String? _createdOn;
+  String? _lastModifiedBy;
   dynamic _lastModifiedOn;
-  String _providerId;
-  AdditionalInfo _additionalInfo;
+  String? _providerId;
+  AdditionalInfo? _additionalInfo;
 
-  String get id => _id;
+  String? get id => _id;
   dynamic get name => _name;
   dynamic get userName => _userName;
-  String get firstName => _firstName;
-  String get middleName => _middleName;
-  String get lastName => _lastName;
-  String get gender => _gender;
-  String get dateOfBirth => _dateOfBirth;
-  String get bloodGroup => _bloodGroup;
+  String? get firstName => _firstName;
+  String? get middleName => _middleName;
+  String? get lastName => _lastName;
+  String? get gender => _gender;
+  String? get dateOfBirth => _dateOfBirth;
+  String? get bloodGroup => _bloodGroup;
   dynamic get countryCode => _countryCode;
   dynamic get profilePicUrl => _profilePicUrl;
   dynamic get profilePicThumbnailUrl => _profilePicThumbnailUrl;
@@ -139,19 +140,19 @@ class Patient {
   dynamic get isVirtualUser => _isVirtualUser;
   dynamic get isMigrated => _isMigrated;
   dynamic get isClaimed => _isClaimed;
-  bool get isIeUser => _isIeUser;
+  bool? get isIeUser => _isIeUser;
   dynamic get isEmailVerified => _isEmailVerified;
-  bool get isCpUser => _isCpUser;
+  bool? get isCpUser => _isCpUser;
   dynamic get communicationPreferences => _communicationPreferences;
   dynamic get medicalPreferences => _medicalPreferences;
-  bool get isSignedIn => _isSignedIn;
-  bool get isActive => _isActive;
-  String get createdBy => _createdBy;
-  String get createdOn => _createdOn;
-  String get lastModifiedBy => _lastModifiedBy;
+  bool? get isSignedIn => _isSignedIn;
+  bool? get isActive => _isActive;
+  String? get createdBy => _createdBy;
+  String? get createdOn => _createdOn;
+  String? get lastModifiedBy => _lastModifiedBy;
   dynamic get lastModifiedOn => _lastModifiedOn;
-  String get providerId => _providerId;
-  AdditionalInfo get additionalInfo => _additionalInfo;
+  String? get providerId => _providerId;
+  AdditionalInfo? get additionalInfo => _additionalInfo;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -184,7 +185,7 @@ class Patient {
     map['lastModifiedOn'] = _lastModifiedOn;
     map['providerId'] = _providerId;
     if (_additionalInfo != null) {
-      map['additionalInfo'] = _additionalInfo.toJson();
+      map['additionalInfo'] = _additionalInfo!.toJson();
     }
     return map;
   }

@@ -13,7 +13,7 @@ import 'package:myfhb/src/utils/language/language_utils.dart';
 
 class FetchAppointmentsService {
   final String _baseUrl = Constants.BASE_URL;
-  String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+  String? authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
   HeaderRequest headerRequest = new HeaderRequest();
 
@@ -25,24 +25,24 @@ class FetchAppointmentsService {
 
 //    requestHeadersTimeSlot['Authorization'] = authToken;
 //    requestHeadersTimeSlot['Content-Type'] = 'application/json';
-    String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String? userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 //    print(baseUrL +
 //        qr_appointment_fetch +
 //        'a756c286-681e-49b3-a306-b5edcf13c997');
 
     return await ApiServices.get(
-      _baseUrl + qr_appointment_fetch + userId,
+      _baseUrl + qr_appointment_fetch + userId!,
       headers: await headerRequest.getRequestHeadersAuthContent(),
-    ).then((http.Response response) {
+    ).then((http.Response? response) {
 //          print(response.body);
-      if (response.statusCode == 200) {
+      if (response?.statusCode == 200) {
         var resReturnCode =
-            AppointmentsModel.fromJson(jsonDecode(response.body));
+            AppointmentsModel.fromJson(jsonDecode(response?.body??''));
 //        print(response.body);
         if (resReturnCode.isSuccess == true) {
-          print('=======response_appointment' + response.body);
-          print(response.body);
-          return AppointmentsModel.fromJson(jsonDecode(response.body));
+          print('=======response_appointment' + (response?.body??''));
+          print(response?.body??'');
+          return AppointmentsModel.fromJson(jsonDecode(response?.body??''));
         } else {
           throw Exception(TranslationConstants.failedToInvoke.t());
         }
@@ -63,7 +63,7 @@ class FetchAppointmentsService {
         headers: headers,
       );
 
-      if (response.statusCode == 200) {
+      if (response!.statusCode == 200) {
         return AppointmentDetailsModel.fromJson(jsonDecode(response.body));
       } else {
         return AppointmentDetailsModel();

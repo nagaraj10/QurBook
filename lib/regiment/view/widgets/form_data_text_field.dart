@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 import 'package:flutter/services.dart';
 import '../../models/field_response_model.dart';
 
 class FormDataTextField extends StatelessWidget {
-  const FormDataTextField({
-    @required this.fieldData,
-    this.isNumberOnly = false,
-    this.isFromQurHomeSymptom = false,
-    @required this.updateValue,
-    @required this.canEdit,
-  });
+  const FormDataTextField(
+      {required this.fieldData,
+      this.isNumberOnly = false,
+      this.isFromQurHomeSymptom = false,
+      required this.updateValue,
+      required this.canEdit,
+      this.vitalsData,
+      required this.isChanged});
 
   final FieldModel fieldData;
   final bool isNumberOnly;
   final Function(FieldModel updatedFieldData) updateValue;
   final bool canEdit;
   final bool isFromQurHomeSymptom;
+  final VitalsData? vitalsData;
+  final Function(bool isChanged) isChanged;
 
   @override
   Widget build(BuildContext context) {
+    setValuesInMap();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -40,6 +45,7 @@ class FormDataTextField extends StatelessWidget {
         TextFormField(
           textCapitalization: TextCapitalization.sentences,
           enabled: canEdit,
+          initialValue: vitalsData?.value?.toString() ?? '',
           style: TextStyle(
             fontSize: 16.0.sp,
           ),
@@ -60,23 +66,24 @@ class FormDataTextField extends StatelessWidget {
             final updatedFieldData = fieldData;
             updatedFieldData.value = value;
             updateValue(updatedFieldData);
+            isChanged(true);
           },
           inputFormatters: [
             // if (isNumberOnly) FilteringTextInputFormatter.digitsOnly,
           ],
           validator: (value) {
-            if (fieldData.title.startsWith('_') && value.isEmpty) {
+            if (fieldData.title.startsWith('_') && value!.isEmpty) {
               return '${fieldData.title} is required';
             } else if (isNumberOnly &&
-                (fieldData?.vmin ?? '').isNotEmpty &&
-                (fieldData?.vmax ?? '').isNotEmpty) {
-              if (value?.isEmpty) {
+                (fieldData.vmin ?? '').isNotEmpty &&
+                (fieldData.vmax ?? '').isNotEmpty) {
+              if (value!.isEmpty) {
                 return '${fieldData.title} is required';
               } else if (isNumberOnly) {
                 if (((double.tryParse(value) ?? 0) <
-                        (double.tryParse(fieldData?.vmin) ?? 0)) ||
+                        (double.tryParse(fieldData.vmin!) ?? 0)) ||
                     ((double.tryParse(value) ?? 0) >
-                        (double.tryParse(fieldData?.vmax) ?? 0))) {
+                        (double.tryParse(fieldData.vmax!) ?? 0))) {
                   return 'Enter a valid ${fieldData.title}';
                 } else {
                   return null;
@@ -91,5 +98,14 @@ class FormDataTextField extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void setValuesInMap() {
+    if (vitalsData?.value.toString() != null &&
+        vitalsData?.value.toString() != "") {
+      final updatedFieldData = fieldData;
+      updatedFieldData.value = vitalsData?.value.toString();
+      updateValue(updatedFieldData);
+    }
   }
 }

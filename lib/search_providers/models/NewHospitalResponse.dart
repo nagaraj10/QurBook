@@ -1,6 +1,7 @@
+
 class NewHospitalResponse {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   NewHospitalResponse({this.isSuccess, this.result});
 
@@ -14,26 +15,26 @@ class NewHospitalResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String name;
-  HealthOrganizationType healthOrganizationType;
-  HealthOrganizationType createdBy;
-  String createdOn;
-  bool isActive;
-  String addressLine1;
-  String addressLine2;
-  String city;
-  String state;
-  String pincode;
-  String isReferenced;
-  String lastModifiedOn;
-  String id;
+  String? name;
+  HealthOrganizationType? healthOrganizationType;
+  HealthOrganizationType? createdBy;
+  String? createdOn;
+  bool? isActive;
+  String? addressLine1;
+  String? addressLine2;
+  String? city;
+  String? state;
+  String? pincode;
+  String? isReferenced;
+  String? lastModifiedOn;
+  String? id;
 
   Result(
       {this.name,
@@ -74,10 +75,10 @@ class Result {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
     if (this.healthOrganizationType != null) {
-      data['healthOrganizationType'] = this.healthOrganizationType.toJson();
+      data['healthOrganizationType'] = this.healthOrganizationType!.toJson();
     }
     if (this.createdBy != null) {
-      data['createdBy'] = this.createdBy.toJson();
+      data['createdBy'] = this.createdBy!.toJson();
     }
     data['createdOn'] = this.createdOn;
     data['isActive'] = this.isActive;
@@ -94,7 +95,7 @@ class Result {
 }
 
 class HealthOrganizationType {
-  String id;
+  String? id;
 
   HealthOrganizationType({this.id});
 

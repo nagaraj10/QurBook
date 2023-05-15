@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +22,7 @@ class DiseasesList extends StatefulWidget {
 }
 
 class _DiseasesList extends State<DiseasesList> {
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
   PlanViewModel myPlanViewModel = PlanViewModel();
   bool isSearch = false;
   List<PlanListResult> myPLanListResult = [];
@@ -33,21 +34,21 @@ class _DiseasesList extends State<DiseasesList> {
   Map<String, List<String>> selectTitle = {};
   Map<String, List<String>> selectedTitle = {};
 
-  Future<PlanListModel> planListModel;
+  Future<PlanListModel>? planListModel;
 
   List<PlanListResult> providerList = [];
 
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
 
-    planListModel = myPlanViewModel.getPlanList('');
+    planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
   }
 
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.dispose();
   }
 
@@ -88,7 +89,7 @@ class _DiseasesList extends State<DiseasesList> {
     setState(() {});
   }
 
-  Widget diseasesList(List<PlanListResult> planList) {
+  Widget diseasesList(List<PlanListResult>? planList) {
     categoryListUniq = [];
     selectTitle = {};
     selectedTitle = {};
@@ -96,13 +97,13 @@ class _DiseasesList extends State<DiseasesList> {
 
     if (planList != null && planList.isNotEmpty) {
       planList.forEach((element) {
-        if (element?.metadata != null && element?.metadata != '') {
-          if (element?.metadata?.diseases != null &&
-              element?.metadata?.diseases != '') {
+        if (element.metadata != null && element.metadata != '') {
+          if (element.metadata?.diseases != null &&
+              element.metadata?.diseases != '') {
             var keysUniq = true;
             categoryListUniq.forEach((catElement) {
-              if (catElement?.metadata?.diseases ==
-                  element?.metadata?.diseases) {
+              if (catElement.metadata?.diseases ==
+                  element.metadata?.diseases) {
                 keysUniq = false;
               }
             });
@@ -272,10 +273,10 @@ class _DiseasesList extends State<DiseasesList> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result.isNotEmpty) {
-            return diseasesList(snapshot.data.result);
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.isNotEmpty) {
+            return diseasesList(snapshot.data!.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -293,18 +294,18 @@ class _DiseasesList extends State<DiseasesList> {
   }
 
   Widget diseasesListItem(BuildContext context, int i,
-      List<PlanListResult> planList, List<PlanListResult> planListFull) {
+      List<PlanListResult> planList, List<PlanListResult>? planListFull) {
     return InkWell(
       onTap: () {
         try {
           if (planListFull != null && planList.isNotEmpty) {
             planListFull.where((element1) {
-              return (element1?.metadata?.diseases ?? '') ==
-                  planList[i]?.metadata?.diseases;
+              return (element1.metadata?.diseases ?? '') ==
+                  planList[i].metadata?.diseases;
             }).forEach((element) {
               var keysUniq = true;
               providerList.forEach((catElement) {
-                if (catElement?.plinkid == element.plinkid) {
+                if (catElement.plinkid == element.plinkid) {
                   keysUniq = false;
                 }
               });
@@ -318,33 +319,33 @@ class _DiseasesList extends State<DiseasesList> {
             context,
             MaterialPageRoute(
                 builder: (context) => SearchProviderList(
-                    planList[i]?.metadata?.diseases ?? '', planListFull)),
+                    planList[i].metadata?.diseases ?? '', planListFull)),
           ).then((value) => {
                 setState(() {
-                  planListModel = myPlanViewModel.getPlanList('');
+                  planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
                 })
               });
         }
 
         if (providerList != null) {
-          if (providerList?.length == 1) {
+          if (providerList.length == 1) {
             Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => CategoryList(
                       planList[i].providerid,
-                      planList[i]?.metadata?.icon,
-                      planList[i]?.metadata?.diseases)),
+                      planList[i].metadata?.icon,
+                      planList[i].metadata?.diseases)),
             );
           } else {
             Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => SearchProviderList(
-                      planList[i]?.metadata?.diseases ?? '', planListFull)),
+                      planList[i].metadata?.diseases ?? '', planListFull)),
             ).then((value) => {
                   setState(() {
-                    planListModel = myPlanViewModel.getPlanList('');
+                    planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
                   })
                 });
           }
@@ -353,10 +354,10 @@ class _DiseasesList extends State<DiseasesList> {
             context,
             MaterialPageRoute(
                 builder: (context) => SearchProviderList(
-                    planList[i]?.metadata?.diseases ?? '', planListFull)),
+                    planList[i].metadata?.diseases ?? '', planListFull)),
           ).then((value) => {
                 setState(() {
-                  planListModel = myPlanViewModel.getPlanList('');
+                  planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
                 })
               });
         }
@@ -372,10 +373,10 @@ class _DiseasesList extends State<DiseasesList> {
                     backgroundColor: Colors.grey[200],
                     radius: 20,
                     child: CommonUtil().customImage(
-                      (planList[i]?.metadata?.diseaseIcon ?? '').isNotEmpty
-                          ? planList[i]?.metadata?.diseaseIcon
+                      (planList[i].metadata?.diseaseIcon ?? '').isNotEmpty
+                          ? planList[i].metadata?.diseaseIcon
                           : '',
-                      planInitial: planList[i]?.providerName,
+                      planInitial: planList[i].providerName,
                     )),
                 SizedBox(
                   width: 10.0.w,
@@ -388,7 +389,7 @@ class _DiseasesList extends State<DiseasesList> {
                       Text(
                         planList[i].metadata?.diseases != null
                             ? toBeginningOfSentenceCase(
-                                planList[i]?.metadata?.diseases)
+                                planList[i].metadata?.diseases)!
                             : '',
                         style: TextStyle(
                           fontSize: 18.0.sp,

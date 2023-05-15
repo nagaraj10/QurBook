@@ -1,11 +1,12 @@
+
 import 'package:myfhb/common/keysofmodel.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 
 class CallPushNSModel {
-  List<String> recipients;
-  MessageDetails messageDetails;
-  List<String> transportMedium;
-  bool saveMessage;
+  List<String>? recipients;
+  MessageDetails? messageDetails;
+  List<String>? transportMedium;
+  bool? saveMessage;
 
   CallPushNSModel(
       {this.recipients,
@@ -26,7 +27,7 @@ class CallPushNSModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[c_recipients] = this.recipients;
     if (this.messageDetails != null) {
-      data[c_messageDetails] = this.messageDetails.toJson();
+      data[c_messageDetails] = this.messageDetails!.toJson();
     }
     data[c_transportMedium] = this.transportMedium;
     data[c_saveMessage] = this.saveMessage;

@@ -1,8 +1,10 @@
+//import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -20,14 +22,15 @@ import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
 import '../../telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 
 import 'my_provider.dart';
 
 class MyProvidersDoctorsList extends StatefulWidget {
-  final List<Doctors> doctorsModel;
-  final ProvidersBloc providersBloc;
-  final MyProviderState myProviderState;
-  Function refresh;
+  final List<Doctors?>? doctorsModel;
+  final ProvidersBloc? providersBloc;
+  final MyProviderState? myProviderState;
+  Function? refresh;
 
   MyProvidersDoctorsList(
       {this.doctorsModel,
@@ -40,18 +43,20 @@ class MyProvidersDoctorsList extends StatefulWidget {
 }
 
 class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
-  List<Doctors> doctorsModel;
-  List<Doctors> copyOfdoctorsModel;
-  MyProviderState myProviderState;
-  MyProviderViewModel providerViewModel;
+  List<Doctors?>? doctorsModel;
+  List<Doctors?>? copyOfdoctorsModel;
+  late MyProviderState myProviderState;
+  late MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = CommonWidgets();
   FlutterToast toast = FlutterToast();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+  var authtoken;
   @override
   void initState() {
     mInitialTime = DateTime.now();
     providerViewModel = MyProviderViewModel();
+    setAuthToken();
     super.initState();
     filterDuplicateDoctor();
   }
@@ -68,10 +73,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   }
 
   void filterDuplicateDoctor() {
-    if (widget?.doctorsModel.isNotEmpty) {
+    if (widget.doctorsModel!.isNotEmpty) {
       copyOfdoctorsModel = widget.doctorsModel;
-      var ids = copyOfdoctorsModel.map((e) => e?.user?.id).toSet();
-      copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
+      var ids = copyOfdoctorsModel!.map((e) => e?.user?.id).toSet();
+      copyOfdoctorsModel!.retainWhere((x) => ids.remove(x?.user?.id));
       doctorsModel = copyOfdoctorsModel;
     }
   }
@@ -84,33 +89,36 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   Widget buildPlayersList() {
     return RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () {
+        onRefresh: () async {
           _refreshIndicatorKey.currentState?.show(atTop: true);
-          widget.refresh();
+          widget.refresh!();
           _refreshIndicatorKey.currentState?.show(atTop: false);
         },
         child: ListView.separated(
           padding: EdgeInsets.only(bottom: 200),
           itemBuilder: (context, index) {
-            var eachDoctorModel = doctorsModel[index];
+            var eachDoctorModel = doctorsModel![index];
             var specialization = eachDoctorModel
-                        .doctorProfessionalDetailCollection !=
+                        ?.doctorProfessionalDetailCollection !=
                     null
-                ? eachDoctorModel.doctorProfessionalDetailCollection.isNotEmpty
-                    ? eachDoctorModel.doctorProfessionalDetailCollection[0]
+                ? eachDoctorModel!
+                        .doctorProfessionalDetailCollection!.isNotEmpty
+                    ? eachDoctorModel.doctorProfessionalDetailCollection![0]
                                 .specialty !=
                             null
-                        ? (eachDoctorModel.doctorProfessionalDetailCollection[0]
-                                        .specialty.name !=
+                        ? (eachDoctorModel
+                                        .doctorProfessionalDetailCollection![0]
+                                        .specialty!
+                                        .name !=
                                     null &&
                                 eachDoctorModel
-                                        .doctorProfessionalDetailCollection[0]
-                                        .specialty
+                                        .doctorProfessionalDetailCollection![0]
+                                        .specialty!
                                         .name !=
                                     '')
                             ? eachDoctorModel
-                                .doctorProfessionalDetailCollection[0]
-                                .specialty
+                                .doctorProfessionalDetailCollection![0]
+                                .specialty!
                                 .name
                             : ''
                         : ''
@@ -118,7 +126,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                 : '';
             return InkWell(
                 onTap: () {
-                  callMethodToNavigate(eachDoctorModel);
+                  callMethodToNavigate(eachDoctorModel!);
                 },
                 child: Container(
                     padding: EdgeInsets.only(
@@ -138,20 +146,22 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                     child: Row(
                       children: <Widget>[
                         ClipOval(
-                            child: eachDoctorModel.user != null
-                                ? (eachDoctorModel
-                                                .user.profilePicThumbnailUrl !=
+                            child: eachDoctorModel?.user != null
+                                ? (eachDoctorModel?.user
+                                                ?.profilePicThumbnailUrl !=
                                             null ||
-                                        (eachDoctorModel.user.firstName !=
+                                        (eachDoctorModel?.user?.firstName !=
                                                 null &&
-                                            eachDoctorModel.user.lastName !=
+                                            eachDoctorModel
+                                                    ?.user?.lastName !=
                                                 null))
                                     ? getProfilePicWidget(
-                                        eachDoctorModel
-                                            .user.profilePicThumbnailUrl,
-                                        eachDoctorModel.user.firstName,
-                                        eachDoctorModel.user.lastName,
-                                        Color(CommonUtil().getMyPrimaryColor()))
+                                        eachDoctorModel!
+                                            .user!.profilePicThumbnailUrl!,
+                                        eachDoctorModel.user!.firstName!,
+                                        eachDoctorModel.user!.lastName!,
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        authtoken: authtoken)
                                     : Container(
                                         width: 50.0.h,
                                         height: 50.0.h,
@@ -174,9 +184,9 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                             children: <Widget>[
                               SizedBox(height: 5.0.h),
                               AutoSizeText(
-                                eachDoctorModel.user != null
+                                eachDoctorModel?.user != null
                                     ? CommonUtil()
-                                        .getDoctorName(eachDoctorModel.user)
+                                        .getDoctorName(eachDoctorModel!.user!)!
                                     : '',
                                 maxLines: 1,
                                 style: TextStyle(
@@ -190,7 +200,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                 AutoSizeText(
                                   specialization != null
                                       ? toBeginningOfSentenceCase(
-                                          specialization)
+                                          specialization)!
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
@@ -215,7 +225,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                         Colors.transparent)),
                                 child: Container(
                                     child: Text(
-                                  eachDoctorModel.isPatientAssociatedRequest
+                                  eachDoctorModel!.isPatientAssociatedRequest!
                                       ? "Waiting for approval"
                                       : "",
                                   maxLines: 2,
@@ -240,7 +250,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                               commonWidgets
                                   .getBookMarkedIconNew(eachDoctorModel, () {
                                 if (eachDoctorModel
-                                    .isPatientAssociatedRequest) {
+                                    .isPatientAssociatedRequest!) {
                                   toast.getToast('Approval request is pending',
                                       Colors.black54);
                                 } else {
@@ -251,8 +261,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                           'ListItem',
                                           eachDoctorModel.sharedCategories)
                                       .then((status) {
-                                    if (status) {
-                                      widget.refresh();
+                                    if (status!) {
+                                      widget.refresh!();
                                     }
                                   });
                                 }
@@ -269,12 +279,12 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
               color: Colors.transparent,
             );
           },
-          itemCount: doctorsModel.length,
+          itemCount: doctorsModel!.length,
         ));
   }
 
   callMethodToNavigate(Doctors eachDoctorModel, {bool isButton = false}) {
-    if (eachDoctorModel.isPatientAssociatedRequest) {
+    if (eachDoctorModel.isPatientAssociatedRequest!) {
       toast.getToast('Approval request is pending', Colors.black54);
     } else {
       Navigator.pushNamed(context, router.rt_AddProvider,
@@ -284,11 +294,15 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
               fromClass: router.rt_myprovider,
               hasData: true,
               isRefresh: () {
-                widget.refresh();
+                widget.refresh!();
               })).then((value) {
 //                providersBloc.getMedicalPreferencesList();
         myProviderState.refreshPage();
       });
     }
+  }
+
+  void setAuthToken() async {
+    authtoken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 }

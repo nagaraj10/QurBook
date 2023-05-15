@@ -25,7 +25,7 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 
 class RegimentService {
   static Future<RegimentResponseModel> getRegimentData(
-      {String dateSelected,
+      {String? dateSelected,
       int isSymptoms = 0,
       bool isForMasterData = false,
       String searchText = ''}) async {
@@ -37,7 +37,7 @@ class RegimentService {
       var currentLanguage = '';
       var lan = CommonUtil.getCurrentLanCode();
       if (lan != 'undef') {
-        var langCode = lan.split('-').first;
+        var langCode = lan!.split('-').first;
         currentLanguage = langCode;
       } else {
         currentLanguage = 'en';
@@ -70,7 +70,6 @@ class RegimentService {
       }
 
       if (response != null && response.statusCode == 200) {
-        print(response.body);
         return RegimentResponseModel.fromJson(json.decode(response.body));
       } else {
         return RegimentResponseModel(
@@ -87,21 +86,24 @@ class RegimentService {
   }
 
   static Future<RegimentResponseModel> getRegimentDataCalendar(
-      {String startDate,
-        String endDate,
-        int isSymptoms = 0,
-        bool isForMasterData = false,
-        String searchText = ''}) async {
+      {String? startDate,
+      String? endDate,
+      int isSymptoms = 0,
+      bool isForMasterData = false,
+      String searchText = ''}) async {
     var response;
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    var urlForRegiment = Constants.BASE_URL+'qurplan-node-mysql/regimen-calendar-filter/'+ userId+'?startDate=${startDate}%2000%3A00%3A00&endDate=${endDate}%2000%3A00%3A00';
+    var urlForRegiment = Constants.BASE_URL +
+        'qurplan-node-mysql/regimen-calendar-filter/' +
+        userId! +
+        '?startDate=${startDate}%2000%3A00%3A00&endDate=${endDate}%2000%3A00%3A00';
     try {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
 
-        response = await ApiServices.get(
-          urlForRegiment,
-          headers: headerRequest,
-        );
+      response = await ApiServices.get(
+        urlForRegiment,
+        headers: headerRequest,
+      );
 
       if (response != null && response.statusCode == 200) {
         print(response.body);
@@ -144,23 +146,23 @@ class RegimentService {
   }
 
   static Future<SaveResponseModel> saveFormData(
-      {String eid,
-      String events,
-      bool isFollowEvent,
-      String followEventContext,
-      DateTime selectedDate,
-      TimeOfDay selectedTime,
+      {String? eid,
+      String? events,
+      bool? isFollowEvent,
+      String? followEventContext,
+      DateTime? selectedDate,
+      TimeOfDay? selectedTime,
       bool isVitals = false}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     var localTime;
     try {
-      if (Provider.of<RegimentViewModel>(Get.context, listen: false)
+      if (Provider.of<RegimentViewModel>(Get.context!, listen: false)
               .regimentFilter ==
           RegimentFilter.AsNeeded) {
         localTime = CommonUtil.dateFormatterWithdatetimeseconds(
-          DateTime(selectedDate.year, selectedDate.month, selectedDate.day,
-              selectedTime.hour, selectedTime.minute),
+          DateTime(selectedDate!.year, selectedDate.month, selectedDate.day,
+              selectedTime!.hour, selectedTime.minute),
           isIndianTime: true,
         );
       } else {
@@ -176,6 +178,8 @@ class RegimentService {
         followEventParams =
             '&followevent=1&context=${followEventContext ?? ''}';
       }
+      print(
+          "Parvathi Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK");
       var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
@@ -183,7 +187,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents?.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK",
+                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK",
             'isVitalSave': isVitals
           },
         ),
@@ -192,7 +196,7 @@ class RegimentService {
         getProviderFromTriggerInputs(response.body);
         return SaveResponseModel.fromJson(json.decode(response.body));
       } else {
-        LoaderClass.hideLoadingDialog(Get.context);
+        LoaderClass.hideLoadingDialog(Get.context!);
         return SaveResponseModel(
           result: SaveResultModel(),
           isSuccess: false,
@@ -200,7 +204,7 @@ class RegimentService {
       }
     } catch (e) {
       print(e);
-      LoaderClass.hideLoadingDialog(Get.context);
+      LoaderClass.hideLoadingDialog(Get.context!);
       return SaveResponseModel(
         result: SaveResultModel(),
         isSuccess: false,
@@ -213,31 +217,31 @@ class RegimentService {
     var data;
     var data1;
     var data2;
-    final decoded = jsonDecode(response) as Map;
+    final decoded = jsonDecode(response) as Map?;
     if (decoded != null) {
-      data = decoded['result'] as Map;
+      data = decoded['result'] as Map?;
     }
     if (data != null) {
-      data1 = data['actions'] as Map;
+      data1 = data['actions'] as Map?;
     }
     if (data1 != null) {
-      data2 = data1['input'] as Map;
+      data2 = data1['input'] as Map?;
     }
     if (data2 != null) {
       for (final name in data2.keys) {
         final value = data2[name];
         if (name.contains('pf_')) {
           var provider =
-              Provider.of<RegimentViewModel>(Get.context, listen: false);
+              Provider.of<RegimentViewModel>(Get.context!, listen: false);
           provider.cachedEvents
-              ?.removeWhere((element) => element?.contains(name));
+              .removeWhere((element) => element.contains(name));
           provider.cachedEvents.add('&$name=$value'.toString());
         }
       }
     }
   }
 
-  static Future<SaveResponseModel> deleteMedia({String eid}) async {
+  static Future<SaveResponseModel> deleteMedia({String? eid}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -268,7 +272,8 @@ class RegimentService {
     }
   }
 
-  static Future<SaveResponseModel> updatePhoto({String eid, String url}) async {
+  static Future<SaveResponseModel> updatePhoto(
+      {String? eid, String? url}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -299,7 +304,7 @@ class RegimentService {
     }
   }
 
-  static Future<FieldsResponseModel> getFormData({String eid}) async {
+  static Future<FieldsResponseModel> getFormData({String? eid}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -360,7 +365,7 @@ class RegimentService {
     }
   }
 
-  static Future<SaveResponseModel> saveProfile({String schedules}) async {
+  static Future<SaveResponseModel> saveProfile({String? schedules}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -392,8 +397,8 @@ class RegimentService {
   }
 
   static Future<SaveResponseModel> undoSaveFormData({
-    String eid,
-    String activityDate,
+    String? eid,
+    String? activityDate,
   }) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
@@ -426,8 +431,8 @@ class RegimentService {
   }
 
   static Future<SaveResponseModel> enableDisableActivity({
-    String eidUser,
-    DateTime startTime,
+    String? eidUser,
+    required DateTime startTime,
     bool isDisable = true,
   }) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -465,7 +470,7 @@ class RegimentService {
     }
   }
 
-  static Future<GetEventIdModel> getEventId(
+  static Future<GetEventIdModel?> getEventId(
       {dynamic uid, dynamic aid, dynamic formId, dynamic formName}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForGetEventId = Constants.BASE_URL + variable.getEventId;
@@ -495,17 +500,14 @@ class RegimentService {
   }
 
   static Future<ActivityStatusModel> getActivityStatus({
-    String eid,
+    required String eid,
   }) async {
     var urlForRegiment = Constants.BASE_URL + user_activity_status;
     try {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
       var currentDate = CommonUtil().getCurrentDateForStatusActivity();
       var response = await ApiServices.get(
-        urlForRegiment +
-            eid +
-            user_activity_status_date +
-            currentDate,
+        urlForRegiment + eid + user_activity_status_date + currentDate,
         headers: headerRequest,
       );
       if (response != null && response.statusCode == 200) {

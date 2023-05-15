@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -20,11 +21,11 @@ import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
 
 class HomeScreen extends StatefulWidget {
-  static _HomeScreenState of(BuildContext context) =>
-      context.findAncestorStateOfType<State<HomeScreen>>();
+  static _HomeScreenState? of(BuildContext context) =>
+      context.findAncestorStateOfType<State<HomeScreen>>() as _HomeScreenState?;
 
-  final int bottomindex;
-  HomeScreenArguments arguments;
+  final int? bottomindex;
+  HomeScreenArguments? arguments;
   HomeScreen({this.bottomindex, this.arguments});
 
   @override
@@ -32,11 +33,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 1;
+  int? _selectedIndex = 1;
   GlobalKey _bottomNavigationKey = GlobalKey();
   static TextStyle optionStyle =
       TextStyle(fontSize: 30.0.sp, fontWeight: FontWeight.bold);
-  List<Widget> _widgetOptions;
+  late List<Widget> _widgetOptions;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -55,14 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
       MyFhbNotifications(),
       MyRecords(
         argument: MyRecordsArgument(
-            categoryPosition: widget.arguments.thTabIndex ?? 0),
+            categoryPosition: widget.arguments!.thTabIndex ?? 0),
       ),
       SuperMaya(),
       UserAccounts(arguments: UserAccountsArguments(selectedIndex: 0)),
       MoreMenuScreen()
     ];
     super.initState();
-    _selectedIndex = widget.arguments.selectedIndex;
+    _selectedIndex = widget.arguments!.selectedIndex;
   }
 
   @override
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFf7f6f5),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: _widgetOptions.elementAt(_selectedIndex!),
       ),
       // bottomNavigationBar: Container(
       //   decoration: BoxDecoration(
@@ -213,8 +214,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class BottomNavigationWidget extends StatefulWidget {
   BottomNavigationWidget({this.selectedPageIndex, this.myFunc});
-  final int selectedPageIndex;
-  final Function myFunc;
+  final int? selectedPageIndex;
+  final Function? myFunc;
 
   @override
   _BottomNavigationWidgetState createState() => _BottomNavigationWidgetState();
@@ -230,7 +231,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
       padding: EdgeInsets.only(top: 20),
       child: CurvedNavigationBar(
           key: _bottomNavigationKey,
-          index: widget.selectedPageIndex,
+          index: widget.selectedPageIndex!,
           height: 60.0.h,
           items: <Widget>[
             Padding(
@@ -289,7 +290,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                       PreferenceUtil.getStringValue(Constants.keyMayaAsset) !=
                               null
                           ? PreferenceUtil.getStringValue(
-                                  Constants.keyMayaAsset) +
+                                  Constants.keyMayaAsset)! +
                               variable.strExtImg
                           : variable.icon_mayaMain,
                       height: 32.0.h,
@@ -361,7 +362,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           animationCurve: Curves.linearToEaseOut,
           animationDuration: Duration(milliseconds: 450),
           onTap: (index) {
-            widget.myFunc(index);
+            widget.myFunc!(index);
           }),
     );
   }

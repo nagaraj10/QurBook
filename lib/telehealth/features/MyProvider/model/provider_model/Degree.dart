@@ -1,9 +1,10 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Degree {
-  String id;
-  String name;
-  String isActive;
+  String? id;
+  String? name;
+  String? isActive;
 
   Degree({this.id, this.name, this.isActive});
 

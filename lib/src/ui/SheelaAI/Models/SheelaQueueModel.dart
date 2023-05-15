@@ -1,7 +1,8 @@
+
 class SheelaQueueModel {
-  bool isSuccess;
-  String message;
-  SheelaInsertResult result;
+  bool? isSuccess;
+  String? message;
+  SheelaInsertResult? result;
 
   SheelaQueueModel({this.isSuccess, this.message, this.result});
 
@@ -17,15 +18,15 @@ class SheelaQueueModel {
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class SheelaInsertResult {
-  String sheelaQueueId;
-  int queueCount;
+  String? sheelaQueueId;
+  int? queueCount;
 
   SheelaInsertResult({this.sheelaQueueId, this.queueCount});
 

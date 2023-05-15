@@ -1,7 +1,8 @@
+
 class GetUserIdModel {
-  bool isSuccess;
-  String message;
-  UserIdResult result;
+  bool? isSuccess;
+  String? message;
+  UserIdResult? result;
 
   GetUserIdModel({this.isSuccess, this.message, this.result});
 
@@ -17,24 +18,24 @@ class GetUserIdModel {
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class UserIdResult {
-  String id;
-  String specialization;
-  bool isTelehealthEnabled;
-  bool isMciVerified;
-  bool isActive;
-  bool isWelcomeMailSent;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  bool isResident;
-  User user;
+  String? id;
+  String? specialization;
+  bool? isTelehealthEnabled;
+  bool? isMciVerified;
+  bool? isActive;
+  bool? isWelcomeMailSent;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  bool? isResident;
+  User? user;
 
   UserIdResult(
       {this.id,
@@ -76,17 +77,17 @@ class UserIdResult {
     data['lastModifiedOn'] = this.lastModifiedOn;
     data['isResident'] = this.isResident;
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user!.toJson();
     }
     return data;
   }
 }
 
 class Documents {
-  String code;
-  String documentId;
-  String documentName;
-  String documentTypeId;
+  String? code;
+  String? documentId;
+  String? documentName;
+  String? documentTypeId;
 
   Documents(
       {this.code, this.documentId, this.documentName, this.documentTypeId});
@@ -109,8 +110,8 @@ class Documents {
 }
 
 class Specialty {
-  String id;
-  String name;
+  String? id;
+  String? name;
 
   Specialty({this.id, this.name});
 
@@ -128,7 +129,7 @@ class Specialty {
 }
 
 class User {
-  String id;
+  String? id;
 
   User(
       {this.id});

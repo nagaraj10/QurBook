@@ -1,15 +1,16 @@
+
 class LabsSearchListResponse {
-  bool isSuccess;
-  List<LabListResult> result;
+  bool? isSuccess;
+  List<LabListResult>? result;
 
   LabsSearchListResponse({this.isSuccess, this.result});
 
   LabsSearchListResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = List<LabListResult>();
+      result = <LabListResult>[];
       json['result'].forEach((v) {
-        result.add(LabListResult.fromJson(v));
+        result!.add(LabListResult.fromJson(v));
       });
     }
   }
@@ -18,25 +19,25 @@ class LabsSearchListResponse {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class LabListResult {
-  String healthOrganizationId;
-  String healthOrganizationName;
-  String healthOrganizationTypeId;
-  String healthOrganizationTypeName;
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  String cityName;
-  String stateName;
-  String phoneNumber;
-  String phoneNumberTypeId;
-  String phoneNumberTypeName;
+  String? healthOrganizationId;
+  String? healthOrganizationName;
+  String? healthOrganizationTypeId;
+  String? healthOrganizationTypeName;
+  String? addressLine1;
+  String? addressLine2;
+  String? pincode;
+  String? cityName;
+  String? stateName;
+  String? phoneNumber;
+  String? phoneNumberTypeId;
+  String? phoneNumberTypeName;
   dynamic healthOrganizationReferenceId;
 
   LabListResult(

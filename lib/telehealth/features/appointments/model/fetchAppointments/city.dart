@@ -1,3 +1,4 @@
+
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class City {
@@ -11,13 +12,13 @@ class City {
     this.healthOrganizationAddressCollection,
   });
 
-  String id;
-  String name;
-  bool isActive;
-  DateTime createdOn;
+  String? id;
+  String? name;
+  bool? isActive;
+  DateTime? createdOn;
   dynamic lastModifiedOn;
-  String countryCode;
-  List<HealthOrganizationAddressCollection> healthOrganizationAddressCollection;
+  String? countryCode;
+  List<HealthOrganizationAddressCollection>? healthOrganizationAddressCollection;
 
   City.fromJson(Map<String, dynamic> json) {
     try {
@@ -31,7 +32,7 @@ class City {
               : json[parameters.strCountryCode];
       if (json['healthOrganizationAddressCollection'] != null) {
             healthOrganizationAddressCollection = <HealthOrganizationAddressCollection>[];
-            json['healthOrganizationAddressCollection'].forEach((v) { healthOrganizationAddressCollection.add(new HealthOrganizationAddressCollection.fromJson(v)); });
+            json['healthOrganizationAddressCollection'].forEach((v) { healthOrganizationAddressCollection!.add(new HealthOrganizationAddressCollection.fromJson(v)); });
           }
     } catch (e) {
       //print(e);
@@ -44,11 +45,11 @@ class City {
       data[parameters.strId] = id;
       data[parameters.strName] = name;
       data[parameters.strIsActive] = isActive;
-      data[parameters.strCreatedOn] = createdOn.toIso8601String();
+      data[parameters.strCreatedOn] = createdOn!.toIso8601String();
       data[parameters.strLastModifiedOn] = lastModifiedOn;
       data[parameters.strCountryCode] = countryCode == null ? null : countryCode;
       if (this.healthOrganizationAddressCollection != null) {
-            data['healthOrganizationAddressCollection'] = this.healthOrganizationAddressCollection.map((v) => v.toJson()).toList();
+            data['healthOrganizationAddressCollection'] = this.healthOrganizationAddressCollection!.map((v) => v.toJson()).toList();
           }
     } catch (e) {
       //print(e);
@@ -59,16 +60,16 @@ class City {
 
 
 class HealthOrganizationAddressCollection {
-  String id;
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  StateDetails state;
-  CityDetails city;
+  String? id;
+  String? addressLine1;
+  String? addressLine2;
+  String? pincode;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  StateDetails? state;
+  CityDetails? city;
 
   HealthOrganizationAddressCollection({this.id, this.addressLine1, this.addressLine2, this.pincode, this.isPrimary, this.isActive, this.createdOn, this.lastModifiedOn, this.state, this.city});
 
@@ -104,10 +105,10 @@ class HealthOrganizationAddressCollection {
       data['createdOn'] = this.createdOn;
       data['lastModifiedOn'] = this.lastModifiedOn;
       if (this.state != null) {
-        data['state'] = this.state.toJson();
+        data['state'] = this.state!.toJson();
       }
       if (this.city != null) {
-        data['city'] = this.city.toJson();
+        data['city'] = this.city!.toJson();
       }
     } catch (e) {
       //print(e);
@@ -118,12 +119,12 @@ class HealthOrganizationAddressCollection {
 
 
 class StateDetails {
-  String id;
-  String name;
-  String countryCode;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? countryCode;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   StateDetails({this.id, this.name, this.countryCode, this.isActive, this.createdOn, this.lastModifiedOn});
 
@@ -157,11 +158,11 @@ class StateDetails {
 }
 
 class CityDetails {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   CityDetails({this.id, this.name, this.isActive, this.createdOn, this.lastModifiedOn});
 

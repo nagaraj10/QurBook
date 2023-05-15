@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -15,21 +16,21 @@ class AddDeviceViewController extends GetxController {
   final nickNameController = TextEditingController();
   final _hubApiProvider = HubApiProvider();
   RxBool loadingData = false.obs;
-  String selectedId = '';
-  HubListViewController listController;
+  String? selectedId = '';
+  late HubListViewController listController;
 
   @override
   void onInit() {
     super.onInit();
     selectedId = PreferenceUtil.getStringValue(KEY_USERID);
     listController = Get.find();
-    deviceIdController.text = listController.bleMacId;
-    deviceTypeNameController.text = listController.bleDeviceType;
+    deviceIdController.text = listController.bleMacId!;
+    deviceTypeNameController.text = listController.bleDeviceType!;
   }
 
   @override
   void onClose() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.onClose();
   }
 
@@ -38,8 +39,8 @@ class AddDeviceViewController extends GetxController {
       loadingData(true);
       final data = {
         DEVICE_ID: listController.bleMacId,
-        DEVICE_TYPE: listController.bleDeviceType.toUpperCase(),
-        USER_HUB_ID: listController.hubListResponse.result.id,
+        DEVICE_TYPE: listController.bleDeviceType!.toUpperCase(),
+        USER_HUB_ID: listController.hubListResponse!.result!.id,
         USER_ID: selectedId,
         DEVICE_NAME: " ",
         ADDITION_DETAILS: {}
@@ -59,13 +60,13 @@ class AddDeviceViewController extends GetxController {
       );
       if (commonResponse.isSuccess ?? false) {
         FlutterToast().getToast(
-          commonResponse.message,
+          commonResponse.message!,
           Colors.grey,
         );
         Get.back();
       } else if ((commonResponse.message ?? "").isNotEmpty) {
         FlutterToast().getToast(
-          commonResponse.message,
+          commonResponse.message!,
           Colors.red,
         );
       }

@@ -1,18 +1,19 @@
+
 import 'package:myfhb/src/model/CaregiverCommunicationSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
 class GetDeviceSelectionModel {
-  bool isSuccess;
-  List<SelectionResult> result;
+  bool? isSuccess;
+  List<SelectionResult>? result;
 
   GetDeviceSelectionModel({this.isSuccess, this.result});
 
   GetDeviceSelectionModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = List<SelectionResult>();
+      result = <SelectionResult>[];
       json['result'].forEach((v) {
-        result.add(SelectionResult.fromJson(v));
+        result!.add(SelectionResult.fromJson(v));
       });
     }
   }
@@ -21,21 +22,21 @@ class GetDeviceSelectionModel {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class SelectionResult {
-  String id;
-  String userId;
-  ProfileSetting profileSetting;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  List<Tags> tags;
-  PrimaryProvider primaryProvider;
+  String? id;
+  String? userId;
+  ProfileSetting? profileSetting;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  List<Tags>? tags;
+  PrimaryProvider? primaryProvider;
 
   SelectionResult(
       {this.id,
@@ -57,9 +58,9 @@ class SelectionResult {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['tags'] != null) {
-      tags = new List<Tags>();
+      tags = <Tags>[];
       json['tags'].forEach((v) {
-        tags.add(new Tags.fromJson(v));
+        tags!.add(new Tags.fromJson(v));
       });
     }
     primaryProvider = json['primaryProvider'] != null
@@ -71,7 +72,7 @@ class SelectionResult {
     final data = <String, dynamic>{};
     data['id'] = id;
     if (profileSetting != null) {
-      data['profileSetting'] = profileSetting.toJson();
+      data['profileSetting'] = profileSetting!.toJson();
     }
     return data;
   }
@@ -81,40 +82,40 @@ class SelectionResult {
     data['id'] = id;
     data['userId'] = userId;
     if (profileSetting != null) {
-      data['profileSetting'] = profileSetting.toJson();
+      data['profileSetting'] = profileSetting!.toJson();
     }
     data['isActive'] = isActive;
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (this.tags != null) {
-      data['tags'] = this.tags.map((v) => v.toJson()).toList();
+      data['tags'] = this.tags!.map((v) => v.toJson()).toList();
     }
     if (this.primaryProvider != null) {
-      data['primaryProvider'] = this.primaryProvider.toJson();
+      data['primaryProvider'] = this.primaryProvider?.toJson();
     }
     return data;
   }
 }
 
 class ProfileSetting {
-  bool bpMonitor;
-  bool googleFit;
-  bool healthFit;
-  bool allowDigit;
-  bool glucoMeter;
-  bool weighScale;
-  bool allowDevice;
-  bool thermoMeter;
-  bool pulseOximeter;
-  bool qurhomeDefaultUI;
+  bool? bpMonitor;
+  bool? googleFit;
+  bool? healthFit;
+  bool? allowDigit;
+  bool? glucoMeter;
+  bool? weighScale;
+  bool? allowDevice;
+  bool? thermoMeter;
+  bool? pulseOximeter;
+  bool? qurhomeDefaultUI;
 
-  int preColor;
-  int greColor;
-  String preferred_language;
-  String qa_subscription;
-  PreferredMeasurement preferredMeasurement;
+  int? preColor;
+  int? greColor;
+  String? preferred_language;
+  String? qa_subscription;
+  PreferredMeasurement? preferredMeasurement;
 
-  CaregiverCommunicationSetting caregiverCommunicationSetting;
+  CaregiverCommunicationSetting? caregiverCommunicationSetting;
 
   ProfileSetting(
       {this.bpMonitor,
@@ -184,19 +185,19 @@ class ProfileSetting {
     data['qurhome_ui'] = qurhomeDefaultUI;
     if (this.caregiverCommunicationSetting != null) {
       data['caregiverCommunicationSetting'] =
-          this.caregiverCommunicationSetting.toJson();
+          this.caregiverCommunicationSetting!.toJson();
     }
     if (this.preferredMeasurement != null) {
-      data['preferred_measurement'] = this.preferredMeasurement.toJson();
+      data['preferred_measurement'] = this.preferredMeasurement!.toJson();
     }
     return data;
   }
 }
 
 class PreferredMeasurement {
-  Height height;
-  Height weight;
-  Height temperature;
+  Height? height;
+  Height? weight;
+  Height? temperature;
 
   PreferredMeasurement({this.height, this.weight, this.temperature});
 
@@ -213,21 +214,21 @@ class PreferredMeasurement {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.height != null) {
-      data['height'] = this.height.toJson();
+      data['height'] = this.height!.toJson();
     }
     if (this.weight != null) {
-      data['weight'] = this.weight.toJson();
+      data['weight'] = this.weight!.toJson();
     }
     if (this.temperature != null) {
-      data['temperature'] = this.temperature.toJson();
+      data['temperature'] = this.temperature!.toJson();
     }
     return data;
   }
 }
 
 class Height {
-  String unitCode;
-  String unitName;
+  String? unitCode;
+  String? unitName;
 
   Height({this.unitCode, this.unitName});
 
@@ -245,8 +246,8 @@ class Height {
 }
 
 class PrimaryProvider {
-  String healthorganizationid;
-  AdditionalInfoModuleAccess additionalInfo;
+  String? healthorganizationid;
+  AdditionalInfoModuleAccess? additionalInfo;
 
   PrimaryProvider({this.healthorganizationid, this.additionalInfo});
 
@@ -261,14 +262,14 @@ class PrimaryProvider {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['healthorganizationid'] = this.healthorganizationid;
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo?.toJson();
     }
     return data;
   }
 }
 
 class AdditionalInfoModuleAccess {
-  List<ModuleAccess> moduleAccess;
+  List<ModuleAccess>? moduleAccess;
 
   AdditionalInfoModuleAccess({this.moduleAccess});
 
@@ -276,7 +277,7 @@ class AdditionalInfoModuleAccess {
     if (json['module-access'] != null) {
       moduleAccess = <ModuleAccess>[];
       json['module-access'].forEach((v) {
-        moduleAccess.add(new ModuleAccess.fromJson(v));
+        moduleAccess?.add(new ModuleAccess.fromJson(v));
       });
     }
   }
@@ -284,16 +285,16 @@ class AdditionalInfoModuleAccess {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.moduleAccess != null) {
-      data['module-access'] = this.moduleAccess.map((v) => v.toJson()).toList();
+      data['module-access'] = this.moduleAccess?.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class ModuleAccess {
-  String id;
-  String name;
-  String access;
+  String? id;
+  String? name;
+  String? access;
 
   ModuleAccess({this.id, this.name, this.access});
 

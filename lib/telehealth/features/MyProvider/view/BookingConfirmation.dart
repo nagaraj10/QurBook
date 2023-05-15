@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,7 +53,7 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';  //FU2.5
 import 'package:myfhb/constants/router_variable.dart' as router;
 
 import 'TelehealthProviders.dart';
@@ -61,29 +62,29 @@ import '../../../../landing/view/landing_arguments.dart';
 
 class BookingConfirmation extends StatefulWidget {
   final followUpFee;
-  bool isNewAppointment;
-  final List<Doctors> docs;
-  final List<DoctorResult> docsReschedule;
-  final int i;
-  final int doctorListIndex;
-  final DateTime selectedDate;
-  final List<SlotSessionsModel> sessionData;
-  final int rowPosition;
-  final int itemPosition;
-  final bool isFollowUp;
-  Past doctorsData;
-  final List<HealthOrganizationResult> healthOrganizationResult;
-  final List<ResultFromHospital> resultFromHospitalList;
-  final int doctorListPos;
-  Function(String) closePage;
-  Function() refresh;
-  bool isFromHospital;
-  bool isFromFollowReschedule;
+  bool? isNewAppointment;
+  final List<Doctors?>? docs;
+  final List<DoctorResult?>? docsReschedule;
+  final int? i;
+  final int? doctorListIndex;
+  final DateTime? selectedDate;
+  final List<SlotSessionsModel>? sessionData;
+  final int? rowPosition;
+  final int? itemPosition;
+  final bool? isFollowUp;
+  Past? doctorsData;
+  final List<HealthOrganizationResult>? healthOrganizationResult;
+  final List<ResultFromHospital>? resultFromHospitalList;
+  final int? doctorListPos;
+  Function(String)? closePage;
+  Function()? refresh;
+  bool? isFromHospital;
+  bool? isFromFollowReschedule;
 
-  bool isFromFollowUpApp;
-  bool isFromFollowUpTake;
+  bool? isFromFollowUpApp;
+  bool? isFromFollowUpTake;
   bool isFromPaymentNotification = false;
-  String appointmentId;
+  String? appointmentId;
 
   BookingConfirmation(
       {this.docs,
@@ -117,69 +118,69 @@ class BookingConfirmation extends StatefulWidget {
 class BookingConfirmationState extends State<BookingConfirmation> {
   CommonWidgets commonWidgets = new CommonWidgets();
   CommonUtil commonUtil = new CommonUtil();
-  MyProviderViewModel providerViewModel;
-  CreateAppointMentViewModel createAppointMentViewModel;
-  FamilyListBloc _familyListBloc;
+  late MyProviderViewModel providerViewModel;
+  late CreateAppointMentViewModel createAppointMentViewModel;
+  late FamilyListBloc _familyListBloc;
   FamilyMembers familyMembersModel = new FamilyMembers();
-  List<SharedByUsers> sharedbyme = new List();
+  List<SharedByUsers> sharedbyme = [];
   FlutterToast toast = new FlutterToast();
-  FamilyMembers familyData = new FamilyMembers();
+  FamilyMembers? familyData = new FamilyMembers();
 
-  List<SharedByUsers> _familyNames = new List();
+  List<SharedByUsers> _familyNames = [];
 
   /* List<String> recordIds = new List();
   List<String> notesId = new List();
   List<String> voiceIds = new List();*/
 
-  List<String> healthRecords = new List();
+  List<String> healthRecords = [];
 
   int recordIdCount = 0;
   int notesIdCount = 0;
   int voiceIdCount = 0;
 
-  String slotNumber = '',
+  String? slotNumber = '',
       slotTime = '',
       createdBy = '',
       createdFor = '',
       doctorSessionId = '',
       scheduleDate = '',
       fees = '';
-  String apiStartTime = '', apiEndTime = '';
-  SharedByUsers selectedUser;
-  var selectedId = '';
-  ProgressDialog pr;
+  String? apiStartTime = '', apiEndTime = '';
+  SharedByUsers? selectedUser;
+  String? selectedId = '';
+  late ProgressDialog pr; // FU2.5
 
-  CategoryListBlock _categoryListBlock;
+  CategoryListBlock? _categoryListBlock;
 
-  List<CategoryResult> categoryDataList = new List();
-  List<CategoryResult> filteredCategoryData = new List();
+  List<CategoryResult>? categoryDataList = [];
+  List<CategoryResult> filteredCategoryData = [];
   CategoryResult categoryDataObjClone = new CategoryResult();
 
-  String doctorId;
+  String? doctorId;
 
   bool isFamilyChanged = false;
 
-  MyProfileModel myProfile;
+  MyProfileModel? myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  bool checkedValue = false;
+  bool? checkedValue = false;
 
-  String INR_Price = '';
+  String? INR_Price = '';
   String btnLabelChange = payNow;
   bool isMembershipDiscount = false;
-  String MembershipDiscountPercent;
-  bool isResident = false;
-  String profilePicThumbnailUrl,
+  String? MembershipDiscountPercent;
+  bool? isResident = false;
+  String? profilePicThumbnailUrl,
       doctorName = '',
       speciality = '',
       patientName = '',
       shortURL = "",
       paymentID = "";
-  bool status;
-  Doctor doctorFromNotification;
+  bool? status;
+  Doctor? doctorFromNotification;
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -198,14 +199,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     setLengthValue();
     showDialogForMembershipDiscount();
     try {
-      INR_Price = commonWidgets.getMoneyWithForamt((widget.isFromFollowUpApp &&
+      INR_Price = commonWidgets.getMoneyWithForamt((widget.isFromFollowUpApp! &&
               widget.isFromFollowUpTake == false &&
               isFollowUp())
           ? getFollowUpFee()
-          : widget.isFromHospital
+          : widget.isFromHospital!
               ? getFeesFromHospital(
-                  widget.resultFromHospitalList[widget.doctorListIndex], false)
-              : getFees(widget.healthOrganizationResult[widget.i], false));
+                  widget.resultFromHospitalList![widget.doctorListIndex!], false)
+              : getFees(widget.healthOrganizationResult![widget.i!], false));
     } catch (e) {}
   }
 
@@ -222,14 +223,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   addHealthRecords() {
     //healthRecords.addAll(CommonUtil.recordIds);
-    healthRecords.addAll(CommonUtil.notesId);
-    healthRecords.addAll(CommonUtil.voiceIds);
+    healthRecords.addAll(CommonUtil.notesId!);
+    healthRecords.addAll(CommonUtil.voiceIds!);
   }
 
   clearAttachedRecords() {
-    CommonUtil.recordIds.clear();
-    CommonUtil.notesId.clear();
-    CommonUtil.voiceIds.clear();
+    CommonUtil.recordIds!.clear();
+    CommonUtil.notesId!.clear();
+    CommonUtil.voiceIds!.clear();
     voiceIdCount = 0;
     recordIdCount = 0;
     notesIdCount = 0;
@@ -239,8 +240,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
       familyMembersModel = familyMembersList;
 
-      for (int i = 0; i < familyMembersModel.result.sharedByUsers.length; i++) {
-        sharedbyme.add(familyMembersModel.result.sharedByUsers[i]);
+      for (int i = 0; i < familyMembersModel.result!.sharedByUsers!.length; i++) {
+        sharedbyme.add(familyMembersModel.result!.sharedByUsers![i]);
       }
     });
 
@@ -250,51 +251,51 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   getDataFromWidget() {
     try {
       slotTime = commonUtil.removeLastThreeDigits(widget
-          .sessionData[widget.rowPosition]
-          .slots[widget.itemPosition]
-          .startTime);
+          .sessionData![widget.rowPosition!]
+          .slots![widget.itemPosition!]
+          .startTime!);
       apiStartTime = widget
-          .sessionData[widget.rowPosition].slots[widget.itemPosition].startTime;
+          .sessionData![widget.rowPosition!].slots![widget.itemPosition!].startTime;
       apiEndTime = widget
-          .sessionData[widget.rowPosition].slots[widget.itemPosition].endTime;
+          .sessionData![widget.rowPosition!].slots![widget.itemPosition!].endTime;
       slotNumber = widget
-          .sessionData[widget.rowPosition].slots[widget.itemPosition].slotNumber
+          .sessionData![widget.rowPosition!].slots![widget.itemPosition!].slotNumber
           .toString();
-      doctorSessionId = widget.sessionData[widget.rowPosition].doctorSessionId;
-      scheduleDate = CommonUtil.dateConversionToApiFormat(widget.selectedDate);
-      isResident = widget.isFromHospital
+      doctorSessionId = widget.sessionData![widget.rowPosition!].doctorSessionId;
+      scheduleDate = CommonUtil.dateConversionToApiFormat(widget.selectedDate!);
+      isResident = widget.isFromHospital!
           ? widget
-              .resultFromHospitalList[widget.doctorListIndex].doctor.isResident
-          : widget.isFromFollowReschedule
-              ? widget.docsReschedule[widget.doctorListPos].isResident
-              : widget.docs[widget.doctorListPos].isResident;
-      doctorId = widget.isFromHospital
-          ? widget.resultFromHospitalList[widget.doctorListIndex].doctor.user.id
-          : widget.isFromFollowReschedule
-              ? widget.docsReschedule[widget.doctorListPos].user.id
-              : widget.docs[widget.doctorListPos].user.id;
+              .resultFromHospitalList![widget.doctorListIndex!].doctor!.isResident
+          : widget.isFromFollowReschedule!
+              ? widget.docsReschedule![widget.doctorListPos!]!.isResident
+              : widget.docs![widget.doctorListPos!]!.isResident;
+      doctorId = widget.isFromHospital!
+          ? widget.resultFromHospitalList![widget.doctorListIndex!].doctor!.user!.id
+          : widget.isFromFollowReschedule!
+              ? widget.docsReschedule![widget.doctorListPos!]!.user!.id
+              : widget.docs![widget.doctorListPos!]!.user!.id;
     } catch (exception) {}
   }
 
   Widget getDataFromResponse(
-      AppointmentNotificationPayment appointmentNotificationPayment) {
+      AppointmentNotificationPayment? appointmentNotificationPayment) {
     if (appointmentNotificationPayment != null) {
       slotTime = CommonUtil.getDateStringFromDateTime(
           appointmentNotificationPayment
-              .result?.appointment?.plannedStartDateTime,
+              .result!.appointment!.plannedStartDateTime!,
           forNotification: true);
       apiStartTime = appointmentNotificationPayment
-          .result?.appointment?.plannedStartDateTime;
+          .result!.appointment!.plannedStartDateTime;
       apiEndTime = appointmentNotificationPayment
-          .result?.appointment?.plannedEndDateTime;
+          .result!.appointment!.plannedEndDateTime;
       slotNumber = appointmentNotificationPayment
-          .result?.appointment?.slotNumber
+          .result!.appointment!.slotNumber
           .toString();
       doctorSessionId =
           appointmentNotificationPayment.result?.appointment?.doctorSessionId;
       scheduleDate = CommonUtil.dateConversionToApiFormat(DateTime.tryParse(
           appointmentNotificationPayment
-              .result?.appointment?.plannedStartDateTime));
+              .result!.appointment!.plannedStartDateTime!)!);
       isResident =
           appointmentNotificationPayment.result?.doctor?.isResident ?? false;
       doctorId = appointmentNotificationPayment.result?.doctor?.id;
@@ -302,7 +303,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           .result?.doctor?.user?.profilePicThumbnailUrl;
       doctorFromNotification = appointmentNotificationPayment.result?.doctor;
       status = appointmentNotificationPayment.result?.doctor?.user?.isActive ??
-          strFalse;
+          strFalse as bool?;
       speciality =
           appointmentNotificationPayment.result?.doctor?.specialization ?? '';
       if (appointmentNotificationPayment.result?.payment != null) {
@@ -314,7 +315,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       }
       selectedId =
           appointmentNotificationPayment.result?.appointment?.bookedFor != null
-              ? appointmentNotificationPayment.result?.appointment?.bookedFor.id
+              ? appointmentNotificationPayment.result?.appointment?.bookedFor!.id
               : "";
       try {
         var firstName = appointmentNotificationPayment
@@ -332,7 +333,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         patientName =
             appointmentNotificationPayment.result?.appointment?.bookedFor !=
                     null
-                ? firstName + " " + lastName
+                ? firstName! + " " + lastName!
                 : "";
       } catch (e) {
         patientName = "";
@@ -345,17 +346,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   appointmentNotificationPayment.result?.doctor?.user?.name !=
                       '')
               ? appointmentNotificationPayment
-                  .result?.doctor?.user?.name.capitalizeFirstofEach
+                  .result?.doctor?.user?.name!.capitalizeFirstofEach
               : appointmentNotificationPayment
                               .result?.doctor?.user?.firstName !=
                           null &&
                       appointmentNotificationPayment
-                              .result?.doctor?.user.lastName !=
+                              .result?.doctor?.user!.lastName !=
                           null
-                  ? (appointmentNotificationPayment.result?.doctor?.user
-                          ?.firstName.capitalizeFirstofEach +
+                  ? (appointmentNotificationPayment.result!.doctor!.user
+                          !.firstName!.capitalizeFirstofEach +
                       appointmentNotificationPayment
-                          .result?.doctor?.user?.lastName.capitalizeFirstofEach)
+                          .result!.doctor!.user!.lastName!.capitalizeFirstofEach)
                   : '')
           : '';
 
@@ -370,7 +371,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       stream: _familyListBloc.familyMemberListNewStream,
       builder: (context, AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Scaffold(
                 backgroundColor: Colors.white,
@@ -385,7 +386,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
             case Status.ERROR:
               return FHBBasicWidget.getRefreshContainerButton(
-                  snapshot.data.message, () {
+                  snapshot.data!.message, () {
                 setState(() {});
               });
               break;
@@ -393,12 +394,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             case Status.COMPLETED:
               //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
-              if (snapshot.data.data.result != null) {
-                familyData = snapshot.data.data;
+              if (snapshot.data!.data!.result != null) {
+                familyData = snapshot.data!.data;
               }
 
-              return dropDownButton(snapshot.data.data.result != null
-                  ? snapshot.data.data.result.sharedByUsers
+              return dropDownButton(snapshot.data!.data!.result != null
+                  ? snapshot.data!.data!.result!.sharedByUsers
                   : null);
               break;
           }
@@ -409,20 +410,20 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     );
   }
 
-  Widget dropDownButton(List<SharedByUsers> sharedByMeList) {
-    MyProfileModel myProfile;
+  Widget dropDownButton(List<SharedByUsers>? sharedByMeList) {
+    MyProfileModel? myProfile;
     String fulName = '';
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-      fulName = myProfile.result != null
-          ? myProfile.result.firstName?.capitalizeFirstofEach +
+      fulName = myProfile!.result != null
+          ? myProfile.result!.firstName!.capitalizeFirstofEach +
               ' ' +
-              myProfile.result.lastName?.capitalizeFirstofEach
+              myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
     } catch (e) {}
 
     if (sharedByMeList == null) {
-      sharedByMeList = new List();
+      sharedByMeList = [];
       sharedByMeList
           .add(new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     } else {
@@ -439,7 +440,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       for (SharedByUsers sharedByUsers in _familyNames) {
         if (sharedByUsers != null) {
           if (sharedByUsers.child != null) {
-            if (sharedByUsers.child.id == selectedId) {
+            if (sharedByUsers.child!.id == selectedId) {
               selectedUser = sharedByUsers;
             }
           }
@@ -477,11 +478,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         Text(
                             user.child == null
                                 ? 'Self'
-                                : ((user?.child?.firstName ?? '') +
+                                : ((user.child?.firstName ?? '') +
                                             ' ' +
-                                            (user?.child?.lastName ?? ''))
-                                        ?.capitalizeFirstofEach ??
-                                    '',
+                                            (user.child?.lastName ?? ''))
+                                        .capitalizeFirstofEach,
                             style: TextStyle(
                               fontSize: 14.0.sp,
                             )),
@@ -490,16 +490,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     value: user,
                   ))
               .toList(),
-          onChanged: (SharedByUsers user) {
+          onChanged: (SharedByUsers? user) {
             isFamilyChanged = true;
             setState(() {
               if (selectedUser != user) {
                 clearAttachedRecords();
               }
               selectedUser = user;
-              if (user.child != null) {
-                if (user.child.id != null) {
-                  selectedId = user.child.id;
+              if (user!.child != null) {
+                if (user.child!.id != null) {
+                  selectedId = user.child!.id;
                 }
               } else {
                 selectedId = createdBy;
@@ -535,7 +535,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ? Row(
                   children: <Widget>[
                     SizedBoxWidget(width: 20),
-                    Text(patientName,
+                    Text(patientName!,
                         style: TextStyle(
                           fontSize: 14.0.sp,
                         )),
@@ -570,7 +570,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         onTap: () {
                           if (widget.isFromPaymentNotification == false) {
                             Navigator.pop(context);
-                            widget.refresh();
+                            widget.refresh!();
                           }
                         }),
                     SizedBoxWidget(
@@ -579,7 +579,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     TextWidget(
                       text: widget.selectedDate != null
                           ? commonUtil
-                              .dateConversionToDayMonthYear(widget.selectedDate)
+                              .dateConversionToDayMonthYear(widget.selectedDate!)
                               .toString()
                           : '',
                       fontsize: 14.0.sp,
@@ -630,7 +630,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   Widget build(BuildContext context) {
-    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr = new ProgressDialog(context, type: ProgressDialogType.normal);//  FU2.5
     pr.style(
         message: checkSlots,
         borderRadius: 6.0,
@@ -658,12 +658,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             fontWeight: FontWeight.w600));
 
     return WillPopScope(
-      onWillPop: () {
-        if (widget?.isFromPaymentNotification) {
+      onWillPop: () async {
+        if (widget.isFromPaymentNotification) {
           Get.offAll(NotificationMain());
+          return true;
         } else {
           Navigator.pop(context);
-          if (widget.isFromPaymentNotification == false) widget.refresh();
+          if (widget.isFromPaymentNotification == false) widget.refresh!();
+          return true;
         }
       },
       child: Scaffold(
@@ -672,10 +674,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
             onTap: () {
-              if (widget?.isFromPaymentNotification) {
+              if (widget.isFromPaymentNotification) {
                 Get.offAll(NotificationMain());
               } else {
-                if (widget.isFromPaymentNotification == false) widget.refresh();
+                if (widget.isFromPaymentNotification == false) widget.refresh!();
                 Navigator.pop(context);
               }
             },
@@ -693,7 +695,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     );
   }
 
-  Widget getCSRCheckBox(String discount, String originalFees) {
+  Widget getCSRCheckBox(String? discount, String originalFees) {
     Widget widget;
     if (discount != null &&
         discount != '' &&
@@ -710,18 +712,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         widget = Container(
           child: Center(
             child: CheckboxListTile(
-              title: Text("Qurhealth Discount (" + discount + '%)'),
+              title: Text("Qurhealth Discount (" + discount! + '%)'),
               value: checkedValue,
               activeColor: Colors.green,
               onChanged: (newValue) {
                 setState(() {
                   checkedValue = newValue;
-                  if (checkedValue) {
+                  if (checkedValue!) {
                     if (originalFees.contains(',')) {
                       originalFees = originalFees.replaceAll(',', '');
                     }
                     INR_Price = getDiscountedFee(
-                        double.parse(discount), double.parse(originalFees));
+                        double.parse(discount!), double.parse(originalFees));
                     if (INR_Price == '0' || INR_Price == '0.00') {
                       btnLabelChange = bookNow;
                     } else {
@@ -759,9 +761,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     }
   }
 
-  String getFollowUpFee() {
+  String? getFollowUpFee() {
     if (widget.followUpFee != null && widget.followUpFee != '') {
-      return widget?.followUpFee;
+      return widget.followUpFee;
     } else {
       return '';
     }
@@ -872,7 +874,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                     healthRecords.length > 0)
                                                 ? true
                                                 : false,
-                                            (widget.isFromFollowUpApp &&
+                                            (widget.isFromFollowUpApp! &&
                                                 widget.isFromFollowUpTake ==
                                                     false &&
                                                 isFollowUp()),
@@ -880,7 +882,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                     healthRecords.length > 0)
                                                 ? healthRecords
                                                 : [],
-                                            doc: widget.isFollowUp
+                                            doc: widget.isFollowUp!
                                                 ? widget.doctorsData
                                                 : null,
                                             isResidentDoctorMembership:
@@ -913,10 +915,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     if (widget.doctorsData?.plannedFollowupDate != null &&
         widget.followUpFee != null &&
         widget.isFollowUp == true) {
-      if (widget.doctorsData.isFollowUpTaken == true) {
-        if (widget.selectedDate
+      if (widget.doctorsData!.isFollowUpTaken == true) {
+        if (widget.selectedDate!
                 .difference(
-                    DateTime.parse(widget.doctorsData.plannedFollowupDate))
+                    DateTime.parse(widget.doctorsData!.plannedFollowupDate!))
                 .inDays <=
             0) {
           return true;
@@ -926,9 +928,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       } else if (widget.doctorsData?.plannedFollowupDate == null) {
         return false;
       } else {
-        if (widget.selectedDate
+        if (widget.selectedDate!
                 .difference(
-                    DateTime.parse(widget.doctorsData.plannedFollowupDate))
+                    DateTime.parse(widget.doctorsData!.plannedFollowupDate!))
                 .inDays <=
             0) {
           return true;
@@ -942,19 +944,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   Future<CreateAppointmentModel> bookAppointmentCall(
-    String createdBy,
-    String bookedFor,
-    String doctorSessionId,
-    String scheduleDate,
-    String slotNumber,
+    String? createdBy,
+    String? bookedFor,
+    String? doctorSessionId,
+    String? scheduleDate,
+    String? slotNumber,
     bool isMedicalShared,
     bool isFollowUp,
     List<String> healthRecords,
-    bool isCSRDiscount, {
-    Past doc,
+    bool? isCSRDiscount, {
+    Past? doc,
     bool isResidentDoctorMembership = false,
   }) async {
-    CreateAppointmentModel bookAppointmentModel =
+    CreateAppointmentModel? bookAppointmentModel =
         await createAppointMentViewModel.putBookAppointment(
       createdBy,
       bookedFor,
@@ -969,19 +971,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       isResidentDoctorMembership: isResidentDoctorMembership,
     );
 
-    return bookAppointmentModel;
+    return bookAppointmentModel!;
   }
 
   bookAppointment(
-    String createdBy,
-    String bookedFor,
-    String doctorSessionId,
-    String scheduleDate,
-    String slotNumber,
+    String? createdBy,
+    String? bookedFor,
+    String? doctorSessionId,
+    String? scheduleDate,
+    String? slotNumber,
     bool isMedicalShared,
     bool isFollowUp,
     List<String> healthRecords, {
-    Past doc,
+    Past? doc,
     bool isResidentDoctorMembership = false,
   }) {
     setState(() {
@@ -989,10 +991,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
 
     try {
-      if (CommonUtil.recordIds.length > 0) {
+      if (CommonUtil.recordIds!.length > 0) {
         associateRecords(doctorId, selectedId, CommonUtil.recordIds)
             .then((value) {
-          if (value != null && value.isSuccess) {
+          if (value != null && value.isSuccess!) {
             bookAppointmentOnly(
               createdBy,
               bookedFor,
@@ -1033,16 +1035,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   bookAppointmentOnly(
-    String createdBy,
-    String bookedFor,
-    String doctorSessionId,
-    String scheduleDate,
-    String slotNumber,
+    String? createdBy,
+    String? bookedFor,
+    String? doctorSessionId,
+    String? scheduleDate,
+    String? slotNumber,
     bool isMedicalShared,
     bool isFollowUp,
     List<String> healthRecords,
-    bool isCSRDiscount, {
-    Past doc,
+    bool? isCSRDiscount, {
+    Past? doc,
     bool isResidentDoctorMembership = false,
   }) {
     bookAppointmentCall(
@@ -1064,41 +1066,41 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             value.result != null) {
           if (value.isSuccess == true &&
               value.message == appointmentCreatedMessage) {
-            if (value?.result?.paymentInfo != null &&
-                value?.result.paymentInfo?.payload?.paymentGatewayDetail !=
+            if (value.result?.paymentInfo != null &&
+                value.result!.paymentInfo?.payload?.paymentGatewayDetail !=
                     null) {
-              if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+              if (value.result?.paymentInfo?.payload?.paymentGatewayDetail
                       ?.responseInfo?.paymentGateWay ==
                   STR_RAZOPAY) {
-                if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                if (value.result?.paymentInfo?.payload?.paymentGatewayDetail
                         ?.responseInfo?.shorturl !=
                     null) {
                   PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
 
                   goToPaymentPage(
-                      value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                      value.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.shorturl,
-                      value?.result?.paymentInfo?.payload?.payment?.id,
+                      value.result?.paymentInfo?.payload?.payment?.id,
                       true,
-                      value?.result?.appointmentInfo?.id);
+                      value.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(
-                      value.message != null ? value.message : someWentWrong,
+                      value.message != null ? value.message! : someWentWrong,
                       Colors.red);
                 }
               } else {
-                if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                if (value.result?.paymentInfo?.payload?.paymentGatewayDetail
                         ?.responseInfo?.longurl !=
                     null) {
                   PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
 
                   goToPaymentPage(
-                      value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                      value.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.longurl,
-                      value?.result?.paymentInfo?.payload?.payment?.id,
+                      value.result?.paymentInfo?.payload?.payment?.id,
                       false,
-                      value?.result?.appointmentInfo?.id);
+                      value.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(noUrl, Colors.red);
@@ -1117,7 +1119,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           } else {
             pr.hide();
             toast.getToast(
-                value.message != null ? value.message : someWentWrong,
+                value.message != null ? value.message! : someWentWrong,
                 Colors.red);
           }
         } else {
@@ -1130,10 +1132,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   goToPaymentPage(
-      String longurl, String paymentId, bool isRazor, String appointmentId) {
-    CommonUtil.recordIds.clear();
-    CommonUtil.notesId.clear();
-    CommonUtil.voiceIds.clear();
+      String? longurl, String? paymentId, bool isRazor, String? appointmentId) {
+    CommonUtil.recordIds!.clear();
+    CommonUtil.notesId!.clear();
+    CommonUtil.voiceIds!.clear();
 
     Navigator.pushReplacement(
         context,
@@ -1148,7 +1150,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   closePage: (value) {
                     if (value == 'success') {
                       if (widget.isFromPaymentNotification == false) {
-                        widget.closePage(value);
+                        widget.closePage!(value);
                         Navigator.pop(context);
                       } else {
                         Get.offAllNamed(
@@ -1160,7 +1162,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       }
                     } else {
                       if (widget.isFromPaymentNotification == false) {
-                        widget.refresh();
+                        widget.refresh!();
                         Navigator.pop(context);
                       } else {
                         Get.off(NotificationMain());
@@ -1203,16 +1205,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               child: commonWidgets.getClipOvalImageBookConfirm(
                   widget.isFromPaymentNotification
                       ? profilePicThumbnailUrl
-                      : widget.isFromHospital
+                      : widget.isFromHospital!
                           ? widget
-                              .resultFromHospitalList[widget.doctorListIndex]
-                              .doctor
-                              .user
+                              .resultFromHospitalList![widget.doctorListIndex!]
+                              .doctor!
+                              .user!
                               .profilePicThumbnailUrl
-                          : widget.isFromFollowReschedule
-                              ? widget.docsReschedule[widget.doctorListPos].user
+                          : widget.isFromFollowReschedule!
+                              ? widget.docsReschedule![widget.doctorListPos!]!.user!
                                   .profilePicThumbnailUrl
-                              : widget.docs[widget.doctorListPos].user
+                              : widget.docs![widget.doctorListPos!]!.user!
                                   .profilePicThumbnailUrl),
             ),
             /* Container(
@@ -1226,17 +1228,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               child: widget.isFromPaymentNotification
                   ? commonWidgets.getDoctorStatusWidgetNewForHos(null, 0,
                       status: '${status}')
-                  : widget.isFromHospital
+                  : widget.isFromHospital!
                       ? commonWidgets.getDoctorStatusWidgetNewForHos(
-                          widget.resultFromHospitalList[widget.doctorListIndex]
+                          widget.resultFromHospitalList![widget.doctorListIndex!]
                               .doctor,
                           widget.i)
-                      : widget.isFromFollowReschedule
+                      : widget.isFromFollowReschedule!
                           ? commonWidgets.getDoctorStatusWidgetForReschedule(
-                              widget.docsReschedule[widget.doctorListPos],
+                              widget.docsReschedule![widget.doctorListPos!]!,
                               widget.i)
                           : commonWidgets.getDoctorStatusWidgetNew(
-                              widget.docs[widget.doctorListPos], widget.i),
+                              widget.docs![widget.doctorListPos!]!, widget.i),
             )
           ],
         ),
@@ -1256,20 +1258,20 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           constraints: BoxConstraints(maxWidth: 160.w),
                           child: widget.isFromPaymentNotification
                               ? commonWidgets
-                                  .getWidgetWithDoctorName(doctorName)
-                              : widget.isFromHospital
+                                  .getWidgetWithDoctorName(doctorName!)
+                              : widget.isFromHospital!
                                   ? commonWidgets.setDoctornameForHos(widget
-                                      .resultFromHospitalList[
-                                          widget.doctorListIndex]
-                                      .doctor
+                                      .resultFromHospitalList![
+                                          widget.doctorListIndex!]
+                                      .doctor!
                                       .user)
                                   : commonWidgets.setDoctorname(widget
-                                          .isFromFollowReschedule
+                                          .isFromFollowReschedule!
                                       ? widget
-                                          .docsReschedule[widget.doctorListPos]
+                                          .docsReschedule![widget.doctorListPos!]!
                                           .user
                                       : widget
-                                          .docs[widget.doctorListPos].user)),
+                                          .docs![widget.doctorListPos!]!.user)),
 
                       //commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
@@ -1277,21 +1279,21 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           height: fhbStyles.imageHeight,
                           icon: Icons.info,
                           onTap: () {
-                            widget.isFromHospital
+                            widget.isFromHospital!
                                 ? commonWidgets.showDoctorDetailViewNewForHos(
                                     widget
-                                        .resultFromHospitalList[
-                                            widget.doctorListIndex]
+                                        .resultFromHospitalList![
+                                            widget.doctorListIndex!]
                                         .doctor,
                                     context)
-                                : widget.isFromFollowReschedule
+                                : widget.isFromFollowReschedule!
                                     ? commonWidgets
                                         .showDoctorDetailViewForReschedule(
-                                            widget.docsReschedule[
-                                                widget.doctorListPos],
+                                            widget.docsReschedule![
+                                                widget.doctorListPos!],
                                             context)
                                     : commonWidgets.showDoctorDetailViewNew(
-                                        widget.docs[widget.doctorListPos],
+                                        widget.docs![widget.doctorListPos!],
                                         context);
                           }),
                     ],
@@ -1302,29 +1304,29 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           height: fhbStyles.imageHeight,
                           icon: Icons.check_circle,
                           onTap: () {})
-                      : widget.isFromHospital
+                      : widget.isFromHospital!
                           ? widget
-                                  .resultFromHospitalList[
-                                      widget.doctorListIndex]
-                                  .doctor
-                                  .isActive
+                                  .resultFromHospitalList![
+                                      widget.doctorListIndex!]
+                                  .doctor!
+                                  .isActive!
                               ? commonWidgets.getIcon(
                                   width: fhbStyles.imageWidth,
                                   height: fhbStyles.imageHeight,
                                   icon: Icons.check_circle,
                                   onTap: () {})
-                              : widget.isFromFollowReschedule
+                              : widget.isFromFollowReschedule!
                                   ? widget
-                                          .docsReschedule[
-                                              widget.doctorListIndex]
-                                          .isActive
+                                          .docsReschedule![
+                                              widget.doctorListIndex!]!
+                                          .isActive!
                                       ? commonWidgets.getIcon(
                                           width: fhbStyles.imageWidth,
                                           height: fhbStyles.imageHeight,
                                           icon: Icons.check_circle,
                                           onTap: () {})
-                                      : widget.docs[widget.doctorListPos]
-                                              .isActive
+                                      : widget.docs![widget.doctorListPos!]!
+                                              .isActive!
                                           ? commonWidgets.getIcon(
                                               width: fhbStyles.imageWidth,
                                               height: fhbStyles.imageHeight,
@@ -1339,16 +1341,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               Row(children: [
                 Expanded(
                     child: widget.isFromPaymentNotification
-                        ? commonWidgets.getDoctorSpecialityText(speciality)
-                        : widget.isFromHospital
+                        ? commonWidgets.getDoctorSpecialityText(speciality!)
+                        : widget.isFromHospital!
                             ? commonWidgets.getDoctoSpecialistOnlyForHos(widget
-                                .resultFromHospitalList[widget.doctorListIndex]
-                                .doctor)
-                            : widget.isFromFollowReschedule
+                                .resultFromHospitalList![widget.doctorListIndex!]
+                                .doctor!)
+                            : widget.isFromFollowReschedule!
                                 ? commonWidgets.getDoctoSpecialistForReschedule(
-                                    widget.docsReschedule[widget.doctorListPos])
+                                    widget.docsReschedule![widget.doctorListPos!]!)
                                 : commonWidgets.getDoctoSpecialistOnly(
-                                    widget.docs[widget.doctorListPos])),
+                                    widget.docs![widget.doctorListPos!]!)),
               ]),
               commonWidgets.getSizedBox(5.0),
               Row(
@@ -1358,20 +1360,20 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       child: Text(
                     widget.isFromPaymentNotification
                         ? ''
-                        : widget.isFromHospital
+                        : widget.isFromHospital!
                             ? '' +
                                 commonWidgets.getCityDoctorsModelForHos(widget
-                                    .resultFromHospitalList[
-                                        widget.doctorListIndex]
-                                    .doctor)
-                            : widget.isFromFollowReschedule
+                                    .resultFromHospitalList![
+                                        widget.doctorListIndex!]
+                                    .doctor!)!
+                            : widget.isFromFollowReschedule!
                                 ? '' +
                                     commonWidgets
                                         .getCityDoctorsModelForReschedule(
-                                            widget.docsReschedule[
-                                                widget.doctorListPos])
+                                            widget.docsReschedule![
+                                                widget.doctorListPos!]!)!
                                 : commonWidgets.getCityDoctorsModel(
-                                    widget.docs[widget.doctorListPos]),
+                                    widget.docs![widget.doctorListPos!]!)!,
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
                     style: TextStyle(
@@ -1383,85 +1385,85 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       ? commonWidgets.getMCVerified(
                           doctorFromNotification?.isMciVerified ?? false,
                           'Verified')
-                      : widget.isFromHospital
+                      : widget.isFromHospital!
                           ? widget
-                                  .resultFromHospitalList[
-                                      widget.doctorListIndex]
-                                  .doctor
-                                  .isMciVerified
+                                  .resultFromHospitalList![
+                                      widget.doctorListIndex!]
+                                  .doctor!
+                                  .isMciVerified!
                               ? commonWidgets.getMCVerified(
-                                  widget.isFromHospital
+                                  widget.isFromHospital!
                                       ? widget
-                                          .resultFromHospitalList[
-                                              widget.doctorListIndex]
-                                          .doctor
-                                          .isMciVerified
+                                          .resultFromHospitalList![
+                                              widget.doctorListIndex!]
+                                          .doctor!
+                                          .isMciVerified!
                                       : widget
-                                          .resultFromHospitalList[
-                                              widget.doctorListIndex]
-                                          .doctor
-                                          .isMciVerified,
+                                          .resultFromHospitalList![
+                                              widget.doctorListIndex!]
+                                          .doctor!
+                                          .isMciVerified!,
                                   'Verified')
                               : commonWidgets.getMCVerified(
-                                  widget.isFromHospital
+                                  widget.isFromHospital!
                                       ? widget
-                                          .resultFromHospitalList[
-                                              widget.doctorListIndex]
-                                          .doctor
-                                          .isMciVerified
+                                          .resultFromHospitalList![
+                                              widget.doctorListIndex!]
+                                          .doctor!
+                                          .isMciVerified!
                                       : widget
-                                          .resultFromHospitalList[
-                                              widget.doctorListIndex]
-                                          .doctor
-                                          .isMciVerified,
+                                          .resultFromHospitalList![
+                                              widget.doctorListIndex!]
+                                          .doctor!
+                                          .isMciVerified!,
                                   'Not Verified')
-                          : widget.isFromFollowReschedule
-                              ? widget.docsReschedule[widget.doctorListPos]
-                                      .isMciVerified
+                          : widget.isFromFollowReschedule!
+                              ? widget.docsReschedule![widget.doctorListPos!]!
+                                      .isMciVerified!
                                   ? commonWidgets.getMCVerified(
-                                      widget.isFromHospital
+                                      widget.isFromHospital!
                                           ? widget
-                                              .resultFromHospitalList[
-                                                  widget.doctorListPos]
-                                              .doctor
-                                              .isMciVerified
+                                              .resultFromHospitalList![
+                                                  widget.doctorListPos!]
+                                              .doctor!
+                                              .isMciVerified!
                                           : widget
-                                              .docsReschedule[
-                                                  widget.doctorListPos]
-                                              .isMciVerified,
+                                              .docsReschedule![
+                                                  widget.doctorListPos!]!
+                                              .isMciVerified!,
                                       'Verified')
                                   : commonWidgets.getMCVerified(
-                                      widget.isFromHospital
+                                      widget.isFromHospital!
                                           ? widget
-                                              .resultFromHospitalList[
-                                                  widget.doctorListPos]
-                                              .doctor
-                                              .isMciVerified
+                                              .resultFromHospitalList![
+                                                  widget.doctorListPos!]
+                                              .doctor!
+                                              .isMciVerified!
                                           : widget
-                                              .docsReschedule[
-                                                  widget.doctorListPos]
-                                              .isMciVerified,
+                                              .docsReschedule![
+                                                  widget.doctorListPos!]!
+                                              .isMciVerified!,
                                       'Not Verified')
-                              : widget.docs[widget.doctorListPos].isMciVerified
+                              : widget.docs![widget.doctorListPos!]!.isMciVerified!
                                   ? commonWidgets.getMCVerified(
-                                      widget.isFromHospital
+                                      widget.isFromHospital!
                                           ? widget
-                                              .resultFromHospitalList[
-                                                  widget.doctorListPos]
-                                              .doctor
-                                              .isMciVerified
-                                          : widget.docs[widget.doctorListPos]
-                                              .isMciVerified,
+                                              .resultFromHospitalList![
+                                                  widget.doctorListPos!]
+                                              .doctor!
+                                              .isMciVerified!
+                                          : widget.docs![widget.doctorListPos!]!
+                                              .isMciVerified!,
                                       'Verified')
                                   : commonWidgets.getMCVerified(
-                                      widget.isFromHospital
+                                      widget.isFromHospital!
                                           ? widget
-                                              .resultFromHospitalList[
-                                                  widget.doctorListPos]
-                                              .doctor
-                                              .isMciVerified
-                                          : widget.docs[widget.doctorListPos]
-                                              .isMciVerified,
+                                              .resultFromHospitalList![
+                                                  widget.doctorListPos!]
+                                              .doctor!
+                                              .isMciVerified!
+                                          : widget.docs![widget.doctorListPos!]!
+                                              .isMciVerified!,
                                       'Not Verified'),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
@@ -1473,13 +1475,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     );
   }
 
-  List<CategoryResult> getCategoryList() {
+  List<CategoryResult>? getCategoryList() {
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
-      _categoryListBlock.getCategoryLists().then((value) {
-        categoryDataList = value.result;
+      _categoryListBlock!.getCategoryLists().then((value) {
+        categoryDataList = value!.result;
 
         filteredCategoryData =
-            new CommonUtil().fliterCategories(categoryDataList);
+            new CommonUtil().fliterCategories(categoryDataList!);
 
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;
@@ -1516,8 +1518,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList = getCategoryList();
-    for (int i = 0; i < categoryDataList.length; i++) {
+    List<CategoryResult>? categoryDataList = getCategoryList();
+    for (int i = 0; i < categoryDataList!.length; i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         saveCategoryToprefernce(categoryDataList[i]);
         position = i;
@@ -1531,7 +1533,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   void FetchRecords(int position, bool allowSelect, bool isAudioSelect,
-      bool isNotesSelect, List<String> mediaIds) async {
+      bool isNotesSelect, List<String>? mediaIds) async {
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
@@ -1549,21 +1551,21 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       ),
     ))
         .then((results) {
-      if (results.containsKey(STR_META_ID)) {
+      if (results?.containsKey(STR_META_ID)) {
         var metaIds = results[STR_META_ID];
         print(metaIds.toString());
 
         if (allowSelect) {
           CommonUtil.recordIds = results['metaId'].cast<String>();
-          recordIdCount = CommonUtil.recordIds.length;
+          recordIdCount = CommonUtil.recordIds!.length;
         } else if (isAudioSelect) {
           CommonUtil.voiceIds = results['metaId'].cast<String>();
 
-          voiceIdCount = CommonUtil.voiceIds.length;
+          voiceIdCount = CommonUtil.voiceIds!.length;
         } else if (isNotesSelect) {
           CommonUtil.notesId = results['metaId'].cast<String>();
 
-          notesIdCount = CommonUtil.notesId.length;
+          notesIdCount = CommonUtil.notesId!.length;
         }
         print(recordIdCount);
         setState(() {});
@@ -1573,17 +1575,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   setLengthValue() {
-    recordIdCount = CommonUtil.recordIds.length;
-    voiceIdCount = CommonUtil.voiceIds.length;
-    notesIdCount = CommonUtil.notesId.length;
+    recordIdCount = CommonUtil.recordIds!.length;
+    voiceIdCount = CommonUtil.voiceIds!.length;
+    notesIdCount = CommonUtil.notesId!.length;
   }
 
   Future<AssociateSuccessResponse> associateRecords(
-      String doctorId, String userId, List<String> healthRecords) async {
-    AssociateSuccessResponse associateResponseList = await providerViewModel
+      String? doctorId, String? userId, List<String>? healthRecords) async {
+    AssociateSuccessResponse? associateResponseList = await providerViewModel
         .associateRecords(doctorId, userId, healthRecords);
 
-    return associateResponseList;
+    return associateResponseList!;
   }
 
   Container getMembershipDiscountCheckBox() {
@@ -1592,7 +1594,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             child: Center(
               child: CheckboxListTile(
                 title: Text(
-                  "Membership Discount (" + MembershipDiscountPercent + '%)',
+                  "Membership Discount (" + MembershipDiscountPercent! + '%)',
                   style: TextStyle(color: Colors.grey),
                 ),
                 value: true,
@@ -1607,46 +1609,46 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   showDialogForMembershipDiscount() async {
-    if (!isResident) return;
-    String originalFees;
-    String discountPercent;
-    String discount;
-    bool isActiveMember = await PreferenceUtil.getActiveMembershipStatus();
+    if (!isResident!) return;
+    String? originalFees;
+    String? discountPercent;
+    String? discount;
+    bool? isActiveMember = await PreferenceUtil.getActiveMembershipStatus();
     if (!(isActiveMember ?? false)) return;
-    if (widget.isFromHospital) {
+    if (widget.isFromHospital!) {
       ResultFromHospital result =
-          widget.resultFromHospitalList[widget.doctorListIndex];
+          widget.resultFromHospitalList![widget.doctorListIndex!];
       if (result.doctorFeeCollection != null) {
-        if (result.doctorFeeCollection.length > 0) {
-          for (int i = 0; i < result.doctorFeeCollection.length; i++) {
-            String feesCode = result.doctorFeeCollection[i].feeType.code;
-            bool isActive = result.doctorFeeCollection[i].isActive;
-            if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
-              discountPercent = result.doctorFeeCollection[i].fee;
-            } else if (feesCode == CONSULTING && isActive) {
-              originalFees = result.doctorFeeCollection[i].fee;
+        if (result.doctorFeeCollection!.length > 0) {
+          for (int i = 0; i < result.doctorFeeCollection!.length; i++) {
+            String? feesCode = result.doctorFeeCollection![i].feeType!.code;
+            bool? isActive = result.doctorFeeCollection![i].isActive;
+            if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive!) {
+              discountPercent = result.doctorFeeCollection![i].fee;
+            } else if (feesCode == CONSULTING && isActive!) {
+              originalFees = result.doctorFeeCollection![i].fee;
             }
           }
         }
       }
     } else {
       HealthOrganizationResult result =
-          widget.healthOrganizationResult[widget.i];
+          widget.healthOrganizationResult![widget.i!];
       if (result.doctorFeeCollection != null) {
-        if (result.doctorFeeCollection.length > 0) {
-          for (int i = 0; i < result.doctorFeeCollection.length; i++) {
-            String feesCode = result.doctorFeeCollection[i].feeType.code;
-            bool isActive = result.doctorFeeCollection[i].isActive;
-            if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
-              discountPercent = result.doctorFeeCollection[i].fee;
-            } else if (feesCode == CONSULTING && isActive) {
-              originalFees = result.doctorFeeCollection[i].fee;
+        if (result.doctorFeeCollection!.length > 0) {
+          for (int i = 0; i < result.doctorFeeCollection!.length; i++) {
+            String? feesCode = result.doctorFeeCollection![i].feeType!.code;
+            bool? isActive = result.doctorFeeCollection![i].isActive;
+            if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive!) {
+              discountPercent = result.doctorFeeCollection![i].fee;
+            } else if (feesCode == CONSULTING && isActive!) {
+              originalFees = result.doctorFeeCollection![i].fee;
             }
           }
         }
       }
     }
-    if (widget.isFromFollowUpApp &&
+    if (widget.isFromFollowUpApp! &&
         widget.isFromFollowUpTake == false &&
         isFollowUp()) {
       originalFees = getFollowUpFee();
@@ -1656,13 +1658,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         try {
           discountPercent = CommonUtil()
               .doubleWithoutDecimalToInt(
-                double.parse(discountPercent),
+                double.parse(discountPercent!),
               )
               .toString();
         } catch (e) {
           return;
         }
-        if (originalFees.contains(',')) {
+        if (originalFees!.contains(',')) {
           originalFees = originalFees.replaceAll(',', '');
         }
         discount = getDiscountedFee(
@@ -1721,20 +1723,20 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     }
   }
 
-  String getFees(HealthOrganizationResult result, bool isCSRDiscount) {
-    String fees;
+  String? getFees(HealthOrganizationResult result, bool isCSRDiscount) {
+    String? fees;
     if (result.doctorFeeCollection != null) {
-      if (result.doctorFeeCollection.length > 0) {
-        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
-          String feesCode = result.doctorFeeCollection[i].feeType.code;
-          bool isActive = result.doctorFeeCollection[i].isActive;
+      if (result.doctorFeeCollection!.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection!.length; i++) {
+          String? feesCode = result.doctorFeeCollection![i].feeType!.code;
+          bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }
@@ -1747,20 +1749,20 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return fees;
   }
 
-  String getFeesFromHospital(ResultFromHospital result, bool isCSRDiscount) {
-    String fees;
+  String? getFeesFromHospital(ResultFromHospital result, bool isCSRDiscount) {
+    String? fees;
     if (result.doctorFeeCollection != null) {
-      if (result.doctorFeeCollection.length > 0) {
-        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
-          String feesCode = result.doctorFeeCollection[i].feeType.code;
-          bool isActive = result.doctorFeeCollection[i].isActive;
+      if (result.doctorFeeCollection!.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection!.length; i++) {
+          String? feesCode = result.doctorFeeCollection![i].feeType!.code;
+          bool? isActive = result.doctorFeeCollection![i].isActive;
           if (isCSRDiscount) {
             if (feesCode == CSR_DISCOUNT && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           } else {
             if (feesCode == CONSULTING && isActive == true) {
-              fees = result?.doctorFeeCollection[i]?.fee;
+              fees = result.doctorFeeCollection![i].fee;
             }
           }
         }
@@ -1775,49 +1777,49 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   void saveCategoryToprefernce(CategoryResult category) async {
     await PreferenceUtil.saveString(
-        Constants.KEY_CATEGORYNAME, category.categoryName);
-    await PreferenceUtil.saveString(Constants.KEY_CATEGORYID, category.id);
-    await PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, selectedId);
+        Constants.KEY_CATEGORYNAME, category.categoryName!);
+    await PreferenceUtil.saveString(Constants.KEY_CATEGORYID, category.id!);
+    await PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, selectedId!);
   }
 
   addressValidation(BuildContext context) {
     if (myProfile != null) {
-      if (myProfile.isSuccess) {
-        if (myProfile.result != null) {
-          if (myProfile.result.gender != null &&
-              myProfile.result.gender.isNotEmpty) {
-            if (myProfile.result.dateOfBirth != null &&
-                myProfile.result.dateOfBirth.isNotEmpty) {
-              if (myProfile.result.additionalInfo != null) {
-                if ((myProfile.result.additionalInfo.height != null &&
-                        myProfile.result.additionalInfo.height.isNotEmpty) ||
-                    myProfile.result.additionalInfo.heightObj != null) {
-                  if (myProfile.result.additionalInfo.weight != null &&
-                      myProfile.result.additionalInfo.weight.isNotEmpty) {
-                    if (myProfile.result.userAddressCollection3 != null) {
-                      if (myProfile.result.userAddressCollection3.length > 0) {
-                        if (myProfile.result.userAddressCollection3[0]
+      if (myProfile!.isSuccess!) {
+        if (myProfile!.result != null) {
+          if (myProfile!.result!.gender != null &&
+              myProfile!.result!.gender!.isNotEmpty) {
+            if (myProfile!.result!.dateOfBirth != null &&
+                myProfile!.result!.dateOfBirth!.isNotEmpty) {
+              if (myProfile!.result!.additionalInfo != null) {
+                if ((myProfile!.result!.additionalInfo!.height != null &&
+                        myProfile!.result!.additionalInfo!.height!.isNotEmpty) ||
+                    myProfile!.result!.additionalInfo!.heightObj != null) {
+                  if (myProfile!.result!.additionalInfo!.weight != null &&
+                      myProfile!.result!.additionalInfo!.weight!.isNotEmpty) {
+                    if (myProfile!.result!.userAddressCollection3 != null) {
+                      if (myProfile!.result!.userAddressCollection3!.length > 0) {
+                        if (myProfile!.result!.userAddressCollection3![0]
                                     .addressLine1 !=
                                 null &&
-                            myProfile.result.userAddressCollection3[0]
-                                .addressLine1.isNotEmpty &&
-                            myProfile
-                                    .result.userAddressCollection3[0].pincode !=
+                            myProfile!.result!.userAddressCollection3![0]
+                                .addressLine1!.isNotEmpty &&
+                            myProfile!
+                                    .result!.userAddressCollection3![0].pincode !=
                                 null &&
-                            myProfile.result.userAddressCollection3[0].pincode
+                            myProfile!.result!.userAddressCollection3![0].pincode!
                                 .isNotEmpty) {
-                          if (myProfile.result.userAddressCollection3[0]
+                          if (myProfile!.result!.userAddressCollection3![0]
                                       .addressLine1 !=
                                   null &&
-                              myProfile.result.userAddressCollection3[0]
-                                  .addressLine1.isNotEmpty) {
-                            if (myProfile.result.userAddressCollection3[0]
+                              myProfile!.result!.userAddressCollection3![0]
+                                  .addressLine1!.isNotEmpty) {
+                            if (myProfile!.result!.userAddressCollection3![0]
                                         .pincode !=
                                     null &&
-                                myProfile.result.userAddressCollection3[0]
-                                    .pincode.isNotEmpty) {
+                                myProfile!.result!.userAddressCollection3![0]
+                                    .pincode!.isNotEmpty) {
                               patientAddressCheck(
-                                  myProfile.result.userAddressCollection3[0],
+                                  myProfile!.result!.userAddressCollection3![0],
                                   context);
                             } else {
                               showInSnackBar(noZipcode, 'Add');
@@ -1881,14 +1883,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   patientAddressCheck(
       UserAddressCollection3 userAddressCollection, BuildContext context) {
-    String address1 = userAddressCollection.addressLine1 != null
+    String? address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
-    String city = userAddressCollection.city.name != null
-        ? userAddressCollection.city.name
+    String? city = userAddressCollection.city!.name != null
+        ? userAddressCollection.city!.name
         : '';
-    String state = userAddressCollection.state.name != null
-        ? userAddressCollection.state.name
+    String? state = userAddressCollection.state!.name != null
+        ? userAddressCollection.state!.name
         : '';
 
     if (address1 != '' && city != '' && state != '') {
@@ -1905,7 +1907,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           (healthRecords != null && healthRecords.length > 0)
               ? healthRecords
               : [],
-          doc: widget.isFollowUp ? widget.doctorsData : null,
+          doc: widget.isFollowUp! ? widget.doctorsData : null,
           isResidentDoctorMembership: isMembershipDiscount,
         );
       } else {
@@ -1917,7 +1919,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   void showInSnackBar(String message, String actionName) {
-    _scaffoldKey.currentState.showSnackBar(
+    _scaffoldKey.currentState!.showSnackBar(
       new SnackBar(
         content: Text(message),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -1949,7 +1951,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     bool twoDecimal = false,
   }) {
     var discountedPrice;
-    String priceLast;
+    String? priceLast;
     if (percent != null && price != null && percent != '' && price != '') {
       discountedPrice = (percent / 100) * price;
       price = price - discountedPrice;
@@ -2178,25 +2180,25 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   : isMembershipDiscount
                       ? SizedBox.shrink()
                       : getCSRCheckBox(
-                          widget.isFromHospital
+                          widget.isFromHospital!
                               ? getFeesFromHospital(
-                                  widget.resultFromHospitalList[
-                                      widget.doctorListIndex],
+                                  widget.resultFromHospitalList![
+                                      widget.doctorListIndex!],
                                   true,
                                 )
                               : getFees(
-                                  widget.healthOrganizationResult[widget.i],
+                                  widget.healthOrganizationResult![widget.i!],
                                   true,
                                 ),
                           commonWidgets.getMoneyWithForamt(
-                            widget.isFromHospital
+                            widget.isFromHospital!
                                 ? getFeesFromHospital(
-                                    widget.resultFromHospitalList[
-                                        widget.doctorListIndex],
+                                    widget.resultFromHospitalList![
+                                        widget.doctorListIndex!],
                                     false,
                                   )
                                 : getFees(
-                                    widget.healthOrganizationResult[widget.i],
+                                    widget.healthOrganizationResult![widget.i!],
                                     false,
                                   ),
                           ),
@@ -2214,7 +2216,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           Container(
             child: Center(
               child: Text(
-                'Pay ${CommonUtil.CURRENCY}' + INR_Price,
+                'Pay ${CommonUtil.CURRENCY}' + INR_Price!,
                 maxLines: 1,
                 style: TextStyle(
                     fontSize: 22.0.sp,
@@ -2245,7 +2247,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     padding: EdgeInsets.all(8.0),
                     onPressed: () {
                       if (widget.isFromPaymentNotification == false)
-                        widget.refresh();
+                        widget.refresh!();
                       Navigator.pop(context);
                     },
                     child: TextWidget(
@@ -2273,9 +2275,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             profileValidationCheck(
                                 context,
                                 selectedId != ''
-                                    ? selectedId
+                                    ? selectedId!
                                     : PreferenceUtil.getStringValue(
-                                        Constants.KEY_USERID));
+                                        Constants.KEY_USERID)!);
                           } else {
                             if (btnLabelChange == bookNow) {
                               bookAppointment(
@@ -2293,7 +2295,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         healthRecords.length > 0)
                                     ? healthRecords
                                     : [],
-                                doc: widget.isFollowUp
+                                doc: widget.isFollowUp!
                                     ? widget.doctorsData
                                     : null,
                                 isResidentDoctorMembership:
@@ -2324,9 +2326,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   Widget getAppointmentDetailsUsingId() {
-    return FutureBuilder<AppointmentNotificationPayment>(
+    return FutureBuilder<AppointmentNotificationPayment?>(
       future: createAppointMentViewModel
-          .getAppointmentDetailsUsingId(widget.appointmentId),
+          .getAppointmentDetailsUsingId(widget.appointmentId!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(

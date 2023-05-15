@@ -57,13 +57,13 @@ import 'SheelaAI/Models/sheela_arguments.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
 
 class SplashScreen extends StatefulWidget {
-  final String nsRoute;
-  final String bookingID;
-  final String doctorID;
-  final String appointmentDate;
-  final String doctorSessionId;
-  final String healthOrganizationId;
-  final String templateName;
+  final String? nsRoute;
+  final String? bookingID;
+  final String? doctorID;
+  final String? appointmentDate;
+  final String? doctorSessionId;
+  final String? healthOrganizationId;
+  final String? templateName;
   final dynamic bundle;
   final bool isFromCallScreen;
 
@@ -87,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
-  GetDeviceSelectionModel selectionResult;
+  GetDeviceSelectionModel? selectionResult;
   bool _loaded = false;
   //bool _loaded = true;
 
@@ -96,10 +96,10 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     PreferenceUtil.init();
     CommonUtil().ListenForTokenUpdate();
-    Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+    Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
     CommonUtil().OnInitAction();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       if (Platform.isIOS) {
         if (widget.isFromCallScreen) {
           // It comes from callscreen on iOS after clicking the cancel call button
@@ -130,7 +130,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!isCallRecieved) {
         // No call notification is received so call security types code
         String authToken = PreferenceUtil.getStringValue(
-            Constants.KEY_AUTHTOKEN); // To check whether it's logged in or not
+            Constants.KEY_AUTHTOKEN)!; // To check whether it's logged in or not
         if (PreferenceUtil.getEnableAppLock() && authToken != null) {
           _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
           if(_loaded){
@@ -180,9 +180,10 @@ class _SplashScreenState extends State<SplashScreen> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return WillPopScope( onWillPop: (){
+        return WillPopScope( onWillPop: ()async{
           Navigator.pop(context);
           Navigator.pop(context);
+          return true;
         },child:AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -230,7 +231,7 @@ class _SplashScreenState extends State<SplashScreen> {
               var deviceIfo =
                   PreferenceUtil.isKeyValid(Constants.KEY_DEVICEINFO);
               PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
-              String authToken =
+              String? authToken =
                   PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
               Future.delayed(const Duration(seconds: 3), () {
@@ -292,7 +293,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             bookingId: widget.bookingID,
                             date: widget.appointmentDate,
                             templateName: widget.templateName),
-                      )).then((value) => PageNavigator.goToPermanent(
+                      ))!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute ==
                         parameters.doctorCancellation) {
@@ -315,12 +316,12 @@ class _SplashScreenState extends State<SplashScreen> {
                                   patientPicture: '',
                                   isFromVideoCall: false,
                                   isCareGiver: false,
-                                ))
+                                ))!
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                         ;
                       } else {
-                        Get.to(ChatUserList()).then((value) =>
+                        Get.to(ChatUserList())!.then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }
@@ -338,7 +339,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             bookingId: widget.bookingID,
                             date: widget.appointmentDate,
                             templateName: widget.templateName),
-                      )).then((value) => PageNavigator.goToPermanent(
+                      ))!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'sheela') {
                       fbaLog(eveParams: {
@@ -349,8 +350,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       if (widget.bundle != null && widget.bundle.isNotEmpty) {
                         var rawTitle;
                         var rawBody;
-                        var eventType = "";
-                        var others = "";
+                        String? eventType = "";
+                        String? others = "";
                         var notificationListId;
                         final parsedData = widget.bundle?.split('|');
 
@@ -384,7 +385,7 @@ class _SplashScreenState extends State<SplashScreen> {
                               isSheelaAskForLang: true,
                               textSpeechSheela: rawTitle,
                             ),
-                          ).then((value) => PageNavigator.goToPermanent(
+                          )!.then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                         } else {
                           Get.toNamed(
@@ -395,24 +396,24 @@ class _SplashScreenState extends State<SplashScreen> {
                               eventType: eventType,
                               others: others,
                             ),
-                          ).then((value) => PageNavigator.goToPermanent(
+                          )!.then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                         }
                       } else {
-                        Get.to(SuperMaya()).then((value) =>
+                        Get.to(SuperMaya())!.then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }
                     } else if (widget.nsRoute == 'isSheelaFollowup') {
                       final temp = widget.bundle.split('|');
                       if (temp[0] == 'isSheelaFollowup' &&
-                          (temp[1].toString() ?? '').isNotEmpty) {
+                          (temp[1].toString()).isNotEmpty) {
                         Get.toNamed(
                           router.rt_Sheela,
                           arguments: SheelaArgument(
                             audioMessage: temp[1].toString(),
                           ),
-                        ).then((value) => PageNavigator.goToPermanent(
+                        )!.then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
                       } else {
                         Get.toNamed(
@@ -421,7 +422,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             isSheelaFollowup: true,
                             message: temp[1],
                           ),
-                        ).then((value) => PageNavigator.goToPermanent(
+                        )!.then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
                       }
                     } else if (widget.nsRoute ==
@@ -494,7 +495,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
-                                  UserAccountsArguments(selectedIndex: 0))
+                                  UserAccountsArguments(selectedIndex: 0))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'googlefit') {
@@ -503,7 +504,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'ns_type': 'googlefit',
                         'navigationPage': 'Google Fit page',
                       });
-                      Get.toNamed(router.rt_AppSettings).then((value) =>
+                      Get.toNamed(router.rt_AppSettings)!.then((value) =>
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'th_provider' ||
@@ -514,7 +515,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': 'Tele Health Provider',
                       });
                       Get.toNamed(router.rt_TelehealthProvider,
-                              arguments: HomeScreenArguments(selectedIndex: 1))
+                              arguments: HomeScreenArguments(selectedIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'my_record' ||
@@ -527,7 +528,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       getProfileData();
                       Get.toNamed(router.rt_HomeScreen,
-                              arguments: HomeScreenArguments(selectedIndex: 1))
+                              arguments: HomeScreenArguments(selectedIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myRecords' &&
@@ -538,11 +539,11 @@ class _SplashScreenState extends State<SplashScreen> {
                         'ns_type': 'myRecords',
                         'navigationPage': '${widget.templateName}',
                       });
-                      final temp = widget.templateName.split('|');
-                      final dataOne = temp[1] ?? '';
+                      final temp = widget.templateName!.split('|');
+                      final dataOne = temp[1];
                       final dataTwo = temp[2];
                       if (dataTwo.runtimeType == String &&
-                          (dataTwo ?? '').isNotEmpty) {
+                          (dataTwo).isNotEmpty) {
                         final userId =
                             PreferenceUtil.getStringValue(KEY_USERID);
                         if ((widget.bundle ?? '') == userId) {
@@ -603,15 +604,15 @@ class _SplashScreenState extends State<SplashScreen> {
                             ? widget.bundle
                             : "";
                         Get.to(() => QurhomeDashboard())
-                            .then((value) => PageNavigator.goToPermanent(
+                            ?.then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       } else {
                         Provider.of<RegimentViewModel>(
                           context,
                           listen: false,
-                        )?.regimentMode = RegimentMode.Schedule;
+                        ).regimentMode = RegimentMode.Schedule;
                         Provider.of<RegimentViewModel>(context, listen: false)
-                            ?.regimentFilter = RegimentFilter.Missed;
+                            .regimentFilter = RegimentFilter.Missed;
                         PageNavigator.goToPermanent(context, router.rt_Regimen,
                             arguments:
                                 RegimentArguments(eventId: widget.bundle));
@@ -624,7 +625,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_TelehealthProvider,
                               arguments: HomeScreenArguments(
-                                  selectedIndex: 1, thTabIndex: 1))
+                                  selectedIndex: 1, thTabIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myfamily_list' ||
@@ -636,7 +637,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
-                                  UserAccountsArguments(selectedIndex: 1))
+                                  UserAccountsArguments(selectedIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myprovider_list') {
@@ -647,7 +648,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
-                                  UserAccountsArguments(selectedIndex: 2))
+                                  UserAccountsArguments(selectedIndex: 2))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (CommonUtil.isUSRegion() && widget.nsRoute ==
@@ -660,7 +661,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
                                   UserAccountsArguments(selectedIndex: 2))
-                          .then((value) => PageNavigator.goToPermanent(
+                          ?.then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myplans') {
                       fbaLog(eveParams: {
@@ -670,7 +671,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
-                                  UserAccountsArguments(selectedIndex: 3))
+                                  UserAccountsArguments(selectedIndex: 3))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'devices_tab') {
@@ -683,7 +684,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         router.rt_HomeScreen,
                         arguments: HomeScreenArguments(
                             selectedIndex: 1, thTabIndex: 1),
-                      ).then((value) => PageNavigator.goToPermanent(
+                      )!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'bills') {
                       fbaLog(eveParams: {
@@ -695,7 +696,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         router.rt_HomeScreen,
                         arguments: HomeScreenArguments(
                             selectedIndex: 1, thTabIndex: 4),
-                      ).then((value) => PageNavigator.goToPermanent(
+                      )!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'openurl') {
                       fbaLog(eveParams: {
@@ -733,17 +734,17 @@ class _SplashScreenState extends State<SplashScreen> {
                         notificationListId: passedValArr[3],
                         cartId: passedValArr[4],
                         patientName: passedValArr[6],
-                      )).then((value) => PageNavigator.goToPermanent(
+                      ))!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == "familyProfile") {
                       var passedValArr = widget.bundle?.split('&');
 
                       new CommonUtil()
                           .getDetailsOfAddedFamilyMember(
-                              Get.context, passedValArr[2].toString())
+                              Get.context!, passedValArr[2].toString())
                           .then((value) {
                         try {
-                          if (!value?.isSuccess || value == null) {
+                          if (!value!.isSuccess! || value == null) {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing);
                           }
@@ -755,10 +756,10 @@ class _SplashScreenState extends State<SplashScreen> {
                     } else if (widget.nsRoute == 'Renew' ||
                         widget.nsRoute == 'Callback' ||
                         widget.nsRoute == 'myplandetails') {
-                      final planid = widget?.bundle['planid'];
-                      final template = widget?.bundle['template'];
-                      final userId = widget?.bundle['userId'];
-                      final patName = widget?.bundle['patName'];
+                      final planid = widget.bundle['planid'];
+                      final template = widget.bundle['template'];
+                      final userId = widget.bundle['userId'];
+                      final patName = widget.bundle['patName'];
                       //TODO if its Renew take the user into plandetail view
                       if (widget.nsRoute == 'Renew' ||
                           widget.nsRoute == 'myplandetails') {
@@ -776,7 +777,7 @@ class _SplashScreenState extends State<SplashScreen> {
                               showRenew: widget.nsRoute != 'myplandetails',
                               templateName: template,
                             ),
-                          ).then((value) => PageNavigator.goToPermanent(
+                          )!.then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                         } else {
                           CommonUtil.showFamilyMemberPlanExpiryDialog(patName,
@@ -814,13 +815,13 @@ class _SplashScreenState extends State<SplashScreen> {
                         ),
                       ).then((value) {});
                     } else if (widget.nsRoute == 'claimList') {
-                      final userId = widget?.bundle['userId'];
-                      final claimId = widget?.bundle['claimId'];
+                      final userId = widget.bundle['userId'];
+                      final claimId = widget.bundle['claimId'];
                       Get.to(
                         ClaimRecordDisplay(
                           claimID: claimId,
                         ),
-                      ).then((value) => PageNavigator.goToPermanent(
+                      )!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'manageActivities') {
                       fbaLog(eveParams: {
@@ -828,7 +829,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'ns_type': 'manageActivities',
                         'navigationPage': 'Manage Activities',
                       });
-                      Get.to(ManageActivitiesScreen()).then((value) =>
+                      Get.to(ManageActivitiesScreen())!.then((value) =>
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == strAppointmentDetail) {
@@ -844,7 +845,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             CommonUtil().onInitAppointmentDetailsController();
                         appointmentDetailsController
                             .getAppointmentDetail(passedValArr[2]);
-                        Get.to(() => AppointmentDetailScreen()).then((value) =>
+                        Get.to(() => AppointmentDetailScreen())!.then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }

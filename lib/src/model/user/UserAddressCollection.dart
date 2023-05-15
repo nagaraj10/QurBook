@@ -1,22 +1,23 @@
+
 import 'City.dart';
 import 'State.dart';
 
 import 'AddressTypeModel.dart';
 
 class UserAddressCollection3 {
-  String id;
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String createdBy;
-  AddressType addressType;
-  City city;
-  State state;
-  String addressID;
+  String? id;
+  String? addressLine1;
+  String? addressLine2;
+  String? pincode;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? createdBy;
+  AddressType? addressType;
+  City? city;
+  State? state;
+  String? addressID;
 
   UserAddressCollection3(
       {this.id,
@@ -62,13 +63,13 @@ class UserAddressCollection3 {
     data['createdBy'] = createdBy;
     data['lastModifiedOn'] = lastModifiedOn;
     if (addressType != null) {
-      data['addressType'] = addressType.toJson();
+      data['addressType'] = addressType!.toJson();
     }
     if (city != null) {
-      data['city'] = city.toJson();
+      data['city'] = city!.toJson();
     }
     if (state != null) {
-      data['state'] = state.toJson();
+      data['state'] = state!.toJson();
     }
     return data;
   }

@@ -1,3 +1,6 @@
+
+import 'dart:async';
+
 import 'fetchGoogleFitData.dart';
 import '../../src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
 import '../model/myFHBResponseModel.dart';
@@ -7,8 +10,8 @@ import '../../constants/fhb_query.dart' as query;
 import '../../constants/fhb_parameters.dart' as params;
 
 class SyncGoogleFitData {
-  GoogleFitData _gfHelper;
-  DeviceHealthRecord _deviceHealthRecord;
+  late GoogleFitData _gfHelper;
+  late DeviceHealthRecord _deviceHealthRecord;
 
   SyncGoogleFitData() {
     _gfHelper = GoogleFitData();
@@ -41,7 +44,7 @@ class SyncGoogleFitData {
       throw 'GoogleFit is deactivated. Please activate and sync again';
     }
 
-    final DateTime lastSynctime = await getLastSynctime();
+    final DateTime? lastSynctime = await (getLastSynctime() as FutureOr<DateTime?>);
 
     endTime = DateTime.now().millisecondsSinceEpoch.toString();
     final currentdate = DateTime.now();
@@ -143,10 +146,10 @@ class SyncGoogleFitData {
       final jsonstr = json.encode(lastsyncDetails);
       var lastSync = latestSyncFromJson(jsonstr);
 
-      if (!lastSync.isSuccess) {
+      if (!lastSync.isSuccess!) {
         return null;
       }
-      return lastSync.result.lastSyncDateTime;
+      return lastSync.result!.lastSyncDateTime;
     } catch (e) {}
   }
 }

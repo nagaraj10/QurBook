@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import '../../constants/fhb_parameters.dart';
@@ -12,8 +13,8 @@ class LastSync {
     this.result,
   });
 
-  bool isSuccess;
-  List<LastSyncResult> result;
+  bool? isSuccess;
+  List<LastSyncResult>? result;
 
   factory LastSync.fromJson(Map<String, dynamic> json) => LastSync(
         isSuccess: json[is_Success],
@@ -23,7 +24,7 @@ class LastSync {
 
   Map<String, dynamic> toJson() => {
         is_Success: isSuccess,
-        dataResult: List<dynamic>.from(result.map((x) => x.toJson())),
+        dataResult: List<dynamic>.from(result!.map((x) => x.toJson())),
       };
 }
 
@@ -35,10 +36,10 @@ class LastSyncResult {
     this.sourcetype,
   });
 
-  DateTime lastSyncDateTime;
-  String devicedatatype;
-  String devicetype;
-  String sourcetype;
+  DateTime? lastSyncDateTime;
+  String? devicedatatype;
+  String? devicetype;
+  String? sourcetype;
 
   factory LastSyncResult.fromJson(Map<String, dynamic> json) => LastSyncResult(
         lastSyncDateTime: DateTime.parse(json[strlastSyncDateTime]),

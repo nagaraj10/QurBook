@@ -1,11 +1,12 @@
+
 class ProfileResponseModel {
   ProfileResponseModel({
     this.isSuccess,
     this.result,
   });
 
-  final bool isSuccess;
-  final ProfileResultModel result;
+  final bool? isSuccess;
+  final ProfileResultModel? result;
 
   factory ProfileResponseModel.fromJson(Map<String, dynamic> json) =>
       ProfileResponseModel(
@@ -15,7 +16,7 @@ class ProfileResponseModel {
 
   Map<String, dynamic> toJson() => {
         'isSuccess': isSuccess,
-        'result': result.toJson(),
+        'result': result!.toJson(),
       };
 }
 
@@ -34,17 +35,17 @@ class ProfileResultModel {
     this.profileDataKeyList,
   });
 
-  final String uid;
-  final String phoneNumber;
-  final String email;
-  final String givenName;
-  final String nick;
-  final String ulinkid;
-  final String familyName;
-  final ProfileDataModel profileData;
+  final String? uid;
+  final String? phoneNumber;
+  final String? email;
+  final String? givenName;
+  final String? nick;
+  final String? ulinkid;
+  final String? familyName;
+  final ProfileDataModel? profileData;
   final dynamic metadata;
-  final Map<String, dynamic> profileDataMap;
-  final List<dynamic> profileDataKeyList;
+  final Map<String, dynamic>? profileDataMap;
+  final List<dynamic>? profileDataKeyList;
 
   factory ProfileResultModel.fromJson(Map<String, dynamic> json) =>
       ProfileResultModel(
@@ -69,7 +70,7 @@ class ProfileResultModel {
         'nick': nick,
         'ulinkid': ulinkid,
         'family_name': familyName,
-        'profile': profileData.toJson(),
+        'profile': profileData!.toJson(),
         'metadata': metadata,
       };
 }
@@ -88,16 +89,16 @@ class ProfileDataModel {
     this.isDefault,
   });
 
-  final String age;
-  final String height;
-  final String language;
-  final String wakeup;
-  final String breakfast;
-  final String lunch;
-  final String tea;
-  final String dinner;
-  final String sleep;
-  final bool isDefault;
+  final String? age;
+  final String? height;
+  final String? language;
+  final String? wakeup;
+  final String? breakfast;
+  final String? lunch;
+  final String? tea;
+  final String? dinner;
+  final String? sleep;
+  final bool? isDefault;
 
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) =>
       ProfileDataModel(

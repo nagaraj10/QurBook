@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../models/update_providers_id.dart';
@@ -7,40 +8,40 @@ import '../../src/blocs/Authentication/LoginBloc.dart';
 import '../../src/resources/network/ApiResponse.dart';
 
 class UpdateProvidersBloc implements BaseBloc {
-  UpdateProvidersRepository updateProvidersRepository;
-  String providerId;
-  String providerReferenceId;
-  bool isPreferred;
+  late UpdateProvidersRepository updateProvidersRepository;
+  String? providerId;
+  String? providerReferenceId;
+  bool? isPreferred;
 
-  String userId;
-  List<String> selectedCategories = [];
+  String? userId;
+  List<String?>? selectedCategories = [];
 
   // 1
   // Doctors
-  StreamController doctorsProvidersController;
+  late StreamController doctorsProvidersController;
 
   StreamSink<ApiResponse<UpdateProvidersId>> get doctorsSink =>
-      doctorsProvidersController.sink;
+      doctorsProvidersController.sink as StreamSink<ApiResponse<UpdateProvidersId>>;
   Stream<ApiResponse<UpdateProvidersId>> get doctorsStream =>
-      doctorsProvidersController.stream;
+      doctorsProvidersController.stream as Stream<ApiResponse<UpdateProvidersId>>;
 
   // 2
   // Hospitals
-  StreamController hospitalsProvidersController;
+  late StreamController hospitalsProvidersController;
 
   StreamSink<ApiResponse<UpdateProvidersId>> get hospitalsSink =>
-      hospitalsProvidersController.sink;
+      hospitalsProvidersController.sink as StreamSink<ApiResponse<UpdateProvidersId>>;
   Stream<ApiResponse<UpdateProvidersId>> get hospitalsStream =>
-      hospitalsProvidersController.stream;
+      hospitalsProvidersController.stream as Stream<ApiResponse<UpdateProvidersId>>;
 
   // 3
   // Labs
-  StreamController labsProvidersController;
+  StreamController? labsProvidersController;
 
   StreamSink<ApiResponse<UpdateProvidersId>> get labsSink =>
-      hospitalsProvidersController.sink;
+      hospitalsProvidersController.sink as StreamSink<ApiResponse<UpdateProvidersId>>;
   Stream<ApiResponse<UpdateProvidersId>> get labsStream =>
-      hospitalsProvidersController.stream;
+      hospitalsProvidersController.stream as Stream<ApiResponse<UpdateProvidersId>>;
 
   UpdateProvidersBloc() {
     updateProvidersRepository = UpdateProvidersRepository();
@@ -102,16 +103,16 @@ class UpdateProvidersBloc implements BaseBloc {
 
   // 1
   // Doctors
-  Future<UpdateProvidersId> updateDoctorsIdWithUserDetails({bool isPAR}) async {
+  Future<UpdateProvidersId?> updateDoctorsIdWithUserDetails({bool? isPAR}) async {
     doctorsSink.add(ApiResponse.loading(variable.strUpdatingDoctor));
-    UpdateProvidersId updateProvidersId;
+    UpdateProvidersId? updateProvidersId;
     try {
       updateProvidersId =
           await updateProvidersRepository.updateDoctorsIdWithUserDetailsNew(
               providerId,
               isPreferred,
               providerReferenceId,
-              userId,
+              userId!,
               selectedCategories,
               isPAR: isPAR);
 //      doctorsSink.add(ApiResponse.completed(updateProvidersId));
@@ -124,16 +125,16 @@ class UpdateProvidersBloc implements BaseBloc {
 
   // 2
   // Hospitals
-  Future<UpdateProvidersId> updateHospitalsIdWithUserDetails() async {
+  Future<UpdateProvidersId?> updateHospitalsIdWithUserDetails() async {
     hospitalsSink.add(ApiResponse.loading(variable.strUpdatingHospital));
-    UpdateProvidersId updateProvidersId;
+    UpdateProvidersId? updateProvidersId;
     try {
       updateProvidersId =
           await updateProvidersRepository.updateHospitalsIdWithUserDetails(
               providerId,
               isPreferred,
               providerReferenceId,
-              userId,
+              userId!,
               selectedCategories);
       hospitalsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
@@ -145,16 +146,16 @@ class UpdateProvidersBloc implements BaseBloc {
 
   // 3
   // Labs
-  Future<UpdateProvidersId> updateLabsIdWithUserDetails() async {
+  Future<UpdateProvidersId?> updateLabsIdWithUserDetails() async {
     labsSink.add(ApiResponse.loading(variable.strUpdatingLab));
-    UpdateProvidersId updateProvidersId;
+    UpdateProvidersId? updateProvidersId;
     try {
       updateProvidersId =
           await updateProvidersRepository.updateLabsIdWithUserDetails(
               providerId,
               isPreferred,
               providerReferenceId,
-              userId,
+              userId!,
               selectedCategories);
       labsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
@@ -165,9 +166,9 @@ class UpdateProvidersBloc implements BaseBloc {
   }
 
   //providerMapping after subscribe
-  Future<UpdateProvidersId> mappingHealthOrg(
-      String providerId, String userId) async {
-    UpdateProvidersId updateProvidersId;
+  Future<UpdateProvidersId?> mappingHealthOrg(
+      String? providerId, String userId) async {
+    UpdateProvidersId? updateProvidersId;
     try {
       updateProvidersId = await updateProvidersRepository
           .updateHospitalsIdWithUserDetails(providerId, false, '', userId, []);

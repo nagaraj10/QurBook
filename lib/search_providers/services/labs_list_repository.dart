@@ -22,7 +22,7 @@ class LabsListRepository {
   }
 
   Future<LabsSearchListResponse> getLabsFromSearchNew(String param,bool isFromCreateTicket) async {
-    String userID = PreferenceUtil.getStringValue(KEY_USERID);
+    String userID = PreferenceUtil.getStringValue(KEY_USERID)!;
     String patientIdQuery="";
     if(isFromCreateTicket){
       if (CommonUtil.REGION_CODE == 'IN') {
@@ -46,7 +46,7 @@ class LabsListRepository {
     var limit = 50;
     final skip = 1;
     String patientIdQuery="";
-    String userID = PreferenceUtil.getStringValue(KEY_USERID);
+    String userID = PreferenceUtil.getStringValue(KEY_USERID)!;
 
     if(isFromCreateTicket){
       if (CommonUtil.REGION_CODE == 'IN') {

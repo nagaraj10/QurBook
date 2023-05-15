@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -10,8 +11,8 @@ class FilterWidget extends StatelessWidget {
     this.value,
   });
 
-  final String title;
-  final RegimentFilter value;
+  final String? title;
+  final RegimentFilter? value;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -20,13 +21,13 @@ class FilterWidget extends StatelessWidget {
             data: Theme.of(context).copyWith(
               unselectedWidgetColor: Color(CommonUtil().getMyPrimaryColor()),
             ),
-            child: Radio<RegimentFilter>(
+            child: Radio<RegimentFilter?>(
               groupValue:
                   Provider.of<RegimentViewModel>(context).regimentFilter,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: value,
               activeColor: Color(CommonUtil().getMyPrimaryColor()),
-              onChanged: (RegimentFilter regimenFilter) {
+              onChanged: (RegimentFilter? regimenFilter) {
                 if (Provider.of<RegimentViewModel>(context, listen: false)
                         .regimentFilter !=
                     regimenFilter) {
@@ -37,7 +38,7 @@ class FilterWidget extends StatelessWidget {
             ),
           ),
           Text(
-            title,
+            title!,
             style: TextStyle(
               fontSize: 12.0.sp,
               fontWeight: FontWeight.w500,

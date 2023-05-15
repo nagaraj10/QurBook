@@ -3,55 +3,55 @@ import '../../constants/fhb_parameters.dart' as parameters;
 import 'CallArguments.dart';
 
 class NotificationModel {
-  String title;
-  String body;
-  String ringtone;
-  String templateName;
-  String userId;
-  String idToHighlight;
-  String redirect;
-  String healthRecordMetaIds;
-  bool isCall = false;
-  bool needToHighlight = false;
+  String? title;
+  String? body;
+  String? ringtone;
+  String? templateName;
+  String? userId;
+  String? idToHighlight;
+  String? redirect;
+  String? healthRecordMetaIds;
+  bool? isCall = false;
+  bool? needToHighlight = false;
   bool isCancellation = false;
-  String meeting_id;
-  String doctorId;
-  String username;
-  String type;
-  String eventId;
-  String rawTitle;
-  String rawBody;
-  String doctorName;
-  String doctorPicture;
-  String patientId;
-  String careCoordinatorUserId;
-  String careGiverName;
-  String activityTime;
-  String activityName;
-  String patientName;
-  String patientPicture;
-  String externalLink;
-  String patientPhoneNumber;
-  String uid;
-  String verificationCode;
-  String caregiverRequestor;
-  String caregiverReceiver;
-  CallArguments callArguments;
-  bool isWeb;
-  String isCaregiver;
-  String deliveredDateTime;
-  bool isFromCareCoordinator;
-  String callType;
-  String claimId;
-  Map<int, dynamic> redirectData;
-  String planId;
-  String notificationListId;
-  bool viewRecordAction, isSheela, chatWithCC = false;
-  String message;
-  String sheelaAudioMsgUrl;
-  String eventType;
-  String others;
-  String appointmentId;
+  String? meeting_id;
+  String? doctorId;
+  String? username;
+  String? type;
+  String? eventId;
+  String? rawTitle;
+  String? rawBody;
+  String? doctorName;
+  String? doctorPicture;
+  String? patientId;
+  String? careCoordinatorUserId;
+  String? careGiverName;
+  String? activityTime;
+  String? activityName;
+  String? patientName;
+  String? patientPicture;
+  String? externalLink;
+  String? patientPhoneNumber;
+  String? uid;
+  String? verificationCode;
+  String? caregiverRequestor;
+  String? caregiverReceiver;
+  CallArguments? callArguments;
+  bool? isWeb;
+  bool? isCaregiver;
+  String? deliveredDateTime;
+  bool? isFromCareCoordinator;
+  String? callType;
+  String? claimId;
+  Map<int, dynamic>? redirectData;
+  String? planId;
+  String? notificationListId;
+  bool? viewRecordAction, isSheela, chatWithCC = false;
+  String? message;
+  String? sheelaAudioMsgUrl;
+  String? eventType;
+  String? others;
+  String? appointmentId;
 
   NotificationModel(
       {this.title,
@@ -220,6 +220,10 @@ class NotificationModel {
         if (message[parameters.username] != null) {
           username = message[parameters.username];
         }
+        if (message[parameters.userNameparam] != null) {
+          username = message[parameters.userNameparam];
+        }
+
         if (message[parameters.strtype] != null) {
           type = message[parameters.strtype];
         }
@@ -378,14 +382,14 @@ class NotificationModel {
     }
 
     setData(messageFromNative);
-    if (redirect != null && redirect.contains('|')) {
-      final split = redirect.split('|');
+    if (redirect != null && redirect!.contains('|')) {
+      final split = redirect!.split('|');
       if (split.first == 'sheela') {
         redirect = split.first;
       } else {
         redirectData = {for (int i = 0; i < split.length; i++) i: split[i]};
         if ((healthRecordMetaIds ?? '').isNotEmpty) {
-          redirectData[split.length] = healthRecordMetaIds;
+          redirectData![split.length] = healthRecordMetaIds;
         }
       }
     }
@@ -398,13 +402,17 @@ class NotificationModel {
             parameters.doctorCancellation ||
         messageFromNative[parameters.templateName] ==
             parameters.doctorRescheduling;
-    if (isCall) {
+    if (isCall!) {
       callArguments = CallArguments(
         role: ClientRole.Broadcaster,
         channelName: meeting_id,
         userName: username ?? doctorName,
         doctorId: doctorId,
         doctorName: doctorName,
+        doctorPicture: doctorPicture,
+        patientId: patientId,
+        patientName: patientName,
+        patientPicture: patientPicture,
         isWeb: isWeb ?? false,
       );
     }
@@ -501,6 +509,10 @@ class NotificationModel {
     if (message[parameters.username] != null) {
       username = message[parameters.username];
     }
+    if (message[parameters.userNameparam] != null) {
+      username = message[parameters.userNameparam];
+    }
+
     if (message[parameters.strtype] != null) {
       type = message[parameters.strtype];
     }
@@ -583,7 +595,14 @@ class NotificationModel {
       careGiverName = message[parameters.CARE_GIVER_NAME];
     }
     if (message[parameters.strIsCaregiver] != null) {
-      isCaregiver = message[parameters.strIsCaregiver];
+      if (message[parameters.strIsCaregiver].runtimeType == String) {
+        if ((message[parameters.strIsCaregiver] ?? '').isNotEmpty) {
+          isCaregiver =
+              message[parameters.strIsCaregiver].toLowerCase() == "true";
+        }
+      } else {
+        isCaregiver = message[parameters.strIsCaregiver];
+      }
     }
     if (message[parameters.strDeliveredDateTime] != null) {
       deliveredDateTime = message[parameters.strDeliveredDateTime];

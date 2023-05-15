@@ -1,8 +1,9 @@
+
 import 'ChatHistoryModel.dart';
 
 class EmitAckResponse {
   //List<ChatList> chatList;
-  ChatHistoryResult lastSentMessageInfo;
+  ChatHistoryResult? lastSentMessageInfo;
 
   EmitAckResponse({/*this.chatList,*/ this.lastSentMessageInfo});
 
@@ -24,7 +25,7 @@ class EmitAckResponse {
       data['chatList'] = this.chatList.map((v) => v.toJson()).toList();
     }*/
     if (this.lastSentMessageInfo != null) {
-      data['lastSentMessageInfo'] = this.lastSentMessageInfo.toJson();
+      data['lastSentMessageInfo'] = this.lastSentMessageInfo!.toJson();
     }
     return data;
   }

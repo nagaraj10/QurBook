@@ -1,6 +1,7 @@
+
 class AppointmentDetailModel {
-  bool isSuccess;
-  AppointmentResult result;
+  bool? isSuccess;
+  AppointmentResult? result;
 
   AppointmentDetailModel({this.isSuccess, this.result});
 
@@ -15,20 +16,20 @@ class AppointmentDetailModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class AppointmentResult {
-  Upcoming upcoming;
-  Past past;
-  DeviceToken deviceToken;
-  bool isCaregiver;
-  bool isPatient;
-  ChatList chatList;
-  DoctorOrCarecoordinatorInfo doctorOrCarecoordinatorInfo;
+  Upcoming? upcoming;
+  Past? past;
+  DeviceToken? deviceToken;
+  bool? isCaregiver;
+  bool? isPatient;
+  ChatList? chatList;
+  DoctorOrCarecoordinatorInfo? doctorOrCarecoordinatorInfo;
 
   AppointmentResult(
       {this.upcoming,
@@ -59,19 +60,19 @@ class AppointmentResult {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.upcoming != null) {
-      data['upcoming'] = this.upcoming.toJson();
+      data['upcoming'] = this.upcoming!.toJson();
     }
     if (this.past != null) {
-      data['past'] = this.past.toJson();
+      data['past'] = this.past!.toJson();
     }
     if (this.deviceToken != null) {
-      data['deviceToken'] = this.deviceToken.toJson();
+      data['deviceToken'] = this.deviceToken!.toJson();
     }
     data['isCaregiver'] = this.isCaregiver;
     data['isPatient'] = this.isPatient;
 
     if (this.chatList != null) {
-      data['chatList'] = this.chatList.toJson();
+      data['chatList'] = this.chatList!.toJson();
     }
 
     return data;
@@ -79,22 +80,22 @@ class AppointmentResult {
 }
 
 class Upcoming {
-  String id;
-  String bookingId;
-  String doctorSessionId;
-  String plannedStartDateTime;
-  String plannedEndDateTime;
-  String actualStartDateTime;
-  String actualEndDateTime;
-  int slotNumber;
-  bool isHealthRecordShared;
-  String plannedFollowupDate;
-  bool isRefunded;
-  bool isFollowupFee;
-  bool isFollowup;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? bookingId;
+  String? doctorSessionId;
+  String? plannedStartDateTime;
+  String? plannedEndDateTime;
+  String? actualStartDateTime;
+  String? actualEndDateTime;
+  int? slotNumber;
+  bool? isHealthRecordShared;
+  String? plannedFollowupDate;
+  bool? isRefunded;
+  bool? isFollowupFee;
+  bool? isFollowup;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   //Null sharedHealthRecordMetadata;
 
@@ -162,22 +163,22 @@ class Upcoming {
 }
 
 class Past {
-  String id;
-  String bookingId;
-  String doctorSessionId;
-  String plannedStartDateTime;
-  String plannedEndDateTime;
-  String actualStartDateTime;
-  String actualEndDateTime;
-  int slotNumber;
-  bool isHealthRecordShared;
-  String plannedFollowupDate;
-  bool isRefunded;
-  bool isFollowupFee;
-  bool isFollowup;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? bookingId;
+  String? doctorSessionId;
+  String? plannedStartDateTime;
+  String? plannedEndDateTime;
+  String? actualStartDateTime;
+  String? actualEndDateTime;
+  int? slotNumber;
+  bool? isHealthRecordShared;
+  String? plannedFollowupDate;
+  bool? isRefunded;
+  bool? isFollowupFee;
+  bool? isFollowup;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   //SharedHealthRecordMetadata sharedHealthRecordMetadata;
 
@@ -251,17 +252,17 @@ class Past {
 }
 
 class SharedHealthRecordMetadata {
-  String id;
-  Metadata metadata;
-  bool isBookmarked;
-  bool isCompleted;
-  bool isDraft;
-  bool isVisible;
-  bool isClaimed;
-  bool isClaimRecord;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  Metadata? metadata;
+  bool? isBookmarked;
+  bool? isCompleted;
+  bool? isDraft;
+  bool? isVisible;
+  bool? isClaimed;
+  bool? isClaimRecord;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   SharedHealthRecordMetadata(
       {this.id,
@@ -296,7 +297,7 @@ class SharedHealthRecordMetadata {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     if (this.metadata != null) {
-      data['metadata'] = this.metadata.toJson();
+      data['metadata'] = this.metadata!.toJson();
     }
     data['isBookmarked'] = this.isBookmarked;
     data['isCompleted'] = this.isCompleted;
@@ -312,9 +313,9 @@ class SharedHealthRecordMetadata {
 }
 
 class Metadata {
-  MediaTypeInfo mediaTypeInfo;
-  CategoryInfo categoryInfo;
-  List<String> healthRecordsReference;
+  MediaTypeInfo? mediaTypeInfo;
+  CategoryInfo? categoryInfo;
+  List<String>? healthRecordsReference;
 
   Metadata(
       {this.mediaTypeInfo, this.categoryInfo, this.healthRecordsReference});
@@ -332,10 +333,10 @@ class Metadata {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.mediaTypeInfo != null) {
-      data['mediaTypeInfo'] = this.mediaTypeInfo.toJson();
+      data['mediaTypeInfo'] = this.mediaTypeInfo!.toJson();
     }
     if (this.categoryInfo != null) {
-      data['categoryInfo'] = this.categoryInfo.toJson();
+      data['categoryInfo'] = this.categoryInfo!.toJson();
     }
     data['healthRecordsReference'] = this.healthRecordsReference;
     return data;
@@ -343,15 +344,15 @@ class Metadata {
 }
 
 class MediaTypeInfo {
-  String id;
-  String name;
-  String description;
-  String logo;
-  bool isDisplay;
-  bool isAiTranscription;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? description;
+  String? logo;
+  bool? isDisplay;
+  bool? isAiTranscription;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   MediaTypeInfo(
       {this.id,
@@ -392,14 +393,14 @@ class MediaTypeInfo {
 }
 
 class CategoryInfo {
-  String id;
-  String categoryName;
-  String categoryDescription;
-  String logo;
-  bool isDisplay;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? categoryName;
+  String? categoryDescription;
+  String? logo;
+  bool? isDisplay;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   CategoryInfo(
       {this.id,
@@ -437,9 +438,9 @@ class CategoryInfo {
 }
 
 class DeviceToken {
-  Doctor doctor;
-  Doctor patient;
-  Doctor parentMember;
+  Doctor? doctor;
+  Doctor? patient;
+  Doctor? parentMember;
 
   DeviceToken({this.doctor, this.patient});
 
@@ -456,30 +457,30 @@ class DeviceToken {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.doctor != null) {
-      data['doctor'] = this.doctor.toJson();
+      data['doctor'] = this.doctor!.toJson();
     }
     if (this.patient != null) {
-      data['patient'] = this.patient.toJson();
+      data['patient'] = this.patient!.toJson();
     }
     if (this.parentMember != null) {
-      data['parentMember'] = this.parentMember.toJson();
+      data['parentMember'] = this.parentMember!.toJson();
     }
     return data;
   }
 }
 
 class Doctor {
-  bool isSuccess;
-  List<Payload> payload;
+  bool? isSuccess;
+  List<Payload>? payload;
 
   Doctor({this.isSuccess, this.payload});
 
   Doctor.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['payload'] != null) {
-      payload = new List<Payload>();
+      payload = <Payload>[];
       json['payload'].forEach((v) {
-        payload.add(new Payload.fromJson(v));
+        payload!.add(new Payload.fromJson(v));
       });
     }
   }
@@ -488,19 +489,19 @@ class Doctor {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
-      data['payload'] = this.payload.map((v) => v.toJson()).toList();
+      data['payload'] = this.payload!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Payload {
-  String id;
-  String deviceTokenId;
-  String platformTypeCode;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? deviceTokenId;
+  String? platformTypeCode;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   Payload(
       {this.id,
@@ -544,9 +545,9 @@ class ChatList {
 
   var actualUserId;*/
 
-  bool isDisable;
+  bool? isDisable;
 
-  String deliveredOn;
+  String? deliveredOn;
 
   //var isMuted;
 
@@ -613,11 +614,11 @@ class ChatList {
 }
 
 class DoctorOrCarecoordinatorInfo {
-  String carecoordinatorfirstName;
-  String carecoordinatorMiddleName;
-  String carecoordinatorLastName;
-  String carecoordinatorProfilePicThumbnailUrl;
-  bool isCareCoordinator;
+  String? carecoordinatorfirstName;
+  String? carecoordinatorMiddleName;
+  String? carecoordinatorLastName;
+  String? carecoordinatorProfilePicThumbnailUrl;
+  bool? isCareCoordinator;
 
   DoctorOrCarecoordinatorInfo(
       {this.carecoordinatorfirstName,

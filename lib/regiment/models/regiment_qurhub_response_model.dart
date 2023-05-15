@@ -1,3 +1,4 @@
+
 // To parse this JSON data, do
 //
 //     final regimentModel = regimentModelFromJson(jsonString);
@@ -18,8 +19,8 @@ class RegimentQurHubResponseModel {
     this.result,
   });
 
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   RegimentQurHubResponseModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
@@ -30,15 +31,15 @@ class RegimentQurHubResponseModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String date;
-  List<RegimentDataModel> upcomingActivities;
+  String? date;
+  List<RegimentDataModel>? upcomingActivities;
 
   Result(
       {this.date,
@@ -48,9 +49,9 @@ class Result {
     date = json['date'];
 
     if (json['upcomingActivities'] != null) {
-      upcomingActivities = new List<RegimentDataModel>();
+      upcomingActivities = <RegimentDataModel>[];
       json['upcomingActivities'].forEach((v) {
-        upcomingActivities.add(new RegimentDataModel.fromJson(v));
+        upcomingActivities!.add(new RegimentDataModel.fromJson(v));
       });
     }
   }
@@ -60,7 +61,7 @@ class Result {
     data['date'] = this.date;
     if (this.upcomingActivities != null) {
       data['upcomingActivities'] =
-          this.upcomingActivities.map((v) => v.toJson()).toList();
+          this.upcomingActivities!.map((v) => v.toJson()).toList();
     }
     return data;
   }

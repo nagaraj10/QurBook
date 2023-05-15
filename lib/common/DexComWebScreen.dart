@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -6,17 +7,17 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class DexComWebScreen extends StatefulWidget {
-  DexComWebScreen({Key key,this.baseUrl, this.clientId,  this.redirectUrl,  this.state}) : super(key: key);
-  String baseUrl='';
-  String clientId='';
-  String redirectUrl='';
-  String state='';
+  DexComWebScreen({Key? key,this.baseUrl, this.clientId,  this.redirectUrl,  this.state}) : super(key: key);
+  String? baseUrl='';
+  String? clientId='';
+  String? redirectUrl='';
+  String? state='';
   @override
   State<DexComWebScreen> createState() => _DexComWebScreenState();
 }
 
 class _DexComWebScreenState extends State<DexComWebScreen> {
-  WebViewController _controller;
+  WebViewController? _controller;
 
 
   @override
@@ -44,7 +45,7 @@ class _DexComWebScreenState extends State<DexComWebScreen> {
   void readResponse() async
   {
     if(_controller!=null){
-      _controller.evaluateJavascript("document.documentElement.innerHTML").then((value) async {
+      _controller!.evaluateJavascript("document.documentElement.innerHTML").then((value) async {
 
         if(value.contains("isSuccess")&&value.contains("true")){
           Fluttertoast.showToast(msg: 'Authorized successfully');

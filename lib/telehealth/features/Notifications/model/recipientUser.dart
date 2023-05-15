@@ -1,32 +1,33 @@
+
 class RecipientUser {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
   dynamic communicationPreferences;
   dynamic medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  String providerId;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  String? providerId;
 
   RecipientUser(
       {this.id,

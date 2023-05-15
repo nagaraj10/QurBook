@@ -6,8 +6,8 @@ import 'dart:convert' show json;
 import '../model/LastSyncResponse.dart';
 
 class SyncHealthKitData {
-  FetchHealthKitData _hkHelper;
-  DeviceHealthRecord _deviceHealthRecord;
+  FetchHealthKitData? _hkHelper;
+  DeviceHealthRecord? _deviceHealthRecord;
 
   SyncHealthKitData() {
     _hkHelper = FetchHealthKitData();
@@ -15,7 +15,7 @@ class SyncHealthKitData {
 
   Future<void> activateHealthKit() async {
     try {
-      await _hkHelper.activateHealthKit();
+      await _hkHelper!.activateHealthKit();
     } catch (e) {
       rethrow;
     }
@@ -29,7 +29,7 @@ class SyncHealthKitData {
     DateTime startDate;
     var endDate = DateTime.now();
 
-    final DateTime lastSynctime = await getLastSynctime();
+    final DateTime? lastSynctime = await getLastSynctime();
 
     endDate = DateTime.now();
     final currentdate = DateTime.now();
@@ -46,7 +46,7 @@ class SyncHealthKitData {
     }
 
     try {
-      var weightParams = await _hkHelper.getWeightData(startDate, endDate);
+      var weightParams = await _hkHelper!.getWeightData(startDate, endDate);
       if (weightParams != null) {
         print(
             '-------------------------weight-------------------------------------');
@@ -55,24 +55,24 @@ class SyncHealthKitData {
       }
 
       final bloodGlucoseParams =
-          await _hkHelper.getBloodGlucoseData(startDate, endDate);
+          await _hkHelper!.getBloodGlucoseData(startDate, endDate);
       if (bloodGlucoseParams != null) {
         await postHealthKitData(bloodGlucoseParams);
       }
 
-      var bpParams = await _hkHelper.getBloodPressureData(startDate, endDate);
+      var bpParams = await _hkHelper!.getBloodPressureData(startDate, endDate);
       if (bpParams != null) {
         await postHealthKitData(bpParams);
       }
 
       final bloodOxygenParams =
-          await _hkHelper.getBloodOxygenData(startDate, endDate);
+          await _hkHelper!.getBloodOxygenData(startDate, endDate);
       if (bloodOxygenParams != null) {
         await postHealthKitData(bloodOxygenParams);
       }
 
       var bodyTemperatureParams =
-          await _hkHelper.getBodyTemperature(startDate, endDate);
+          await _hkHelper!.getBodyTemperature(startDate, endDate);
       if (bodyTemperatureParams != null) {
         await postHealthKitData(bodyTemperatureParams);
       }
@@ -93,7 +93,7 @@ class SyncHealthKitData {
   Future<dynamic> postHealthKitData(String params) async {
     try {
       _deviceHealthRecord = DeviceHealthRecord();
-      final response = await _deviceHealthRecord.postDeviceData(params);
+      final response = await _deviceHealthRecord!.postDeviceData(params);
       return response;
     } catch (e) {
       rethrow;
@@ -105,12 +105,12 @@ class SyncHealthKitData {
       _deviceHealthRecord = DeviceHealthRecord();
 
       final lastsyncDetails =
-          await _deviceHealthRecord.getLastsynctime(query.qr_LastSyncHK);
+          await _deviceHealthRecord!.getLastsynctime(query.qr_LastSyncHK);
       var jsonstr = json.encode(lastsyncDetails);
       var lastSync = latestSyncFromJson(jsonstr);
 
-      if (!lastSync.isSuccess) return null;
-      return lastSync.result.lastSyncDateTime;
+      if (!lastSync.isSuccess!) return null;
+      if (lastSync.result != null) return lastSync.result!.lastSyncDateTime;
     } catch (e) {}
   }
 }

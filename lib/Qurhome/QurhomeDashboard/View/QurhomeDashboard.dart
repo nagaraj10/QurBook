@@ -15,9 +15,7 @@ import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/landing/view/widgets/qurhome_nav_drawer.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -54,15 +52,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   double selOption = 30.0.sp;
   double unSelOption = 28.0.sp;
 
-  MyProfileModel myProfile;
+  MyProfileModel? myProfile;
 
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
-
-  HealthReportListForUserRepository healthReportListForUserRepository =
-      HealthReportListForUserRepository();
-
-  GetDeviceSelectionModel selectionResult;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -81,21 +74,23 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    MyFHB.routeObserver.subscribe(this, ModalRoute.of(context));
+    MyFHB.routeObserver
+        .subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
     controller.isActive.value = true;
   }
 
   onInit() async {
     try {
       if (CommonUtil.isUSRegion()) {
-        Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+        Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
         CommonUtil().initSocket();
+        CommonUtil().versionCheck(context);
 
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
 
-        enableModuleAccess();
-        getModuleAccess();
+        controller.enableModuleAccess();
+        controller.getModuleAccess();
 
         await CommonUtil().getUserProfileData();
       }
@@ -104,7 +99,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
       getProfileApi();
 
-      if (CommonUtil().isTablet) {
+      if (CommonUtil().isTablet!) {
         CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = buttonSize.h;
         badgeSize = badgeSize.h;
@@ -198,7 +193,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
               key: _scaffoldKey,
               appBar: AppBar(
                 backgroundColor: Colors.white,
-                toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+                toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
                 elevation: 0,
                 centerTitle: true,
                 title: Row(
@@ -221,7 +216,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                 vertical: 4.h,
                               ),
                               child: controller.currentSelectedIndex == 2
-                                  ? CommonUtil().isTablet
+                                  ? CommonUtil().isTablet!
                                       ? AssetImageWidget(
                                           icon: icon_vitals_qurhome,
                                           height: 24.h,
@@ -233,7 +228,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                           width: 22.h,
                                         )
                                   : controller.currentSelectedIndex == 3
-                                      ? CommonUtil().isTablet
+                                      ? CommonUtil().isTablet!
                                           ? AssetImageWidget(
                                               icon: icon_symptom_qurhome,
                                               height: 24.h,
@@ -321,16 +316,16 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                               color:
                                   Color(CommonUtil().getQurhomePrimaryColor()),
                               iconSize:
-                                  CommonUtil().isTablet ? 34.0.sp : 24.0.sp,
+                                  CommonUtil().isTablet! ? 34.0.sp : 24.0.sp,
                               onPressed: () {
-                                _scaffoldKey.currentState.openDrawer();
+                                _scaffoldKey.currentState?.openDrawer();
                               },
                             ),
                           )
                         : IconWidget(
                             icon: Icons.arrow_back_ios,
                             colors: Colors.black,
-                            size: CommonUtil().isTablet ? 38.0 : 24.0,
+                            size: CommonUtil().isTablet! ? 38.0 : 24.0,
                             onTap: () {
                               Get.back();
                               controller.isActive.value = false;
@@ -359,7 +354,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                           .getQurhomePrimaryColor()),
                                     ),
                                   )
-                                : CommonUtil().isTablet
+                                : CommonUtil().isTablet!
                                     ? AssetImageWidget(
                                         icon: icon_qurhome,
                                         height: 48.h,
@@ -398,7 +393,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                      top: CommonUtil().isTablet ? 20.h : 20,
+                      top: CommonUtil().isTablet! ? 20.h : 20,
                     ),
                     child: SizedBox(
                       height: buttonSize,
@@ -407,29 +402,27 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         backgroundColor: Colors.transparent,
                         elevation: 0,
                         onPressed: () {
-                          if (sheelBadgeController
-                                  ?.sheelaIconBadgeCount?.value >
+                          if (sheelBadgeController.sheelaIconBadgeCount.value >
                               0) {
                             Get.toNamed(
                               rt_Sheela,
                               arguments: SheelaArgument(
                                 rawMessage: sheelaQueueShowRemind,
                               ),
-                            ).then((value) {
+                            )?.then((value) {
                               sheelBadgeController.getSheelaBadgeCount(
                                   isNeedSheelaDialog: true);
                             });
                           } else {
                             String sheela_lang =
-                                PreferenceUtil.getStringValue(SHEELA_LANG);
+                                PreferenceUtil.getStringValue(SHEELA_LANG)!;
                             Get.toNamed(
                               rt_Sheela,
                               arguments: SheelaArgument(
-                                isSheelaAskForLang:
-                                    !((sheela_lang ?? '').isNotEmpty),
-                                langCode: (sheela_lang ?? ''),
+                                isSheelaAskForLang: !((sheela_lang).isNotEmpty),
+                                langCode: (sheela_lang),
                               ),
-                            ).then((value) {
+                            )?.then((value) {
                               sheelBadgeController.getSheelaBadgeCount(
                                   isNeedSheelaDialog: true);
                             });
@@ -460,10 +453,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       ),
                     ),
                   ),
-                  if ((sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0) >
-                      0)
+                  if ((sheelBadgeController.sheelaIconBadgeCount.value) > 0)
                     badge(
-                      sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0,
+                      sheelBadgeController.sheelaIconBadgeCount.value,
                     ),
                 ],
               ),
@@ -653,18 +645,18 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
           Get.to(ChatUserList(careGiversList: [], isFromQurDay: true));
         },
         child: ImageIcon(AssetImage(icon_chat),
-            size: CommonUtil().isTablet ? 33.0.sp : unSelOption,
+            size: CommonUtil().isTablet! ? 33.0.sp : unSelOption,
             color: Color(CommonUtil().getQurhomePrimaryColor())),
       ),
       badgeColor: ColorUtils.countColor,
-      badgeCount: Provider.of<ChatSocketViewModel>(Get.context)?.chatTotalCount,
+      badgeCount: Provider.of<ChatSocketViewModel>(Get.context!).chatTotalCount,
     );
   }
 
   getProfileApi() async {
     final userId = await PreferenceUtil.getStringValue(KEY_USERID);
     MyProfileModel value =
-        await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+        await addFamilyUserInfoRepository.getMyProfileInfoNew(userId!);
     myProfile = value;
   }
 
@@ -672,7 +664,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     PreferenceUtil.clearAllData().then(
       (value) {
         Navigator.pushAndRemoveUntil(
-          Get.context,
+          Get.context!,
           MaterialPageRoute(
             builder: (context) => PatientSignInScreen(),
           ),
@@ -688,8 +680,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     try {
       if (userChanged) {
         //profileData = getMyProfile();
+        controller.getModuleAccess();
       }
-      setState(() {});
+      //setState(() {});
     } catch (e) {
       print(e);
     }
@@ -705,22 +698,5 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     } else {
       return SizedBox(width: 70.w);
     }
-  }
-
-  Future<GetDeviceSelectionModel> getModuleAccess() async {
-    await healthReportListForUserRepository.getDeviceSelection().then((value) {
-      selectionResult = value;
-      if (selectionResult?.isSuccess) {
-        if (selectionResult?.result != null) {
-          controller.updateModuleAccess(selectionResult?.result);
-        }
-      }
-    });
-    return selectionResult;
-  }
-
-  enableModuleAccess() {
-    controller.isVitalModuleDisable.value = true;
-    controller.isSymptomModuleDisable.value = true;
   }
 }

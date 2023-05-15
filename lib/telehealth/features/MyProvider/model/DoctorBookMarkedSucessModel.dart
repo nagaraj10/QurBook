@@ -1,5 +1,6 @@
+
 class DoctorBookMarkedSucessModel {
-  bool isSuccess;
+  bool? isSuccess;
 
   DoctorBookMarkedSucessModel({this.isSuccess});
 

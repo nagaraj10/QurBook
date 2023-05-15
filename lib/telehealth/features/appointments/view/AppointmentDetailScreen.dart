@@ -72,7 +72,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           }
 
           return appointmentDetailsController.appointmentDetailsModel != null &&
-                  appointmentDetailsController.appointmentDetailsModel.result !=
+                  appointmentDetailsController.appointmentDetailsModel!.result !=
                       null
               ? InkWell(
                   onTap: () {
@@ -112,7 +112,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Widget getAppointmentDetailWidget() {
     if (appointmentDetailsController.appointmentDetailsModel != null &&
-        appointmentDetailsController.appointmentDetailsModel.result != null) {
+        appointmentDetailsController.appointmentDetailsModel!.result != null) {
       return Padding(
         padding: EdgeInsets.only(bottom: 100),
         child: SingleChildScrollView(
@@ -177,8 +177,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               null
                           ? CachedNetworkImage(
                               imageUrl: appointmentDetailsController
-                                      .appointmentIconUrl.value ??
-                                  "",
+                                      .appointmentIconUrl.value,
                               height: imgSize,
                               width: imgSize,
                               fit: BoxFit.fill,

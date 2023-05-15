@@ -2,8 +2,6 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:math' as Math;
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 class Device {
   static double devicePixelRatio = ui.window.devicePixelRatio;
   static ui.Size size = ui.window.physicalSize;
@@ -12,9 +10,9 @@ class Device {
   static double screenWidth = width / devicePixelRatio;
   static double screenHeight = height / devicePixelRatio;
   static ui.Size screenSize = new ui.Size(screenWidth, screenHeight);
-  final bool isTablet, isPhone, isIos, isAndroid, isIphoneX, hasNotch;
-  static Device _device;
-  static Function onMetricsChange;
+  final bool? isTablet, isPhone, isIos, isAndroid, isIphoneX, hasNotch;
+  static Device? _device;
+  static Function? onMetricsChange;
 
   Device(
       {this.isTablet,
@@ -25,7 +23,7 @@ class Device {
       this.hasNotch});
 
   factory Device.get() {
-    if (_device != null) return _device;
+    if (_device != null) return _device!;
 
     if (onMetricsChange == null) {
       onMetricsChange = ui.window.onMetricsChanged;
@@ -39,7 +37,7 @@ class Device {
         screenHeight = height / devicePixelRatio;
         screenSize = new ui.Size(screenWidth, screenHeight);
 
-        onMetricsChange();
+        onMetricsChange!();
       };
     }
 

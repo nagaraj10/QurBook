@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/GoogleTTSResponseModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:rxdart/streams.dart';
 
 class SpeechModelAPIResponse {
-  bool isSuccess;
-  SheelaResponse result;
+  bool? isSuccess;
+  SheelaResponse? result;
 
   SpeechModelAPIResponse({this.isSuccess, this.result});
 
@@ -19,82 +20,81 @@ class SpeechModelAPIResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class SheelaResponse {
-  String recipientId;
-  String text;
-  String audioURL;
-  bool endOfConv = true;
-  List<Buttons> buttons;
+  String? recipientId;
+  String? text;
+  String? audioURL;
+  bool? endOfConv = true;
+  List<Buttons>? buttons;
   var imageURL;
-  List<String> imageURLS;
+  List<String>? imageURLS;
   var searchURL;
-  String lang;
+  String? lang;
   var postId;
   var matchedQuestion;
-  List<VideoLinks> videoLinks;
+  List<VideoLinks>? videoLinks;
   var translatedUserText;
-  bool redirect;
-  bool enableMic;
-  bool providerMsg;
+  bool? redirect;
+  bool? enableMic;
+  bool? providerMsg;
   var redirectTo;
-  bool singleuse = false;
-  bool isActionDone = false;
+  bool? singleuse = false;
+  bool? isActionDone = false;
   var eid;
-  bool directCall;
-  String recipient;
+  bool? directCall;
+  String? recipient;
   String timeStamp =
       FHBUtils().getFormattedDateString(DateTime.now().toString());
-  GoogleTTSResponseModel ttsResponse;
+  GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
-  int currentButtonPlayingIndex;
-  bool loading = false;
-  String conversationFlag;
+  int? currentButtonPlayingIndex;
+  bool? loading = false;
+  String? conversationFlag;
   var additionalInfo;
-  String sessionId;
-  String relationshipId;
-  String audioFile;
-  bool playAudioInit = false;
-  bool isButtonNumber;
+  String? sessionId;
+  String? relationshipId;
+  String? audioFile;
+  bool? playAudioInit = false;
+  bool? isButtonNumber;
 
-  SheelaResponse({
-    this.recipientId,
-    this.text,
-    this.audioURL,
-    this.endOfConv,
-    this.buttons,
-    this.imageURL,
-    this.searchURL,
-    this.lang,
-    this.postId,
-    this.matchedQuestion,
-    this.videoLinks,
-    this.translatedUserText,
-    this.redirect,
-    this.enableMic,
-    this.providerMsg,
-    this.redirectTo,
-    this.singleuse,
-    this.isActionDone,
-    this.eid,
-    this.directCall,
-    this.recipient,
-    this.ttsResponse,
-    this.loading,
-    this.conversationFlag,
-    this.additionalInfo,
-    this.sessionId,
-    this.relationshipId,
-    this.imageURLS,
-    this.audioFile,
-    this.playAudioInit,
-    this.isButtonNumber
-  });
+  SheelaResponse(
+      {this.recipientId,
+      this.text,
+      this.audioURL,
+      this.endOfConv,
+      this.buttons,
+      this.imageURL,
+      this.searchURL,
+      this.lang,
+      this.postId,
+      this.matchedQuestion,
+      this.videoLinks,
+      this.translatedUserText,
+      this.redirect,
+      this.enableMic,
+      this.providerMsg,
+      this.redirectTo,
+      this.singleuse,
+      this.isActionDone,
+      this.eid,
+      this.directCall,
+      this.recipient,
+      this.ttsResponse,
+      this.loading,
+      this.conversationFlag,
+      this.additionalInfo,
+      this.sessionId,
+      this.relationshipId,
+      this.imageURLS,
+      this.audioFile,
+      this.playAudioInit,
+      this.isButtonNumber});
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     recipientId = json['recipient_id'];
@@ -130,13 +130,24 @@ class SheelaResponse {
     singleuse = json['singleuse'];
     isActionDone = json['isActionDone'];
     eid = json['eid'];
-    directCall = (json['directCall']?? false);
+    directCall = (json['directCall'] ?? false);
     recipient = json['recipient'];
     conversationFlag = json['conversationFlag'];
     additionalInfo = json['additionalInfo'];
     sessionId = json['sessionId'];
     relationshipId = json['relationshipId'];
-    isButtonNumber = (json['IsButtonNumber']?? false);
+    isButtonNumber = (json['IsButtonNumber'] ?? false);
+
+    if(buttons!=null && buttons!.length>0){
+      List<Buttons>? buttonsList = [];
+      buttons!.forEach((element) {
+        if (element.hidden != sheela_hdn_btn_yes) {
+          buttonsList.add(element);
+        }
+      });
+      buttons = buttonsList;
+    }
+
   }
 
   Map<String, dynamic> toJson() {
@@ -176,17 +187,21 @@ class SheelaResponse {
 }
 
 class Buttons {
-  String payload;
-  String title;
-  bool skipTts;
-  bool relationshipIdNotRequired;
-  GoogleTTSResponseModel ttsResponse;
+  String? payload;
+  String? title;
+  String? hidden;
+  String? sayText;
+  bool? skipTts;
+  bool? relationshipIdNotRequired;
+  GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
   bool isSelected = false;
 
   Buttons({
     this.payload,
     this.title,
+    this.hidden,
+    this.sayText,
     this.skipTts,
     this.relationshipIdNotRequired = false,
     this.ttsResponse,
@@ -195,6 +210,8 @@ class Buttons {
   Buttons.fromJson(Map<String, dynamic> json) {
     payload = json['payload'];
     title = json['title'];
+    hidden = (json['hidden'] ?? '');
+    sayText = (json['saytext'] ?? '');
     skipTts = (json['skip_tts'] ?? false);
     relationshipIdNotRequired = (json['relationshipIdNotRequired'] ?? false);
   }
@@ -203,6 +220,8 @@ class Buttons {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['payload'] = this.payload;
     data['title'] = this.title;
+    data['hidden'] = this.hidden;
+    data['saytext'] = this.sayText;
     data['skip_tts'] = this.skipTts;
     data['relationshipIdNotRequired'] = this.relationshipIdNotRequired;
     return data;
@@ -210,9 +229,9 @@ class Buttons {
 }
 
 class VideoLinks {
-  String title;
-  String thumbnail;
-  String url;
+  String? title;
+  String? thumbnail;
+  String? url;
 
   VideoLinks({this.title, this.thumbnail, this.url});
 

@@ -1,6 +1,6 @@
 class CityListModel {
-  bool isSuccess;
-  List<CityListData> result;
+  bool? isSuccess;
+  List<CityListData>? result;
 
   CityListModel({this.isSuccess, this.result});
 
@@ -10,7 +10,7 @@ class CityListModel {
       if (json['result'] != null) {
             result = <CityListData>[];
             json['result'].forEach((v) {
-              result.add(new CityListData.fromJson(v));
+              result!.add(new CityListData.fromJson(v));
             });
           }
     } catch (e) {
@@ -23,7 +23,7 @@ class CityListModel {
     try {
       data['isSuccess'] = this.isSuccess;
       if (this.result != null) {
-            data['result'] = this.result.map((v) => v.toJson()).toList();
+            data['result'] = this.result!.map((v) => v.toJson()).toList();
           }
     } catch (e) {
       
@@ -33,12 +33,12 @@ class CityListModel {
 }
 
 class CityListData {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  State state;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  State? state;
 
   CityListData(
       {this.id,
@@ -70,7 +70,7 @@ class CityListData {
       data['createdOn'] = this.createdOn;
       data['lastModifiedOn'] = this.lastModifiedOn;
       if (this.state != null) {
-            data['state'] = this.state.toJson();
+            data['state'] = this.state!.toJson();
           }
     } catch (e) {
       
@@ -80,12 +80,12 @@ class CityListData {
 }
 
 class State {
-  String id;
-  String name;
-  String countryCode;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? countryCode;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   State(
       {this.id,

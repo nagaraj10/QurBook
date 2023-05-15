@@ -1,6 +1,8 @@
+
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -30,7 +32,7 @@ import '../../../src/utils/screenutils/size_extensions.dart';
 import 'VitalsDetails.dart';
 
 class VitalsList extends StatefulWidget {
-  const VitalsList({Key key}) : super(key: key);
+  const VitalsList({Key? key}) : super(key: key);
 
   @override
   _VitalsListState createState() => _VitalsListState();
@@ -39,14 +41,14 @@ class VitalsList extends StatefulWidget {
 class _VitalsListState extends State<VitalsList> {
   final controller = Get.put(VitalListController());
 
-  LastMeasureSyncValues deviceValues;
-  DeviceData finalList;
+  LastMeasureSyncValues? deviceValues;
+  DeviceData? finalList;
 
-  String dateForBp;
-  String dateForGulcose;
-  String dateForOs;
-  String dateForWeight;
-  String dateForTemp;
+  String? dateForBp;
+  String? dateForGulcose;
+  String? dateForOs;
+  String? dateForWeight;
+  String? dateForTemp;
 
   String sourceForBp = '';
   String sourceForGluco = '';
@@ -54,17 +56,17 @@ class _VitalsListState extends State<VitalsList> {
   String sourceForPulse = '';
   String sourceForWeigh = '';
 
-  String timeForBp;
-  String timeForGulcose;
-  String timeForOs;
-  String timeForWeight;
-  String timeForTemp;
+  String? timeForBp;
+  String? timeForGulcose;
+  String? timeForOs;
+  String? timeForWeight;
+  String? timeForTemp;
 
-  DateTime dateTimeStampForBp;
-  DateTime dateTimeStampForGulcose;
-  DateTime dateTimeStampForOs;
-  DateTime dateTimeStampForWeight;
-  DateTime dateTimeStampForTemp;
+  late DateTime dateTimeStampForBp;
+  late DateTime dateTimeStampForGulcose;
+  late DateTime dateTimeStampForOs;
+  late DateTime dateTimeStampForWeight;
+  late DateTime dateTimeStampForTemp;
 
   var devicevalue1ForBp;
   var devicevalue2ForBp;
@@ -76,11 +78,11 @@ class _VitalsListState extends State<VitalsList> {
   var devicevalue1ForWeight;
   var devicevalue1ForTemp;
 
-  bool bpMonitor = true;
-  bool glucoMeter = true;
-  bool pulseOximeter = true;
-  bool thermoMeter = true;
-  bool weighScale = true;
+  bool? bpMonitor = true;
+  bool? glucoMeter = true;
+  bool? pulseOximeter = true;
+  bool? thermoMeter = true;
+  bool? weighScale = true;
 
   var averageForSys;
   var averageForDia;
@@ -101,13 +103,13 @@ class _VitalsListState extends State<VitalsList> {
 
   var averageForWeigh;
 
-  MyProfileModel myProfile;
+  MyProfileModel? myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
-  GetDeviceSelectionModel selectionResult;
+  GetDeviceSelectionModel? selectionResult;
 
   FlutterToast toast = FlutterToast();
 
@@ -117,21 +119,35 @@ class _VitalsListState extends State<VitalsList> {
   var unitForWeight;
   var unitForTemp;
 
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
+
   @override
   void initState() {
     try {
-      FocusManager.instance.primaryFocus.unfocus();
+      FocusManager.instance.primaryFocus!.unfocus();
       mInitialTime = DateTime.now();
+      //onInit();
       super.initState();
     } catch (e) {
       print(e);
     }
   }
 
+  onInit() async {
+    try {
+      qurhomeDashboardController.getModuleAccess();
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
+  }
+
   @override
   void dispose() {
     try {
-      FocusManager.instance.primaryFocus.unfocus();
+      FocusManager.instance.primaryFocus!.unfocus();
       super.dispose();
       fbaLog(eveName: 'qurbook_screen_event', eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -144,57 +160,57 @@ class _VitalsListState extends State<VitalsList> {
     }
   }
 
-  Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
+  Future<GetDeviceSelectionModel?> getDeviceSelectionValues() async {
     await controller.getDeviceSelection().then((value) {
       selectionResult = value;
-      if (selectionResult.isSuccess) {
-        if (selectionResult.result != null) {
+      if (selectionResult!.isSuccess!) {
+        if (selectionResult!.result != null) {
           bpMonitor =
-              selectionResult.result[0].profileSetting.bpMonitor != null &&
-                      selectionResult.result[0].profileSetting.bpMonitor != ''
-                  ? selectionResult.result[0].profileSetting.bpMonitor
+              selectionResult!.result![0].profileSetting!.bpMonitor != null &&
+                      selectionResult!.result![0].profileSetting!.bpMonitor != ''
+                  ? selectionResult!.result![0].profileSetting!.bpMonitor
                   : true;
           glucoMeter =
-              selectionResult.result[0].profileSetting.glucoMeter != null &&
-                      selectionResult.result[0].profileSetting.glucoMeter != ''
-                  ? selectionResult.result[0].profileSetting.glucoMeter
+              selectionResult!.result![0].profileSetting!.glucoMeter != null &&
+                      selectionResult!.result![0].profileSetting!.glucoMeter != ''
+                  ? selectionResult!.result![0].profileSetting!.glucoMeter
                   : true;
           pulseOximeter =
-              selectionResult.result[0].profileSetting.pulseOximeter != null &&
-                      selectionResult.result[0].profileSetting.pulseOximeter !=
+              selectionResult!.result![0].profileSetting!.pulseOximeter != null &&
+                      selectionResult!.result![0].profileSetting!.pulseOximeter !=
                           ''
-                  ? selectionResult.result[0].profileSetting.pulseOximeter
+                  ? selectionResult!.result![0].profileSetting!.pulseOximeter
                   : true;
           thermoMeter =
-              selectionResult.result[0].profileSetting.thermoMeter != null &&
-                      selectionResult.result[0].profileSetting.thermoMeter != ''
-                  ? selectionResult.result[0].profileSetting.thermoMeter
+              selectionResult!.result![0].profileSetting!.thermoMeter != null &&
+                      selectionResult!.result![0].profileSetting!.thermoMeter != ''
+                  ? selectionResult!.result![0].profileSetting!.thermoMeter
                   : true;
           weighScale =
-              selectionResult.result[0].profileSetting.weighScale != null &&
-                      selectionResult.result[0].profileSetting.weighScale != ''
-                  ? selectionResult.result[0].profileSetting.weighScale
+              selectionResult!.result![0].profileSetting!.weighScale != null &&
+                      selectionResult!.result![0].profileSetting!.weighScale != ''
+                  ? selectionResult!.result![0].profileSetting!.weighScale
                   : true;
-          if (selectionResult.result[0].profileSetting != null) {
-            if (selectionResult.result[0].profileSetting.preferred_language !=
+          if (selectionResult!.result![0].profileSetting != null) {
+            if (selectionResult!.result![0].profileSetting!.preferred_language !=
                 null) {
               final preferredLanguage =
-                  selectionResult.result[0].profileSetting.preferred_language;
+                  selectionResult!.result![0].profileSetting!.preferred_language;
               var currentLanguage = '';
               if (preferredLanguage != 'undef') {
-                currentLanguage = preferredLanguage.split('-').first;
+                currentLanguage = preferredLanguage!.split('-').first;
               } else {
                 currentLanguage = 'en';
               }
               PreferenceUtil.saveString(Constants.SHEELA_LANG,
                   CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
             }
-            if (selectionResult.result[0].profileSetting.preColor != null &&
-                selectionResult.result[0].profileSetting.greColor != null) {
+            if (selectionResult!.result![0].profileSetting!.preColor != null &&
+                selectionResult!.result![0].profileSetting!.greColor != null) {
               PreferenceUtil.saveTheme(Constants.keyPriColor,
-                  selectionResult.result[0].profileSetting.preColor);
+                  selectionResult!.result![0].profileSetting!.preColor!);
               PreferenceUtil.saveTheme(Constants.keyGreyColor,
-                  selectionResult.result[0].profileSetting.greColor);
+                  selectionResult!.result![0].profileSetting!.greColor!);
               //HomeScreen.of(context).refresh();
               //setState(() {});
             } else {
@@ -236,7 +252,7 @@ class _VitalsListState extends State<VitalsList> {
   }
 
   Widget getDeviceVisibleValues(BuildContext context) {
-    return FutureBuilder<GetDeviceSelectionModel>(
+    return FutureBuilder<GetDeviceSelectionModel?>(
       future: getDeviceSelectionValues(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -256,7 +272,7 @@ class _VitalsListState extends State<VitalsList> {
   }
 
   Widget getMealType() {
-    if (deviceValues.bloodGlucose.entities.isNotEmpty) {
+    if (deviceValues!.bloodGlucose!.entities!.isNotEmpty) {
       if (deviceMealContext != '') {
         return Text(
           getMealText(deviceMealContext.toString()),
@@ -323,7 +339,7 @@ class _VitalsListState extends State<VitalsList> {
   }
 
   Widget getValues(BuildContext context) {
-    return FutureBuilder<LastMeasureSyncValues>(
+    return FutureBuilder<LastMeasureSyncValues?>(
         future: controller.fetchDeviceDetails(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -347,9 +363,9 @@ class _VitalsListState extends State<VitalsList> {
       return CommonCircularQurHome();
     }
 
-    if (deviceValues.bloodPressure.entities.isNotEmpty) {
-      dateTimeStampForBp = deviceValues
-          .bloodPressure.entities[0].deviceHealthRecord?.createdOn
+    if (deviceValues!.bloodPressure!.entities!.isNotEmpty) {
+      dateTimeStampForBp = deviceValues!
+          .bloodPressure!.entities![0].deviceHealthRecord!.createdOn!
           .toLocal();
 
       //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
@@ -359,38 +375,38 @@ class _VitalsListState extends State<VitalsList> {
           '${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForBp)}';
 
       devicevalue1ForBp =
-          deviceValues.bloodPressure.entities[0].systolic.toString();
+          deviceValues!.bloodPressure!.entities![0].systolic.toString();
       devicevalue2ForBp =
-          deviceValues.bloodPressure.entities[0].diastolic.toString();
+          deviceValues!.bloodPressure!.entities![0].diastolic.toString();
 
-      if (deviceValues.bloodPressure.entities[0].deviceHealthRecord != null) {
-        sourceForBp = deviceValues
-            .bloodPressure.entities[0].deviceHealthRecord.sourceType.code
+      if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord != null) {
+        sourceForBp = deviceValues!
+            .bloodPressure!.entities![0].deviceHealthRecord!.sourceType!.code
             .toString();
       }
 
       try {
-        if (deviceValues.bloodPressure.entities[0].deviceHealthRecord != null) {
-          if (deviceValues.bloodPressure.entities[0].deviceHealthRecord
-              .heartRateCollection.isNotEmpty) {
-            if (deviceValues.bloodPressure.entities[0].deviceHealthRecord
-                    .heartRateCollection[0].bpm !=
+        if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord != null) {
+          if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord!
+              .heartRateCollection!.isNotEmpty) {
+            if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord!
+                    .heartRateCollection![0].bpm !=
                 null) {
-              pulseBp = deviceValues.bloodPressure.entities[0]
-                  .deviceHealthRecord.heartRateCollection[0].bpm
+              pulseBp = deviceValues!.bloodPressure!.entities![0]
+                  .deviceHealthRecord!.heartRateCollection![0].bpm
                   .toString();
             } else {
               pulseBp = '';
             }
-            if (deviceValues.bloodPressure.entities[0].deviceHealthRecord
-                    .heartRateCollection[0].averageAsOfNow !=
+            if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord!
+                    .heartRateCollection![0].averageAsOfNow !=
                 null) {
-              averageForPulForBp = deviceValues
-                  .bloodPressure
-                  .entities[0]
-                  .deviceHealthRecord
-                  .heartRateCollection[0]
-                  .averageAsOfNow
+              averageForPulForBp = deviceValues!
+                  .bloodPressure!
+                  .entities![0]
+                  .deviceHealthRecord!
+                  .heartRateCollection![0]
+                  .averageAsOfNow!
                   .pulseAverage
                   .toString();
             } else {
@@ -405,19 +421,19 @@ class _VitalsListState extends State<VitalsList> {
           averageForPulForBp = '';
         }
 
-        if (deviceValues.bloodPressure.entities[0].averageAsOfNow != null) {
-          averageForSys = deviceValues.bloodPressure.entities[0].averageAsOfNow
+        if (deviceValues!.bloodPressure!.entities![0].averageAsOfNow != null) {
+          averageForSys = deviceValues!.bloodPressure!.entities![0].averageAsOfNow!
                       .systolicAverage !=
                   null
-              ? deviceValues
-                  .bloodPressure.entities[0].averageAsOfNow.systolicAverage
+              ? deviceValues!
+                  .bloodPressure!.entities![0].averageAsOfNow!.systolicAverage
                   .toString()
               : '';
-          averageForDia = deviceValues.bloodPressure.entities[0].averageAsOfNow
+          averageForDia = deviceValues!.bloodPressure!.entities![0].averageAsOfNow!
                       .diastolicAverage !=
                   null
-              ? deviceValues
-                  .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
+              ? deviceValues!
+                  .bloodPressure!.entities![0].averageAsOfNow!.diastolicAverage
                   .toString()
               : '';
         } else {
@@ -441,9 +457,9 @@ class _VitalsListState extends State<VitalsList> {
       averageForPulForBp = '';
       timeForBp = '';
     }
-    if (deviceValues.bloodGlucose.entities.isNotEmpty) {
-      dateTimeStampForGulcose = deviceValues
-          .bloodGlucose.entities[0].deviceHealthRecord?.createdOn
+    if (deviceValues!.bloodGlucose!.entities!.isNotEmpty) {
+      dateTimeStampForGulcose = deviceValues!
+          .bloodGlucose!.entities![0].deviceHealthRecord!.createdOn!
           .toLocal();
 
       dateForGulcose = DateFormat(parameters.strDateYMD, variable.strenUs)
@@ -451,37 +467,37 @@ class _VitalsListState extends State<VitalsList> {
       timeForGulcose = DateFormat(parameters.strTimeHM, variable.strenUs)
           .format(dateTimeStampForGulcose);
       devicevalue1ForGulcose =
-          deviceValues.bloodGlucose.entities[0].bloodGlucoseLevel.toString();
+          deviceValues!.bloodGlucose!.entities![0].bloodGlucoseLevel.toString();
 
-      if (deviceValues.bloodGlucose.entities[0].mealContext != null) {
+      if (deviceValues!.bloodGlucose!.entities![0].mealContext != null) {
         deviceMealContext =
-            deviceValues.bloodGlucose.entities[0].mealContext.name.toString();
+            deviceValues!.bloodGlucose!.entities![0].mealContext!.name.toString();
       } else {
         deviceMealContext = 'Random';
       }
 
-      deviceMealType = deviceValues.bloodGlucose.entities[0].mealType != null
-          ? deviceValues.bloodGlucose.entities[0].mealType.name.toString()
+      deviceMealType = deviceValues!.bloodGlucose!.entities![0].mealType != null
+          ? deviceValues!.bloodGlucose!.entities![0].mealType!.name.toString()
           : '';
 
-      if (deviceValues.bloodGlucose.entities[0].deviceHealthRecord != null) {
-        sourceForGluco = deviceValues
-            .bloodGlucose.entities[0].deviceHealthRecord.sourceType.code
+      if (deviceValues!.bloodGlucose!.entities![0].deviceHealthRecord != null) {
+        sourceForGluco = deviceValues!
+            .bloodGlucose!.entities![0].deviceHealthRecord!.sourceType!.code
             .toString();
       }
 
       try {
-        averageForFasting = deviceValues
-                    .bloodGlucose.entities[0].averageAsOfNow.fastingAverage !=
+        averageForFasting = deviceValues!
+                    .bloodGlucose!.entities![0].averageAsOfNow!.fastingAverage !=
                 null
-            ? deviceValues
-                .bloodGlucose.entities[0].averageAsOfNow.fastingAverage
+            ? deviceValues!
+                .bloodGlucose!.entities![0].averageAsOfNow!.fastingAverage
                 .toString()
             : '';
         averageForPP =
-            deviceValues.bloodGlucose.entities[0].averageAsOfNow.ppAverage !=
+            deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage !=
                     null
-                ? deviceValues.bloodGlucose.entities[0].averageAsOfNow.ppAverage
+                ? deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage
                     .toString()
                 : '';
       } catch (e) {
@@ -498,9 +514,9 @@ class _VitalsListState extends State<VitalsList> {
       averageForPP = '';
       timeForGulcose = '';
     }
-    if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
-      dateTimeStampForOs = deviceValues
-          .oxygenSaturation.entities[0].deviceHealthRecord?.createdOn
+    if (deviceValues!.oxygenSaturation!.entities!.isNotEmpty) {
+      dateTimeStampForOs = deviceValues!
+          .oxygenSaturation!.entities![0].deviceHealthRecord!.createdOn!
           .toLocal();
 
       dateForOs = DateFormat(parameters.strDateYMD, variable.strenUs)
@@ -508,42 +524,42 @@ class _VitalsListState extends State<VitalsList> {
       timeForOs = DateFormat(parameters.strTimeHM, variable.strenUs)
           .format(dateTimeStampForOs);
       devicevalue1ForOs =
-          deviceValues.oxygenSaturation.entities[0].oxygenSaturation.toString();
-      if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord !=
+          deviceValues!.oxygenSaturation!.entities![0].oxygenSaturation.toString();
+      if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord !=
           null) {
-        sourceForPulse = deviceValues
-            .oxygenSaturation.entities[0].deviceHealthRecord.sourceType.code
+        sourceForPulse = deviceValues!
+            .oxygenSaturation!.entities![0].deviceHealthRecord!.sourceType!.code
             .toString();
       }
 
       try {
-        if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord !=
+        if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord !=
             null) {
-          if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
-              .heartRateCollection.isNotEmpty) {
+          if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
+              .heartRateCollection!.isNotEmpty) {
             try {
-              if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
-                      .heartRateCollection[0].bpm !=
+              if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
+                      .heartRateCollection![0].bpm !=
                   null) {
-                prbPMOxi = deviceValues.oxygenSaturation.entities[0]
-                    .deviceHealthRecord.heartRateCollection[0].bpm
+                prbPMOxi = deviceValues!.oxygenSaturation!.entities![0]
+                    .deviceHealthRecord!.heartRateCollection![0].bpm
                     .toString();
               } else {
                 prbPMOxi = '';
               }
 
-              if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
-                      .heartRateCollection[0].averageAsOfNow !=
+              if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
+                      .heartRateCollection![0].averageAsOfNow !=
                   null) {
-                if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
-                        .heartRateCollection[0].averageAsOfNow.pulseAverage !=
+                if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
+                        .heartRateCollection![0].averageAsOfNow!.pulseAverage !=
                     null) {
-                  averageForPRBpm = deviceValues
-                      .oxygenSaturation
-                      .entities[0]
-                      .deviceHealthRecord
-                      .heartRateCollection[0]
-                      .averageAsOfNow
+                  averageForPRBpm = deviceValues!
+                      .oxygenSaturation!
+                      .entities![0]
+                      .deviceHealthRecord!
+                      .heartRateCollection![0]
+                      .averageAsOfNow!
                       .pulseAverage
                       .toString();
                 } else {
@@ -553,9 +569,9 @@ class _VitalsListState extends State<VitalsList> {
                 averageForPRBpm = '';
               }
               averageForPul =
-                  deviceValues.oxygenSaturation.entities[0].averageAsOfNow !=
+                  deviceValues!.oxygenSaturation!.entities![0].averageAsOfNow !=
                           null
-                      ? deviceValues.oxygenSaturation.entities[0].averageAsOfNow
+                      ? deviceValues!.oxygenSaturation!.entities![0].averageAsOfNow!
                           .oxygenLevelAverage
                           .toString()
                       : '';
@@ -581,11 +597,11 @@ class _VitalsListState extends State<VitalsList> {
       }
 
       try {
-        averageForSPO2 = deviceValues.oxygenSaturation.entities[0]
-                    .averageAsOfNow.oxygenLevelAverage !=
+        averageForSPO2 = deviceValues!.oxygenSaturation!.entities![0]
+                    .averageAsOfNow!.oxygenLevelAverage !=
                 null
-            ? deviceValues
-                .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage
+            ? deviceValues!
+                .oxygenSaturation!.entities![0].averageAsOfNow!.oxygenLevelAverage
                 .toString()
             : '';
       } catch (e) {
@@ -598,9 +614,9 @@ class _VitalsListState extends State<VitalsList> {
       averageForSPO2 = '';
       timeForOs = '';
     }
-    if (deviceValues.bodyTemperature.entities.isNotEmpty) {
-      dateTimeStampForTemp = deviceValues
-          .bodyTemperature.entities[0].deviceHealthRecord?.createdOn
+    if (deviceValues!.bodyTemperature!.entities!.isNotEmpty) {
+      dateTimeStampForTemp = deviceValues!
+          .bodyTemperature!.entities![0].deviceHealthRecord!.createdOn!
           .toLocal();
 
       dateForTemp = DateFormat(parameters.strDateYMD, variable.strenUs)
@@ -608,20 +624,20 @@ class _VitalsListState extends State<VitalsList> {
       timeForTemp = DateFormat(parameters.strTimeHM, variable.strenUs)
           .format(dateTimeStampForTemp);
       devicevalue1ForTemp =
-          deviceValues.bodyTemperature.entities[0].temperature.toString();
+          deviceValues!.bodyTemperature!.entities![0].temperature.toString();
 
-      if (deviceValues.bodyTemperature.entities[0].deviceHealthRecord != null) {
-        sourceForThermo = deviceValues
-            .bodyTemperature.entities[0].deviceHealthRecord.sourceType.code
+      if (deviceValues!.bodyTemperature!.entities![0].deviceHealthRecord != null) {
+        sourceForThermo = deviceValues!
+            .bodyTemperature!.entities![0].deviceHealthRecord!.sourceType!.code
             .toString();
       }
 
       try {
-        averageForTemp = deviceValues.bodyTemperature.entities[0].averageAsOfNow
+        averageForTemp = deviceValues!.bodyTemperature!.entities![0].averageAsOfNow!
                     .temperatureAverage !=
                 null
-            ? deviceValues
-                .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage
+            ? deviceValues!
+                .bodyTemperature!.entities![0].averageAsOfNow!.temperatureAverage
                 .toString()
             : '';
       } catch (e) {
@@ -629,8 +645,8 @@ class _VitalsListState extends State<VitalsList> {
       }
       try {
         unitForTemp =
-            deviceValues.bodyTemperature.entities[0].temperatureUnit != null
-                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.code
+            deviceValues!.bodyTemperature!.entities![0].temperatureUnit != null
+                ? deviceValues!.bodyTemperature!.entities![0].temperatureUnit!.code
                 : '';
       } catch (e) {
         unitForTemp = '';
@@ -643,9 +659,9 @@ class _VitalsListState extends State<VitalsList> {
       timeForTemp = '';
       unitForTemp = '';
     }
-    if (deviceValues.bodyWeight.entities.isNotEmpty) {
-      dateTimeStampForWeight = deviceValues
-          .bodyWeight.entities[0].deviceHealthRecord?.createdOn
+    if (deviceValues!.bodyWeight!.entities!.isNotEmpty) {
+      dateTimeStampForWeight = deviceValues!
+          .bodyWeight!.entities![0].deviceHealthRecord!.createdOn!
           .toLocal();
 
       dateForWeight =
@@ -653,27 +669,27 @@ class _VitalsListState extends State<VitalsList> {
       timeForWeight =
           '${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForWeight)}';
       devicevalue1ForWeight =
-          deviceValues.bodyWeight.entities[0].weight.toString();
+          deviceValues!.bodyWeight!.entities![0].weight.toString();
 
-      if (deviceValues.bodyWeight.entities[0].deviceHealthRecord != null) {
-        sourceForWeigh = deviceValues
-            .bodyWeight.entities[0].deviceHealthRecord.sourceType.code
+      if (deviceValues!.bodyWeight!.entities![0].deviceHealthRecord != null) {
+        sourceForWeigh = deviceValues!
+            .bodyWeight!.entities![0].deviceHealthRecord!.sourceType!.code
             .toString();
       }
 
       try {
-        averageForWeigh = deviceValues
-                    .bodyWeight.entities[0].averageAsOfNow.weightAverage !=
+        averageForWeigh = deviceValues!
+                    .bodyWeight!.entities![0].averageAsOfNow!.weightAverage !=
                 null
-            ? deviceValues.bodyWeight.entities[0].averageAsOfNow.weightAverage
+            ? deviceValues!.bodyWeight!.entities![0].averageAsOfNow!.weightAverage
                 .toString()
             : '';
       } catch (e) {
         averageForWeigh = '';
       }
       try {
-        unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
-            ? deviceValues.bodyWeight.entities[0].weightUnit.code
+        unitForWeight = deviceValues!.bodyWeight!.entities![0].weightUnit != null
+            ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
             : '';
       } catch (e) {
         unitForWeight = '';
@@ -722,26 +738,26 @@ class _VitalsListState extends State<VitalsList> {
 
   Widget getDeviceData(
       BuildContext context,
-      String dateForBp,
-      String dateForGulcose,
-      String dateForOs,
-      String dateForWeight,
-      String dateForTemp,
-      String timeForBp,
-      String timeForGulcose,
-      String timeForOs,
-      String timeForWeight,
-      String timeForTemp,
-      String value1ForBp,
+      String? dateForBp,
+      String? dateForGulcose,
+      String? dateForOs,
+      String? dateForWeight,
+      String? dateForTemp,
+      String? timeForBp,
+      String? timeForGulcose,
+      String? timeForOs,
+      String? timeForWeight,
+      String? timeForTemp,
+      String? value1ForBp,
       value1ForGulcose,
       mealContext,
       mealType,
       value1ForOs,
       value1ForWeight,
       value1ForTemp,
-      String value2ForBp,
-      String unitForTemp,
-      String unitForWeight) {
+      String? value2ForBp,
+      String? unitForTemp,
+      String? unitForWeight) {
     return Container(
       //height: 1.sh,
       height: 1.sw * 2.0,
@@ -751,7 +767,7 @@ class _VitalsListState extends State<VitalsList> {
         children: <Widget>[
           SizedBox(height: 15.h),
           Visibility(
-            visible: bpMonitor,
+            visible: bpMonitor!,
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 12.0.w,
@@ -1111,7 +1127,7 @@ class _VitalsListState extends State<VitalsList> {
                   runSpacing: 10,
                   children: [
                     Visibility(
-                      visible: glucoMeter,
+                      visible: glucoMeter!,
                       child: Container(
                         child: GestureDetector(
                           onTap: () {
@@ -1496,7 +1512,7 @@ class _VitalsListState extends State<VitalsList> {
                       ),
                     ),
                     Visibility(
-                      visible: thermoMeter,
+                      visible: thermoMeter!,
                       child: Container(
                         child: GestureDetector(
                           onTap: () {
@@ -1835,7 +1851,7 @@ class _VitalsListState extends State<VitalsList> {
                       ),
                     ),
                     Visibility(
-                      visible: pulseOximeter,
+                      visible: pulseOximeter!,
                       child: Container(
                         child: GestureDetector(
                           onTap: () {
@@ -2188,7 +2204,7 @@ class _VitalsListState extends State<VitalsList> {
                       ),
                     ),
                     Visibility(
-                      visible: weighScale,
+                      visible: weighScale!,
                       child: Container(
                         child: GestureDetector(
                           onTap: () {
@@ -2609,6 +2625,12 @@ Widget TypeIcon(String type, Color color) {
       height: 20.0.h,
       width: 20.0.h,
       color: color,
+    ); 
+  } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) || (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
+    return Image.asset(
+      'assets/Qurhome/Qurhome.png',
+      height: 20.0.h,
+      width: 20.0.h,
     );
   } else {
     return Image.asset(

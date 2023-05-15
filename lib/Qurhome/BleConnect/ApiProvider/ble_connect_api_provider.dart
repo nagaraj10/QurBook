@@ -28,11 +28,11 @@ class BleConnectApiProvider {
     };
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.post(
+      responseJson = (await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-device',
         headers: header,
         body: json.encode(data),
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -50,11 +50,11 @@ class BleConnectApiProvider {
     try {
       final data = {"userHubId": hubId};
       final header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.post(
+      responseJson = (await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-hub/unpair-hub',
         headers: header,
         body: json.encode(data),
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -71,10 +71,10 @@ class BleConnectApiProvider {
     http.Response responseJson;
     try {
       final header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.delete(
+      responseJson = (await ApiServices.delete(
         '${CommonUtil.BASE_URL_QURHUB}user-device/' + deviceId,
         headers: header,
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -92,11 +92,11 @@ class BleConnectApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlotWithUserId();
       var body = json.encode(bleDataModel);
-      responseJson = await ApiServices.post(
+      responseJson = (await ApiServices.post(
         CommonUtil.BASE_URL_QURHUB + qr_BLEDataUpload,
         headers: header,
         body: body,
-      );
+      ))!;
       if (responseJson.statusCode == 200) {
         return true;
       } else {

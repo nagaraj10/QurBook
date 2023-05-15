@@ -1,9 +1,10 @@
+
 import 'package:myfhb/claim/model/claimmodel/ClaimListResult.dart';
 
 class ClaimListResponse {
-  bool isSuccess;
-  String message;
-  List<ClaimListResult> result;
+  bool? isSuccess;
+  String? message;
+  List<ClaimListResult>? result;
 
   ClaimListResponse({this.isSuccess, this.result});
 
@@ -15,9 +16,9 @@ class ClaimListResponse {
     }
     if(json.containsKey('result')) {
       if (json['result'] != null) {
-        result = new List<ClaimListResult>();
+        result = <ClaimListResult>[];
         json['result'].forEach((v) {
-          result.add(new ClaimListResult.fromJson(v));
+          result!.add(new ClaimListResult.fromJson(v));
         });
       }
     }
@@ -28,7 +29,7 @@ class ClaimListResponse {
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }

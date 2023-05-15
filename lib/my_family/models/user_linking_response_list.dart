@@ -1,9 +1,9 @@
 
 import '../../constants/fhb_parameters.dart' as parameters;
 class UserLinkingResponseList {
-  int status;
-  bool success;
-  String message;
+  int? status;
+  bool? success;
+  String? message;
 
   UserLinkingResponseList({this.status, this.success, this.message});
 

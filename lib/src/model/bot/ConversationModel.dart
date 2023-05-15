@@ -1,31 +1,32 @@
+
 import 'package:flutter/foundation.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'button_model.dart';
 import 'video_links.dart';
 
 class Conversation {
-  bool isMayaSaid;
-  String text;
-  String imageUrl;
-  String name;
-  String timeStamp;
-  String langCode;
-  List<Buttons> buttons;
-  String searchURL;
-  List<VideoLinks> videoLinks;
-  String screen;
-  bool redirect;
-  bool isSpeaking;
-  bool loadingDots;
-  bool provider_msg;
-  bool singleuse;
-  bool isActionDone;
-  String redirectTo;
+  bool? isMayaSaid;
+  String? text;
+  String? imageUrl;
+  String? name;
+  String? timeStamp;
+  String? langCode;
+  List<Buttons>? buttons;
+  String? searchURL;
+  List<VideoLinks>? videoLinks;
+  String? screen;
+  bool? redirect;
+  bool? isSpeaking;
+  bool? loadingDots;
+  bool? provider_msg;
+  bool? singleuse;
+  bool? isActionDone;
+  String? redirectTo;
   Conversation({
-    @required this.isMayaSaid,
-    @required this.text,
+    required this.isMayaSaid,
+    required this.text,
     this.imageUrl,
-    @required this.name,
+    required this.name,
     this.timeStamp,
     this.buttons,
     this.langCode,
@@ -52,14 +53,14 @@ class Conversation {
     if (json[parameters.strButtons] != null) {
       buttons = <Buttons>[];
       json[parameters.strButtons].forEach((v) {
-        buttons.add(Buttons.fromJson(v));
+        buttons!.add(Buttons.fromJson(v));
       });
     }
     searchURL = json[parameters.strSearchUrl];
     if (json[parameters.strVideoLinks] != null) {
       videoLinks = <VideoLinks>[];
       json[parameters.strVideoLinks].forEach((v) {
-        videoLinks.add(VideoLinks.fromJson(v));
+        videoLinks!.add(VideoLinks.fromJson(v));
       });
     }
     screen = json[parameters.strScreen];
@@ -79,12 +80,12 @@ class Conversation {
     data[parameters.strProviderMsg] = this.provider_msg;
     if (this.buttons != null) {
       data[parameters.strButtons] =
-          buttons.map((v) => v.toJson()).toList();
+          buttons!.map((v) => v.toJson()).toList();
     }
     data[parameters.strSearchUrl] = searchURL;
     if (videoLinks != null) {
       data[parameters.strVideoLinks] =
-          videoLinks.map((v) => v.toJson()).toList();
+          videoLinks!.map((v) => v.toJson()).toList();
     }
     data[parameters.strScreen] = screen;
     data[parameters.strRedirect] = redirect;

@@ -17,24 +17,24 @@ class HealthConditionPage extends StatefulWidget {
 }
 
 class _HealthConditionPageState extends State<HealthConditionPage> {
-  Future<Map<String, List<MenuItem>>> healthConditions;
+  late Future<Map<String?, List<MenuItem>>?> healthConditions;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.isHealthSearch =
+    Provider.of<PlanWizardViewModel>(context, listen: false).isHealthSearch =
         false;
 
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty =
-    false;
+    Provider.of<PlanWizardViewModel>(context, listen: false).isListEmpty =
+        false;
 
     healthConditions = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getHealthConditions();
 
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty = false;
-
+    Provider.of<PlanWizardViewModel>(context, listen: false).currentTab = 0;
+    Provider.of<PlanWizardViewModel>(context, listen: false).currentPage = 0;
+    Provider.of<PlanWizardViewModel>(context, listen: false).isListEmpty =
+        false;
   }
 
   @override
@@ -48,7 +48,7 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
           //   },
           // ),
           Expanded(
-            child: FutureBuilder<Map<String, List<MenuItem>>>(
+            child: FutureBuilder<Map<String?, List<MenuItem>>?>(
                 future: healthConditions,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -69,17 +69,14 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
                   } else {
                     var healthConditionsList =
                         (Provider.of<PlanWizardViewModel>(context)
-                                    ?.isHealthSearch ??
-                                false)
+                                .isHealthSearch)
                             ? (Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.filteredHealthConditions ??
-                                {})
+                                    listen: false)
+                                .filteredHealthConditions)
                             : (Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.healthConditions ??
-                                {});
-                    if ((healthConditionsList?.length ?? 0) > 0) {
+                                    listen: false)
+                                .healthConditions);
+                    if ((healthConditionsList.length) > 0) {
                       return SingleChildScrollView(
                         child: Column(
                           children: getPlansGrid(healthConditionsList),
@@ -103,13 +100,13 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
         ],
       );
 
-  List<Widget> getPlansGrid(Map<String, List<MenuItem>> healthConditionsList) {
+  List<Widget> getPlansGrid(Map<String?, List<MenuItem>> healthConditionsList) {
     var planCategories = <Widget>[];
-    healthConditionsList?.forEach(
+    healthConditionsList.forEach(
       (categoryName, menuItemList) {
         planCategories.add(
           PlansGridView(
-            title: toBeginningOfSentenceCase(categoryName ?? ''),
+            title: toBeginningOfSentenceCase(categoryName),
             planList: menuItemList,
           ),
         );

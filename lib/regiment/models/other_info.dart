@@ -1,3 +1,4 @@
+
 class OtherInfo {
   OtherInfo({
     this.needPhoto,
@@ -6,10 +7,10 @@ class OtherInfo {
     this.needFile,
   });
 
-  int needPhoto;
-  int needAudio;
-  int needVideo;
-  int needFile;
+  int? needPhoto;
+  int? needAudio;
+  int? needVideo;
+  int? needFile;
 
   OtherInfo.fromJson(Map<String, dynamic> json) {
     needPhoto = json['NeedPhoto'];

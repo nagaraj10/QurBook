@@ -1,5 +1,6 @@
+
 class HomeScreenArguments{
-  int selectedIndex;
+  int? selectedIndex;
 
   HomeScreenArguments({
     this.selectedIndex

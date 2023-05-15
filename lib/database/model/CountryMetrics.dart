@@ -1,16 +1,17 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class CountryMetrics {
-  int countryCode;
-  String name;
-  String bpSPUnit;
-  String bpDPUnit;
-  String bpPulseUnit;
-  String glucometerUnit;
-  String poOxySatUnit;
-  String poPulseUnit;
-  String tempUnit;
-  String weightUnit;
+  int? countryCode;
+  String? name;
+  String? bpSPUnit;
+  String? bpDPUnit;
+  String? bpPulseUnit;
+  String? glucometerUnit;
+  String? poOxySatUnit;
+  String? poPulseUnit;
+  String? tempUnit;
+  String? weightUnit;
 
   CountryMetrics(
       this.countryCode,
@@ -80,7 +81,7 @@ class CountryMetrics {
     return obj;
   }
 
-  void setUserId(int countryCode) {
+  void setUserId(int? countryCode) {
     this.countryCode = countryCode;
   }
 }

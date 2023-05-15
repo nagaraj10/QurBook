@@ -1,8 +1,9 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class ProfilePicThumbnailMain {
-  String type;
-  List<int> data;
+  String? type;
+  List<int>? data;
 
   ProfilePicThumbnailMain({this.type, this.data});
 

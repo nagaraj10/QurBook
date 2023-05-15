@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,18 +38,18 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  MyProfileBloc _myProfileBloc;
-  BuildContext _myContext;
+  MyProfileBloc? _myProfileBloc;
+  BuildContext? _myContext;
   final GlobalKey _showMaya = GlobalKey();
   final GlobalKey _provider = GlobalKey();
   final GlobalKey _records = GlobalKey();
   final GlobalKey _family = GlobalKey();
   final GlobalKey _coverImage = GlobalKey();
   UserModel saveuser = UserModel();
-  File imageURIProfile;
-  String date;
-  String devicevalue1;
-  String devicevalue2;
+  File? imageURIProfile;
+  String? date;
+  String? devicevalue1;
+  String? devicevalue2;
 
   bool noInternet = true;
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
@@ -78,7 +79,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     //QurPlanReminders.getTheRemindersFromAPI();
     //callImportantsMethod();
 
-    String profilebanner =
+    String? profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
@@ -281,7 +282,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget getChatIcon() {
     int count = 0;
-    String targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String? targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     return StreamBuilder<QuerySnapshot<Map<dynamic, dynamic>>>(
         stream: FirebaseFirestore.instance
             .collection(STR_CHAT_LIST)
@@ -291,10 +292,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             count = 0;
-            snapshot.data.docs.forEach((element) {
+            snapshot.data!.docs.forEach((element) {
               if (element.data()[STR_IS_READ_COUNT] != null &&
                   element.data()[STR_IS_READ_COUNT] != '') {
-                count = count + element.data()[STR_IS_READ_COUNT];
+                count = count + element.data()[STR_IS_READ_COUNT] as int;
               }
             });
             return BadgeIcon(

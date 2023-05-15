@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +12,10 @@ import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class BottomBarWidget extends StatelessWidget {
-  String name;
-  String icon;
-  int pageIndex;
-  int selectedPageIndex;
+  String? name;
+  String? icon;
+  int? pageIndex;
+  int? selectedPageIndex;
 
   BottomBarWidget(
       {this.name, this.icon, this.pageIndex, this.selectedPageIndex});
@@ -31,7 +32,7 @@ class BottomBarWidget extends StatelessWidget {
                     PreferenceUtil.getStringValue(Constants.keyMayaAsset) !=
                             null
                         ? PreferenceUtil.getStringValue(
-                                Constants.keyMayaAsset) +
+                                Constants.keyMayaAsset)! +
                             variable.strExtImg
                         : variable.icon_mayaMain,
                     height: 25.0.h,
@@ -40,7 +41,7 @@ class BottomBarWidget extends StatelessWidget {
                 : name == 'Chats'
                     ? getChatIcon(icon)
                     : ImageIcon(
-                        AssetImage(icon),
+                        AssetImage(icon!),
                         size: 20.0.sp,
                         color: selectedPageIndex == pageIndex
                             ? Colors.white
@@ -52,7 +53,7 @@ class BottomBarWidget extends StatelessWidget {
                     width: 0.0.h,
                   )
                 : Text(
-                    name,
+                    name!,
                     style: TextStyle(
                       fontSize: 12.0.sp,
                     ),
@@ -61,9 +62,9 @@ class BottomBarWidget extends StatelessWidget {
         ));
   }
 
-  Widget getChatIcon(String icon) {
+  Widget getChatIcon(String? icon) {
     int count = 0;
-    String targetID = PreferenceUtil.getStringValue(KEY_USERID);
+    String? targetID = PreferenceUtil.getStringValue(KEY_USERID);
     return StreamBuilder<QuerySnapshot<Map<dynamic, dynamic>>>(
         stream: FirebaseFirestore.instance
             .collection(STR_CHAT_LIST)
@@ -73,16 +74,16 @@ class BottomBarWidget extends StatelessWidget {
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             count = 0;
-            snapshot.data.docs.forEach((element) {
+            snapshot.data!.docs.forEach((element) {
               if (element.data()[STR_IS_READ_COUNT] != null &&
                   element.data()[STR_IS_READ_COUNT] != '') {
-                count = count + element.data()[STR_IS_READ_COUNT];
+                count = count + element.data()[STR_IS_READ_COUNT] as int;
               }
             });
             return BadgeIcon(
                 icon: GestureDetector(
                   child: ImageIcon(
-                    AssetImage(icon),
+                    AssetImage(icon!),
                     size: 20.0.sp,
                     color: selectedPageIndex == pageIndex
                         ? Colors.white
@@ -95,7 +96,7 @@ class BottomBarWidget extends StatelessWidget {
             return BadgeIcon(
                 icon: GestureDetector(
                   child: ImageIcon(
-                    AssetImage(icon),
+                    AssetImage(icon!),
                     size: 20.0.sp,
                     color: selectedPageIndex == pageIndex
                         ? Colors.white

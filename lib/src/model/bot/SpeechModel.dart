@@ -1,12 +1,13 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class SpeechModel {
-  String sender;
-  String name;
-  String message;
-  String source;
-  String sessionId;
-  String authToken;
+  String? sender;
+  String? name;
+  String? message;
+  String? source;
+  String? sessionId;
+  String? authToken;
 
   SpeechModel(
       {this.sender,

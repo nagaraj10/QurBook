@@ -40,36 +40,36 @@ import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
 
 class SheelaAIController extends GetxController {
-  MyProfileModel profile;
-  String authToken;
-  String userName;
-  String sessionToken;
-  String userId;
+  MyProfileModel? profile;
+  String? authToken;
+  String? userName;
+  String? sessionToken;
+  String? userId;
   Rx<bool> isLoading = false.obs;
   Rx<bool> isMicListening = false.obs;
   bool canSpeak = false;
   List conversations = [].obs;
-  SheelaResponse currentPlayingConversation;
-  int indexOfCurrentPlayingConversation;
-  AudioPlayer player;
+  SheelaResponse? currentPlayingConversation;
+  int? indexOfCurrentPlayingConversation;
+  AudioPlayer? player;
   ScrollController scrollController = ScrollController();
 
   //Just make it true for using local tts,
   //rest of the cases will be auto handled .
   bool useLocalTTSEngine = false;
-  SheelaArgument arguments;
-  SheelaBLEController bleController;
+  SheelaArgument? arguments;
+  SheelaBLEController? bleController;
   bool isSheelaScreenActive = false;
   int randomNum = 0;
-  String relationshipId;
-  String conversationFlag;
-  var additionalInfo = {};
+  String? relationshipId;
+  String? conversationFlag;
+  Map<dynamic, dynamic>? additionalInfo = {};
   bool lastMsgIsOfButtons = false;
-  AudioCache _audioCache;
-  Timer _popTimer;
+  late AudioCache _audioCache;
+  Timer? _popTimer;
   var sheelaIconBadgeCount = 0.obs;
   bool isUnAvailableCC = false;
-
+  bool isProd = false;
   SheelaBadgeServices sheelaBadgeServices = SheelaBadgeServices();
 
   @override
@@ -79,6 +79,11 @@ class SheelaAIController extends GetxController {
   }
 
   setDefaultValues() async {
+    if (BASE_URL == prodINURL) {
+      isProd = true;
+    } else if (BASE_URL == prodUSURL) {
+      isProd = true;
+    }
     if (Platform.isIOS) {
       _audioCache = AudioCache();
       _audioCache.loadAll(['raw/Negative.mp3', 'raw/Positive.mp3']);
@@ -87,43 +92,43 @@ class SheelaAIController extends GetxController {
     authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
     relationshipId = userId;
-    userName = profile.result != null
-        ? '${profile.result.firstName} ${profile.result.lastName}'
+    userName = profile?.result != null
+        ? '${profile!.result!.firstName} ${profile!.result!.lastName}'
         : '';
     conversationFlag = null;
     additionalInfo = {};
     player = AudioPlayer();
     listnerForAudioPlayer();
     if (Platform.isIOS) {
-      tts_platform.setMethodCallHandler(
-        (call) {
-          if (call.method == tts_platform_closeMic) {
-            if (isMicListening.isTrue) {
-              isMicListening.value = false;
-              _audioCache.play('raw/Negative.mp3');
-            }
+      tts_platform.setMethodCallHandler((call) {
+        if (call.method == tts_platform_closeMic) {
+          if (isMicListening.isTrue) {
+            isMicListening.value = false;
+            _audioCache.play('raw/Negative.mp3');
           }
-        },
-      );
+        }
+        return Future.value("");
+      });
     }
   }
 
   listnerForAudioPlayer() {
-    player.onPlayerStateChanged.listen(
+    player!.onPlayerStateChanged.listen(
       (event) {
         if (event == PlayerState.COMPLETED) {
-          if ((currentPlayingConversation.buttons ?? []).isNotEmpty) {
-            final buttons = currentPlayingConversation.buttons;
-            if ((currentPlayingConversation.currentButtonPlayingIndex ?? 0) <
+          if ((currentPlayingConversation!.buttons ?? []).isNotEmpty) {
+            final buttons = currentPlayingConversation!.buttons!;
+            if ((currentPlayingConversation!.currentButtonPlayingIndex ?? 0) <
                 buttons.length) {
-              final index =
-                  currentPlayingConversation.currentButtonPlayingIndex ?? 0;
+              var index =
+                  currentPlayingConversation!.currentButtonPlayingIndex ?? 0;
               if ((index < buttons.length - 1) &&
-                  buttons[index + 1].skipTts &&
-                  !currentPlayingConversation.isButtonNumber) {
-                if (currentPlayingConversation.currentButtonPlayingIndex !=
+                  buttons[index + 1].skipTts! &&
+                  !currentPlayingConversation!.isButtonNumber!) {
+                if (currentPlayingConversation!.currentButtonPlayingIndex !=
                     null) {
-                  currentPlayingConversation.currentButtonPlayingIndex++;
+                  index++;
+                  currentPlayingConversation!.currentButtonPlayingIndex = index;
                 }
               }
               checkForButtonsAndPlay();
@@ -163,13 +168,14 @@ class SheelaAIController extends GetxController {
   }
 
   checkForButtonsAndPlay() {
-    final buttons = currentPlayingConversation.buttons;
-    if (currentPlayingConversation.currentButtonPlayingIndex != null) {
-      final index = currentPlayingConversation.currentButtonPlayingIndex;
-      if (index < (buttons.length - 1)) {
+    final buttons = currentPlayingConversation!.buttons;
+    if (currentPlayingConversation!.currentButtonPlayingIndex != null) {
+      var index = currentPlayingConversation!.currentButtonPlayingIndex;
+      if (index! < (buttons!.length - 1)) {
         buttons[index].isPlaying.value = false;
-        currentPlayingConversation.currentButtonPlayingIndex++;
-        buttons[currentPlayingConversation.currentButtonPlayingIndex]
+        index++;
+        currentPlayingConversation!.currentButtonPlayingIndex = index;
+        buttons[currentPlayingConversation!.currentButtonPlayingIndex!]
             .isPlaying
             .value = true;
         playTTS(playButtons: true);
@@ -178,8 +184,8 @@ class SheelaAIController extends GetxController {
         gettingReposnseFromNative();
       }
     } else {
-      currentPlayingConversation.currentButtonPlayingIndex = 0;
-      buttons.first.isPlaying.value = true;
+      currentPlayingConversation!.currentButtonPlayingIndex = 0;
+      buttons!.first.isPlaying.value = true;
       playTTS(playButtons: true);
     }
   }
@@ -195,9 +201,9 @@ class SheelaAIController extends GetxController {
   }
 
   startSheelaFromButton({
-    String buttonText,
-    String payload,
-    Buttons buttons,
+    String? buttonText,
+    String? payload,
+    Buttons? buttons,
   }) async {
     stopTTS();
     conversations.add(SheelaResponse(text: buttonText));
@@ -211,18 +217,19 @@ class SheelaAIController extends GetxController {
     if (PreferenceUtil.getIfQurhomeisAcive() &&
         (arguments?.takeActiveDeviceReadings ?? false)) {
       //BLE devices handling
-      bleController = Get.find();
-      bleController.startSheelaBLEDeviceReadings();
+      //bleController = Get.find();
+      bleController = CommonUtil().onInitSheelaBLEController();
+      bleController!.startSheelaBLEDeviceReadings();
       isLoading(true);
     } else {
       if (Get.isRegistered<SheelaBLEController>())
         Get.find<SheelaBLEController>().stopScanning();
       var msg = strhiMaya;
       if ((arguments?.rawMessage ?? '').isNotEmpty) {
-        msg = arguments.rawMessage;
+        msg = arguments!.rawMessage!;
         getAIAPIResponseFor(msg, null);
       } else if ((arguments?.sheelaInputs ?? '').isNotEmpty) {
-        msg = arguments.sheelaInputs;
+        msg = arguments!.sheelaInputs!;
         conversations.add(SheelaResponse(text: msg));
         getAIAPIResponseFor(msg, null);
       } else if ((arguments?.eId ?? '').isNotEmpty ||
@@ -234,10 +241,10 @@ class SheelaAIController extends GetxController {
         isLoading(true);
         SheelaResponse audioResponse = SheelaResponse();
         audioResponse.recipientId = sheelaAudioMsgUrl;
-        audioResponse.audioFile = arguments.audioMessage;
+        audioResponse.audioFile = arguments!.audioMessage;
         conversations.add(audioResponse);
       } else if ((arguments?.textSpeechSheela ?? '').isNotEmpty) {
-        msg = arguments?.textSpeechSheela;
+        msg = arguments!.textSpeechSheela!;
         var currentCon = SheelaResponse(text: msg, recipientId: sheelaRecepId);
         conversations.add(currentCon);
         currentPlayingConversation = currentCon;
@@ -248,7 +255,7 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  getAIAPIResponseFor(String message, Buttons buttonsList) async {
+  getAIAPIResponseFor(String? message, Buttons? buttonsList) async {
     try {
       isLoading.value = true;
       conversations.add(SheelaResponse(loading: true));
@@ -285,28 +292,35 @@ class SheelaAIController extends GetxController {
       if (arguments?.isSheelaFollowup ?? false) {
         reqJson = {
           KIOSK_task: strfollowup,
-          KIOSK_eid: arguments.eId,
-          KIOSK_action: arguments.action,
-          KIOSK_activityName: arguments.activityName,
+          KIOSK_eid: arguments!.eId,
+          KIOSK_action: arguments!.action,
+          KIOSK_activityName: arguments!.activityName,
           KIOSK_message: message,
-          KIOSK_isSheela: arguments.isSheelaFollowup,
+          KIOSK_isSheela: arguments!.isSheelaFollowup,
         };
-        arguments.isSheelaFollowup = false;
+        arguments!.isSheelaFollowup = false;
       } else if (arguments?.eId != '' && arguments?.eId != null) {
-        reqJson = {KIOSK_task: KIOSK_remind, KIOSK_eid: arguments.eId};
-        sheelaRequest.message = KIOSK_SHEELA;
-        arguments.eId = null;
+        if (arguments?.isSurvey ?? false) {
+          reqJson = {KIOSK_task: KIOSK_survey, KIOSK_eid: arguments!.eId};
+          sheelaRequest.message = KIOSK_SHEELA;
+          arguments!.eId = null;
+        } else {
+          reqJson = {KIOSK_task: KIOSK_remind, KIOSK_eid: arguments!.eId};
+          sheelaRequest.message = KIOSK_SHEELA;
+          arguments!.eId = null;
+        }
       } else if (arguments?.scheduleAppointment ?? false) {
         reqJson = {KIOSK_task: KIOSK_appointment_avail};
         sheelaRequest.message = KIOSK_SHEELA;
-        arguments.scheduleAppointment = false;
+        arguments!.scheduleAppointment = false;
       } else if (arguments?.showUnreadMessage ?? false) {
         reqJson = {"task": "messages"};
         sheelaRequest.message = KIOSK_SHEELA;
-        arguments.showUnreadMessage = false;
+        arguments!.showUnreadMessage = false;
       } else if (arguments?.eventType != null &&
           arguments?.eventType == strWrapperCall) {
         sheelaRequest.additionalInfo = arguments?.others ?? "";
+        arguments?.eventType = null;
       }
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;
@@ -315,19 +329,20 @@ class SheelaAIController extends GetxController {
       final response = await SheelAIAPIService().SheelaAIAPI(
         body,
       );
-      if (response?.statusCode == 200 && (response?.body ?? '').isNotEmpty) {
+      if (response.statusCode == 200 && (response.body).isNotEmpty) {
         if (isUnAvailableCC) {
           isUnAvailableCC = false;
         }
         final parsedResponse = jsonDecode(response.body);
         SpeechModelAPIResponse apiResponse =
             SpeechModelAPIResponse.fromJson(parsedResponse);
-        if (apiResponse.isSuccess && apiResponse.result != null) {
-          var currentResponse = apiResponse.result;
+        if (apiResponse.isSuccess! && apiResponse.result != null) {
+          var currentResponse = apiResponse.result!;
           if ((currentResponse.recipientId ?? '').isEmpty) {
             currentResponse.recipientId = "Sheela Response";
           }
-          currentResponse = await getGoogleTTSForConversation(currentResponse);
+          currentResponse =
+              (await getGoogleTTSForConversation(currentResponse))!;
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
           if ((currentResponse.buttons ?? []).length > 0) {
@@ -348,12 +363,12 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
             additionalInfo = currentResponse.additionalInfo;
           }
-          if ((currentResponse?.audioURL != null) &&
-              (currentResponse?.audioURL ?? '').isNotEmpty) {
+          if ((currentResponse.audioURL != null) &&
+              (currentResponse.audioURL ?? '').isNotEmpty) {
             isLoading(true);
             SheelaResponse audioResponse = SheelaResponse();
             audioResponse.recipientId = sheelaAudioMsgUrl;
-            audioResponse.audioFile = currentResponse?.audioURL;
+            audioResponse.audioFile = currentResponse.audioURL;
             audioResponse.playAudioInit = true;
             conversations.add(audioResponse);
           }
@@ -366,7 +381,9 @@ class SheelaAIController extends GetxController {
           }
           playTTS();
           callToCC(currentResponse);
-          PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang);
+          if (currentResponse.lang != null && currentResponse.lang != '') {
+            PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang ?? "");
+          }
           scrollToEnd();
         } else {
           //Received a wrong format data
@@ -375,7 +392,7 @@ class SheelaAIController extends GetxController {
       } else {
         // Failed to get Sheela Response
         conversations.removeLast();
-        if (kDebugMode) print(response?.body);
+        if (kDebugMode) print(response.body);
         FlutterToast().getToast(
             'There is some issue with sheela,\n Please try after some time',
             Colors.black54);
@@ -392,7 +409,7 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  Future<bool> playUsingLocalTTSEngineFor(String message,
+  Future<bool> playUsingLocalTTSEngineFor(String? message,
       {bool close = false}) async {
     try {
       final status = await tts_platform.invokeMethod(
@@ -417,13 +434,14 @@ class SheelaAIController extends GetxController {
     }
     if (useLocalTTSEngine) {
       try {
-        if ((currentPlayingConversation.text ?? '').isNotEmpty) {
-          currentPlayingConversation.isPlaying.value = true;
-          final status =
-              await playUsingLocalTTSEngineFor(currentPlayingConversation.text);
-          if (status && (currentPlayingConversation.buttons ?? []).isNotEmpty) {
-            for (final button in currentPlayingConversation.buttons) {
-              if ((button.title ?? '').isNotEmpty && !button.skipTts) {
+        if ((currentPlayingConversation!.text ?? '').isNotEmpty) {
+          currentPlayingConversation!.isPlaying.value = true;
+          final status = await playUsingLocalTTSEngineFor(
+              currentPlayingConversation!.text);
+          if (status &&
+              (currentPlayingConversation!.buttons ?? []).isNotEmpty) {
+            for (final button in currentPlayingConversation!.buttons!) {
+              if ((button.title ?? '').isNotEmpty && !button.skipTts!) {
                 button.isPlaying.value = true;
                 await playUsingLocalTTSEngineFor(button.title);
                 button.isPlaying.value = false;
@@ -457,25 +475,35 @@ class SheelaAIController extends GetxController {
         //failed to play in local tts
       }
     } else {
-      String textForPlaying;
+      String? textForPlaying;
       if (playButtons) {
-        final currentButton = currentPlayingConversation
-            .buttons[currentPlayingConversation.currentButtonPlayingIndex];
-        if (currentButton.title.contains("Exit")) {
+        final currentButton = currentPlayingConversation!
+            .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
+        if (currentButton.title!.contains("Exit")) {
           gettingReposnseFromNative();
           return;
         } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
             .isNotEmpty) {
-          textForPlaying = currentButton.ttsResponse.payload.audioContent;
+          textForPlaying = currentButton.ttsResponse!.payload!.audioContent;
         } else if ((currentButton.title ?? '').isNotEmpty) {
           var result;
           try {
-            var stringToSpeech = currentButton.title;
-            if (currentButton.title.contains(".")) {
-              stringToSpeech = currentButton.title.split(".")[1];
-              result = await getGoogleTTSForText(stringToSpeech);
+            if (currentButton.sayText != null && currentButton.sayText != '') {
+              var stringToSpeech = currentButton.sayText;
+              if (currentButton.sayText!.contains(".")) {
+                stringToSpeech = currentButton.sayText!.split(".")[1];
+                result = await getGoogleTTSForText(stringToSpeech);
+              } else {
+                result = await getGoogleTTSForText(currentButton.sayText);
+              }
             } else {
-              result = await getGoogleTTSForText(currentButton.title);
+              var stringToSpeech = currentButton.title;
+              if (currentButton.title!.contains(".")) {
+                stringToSpeech = currentButton.title!.split(".")[1];
+                result = await getGoogleTTSForText(stringToSpeech);
+              } else {
+                result = await getGoogleTTSForText(currentButton.title);
+              }
             }
           } catch (e) {
             result = await getGoogleTTSForText(currentButton.title);
@@ -486,23 +514,23 @@ class SheelaAIController extends GetxController {
           }
         }
       } else {
-        if ((currentPlayingConversation.ttsResponse?.payload?.audioContent ??
+        if ((currentPlayingConversation!.ttsResponse?.payload?.audioContent ??
                 '')
             .isNotEmpty) {
           textForPlaying =
-              currentPlayingConversation.ttsResponse.payload.audioContent;
-        } else if ((currentPlayingConversation.text ?? '').isNotEmpty) {
+              currentPlayingConversation!.ttsResponse!.payload!.audioContent;
+        } else if ((currentPlayingConversation!.text ?? '').isNotEmpty) {
           final result =
-              await getGoogleTTSForText(currentPlayingConversation.text);
-          if ((result.payload?.audioContent ?? '').isNotEmpty) {
-            textForPlaying = result.payload.audioContent;
+              await getGoogleTTSForText(currentPlayingConversation!.text);
+          if ((result!.payload!.audioContent ?? '').isNotEmpty) {
+            textForPlaying = result.payload!.audioContent;
           }
         }
       }
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
           if (Platform.isIOS) {
-            final bytes = base64Decode(textForPlaying);
+            final bytes = base64Decode(textForPlaying!);
             if (bytes != null) {
               final dir = await getTemporaryDirectory();
               randomNum++;
@@ -512,21 +540,21 @@ class SheelaAIController extends GetxController {
               final tempFile =
                   await File('${dir.path}/tempAudioFile$randomNum.mp3')
                       .create();
-              await tempFile.writeAsBytesSync(
+              tempFile.writeAsBytesSync(
                 bytes,
               );
-              currentPlayingConversation.isPlaying.value = true;
-              player.play('${dir.path}/tempAudioFile$randomNum.mp3');
+              currentPlayingConversation!.isPlaying.value = true;
+              player!.play('${dir.path}/tempAudioFile$randomNum.mp3');
             }
           } else {
-            final bytes = const Base64Decoder().convert(textForPlaying);
+            final bytes = const Base64Decoder().convert(textForPlaying!);
             if (bytes != null) {
               final dir = await getTemporaryDirectory();
               final file = File('${dir.path}/tempAudioFile.mp3');
               await file.writeAsBytes(bytes);
               final path = "${dir.path}/tempAudioFile.mp3";
-              currentPlayingConversation.isPlaying.value = true;
-              await player.play(path, isLocal: true);
+              currentPlayingConversation!.isPlaying.value = true;
+              await player!.play(path, isLocal: true);
             }
           }
         } catch (e) {
@@ -553,10 +581,10 @@ class SheelaAIController extends GetxController {
       CommonUtil().closeSheelaDialog();
     }
     if (currentPlayingConversation != null) {
-      currentPlayingConversation.isPlaying.value = false;
-      currentPlayingConversation.currentButtonPlayingIndex = null;
-      if ((currentPlayingConversation.buttons ?? []).isNotEmpty) {
-        for (final button in currentPlayingConversation.buttons) {
+      currentPlayingConversation!.isPlaying.value = false;
+      currentPlayingConversation!.currentButtonPlayingIndex = null;
+      if ((currentPlayingConversation!.buttons ?? []).isNotEmpty) {
+        for (final button in currentPlayingConversation!.buttons!) {
           button.isPlaying.value = false;
         }
       }
@@ -564,7 +592,7 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  Future<SheelaResponse> getGoogleTTSForConversation(
+  Future<SheelaResponse?> getGoogleTTSForConversation(
       SheelaResponse conversation) async {
     try {
       final result = await getGoogleTTSForText(conversation.text);
@@ -586,13 +614,13 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  Future<GoogleTTSResponseModel> getGoogleTTSForText(String text) async {
+  Future<GoogleTTSResponseModel?> getGoogleTTSForText(String? text) async {
     try {
       final req = GoogleTTSRequestModel.fromJson({});
-      req.input.text = text;
-      req.voice.languageCode = getCurrentLanCode();
+      req.input!.text = text;
+      req.voice!.languageCode = getCurrentLanCode();
       final response = await SheelAIAPIService().getAudioFileTTS(req.toJson());
-      if (response.statusCode == 200 && (response.body ?? '').isNotEmpty) {
+      if (response.statusCode == 200 && (response.body).isNotEmpty) {
         final data = jsonDecode(response.body);
         final GoogleTTSResponseModel result =
             GoogleTTSResponseModel.fromJson(data);
@@ -629,16 +657,20 @@ class SheelaAIController extends GetxController {
           isMicListening.value = true;
           if (Platform.isIOS) {
             await _audioCache.play('raw/Positive.mp3');
-            await Future.delayed(Duration(seconds: 1));
+            await Future.delayed(const Duration(seconds: 1));
           }
           await voice_platform.invokeMethod(
             strspeakAssistant,
             {
               'langcode': getCurrentLanCode(),
             },
-          ).then((response) {
+          ).then((response) async {
             isMicListening.value = false;
-            if ((response ?? '').toString()?.isNotEmpty) {
+            if (Platform.isIOS) {
+              await Future.delayed(const Duration(seconds: 1));
+            }
+
+            if ((response ?? '').toString().isNotEmpty) {
               final newConversation = SheelaResponse(text: response);
               if (conversations.isNotEmpty &&
                   ((conversations.last?.buttons?.length ?? 0) > 0)) {
@@ -646,25 +678,23 @@ class SheelaAIController extends GetxController {
                   var responseRecived =
                       response.toString().toLowerCase().trim();
 
-                  var button = null;
+                  dynamic button = null;
 
-                  if (!conversations?.last?.isButtonNumber) {
+                  if (!conversations.last?.isButtonNumber) {
                     if (responseRecived == carGiverSheela) {
                       responseRecived = careGiverSheela;
                     }
-                    button = conversations?.last?.buttons.firstWhere(
-                        (element) =>
-                            (element.title ?? "").toLowerCase() ==
-                            responseRecived);
-                  } else if (conversations?.last?.isButtonNumber) {
+                    button = conversations.last?.buttons.firstWhere((element) =>
+                        (element.title ?? "").toLowerCase() == responseRecived);
+                  } else if (conversations.last?.isButtonNumber) {
                     bool isDigit = CommonUtil().isNumeric(responseRecived);
                     for (int i = 0;
-                        i < conversations?.last?.buttons.length ?? 0;
+                        i < conversations.last?.buttons.length;
                         i++) {
                       var temp =
-                          conversations?.last?.buttons[i].title.split(".");
-                      var realNumber = CommonUtil().realNumber(
-                          int.tryParse(temp[0].toString().trim() ?? 0));
+                          conversations.last?.buttons[i].title.split(".");
+                      var realNumber = CommonUtil()
+                          .realNumber(int.tryParse(temp[0].toString().trim()));
                       var optionWithRealNumber =
                           "Option ${realNumber.toString().trim()}";
                       var optionWithDigit =
@@ -673,7 +703,7 @@ class SheelaAIController extends GetxController {
                           "Number ${realNumber.toString().trim()}";
                       var numberWithDigit =
                           "Number ${temp[0].toString().trim()}";
-                      if (((temp[isDigit ? 0 : 1].toString().trim() ?? "")
+                      if (((temp[isDigit ? 0 : 1].toString().trim())
                                   .toLowerCase() ==
                               responseRecived) ||
                           (realNumber.toString().toLowerCase().trim() ==
@@ -692,7 +722,7 @@ class SheelaAIController extends GetxController {
                               responseRecived) ||
                           (numberWithDigit.toString().toLowerCase().trim() ==
                               responseRecived)) {
-                        button = conversations?.last?.buttons[i];
+                        button = conversations.last?.buttons[i];
                         break;
                       }
                     }
@@ -722,7 +752,7 @@ class SheelaAIController extends GetxController {
             scrollToEnd();
           }).whenComplete(() {
             isMicListening.value = false;
-          }).onError((error, stackTrace) {
+          }).onError((dynamic error, stackTrace) {
             isMicListening.value = false;
           });
         }
@@ -742,12 +772,12 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  String getCurrentLanCode({bool splittedCode = false}) {
+  String? getCurrentLanCode({bool splittedCode = false}) {
     try {
-      String currentLang = PreferenceUtil.getStringValue(SHEELA_LANG);
+      String? currentLang = PreferenceUtil.getStringValue(SHEELA_LANG);
       if ((currentLang ?? '').isNotEmpty) {
         if (splittedCode && (currentLang != "undef")) {
-          final langCode = currentLang.split("-").first;
+          final langCode = currentLang!.split("-").first;
           currentLang = langCode;
         }
       } else {
@@ -769,11 +799,11 @@ class SheelaAIController extends GetxController {
   }
 
   DeviceStatus currentDeviceStatus = DeviceStatus();
-  CreateDeviceSelectionModel createDeviceSelectionModel;
+  late CreateDeviceSelectionModel createDeviceSelectionModel;
 
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
-    final selection = getDeviceSelectionModel.result[0];
-    final prof = selection.profileSetting;
+    final selection = getDeviceSelectionModel.result![0];
+    final prof = selection.profileSetting!;
     currentDeviceStatus.preColor = prof.preColor;
     currentDeviceStatus.greColor = prof.greColor;
     currentDeviceStatus.isdeviceRecognition = prof.allowDevice ?? true;
@@ -800,7 +830,7 @@ class SheelaAIController extends GetxController {
         prof.caregiverCommunicationSetting?.symptoms ?? true;
   }
 
-  Future<CreateDeviceSelectionModel> createDeviceSel() async {
+  Future<CreateDeviceSelectionModel?> createDeviceSel() async {
     try {
       final data = await HealthReportListForUserRepository()
           .createDeviceSelection(
@@ -828,20 +858,20 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  Future getDeviceSelectionValues({String preferredLanguage}) async {
+  Future getDeviceSelectionValues({String? preferredLanguage}) async {
     final GetDeviceSelectionModel selectionResult =
         await HealthReportListForUserRepository().getDeviceSelection();
-    if (selectionResult.isSuccess) {
+    if (selectionResult.isSuccess!) {
       if (selectionResult.result != null) {
         setValues(selectionResult);
-        currentDeviceStatus.userMappingId = selectionResult.result[0].id;
+        currentDeviceStatus.userMappingId = selectionResult.result![0].id;
       } else {
         currentDeviceStatus = DeviceStatus();
       }
     } else {
       currentDeviceStatus = DeviceStatus();
-      createDeviceSelectionModel = await createDeviceSel();
-      if (createDeviceSelectionModel.isSuccess) {
+      createDeviceSelectionModel = (await createDeviceSel())!;
+      if (createDeviceSelectionModel.isSuccess!) {
         updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
       } else {
         //failed to create new model
@@ -849,7 +879,7 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  updateDeviceSelectionModel({String preferredLanguage}) async {
+  updateDeviceSelectionModel({String? preferredLanguage}) async {
     final value = await HealthReportListForUserRepository().updateDeviceModel(
         currentDeviceStatus.userMappingId,
         currentDeviceStatus.isdigitRecognition,
@@ -870,7 +900,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.allowVitalNotification,
         currentDeviceStatus.allowSymptomsNotification,
         currentDeviceStatus.preferredMeasurement);
-    if (value?.isSuccess ?? false) {
+    if (value.isSuccess ?? false) {
       //updated
 
     } else {
@@ -884,13 +914,13 @@ class SheelaAIController extends GetxController {
     try {
       sheelaBadgeServices.getSheelaBadgeCount().then((value) {
         if (value != null) {
-          if (value?.isSuccess) {
-            if (value?.result != null) {
-              sheelaIconBadgeCount.value = value?.result?.queueCount ?? 0;
+          if (value.isSuccess!) {
+            if (value.result != null) {
+              sheelaIconBadgeCount.value = value.result?.queueCount ?? 0;
               if (isNeedSheelaDialog) {
-                if ((value?.result?.queueCount ?? 0) > 0) {
+                if ((value.result?.queueCount ?? 0) > 0) {
                   CommonUtil().dialogForSheelaQueueStable(
-                      Get.context, value?.result?.queueCount ?? 0,
+                      Get.context!, value.result?.queueCount ?? 0,
                       onTapSheela: () {
                     Get.back();
                     Get.toNamed(
@@ -898,7 +928,8 @@ class SheelaAIController extends GetxController {
                       arguments: SheelaArgument(
                         rawMessage: sheelaQueueShowRemind,
                       ),
-                    ).then((value) {
+                    )!
+                        .then((value) {
                       getSheelaBadgeCount(isNeedSheelaDialog: true);
                     });
                   });
@@ -921,13 +952,13 @@ class SheelaAIController extends GetxController {
 
   void updateTimer({bool enable = false}) {
     try {
-      if (_popTimer != null && _popTimer.isActive) {
+      if (_popTimer != null && _popTimer!.isActive) {
         printInfo(info: "Cancelled the timer");
-        _popTimer.cancel();
+        _popTimer!.cancel();
         _popTimer = null;
       } else if (enable) {
         printInfo(info: "started the timer");
-        _popTimer = Timer(const Duration(minutes: 1), () {
+        _popTimer = Timer(const Duration(minutes: 2), () {
           if (isSheelaScreenActive && bleController == null) {
             printInfo(info: "timeout the timer");
             stopTTS();
@@ -944,9 +975,9 @@ class SheelaAIController extends GetxController {
   }
 
   callToCC(SheelaResponse currentResponse) async {
-    if ((currentResponse.directCall != null && currentResponse.directCall) &&
+    if ((currentResponse.directCall != null && currentResponse.directCall!) &&
         (currentResponse.recipient != null &&
-            currentResponse.recipient.trim().toLowerCase() == "cc")) {
+            currentResponse.recipient!.trim().toLowerCase() == "cc")) {
       var regController = CommonUtil().onInitQurhomeRegimenController();
       if (CommonUtil()
           .validString(regController.careCoordinatorId.value)

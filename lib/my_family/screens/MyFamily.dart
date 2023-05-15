@@ -1,9 +1,11 @@
+
 // ignore: file_names
 import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
@@ -40,7 +42,7 @@ class MyFamily extends StatefulWidget {
 }
 
 class _MyFamilyState extends State<MyFamily> {
-  FamilyListBloc _familyListBloc;
+  FamilyListBloc? _familyListBloc;
 
   //var _selected = CommonUtil.REGION_CODE == 'IN' ? Country.IN : Country.US;
   Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
@@ -65,22 +67,22 @@ class _MyFamilyState extends State<MyFamily> {
   FocusNode relationShipFocus = FocusNode();
 
   bool isCalled = false;
-  RelationShipResponseList relationShipResponseList;
+  RelationShipResponseList? relationShipResponseList;
 
   bool firstTym = true;
 
   // Option 2
-  String selectedBloodGroup;
-  RelationsShipModel selectedRelationShip;
+  String? selectedBloodGroup;
+  RelationsShipModel? selectedRelationShip;
 
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
-  var dialogContext;
+  late var dialogContext;
 
-  String parentProfilePic;
+  String? parentProfilePic;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
@@ -94,8 +96,8 @@ class _MyFamilyState extends State<MyFamily> {
     mInitialTime = DateTime.now();
     super.initState();
     _familyListBloc = FamilyListBloc();
-    _familyListBloc.getFamilyMembersListNew();
-    _familyListBloc.getCustomRoles();
+    _familyListBloc!.getFamilyMembersListNew();
+    _familyListBloc!.getCustomRoles();
     parentProfilePic =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
@@ -134,13 +136,13 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   Widget getAllFamilyMembers() {
-    Widget familyWidget;
+    late Widget familyWidget;
 
     return StreamBuilder<ApiResponse<FamilyMembers>>(
-      stream: _familyListBloc.familyMemberListNewStream,
+      stream: _familyListBloc!.familyMemberListNewStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
@@ -152,7 +154,7 @@ class _MyFamilyState extends State<MyFamily> {
 
             case Status.ERROR:
               familyWidget = FHBBasicWidget.getRefreshContainerButton(
-                  snapshot.data.message, () {
+                  snapshot.data!.message, () {
                 setState(() {});
               });
               break;
@@ -164,7 +166,7 @@ class _MyFamilyState extends State<MyFamily> {
                             Constants.KEY_FAMILYMEMBERNEW,
                             snapshot.data.data.result); */
 
-              familyWidget = getMyFamilyMembers(snapshot.data.data.result);
+              familyWidget = getMyFamilyMembers(snapshot.data!.data!.result);
               break;
           }
         } else {
@@ -230,14 +232,14 @@ class _MyFamilyState extends State<MyFamily> {
             PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW)); */
   }
 
-  Widget getMyFamilyMembers(FamilyMemberResult data) {
+  Widget getMyFamilyMembers(FamilyMemberResult? data) {
     return data != null
-        ? data.sharedByUsers.isNotEmpty
+        ? data.sharedByUsers!.isNotEmpty
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
                 child: RefreshIndicator(
                   key: _refreshIndicatorKey,
-                  onRefresh: () {
+                  onRefresh: () async {
                     _refreshIndicatorKey.currentState?.show(atTop: true);
                     rebuildFamilyBlock();
                     setState(() {});
@@ -248,11 +250,11 @@ class _MyFamilyState extends State<MyFamily> {
                     shrinkWrap: true,
                     padding: EdgeInsets.only(bottom: 20),
                     itemBuilder: (c, i) => getCardWidgetForUser(
-                        data.sharedByUsers[i == 0 ? 0 : i - 1],
+                        data.sharedByUsers![i == 0 ? 0 : i - 1],
                         i,
                         data.sharedByUsers,
                         userCollection: data),
-                    itemCount: data.sharedByUsers.length + 1,
+                    itemCount: data.sharedByUsers!.length + 1,
                   ),
                 ))
             : refreshIndicatorWithEmptyContainer()
@@ -281,30 +283,30 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   Widget getCardWidgetForUser(SharedByUsers data, int position,
-      List<SharedByUsers> profilesSharedByMeAry,
-      {FamilyMemberResult userCollection}) {
+      List<SharedByUsers>? profilesSharedByMeAry,
+      {FamilyMemberResult? userCollection}) {
     /* String familyMemberName = '';
     if (data?.child != null) {
       familyMemberName = '${data.child.firstName} ${data.child.lastName}';
     } */
-    var fulName = '';
+    String? fulName = '';
     try {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)!;
       fulName = myProfile.result != null
-          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
+          ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
           : '';
     } catch (e) {
       fulName = myProfile.result != null
-          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
+          ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
           : '';
     }
 
     if (position != 0) {
-      if (data?.child?.firstName != null && data?.child?.firstName != '') {
-        fulName = data?.child?.firstName;
+      if (data.child?.firstName != null && data.child?.firstName != '') {
+        fulName = data.child?.firstName;
       }
-      if (data?.child?.lastName != null && data?.child?.lastName != '') {
-        fulName = fulName + ' ' + data?.child?.lastName;
+      if (data.child?.lastName != null && data.child?.lastName != '') {
+        fulName = fulName! + ' ' + data.child!.lastName!;
       }
     }
 
@@ -319,7 +321,7 @@ class _MyFamilyState extends State<MyFamily> {
                 myProfile: myProfile,
                 currentPage: position - 1),
           ).then((value) {
-            if (value) {
+            if (value as bool) {
               rebuildFamilyBlock();
               setState(() {});
               // FlutterToast toast = new FlutterToast();
@@ -350,7 +352,7 @@ class _MyFamilyState extends State<MyFamily> {
             children: <Widget>[
               ClipOval(
                 child: position != 0
-                    ? data?.child?.profilePicThumbnailUrl == null
+                    ? data.child?.profilePicThumbnailUrl == null
                         ? Container(
                             width: 60.0.h,
                             height: 60.0.h,
@@ -358,7 +360,7 @@ class _MyFamilyState extends State<MyFamily> {
                             child: Center(
                               child: Text(
                                 data.child != null
-                                    ? data.child.firstName[0].toUpperCase()
+                                    ? data.child!.firstName![0].toUpperCase()
                                     : '',
                                 style: TextStyle(
                                     fontSize: 22.0.sp,
@@ -368,14 +370,14 @@ class _MyFamilyState extends State<MyFamily> {
                             ),
                           )
                         : Image.network(
-                            data.child?.profilePicThumbnailUrl,
+                            data.child!.profilePicThumbnailUrl!,
                             fit: BoxFit.cover,
                             width: 60.0.h,
                             height: 60.0.h,
                             headers: {
                               HttpHeaders.authorizationHeader:
                                   PreferenceUtil.getStringValue(
-                                      Constants.KEY_AUTHTOKEN),
+                                      Constants.KEY_AUTHTOKEN)!,
                             },
                             errorBuilder: (context, exception, stackTrace) {
                               return Container(
@@ -385,14 +387,14 @@ class _MyFamilyState extends State<MyFamily> {
                                 child: Center(
                                     child: Text(
                                   data.child?.firstName != null &&
-                                          data.child.lastName != null
-                                      ? data.child.firstName[0].toUpperCase() +
-                                          (data.child.lastName.length > 0
-                                              ? data.child.lastName[0]
+                                          data.child!.lastName != null
+                                      ? data.child!.firstName![0].toUpperCase() +
+                                          (data.child!.lastName!.length > 0
+                                              ? data.child!.lastName![0]
                                                   .toUpperCase()
                                               : '')
-                                      : data.child.firstName != null
-                                          ? data.child.firstName[0]
+                                      : data.child!.firstName != null
+                                          ? data.child!.firstName![0]
                                               .toUpperCase()
                                           : '',
                                   style: TextStyle(
@@ -407,7 +409,7 @@ class _MyFamilyState extends State<MyFamily> {
                     //!add condition for login user data
                     : myProfile != null
                         ? myProfile.result != null
-                            ? myProfile.result.profilePicThumbnailUrl != null
+                            ? myProfile.result!.profilePicThumbnailUrl != null
                                 ? FHBBasicWidget()
                                     .getProfilePicWidgeUsingUrl(myProfile)
                                 : Container(
@@ -432,7 +434,7 @@ class _MyFamilyState extends State<MyFamily> {
                                 color: Color(fhbColors.bgColorContainer),
                                 child: Center(
                                   child: Text(
-                                    fulName != null
+                                    fulName != null && fulName.isNotEmpty
                                         ? fulName[0].toUpperCase()
                                         : '',
                                     style: TextStyle(
@@ -448,7 +450,7 @@ class _MyFamilyState extends State<MyFamily> {
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
-                                fulName != null ? fulName[0].toUpperCase() : '',
+                                fulName != null  && fulName.isNotEmpty ? fulName[0].toUpperCase() : '',
                                 style: TextStyle(
                                     fontSize: 22.0.sp,
                                     color: Color(
@@ -468,7 +470,7 @@ class _MyFamilyState extends State<MyFamily> {
                   children: <Widget>[
                     Text(
                       position == 0
-                          ? fulName != null
+                          ? fulName != null&& fulName.isNotEmpty
                               ? CommonUtil().titleCase(fulName.toLowerCase())
                               : ''
                           : data.child?.firstName != null
@@ -486,26 +488,26 @@ class _MyFamilyState extends State<MyFamily> {
                     ),
                     Text(
                       position == 0 //this is checking self
-                          ? (myProfile?.result?.userContactCollection3 !=
+                          ? ((myProfile.result?.userContactCollection3 !=
                                       null &&
-                                  myProfile?.result?.userContactCollection3
+                                  myProfile.result!.userContactCollection3!
                                       .isNotEmpty)
-                              ? myProfile?.result?.userContactCollection3[0]
-                                  .phoneNumber
-                              : ''
-                          : (data?.child?.isVirtualUser != null &&
-                                  data?.child?.isVirtualUser)
+                              ? myProfile.result?.userContactCollection3![0]!
+                                  .phoneNumber!
+                              : '')!
+                          : (data.child?.isVirtualUser != null &&
+                                  data.child!.isVirtualUser!)
                               /*? data?.child?.isVirtualUser
                                 */
                               ? userCollection
                                       ?.virtualUserParent?.phoneNumber ??
                                   ''
-                              : (data?.child?.userContactCollection3 != null &&
-                                      data?.child?.userContactCollection3
+                              : ((data.child?.userContactCollection3 != null &&
+                                      data.child!.userContactCollection3!
                                           .isNotEmpty)
-                                  ? data?.child?.userContactCollection3[0]
-                                      .phoneNumber
-                                  : '',
+                                  ? data.child?.userContactCollection3![0]
+                                      .phoneNumber!
+                                  : '')!,
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         color: ColorUtils.greycolor1,
@@ -521,7 +523,7 @@ class _MyFamilyState extends State<MyFamily> {
                       position == 0
                           ? variable.Self
                           : data.relationship != null
-                              ? data.relationship.name ?? ''
+                              ? data.relationship!.name ?? ''
                               : '',
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
@@ -553,10 +555,10 @@ class _MyFamilyState extends State<MyFamily> {
                                 _familyListRespository
                                     .checkDelink(jsonString)
                                     .then((value) {
-                                  Navigator.of(_keyLoader.currentContext,
+                                  Navigator.of(_keyLoader.currentContext!,
                                           rootNavigator: true)
                                       .pop();
-                                  if (value.isSuccess) {
+                                  if (value.isSuccess!) {
                                     Alert.displayConfirmProceed(context,
                                         title: "ALERT", content: value.message,
                                         onPressedConfirm: () {
@@ -606,7 +608,7 @@ class _MyFamilyState extends State<MyFamily> {
     );
   }
 
-  void checkIfUserIdSame(String userId) async {
+  void checkIfUserIdSame(String? userId) async {
     try {
       print("checkIfUserIdSame Calling in MyFamily Class");
       final currUserId =
@@ -614,7 +616,7 @@ class _MyFamilyState extends State<MyFamily> {
       final userIdMain =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       if (userId == currUserId) {
-        await PreferenceUtil.saveString(Constants.KEY_USERID, userIdMain)
+        await PreferenceUtil.saveString(Constants.KEY_USERID, userIdMain!)
             .then((onValue) {
           CommonUtil().updateSocketFamily();
           CommonUtil().getUserProfileData();
@@ -714,7 +716,7 @@ class _MyFamilyState extends State<MyFamily> {
                                         try {
                                           String mobileNumber =
                                               PreferenceUtil.getStringValue(
-                                                  Constants.MOB_NUM);
+                                                  Constants.MOB_NUM)!;
 
                                           String subMobile =
                                               mobileNumber.substring(0, 2);
@@ -816,13 +818,13 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   Widget getAllCustomRoles() {
-    Widget familyWidget;
+    late Widget familyWidget;
 
     return StreamBuilder<ApiResponse<RelationShipResponseList>>(
-      stream: _familyListBloc.relationShipStream,
+      stream: _familyListBloc!.relationShipStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
@@ -843,13 +845,13 @@ class _MyFamilyState extends State<MyFamily> {
 
             case Status.COMPLETED:
               isCalled = true;
-              if (snapshot.data.data.result[0] != null) {
+              if (snapshot.data!.data!.result![0] != null) {
                 PreferenceUtil.saveRelationshipArray(Constants.KEY_FAMILYREL,
-                    snapshot?.data?.data?.result[0]?.referenceValueCollection);
-                relationShipResponseList = snapshot.data.data;
+                    snapshot.data?.data?.result![0].referenceValueCollection);
+                relationShipResponseList = snapshot.data!.data;
 
                 familyWidget = getRelationshipDetails(
-                    snapshot?.data.data?.result[0]?.referenceValueCollection);
+                    snapshot.data!.data?.result![0].referenceValueCollection);
               }
               break;
           }
@@ -864,7 +866,7 @@ class _MyFamilyState extends State<MyFamily> {
     );
   }
 
-  Widget getRelationshipDetails(List<RelationsShipModel> data) {
+  Widget getRelationshipDetails(List<RelationsShipModel>? data) {
     return StatefulBuilder(builder: (context, setState) {
       return Expanded(
           flex: 8,
@@ -872,9 +874,9 @@ class _MyFamilyState extends State<MyFamily> {
             isExpanded: true,
             hint: Text(CommonConstants.relationshipWithStar),
             value: selectedRelationShip,
-            items: data.map((relationShipDetail) {
+            items: data!.map((relationShipDetail) {
               return DropdownMenuItem(
-                child: Text(relationShipDetail.name,
+                child: Text(relationShipDetail.name!,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16.0.sp,
@@ -882,7 +884,7 @@ class _MyFamilyState extends State<MyFamily> {
                 value: relationShipDetail,
               );
             }).toList(),
-            onChanged: (newValue) {
+            onChanged: (dynamic newValue) {
               setState(() {
                 selectedRelationShip = newValue;
               });
@@ -1114,21 +1116,21 @@ class _MyFamilyState extends State<MyFamily> {
             addFamilyMemberRequest['lastName'] = lastNameController.text;
             addFamilyMemberRequest['middleName'] = middleNameController.text;
             addFamilyMemberRequest['dateOfBirth'] = null;
-            addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
+            addFamilyMemberRequest['relationship'] = selectedRelationShip!.id;
             addFamilyMemberRequest['phoneNumber'] = mobileNoController.text;
             addFamilyMemberRequest['email'] = '';
             addFamilyMemberRequest['isPrimary'] = true;
 
             final jsonString = convert.jsonEncode(addFamilyMemberRequest);
 
-            _familyListBloc
+            _familyListBloc!
                 .postUserLinkingForPrimaryNo(jsonString)
                 .then((addFamilyOTPResponse) {
-              if (addFamilyOTPResponse.isSuccess) {
+              if (addFamilyOTPResponse!.isSuccess!) {
                 if (addFamilyOTPResponse.result != null) {
-                  _familyListBloc.getFamilyMembersInfo().then((value) {
-                    if (value.isSuccess) {
-                      Navigator.of(_keyLoader.currentContext,
+                  _familyListBloc!.getFamilyMembersInfo().then((value) {
+                    if (value!.isSuccess!) {
+                      Navigator.of(_keyLoader.currentContext!,
                               rootNavigator: true)
                           .pop();
 
@@ -1143,10 +1145,10 @@ class _MyFamilyState extends State<MyFamily> {
                             enteredLastName: lastNameController.text,
                             relationShip: selectedRelationShip,
                             isPrimaryNoSelected: isPrimaryNoSelected,
-                            id: addFamilyOTPResponse.result.childInfo.id,
+                            id: addFamilyOTPResponse.result!.childInfo!.id,
                             isForFamily: false,
                             addFamilyUserInfo:
-                                addFamilyOTPResponse.result ?? ''),
+                                addFamilyOTPResponse.result!),
                       ).then((value) {
                         mobileNoController.text = '';
                         nameController.text = '';
@@ -1155,23 +1157,23 @@ class _MyFamilyState extends State<MyFamily> {
                         rebuildFamilyBlock();
                       });
                     } else {
-                      Navigator.of(_keyLoader.currentContext,
+                      Navigator.of(_keyLoader.currentContext!,
                               rootNavigator: true)
                           .pop();
 
                       Alert.displayAlertPlain(context,
-                          title: variable.Error, content: value?.message);
+                          title: variable.Error, content: value.message);
                     }
                   });
                 } else {
-                  Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                       .pop();
                   Alert.displayAlertPlain(context,
                       title: variable.Error,
                       content: 'Error Adding Family member');
                 }
               } else {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                     .pop();
 
                 Alert.displayAlertPlain(context,
@@ -1189,7 +1191,7 @@ class _MyFamilyState extends State<MyFamily> {
             addFamilyMemberRequest['lastName'] = lastNameController.text;
             addFamilyMemberRequest['middleName'] = middleNameController.text;
             addFamilyMemberRequest['dateOfBirth'] = null;
-            addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
+            addFamilyMemberRequest['relationship'] = selectedRelationShip!.id;
             addFamilyMemberRequest['phoneNumber'] =
                 mobileNo; //TODO this has be dynamic country code.
             addFamilyMemberRequest['email'] = '';
@@ -1197,9 +1199,9 @@ class _MyFamilyState extends State<MyFamily> {
 
             final jsonString = convert.jsonEncode(addFamilyMemberRequest);
 
-            _familyListBloc.postUserLinking(jsonString).then((userLinking) {
-              if (userLinking.success) {
-                Navigator.pop(_keyLoader.currentContext);
+            _familyListBloc!.postUserLinking(jsonString).then((userLinking) {
+              if (userLinking!.success!) {
+                Navigator.pop(_keyLoader.currentContext!);
                 Navigator.pop(context);
 
                 Navigator.push(
@@ -1314,12 +1316,12 @@ class _MyFamilyState extends State<MyFamily> {
                   }
                 }); */
               } else {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                     .pop();
-                Navigator.pop(_keyLoader.currentContext);
+                Navigator.pop(_keyLoader.currentContext!);
 
                 Alert.displayAlertPlain(context,
-                    title: variable.Error, content: userLinking?.message);
+                    title: variable.Error, content: userLinking.message);
               }
             });
           }
@@ -1339,11 +1341,11 @@ class _MyFamilyState extends State<MyFamily> {
   rebuildFamilyBlock() {
     _familyListBloc = null;
     _familyListBloc = FamilyListBloc();
-    _familyListBloc.getFamilyMembersListNew();
-    _familyListBloc.getCustomRoles();
+    _familyListBloc!.getFamilyMembersListNew();
+    _familyListBloc!.getCustomRoles();
   }
 
-  void commonMethodToDelink(String id) {
+  void commonMethodToDelink(String? id) {
     Alert.displayConfirmProceed(context,
         title: variable.Delink,
         content: CommonConstants.delink_alert, onPressedConfirm: () {
@@ -1360,19 +1362,19 @@ class _MyFamilyState extends State<MyFamily> {
               variable.strparentToChild;
           final jsonString = convert.jsonEncode(deLinkingData);
 
-          _familyListBloc
+          _familyListBloc!
               .postUserDeLinking(jsonString.toString())
               .then((userLinking) {
-            if (userLinking.isSuccess) {
+            if (userLinking!.isSuccess!) {
               checkIfUserIdSame(id);
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+              Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                   .pop();
               rebuildFamilyBlock();
               setState(() {});
             } else {
               FHBBasicWidget()
-                  .showInSnackBar(userLinking.message, scaffold_state);
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  .showInSnackBar(userLinking.message!, scaffold_state);
+              Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                   .pop();
             }
           });
@@ -1389,7 +1391,7 @@ class _MyFamilyState extends State<MyFamily> {
   refreshIndicatorWithEmptyContainer() {
     return RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () {
+        onRefresh: () async{
           _refreshIndicatorKey.currentState?.show(atTop: true);
           rebuildFamilyBlock();
           setState(() {});

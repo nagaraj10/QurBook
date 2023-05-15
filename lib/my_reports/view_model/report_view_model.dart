@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class MyReportViewModel extends ChangeNotifier {
 
   ReportService reportService = ReportService();
 
-  Future<ReportModel> getReportList() async {
+  Future<ReportModel?> getReportList() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {

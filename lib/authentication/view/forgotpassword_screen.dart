@@ -28,7 +28,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final mobileController = TextEditingController();
   bool _autoValidateBool = false;
   FlutterToast toast = FlutterToast();
-  AuthViewModel authViewModel;
+  late AuthViewModel authViewModel;
   final _ForgetPassKey = GlobalKey<FormState>();
 
   @override
@@ -67,7 +67,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.symmetric(
-                      horizontal: CommonUtil().isTablet ? 50 : 20),
+                      horizontal: CommonUtil().isTablet! ? 50 : 20),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -179,7 +179,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               )),
           validator: (value) {
             return AuthenticationValidator()
-                .phoneValidation(value, patternPhoneNew, strPhoneCantEmpty);
+                .phoneValidation(value!, patternPhoneNew as String, strPhoneCantEmpty);
           },
           keyboardType: TextInputType.number,
         ));
@@ -225,8 +225,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         InkWell(
           onTap: () async {
             FocusScope.of(context).unfocus();
-            if (_ForgetPassKey.currentState.validate()) {
-              _ForgetPassKey.currentState.save();
+            if (_ForgetPassKey.currentState!.validate()) {
+              _ForgetPassKey.currentState!.save();
               LoaderClass.showLoadingDialog(context);
               var logInModel = PatientForgotPasswordModel(
                 //userName: mobileController.text,
@@ -276,8 +276,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   _checkResponse(PatientForgotPasswordModel response) {
     LoaderClass.hideLoadingDialog(context);
-    if (response.isSuccess) {
-      toast.getToast(response.message, Colors.lightBlue);
+    if (response.isSuccess!) {
+      toast.getToast(response.message!, Colors.lightBlue);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -285,10 +285,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     //userName: mobileController.text,
                     userName:
                         '${_selectedDialogCountry.phoneCode}${mobileController.text}',
-                    isVirtualNumber: response?.result?.isVirtualNumber ?? false,
+                    isVirtualNumber: response.result?.isVirtualNumber ?? false,
                   )));
     } else {
-      toast.getToast(response.message, Colors.red);
+      toast.getToast(response.message!, Colors.red);
     }
   }
 }

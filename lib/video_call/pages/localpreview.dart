@@ -1,3 +1,4 @@
+
 import 'dart:ui';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -11,8 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 
 class LocalPreview extends StatefulWidget {
-  RtcEngine rtcEngine;
-  String channelName;
+  RtcEngine? rtcEngine;
+  String? channelName;
 
   LocalPreview({this.rtcEngine, this.channelName});
   @override
@@ -80,7 +81,7 @@ class _LocalPreviewState extends State<LocalPreview> {
                               iconSize: 30,
                               color: Colors.white,
                               onPressed: () {
-                                widget.rtcEngine.switchCamera();
+                                widget.rtcEngine!.switchCamera();
                               }))
                     ],
                   ),

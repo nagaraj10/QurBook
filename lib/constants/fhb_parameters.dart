@@ -102,6 +102,7 @@ const String KIOSK_data = 'kiosk_data';
 const String KIOSK_task = 'task';
 const String KIOSK_messages = 'messages';
 const String KIOSK_remind = 'remind';
+const String KIOSK_survey = 'starttask';
 const String KIOSK_read = 'read';
 const String KIOSK_audio = 'audio';
 const String KIOSK_audio_url = 'audioUrl';
@@ -467,6 +468,8 @@ const String strdevicesourceName = 'sourceType';
 const String strdeviceType = 'deviceType';
 const String strdeviceDataType = 'deviceDataType';
 const String strRawData = 'rawHealthData';
+const String strQurPlan = 'QURPLAN';
+const String strDevice = 'DEVICE';
 
 const String strsyncStartDate = 'startDateTime';
 const String strsyncEndDate = 'endDateTime';
@@ -673,6 +676,7 @@ const String externalLink = 'externalLink';
 const String onresume = 'OnResume New';
 const String onlaunch = 'OnLaunch New';
 const String username = 'username';
+const String userNameparam = 'userName';
 const String meeting_id = 'meeting_id';
 const String doctorId = 'doctorId';
 const String aps = 'aps';
@@ -795,10 +799,8 @@ const String claimList = 'claimList';
 const String claimId = 'claimId';
 const String strPatientReferralAcceptToPatient =
     'patientReferralAcceptToPatient';
-const String strNotificationChat =
-    'chat';
-const String strChoosePrefDate =
-    'apptChoosePreferredDate';
+const String strNotificationChat = 'chat';
+const String strChoosePrefDate = 'apptChoosePreferredDate';
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
 const String strDoctorSession = 'doctorSession';
@@ -817,6 +819,7 @@ const String strDoctorReferenceId = 'doctorReferenceId';
 const String strHealthOrganizationId = 'healthOrganizationId';
 const String strHealthOrganizationReferenceId = 'healthOrganizationReferenceId';
 const String strpatient = 'patient';
+const String strpatientId = 'patientId';
 
 const String strHealthOrganizationName = 'healthOrganizationName';
 const String strHealthRecordMetaId = 'healthRecordMetaId';

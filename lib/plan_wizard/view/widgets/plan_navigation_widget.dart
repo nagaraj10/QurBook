@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -45,7 +46,7 @@ class PlanNavigationWidget extends StatelessWidget {
             // or ClipRRect if you need to clip the content
             child: InkWell(
               onTap: () {
-                Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
+                Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
               },
               child: CartIconWithBadge(
                   color: Color(CommonUtil().getMyPrimaryColor()), size: 38.sp),
@@ -56,7 +57,7 @@ class PlanNavigationWidget extends StatelessWidget {
     );
   }
 
-  String _getAppBarText(int currentPage) {
+  String? _getAppBarText(int currentPage) {
     switch (currentPage) {
       case 0:
         return strHealthconLine;

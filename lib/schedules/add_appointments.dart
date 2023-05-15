@@ -1,3 +1,4 @@
+
 import 'dart:core';
 import 'package:flutter/material.dart';
 import '../src/model/AppointmentModel.dart';
@@ -11,7 +12,7 @@ import '../constants/fhb_constants.dart' as Constants;
 import '../src/utils/screenutils/size_extensions.dart';
 
 class AddAppointments extends StatefulWidget {
-  final ReminderModel model;
+  final ReminderModel? model;
 
   const AddAppointments({this.model});
 
@@ -21,8 +22,8 @@ class AddAppointments extends StatefulWidget {
 
 class _AddAppointmentState extends State<AddAppointments> {
   List<bool> isSelected = [false, false, false];
-  static DateTime selectedDate;
-  static TimeOfDay selectedTime;
+  static DateTime? selectedDate;
+  static TimeOfDay? selectedTime;
   String id = '';
   String myCurrentDate = '';
   String myCurrentTime = '';
@@ -41,9 +42,9 @@ class _AddAppointmentState extends State<AddAppointments> {
 
   int intervalIndex = 0;
 
-  SharedPreferences prefs;
+  SharedPreferences? prefs;
   dynamic detailsList =
-      List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
+      []; // our default setting is to login, and we should switch to creating an account when the user chooses to
   dynamic reverseDetailsList = [];
 
   @override
@@ -133,7 +134,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                               child: Row(
                                 children: <Widget>[
                                   Text(
-                                      FHBUtils().formatTimeOfDay(selectedTime)),
+                                      FHBUtils().formatTimeOfDay(selectedTime!)),
                                   SizedBox(width: 10.0.w),
                                   Icon(
                                     Icons.alarm,
@@ -196,7 +197,7 @@ class _AddAppointmentState extends State<AddAppointments> {
   Future<Null> _selectDate(BuildContext context) async {
     final pickedDate = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: selectedDate!,
         firstDate: DateTime.now().subtract(Duration(days: 1)),
         lastDate: DateTime(2100));
 
@@ -206,12 +207,12 @@ class _AddAppointmentState extends State<AddAppointments> {
       });
     }
 
-    if (FHBUtils().checkdate(selectedDate)) {
+    if (FHBUtils().checkdate(selectedDate!)) {
       setState(() {
         _isTimeAfter = true;
       });
     } else {
-      if (FHBUtils().checkTime(selectedTime)) {
+      if (FHBUtils().checkTime(selectedTime!)) {
         setState(() {
           _isTimeAfter = true;
         });
@@ -226,11 +227,11 @@ class _AddAppointmentState extends State<AddAppointments> {
   Future<Null> _selectTime(BuildContext context) async {
     final pickedTime = await showTimePicker(
       context: context,
-      initialTime: selectedTime,
+      initialTime: selectedTime!,
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child,
+          child: child!,
         );
       },
     );
@@ -241,8 +242,8 @@ class _AddAppointmentState extends State<AddAppointments> {
       });
     }
 
-    if (!FHBUtils().checkdate(selectedDate)) {
-      if (FHBUtils().checkTime(selectedTime)) {
+    if (!FHBUtils().checkdate(selectedDate!)) {
+      if (FHBUtils().checkTime(selectedTime!)) {
         setState(() {
           _isTimeAfter = true;
         });
@@ -270,7 +271,7 @@ class _AddAppointmentState extends State<AddAppointments> {
           hName: hosContoller.text,
           dName: docNameController.text,
           appDate: FHBUtils().getFormattedDateOnly(selectedDate.toString()),
-          appTime: FHBUtils().formatTimeOfDay(selectedTime),
+          appTime: FHBUtils().formatTimeOfDay(selectedTime!),
           reason: reasonController.text);
 
       await FHBUtils().createNewAppointment(model).then((_) {

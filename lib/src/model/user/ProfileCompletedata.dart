@@ -1,3 +1,4 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'DoctorIds.dart';
 import 'HospitalIds.dart';
@@ -5,10 +6,10 @@ import 'LaboratoryIds.dart';
 import 'ProfilePicThumbnail.dart';
 
 class ProfileCompleteData {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   ProfileCompleteData({this.status, this.success, this.message, this.response});
 
@@ -27,15 +28,15 @@ class ProfileCompleteData {
     data[parameters.strSuccess] = success;
     data[parameters.strMessage] = message;
     if (response != null) {
-      data[parameters.strResponse] = response.toJson();
+      data[parameters.strResponse] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  int count;
-  MyProfileData data;
+  int? count;
+  MyProfileData? data;
 
   Response({this.count, this.data});
 
@@ -49,32 +50,32 @@ class Response {
     final data = Map<String, dynamic>();
     data[parameters.strCount] = count;
     if (this.data != null) {
-      data[parameters.strData] = this.data.toJson();
+      data[parameters.strData] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class MyProfileData {
-  String id;
-  String name;
-  String phoneNumber;
-  String email;
-  String gender;
+  String? id;
+  String? name;
+  String? phoneNumber;
+  String? email;
+  String? gender;
   //Null communicationPreferences;
-  MedicalPreferences medicalPreferences;
-  bool isActive;
-  bool isTempUser;
-  bool isVirtualUser;
-  String createdOn;
-  String createdBy;
-  String lastModifiedOn;
-  String dateOfBirth;
-  bool isEmailVerified;
-  String bloodGroup;
-  ProfilePicThumbnailMain profilePicThumbnail;
-  int oid;
-  String countryCode;
+  MedicalPreferences? medicalPreferences;
+  bool? isActive;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  String? createdOn;
+  String? createdBy;
+  String? lastModifiedOn;
+  String? dateOfBirth;
+  bool? isEmailVerified;
+  String? bloodGroup;
+  ProfilePicThumbnailMain? profilePicThumbnail;
+  int? oid;
+  String? countryCode;
 //  QualifiedFullName qualifiedFullName;
 
   MyProfileData(
@@ -136,7 +137,7 @@ class MyProfileData {
     data[parameters.strGender] = gender;
     //data['communicationPreferences'] = this.communicationPreferences;
     if (medicalPreferences != null) {
-      data[parameters.strmedicalPreferences] = medicalPreferences.toJson();
+      data[parameters.strmedicalPreferences] = medicalPreferences!.toJson();
     }
     data[parameters.strIsActive] = isActive;
     data[parameters.strIstemper] = isTempUser;
@@ -148,7 +149,7 @@ class MyProfileData {
     data[parameters.strisEmailVerified] = isEmailVerified;
     data[parameters.strbloodGroup] = bloodGroup;
     if (profilePicThumbnail != null) {
-      data[parameters.strprofilePicThumbnail] = profilePicThumbnail.toJson();
+      data[parameters.strprofilePicThumbnail] = profilePicThumbnail!.toJson();
     }
     data[parameters.stroid] = oid;
     data[parameters.strCountryCode] = countryCode;
@@ -160,7 +161,7 @@ class MyProfileData {
 }
 
 class MedicalPreferences {
-  Preferences preferences;
+  Preferences? preferences;
 
   MedicalPreferences({this.preferences});
 
@@ -173,16 +174,16 @@ class MedicalPreferences {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (preferences != null) {
-      data[parameters.strpreferences] = preferences.toJson();
+      data[parameters.strpreferences] = preferences!.toJson();
     }
     return data;
   }
 }
 
 class Preferences {
-  List<DoctorIds> doctorIds;
-  List<HospitalIds> hospitalIds;
-  List<LaboratoryIds> laboratoryIds;
+  List<DoctorIds>? doctorIds;
+  List<HospitalIds>? hospitalIds;
+  List<LaboratoryIds>? laboratoryIds;
 
   Preferences({this.doctorIds, this.hospitalIds, this.laboratoryIds});
 
@@ -190,19 +191,19 @@ class Preferences {
     if (json[parameters.strdoctorIds] != null) {
       doctorIds = <DoctorIds>[];
       json[parameters.strdoctorIds].forEach((v) {
-        doctorIds.add(DoctorIds.fromJson(v));
+        doctorIds!.add(DoctorIds.fromJson(v));
       });
     }
     if (json[parameters.strhospitalIds] != null) {
-      hospitalIds = List<HospitalIds>();
+      hospitalIds = <HospitalIds>[];
       json[parameters.strhospitalIds].forEach((v) {
-        hospitalIds.add(HospitalIds.fromJson(v));
+        hospitalIds!.add(HospitalIds.fromJson(v));
       });
     }
     if (json[parameters.strlaboratoryIds] != null) {
-      laboratoryIds = List<LaboratoryIds>();
+      laboratoryIds = <LaboratoryIds>[];
       json[parameters.strlaboratoryIds].forEach((v) {
-        laboratoryIds.add(LaboratoryIds.fromJson(v));
+        laboratoryIds!.add(LaboratoryIds.fromJson(v));
       });
     }
   }
@@ -210,14 +211,14 @@ class Preferences {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (doctorIds != null) {
-      data[parameters.strdoctorIds] = doctorIds.map((v) => v.toJson()).toList();
+      data[parameters.strdoctorIds] = doctorIds!.map((v) => v.toJson()).toList();
     }
     if (hospitalIds != null) {
-      data[parameters.strhospitalIds] = hospitalIds.map((v) => v.toJson()).toList();
+      data[parameters.strhospitalIds] = hospitalIds!.map((v) => v.toJson()).toList();
     }
     if (laboratoryIds != null) {
       data[parameters.strlaboratoryIds] =
-          laboratoryIds.map((v) => v.toJson()).toList();
+          laboratoryIds!.map((v) => v.toJson()).toList();
     }
     return data;
   }

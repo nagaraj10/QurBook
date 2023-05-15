@@ -1,3 +1,4 @@
+
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
     as parameters;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/booked.dart';
@@ -41,38 +42,38 @@ class Past {
       this.modeOfService,
       this.additionalinfo});
 
-  String id;
-  String bookingId;
-  String doctorSessionId;
-  String plannedStartDateTime;
-  String plannedEndDateTime;
-  String actualStartDateTime;
-  String actualEndDateTime;
-  int slotNumber;
-  bool isHealthRecordShared;
-  String plannedFollowupDate;
-  bool isEndTimeOptional;
-  bool isRefunded;
-  bool isFollowupFee;
+  String? id;
+  String? bookingId;
+  String? doctorSessionId;
+  String? plannedStartDateTime;
+  String? plannedEndDateTime;
+  String? actualStartDateTime;
+  String? actualEndDateTime;
+  int? slotNumber;
+  bool? isHealthRecordShared;
+  String? plannedFollowupDate;
+  bool? isEndTimeOptional;
+  bool? isRefunded;
+  bool? isFollowupFee;
   dynamic isFollowup;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  Booked bookedFor;
-  Booked bookedBy;
-  Status status;
-  List<dynamic> prescriptionCollection;
-  HealthRecord healthRecord;
-  String doctorFollowUpFee;
-  Doctor doctor;
-  FeeDetails feeDetails;
-  City healthOrganization;
-  bool isFollowUpTaken;
-  String chatListId;
-  ChatMessage chatMessage;
-  ServiceCategory serviceCategory;
-  ServiceCategory modeOfService;
-  AdditionalInfo additionalinfo;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  Booked? bookedFor;
+  Booked? bookedBy;
+  Status? status;
+  List<dynamic>? prescriptionCollection;
+  HealthRecord? healthRecord;
+  String? doctorFollowUpFee;
+  Doctor? doctor;
+  FeeDetails? feeDetails;
+  City? healthOrganization;
+  bool? isFollowUpTaken;
+  String? chatListId;
+  ChatMessage? chatMessage;
+  ServiceCategory? serviceCategory;
+  ServiceCategory? modeOfService;
+  AdditionalInfo? additionalinfo;
 
   Past.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -158,24 +159,24 @@ class Past {
     data[parameters.strIsActive] = isActive;
     data[parameters.strCreatedOn] = createdOn;
     data[parameters.strLastModifiedOn] = lastModifiedOn;
-    data[parameters.strBookedFor] = bookedFor.toJson();
-    data[parameters.strBookedBy] = bookedBy.toJson();
-    data[parameters.strStatus] = status.toJson();
+    data[parameters.strBookedFor] = bookedFor!.toJson();
+    data[parameters.strBookedBy] = bookedBy!.toJson();
+    data[parameters.strStatus] = status!.toJson();
     data[parameters.strIsFollowUpTaken] = isFollowUpTaken;
     data[parameters.strPrescriptionCollection] =
-        List<dynamic>.from(prescriptionCollection.map((x) => x));
-    data[parameters.strHealthRecord] = healthRecord.toJson();
+        List<dynamic>.from(prescriptionCollection!.map((x) => x));
+    data[parameters.strHealthRecord] = healthRecord!.toJson();
     data[parameters.strDoctorFollowUpFee] =
         doctorFollowUpFee == null ? null : doctorFollowUpFee;
     if (this.feeDetails != null) {
-      data[parameters.strFeeDetails] = this.feeDetails.toJson();
+      data[parameters.strFeeDetails] = this.feeDetails!.toJson();
     }
-    data[parameters.strdoctor] = doctor.toJson();
-    data[parameters.strHealthOrganization] = this.healthOrganization.toJson();
+    data[parameters.strdoctor] = doctor!.toJson();
+    data[parameters.strHealthOrganization] = this.healthOrganization!.toJson();
     data[parameters.strChatListId] = chatListId;
-    data['additionalInfo'] = this.additionalinfo.toJson();
-    data['modeOfService'] = this.modeOfService.toJson();
-    data['serviceCategory'] = this.serviceCategory.toJson();
+    data['additionalInfo'] = this.additionalinfo!.toJson();
+    data['modeOfService'] = this.modeOfService!.toJson();
+    data['serviceCategory'] = this.serviceCategory!.toJson();
 
     return data;
   }
@@ -188,9 +189,9 @@ class ChatMessage {
     this.chatMessageId,
   });
 
-  String deliveredOn;
-  String documentId;
-  String chatMessageId;
+  String? deliveredOn;
+  String? documentId;
+  String? chatMessageId;
 
   ChatMessage.fromJson(Map<String, dynamic> json) {
     deliveredOn = json["deliveredOn"];
@@ -210,15 +211,16 @@ class AdditionalInfo {
     this.healthOrganizationId,
   });
 
-  String title;
-  String Address;
-  String description;
-  String serviceType;
-  String lab_name;
-  String provider_name;
-  String healthOrganizationId;
+  String? title;
+  String? Address;
+  String? description;
+  String? serviceType;
+  String? lab_name;
+  String? provider_name;
+  String? healthOrganizationId;
 
-  int fee;
+
+  int? fee;
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     title = json.containsKey('title') ? json["title"] : '';
@@ -231,7 +233,7 @@ class AdditionalInfo {
 
     fee = json.containsKey('fee') ? json["fee"] : 0;
   }
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic>? toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = title;
     data['Address'] = Address;

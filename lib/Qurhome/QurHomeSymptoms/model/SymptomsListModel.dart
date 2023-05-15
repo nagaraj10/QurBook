@@ -1,8 +1,9 @@
+
 import 'dart:convert';
 
 class SymptomsListModel {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   SymptomsListModel({this.isSuccess, this.result});
 
@@ -16,17 +17,17 @@ class SymptomsListModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  int totalRecord;
-  String currentPage;
-  int totalPage;
-  List<SymptomListData> data;
+  int? totalRecord;
+  String? currentPage;
+  int? totalPage;
+  List<SymptomListData>? data;
 
   Result({this.totalRecord, this.currentPage, this.totalPage, this.data});
 
@@ -37,7 +38,7 @@ class Result {
     if (json['data'] != null) {
       data = <SymptomListData>[];
       json['data'].forEach((v) {
-        data.add(new SymptomListData.fromJson(v));
+        data!.add(new SymptomListData.fromJson(v));
       });
     }
   }
@@ -48,67 +49,67 @@ class Result {
     data['currentPage'] = this.currentPage;
     data['totalPage'] = this.totalPage;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class SymptomListData {
-  int eid;
-  int providerid;
-  int uid;
-  String title;
-  String description;
-  int tplanid;
-  int teidUser;
-  int aid;
-  String activityname;
-  int pformid;
-  int uformid;
-  String uformname;
-  String estart;
-  String eend;
-  String html;
-  OtherinfoSymptom otherinfo;
-  int remindin;
-  int remindinType;
-  String ack;
-  int alarm;
-  String uformdata;
-  String ts;
-  int deleted;
-  int evDuration;
-  int dosemeal;
-  String pformname;
-  String pformdata;
-  int pplanid;
-  int evDisabled;
-  int importance;
-  int evMuted;
-  int evSource;
-  int points;
-  String ackLocal;
-  int remindbefore;
-  int remindbeforeType;
-  String custform;
-  String langTitle;
-  int doserepeat;
-  int issymptom;
-  int disabled;
-  String pform;
-  String uform;
-  String alertdata;
-  Providers providers;
+  int? eid;
+  int? providerid;
+  int? uid;
+  String? title;
+  String? description;
+  int? tplanid;
+  int? teidUser;
+  int? aid;
+  String? activityname;
+  int? pformid;
+  int? uformid;
+  String? uformname;
+  String? estart;
+  String? eend;
+  String? html;
+  OtherinfoSymptom? otherinfo;
+  int? remindin;
+  int? remindinType;
+  String? ack;
+  int? alarm;
+  String? uformdata;
+  String? ts;
+  int? deleted;
+  int? evDuration;
+  int? dosemeal;
+  String? pformname;
+  String? pformdata;
+  int? pplanid;
+  int? evDisabled;
+  int? importance;
+  int? evMuted;
+  int? evSource;
+  int? points;
+  String? ackLocal;
+  int? remindbefore;
+  int? remindbeforeType;
+  String? custform;
+  String? langTitle;
+  int? doserepeat;
+  int? issymptom;
+  int? disabled;
+  String? pform;
+  String? uform;
+  String? alertdata;
+  Providers? providers;
   var planTemplate;
-  List<Fields> fields;
-  List<Doneevents> doneevents;
-  String doeventUserTemplateCustform;
-  String doeventUserTemplateHtml;
-  PersonalPlanCollection personalPlanCollection;
-  int isCustomized;
-  String doeventsTemplateUserTs;
-  List<Forms> forms;
+  List<Fields>? fields;
+  List<Doneevents>? doneevents;
+  String? doeventUserTemplateCustform;
+  String? doeventUserTemplateHtml;
+  PersonalPlanCollection? personalPlanCollection;
+  int? isCustomized;
+  String? doeventsTemplateUserTs;
+  List<Forms>? forms;
 
   SymptomListData(
       {this.eid,
@@ -220,13 +221,13 @@ class SymptomListData {
     if (json['fields'] != null) {
       fields = <Fields>[];
       json['fields'].forEach((v) {
-        fields.add(new Fields.fromJson(v));
+        fields!.add(new Fields.fromJson(v));
       });
     }
     if (json['doneevents'] != null) {
       doneevents = <Doneevents>[];
       json['doneevents'].forEach((v) {
-        doneevents.add(new Doneevents.fromJson(v));
+        doneevents!.add(new Doneevents.fromJson(v));
       });
     }
     doeventUserTemplateCustform = json['doevent_userTemplate_custform'];
@@ -239,7 +240,7 @@ class SymptomListData {
     if (json['forms'] != null) {
       forms = <Forms>[];
       json['forms'].forEach((v) {
-        forms.add(new Forms.fromJson(v));
+        forms!.add(new Forms.fromJson(v));
       });
     }
   }
@@ -262,7 +263,7 @@ class SymptomListData {
     data['eend'] = this.eend;
     data['html'] = this.html;
     if (this.otherinfo != null) {
-      data['otherinfo'] = this.otherinfo.toJson();
+      data['otherinfo'] = this.otherinfo!.toJson();
     }
     data['remindin'] = this.remindin;
     data['remindinType'] = this.remindinType;
@@ -293,38 +294,38 @@ class SymptomListData {
     data['uform'] = this.uform;
     data['alertdata'] = this.alertdata;
     if (this.providers != null) {
-      data['providers'] = this.providers.toJson();
+      data['providers'] = this.providers!.toJson();
     }
     data['planTemplate'] = this.planTemplate;
     if (this.fields != null) {
-      data['fields'] = this.fields.map((v) => v.toJson()).toList();
+      data['fields'] = this.fields!.map((v) => v.toJson()).toList();
     }
-    if (this.doneevents = null) {
-      data['doneevents'] = this.doneevents.map((v) => v.toJson()).toList();
+    if ((this.doneevents = null)!) {
+      data['doneevents'] = this.doneevents!.map((v) => v.toJson()).toList();
     }
     data['doevent_userTemplate_custform'] = this.doeventUserTemplateCustform;
     data['doevent_userTemplate_html'] = this.doeventUserTemplateHtml;
     if (this.personalPlanCollection != null) {
-      data['personalPlanCollection'] = this.personalPlanCollection.toJson();
+      data['personalPlanCollection'] = this.personalPlanCollection!.toJson();
     }
     data['isCustomized'] = this.isCustomized;
     data['doeventsTemplateUserTs'] = this.doeventsTemplateUserTs;
     if (this.forms != null) {
-      data['forms'] = this.forms.map((v) => v.toJson()).toList();
+      data['forms'] = this.forms!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Providers {
-  int providerid;
-  String title;
-  String description;
-  String metadata;
-  int deleted;
-  String linkid;
-  String ts;
-  String prtags;
+  int? providerid;
+  String? title;
+  String? description;
+  String? metadata;
+  int? deleted;
+  String? linkid;
+  String? ts;
+  String? prtags;
   var providerType;
 
   Providers(
@@ -366,23 +367,23 @@ class Providers {
 }
 
 class Fields {
-  int fieldid;
-  int providerid;
-  int formid;
-  String title;
-  String description;
-  int uomid;
-  String fdata;
-  String ftype;
-  String vmin;
-  String vmax;
-  String amin;
-  String amax;
-  String validation;
-  int seq;
-  int depth;
-  String ts;
-  int deleted;
+  int? fieldid;
+  int? providerid;
+  int? formid;
+  String? title;
+  String? description;
+  int? uomid;
+  String? fdata;
+  String? ftype;
+  String? vmin;
+  String? vmax;
+  String? amin;
+  String? amax;
+  String? validation;
+  int? seq;
+  int? depth;
+  String? ts;
+  int? deleted;
 
   Fields(
       {this.fieldid,
@@ -447,45 +448,45 @@ class Fields {
 }
 
 class Doneevents {
-  int doneid;
-  int eid;
-  int tplanid;
-  int teidUser;
-  int aid;
-  String activityname;
-  int pformid;
-  int uformid;
-  String uformname;
-  int alarm;
-  String uformdata;
-  String otherinfo;
-  int remindin;
-  int remindinType;
-  String ts;
-  int deleted;
-  int evDuration;
-  int dosemeal;
-  int isUnDone;
-  int pplanid;
-  int importance;
-  int evSource;
-  int points;
-  String ackLocal;
-  int remindbefore;
-  int remindbeforeType;
-  int evDisabled;
-  int evMuted;
-  String custform;
-  String langTitle;
-  int doserepeat;
-  int issymptom;
-  int disabled;
-  String pform;
-  String uform;
-  String alertdata;
-  String ack;
-  int parentTplanid;
-  String description;
+  int? doneid;
+  int? eid;
+  int? tplanid;
+  int? teidUser;
+  int? aid;
+  String? activityname;
+  int? pformid;
+  int? uformid;
+  String? uformname;
+  int? alarm;
+  String? uformdata;
+  String? otherinfo;
+  int? remindin;
+  int? remindinType;
+  String? ts;
+  int? deleted;
+  int? evDuration;
+  int? dosemeal;
+  int? isUnDone;
+  int? pplanid;
+  int? importance;
+  int? evSource;
+  int? points;
+  String? ackLocal;
+  int? remindbefore;
+  int? remindbeforeType;
+  int? evDisabled;
+  int? evMuted;
+  String? custform;
+  String? langTitle;
+  int? doserepeat;
+  int? issymptom;
+  int? disabled;
+  String? pform;
+  String? uform;
+  String? alertdata;
+  String? ack;
+  int? parentTplanid;
+  String? description;
 
   Doneevents(
       {this.doneid,
@@ -616,18 +617,18 @@ class Doneevents {
 }
 
 class PersonalPlanCollection {
-  int pplanid;
-  int providerid;
-  String title;
-  String description;
-  int uid;
-  String startdate;
-  int packageduration;
-  int seq;
-  int depth;
-  String ts;
-  int deleted;
-  String metadata;
+  int? pplanid;
+  int? providerid;
+  String? title;
+  String? description;
+  int? uid;
+  String? startdate;
+  int? packageduration;
+  int? seq;
+  int? depth;
+  String? ts;
+  int? deleted;
+  String? metadata;
 
   PersonalPlanCollection(
       {this.pplanid,
@@ -677,19 +678,19 @@ class PersonalPlanCollection {
 }
 
 class Forms {
-  int formid;
-  int providerid;
-  String title;
-  String description;
-  int aid;
-  int forprovider;
-  int seq;
-  int depth;
-  String metadata;
-  String ts;
-  int deleted;
-  int fieldcount;
-  int points;
+  int? formid;
+  int? providerid;
+  String? title;
+  String? description;
+  int? aid;
+  int? forprovider;
+  int? seq;
+  int? depth;
+  String? metadata;
+  String? ts;
+  int? deleted;
+  int? fieldcount;
+  int? points;
 
   Forms(
       {this.formid,
@@ -749,10 +750,10 @@ class OtherinfoSymptom {
     this.needFile,
   });
 
-  final String needPhoto;
-  final String needAudio;
-  final String needVideo;
-  final String needFile;
+  final String? needPhoto;
+  final String? needAudio;
+  final String? needVideo;
+  final String? needFile;
 
   factory OtherinfoSymptom.fromJson(Map<String, dynamic> json) => OtherinfoSymptom(
     needPhoto: (json['NeedPhoto'] ?? 0).toString(),

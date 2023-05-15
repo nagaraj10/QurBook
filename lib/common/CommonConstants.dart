@@ -1,3 +1,4 @@
+
 import 'CommonUtil.dart';
 import 'PreferenceUtil.dart';
 import '../database/model/CountryMetrics.dart';
@@ -37,7 +38,7 @@ class CommonConstants {
   static const String CAT_JSON_FEEDBACK = 'Catcode009_Typecode001';
   static const String CAT_JSON_HOSPITAL = 'Catcode006_Typecode001';
 
-  static String appVersion = 'default app version';
+  static String? appVersion = 'default app version';
   static String serach_specific_list = 'Search Specific List';
 
   static const String STR_BP_MONITOR = 'Blood Pressure';
@@ -275,8 +276,8 @@ class CommonConstants {
   static String SEARCH_LAB_ID = 'LAB';
 
   static final CommonConstants _instance = CommonConstants.internal();
-  static CountryMetrics countryMetrics;
-  static UnitsMesurements unitsMeasurements;
+  static CountryMetrics? countryMetrics;
+  static UnitsMesurements? unitsMeasurements;
 
   static const String strQueryString = '?';
   static const String strGetProfilePic = 'section=profilePicture';
@@ -337,7 +338,7 @@ class CommonConstants {
 
   static bool showNotificationdialog = true;
 
-  Future<CountryMetrics> getCountryMetrics() async {
+  Future<CountryMetrics?> getCountryMetrics() async {
     if (countryMetrics != null) return countryMetrics;
     countryMetrics = await setCountryMetrics();
     return countryMetrics;
@@ -353,7 +354,7 @@ class CommonConstants {
     return countryMetrics;
   }
 
-  Future<UnitsMesurements> getValuesForUnit(String units, String range) async {
+  Future<UnitsMesurements?> getValuesForUnit(String? units, String? range) async {
     final db = DatabaseHelper();
 
     unitsMeasurements =
@@ -362,21 +363,21 @@ class CommonConstants {
     return unitsMeasurements;
   }
 
-  String get bpSPUNIT => countryMetrics.bpSPUnit;
+  String? get bpSPUNIT => countryMetrics?.bpSPUnit;
 
-  String get bpDPUNIT => countryMetrics.bpDPUnit;
+  String? get bpDPUNIT => countryMetrics?.bpDPUnit;
 
-  String get bpPulseUNIT => countryMetrics.bpPulseUnit;
+  String? get bpPulseUNIT => countryMetrics?.bpPulseUnit;
 
-  String get glucometerUNIT => countryMetrics.glucometerUnit;
+  String? get glucometerUNIT => countryMetrics?.glucometerUnit;
 
-  String get poOxySatUNIT => countryMetrics.poOxySatUnit;
+  String? get poOxySatUNIT => countryMetrics?.poOxySatUnit;
 
-  String get poPulseUNIT => countryMetrics.poPulseUnit;
+  String? get poPulseUNIT => countryMetrics?.poPulseUnit;
 
-  String get tempUNIT => countryMetrics.tempUnit;
+  String? get tempUNIT => countryMetrics?.tempUnit;
 
-  String get weightUNIT => countryMetrics.weightUnit;
+  String? get weightUNIT => countryMetrics!.weightUnit;
 
   static const String strId = 'id';
   static const String strName = 'name';

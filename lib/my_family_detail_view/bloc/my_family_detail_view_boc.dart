@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../../bookmark_record/bloc/bookmarkRecordBloc.dart';
@@ -11,42 +12,42 @@ import '../../constants/variable_constant.dart' as variable;
 import '../../constants/router_variable.dart' as router;
 
 class MyFamilyDetailViewBloc implements BaseBloc {
-  StreamController _healthReportListController;
-  StreamController _categoryController;
-  StreamController _categoryControllers;
-  StreamController _healthListControlllers;
+  StreamController? _healthReportListController;
+  StreamController? _categoryController;
+  StreamController? _categoryControllers;
+  StreamController? _healthListControlllers;
 
   // 1
 
   StreamSink<ApiResponse<UserHealthResponseList>> get healthReportListSink =>
-      _healthReportListController.sink;
+      _healthReportListController!.sink as StreamSink<ApiResponse<UserHealthResponseList>>;
 
   Stream<ApiResponse<UserHealthResponseList>> get healthReportStream =>
-      _healthReportListController.stream;
+      _healthReportListController!.stream as Stream<ApiResponse<UserHealthResponseList>>;
 
   // 2
   StreamSink<ApiResponse<CategoryResponseList>> get categoryListSink =>
-      _categoryController.sink;
+      _categoryController!.sink as StreamSink<ApiResponse<CategoryResponseList>>;
 
   Stream<ApiResponse<CategoryResponseList>> get categoryListStream =>
-      _categoryController.stream;
+      _categoryController!.stream as Stream<ApiResponse<CategoryResponseList>>;
 
   //3
 
   StreamSink<ApiResponse<CategoryDataList>> get categoryListSinks =>
-      _categoryControllers.sink;
+      _categoryControllers!.sink as StreamSink<ApiResponse<CategoryDataList>>;
 
   Stream<ApiResponse<CategoryDataList>> get categoryListStreams =>
-      _categoryControllers.stream;
+      _categoryControllers!.stream as Stream<ApiResponse<CategoryDataList>>;
 
   StreamSink<ApiResponse<HealthRecordList>> get healthReportListSinks =>
-      _healthListControlllers.sink;
+      _healthListControlllers!.sink as StreamSink<ApiResponse<HealthRecordList>>;
   Stream<ApiResponse<HealthRecordList>> get healthReportStreams =>
-      _healthListControlllers.stream;
+      _healthListControlllers!.stream as Stream<ApiResponse<HealthRecordList>>;
 
-  MyFamilyDetailViewRepository _healthReportListForUserRepository;
+  late MyFamilyDetailViewRepository _healthReportListForUserRepository;
 
-  String userId;
+  String? userId;
 
   @override
   void dispose() {
@@ -72,15 +73,15 @@ class MyFamilyDetailViewBloc implements BaseBloc {
     healthReportListSink.add(ApiResponse.loading(variable.strFetchingHealth));
     try {
       final userHealthResponseList =
-          await _healthReportListForUserRepository.getHealthReportList(userId);
+          await _healthReportListForUserRepository.getHealthReportList(userId!);
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       healthReportListSink.add(ApiResponse.error(e.toString()));
     }
   }
 
-  Future<HealthRecordList> getHelthReportLists(String userId) async {
-    HealthRecordList userHealthResponseList;
+  Future<HealthRecordList?> getHelthReportLists(String userId) async {
+    HealthRecordList? userHealthResponseList;
     healthReportListSinks
         .add(ApiResponse.loading(variable.strGettingHealthRecords));
     try {
@@ -93,10 +94,10 @@ class MyFamilyDetailViewBloc implements BaseBloc {
     return userHealthResponseList;
   }
 
-  Future<CategoryResponseList> getCategoryList() async {
+  Future<CategoryResponseList?> getCategoryList() async {
     categoryListSink.add(ApiResponse.loading(variable.strFetchCategory));
 
-    CategoryResponseList categoryResponseList;
+    CategoryResponseList? categoryResponseList;
 
     try {
       categoryResponseList =
@@ -108,10 +109,10 @@ class MyFamilyDetailViewBloc implements BaseBloc {
     return categoryResponseList;
   }
 
-  Future<CategoryDataList> getCategoryLists() async {
+  Future<CategoryDataList?> getCategoryLists() async {
     categoryListSinks.add(ApiResponse.loading(variable.strFetchCategory));
 
-    CategoryDataList categoryResponseList;
+    CategoryDataList? categoryResponseList;
 
     try {
       categoryResponseList =

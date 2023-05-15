@@ -1,10 +1,11 @@
+
 import 'dart:core';
 
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 
 class CareCoordinatorData {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   CareCoordinatorData({this.isSuccess, this.result});
 
@@ -14,7 +15,7 @@ class CareCoordinatorData {
       if (json['result'] != null) {
         result = <Result>[];
         json['result'].forEach((v) {
-          result.add(new Result.fromJson(v));
+          result!.add(new Result.fromJson(v));
         });
       }
     } catch (e) {
@@ -27,7 +28,7 @@ class CareCoordinatorData {
     try {
       data['isSuccess'] = this.isSuccess;
       if (this.result != null) {
-        data['result'] = this.result.map((v) => v.toJson()).toList();
+        data['result'] = this.result!.map((v) => v.toJson()).toList();
       }
     } catch (e) {
       print(e);
@@ -38,10 +39,10 @@ class CareCoordinatorData {
 }
 
 class Result {
-  String patientId;
-  String userId;
-  String userType;
-  String name;
+  String? patientId;
+  String? userId;
+  String? userType;
+  String? name;
 
   Result({this.patientId, this.userId, this.userType,this.name});
 
@@ -71,9 +72,9 @@ class Result {
 }
 
 class CallMessagingErrorResponse {
-  bool isSuccess;
-  String message;
-  Diagnostics diagnostics;
+  bool? isSuccess;
+  String? message;
+  Diagnostics? diagnostics;
 
   CallMessagingErrorResponse({this.isSuccess, this.message, this.diagnostics});
 
@@ -90,16 +91,16 @@ class CallMessagingErrorResponse {
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.diagnostics != null) {
-      data['diagnostics'] = this.diagnostics.toJson();
+      data['diagnostics'] = this.diagnostics!.toJson();
     }
     return data;
   }
 }
 
 class Diagnostics {
-  String message;
-  ErrorData errorData;
-  bool includeErrorDataInResponse;
+  String? message;
+  ErrorData? errorData;
+  bool? includeErrorDataInResponse;
 
   Diagnostics({this.message, this.errorData, this.includeErrorDataInResponse});
 
@@ -115,7 +116,7 @@ class Diagnostics {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
     if (this.errorData != null) {
-      data['errorData'] = this.errorData.toJson();
+      data['errorData'] = this.errorData!.toJson();
     }
     data['includeErrorDataInResponse'] = this.includeErrorDataInResponse;
     return data;
@@ -123,8 +124,8 @@ class Diagnostics {
 }
 
 class ErrorData {
-  String code;
-  String message;
+  String? code;
+  String? message;
 
   ErrorData({this.code, this.message});
 

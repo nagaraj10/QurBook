@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -12,8 +13,8 @@ class OtpViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
   String timeForResend = '00:30';
   int timerSeconds = 30;
-  Timer _timer;
-  Timer _otpTimer;
+  Timer? _timer;
+  Timer? _otpTimer;
   bool isDialogOpen = false;
 
   void updateDialogStatus(bool newStatus) {
@@ -31,7 +32,7 @@ class OtpViewModel extends ChangeNotifier {
           stopTimer(resetValues: false);
         }
         timeForResend =
-            '00:${timerSeconds?.toString()?.length > 1 ? timerSeconds : '0$timerSeconds'}';
+            '00:${timerSeconds.toString().length > 1 ? timerSeconds : '0$timerSeconds'}';
         notifyListeners();
       },
     );
@@ -42,35 +43,35 @@ class OtpViewModel extends ChangeNotifier {
       timerSeconds = 30;
       timeForResend = '00:30';
     }
-    if (_timer?.isActive) _timer?.cancel();
+    if (_timer!.isActive) _timer?.cancel();
   }
 
   void confirmViaCall({
-    @required String phoneNumber,
-    @required Function(String otpCode) onOtpReceived,
+    required String phoneNumber,
+    required Function(String otpCode) onOtpReceived,
   }) async {
-    LoaderClass.showLoadingDialog(Get.context, canDismiss: false);
+    LoaderClass.showLoadingDialog(Get.context!, canDismiss: false);
     final ivrNumberslist = await getIVRNumbers();
-    LoaderClass.hideLoadingDialog(Get.context);
+    LoaderClass.hideLoadingDialog(Get.context!);
     updateDialogStatus(true);
-    if ((ivrNumberslist?.result?.length ?? 0) > 0) {
+    if ((ivrNumberslist.result?.length ?? 0) > 0) {
       await Get.dialog(
         ConfirmViaCallWidget(
-          ivrNumbersList: ivrNumberslist?.result,
+          ivrNumbersList: ivrNumberslist.result,
         ),
       );
       _otpTimer = Timer.periodic(
         Duration(seconds: 5),
         (timer) async {
           var otpResponse =
-              await getOTPFromCall(phoneNumber?.replaceAll('+', ''));
-          if (otpResponse?.isSuccess ?? false) {
-            timer?.cancel();
+              await getOTPFromCall(phoneNumber.replaceAll('+', ''));
+          if (otpResponse.isSuccess ?? false) {
+            timer.cancel();
             if (isDialogOpen) {
               updateDialogStatus(true);
               Get.back();
             }
-            onOtpReceived(otpResponse?.otpData?.otpCode ?? '');
+            onOtpReceived(otpResponse.otpData?.otpCode ?? '');
             notifyListeners();
           }
         },

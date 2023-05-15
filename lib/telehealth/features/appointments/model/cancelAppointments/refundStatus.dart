@@ -1,17 +1,18 @@
+
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/referenceData.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class RefundStatus {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
   dynamic lastModifiedOn;
-  ReferenceData referenceData;
+  ReferenceData? referenceData;
 
   RefundStatus(
       {this.id,
@@ -52,7 +53,7 @@ class RefundStatus {
     data[parameters.strCreatedOn] = this.createdOn;
     data[parameters.strLastModifiedOn] = this.lastModifiedOn;
     if (this.referenceData != null) {
-      data[parameters.strReferenceData] = this.referenceData.toJson();
+      data[parameters.strReferenceData] = this.referenceData!.toJson();
     }
     return data;
   }

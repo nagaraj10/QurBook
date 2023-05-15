@@ -1,12 +1,13 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Consulting.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Followup.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Fees {
-  String doctorId;
-  Consulting consulting;
-  Followup followup;
-  Consulting cancellation;
+  String? doctorId;
+  Consulting? consulting;
+  Followup? followup;
+  Consulting? cancellation;
 
   Fees({this.doctorId, this.consulting, this.followup, this.cancellation});
 
@@ -27,13 +28,13 @@ class Fees {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[parameters.strDoctorId] = this.doctorId;
     if (this.consulting != null) {
-      data[parameters.strconsulting] = this.consulting.toJson();
+      data[parameters.strconsulting] = this.consulting!.toJson();
     }
     if (this.followup != null) {
-      data[parameters.strfollowup] = this.followup.toJson();
+      data[parameters.strfollowup] = this.followup!.toJson();
     }
     if (this.cancellation != null) {
-      data[parameters.strcancellation] = this.cancellation.toJson();
+      data[parameters.strcancellation] = this.cancellation!.toJson();
     }
     return data;
   }

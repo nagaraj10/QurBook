@@ -1,5 +1,6 @@
+
 class DeleteDeviceHealthRecord {
-  bool isSuccess;
+  bool? isSuccess;
 
   DeleteDeviceHealthRecord({this.isSuccess});
 

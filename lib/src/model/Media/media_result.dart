@@ -1,18 +1,19 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import '../Category/catergory_result.dart';
 
 class MediaResult {
-  String id;
-  String name;
-  String description;
-  String logo;
-  bool isDisplay;
-  bool isAiTranscription;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  CategoryResult healthRecordCategory;
-  bool isChecked = false;
+  String? id;
+  String? name;
+  String? description;
+  String? logo;
+  bool? isDisplay;
+  bool? isAiTranscription;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  CategoryResult? healthRecordCategory;
+  bool? isChecked = false;
   MediaResult(
       {this.id,
       this.name,
@@ -58,7 +59,7 @@ class MediaResult {
     if (data.containsKey(parameters.strHealthRecordCategory)) {
       if (healthRecordCategory != null) {
         data[parameters.strHealthRecordCategory] =
-            healthRecordCategory.toJson();
+            healthRecordCategory!.toJson();
       }
     }
 

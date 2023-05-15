@@ -1,12 +1,13 @@
+
 class BleDataModel {
-  String status;
-  String hubId;
-  String deviceId;
-  String deviceType;
-  Data data;
-  String eid;
-  String uid;
-  String ackLocal;
+  String? status;
+  String? hubId;
+  String? deviceId;
+  String? deviceType;
+  Data? data;
+  String? eid;
+  String? uid;
+  String? ackLocal;
 
   BleDataModel(
       {this.status, this.hubId, this.deviceId, this.deviceType, this.data});
@@ -37,7 +38,7 @@ class BleDataModel {
       data['uid'] = this.uid;
       data['ackLocal'] = this.ackLocal;
       if (this.data != null) {
-        data['Data'] = this.data.toJson();
+        data['Data'] = this.data!.toJson();
       }
     } catch (e) {
       print(e);
@@ -47,11 +48,11 @@ class BleDataModel {
 }
 
 class Data {
-  String sPO2;
-  String pulse;
-  String systolic;
-  String diastolic;
-  String weight;
+  String? sPO2;
+  String? pulse;
+  String? systolic;
+  String? diastolic;
+  String? weight;
   Data({
     this.sPO2,
     this.pulse,
@@ -88,8 +89,8 @@ class Data {
 }
 
 class BleDataResponseModel {
-  bool isSuccess;
-  BleDataResult result;
+  bool? isSuccess;
+  BleDataResult? result;
 
   BleDataResponseModel({this.isSuccess, this.result});
 
@@ -109,7 +110,7 @@ class BleDataResponseModel {
     try {
       data['isSuccess'] = this.isSuccess;
       if (this.result != null) {
-        data['result'] = this.result.toJson();
+        data['result'] = this.result!.toJson();
       }
     } catch (e) {
       print(e);
@@ -120,12 +121,12 @@ class BleDataResponseModel {
 }
 
 class BleDataResult {
-  BleDataResponseData data;
-  String hubId;
-  String deviceId;
-  String deviceType;
-  String status;
-  String deviceName;
+  BleDataResponseData? data;
+  String? hubId;
+  String? deviceId;
+  String? deviceType;
+  String? status;
+  String? deviceName;
 
   BleDataResult(
       {this.data,
@@ -154,7 +155,7 @@ class BleDataResult {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     try {
       if (this.data != null) {
-        data['Data'] = this.data.toJson();
+        data['Data'] = this.data!.toJson();
       }
       data['hubId'] = this.hubId;
       data['deviceId'] = this.deviceId;
@@ -170,8 +171,8 @@ class BleDataResult {
 }
 
 class BleDataResponseData {
-  String pulse;
-  String sPO2;
+  String? pulse;
+  String? sPO2;
 
   BleDataResponseData({this.pulse, this.sPO2});
 

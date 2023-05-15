@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
@@ -11,17 +12,17 @@ import 'plan_header.dart';
 
 class PlanDietListView extends StatelessWidget {
   const PlanDietListView({
-    @required this.title,
-    @required this.planList,
+    required this.title,
+    required this.planList,
   });
 
-  final String title;
+  final String? title;
   final List<DietPlanResult> planList;
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: (planList?.length??0)>0,
+      visible: (planList.length)>0,
       child: Column(
         children: [
           SizedBox(

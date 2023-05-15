@@ -1,20 +1,21 @@
+
 import 'dart:convert';
 
 import 'MetaDataForHospitalLogo.dart';
 import 'MetaDataForURL.dart';
 
 class PlanListModel {
-  bool isSuccess;
-  List<PlanListResult> result;
+  bool? isSuccess;
+  List<PlanListResult>? result;
 
   PlanListModel({this.isSuccess, this.result});
 
   PlanListModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = List<PlanListResult>();
+      result = <PlanListResult>[];
       json['result'].forEach((v) {
-        result.add(PlanListResult.fromJson(v));
+        result!.add(PlanListResult.fromJson(v));
       });
     }
   }
@@ -23,41 +24,41 @@ class PlanListModel {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class PlanListResult {
-  String packageid;
-  String title;
-  String description;
-  String docid;
-  String price;
-  String issubscription;
-  String ispublic;
-  String html;
-  String packageDuration;
-  String billingCycle;
-  String ts;
-  String providerid;
-  String providerName;
-  String providerDesc;
-  String plinkid;
-  String packcatid;
-  String catname;
-  String catdesc;
-  String catselecttype;
-  String userpackid;
-  String isSubscribed;
-  String startDate;
-  String isexpired;
-  MetaDataForURL metadata;
-  MetaDataForURL catmetadata;
-  MetaDataForHospitalLogo providerMetadata;
+  String? packageid;
+  String? title;
+  String? description;
+  String? docid;
+  String? price;
+  String? issubscription;
+  String? ispublic;
+  String? html;
+  String? packageDuration;
+  String? billingCycle;
+  String? ts;
+  String? providerid;
+  String? providerName;
+  String? providerDesc;
+  String? plinkid;
+  String? packcatid;
+  String? catname;
+  String? catdesc;
+  String? catselecttype;
+  String? userpackid;
+  String? isSubscribed;
+  String? startDate;
+  String? isexpired;
+  MetaDataForURL? metadata;
+  MetaDataForURL? catmetadata;
+  MetaDataForHospitalLogo? providerMetadata;
   bool isSelected;
-  String isExtendable;
+  String? isExtendable;
 
   PlanListResult(
       {this.packageid,

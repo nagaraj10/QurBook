@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,7 +31,7 @@ class SymptomService {
       var currentLanguage = '';
       var lan = CommonUtil.getCurrentLanCode();
       if (lan != 'undef') {
-        var langCode = lan.split('-').first;
+        var langCode = lan!.split('-').first;
         currentLanguage = langCode;
       } else {
         currentLanguage = 'en';
@@ -72,37 +73,37 @@ class SymptomService {
     dynamic formId, dynamic formName,
   }) async {
     LoaderQurHome.showLoadingDialog(
-      Get.context,
+      Get.context!,
       canDismiss: false,
     );
     var response = await RegimentService.getEventId(
         uid: uid,aid: aid,formId: formId,formName: formName
     );
-    LoaderQurHome.hideLoadingDialog(Get.context);
-    return response;
+    LoaderQurHome.hideLoadingDialog(Get.context!);
+    return response!;
   }
 
   Future<FieldsResponseModel> getFormDataQurHome({
-    String eid,
+    String? eid,
   }) async {
     LoaderQurHome.showLoadingDialog(
-      Get.context,
+      Get.context!,
       canDismiss: false,
     );
     var response = await RegimentService.getFormData(
       eid: eid,
     );
-    LoaderQurHome.hideLoadingDialog(Get.context);
+    LoaderQurHome.hideLoadingDialog(Get.context!);
     return response;
   }
 
   Future<SaveResponseModel> saveFormDataQurHome({
-    String eid,
-    String events,
-    bool isFollowEvent,
-    String followEventContext,
-    DateTime selectedDate,
-    TimeOfDay selectedTime
+    String? eid,
+    String? events,
+    bool? isFollowEvent,
+    String? followEventContext,
+    DateTime? selectedDate,
+    TimeOfDay? selectedTime
   }) async {
     //updateInitialShowIndex(isDone: true);
     return await SymptomListController.saveFormData(

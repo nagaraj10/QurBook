@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -22,22 +23,22 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class DeviceListScreen extends StatefulWidget {
-  final HealthRecordList completeData;
+  final HealthRecordList? completeData;
   final Function callBackToRefresh;
 
-  final String categoryName;
-  final String categoryId;
+  final String? categoryName;
+  final String? categoryId;
 
   final Function(String, String) getDataForParticularLabel;
-  final Function(String, bool) mediaSelected;
-  final Function(String, List<HealthRecordCollection>, bool)
+  final Function(String?, bool?) mediaSelected;
+  final Function(String?, List<HealthRecordCollection>, bool)
       healthRecordSelected;
-  final bool allowSelect;
-  List<String> mediaMeta;
-  final bool isNotesSelect;
-  final bool isAudioSelect;
-  final bool showDetails;
-  final bool allowAttach;
+  final bool? allowSelect;
+  List<String?>? mediaMeta;
+  final bool? isNotesSelect;
+  final bool? isAudioSelect;
+  final bool? showDetails;
+  final bool? allowAttach;
 
   DeviceListScreen(
       this.completeData,
@@ -59,19 +60,19 @@ class DeviceListScreen extends StatefulWidget {
 }
 
 class _DeviceListScreentState extends State<DeviceListScreen> {
-  HealthReportListForUserBlock _healthReportListForUserBlock;
+  late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
-  List<HealthRecordCollection> mediMasterId = new List();
+  List<HealthRecordCollection> mediMasterId = [];
   FlutterToast toast = new FlutterToast();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    String categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
+    String? categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
 
     super.initState();
   }
@@ -89,11 +90,11 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _getWidgetToDisplayDeviceList(widget.completeData);
+    return _getWidgetToDisplayDeviceList(widget.completeData!);
   }
 
   Widget _getWidgetToDisplayDeviceList(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    List<HealthResult> mediaMetaInfoObj = [];
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionDevice);
@@ -133,23 +134,23 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   Widget getCardWidgetForDevice(HealthResult data, int position) {
     return InkWell(
         onLongPress: () {
-          if (widget.allowSelect) {
-            data.isSelected = !data.isSelected;
+          if (widget.allowSelect!) {
+            data.isSelected = !data.isSelected!;
 
             setState(() {});
             widget.mediaSelected(data.id, data.isSelected);
           }
         },
         onTap: () {
-          if (widget.allowSelect && widget.showDetails == false) {
-            if (widget.allowAttach) {
+          if (widget.allowSelect! && widget.showDetails == false) {
+            if (widget.allowAttach!) {
               bool condition;
-              if (widget.mediaMeta.contains(data.id)) {
+              if (widget.mediaMeta!.contains(data.id)) {
                 condition = false;
               } else {
                 condition = true;
               }
-              data.isSelected = !data.isSelected;
+              data.isSelected = !data.isSelected!;
               if (data != null &&
                   (data.healthRecordCollection?.length ?? 0) > 0) {
                 mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
@@ -164,12 +165,12 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               }
             } else {
               bool condition;
-              if (widget.mediaMeta.contains(data.id)) {
+              if (widget.mediaMeta!.contains(data.id)) {
                 condition = false;
               } else {
                 condition = true;
               }
-              data.isSelected = !data.isSelected;
+              data.isSelected = !data.isSelected!;
 
               // setState(() {});
               widget.mediaSelected(data.id, condition);
@@ -212,7 +213,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         backgroundColor:
                             const Color(fhbColors.bgColorContainer),
                         child: Image.network(
-                          data.metadata.healthRecordType.logo,
+                          data.metadata!.healthRecordType!.logo!,
                           height: 25.0.h,
                           width: 25.0.h,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -224,9 +225,9 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         children: [
                           Flexible(
                             child: Text(
-                              data.metadata.healthRecordType.name != null
+                              data.metadata!.healthRecordType!.name != null
                                   ? toBeginningOfSentenceCase(
-                                      data.metadata.healthRecordType.name)
+                                      data.metadata!.healthRecordType!.name)!
                                   : '',
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
@@ -252,7 +253,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         children: [
                           Text(
                             new FHBUtils().getFormattedDateStringClone(
-                                data.dateTimeValue.toLocal()),
+                                data.dateTimeValue!.toLocal()),
                             style: TextStyle(
                                 color:
                                     Color(new CommonUtil().getMyPrimaryColor()),
@@ -266,14 +267,14 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         children: <Widget>[
                           Expanded(
                             child: getDeviceReadings(
-                                data, data.metadata.deviceReadings),
+                                data, data.metadata!.deviceReadings!),
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               IconButton(
-                                  icon: data.isBookmarked
+                                  icon: data.isBookmarked!
                                       ? ImageIcon(
                                           AssetImage(
                                               variable.icon_record_fav_active),
@@ -291,14 +292,14 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                     new CommonUtil()
                                         .bookMarkRecord(data, _refresh);
                                   }),
-                              (data.metadata.hasVoiceNotes != null &&
-                                      data.metadata.hasVoiceNotes)
+                              (data.metadata!.hasVoiceNotes != null &&
+                                      data.metadata!.hasVoiceNotes!)
                                   ? Icon(
                                       Icons.mic,
                                       color: Colors.black54,
                                     )
                                   : Container(),
-                              widget.mediaMeta.contains(data.id)
+                              widget.mediaMeta!.contains(data.id)
                                   ? Icon(
                                       Icons.done,
                                       color: Color(
@@ -319,7 +320,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   getDocumentImageWidget(MediaMetaInfo data) {
     return new FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)),
+          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Container(
@@ -330,8 +331,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
           );
         } else {
           return new Shimmer.fromColors(
-              baseColor: Colors.grey[300],
-              highlightColor: Colors.grey[100],
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
               child: Container(
                 width: 50.0.h,
                 height: 50.0.h,
@@ -342,7 +343,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   }
 
   String getCreatedDate(HealthResult data) {
-    DateTime dateTimeStampForBp = data.dateTimeValue.toLocal();
+    DateTime dateTimeStampForBp = data.dateTimeValue!.toLocal();
 
     //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
     String dateForBp =
@@ -356,7 +357,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
 
   Widget getDeviceReadings(
       HealthResult data, List<DeviceReadings> deviceReadings) {
-    List<Widget> list = new List<Widget>();
+    List<Widget> list = <Widget>[];
     for (var i = 0; i < deviceReadings.length; i++) {
       list.add(Padding(
         padding: EdgeInsets.all(5.0.sp),
@@ -366,10 +367,10 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
             Text(
               deviceReadings[i].parameter != null
                   ? toBeginningOfSentenceCase(
-                      deviceReadings[i].parameter.toLowerCase() ==
+                      deviceReadings[i].parameter!.toLowerCase() ==
                               CommonConstants.strOxygenParams.toLowerCase()
                           ? CommonConstants.strOxygenParamsName.toLowerCase()
-                          : deviceReadings[i].parameter.toLowerCase())
+                          : deviceReadings[i].parameter!.toLowerCase())!
                   : '',
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12.0.sp),
               maxLines: 2,

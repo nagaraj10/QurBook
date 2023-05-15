@@ -1,12 +1,13 @@
+
 class HealthOrganizationResult {
-  String id;
-  String startDate;
-  String endDate;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  HealthOrganization healthOrganization;
-  List<DoctorFeeCollection> doctorFeeCollection;
+  String? id;
+  String? startDate;
+  String? endDate;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  HealthOrganization? healthOrganization;
+  List<DoctorFeeCollection>? doctorFeeCollection;
 
   HealthOrganizationResult(
       {this.id,
@@ -29,9 +30,9 @@ class HealthOrganizationResult {
         ? new HealthOrganization.fromJson(json['healthOrganization'])
         : null;
     if (json['doctorFeeCollection'] != null) {
-      doctorFeeCollection = new List<DoctorFeeCollection>();
+      doctorFeeCollection = <DoctorFeeCollection>[];
       json['doctorFeeCollection'].forEach((v) {
-        doctorFeeCollection.add(new DoctorFeeCollection.fromJson(v));
+        doctorFeeCollection!.add(new DoctorFeeCollection.fromJson(v));
       });
     }
   }
@@ -45,24 +46,24 @@ class HealthOrganizationResult {
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.healthOrganization != null) {
-      data['healthOrganization'] = this.healthOrganization.toJson();
+      data['healthOrganization'] = this.healthOrganization!.toJson();
     }
     if (this.doctorFeeCollection != null) {
       data['doctorFeeCollection'] =
-          this.doctorFeeCollection.map((v) => v.toJson()).toList();
+          this.doctorFeeCollection!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class HealthOrganization {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  List<HealthOrganizationAddressCollection> healthOrganizationAddressCollection;
-  List<HealthOrganizationContactCollection> healthOrganizationContactCollection;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  List<HealthOrganizationAddressCollection>? healthOrganizationAddressCollection;
+  List<HealthOrganizationContactCollection>? healthOrganizationContactCollection;
 
   HealthOrganization(
       {this.id,
@@ -81,17 +82,17 @@ class HealthOrganization {
     lastModifiedOn = json['lastModifiedOn'];
     if (json['healthOrganizationAddressCollection'] != null) {
       healthOrganizationAddressCollection =
-      new List<HealthOrganizationAddressCollection>();
+      <HealthOrganizationAddressCollection>[];
       json['healthOrganizationAddressCollection'].forEach((v) {
-        healthOrganizationAddressCollection
+        healthOrganizationAddressCollection!
             .add(new HealthOrganizationAddressCollection.fromJson(v));
       });
     }
     if (json['healthOrganizationContactCollection'] != null) {
       healthOrganizationContactCollection =
-      new List<HealthOrganizationContactCollection>();
+      <HealthOrganizationContactCollection>[];
       json['healthOrganizationContactCollection'].forEach((v) {
-        healthOrganizationContactCollection
+        healthOrganizationContactCollection!
             .add(new HealthOrganizationContactCollection.fromJson(v));
       });
     }
@@ -106,13 +107,13 @@ class HealthOrganization {
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.healthOrganizationAddressCollection != null) {
       data['healthOrganizationAddressCollection'] = this
-          .healthOrganizationAddressCollection
+          .healthOrganizationAddressCollection!
           .map((v) => v.toJson())
           .toList();
     }
     if (this.healthOrganizationContactCollection != null) {
       data['healthOrganizationContactCollection'] = this
-          .healthOrganizationContactCollection
+          .healthOrganizationContactCollection!
           .map((v) => v.toJson())
           .toList();
     }
@@ -121,17 +122,17 @@ class HealthOrganization {
 }
 
 class HealthOrganizationAddressCollection {
-  String id;
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  AddressTypeNew addressType;
-  CityNew city;
-  StateNew state;
+  String? id;
+  String? addressLine1;
+  String? addressLine2;
+  String? pincode;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  AddressTypeNew? addressType;
+  CityNew? city;
+  StateNew? state;
 
   HealthOrganizationAddressCollection(
       {this.id,
@@ -173,28 +174,28 @@ class HealthOrganizationAddressCollection {
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.addressType != null) {
-      data['addressType'] = this.addressType.toJson();
+      data['addressType'] = this.addressType!.toJson();
     }
     if (this.city != null) {
-      data['city'] = this.city.toJson();
+      data['city'] = this.city!.toJson();
     }
     if (this.state != null) {
-      data['state'] = this.state.toJson();
+      data['state'] = this.state!.toJson();
     }
     return data;
   }
 }
 
 class AddressTypeNew {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   AddressTypeNew(
       {this.id,
@@ -235,11 +236,11 @@ class AddressTypeNew {
 }
 
 class CityNew {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   CityNew(
       {this.id, this.name, this.isActive, this.createdOn, this.lastModifiedOn});
@@ -264,12 +265,12 @@ class CityNew {
 }
 
 class StateNew {
-  String id;
-  String name;
-  String countryCode;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? countryCode;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   StateNew(
       {this.id,
@@ -302,12 +303,12 @@ class StateNew {
 
 
 class HealthOrganizationContactCollection {
-  String id;
-  String phoneNumber;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? phoneNumber;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   HealthOrganizationContactCollection(
       {this.id,
@@ -339,17 +340,17 @@ class HealthOrganizationContactCollection {
 }
 
 class DoctorFeeCollection {
-  String id;
-  String fee;
-  int followupValue;
-  FollowupIn followupIn;
-  String effectiveFromDate;
-  String effectiveToDate;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  FeeType feeType;
-  FeeType followupType;
+  String? id;
+  String? fee;
+  int? followupValue;
+  FollowupIn? followupIn;
+  String? effectiveFromDate;
+  String? effectiveToDate;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  FeeType? feeType;
+  FeeType? followupType;
 
   DoctorFeeCollection(
       {this.id,
@@ -389,7 +390,7 @@ class DoctorFeeCollection {
     data['fee'] = this.fee;
     data['followupValue'] = this.followupValue;
     if (this.followupIn != null) {
-      data['followupIn'] = this.followupIn.toJson();
+      data['followupIn'] = this.followupIn!.toJson();
     }
     data['effectiveFromDate'] = this.effectiveFromDate;
     data['effectiveToDate'] = this.effectiveToDate;
@@ -397,17 +398,17 @@ class DoctorFeeCollection {
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.feeType != null) {
-      data['feeType'] = this.feeType.toJson();
+      data['feeType'] = this.feeType!.toJson();
     }
     if (this.followupType != null) {
-      data['followupType'] = this.followupType.toJson();
+      data['followupType'] = this.followupType!.toJson();
     }
     return data;
   }
 }
 
 class FollowupIn {
-  List<int> days;
+  List<int>? days;
 
   FollowupIn({this.days});
 
@@ -426,15 +427,15 @@ class FollowupIn {
 }
 
 class FeeType {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   FeeType(
       {this.id,

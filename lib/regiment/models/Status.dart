@@ -1,11 +1,12 @@
+
 class ServiceCategory {
-  String id;
-  String code;
-  String name;
-  String description;
-  bool isActive;
-  String createdBy;
-  String createdOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
 
   ServiceCategory(
       {this.id,

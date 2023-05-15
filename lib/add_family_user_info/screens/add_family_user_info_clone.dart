@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
@@ -65,7 +66,7 @@ import '../../telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'dart:convert' as convert;
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
-  AddFamilyUserInfoArguments arguments;
+  AddFamilyUserInfoArguments? arguments;
 
   AddFamilyUserInfoScreen({this.arguments});
 
@@ -77,7 +78,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   final double circleRadius = 100.0.h;
   final double circleBorderWidth = 2.0.w;
-  File imageURI;
+  File? imageURI;
 
   final mobileNoController = TextEditingController(text: '');
   FocusNode mobileNoFocus = FocusNode();
@@ -114,21 +115,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   final weightController = TextEditingController(text: '');
   FocusNode weightFocus = FocusNode();
   FocusNode dobFocus = FocusNode();
-  AddFamilyUserInfoBloc addFamilyUserInfoBloc;
-  AddFamilyUserInfoRepository _addFamilyUserInfoRepository;
+  AddFamilyUserInfoBloc? addFamilyUserInfoBloc;
+  late AddFamilyUserInfoRepository _addFamilyUserInfoRepository;
 
-  List<RelationsShipModel> relationShipResponseList;
-  RelationsShipModel selectedRelationShip;
+  List<RelationsShipModel>? relationShipResponseList;
+  RelationsShipModel? selectedRelationShip;
   bool isCalled = false;
 
-  String selectedGender;
+  String? selectedGender;
 
-  String currentselectedBloodGroup;
-  String currentselectedBloodGroupRange;
+  String? currentselectedBloodGroup;
+  String? currentselectedBloodGroupRange;
   var currentAddressID;
 
   DateTime dateTime = DateTime.now();
-  String dateofBirthStr;
+  String? dateofBirthStr;
 
   var cntrlr_addr_one = TextEditingController(text: '');
   var cntrlr_addr_two = TextEditingController(text: '');
@@ -140,45 +141,45 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   final _formkey = GlobalKey<FormState>();
 
-  City cityVal = City();
-  stateObj.State stateVal = stateObj.State();
+  City? cityVal = City();
+  stateObj.State? stateVal = stateObj.State();
 
   AddressResult _addressResult = AddressResult();
   List<DropdownMenuItem<String>> languagesList = [];
   List<DropdownMenuItem<String>> languagesNameList = [];
-  String selectedLanguage;
+  String? selectedLanguage;
   List<AddressResult> _addressList = [];
-  String addressTypeId;
+  String? addressTypeId;
 
-  String city = '';
-  String state = '';
+  String? city = '';
+  String? state = '';
 
-  var dialogContext;
+  late var dialogContext;
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String strErrorMsg = '';
   bool updateProfile = false;
   CommonUtil commonUtil = CommonUtil();
   DoctorPersonalViewModel doctorPersonalViewModel = DoctorPersonalViewModel();
 
-  String currentUserID;
+  String? currentUserID;
 
-  UserContactCollection3 mContactInfo;
+  UserContactCollection3? mContactInfo;
   ChatViewModel chatViewModel = ChatViewModel();
 
   LanguageRepository languageBlock = LanguageRepository();
-  LanguageModel languageModelList;
+  late LanguageModel languageModelList;
 
-  AddFamilyUserInfoRepository addFamilyUserInfoRepository;
+  late AddFamilyUserInfoRepository addFamilyUserInfoRepository;
   MyProfileModel myProfile = MyProfileModel();
 
   bool isFeetOrInches = true;
   bool isKg = true;
 
-  HealthReportListForUserRepository _healthReportListForUserRepository;
-  List<Tags> selectedTags = [];
+  late HealthReportListForUserRepository _healthReportListForUserRepository;
+  List<Tags>? selectedTags = [];
   List<Tags> mediaResultFiltered = [];
 
-  String heightUnit = 'feet', weightUnit = 'kg';
+  String? heightUnit = 'feet', weightUnit = 'kg';
 
   @override
   void initState() {
@@ -187,21 +188,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     getSupportedLanguages();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
-    addFamilyUserInfoBloc.getCustomRoles();
+    addFamilyUserInfoBloc!.getCustomRoles();
     _healthReportListForUserRepository =
-        new HealthReportListForUserRepository();
+    new HealthReportListForUserRepository();
 
     getDefaultHeightAndWeight();
 
     setUserId();
-    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
+    addFamilyUserInfoBloc!.getDeviceSelectionValues().then((value) {
       //fetchUserProfileInfo();
     });
 
     setUnit();
 
     _healthReportListForUserRepository.getTags().then((value) {
-      List<Tags> tagslist = value.result;
+      List<Tags> tagslist = value.result!;
 
       mediaResultFiltered = removeUnwantedCategories(tagslist);
 
@@ -220,13 +221,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Add Family User info Screen',
       'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
   fetchUserProfileInfo() async {
     addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
-    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
     myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
 
     return myProfile;
@@ -234,9 +235,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   dynamic checkAddressValidation(
       UserAddressCollection3 userAddressCollection3) {
-    final addrLine1 = userAddressCollection3?.addressLine1;
-    final city = userAddressCollection3?.city?.name;
-    final state = userAddressCollection3?.state?.name;
+    var addrLine1 = userAddressCollection3.addressLine1;
+    var city = userAddressCollection3.city?.name;
+    var state = userAddressCollection3.state?.name;
     if (addrLine1 != '' && city != '' && state != '') {
       return true;
     } else {
@@ -263,19 +264,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     }
     else  */
-    if (widget.arguments.isFromCSIR) {
-      final myProfile = await CommonUtil().fetchUserProfileInfo();
-      if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
+    if (widget.arguments!.isFromCSIR) {
+      var myProfile = await CommonUtil().fetchUserProfileInfo();
+      if (myProfile.result!.userAddressCollection3!.isNotEmpty) {
         var callback = checkAddressValidation(
-            myProfile?.result?.userAddressCollection3[0]);
+            myProfile.result!.userAddressCollection3![0]);
         if (callback) {
           await CommonUtil().mDisclaimerAlertDialog(
-            context: Get.context,
-            packageId: widget.arguments.packageId,
-            isSubscribed: widget.arguments.isSubscribed,
-            providerId: widget.arguments.providerId,
-            feeZero: widget.arguments.feeZero,
-            refresh: widget.arguments.refresh,
+            context: Get.context!,
+            packageId: widget.arguments!.packageId,
+            isSubscribed: widget.arguments!.isSubscribed,
+            providerId: widget.arguments!.providerId,
+            feeZero: widget.arguments!.feeZero,
+            refresh: widget.arguments!.refresh,
           );
         } else {}
       }
@@ -332,11 +333,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                           child: ClipOval(
                               child: (imageURI != null && imageURI != '')
                                   ? Image.file(
-                                      imageURI,
-                                      fit: BoxFit.cover,
-                                      width: 60.0.h,
-                                      height: 60.0.h,
-                                    )
+                                imageURI!,
+                                fit: BoxFit.cover,
+                                width: 60.0.h,
+                                height: 60.0.h,
+                              )
                                   : showProfileImageNew()),
                         ),
                       ),
@@ -420,24 +421,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     CommonConstants.lastName,
                     true,
                     maxLength: 35),
-                widget.arguments.fromClass == CommonConstants.my_family
+                widget.arguments!.fromClass == CommonConstants.my_family
                     ? (relationShipResponseList != null &&
-                            relationShipResponseList.isNotEmpty)
-                        ? Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: getRelationshipDetails(
-                                    relationShipResponseList),
-                              )
-                            ],
-                          )
-                        : _showRelationShipTextField()
-                    : widget.arguments.isForFamilyAddition == true
-                        ? getAllCustomRoles()
-                        : widget.arguments.fromClass ==
-                                CommonConstants.user_update
-                            ? Container()
-                            : _showRelationShipTextField(),
+                    relationShipResponseList!.isNotEmpty)
+                    ? Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: getRelationshipDetails(
+                          relationShipResponseList!),
+                    )
+                  ],
+                )
+                    : _showRelationShipTextField()
+                    : widget.arguments!.isForFamilyAddition == true
+                    ? getAllCustomRoles()
+                    : widget.arguments!.fromClass ==
+                    CommonConstants.user_update
+                    ? Container()
+                    : _showRelationShipTextField(),
                 _showCommonEditText(
                     emailController,
                     emailFocus,
@@ -446,10 +447,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         ? CommonConstants.emailWithStar
                         : CommonConstants.emailWithoutStar,
                     CommonConstants.email_address_optional,
-                    (widget.arguments.fromClass ==
-                                CommonConstants.user_update ||
-                            widget.arguments.fromClass ==
-                                CommonConstants.add_family)
+                    (widget.arguments!.fromClass ==
+                        CommonConstants.user_update ||
+                        widget.arguments!.fromClass ==
+                            CommonConstants.add_family)
                         ? true
                         : false,
                     maxLength: 50),
@@ -464,159 +465,159 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ),
                 isFeetOrInches
                     ? Container(
-                        child: Row(
-                        children: [
-                          Expanded(
-                              child: _showCommonEditText(
-                                  heightController,
-                                  heightFocus,
-                                  heightInchFocus,
-                                  CommonConstants.heightNameFeetInd,
-                                  CommonConstants.heightNameFeetInd,
-                                  true,
-                                  isheightOrWeight: true,
-                                  maxLength: 3)),
-                          Expanded(
-                              child: _showCommonEditText(
-                                  heightInchController,
-                                  heightInchFocus,
-                                  middleNameFocus,
-                                  CommonConstants.heightNameInchInd,
-                                  CommonConstants.heightNameInchInd,
-                                  true,
-                                  isheightOrWeight: true,
-                                  maxLength: 3)),
-                          Expanded(
-                              child: _showCommonEditText(
-                                  weightController,
-                                  weightFocus,
-                                  middleNameFocus,
-                                  isKg
-                                      ? CommonConstants.weightName
-                                      : CommonConstants.weightNameUS,
-                                  isKg
-                                      ? CommonConstants.weightName
-                                      : CommonConstants.weightNameUS,
-                                  true,
-                                  isheightOrWeight: true,
-                                  maxLength: 3))
-                        ],
-                      ))
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: _showCommonEditText(
+                                heightController,
+                                heightFocus,
+                                heightInchFocus,
+                                CommonConstants.heightNameFeetInd,
+                                CommonConstants.heightNameFeetInd,
+                                true,
+                                isheightOrWeight: true,
+                                maxLength: 3)),
+                        Expanded(
+                            child: _showCommonEditText(
+                                heightInchController,
+                                heightInchFocus,
+                                middleNameFocus,
+                                CommonConstants.heightNameInchInd,
+                                CommonConstants.heightNameInchInd,
+                                true,
+                                isheightOrWeight: true,
+                                maxLength: 3)),
+                        Expanded(
+                            child: _showCommonEditText(
+                                weightController,
+                                weightFocus,
+                                middleNameFocus,
+                                isKg
+                                    ? CommonConstants.weightName
+                                    : CommonConstants.weightNameUS,
+                                isKg
+                                    ? CommonConstants.weightName
+                                    : CommonConstants.weightNameUS,
+                                true,
+                                isheightOrWeight: true,
+                                maxLength: 3))
+                      ],
+                    ))
                     : Row(
-                        children: [
-                          Expanded(
-                              child: _showCommonEditText(
-                                  heightController,
-                                  heightFocus,
-                                  middleNameFocus,
-                                  CommonConstants.heightName,
-                                  CommonConstants.heightName,
-                                  true,
-                                  isheightOrWeight: true,
-                                  maxLength: 3)),
-                          Expanded(
-                              child: _showCommonEditText(
-                                  weightController,
-                                  weightFocus,
-                                  middleNameFocus,
-                                  isKg
-                                      ? CommonConstants.weightName
-                                      : CommonConstants.weightNameUS,
-                                  isKg
-                                      ? CommonConstants.weightName
-                                      : CommonConstants.weightNameUS,
-                                  true,
-                                  isheightOrWeight: true,
-                                  maxLength: 3))
-                        ],
-                      ),
-                if (widget.arguments.fromClass == CommonConstants.user_update)
+                  children: [
+                    Expanded(
+                        child: _showCommonEditText(
+                            heightController,
+                            heightFocus,
+                            middleNameFocus,
+                            CommonConstants.heightName,
+                            CommonConstants.heightName,
+                            true,
+                            isheightOrWeight: true,
+                            maxLength: 3)),
+                    Expanded(
+                        child: _showCommonEditText(
+                            weightController,
+                            weightFocus,
+                            middleNameFocus,
+                            isKg
+                                ? CommonConstants.weightName
+                                : CommonConstants.weightNameUS,
+                            isKg
+                                ? CommonConstants.weightName
+                                : CommonConstants.weightNameUS,
+                            true,
+                            isheightOrWeight: true,
+                            maxLength: 3))
+                  ],
+                ),
+                if (widget.arguments!.fromClass == CommonConstants.user_update)
                   getLanguageWidget()
                 else
                   Container(),
-                if (widget.arguments.fromClass == CommonConstants.user_update)
-                  //getDropDownWithTagsdrop()
+                if (widget.arguments!.fromClass == CommonConstants.user_update)
+                //getDropDownWithTagsdrop()
                   Column(
                     children: [
                       getTagsWithButton(context),
-                      selectedTags != null && selectedTags.length > 0
+                      selectedTags != null && selectedTags!.length > 0
                           ? Container(
-                              child: GridView.count(
-                                  crossAxisCount: 3,
-                                  padding: EdgeInsets.only(
-                                      left: 20, right: 20, top: 5),
-                                  mainAxisSpacing: 10.0,
-                                  childAspectRatio: (itemWidth / itemHeight) > 0
-                                      ? (itemWidth / itemHeight)
-                                      : 2.0,
-                                  crossAxisSpacing: 10.0,
-                                  controller: new ScrollController(
-                                      keepScrollOffset: false),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  children: selectedTags.map((Tags tagObj) {
-                                    return Container(
-                                      height: 60.0.h,
-                                      margin: new EdgeInsets.all(
-                                        1.0.sp,
-                                      ),
-                                      padding: EdgeInsets.all(
-                                        5.0.sp,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Color(new CommonUtil()
-                                                .getMyPrimaryColor())),
-                                        borderRadius: BorderRadius.circular(
-                                          10.0.sp,
+                          child: GridView.count(
+                              crossAxisCount: 3,
+                              padding: EdgeInsets.only(
+                                  left: 20, right: 20, top: 5),
+                              mainAxisSpacing: 10.0,
+                              childAspectRatio: (itemWidth / itemHeight) > 0
+                                  ? (itemWidth / itemHeight)
+                                  : 2.0,
+                              crossAxisSpacing: 10.0,
+                              controller: new ScrollController(
+                                  keepScrollOffset: false),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              children: selectedTags!.map((Tags tagObj) {
+                                return Container(
+                                  height: 60.0.h,
+                                  margin: new EdgeInsets.all(
+                                    1.0.sp,
+                                  ),
+                                  padding: EdgeInsets.all(
+                                    5.0.sp,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Color(new CommonUtil()
+                                            .getMyPrimaryColor())),
+                                    borderRadius: BorderRadius.circular(
+                                      10.0.sp,
+                                    ),
+                                  ),
+                                  child: new Row(
+                                    children: [
+                                      Expanded(
+                                        child: Center(
+                                          child: new TextWidget(
+                                            text: tagObj.name,
+                                            fontsize: 16.0.sp,
+                                            colors: Color(new CommonUtil()
+                                                .getMyPrimaryColor()),
+                                          ),
                                         ),
                                       ),
-                                      child: new Row(
-                                        children: [
-                                          Expanded(
-                                            child: Center(
-                                              child: new TextWidget(
-                                                text: tagObj.name,
-                                                fontsize: 16.0.sp,
-                                                colors: Color(new CommonUtil()
-                                                    .getMyPrimaryColor()),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList()))
+                                    ],
+                                  ),
+                                );
+                              }).toList()))
                           : SizedBox()
                     ],
                   )
                 else
                   Container(),
 
-                _showDateOfBirthTextFieldNew(),
+                CommonUtil.isUSRegion()?_showDateOfBirthTextField():_showDateOfBirthTextFieldNew(),
                 cntrlr_corp_name.text != ''
                     ? Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                        child: TextField(
-                          textCapitalization: TextCapitalization.sentences,
-                          style: TextStyle(fontSize: 16.0.sp),
-                          controller: cntrlr_corp_name,
-                          enabled: false,
-                          decoration: InputDecoration(
-                            hintStyle: TextStyle(fontSize: 16.0.sp),
-                            labelText: CommonConstants.corpname,
-                          ),
-                        ),
-                      )
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                  child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
+                    style: TextStyle(fontSize: 16.0.sp),
+                    controller: cntrlr_corp_name,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(fontSize: 16.0.sp),
+                      labelText: CommonConstants.corpname,
+                    ),
+                  ),
+                )
                     : SizedBox(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
                   addressList: _addressList,
                   onSelected: (addressResult, addressList) {
                     setState(() {
-                      _addressResult = addressResult;
+                      _addressResult = addressResult!;
                       addressTypeId = addressResult.id;
-                      _addressList = addressList;
+                      _addressList = addressList!;
                     });
                   },
                 ),
@@ -631,7 +632,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void getSupportedLanguages() {
     var lan = CommonUtil.getCurrentLanCode();
     if (lan != 'undef') {
-      var langCode = lan.split('-').first;
+      var langCode = lan!.split('-').first;
       selectedLanguage = langCode;
     } else {
       selectedLanguage = "en";
@@ -642,7 +643,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         DropdownMenuItem<String>(
           value: languageCode,
           child: Text(
-            toBeginningOfSentenceCase(language),
+            toBeginningOfSentenceCase(language)!,
             style: TextStyle(
               fontSize: 16.0.sp,
             ),
@@ -667,7 +668,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
           ),
           value: selectedGender != null
-              ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
+              ? toBeginningOfSentenceCase(selectedGender!.toLowerCase())
               : selectedGender,
           items: variable.genderArray.map((eachGender) {
             return DropdownMenuItem(
@@ -699,6 +700,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
             readOnly: true,
+            onTap: dateOfBirthTapped,
             keyboardType: TextInputType.text,
             focusNode: dateOfBirthFocus,
             textInputAction: TextInputAction.done,
@@ -754,7 +756,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final picked = await showDatePicker(
+    var picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(1940),
@@ -762,26 +764,32 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     if (picked != null) {
       setState(() {
-        dateTime = picked ?? dateTime;
+        dateTime = picked;
 
         dateofBirthStr =
             FHBUtils().getFormattedDateForUserBirth(dateTime.toString());
-        dateOfBirthController.text =
-            FHBUtils().getFormattedDateOnlyNew(dateTime.toString());
+        if (CommonUtil.isUSRegion())
+        {
+          dateOfBirthController.text =
+          FHBUtils().getFormattedDateOnly(dateTime.toString())!;
+        }else {
+          dateOfBirthController.text =
+          FHBUtils().getFormattedDateOnlyNew(dateTime.toString())!;
+        }
       });
     }
   }
 
   Widget _showCommonEditText(
-    TextEditingController textEditingController,
-    FocusNode focusNode,
-    FocusNode nextFocusNode,
-    String labelText,
-    String hintText,
-    bool isEnabled, {
-    int maxLength,
-    bool isheightOrWeight = false,
-  }) {
+      TextEditingController textEditingController,
+      FocusNode focusNode,
+      FocusNode? nextFocusNode,
+      String labelText,
+      String hintText,
+      bool isEnabled, {
+        int? maxLength,
+        bool isheightOrWeight = false,
+      }) {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
@@ -798,7 +806,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           enableInteractiveSelection: false,
           maxLength: maxLength,
           keyboardType:
-              isheightOrWeight ? TextInputType.number : TextInputType.text,
+          isheightOrWeight ? TextInputType.number : TextInputType.text,
           focusNode: focusNode,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
@@ -829,8 +837,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
           inputFormatters: (textEditingController == firstNameController ||
-                  textEditingController == lastNameController ||
-                  textEditingController == middleNameController)
+              textEditingController == lastNameController ||
+              textEditingController == middleNameController)
               ? [WhitelistingTextInputFormatter(RegExp('[a-zA-Z ]*'))]
               : [],
         ));
@@ -897,13 +905,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   return await getCitybasedOnSearch(
                     pattern,
                     'city',
-                  );
+                  ) as FutureOr<Iterable<City>>;
+                } else {
+                  return [];
                 }
               },
               itemBuilder: (context, suggestion) {
                 return ListTile(
                   title: Text(
-                    suggestion.name,
+                    suggestion.name!,
                     style: TextStyle(
                       fontSize: 16.0.sp,
                     ),
@@ -924,16 +934,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 );
               },
               onSuggestionSelected: (suggestion) {
-                cntrlr_addr_city.text = suggestion.name;
+                cntrlr_addr_city.text = suggestion.name??'';
                 cityVal = suggestion;
                 if (cityVal != null && cityVal?.state != null) {
-                  cntrlr_addr_state.text = suggestion.state.name;
+                  cntrlr_addr_state.text = suggestion.state!.name??'';
                   stateVal = suggestion.state;
                 }
                 //stateVal = suggestion.state;
               },
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'Please select a city';
                 } else if (cityVal == null) {
                   return 'Please select a City from list';
@@ -959,16 +969,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ),
               suggestionsCallback: (pattern) async {
                 if (pattern.length >= 3) {
-                  return await getStateBasedOnSearch(
+                  return await (getStateBasedOnSearch(
                     pattern,
                     'state',
-                  );
+                  ) as FutureOr<Iterable<stateObj.State>>);
+                } else {
+                  return [];
                 }
-              },
+              }, //as FutureOr<Iterable<stateObj.State>> Function(String),
               itemBuilder: (context, suggestion) {
                 return ListTile(
                   title: Text(
-                    suggestion.name,
+                    suggestion.name??'',
                     style: TextStyle(
                       fontSize: 16.0.sp,
                     ),
@@ -990,13 +1002,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 );
               },
               onSuggestionSelected: (suggestion) {
-                cntrlr_addr_state.text = suggestion.name;
+                cntrlr_addr_state.text = suggestion.name??'';
                 stateVal = suggestion;
                 cntrlr_addr_city.text = "";
                 cityVal = null;
               },
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'Please select a State';
                 } else if (stateVal == null) {
                   return 'Please select a State from list';
@@ -1035,7 +1047,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget _showSaveButton() {
-    final addButtonWithGesture = GestureDetector(
+    var addButtonWithGesture = GestureDetector(
       onTap: _saveBtnTappedClone,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1057,14 +1069,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
             child: Center(
               child: Text(
-                (widget.arguments.isForFamilyAddition == true)
+                (widget.arguments!.isForFamilyAddition == true)
                     ? CommonConstants.add
-                    : (widget.arguments.fromClass ==
-                                CommonConstants.my_family ||
-                            widget.arguments.fromClass ==
-                                CommonConstants.user_update)
-                        ? CommonConstants.update
-                        : CommonConstants.save,
+                    : (widget.arguments!.fromClass ==
+                    CommonConstants.my_family ||
+                    widget.arguments!.fromClass ==
+                        CommonConstants.user_update)
+                    ? CommonConstants.update
+                    : CommonConstants.save,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0.sp,
@@ -1083,7 +1095,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget _showOKButton() {
-    final addButtonWithGesture = GestureDetector(
+    var addButtonWithGesture = GestureDetector(
       onTap: _onOkPressed,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1129,25 +1141,25 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void verifyEmail() {
-    addFamilyUserInfoBloc.verifyEmail().then((value) {
-      if (value.success &&
-          value.message.contains(Constants.MSG_VERIFYEMAIL_VERIFIED)) {
-        FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
+    addFamilyUserInfoBloc!.verifyEmail().then((value) {
+      if (value!.success! &&
+          value.message!.contains(Constants.MSG_VERIFYEMAIL_VERIFIED)) {
+        FHBBasicWidget().showInSnackBar(value.message!, scaffold_state);
       } else {
         PreferenceUtil.saveString(
             Constants.PROFILE_EMAIL, emailController.text);
 
         Navigator.of(context)
             .push(MaterialPageRoute(
-                builder: (context) => OtpVerifyScreen(
-                      enteredMobNumber:
-                          PreferenceUtil.getStringValue(Constants.MOB_NUM),
-                      selectedCountryCode: PreferenceUtil.getIntValue(
-                              CommonConstants.KEY_COUNTRYCODE)
-                          .toString(),
-                      fromSignIn: true,
-                      forEmailVerify: true,
-                    )))
+            builder: (context) => OtpVerifyScreen(
+              enteredMobNumber:
+              PreferenceUtil.getStringValue(Constants.MOB_NUM),
+              selectedCountryCode: PreferenceUtil.getIntValue(
+                  CommonConstants.KEY_COUNTRYCODE)
+                  .toString(),
+              fromSignIn: true,
+              forEmailVerify: true,
+            )))
             .then((value) {
           Navigator.popUntil(context, (route) {
             var shouldPop = false;
@@ -1163,19 +1175,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   Widget getRelationshipDetails(List<RelationsShipModel> data) {
     var currentSelectedUserRole = data[15];
-    if (widget.arguments.isForFamilyAddition == true &&
+    if (widget.arguments!.isForFamilyAddition == true &&
         selectedRelationShip == null)
       selectedRelationShip = currentSelectedUserRole;
 
     if (selectedRelationShip != null)
       for (final model in data) {
-        if (model.id == selectedRelationShip.id) {
+        if (model.id == selectedRelationShip!.id) {
           currentSelectedUserRole = model;
         }
       }
 
     return Container(
-      color: widget.arguments.isForFamilyAddition
+      color: widget.arguments!.isForFamilyAddition!
           ? Colors.yellow[300]
           : Colors.white,
       child: Padding(
@@ -1193,7 +1205,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             return DropdownMenuItem<RelationsShipModel>(
               value: val,
               child: Text(
-                val.name,
+                val.name!,
                 style: TextStyle(
                   fontSize: 16.0.sp,
                 ),
@@ -1216,25 +1228,25 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
           onTap: () {
-            widget.arguments.fromClass == CommonConstants.my_family
+            widget.arguments!.fromClass == CommonConstants.my_family
                 ? relationShipResponseList != null
-                    ? Row(
-                        children: <Widget>[
-                          getRelationshipDetails(relationShipResponseList)
-                        ],
-                      )
-                    : getAllCustomRoles()
-                : widget.arguments.isForFamilyAddition == true
-                    ? getAllCustomRoles()
-                    : widget.arguments.fromClass == CommonConstants.user_update
-                        ? Container()
-                        : _showRelationShipTextField();
+                ? Row(
+              children: <Widget>[
+                getRelationshipDetails(relationShipResponseList!)
+              ],
+            )
+                : getAllCustomRoles()
+                : widget.arguments!.isForFamilyAddition == true
+                ? getAllCustomRoles()
+                : widget.arguments!.fromClass == CommonConstants.user_update
+                ? Container()
+                : _showRelationShipTextField();
           },
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
-          enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
-                  widget.arguments.fromClass == CommonConstants.add_family ||
-                  widget.arguments.isForFamilyAddition == true)
+          enabled: (widget.arguments!.fromClass == CommonConstants.my_family ||
+              widget.arguments!.fromClass == CommonConstants.add_family ||
+              widget.arguments!.isForFamilyAddition == true)
               ? true
               : false,
           keyboardType: TextInputType.text,
@@ -1363,28 +1375,29 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
         //address fields validation
-        if (_formkey.currentState.validate()) {
+        if (_formkey.currentState!.validate()) {
           var _familyListBloc = FamilyListBloc();
           //NOTE this would be called when family member profile update
-          if (widget.arguments.isForFamilyAddition == true) {
+          if (widget.arguments!.isForFamilyAddition == true) {
             CommonUtil.showLoadingDialog(
                 dialogContext, _keyLoader, variable.Please_Wait);
             methodToAddFamilyFromNotification();
-          } else if (widget.arguments.fromClass == CommonConstants.my_family) {
-            addFamilyUserInfoBloc.userId = widget.arguments.id;
-            addFamilyUserInfoBloc.relationship = UpdateRelationshipModel(
-                id: widget.arguments.sharedbyme.id,
+          } else if (widget.arguments!.fromClass == CommonConstants.my_family) {
+            addFamilyUserInfoBloc!.userId = widget.arguments!.id;
+            addFamilyUserInfoBloc!.relationship = UpdateRelationshipModel(
+                id: widget.arguments!.sharedbyme!.id,
                 relationship: selectedRelationShip);
 
             setValues();
-          } else if (widget.arguments.fromClass ==
+          } else if (widget.arguments!.fromClass ==
               CommonConstants.user_update) {
-            addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
+            addFamilyUserInfoBloc!.userId =
+                widget.arguments!.myProfileResult!.id;
 
             setValues();
           } else {
-            addFamilyUserInfoBloc.userId =
-                widget.arguments.addFamilyUserInfo.childInfo.id;
+            addFamilyUserInfoBloc!.userId =
+                widget.arguments!.addFamilyUserInfo!.childInfo!.id;
 
             setValues();
           }
@@ -1400,29 +1413,31 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Future<List<City>> getCitybasedOnSearch(
-    String cityname,
-    String apibody,
-  ) {
-    Future<List<City>> citylist;
-    citylist = addFamilyUserInfoBloc.getCityDataList(cityname, apibody);
+      String cityname,
+      String apibody,
+      ) async {
+    List<City> citylist;
+    citylist = await addFamilyUserInfoBloc!.getCityDataList(cityname, apibody)
+    as List<City>;
     return citylist;
   }
 
   Future<List<stateObj.State>> getStateBasedOnSearch(
-    String stateName,
-    String apibody,
-  ) {
-    Future<List<stateObj.State>> stateList;
-    stateList = addFamilyUserInfoBloc.geStateDataList(stateName, apibody);
+      String stateName,
+      String apibody,
+      ) async {
+    List<stateObj.State> stateList;
+    stateList = await addFamilyUserInfoBloc!.geStateDataList(stateName, apibody)
+    as List<stateObj.State>;
     return stateList;
   }
 
   bool doValidation() {
     var isValid = false;
 
-    final emailValid = '@'.allMatches(emailController.text.trim()).length > 1
+    var emailValid = '@'.allMatches(emailController.text.trim()).length > 1
         ? false
-        : RegExp(patternEmail).hasMatch(emailController.text);
+        : RegExp(patternEmail as String).hasMatch(emailController.text);
 
     if (firstNameController.text == '') {
       isValid = false;
@@ -1433,19 +1448,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (selectedGender == null) {
       isValid = false;
       strErrorMsg = variable.selectGender;
-    } else if (dateOfBirthController.text.isEmpty) {
+    } else if (dateOfBirthController.text.toString().trim().isEmpty) {
       isValid = false;
-      strErrorMsg = variable.selectYOB;
-    } else if (dateOfBirthController.text.length < 4) {
+      strErrorMsg = CommonUtil.isUSRegion()
+          ? variable.selectDateOfBirth
+          : variable.selectYOB;
+    } else if (!CommonUtil.isUSRegion()&&dateOfBirthController.text.length < 4) {
       isValid = false;
       strErrorMsg = "Enter a Valid Year";
-    } else if (checkIfYearIsGreaterThanCurrentYear(
+    } else if (!CommonUtil.isUSRegion()&&checkIfYearIsGreaterThanCurrentYear(
         int.parse(dateOfBirthController.text))) {
       isValid = false;
     } else if (_addressResult == null || _addressResult.id == null) {
       isValid = false;
       strErrorMsg = 'Select Address type';
-    } else if (selectedLanguage == null || selectedLanguage.isEmpty) {
+    } else if (selectedLanguage == null || selectedLanguage!.isEmpty) {
       isValid = false;
       strErrorMsg = 'Select Preferred Language';
     } else if (currentselectedBloodGroup == null) {
@@ -1453,8 +1470,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         isValid = false;
         strErrorMsg = variable.selectRHType;
       } else {
-        addFamilyUserInfoBloc.bloodGroup =
-            currentselectedBloodGroup + '_' + currentselectedBloodGroupRange;
+        addFamilyUserInfoBloc!.bloodGroup =
+            currentselectedBloodGroup! + '_' + currentselectedBloodGroupRange!;
       }
       isValid = false;
       strErrorMsg = variable.selectBloodGroup;
@@ -1474,32 +1491,32 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } catch (e) {}
     //* set the user data from input
     _addressList = await doctorPersonalViewModel.getAddressTypeList();
-    if (widget.arguments.fromClass == CommonConstants.user_update) {
+    if (widget.arguments!.fromClass == CommonConstants.user_update) {
       //* user profile update sections
-      addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
+      addFamilyUserInfoBloc!.userId = widget.arguments!.myProfileResult!.id;
 
-      if (widget.arguments.sharedbyme != null) {
+      if (widget.arguments!.sharedbyme != null) {
         try {
-          if (widget?.arguments?.sharedbyme?.child?.userContactCollection3
+          if (widget.arguments!.sharedbyme!.child!.userContactCollection3!
               .isNotEmpty) {
-            mobileNoController.text = widget?.arguments?.sharedbyme?.child
-                ?.userContactCollection3[0].phoneNumber;
-            emailController.text = widget
-                ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
+            mobileNoController.text = widget.arguments!.sharedbyme!.child!
+                .userContactCollection3![0].phoneNumber??'';
+            emailController.text = widget.arguments!.sharedbyme!.child!
+                .userContactCollection3![0].email??'';
           }
         } catch (e) {
           mobileNoController.text = '';
           emailController.text = '';
         }
       } else {
-        if (widget.arguments.isForFamilyAddition) {
+        if (widget.arguments!.isForFamilyAddition!) {
           try {
-            if (widget?.arguments?.myProfileResult?.userContactCollection3
+            if (widget.arguments!.myProfileResult!.userContactCollection3!
                 .isNotEmpty) {
-              mobileNoController.text = widget?.arguments?.myProfileResult
-                  ?.userContactCollection3[0].phoneNumber;
-              emailController.text = widget
-                  ?.arguments?.myProfileResult?.userContactCollection3[0].email;
+              mobileNoController.text = widget.arguments!.myProfileResult!
+                  .userContactCollection3![0]!.phoneNumber??'';
+              emailController.text = widget.arguments!.myProfileResult!
+                  .userContactCollection3![0]!.email??'';
             }
           } catch (e) {
             mobileNoController.text = '';
@@ -1507,81 +1524,87 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         } else {
           try {
-            final myProf =
+            var myProf =
                 await PreferenceUtil.getProfileData(Constants.KEY_PROFILE) ??
                     PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-            if (myProf.result.userContactCollection3 != null &&
-                myProf.result.userContactCollection3.length > 0) {
-              if (myProf.result.userContactCollection3.isNotEmpty) {
+            if (myProf!.result!.userContactCollection3 != null &&
+                myProf.result!.userContactCollection3!.length > 0) {
+              if (myProf.result!.userContactCollection3!.isNotEmpty) {
                 mobileNoController.text =
-                    myProf.result.userContactCollection3[0].phoneNumber;
+                    myProf.result!.userContactCollection3![0]!.phoneNumber??'';
                 emailController.text =
-                    myProf.result.userContactCollection3[0].email;
+                    myProf.result!.userContactCollection3![0]!.email??'';
               }
             } else {
-              final myProf = await PreferenceUtil.getProfileData(
+              var myProf = await PreferenceUtil.getProfileData(
                   Constants.KEY_PROFILE_MAIN);
-              if (myProf.result.userContactCollection3 != null &&
-                  myProf.result.userContactCollection3.length > 0) {
-                if (myProf.result.userContactCollection3.isNotEmpty) {
+              if (myProf!.result!.userContactCollection3 != null &&
+                  myProf.result!.userContactCollection3!.length > 0) {
+                if (myProf.result!.userContactCollection3!.isNotEmpty) {
                   mobileNoController.text =
-                      myProf.result.userContactCollection3[0].phoneNumber;
+                      myProf.result!.userContactCollection3![0]!.phoneNumber??'';
                   emailController.text =
-                      myProf.result.userContactCollection3[0].email;
+                      myProf.result!.userContactCollection3![0]!.email??'';
                 }
               }
             }
           } catch (e) {
-            if (widget.arguments.myProfileResult.userContactCollection3 !=
-                    null &&
-                widget.arguments.myProfileResult.userContactCollection3.length >
+            if (widget.arguments!.myProfileResult!.userContactCollection3 !=
+                null &&
+                widget.arguments!.myProfileResult!.userContactCollection3!
+                    .length >
                     0) {
-              if (widget.arguments.myProfileResult.userContactCollection3
+              if (widget.arguments!.myProfileResult!.userContactCollection3!
                   .isNotEmpty) {
-                mobileNoController.text = widget.arguments.myProfileResult
-                    .userContactCollection3[0].phoneNumber;
-                emailController.text = widget
-                    .arguments.myProfileResult.userContactCollection3[0].email;
+                mobileNoController.text = widget.arguments!.myProfileResult!
+                    .userContactCollection3![0]!.phoneNumber??'';
+                emailController.text = widget.arguments!.myProfileResult!
+                    .userContactCollection3![0]!.email??'';
               }
             }
           }
         }
 
-        if (widget.arguments.myProfileResult.dateOfBirth != null) {
+        if (widget.arguments!.myProfileResult!.dateOfBirth != null) {
           dateofBirthStr = FHBUtils().getFormattedDateForUserBirth(
-              widget.arguments.myProfileResult.dateOfBirth);
-          dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
-              widget.arguments.myProfileResult.dateOfBirth);
+              widget.arguments!.myProfileResult!.dateOfBirth!);
+          if(CommonUtil.isUSRegion()){
+            dateOfBirthController.text = FHBUtils().getFormattedDateOnly(
+                widget.arguments!.myProfileResult!.dateOfBirth??"");
+          }else{
+            dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
+                widget.arguments!.myProfileResult!.dateOfBirth)!;
+          }
         }
 
-        if (widget.arguments.myProfileResult.userAddressCollection3 != null &&
-            widget
-                .arguments.myProfileResult.userAddressCollection3.isNotEmpty &&
-            widget.arguments.myProfileResult.userAddressCollection3.length >
+        if (widget.arguments!.myProfileResult!.userAddressCollection3 != null &&
+            widget.arguments!.myProfileResult!.userAddressCollection3!
+                .isNotEmpty &&
+            widget.arguments!.myProfileResult!.userAddressCollection3!.length >
                 0) {
-          cntrlr_addr_one.text = widget
-              .arguments.myProfileResult.userAddressCollection3[0].addressLine1;
-          cntrlr_addr_two.text = widget
-              .arguments.myProfileResult.userAddressCollection3[0].addressLine2;
-          cntrlr_addr_city.text = widget
-              .arguments.myProfileResult.userAddressCollection3[0].city?.name;
-          cntrlr_addr_state.text = widget
-              .arguments.myProfileResult.userAddressCollection3[0].state?.name;
+          cntrlr_addr_one.text = widget.arguments!.myProfileResult!
+              .userAddressCollection3![0].addressLine1??'';
+          cntrlr_addr_two.text = widget.arguments!.myProfileResult!
+              .userAddressCollection3![0].addressLine2??'';
+          cntrlr_addr_city.text = widget.arguments!.myProfileResult!
+              .userAddressCollection3![0].city!.name??'';
+          cntrlr_addr_state.text = widget.arguments!.myProfileResult!
+              .userAddressCollection3![0].state!.name??'';
           cntrlr_addr_zip.text = widget
-              .arguments.myProfileResult.userAddressCollection3[0].pincode;
+              .arguments!.myProfileResult!.userAddressCollection3![0].pincode??'';
 
-          cityVal =
-              widget.arguments.myProfileResult.userAddressCollection3[0].city;
-          stateVal =
-              widget.arguments.myProfileResult.userAddressCollection3[0].state;
+          cityVal = widget
+              .arguments!.myProfileResult!.userAddressCollection3![0].city;
+          stateVal = widget
+              .arguments!.myProfileResult!.userAddressCollection3![0].state;
           setState(() {
             _addressResult = AddressResult(
-                id: widget.arguments.myProfileResult.userAddressCollection3[0]
-                    .addressType.id,
-                code: widget.arguments.myProfileResult.userAddressCollection3[0]
-                    .addressType.code,
-                name: widget.arguments.myProfileResult.userAddressCollection3[0]
-                    .addressType.name);
+                id: widget.arguments!.myProfileResult!
+                    .userAddressCollection3![0].addressType!.id??'',
+                code: widget.arguments!.myProfileResult!
+                    .userAddressCollection3![0].addressType!.code??'',
+                name: widget.arguments!.myProfileResult!
+                    .userAddressCollection3![0].addressType!.name??'');
           });
         } else {
           try {
@@ -1593,91 +1616,91 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } catch (e) {}
         }
 
-        if (widget.arguments.myProfileResult.firstName != null) {
+        if (widget.arguments!.myProfileResult!.firstName != null) {
           firstNameController.text =
-              widget.arguments.myProfileResult.firstName != null
-                  ? widget?.arguments?.myProfileResult?.firstName
-                      ?.capitalizeFirstofEach
-                  : '';
+          (widget.arguments!.myProfileResult!.firstName != null
+              ? widget.arguments?.myProfileResult?.firstName
+              ?.capitalizeFirstofEach
+              : '')!;
           middleNameController.text =
-              widget?.arguments?.myProfileResult?.middleName != null
-                  ? widget?.arguments?.myProfileResult?.middleName
-                      ?.capitalizeFirstofEach
-                  : '';
+          (widget.arguments?.myProfileResult?.middleName != null
+              ? widget.arguments?.myProfileResult?.middleName
+              ?.capitalizeFirstofEach
+              : '')!;
           lastNameController.text =
-              widget?.arguments?.myProfileResult?.lastName != null
-                  ? widget?.arguments?.myProfileResult?.lastName
-                      ?.capitalizeFirstofEach
-                  : '';
+          (widget.arguments?.myProfileResult?.lastName != null
+              ? widget.arguments?.myProfileResult?.lastName
+              ?.capitalizeFirstofEach
+              : '')!;
         }
 
-        if (widget.arguments.myProfileResult.additionalInfo != null) {
+        if (widget.arguments!.myProfileResult!.additionalInfo != null) {
           if (isFeetOrInches) {
-            heightController.text = widget.arguments.myProfileResult
-                    .additionalInfo?.heightObj?.valueFeet ??
+            heightController.text = widget.arguments!.myProfileResult!
+                .additionalInfo?.heightObj?.valueFeet ??
                 '';
-            heightInchController.text = widget.arguments.myProfileResult
-                    .additionalInfo?.heightObj?.valueInches ??
+            heightInchController.text = widget.arguments!.myProfileResult!
+                .additionalInfo?.heightObj?.valueInches ??
                 '';
           } else {
             heightController.text =
-                widget.arguments.myProfileResult.additionalInfo.height ?? '';
+                widget.arguments!.myProfileResult!.additionalInfo!.height ?? '';
           }
 
           weightController.text =
-              widget.arguments.myProfileResult.additionalInfo.weight ?? '';
+              widget.arguments!.myProfileResult!.additionalInfo!.weight ?? '';
         }
-        if (commonUtil
-            .checkIfStringisNull(widget.arguments.myProfileResult.bloodGroup)) {
+        if (commonUtil.checkIfStringisNull(
+            widget.arguments!.myProfileResult!.bloodGroup)) {
           currentselectedBloodGroup =
-              widget.arguments.myProfileResult.bloodGroup.split(' ')[0];
+          widget.arguments!.myProfileResult!.bloodGroup!.split(' ')[0];
           currentselectedBloodGroupRange =
-              widget.arguments.myProfileResult.bloodGroup.split(' ')[1];
+          widget.arguments!.myProfileResult!.bloodGroup!.split(' ')[1];
         } else {
           currentselectedBloodGroup = null;
           currentselectedBloodGroupRange = null;
         }
 
-        if (widget.arguments.myProfileResult.gender != null) {
-          selectedGender = widget.arguments.myProfileResult.gender;
+        if (widget.arguments!.myProfileResult!.gender != null) {
+          selectedGender = widget.arguments!.myProfileResult!.gender??'';
         }
 
-        if (widget.arguments.myProfileResult.membershipOfferedBy != null &&
-            widget.arguments.myProfileResult.membershipOfferedBy != '') {
+        if (widget.arguments!.myProfileResult!.membershipOfferedBy != null &&
+            widget.arguments!.myProfileResult!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget.arguments.myProfileResult.membershipOfferedBy;
+              widget.arguments!.myProfileResult!.membershipOfferedBy??'';
         }
-        selectedTags = addFamilyUserInfoBloc.tagsList != null &&
-                addFamilyUserInfoBloc.tagsList.length > 0
-            ? addFamilyUserInfoBloc.tagsList
-            : new List();
+        selectedTags = addFamilyUserInfoBloc!.tagsList != null &&
+            addFamilyUserInfoBloc!.tagsList!.length > 0
+            ? addFamilyUserInfoBloc!.tagsList
+            : [];
         setTheValuesForDropdown(selectedTags);
       }
       await setValueLanguages();
-    } else if (widget.arguments.fromClass == CommonConstants.my_family) {
+    } else if (widget.arguments!.fromClass == CommonConstants.my_family) {
       //* my-family member details update sections
-      addFamilyUserInfoBloc.userId = widget
-          .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
+      addFamilyUserInfoBloc!.userId = widget
+          .arguments!.sharedbyme!.id; //widget.arguments.addFamilyUserInfo.id;
 
       relationShipResponseList = widget.arguments?.defaultrelationShips;
 
-      if (widget?.arguments?.sharedbyme?.relationship?.name != null) {
-        selectedRelationShip = widget.arguments.sharedbyme.relationship;
+      if (widget.arguments?.sharedbyme?.relationship?.name != null) {
+        selectedRelationShip = widget.arguments!.sharedbyme!.relationship;
       }
 
-      if (widget.arguments.sharedbyme.child.isVirtualUser != null) {
+      if (widget.arguments!.sharedbyme!.child!.isVirtualUser != null) {
         try {
-          if (widget.arguments.sharedbyme.child.isVirtualUser) {
+          if (widget.arguments!.sharedbyme!.child!.isVirtualUser!) {
             var myProf =
                 PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) ??
                     PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             try {
-              if (myProf.result.userContactCollection3 != null) {
-                if (myProf.result.userContactCollection3.isNotEmpty) {
+              if (myProf!.result!.userContactCollection3 != null) {
+                if (myProf.result!.userContactCollection3!.isNotEmpty) {
                   mobileNoController.text =
-                      myProf.result.userContactCollection3[0].phoneNumber;
+                      myProf.result!.userContactCollection3![0]!.phoneNumber??'';
                   emailController.text =
-                      myProf.result.userContactCollection3[0].email;
+                      myProf.result!.userContactCollection3![0]!.email??'';
                 }
               }
             } catch (e) {
@@ -1685,11 +1708,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             }
 
             try {
-              if (myProf.result?.userProfileSettingCollection3 != null &&
-                  myProf.result?.userProfileSettingCollection3.length > 0) {
+              if (myProf!.result!.userProfileSettingCollection3 != null &&
+                  myProf.result!.userProfileSettingCollection3!.length > 0) {
                 var preferredMesurement = myProf
                     .result
-                    ?.userProfileSettingCollection3[0]
+                    ?.userProfileSettingCollection3![0]
                     .profileSetting
                     ?.preferredMeasurement;
 
@@ -1698,12 +1721,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             } catch (e) {}
           } else {
             //! this must be loook
-            if (widget?.arguments?.sharedbyme?.child?.userContactCollection3
+            if (widget.arguments!.sharedbyme!.child!.userContactCollection3!
                 .isNotEmpty) {
-              mobileNoController.text = widget.arguments.sharedbyme.child
-                  .userContactCollection3[0].phoneNumber;
-              emailController.text = widget
-                  .arguments.sharedbyme.child.userContactCollection3[0].email;
+              mobileNoController.text = widget.arguments!.sharedbyme!.child!
+                  .userContactCollection3![0].phoneNumber??'';
+              emailController.text = widget.arguments!.sharedbyme!.child!
+                  .userContactCollection3![0].email??'';
             } else {
               mobileNoController.text = '';
               emailController.text = '';
@@ -1714,101 +1737,103 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           emailController.text = '';
         }
 
-        if (widget?.arguments?.sharedbyme?.membershipOfferedBy != null &&
-            widget?.arguments?.sharedbyme?.membershipOfferedBy != '') {
+        if (widget.arguments!.sharedbyme!.membershipOfferedBy != null &&
+            widget.arguments!.sharedbyme!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget?.arguments?.sharedbyme?.membershipOfferedBy;
+              widget.arguments!.sharedbyme!.membershipOfferedBy??'';
         }
       } else {
         if (widget
-            ?.arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
-          mobileNoController.text = widget?.arguments?.sharedbyme?.child
-              ?.userContactCollection3[0].phoneNumber;
+            .arguments!.sharedbyme!.child!.userContactCollection3!.isNotEmpty) {
+          mobileNoController.text = widget.arguments!.sharedbyme!.child!
+              .userContactCollection3![0].phoneNumber??'';
           emailController.text = widget
-              ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
+              .arguments!.sharedbyme!.child!.userContactCollection3![0].email??'';
         }
-        if (widget?.arguments?.sharedbyme?.membershipOfferedBy != null &&
-            widget?.arguments?.sharedbyme?.membershipOfferedBy != '') {
+        if (widget.arguments!.sharedbyme!.membershipOfferedBy != null &&
+            widget.arguments!.sharedbyme!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget?.arguments?.sharedbyme?.membershipOfferedBy;
+              widget.arguments!.sharedbyme!.membershipOfferedBy??'';
         }
       }
-      if (widget.arguments.sharedbyme != null) {
-        if (widget.arguments.sharedbyme.child.firstName != null) {
+      if (widget.arguments!.sharedbyme != null) {
+        if (widget.arguments!.sharedbyme!.child!.firstName != null) {
           firstNameController.text =
-              widget.arguments.sharedbyme.child.firstName != null
-                  ? widget?.arguments?.sharedbyme?.child?.firstName
-                      ?.capitalizeFirstofEach
-                  : '';
+          (widget.arguments!.sharedbyme!.child!.firstName != null
+              ? widget.arguments?.sharedbyme?.child?.firstName
+              ?.capitalizeFirstofEach
+              : '')!;
           middleNameController.text =
-              widget.arguments.sharedbyme.child.middleName != null
-                  ? widget?.arguments?.sharedbyme?.child?.middleName
-                      ?.capitalizeFirstofEach
-                  : '';
+          (widget.arguments!.sharedbyme!.child!.middleName != null
+              ? widget.arguments?.sharedbyme?.child?.middleName
+              ?.capitalizeFirstofEach
+              : '')!;
           lastNameController.text =
-              widget.arguments.sharedbyme.child.lastName != null
-                  ? widget?.arguments?.sharedbyme?.child?.lastName
-                      ?.capitalizeFirstofEach
-                  : '';
+          (widget.arguments!.sharedbyme!.child!.lastName != null
+              ? widget.arguments?.sharedbyme?.child?.lastName
+              ?.capitalizeFirstofEach
+              : '')!;
         } else {
           firstNameController.text = '';
         }
 
-        if (widget.arguments.sharedbyme.child.additionalInfo != null) {
-          if (widget.arguments.sharedbyme.child.additionalInfo?.heightObj !=
+        if (widget.arguments!.sharedbyme!.child!.additionalInfo != null) {
+          if (widget.arguments!.sharedbyme!.child!.additionalInfo?.heightObj !=
               null) {
             isFeetOrInches = true;
-            heightController.text = widget.arguments.sharedbyme.child
-                    .additionalInfo?.heightObj?.valueFeet ??
+            heightController.text = widget.arguments!.sharedbyme!.child!
+                .additionalInfo?.heightObj?.valueFeet ??
                 '';
-            heightInchController.text = widget.arguments.sharedbyme.child
-                    .additionalInfo?.heightObj?.valueInches ??
+            heightInchController.text = widget.arguments!.sharedbyme!.child!
+                .additionalInfo?.heightObj?.valueInches ??
                 '';
           } else {
             isFeetOrInches = false;
 
             heightController.text =
-                widget.arguments.sharedbyme.child.additionalInfo.height ?? '';
+                widget.arguments!.sharedbyme!.child!.additionalInfo!.height ??
+                    '';
           }
 
-          if (widget.arguments.sharedbyme.child.additionalInfo.weightUnitCode ==
+          if (widget.arguments!.sharedbyme!.child!.additionalInfo!
+              .weightUnitCode ==
               'lb') {
             isKg = false;
           } else {
             isKg = true;
           }
           weightController.text =
-              widget.arguments.sharedbyme.child.additionalInfo.weight ?? '';
+              widget.arguments!.sharedbyme!.child!.additionalInfo!.weight ?? '';
         }
         if (commonUtil.checkIfStringisNull(
-            widget.arguments.sharedbyme.child.bloodGroup)) {
+            widget.arguments!.sharedbyme!.child!.bloodGroup)) {
           currentselectedBloodGroup =
-              widget.arguments.sharedbyme.child.bloodGroup.split(' ')[0];
+          widget.arguments!.sharedbyme!.child!.bloodGroup!.split(' ')[0];
           currentselectedBloodGroupRange =
-              widget.arguments.sharedbyme.child.bloodGroup.split(' ')[1];
+          widget.arguments!.sharedbyme!.child!.bloodGroup!.split(' ')[1];
         } else {
           currentselectedBloodGroup = null;
           currentselectedBloodGroupRange = null;
         }
 
-        if (widget.arguments.sharedbyme.child.gender != null) {
-          selectedGender = widget.arguments.sharedbyme.child.gender;
+        if (widget.arguments!.sharedbyme!.child!.gender != null) {
+          selectedGender = widget.arguments!.sharedbyme!.child!.gender??'';
         }
 
         if (widget
-            ?.arguments?.sharedbyme?.child?.userAddressCollection3.isNotEmpty) {
+            .arguments!.sharedbyme!.child!.userAddressCollection3!.isNotEmpty) {
           var currentAddress =
-              widget.arguments.sharedbyme.child.userAddressCollection3[0];
-          cntrlr_addr_one.text = currentAddress.addressLine1;
-          cntrlr_addr_two.text = currentAddress.addressLine2;
-          cntrlr_addr_city.text = currentAddress.city?.name;
-          cntrlr_addr_state.text = currentAddress.state?.name;
-          cntrlr_addr_zip.text = currentAddress.pincode;
+          widget.arguments!.sharedbyme!.child!.userAddressCollection3![0];
+          cntrlr_addr_one.text = currentAddress.addressLine1??'';
+          cntrlr_addr_two.text = currentAddress.addressLine2??'';
+          cntrlr_addr_city.text = currentAddress.city!.name??'';
+          cntrlr_addr_state.text = currentAddress.state!.name??'';
+          cntrlr_addr_zip.text = currentAddress.pincode??'';
           setState(() {
             _addressResult = AddressResult(
-                id: currentAddress.addressType.id,
-                code: currentAddress.addressType.code,
-                name: currentAddress.addressType.name);
+                id: currentAddress.addressType!.id??'',
+                code: currentAddress.addressType!.code??'',
+                name: currentAddress.addressType!.name??'');
           });
 
           cityVal = currentAddress.city;
@@ -1821,11 +1846,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } catch (e) {}
         }
 
-        if (widget.arguments.sharedbyme.child.dateOfBirth != null) {
+        if (widget.arguments!.sharedbyme!.child!.dateOfBirth != null) {
           dateofBirthStr = FHBUtils().getFormattedDateForUserBirth(
-              widget.arguments.sharedbyme.child.dateOfBirth);
-          dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
-              widget.arguments.sharedbyme.child.dateOfBirth);
+              widget.arguments!.sharedbyme!.child!.dateOfBirth??'');
+          if(CommonUtil.isUSRegion()) {
+            dateOfBirthController.text = FHBUtils().getFormattedDateOnly(
+                widget.arguments!.sharedbyme!.child!.dateOfBirth??"") ?? '';
+          }else{
+            dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
+                widget.arguments!.sharedbyme!.child!.dateOfBirth) ?? '';
+          }
         }
       }
     } else {
@@ -1833,43 +1863,45 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       getDefaultHeightAndWeight();
       setHeightAndWeightUnit();
-      addFamilyUserInfoBloc.userId =
-          widget.arguments.addFamilyUserInfo?.childInfo?.id;
-      await addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
-        if (widget.arguments.isPrimaryNoSelected) {
+      addFamilyUserInfoBloc!.userId =
+          widget.arguments!.addFamilyUserInfo?.childInfo?.id;
+      await addFamilyUserInfoBloc!.getMyProfileInfo().then((value) {
+        if (widget.arguments!.isPrimaryNoSelected!) {
           try {
             var myProf =
-                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+            PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
             mobileNoController.text =
-                myProf.result.userContactCollection3[0].phoneNumber;
+                myProf!.result!.userContactCollection3![0]!.phoneNumber??'';
             emailController.text =
-                myProf.result.userContactCollection3[0].email;
+                myProf.result!.userContactCollection3![0]!.email??'';
           } catch (e) {
             setMobileAndEmail();
           }
         } else {
           mobileNoController.text =
-              value.result.userContactCollection3[0].phoneNumber;
-          if (value?.result?.userContactCollection3[0].email != null &&
-              value?.result?.userContactCollection3[0].email != '') {
-            emailController.text = value.result.userContactCollection3[0].email;
+              value!.result!.userContactCollection3![0]!.phoneNumber??'';
+          if (value.result?.userContactCollection3![0]!.email != null &&
+              value.result?.userContactCollection3![0]!.email != '') {
+            emailController.text =
+                value.result!.userContactCollection3![0]!.email??'';
           }
 
-          mContactInfo = value?.result?.userContactCollection3[0];
+          mContactInfo = value.result?.userContactCollection3![0];
         }
         //*user already user exist set the address data if available
-        if (value?.result?.userAddressCollection3.isNotEmpty) {
-          var currentAddress = value?.result?.userAddressCollection3[0];
-          cntrlr_addr_one.text = currentAddress.addressLine1;
-          cntrlr_addr_two.text = currentAddress.addressLine2;
-          cntrlr_addr_city.text = currentAddress.city?.name;
-          cntrlr_addr_state.text = currentAddress.state?.name;
-          cntrlr_addr_zip.text = currentAddress.pincode;
+        if (value!.result!.userAddressCollection3!.isNotEmpty) {
+          UserAddressCollection3 currentAddress =
+          value.result!.userAddressCollection3![0];
+          cntrlr_addr_one.text = currentAddress.addressLine1??'';
+          cntrlr_addr_two.text = currentAddress.addressLine2??'';
+          cntrlr_addr_city.text = currentAddress.city!.name??'';
+          cntrlr_addr_state.text = currentAddress.state!.name??'';
+          cntrlr_addr_zip.text = currentAddress.pincode??'';
           setState(() {
             _addressResult = AddressResult(
-                id: currentAddress.addressType.id,
-                code: currentAddress.addressType.code,
-                name: currentAddress.addressType.name);
+                id: currentAddress.addressType!.id??'',
+                code: currentAddress.addressType!.code??'',
+                name: currentAddress.addressType!.name??'');
           });
 
           cityVal = currentAddress.city;
@@ -1878,67 +1910,67 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         firstNameController.text =
-            value?.result?.firstName?.capitalizeFirstofEach;
+            value.result!.firstName!.capitalizeFirstofEach??'';
         middleNameController.text =
-            value?.result?.middleName?.capitalizeFirstofEach;
-        lastNameController.text =
-            value?.result?.lastName?.capitalizeFirstofEach;
+            value.result!.middleName!.capitalizeFirstofEach??'';
+        lastNameController.text = value.result!.lastName!.capitalizeFirstofEach??'';
         //? check relatioship id against logged in user
-        if (value?.result?.userRelationshipCollection.isNotEmpty) {
-          for (var cRelationship in value?.result?.userRelationshipCollection) {
-            if (cRelationship?.parent?.id ==
+        if (value.result!.userRelationshipCollection!.isNotEmpty) {
+          for (var cRelationship in value.result!.userRelationshipCollection!) {
+            if (cRelationship.parent?.id ==
                 PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-              relationShipController.text = cRelationship?.relationship?.name;
+              relationShipController.text = cRelationship.relationship!.name??'';
             } else {
               relationShipController.text =
-                  widget?.arguments?.relationShip?.name;
+                  widget.arguments!.relationShip!.name??'';
             }
           }
         } else {
-          relationShipController.text = widget?.arguments?.relationShip?.name;
+          relationShipController.text = widget.arguments!.relationShip!.name??'';
         }
         try {
           setState(() {
             _addressResult = _addressList[0];
           });
         } catch (e) {}
-        if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
-          currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];
+        if (commonUtil.checkIfStringisNull(value.result!.bloodGroup)) {
+          currentselectedBloodGroup = value.result!.bloodGroup!.split(' ')[0];
           currentselectedBloodGroupRange =
-              value.result.bloodGroup.split(' ')[1];
+          value.result!.bloodGroup!.split(' ')[1];
         } else {
           currentselectedBloodGroup = null;
           currentselectedBloodGroupRange = null;
         }
-        selectedGender = value.result.gender == null
+        selectedGender = value.result!.gender == null
             ? null
-            : toBeginningOfSentenceCase(value.result.gender.toLowerCase());
+            : toBeginningOfSentenceCase(value.result!.gender!.toLowerCase());
 
-        dateofBirthStr = value.result.dateOfBirth != null
-            ? FHBUtils().getFormattedDateForUserBirth(value.result.dateOfBirth)
+        dateofBirthStr = value.result!.dateOfBirth != null
+            ? FHBUtils()
+            .getFormattedDateForUserBirth(value.result!.dateOfBirth??'')
             : '';
-        dateOfBirthController.text = value.result.dateOfBirth != null
-            ? FHBUtils().getFormattedDateOnlyNew(value.result.dateOfBirth)
+        dateOfBirthController.text = value.result!.dateOfBirth != null
+            ? CommonUtil.isUSRegion()?FHBUtils().getFormattedDateOnly(value.result!.dateOfBirth??"")??'':FHBUtils().getFormattedDateOnlyNew(value.result!.dateOfBirth)??''
             : '';
 
-        if (value?.result?.additionalInfo != null) {
-          heightController.text = value?.result?.additionalInfo?.height ?? '';
-          weightController.text = value?.result?.additionalInfo?.weight ?? '';
+        if (value.result?.additionalInfo != null) {
+          heightController.text = value.result?.additionalInfo?.height ?? '';
+          weightController.text = value.result?.additionalInfo?.weight ?? '';
         }
 
-        if (value.result.membershipOfferedBy != null &&
-            value.result.membershipOfferedBy != '') {
-          cntrlr_corp_name.text = value.result.membershipOfferedBy;
+        if (value.result!.membershipOfferedBy != null &&
+            value.result!.membershipOfferedBy != '') {
+          cntrlr_corp_name.text = value.result!.membershipOfferedBy??'';
         }
       });
     }
   }
 
   void setValues() async {
-    addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
-    final myProf = MyProfileModel();
+    addFamilyUserInfoBloc!.phoneNo = mobileNoController.text;
+    var myProf = MyProfileModel();
 
-    final profileResult = MyProfileResult();
+    var profileResult = MyProfileResult();
     profileResult.firstName = firstNameController.text.trim();
     profileResult.middleName = middleNameController.text.trim();
     profileResult.lastName = lastNameController.text.trim();
@@ -1959,19 +1991,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     profileResult.lastModifiedOn =
         addFamilyUserInfoBloc?.myprofileObject?.result?.lastModifiedOn ?? null;
     profileResult.profilePicThumbnailUrl = addFamilyUserInfoBloc
-            ?.myprofileObject?.result?.profilePicThumbnailUrl ??
+        ?.myprofileObject?.result?.profilePicThumbnailUrl ??
         '';
 
-    var additionalInfo = AdditionalInfo();
-    if (widget.arguments.myProfileResult?.additionalInfo != null) {
-      additionalInfo = widget.arguments.myProfileResult.additionalInfo;
+    AdditionalInfo? additionalInfo = AdditionalInfo();
+    if (widget.arguments!.myProfileResult?.additionalInfo != null) {
+      additionalInfo = widget.arguments!.myProfileResult!.additionalInfo;
       var heightObj = new HeightObj();
       if (isFeetOrInches) {
         heightObj.valueFeet = heightController.text;
         heightObj.valueInches = heightInchController.text;
-        additionalInfo.heightObj = heightObj;
+        additionalInfo!.heightObj = heightObj;
       } else {
-        additionalInfo.height = heightController.text;
+        additionalInfo!.height = heightController.text;
       }
 
       additionalInfo.weight = weightController.text;
@@ -1998,20 +2030,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     /*if (widget.arguments.fromClass == CommonConstants.user_update ||
         widget.arguments.fromClass == CommonConstants.my_family) {*/
     try {
-      List<UserProfileSettingCollection3> userProfileSettingCollection = [];
+      List<UserProfileSettingCollection3>? userProfileSettingCollection = [];
       List<UserProfileSettingCollection3> userProfileSettingCollectionClone =
-          [];
+      [];
 
       var userProfileSettingCollection3Obj = UserProfileSettingCollection3();
       var profileSetting = ProfileSetting();
-      userProfileSettingCollection = addFamilyUserInfoBloc
-          .myprofileObject.result.userProfileSettingCollection3;
-      if (userProfileSettingCollection.isNotEmpty) {
-        userProfileSettingCollection3Obj = addFamilyUserInfoBloc
-            .myprofileObject.result.userProfileSettingCollection3[0];
+      userProfileSettingCollection = addFamilyUserInfoBloc!
+          .myprofileObject!.result!.userProfileSettingCollection3;
+      if (userProfileSettingCollection!.isNotEmpty) {
+        userProfileSettingCollection3Obj = addFamilyUserInfoBloc!
+            .myprofileObject!.result!.userProfileSettingCollection3![0];
         if (userProfileSettingCollection3Obj.profileSetting != null) {
           var profileSettingClone =
-              userProfileSettingCollection3Obj.profileSetting;
+          userProfileSettingCollection3Obj.profileSetting!;
           var preferredMeasuremntClone =
               profileSettingClone.preferredMeasurement;
 
@@ -2076,8 +2108,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           profileSetting.preferred_language = selectedLanguage;
 
           userProfileSettingCollection3Obj.profileSetting = profileSetting;
-          userProfileSettingCollectionClone.insert(
-              0, userProfileSettingCollection3Obj);
+          /*if (widget.arguments!.fromClass == CommonConstants.my_family &&
+              (addFamilyUserInfoBloc!.myprofileObject!.result!
+                  .userProfileSettingCollection3?.length ??
+                  0) >
+                  0) {
+            userProfileSettingCollectionClone.insert(
+                0, userProfileSettingCollection3Obj);
+          } else if(widget.arguments!.fromClass == CommonConstants.user_update){
+            userProfileSettingCollectionClone.insert(
+                0, userProfileSettingCollection3Obj);
+          }else {
+            userProfileSettingCollectionClone = [];
+          }*/
         } else {
           if (CommonUtil.REGION_CODE == 'IN') {
             var heightObj = new Height(
@@ -2114,8 +2157,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               0, userProfileSettingCollection3Obj);
         }
       } else {
-        if (widget.arguments.fromClass == CommonConstants.user_update ||
-            widget.arguments.fromClass == CommonConstants.my_family) {
+        if (widget.arguments!.fromClass == CommonConstants.user_update ||
+            widget.arguments!.fromClass == CommonConstants.my_family) {
           if (CommonUtil.REGION_CODE == 'IN') {
             var heightObj = new Height(
                 unitCode: Constants.STR_VAL_HEIGHT_IND,
@@ -2147,62 +2190,68 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
           profileSetting.preferred_language = selectedLanguage;
           userProfileSettingCollection3Obj.profileSetting = profileSetting;
-          userProfileSettingCollectionClone
-              .add(userProfileSettingCollection3Obj);
+          /*if(widget.arguments!.fromClass == CommonConstants.my_family&&(addFamilyUserInfoBloc!
+              .myprofileObject!.result!.userProfileSettingCollection3?.length??0)>0){
+
+            userProfileSettingCollectionClone
+                .add(userProfileSettingCollection3Obj);
+          }else {
+            userProfileSettingCollectionClone = [];
+          }*/
         } else {
           userProfileSettingCollectionClone = [];
         }
       }
 
-      profileResult.userProfileSettingCollection3 =
-          userProfileSettingCollectionClone;
+      /*profileResult.userProfileSettingCollection3 =
+          userProfileSettingCollectionClone;*/
     } catch (e) {}
     /*  }*/
 
-    addFamilyUserInfoBloc.tagsList = selectedTags;
+    addFamilyUserInfoBloc!.tagsList = selectedTags;
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
       profileResult.bloodGroup =
-          currentselectedBloodGroup + ' ' + currentselectedBloodGroupRange;
+          currentselectedBloodGroup! + ' ' + currentselectedBloodGroupRange!;
     }
     var userAddressCollection3 = UserAddressCollection3();
-    if (widget.arguments.fromClass == CommonConstants.my_family) {
-      addFamilyUserInfoBloc.isUpdate = true;
-      profileResult.id = widget.arguments.sharedbyme.id;
+    if (widget.arguments!.fromClass == CommonConstants.my_family) {
+      addFamilyUserInfoBloc!.isUpdate = true;
+      profileResult.id = widget.arguments!.sharedbyme!.id;
 
       if (widget
-          .arguments?.sharedbyme?.child?.userAddressCollection3.isNotEmpty) {
+          .arguments!.sharedbyme!.child!.userAddressCollection3!.isNotEmpty) {
         userAddressCollection3.id =
-            widget?.arguments?.sharedbyme?.child?.userAddressCollection3[0].id;
+            widget.arguments?.sharedbyme?.child?.userAddressCollection3![0].id;
       }
-    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-      addFamilyUserInfoBloc.isUpdate = false;
-      profileResult.id = widget.arguments.myProfileResult.id;
+    } else if (widget.arguments!.fromClass == CommonConstants.user_update) {
+      addFamilyUserInfoBloc!.isUpdate = false;
+      profileResult.id = widget.arguments!.myProfileResult!.id;
       if (widget
-          .arguments?.myProfileResult?.userAddressCollection3.isNotEmpty) {
+          .arguments!.myProfileResult!.userAddressCollection3!.isNotEmpty) {
         userAddressCollection3.id =
-            widget.arguments?.myProfileResult?.userAddressCollection3[0].id;
+            widget.arguments?.myProfileResult?.userAddressCollection3![0].id;
       }
 
       //allow only user who logged in to update their email address
       if (widget
-          .arguments?.myProfileResult?.userContactCollection3.isNotEmpty) {
-        var userContact =
-            widget.arguments?.myProfileResult?.userContactCollection3[0];
+          .arguments!.myProfileResult!.userContactCollection3!.isNotEmpty) {
+        UserContactCollection3 userContact =
+        widget.arguments!.myProfileResult!.userContactCollection3![0]!;
         userContact.email = emailController.text;
         final List<UserContactCollection3> userContactCollection3List = [];
         userContactCollection3List.add(userContact);
         profileResult.userContactCollection3 = userContactCollection3List;
       }
     } else {
-      profileResult.id = widget.arguments.addFamilyUserInfo.childInfo.id;
-      addFamilyUserInfoBloc.isUpdate = false;
+      profileResult.id = widget.arguments!.addFamilyUserInfo!.childInfo!.id;
+      addFamilyUserInfoBloc!.isUpdate = false;
       if (widget
-          ?.arguments?.addFamilyUserInfo?.childInfo?.contactInfo.isNotEmpty) {
+          .arguments!.addFamilyUserInfo!.childInfo!.contactInfo!.isNotEmpty) {
         var userContact = mContactInfo;
         userContact?.email = emailController.text;
-        final userContactCollection3List = List<UserContactCollection3>();
+        var userContactCollection3List = <UserContactCollection3?>[];
         userContactCollection3List.add(userContact);
         profileResult.userContactCollection3 = userContactCollection3List;
       }
@@ -2219,10 +2268,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now(),
             isIndianTime: true);
     userAddressCollection3.lastModifiedOn = null;
-    if (widget.arguments.fromClass == CommonConstants.my_family) {
-      userAddressCollection3.createdBy = widget.arguments.id;
-    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-      userAddressCollection3.createdBy = widget.arguments.myProfileResult.id;
+    if (widget.arguments!.fromClass == CommonConstants.my_family) {
+      userAddressCollection3.createdBy = widget.arguments!.id;
+    } else if (widget.arguments!.fromClass == CommonConstants.user_update) {
+      userAddressCollection3.createdBy = widget.arguments!.myProfileResult!.id;
     } else {
       userAddressCollection3.createdBy =
           PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -2239,37 +2288,37 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       name: _addressResult.name,
       description: _addressResult.name,
       isActive: true,
-      createdBy: widget.arguments.fromClass == CommonConstants.user_update
+      createdBy: widget.arguments!.fromClass == CommonConstants.user_update
           ? PreferenceUtil.getStringValue(Constants.KEY_USERID)
-          : widget.arguments.id,
+          : widget.arguments!.id,
       createdOn: CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now(),
           isIndianTime: true),
     );
 
-    var userAddressCollection3List = List<UserAddressCollection3>();
+    var userAddressCollection3List = <UserAddressCollection3>[];
     userAddressCollection3List.add(userAddressCollection3);
     profileResult.userAddressCollection3 = userAddressCollection3List;
 
     myProf.result = profileResult;
-    addFamilyUserInfoBloc.myProfileModel = myProf;
-    final _familyListBloc = FamilyListBloc();
-    if (widget.arguments.fromClass == CommonConstants.my_family) {
+    addFamilyUserInfoBloc!.myProfileModel = myProf;
+    var _familyListBloc = FamilyListBloc();
+    if (widget.arguments!.fromClass == CommonConstants.my_family) {
       //*update the myfamily member details
       if (doValidation()) {
-        if (addFamilyUserInfoBloc.profileBanner != null) {
+        if (addFamilyUserInfoBloc!.profileBanner != null) {
           await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-              addFamilyUserInfoBloc.profileBanner.path);
+              addFamilyUserInfoBloc!.profileBanner!.path);
         }
         CommonUtil.showLoadingDialog(
             dialogContext, _keyLoader, variable.Please_Wait); //
 
-        await addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
-          if (value != null && value.isSuccess) {
-            chatViewModel.upateUserNickname(myProf.result.id,
+        await addFamilyUserInfoBloc!.updateSelfProfile(false).then((value) {
+          if (value != null && value.isSuccess!) {
+            chatViewModel.upateUserNickname(myProf.result!.id,
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
-                      Constants.KEY_FAMILYMEMBER, value.result)
+                  Constants.KEY_FAMILYMEMBER, value.result)
                   .then((value) {
                 //saveProfileImage();
                 /* MySliverAppBar.imageURI = null;
@@ -2292,31 +2341,31 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         await Alert.displayAlertPlain(context,
             title: variable.Error, content: strErrorMsg);
       }
-    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+    } else if (widget.arguments!.fromClass == CommonConstants.user_update) {
       //*update the user details
 
       if (doValidation()) {
-        if (addFamilyUserInfoBloc.profileBanner != null) {
+        if (addFamilyUserInfoBloc!.profileBanner != null) {
           await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-              addFamilyUserInfoBloc.profileBanner.path);
+              addFamilyUserInfoBloc!.profileBanner!.path);
         }
         CommonUtil.showLoadingDialog(
             dialogContext, _keyLoader, variable.Please_Wait); //
 
-        await addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
-          if (value != null && value.isSuccess) {
-            if (widget.arguments.isForFamily != null &&
-                widget.arguments.isForFamily == false) {
-              if (widget.arguments.isFromAppointmentOrSlotPage != true) {
-                chatViewModel.upateUserNickname(myProf.result.id,
+        await addFamilyUserInfoBloc!.updateSelfProfile(false).then((value) {
+          if (value != null && value.isSuccess!) {
+            if (widget.arguments!.isForFamily != null &&
+                widget.arguments!.isForFamily == false) {
+              if (widget.arguments!.isFromAppointmentOrSlotPage != true) {
+                chatViewModel.upateUserNickname(myProf.result!.id,
                     firstNameController.text + ' ' + lastNameController.text);
-                addFamilyUserInfoBloc.getMyProfileInfo().then((profileValue) {
-                  if (profileValue.result.firstName != null) {
-                    final firstName = profileValue.result.firstName != null
-                        ? profileValue.result.firstName.capitalizeFirstofEach
+                addFamilyUserInfoBloc!.getMyProfileInfo().then((profileValue) {
+                  if (profileValue!.result!.firstName != null) {
+                    var firstName = profileValue.result!.firstName != null
+                        ? profileValue.result!.firstName!.capitalizeFirstofEach
                         : '';
-                    var lastName = profileValue.result.lastName != null
-                        ? profileValue.result.lastName.capitalizeFirstofEach
+                    var lastName = profileValue.result!.lastName != null
+                        ? profileValue.result!.lastName!.capitalizeFirstofEach
                         : '';
 
                     PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
@@ -2352,32 +2401,32 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else {
       //*other update
       if (doValidation()) {
-        if (addFamilyUserInfoBloc.profileBanner != null) {
+        if (addFamilyUserInfoBloc!.profileBanner != null) {
           await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-              addFamilyUserInfoBloc.profileBanner.path);
+              addFamilyUserInfoBloc!.profileBanner!.path);
         }
         CommonUtil.showLoadingDialog(
             dialogContext, _keyLoader, variable.Please_Wait); //
 
-        await addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
-          if (value != null && value.isSuccess) {
-            chatViewModel.upateUserNickname(myProf.result.id,
+        await addFamilyUserInfoBloc!.updateSelfProfile(false).then((value) {
+          if (value != null && value.isSuccess!) {
+            chatViewModel.upateUserNickname(myProf.result!.id,
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
-                      Constants.KEY_FAMILYMEMBER, value?.result)
+                  Constants.KEY_FAMILYMEMBER, value?.result)
                   .then((value) {
                 //saveProfileImage();
                 /*  MySliverAppBar.imageURI = null;
                       fetchedProfileData = null;*/
                 imageURI = null;
-                if (widget.arguments.isForFamily) {
+                if (widget.arguments!.isForFamily!) {
                   Navigator.pop(dialogContext);
                   Navigator.pop(dialogContext);
                   Navigator.pop(dialogContext);
 
                   Navigator.pushNamed(
-                    Get.context,
+                    Get.context!,
                     rt_UserAccounts,
                     arguments: UserAccountsArguments(
                       selectedIndex: 1,
@@ -2405,37 +2454,37 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Future<void> setMyProfilePic(String userId, File image) async {
-    final response =
-        await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
-    if (response.isSuccess) {
+    var response =
+    await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
+    if (response.isSuccess!) {
       if (!Platform.isIOS) {
-        imageCache.clear();
-        imageCache.clearLiveImages();
+        imageCache!.clear();
+        imageCache!.clearLiveImages();
       }
-      FlutterToast().getToast(response.message, Colors.green);
+      FlutterToast().getToast(response.message!, Colors.green);
     } else {
-      FlutterToast().getToast(response.message, Colors.red);
+      FlutterToast().getToast(response.message!, Colors.red);
     }
   }
 
   Widget showProfileImageNew() {
-    if (widget.arguments.fromClass == CommonConstants.my_family) {
-      currentUserID = widget.arguments.sharedbyme.child.id;
+    if (widget.arguments!.fromClass == CommonConstants.my_family) {
+      currentUserID = widget.arguments!.sharedbyme!.child!.id;
       return FutureBuilder<CommonResponse>(
         future: _addFamilyUserInfoRepository
-            .getUserProfilePic(widget.arguments.sharedbyme.child.id),
+            .getUserProfilePic(widget.arguments!.sharedbyme!.child!.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot?.data?.isSuccess != null &&
-                snapshot?.data?.result != null) {
-              if (snapshot.data.isSuccess) {
+            if (snapshot.data?.isSuccess != null &&
+                snapshot.data?.result != null) {
+              if (snapshot.data!.isSuccess!) {
                 return Image(
                   image: NetworkImage(
-                    snapshot.data.result,
+                    snapshot.data!.result!,
                     headers: {
                       HttpHeaders.authorizationHeader:
-                          PreferenceUtil.getStringValue(
-                              Constants.KEY_AUTHTOKEN),
+                      PreferenceUtil.getStringValue(
+                          Constants.KEY_AUTHTOKEN)!,
                       Constants.KEY_OffSet: CommonUtil().setTimeZone()
                     },
                   ),
@@ -2448,19 +2497,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               } else {
                 return Center(
                   child: Text(
-                    widget.arguments.sharedbyme.child.firstName != null &&
-                            widget.arguments.sharedbyme.child.lastName != null
-                        ? widget.arguments.sharedbyme.child.firstName[0]
-                                .toUpperCase() +
-                            (widget.arguments.sharedbyme.child.lastName.length >
-                                    0
-                                ? widget.arguments.sharedbyme.child.lastName[0]
-                                    .toUpperCase()
-                                : '')
-                        : widget.arguments.sharedbyme.child.firstName != null
-                            ? widget.arguments.sharedbyme.child.firstName[0]
-                                .toUpperCase()
-                            : '',
+                    widget.arguments!.sharedbyme!.child!.firstName != null &&
+                        widget.arguments!.sharedbyme!.child!.lastName !=
+                            null
+                        ? widget.arguments!.sharedbyme!.child!.firstName![0]
+                        .toUpperCase() +
+                        (widget.arguments!.sharedbyme!.child!.lastName!
+                            .length >
+                            0
+                            ? widget
+                            .arguments!.sharedbyme!.child!.lastName![0]
+                            .toUpperCase()
+                            : '')
+                        : widget.arguments!.sharedbyme!.child!.firstName != null
+                        ? widget.arguments!.sharedbyme!.child!.firstName![0]
+                        .toUpperCase()
+                        : '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 50.0.sp,
@@ -2472,18 +2524,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             } else {
               return Center(
                 child: Text(
-                  widget.arguments.sharedbyme.child.firstName != null &&
-                          widget.arguments.sharedbyme.child.lastName != null
-                      ? widget.arguments.sharedbyme.child.firstName[0]
-                              .toUpperCase() +
-                          (widget.arguments.sharedbyme.child.lastName.length > 0
-                              ? widget.arguments.sharedbyme.child.lastName[0]
-                                  .toUpperCase()
-                              : '')
-                      : widget.arguments.sharedbyme.child.firstName != null
-                          ? widget.arguments.sharedbyme.child.firstName[0]
-                              .toUpperCase()
-                          : '',
+                  widget.arguments!.sharedbyme!.child!.firstName != null &&
+                      widget.arguments!.sharedbyme!.child!.lastName != null
+                      ? widget.arguments!.sharedbyme!.child!.firstName![0]
+                      .toUpperCase() +
+                      (widget.arguments!.sharedbyme!.child!.lastName!
+                          .length >
+                          0
+                          ? widget
+                          .arguments!.sharedbyme!.child!.lastName![0]
+                          .toUpperCase()
+                          : '')
+                      : widget.arguments!.sharedbyme!.child!.firstName != null
+                      ? widget.arguments!.sharedbyme!.child!.firstName![0]
+                      .toUpperCase()
+                      : '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 50.0.sp,
@@ -2497,18 +2552,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             return Center(
               child: Text(
-                widget.arguments.sharedbyme.child.firstName != null &&
-                        widget.arguments.sharedbyme.child.lastName != null
-                    ? widget.arguments.sharedbyme.child.firstName[0]
-                            .toUpperCase() +
-                        (widget.arguments.sharedbyme.child.lastName.length > 0
-                            ? widget.arguments.sharedbyme.child.lastName[0]
-                                .toUpperCase()
-                            : '')
-                    : widget.arguments.sharedbyme.child.firstName != null
-                        ? widget.arguments.sharedbyme.child.firstName[0]
-                            .toUpperCase()
-                        : '',
+                widget.arguments!.sharedbyme!.child!.firstName != null &&
+                    widget.arguments!.sharedbyme!.child!.lastName != null
+                    ? widget.arguments!.sharedbyme!.child!.firstName![0]
+                    .toUpperCase() +
+                    (widget.arguments!.sharedbyme!.child!.lastName!.length >
+                        0
+                        ? widget.arguments!.sharedbyme!.child!.lastName![0]
+                        .toUpperCase()
+                        : '')
+                    : widget.arguments!.sharedbyme!.child!.firstName != null
+                    ? widget.arguments!.sharedbyme!.child!.firstName![0]
+                    .toUpperCase()
+                    : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 50.0.sp,
@@ -2519,43 +2575,45 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         },
       );
-    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-      currentUserID = widget.arguments.myProfileResult.id;
+    } else if (widget.arguments!.fromClass == CommonConstants.user_update) {
+      currentUserID = widget.arguments!.myProfileResult!.id;
       return FutureBuilder<CommonResponse>(
         future: _addFamilyUserInfoRepository
-            .getUserProfilePic(widget.arguments.myProfileResult.id),
+            .getUserProfilePic(widget.arguments!.myProfileResult!.id!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot?.data?.isSuccess != null &&
-                snapshot?.data?.result != null) {
-              if (snapshot.data.isSuccess) {
+            if (snapshot.data?.isSuccess != null &&
+                snapshot.data?.result != null) {
+              if (snapshot.data!.isSuccess!) {
                 return Image.network(
-                  snapshot.data.result,
+                  snapshot.data!.result!,
                   fit: BoxFit.cover,
                   width: 60.0.h,
                   height: 60.0.h,
                   headers: {
                     HttpHeaders.authorizationHeader:
-                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
                     Constants.KEY_OffSet: CommonUtil().setTimeZone()
                   },
                 );
               } else {
                 return Center(
                   child: Text(
-                    widget.arguments.myProfileResult.firstName != null &&
-                            widget.arguments.myProfileResult.lastName != null
-                        ? widget.arguments.myProfileResult.firstName[0]
-                                .toUpperCase() +
-                            (widget.arguments.myProfileResult.lastName.length >
-                                    0
-                                ? widget.arguments.myProfileResult.lastName[0]
-                                    .toUpperCase()
-                                : '')
-                        : widget.arguments.myProfileResult.firstName != null
-                            ? widget.arguments.myProfileResult.firstName[0]
-                                .toUpperCase()
-                            : '',
+                    widget.arguments!.myProfileResult!.firstName != null &&
+                        widget.arguments!.myProfileResult!.lastName != null
+                        ? widget.arguments!.myProfileResult!.firstName![0]
+                        .toUpperCase() +
+                        (widget.arguments!.myProfileResult!.lastName!
+                            .length >
+                            0
+                            ? widget
+                            .arguments!.myProfileResult!.lastName![0]
+                            .toUpperCase()
+                            : '')
+                        : widget.arguments!.myProfileResult!.firstName != null
+                        ? widget.arguments!.myProfileResult!.firstName![0]
+                        .toUpperCase()
+                        : '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 50.0.sp,
@@ -2567,18 +2625,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             } else {
               return Center(
                 child: Text(
-                  widget.arguments.myProfileResult.firstName != null &&
-                          widget.arguments.myProfileResult.lastName != null
-                      ? widget.arguments.myProfileResult.firstName[0]
-                              .toUpperCase() +
-                          (widget.arguments.myProfileResult.lastName.length > 0
-                              ? widget.arguments.myProfileResult.lastName[0]
-                                  .toUpperCase()
-                              : '')
-                      : widget.arguments.myProfileResult.firstName != null
-                          ? widget.arguments.myProfileResult.firstName[0]
-                              .toUpperCase()
-                          : '',
+                  widget.arguments!.myProfileResult!.firstName != null &&
+                      widget.arguments!.myProfileResult!.lastName != null
+                      ? widget.arguments!.myProfileResult!.firstName![0]
+                      .toUpperCase() +
+                      (widget.arguments!.myProfileResult!.lastName!.length >
+                          0
+                          ? widget.arguments!.myProfileResult!.lastName![0]
+                          .toUpperCase()
+                          : '')
+                      : widget.arguments!.myProfileResult!.firstName != null
+                      ? widget.arguments!.myProfileResult!.firstName![0]
+                      .toUpperCase()
+                      : '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 50.0.sp,
@@ -2592,18 +2651,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             return Center(
               child: Text(
-                widget.arguments.myProfileResult.firstName != null &&
-                        widget.arguments.myProfileResult.lastName != null
-                    ? widget.arguments.myProfileResult.firstName[0]
-                            .toUpperCase() +
-                        (widget.arguments.myProfileResult.lastName.length > 0
-                            ? widget.arguments.myProfileResult.lastName[0]
-                                .toUpperCase()
-                            : '')
-                    : widget.arguments.myProfileResult.firstName != null
-                        ? widget.arguments.myProfileResult.firstName[0]
-                            .toUpperCase()
-                        : '',
+                widget.arguments!.myProfileResult!.firstName != null &&
+                    widget.arguments!.myProfileResult!.lastName != null
+                    ? widget.arguments!.myProfileResult!.firstName![0]
+                    .toUpperCase() +
+                    (widget.arguments!.myProfileResult!.lastName!.length > 0
+                        ? widget.arguments!.myProfileResult!.lastName![0]
+                        .toUpperCase()
+                        : '')
+                    : widget.arguments!.myProfileResult!.firstName != null
+                    ? widget.arguments!.myProfileResult!.firstName![0]
+                    .toUpperCase()
+                    : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 50.0.sp,
@@ -2618,33 +2677,34 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       currentUserID = widget.arguments?.addFamilyUserInfo?.childInfo?.id;
       return FutureBuilder<CommonResponse>(
         future: _addFamilyUserInfoRepository.getUserProfilePic(
-            widget.arguments?.addFamilyUserInfo?.childInfo?.id),
+            widget.arguments!.addFamilyUserInfo!.childInfo!.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot?.data?.isSuccess != null &&
-                snapshot?.data?.result != null) {
-              if (snapshot.data.isSuccess) {
+            if (snapshot.data?.isSuccess != null &&
+                snapshot.data?.result != null) {
+              if (snapshot.data!.isSuccess!) {
                 return Image.network(
-                  snapshot.data.result,
+                  snapshot.data!.result!,
                   fit: BoxFit.cover,
                   width: 60.0.h,
                   height: 60.0.h,
                   headers: {
                     HttpHeaders.authorizationHeader:
-                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
                     Constants.KEY_OffSet: CommonUtil().setTimeZone()
                   },
                 );
               } else {
                 return Center(
                   child: Text(
-                    widget.arguments.enteredFirstName != null &&
-                            widget.arguments.enteredLastName != null
-                        ? widget.arguments.enteredFirstName[0].toUpperCase() +
-                            widget.arguments.enteredLastName[0].toUpperCase()
-                        : widget.arguments.enteredFirstName != null
-                            ? widget.arguments.enteredFirstName[0].toUpperCase()
-                            : '',
+                    widget.arguments!.enteredFirstName != null &&
+                        widget.arguments!.enteredLastName != null
+                        ? widget.arguments!.enteredFirstName![0].toUpperCase() +
+                        widget.arguments!.enteredLastName![0].toUpperCase()
+                        : widget.arguments!.enteredFirstName != null
+                        ? widget.arguments!.enteredFirstName![0]
+                        .toUpperCase()
+                        : '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 50.0.sp,
@@ -2656,13 +2716,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             } else {
               return Center(
                 child: Text(
-                  widget.arguments.enteredFirstName != null &&
-                          widget.arguments.enteredLastName != null
-                      ? widget.arguments.enteredFirstName[0].toUpperCase() +
-                          widget.arguments.enteredLastName[0].toUpperCase()
-                      : widget.arguments.enteredFirstName != null
-                          ? widget.arguments.enteredFirstName[0].toUpperCase()
-                          : '',
+                  widget.arguments!.enteredFirstName != null &&
+                      widget.arguments!.enteredLastName != null
+                      ? widget.arguments!.enteredFirstName![0].toUpperCase() +
+                      widget.arguments!.enteredLastName![0].toUpperCase()
+                      : widget.arguments!.enteredFirstName != null
+                      ? widget.arguments!.enteredFirstName![0].toUpperCase()
+                      : '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 50.0.sp,
@@ -2676,13 +2736,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             return Center(
               child: Text(
-                widget.arguments.enteredFirstName != null &&
-                        widget.arguments.enteredLastName != null
-                    ? widget.arguments.enteredFirstName[0].toUpperCase() +
-                        widget.arguments.enteredLastName[0].toUpperCase()
-                    : widget.arguments.enteredFirstName != null
-                        ? widget.arguments.enteredFirstName[0].toUpperCase()
-                        : '',
+                widget.arguments!.enteredFirstName != null &&
+                    widget.arguments!.enteredLastName != null
+                    ? widget.arguments!.enteredFirstName![0].toUpperCase() +
+                    widget.arguments!.enteredLastName![0].toUpperCase()
+                    : widget.arguments!.enteredFirstName != null
+                    ? widget.arguments!.enteredFirstName![0].toUpperCase()
+                    : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 50.0.sp,
@@ -2716,7 +2776,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () async {
-                        PickedFile image = await ImagePicker.platform
+                        PickedFile? image = await ImagePicker.platform
                             .pickImage(source: ImageSource.gallery);
                         if (image != null) {
                           if (Platform.isIOS) {
@@ -2725,10 +2785,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             imageURI = File(image.path);
                           }
 
-                          if (widget.arguments.fromClass ==
+                          if (widget.arguments!.fromClass ==
                               CommonConstants.user_update) {
                             await PreferenceUtil.saveString(
-                                Constants.KEY_PROFILE_IMAGE, imageURI.path);
+                                Constants.KEY_PROFILE_IMAGE, imageURI!.path);
                           }
                           Navigator.pop(context);
                         }
@@ -2745,7 +2805,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        PickedFile image = await ImagePicker.platform
+                        PickedFile? image = await ImagePicker.platform
                             .pickImage(source: ImageSource.camera);
                         if (image != null) {
                           if (Platform.isIOS) {
@@ -2754,10 +2814,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             imageURI = File(image.path);
                           }
                           Navigator.pop(context);
-                          if (widget.arguments.fromClass ==
+                          if (widget.arguments!.fromClass ==
                               CommonConstants.user_update) {
                             await PreferenceUtil.saveString(
-                                Constants.KEY_PROFILE_IMAGE, imageURI.path);
+                                Constants.KEY_PROFILE_IMAGE, imageURI!.path);
                           }
                         }
                       },
@@ -2776,7 +2836,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     ).then((value) {
       setState(() {});
       if (imageURI != null) {
-        setMyProfilePic(userId, imageURI).then((value) async {
+        setMyProfilePic(userId!, imageURI!).then((value) async {
           await CommonUtil().getUserProfileData();
         });
       }
@@ -2784,13 +2844,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget getAllCustomRoles() {
-    Widget familyWidget;
+    late Widget familyWidget;
 
     return StreamBuilder<ApiResponse<RelationShipResponseList>>(
-      stream: addFamilyUserInfoBloc.relationShipStream,
+      stream: addFamilyUserInfoBloc!.relationShipStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               break;
 
@@ -2807,16 +2867,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               isCalled = true;
               // relationShipResponseList =
               //     snapshot.data.data.result[0].referenceValueCollection;
-              if (widget.arguments.isForFamilyAddition != true) {
+              if (widget.arguments!.isForFamilyAddition != true) {
                 setState(() {
                   relationShipResponseList =
-                      snapshot.data.data.result[0].referenceValueCollection;
+                      snapshot.data!.data!.result![0].referenceValueCollection;
                 });
               } else {
                 relationShipResponseList =
-                    snapshot.data.data.result[0].referenceValueCollection;
+                    snapshot.data!.data!.result![0].referenceValueCollection;
               }
-              familyWidget = getRelationshipDetails(relationShipResponseList);
+              familyWidget = getRelationshipDetails(relationShipResponseList!);
 
               break;
           }
@@ -2832,13 +2892,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     );
   }
 
-  List<String> getLanguageList() {
-    final List<String> languageList = [];
+  List<String?> getLanguageList() {
+    final List<String?> languageList = [];
 
-    for (var languageResultObj in languageModelList.result) {
-      if (languageResultObj.referenceValueCollection.isNotEmpty) {
+    for (var languageResultObj in languageModelList.result!) {
+      if (languageResultObj.referenceValueCollection!.isNotEmpty) {
         for (var referenceValueCollection
-            in languageResultObj.referenceValueCollection) {
+        in languageResultObj.referenceValueCollection!) {
           if (selectedLanguage == referenceValueCollection.code) {
             languageList.add(referenceValueCollection.id);
           }
@@ -2851,11 +2911,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   void setMobileAndEmail() {
     mobileNoController.text =
-        myProfile?.result?.userContactCollection3[0].phoneNumber;
-    emailController.text = myProfile?.result?.userContactCollection3[0].email;
+        myProfile.result!.userContactCollection3![0]!.phoneNumber??'';
+    emailController.text = myProfile.result!.userContactCollection3![0]!.email??'';
   }
 
-  Future<String> setValueLanguages() async {
+  Future<String?> setValueLanguages() async {
     /* for (LanguageResult languageResultObj in languageModelList.result) {
       if (languageResultObj.referenceValueCollection.length > 0) {
         for (ReferenceValueCollection referenceValueCollection
@@ -2877,10 +2937,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }*/
     if (selectedLanguage != null && selectedLanguage != '') {
     } else {
-      if (addFamilyUserInfoBloc
-          .myprofileObject.result?.userProfileSettingCollection3?.isNotEmpty) {
-        var profileSetting = addFamilyUserInfoBloc.myprofileObject?.result
-            ?.userProfileSettingCollection3[0].profileSetting;
+      if (addFamilyUserInfoBloc!
+          .myprofileObject!.result!.userProfileSettingCollection3!.isNotEmpty) {
+        var profileSetting = addFamilyUserInfoBloc!.myprofileObject?.result
+            ?.userProfileSettingCollection3![0].profileSetting;
         if (profileSetting != null) {
           CommonUtil.langaugeCodes.forEach((language, languageCode) {
             if (language == profileSetting.preferred_language) {
@@ -2910,13 +2970,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void setUserId() {
-    if (widget.arguments.fromClass == CommonConstants.my_family) {
-      addFamilyUserInfoBloc.userId = widget.arguments.id;
-    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-      addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
+    if (widget.arguments!.fromClass == CommonConstants.my_family) {
+      addFamilyUserInfoBloc!.userId = widget.arguments!.id;
+    } else if (widget.arguments!.fromClass == CommonConstants.user_update) {
+      addFamilyUserInfoBloc!.userId = widget.arguments!.myProfileResult!.id;
     } else {
-      addFamilyUserInfoBloc.userId =
-          widget.arguments.addFamilyUserInfo.childInfo.id;
+      addFamilyUserInfoBloc!.userId =
+          widget.arguments!.addFamilyUserInfo!.childInfo!.id;
     }
   }
 
@@ -2937,11 +2997,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ),
               value: selectedLanguage,
               items: languagesList,
-              onChanged: (newLanguage) {
+              onChanged: (dynamic newLanguage) {
                 setState(() {
                   selectedLanguage = newLanguage;
                 });
-                addFamilyUserInfoBloc.preferredLanguage = newLanguage;
+                addFamilyUserInfoBloc!.preferredLanguage = newLanguage;
               },
             ),
           );
@@ -2968,41 +3028,41 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void setUnit() async {
-    if (widget.arguments.fromClass == CommonConstants.user_update) {
+    if (widget.arguments!.fromClass == CommonConstants.user_update) {
       var profileSetting;
       try {
         profileSetting = widget.arguments?.myProfileResult
-            ?.userProfileSettingCollection3[0]?.profileSetting;
+            ?.userProfileSettingCollection3![0].profileSetting;
         if (profileSetting != null) {
           getUnitFromPreferredMeasurement(profileSetting);
         } else {
           var profileModel =
-              await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-          if (profileModel.result.userProfileSettingCollection3 != null &&
-              profileModel.result.userProfileSettingCollection3.length > 0) {
+          await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+          if (profileModel!.result!.userProfileSettingCollection3 != null &&
+              profileModel.result!.userProfileSettingCollection3!.length > 0) {
             var profileSetting = profileModel
-                .result.userProfileSettingCollection3[0].profileSetting;
+                .result!.userProfileSettingCollection3![0].profileSetting;
             getUnitFromPreferredMeasurement(profileSetting);
           }
         }
       } catch (e) {
         var profileModel =
-            await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-        if (profileModel.result.userProfileSettingCollection3 != null &&
-            profileModel.result.userProfileSettingCollection3.length > 0) {
+        await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+        if (profileModel!.result!.userProfileSettingCollection3 != null &&
+            profileModel.result!.userProfileSettingCollection3!.length > 0) {
           var profileSetting = profileModel
-              .result.userProfileSettingCollection3[0].profileSetting;
+              .result!.userProfileSettingCollection3![0].profileSetting;
           getUnitFromPreferredMeasurement(profileSetting);
         }
       }
-    } else if (widget.arguments.fromClass == CommonConstants.my_family) {
-      if (widget.arguments.sharedbyme?.child?.isVirtualUser) {
+    } else if (widget.arguments!.fromClass == CommonConstants.my_family) {
+      if (widget.arguments!.sharedbyme!.child!.isVirtualUser!) {
         var preferredMeasurment = await PreferenceUtil.getPreferredMeasurement(
             Constants.KEY_PREFERREDMEASUREMENT);
 
         if (preferredMeasurment != null) {
           try {
-            heightUnit = preferredMeasurment?.height?.unitCode;
+            heightUnit = preferredMeasurment.height?.unitCode;
             weightUnit = preferredMeasurment.weight?.unitCode;
             setHeightAndWeightUnit();
           } catch (e) {
@@ -3023,7 +3083,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (!snapshot.hasData) {
             return CommonCircularIndicator();
           }
-          final List<Tags> tagslist = snapshot.data.result;
+          final List<Tags> tagslist = snapshot.data
+          as List<Tags>; // snapshot.data.result to snapshot.data
 
           mediaResultFiltered = removeUnwantedCategories(tagslist);
 
@@ -3032,7 +3093,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             isClickable: true,
             tags: mediaResultFiltered,
             onChecked: (result) {
-              addSelectedcategoriesToList(result);
+              addSelectedcategoriesToList(result!);
             },
           );
         });
@@ -3063,7 +3124,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   List<Tags> removeUnwantedCategories(List<Tags> tagsList) {
-    final tagsListDuplicate = List<Tags>();
+    var tagsListDuplicate = <Tags>[];
     for (var i = 0; i < tagsList.length; i++) {
       if (!tagsListDuplicate.contains(tagsList[i].name)) {
         tagsListDuplicate.add(tagsList[i]);
@@ -3072,14 +3133,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return tagsListDuplicate;
   }
 
-  void setTheValuesForDropdown(List<Tags> result) {
-    if (addFamilyUserInfoBloc.tagsList != null &&
-        addFamilyUserInfoBloc.tagsList.length > 0 &&
-        addFamilyUserInfoBloc.tagsList.isNotEmpty) {
+  void setTheValuesForDropdown(List<Tags>? result) {
+    if (addFamilyUserInfoBloc!.tagsList != null &&
+        addFamilyUserInfoBloc!.tagsList!.length > 0 &&
+        addFamilyUserInfoBloc!.tagsList!.isNotEmpty) {
       for (var mediaResultObj in mediaResultFiltered) {
-        for (var tagsSelected in addFamilyUserInfoBloc.tagsList) {
-          if (tagsSelected.name.toUpperCase() ==
-              mediaResultObj.name.toUpperCase()) {
+        for (var tagsSelected in addFamilyUserInfoBloc!.tagsList!) {
+          if (tagsSelected.name!.toUpperCase() ==
+              mediaResultObj.name!.toUpperCase()) {
             mediaResultObj.isChecked = true;
           }
         }
@@ -3088,11 +3149,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void refreshDropDown(List<Tags> result) {
-    if (selectedTags != null && selectedTags.isNotEmpty) {
+    if (selectedTags != null && selectedTags!.isNotEmpty) {
       for (var mediaResultObj in mediaResultFiltered) {
-        for (var tagsSelected in selectedTags) {
-          if (tagsSelected.name.toUpperCase() ==
-              mediaResultObj.name.toUpperCase()) {
+        for (var tagsSelected in selectedTags!) {
+          if (tagsSelected.name!.toUpperCase() ==
+              mediaResultObj.name!.toUpperCase()) {
             mediaResultObj.isChecked = true;
           }
         }
@@ -3103,9 +3164,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void addSelectedcategoriesToList(List<Tags> result) {
     selectedTags = [];
     for (final mediaResultObj in result) {
-      if (!selectedTags.contains(mediaResultObj.name) &&
-          mediaResultObj.isChecked) {
-        selectedTags.add(mediaResultObj);
+      if (!selectedTags!.contains(mediaResultObj.name) &&
+          mediaResultObj.isChecked!) {
+        selectedTags!.add(mediaResultObj);
       }
     }
   }
@@ -3145,7 +3206,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                               isClickable: true,
                               tags: mediaResultFiltered,
                               onChecked: (result) {
-                                addSelectedcategoriesToList(result);
+                                addSelectedcategoriesToList(result!);
                                 refreshDropDown(result);
                               },
                             ),
@@ -3165,25 +3226,25 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void methodToAddFamilyFromNotification() async {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
 
-    final mobileNo = '${mobileNoController.text}';
-    final addFamilyMemberRequest = {};
+    var mobileNo = '${mobileNoController.text}';
+    var addFamilyMemberRequest = {};
     addFamilyMemberRequest['isVirtualUser'] = false;
     addFamilyMemberRequest['firstName'] = firstNameController.text;
     addFamilyMemberRequest['lastName'] = lastNameController.text;
     addFamilyMemberRequest['dateOfBirth'] = dateOfBirthController.text;
-    addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
+    addFamilyMemberRequest['relationship'] = selectedRelationShip!.id;
     addFamilyMemberRequest['phoneNumber'] =
         mobileNo; //TODO this has be dynamic country code.
     addFamilyMemberRequest['email'] = emailController.text;
     addFamilyMemberRequest['isPrimary'] = true;
 
-    final jsonString = convert.jsonEncode(addFamilyMemberRequest);
+    var jsonString = convert.jsonEncode(addFamilyMemberRequest);
 
     var userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
 
     _familyListBloc.postUserLinking(jsonString).then((userLinking) {
-      if (userLinking.success) {
-        Navigator.pop(_keyLoader.currentContext);
+      if (userLinking!.success!) {
+        Navigator.pop(_keyLoader.currentContext!);
 
         Navigator.push(
           dialogContext,
@@ -3202,11 +3263,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           ),
         );
       } else {
-        if (widget.arguments.isForFamilyAddition == true) {
-          Navigator.pop(_keyLoader.currentContext);
+        if (widget.arguments!.isForFamilyAddition == true) {
+          Navigator.pop(_keyLoader.currentContext!);
           Navigator.pop(context);
           MyProfileModel myProfileModel =
-              new MyProfileModel(isSuccess: true, message: userLinking.message);
+          new MyProfileModel(isSuccess: true, message: userLinking.message);
           Navigator.of(context)
               .pop({"myProfileData": convert.jsonEncode(myProfileModel)});
         }
@@ -3244,13 +3305,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
   }
 
-  void getUnitFromPreferredMeasurement(ProfileSetting profileSetting) async {
+  void getUnitFromPreferredMeasurement(ProfileSetting? profileSetting) async {
     if (profileSetting?.preferredMeasurement != null) {
       try {
         heightUnit =
-            await profileSetting?.preferredMeasurement?.height?.unitCode;
+            await profileSetting?.preferredMeasurement?.height?.unitCode??'';
         weightUnit =
-            await profileSetting?.preferredMeasurement?.weight?.unitCode;
+            await profileSetting?.preferredMeasurement?.weight?.unitCode??'';
         setHeightAndWeightUnit();
       } catch (e) {
         setUnitBasedOnRegion();

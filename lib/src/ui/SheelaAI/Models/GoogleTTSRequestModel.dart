@@ -1,10 +1,11 @@
+
 import '../../../../constants/fhb_parameters.dart';
 
 class GoogleTTSRequestModel {
-  InputTTS input;
-  Voice voice;
-  AudioConfig audioConfig;
-  bool isAudioFile = false;
+  InputTTS? input;
+  Voice? voice;
+  AudioConfig? audioConfig;
+  bool? isAudioFile = false;
 
   GoogleTTSRequestModel({
     this.input,
@@ -26,16 +27,16 @@ class GoogleTTSRequestModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data[strinput] = input.toJson();
-    data[strvoice] = voice.toJson();
-    data[straudioConfig] = audioConfig.toJson();
+    data[strinput] = input!.toJson();
+    data[strvoice] = voice!.toJson();
+    data[straudioConfig] = audioConfig!.toJson();
     data[strisAudioFile] = isAudioFile;
     return data;
   }
 }
 
 class InputTTS {
-  String text;
+  String? text;
 
   InputTTS({this.text});
 
@@ -51,7 +52,7 @@ class InputTTS {
 }
 
 class Voice {
-  String languageCode;
+  String? languageCode;
   String ssmlGenderType = Female;
   Voice({this.languageCode});
   Voice.fromJson(Map<String, dynamic> json) {
@@ -67,7 +68,7 @@ class Voice {
 }
 
 class AudioConfig {
-  String audioEncodingType;
+  String? audioEncodingType;
   AudioConfig({this.audioEncodingType = strMP3});
   AudioConfig.fromJson(Map<String, dynamic> json) {
     audioEncodingType = json[audioEncoding];

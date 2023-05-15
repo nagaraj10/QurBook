@@ -1,16 +1,17 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/WeekdayPreference.dart';
 
 class SlotSessionsModel {
-  String doctorSessionId;
-  String sessionStartTime;
-  String sessionEndTime;
-  int duration;
-  List<WeekdayPreference> weekdayPreference;
-  bool isEnabled;
-  bool isActive;
-  int slotCounts;
-  List<Slots> slots;
+  String? doctorSessionId;
+  String? sessionStartTime;
+  String? sessionEndTime;
+  int? duration;
+  List<WeekdayPreference>? weekdayPreference;
+  bool? isEnabled;
+  bool? isActive;
+  int? slotCounts;
+  List<Slots>? slots;
 
   SlotSessionsModel(
       {this.doctorSessionId,
@@ -29,18 +30,18 @@ class SlotSessionsModel {
     sessionEndTime = json['sessionEndTime'];
     duration = json['duration'];
     if (json['weekdayPreference'] != null) {
-      weekdayPreference = new List<WeekdayPreference>();
+      weekdayPreference = <WeekdayPreference>[];
       json['weekdayPreference'].forEach((v) {
-        weekdayPreference.add(new WeekdayPreference.fromJson(v));
+        weekdayPreference!.add(new WeekdayPreference.fromJson(v));
       });
     }
     isEnabled = json['isEnabled'];
     isActive = json['isActive'];
     slotCounts = json['slotCounts'];
     if (json['slots'] != null) {
-      slots = new List<Slots>();
+      slots = <Slots>[];
       json['slots'].forEach((v) {
-        slots.add(new Slots.fromJson(v));
+        slots!.add(new Slots.fromJson(v));
       });
     }
   }
@@ -53,13 +54,13 @@ class SlotSessionsModel {
     data['duration'] = this.duration;
     if (this.weekdayPreference != null) {
       data['weekdayPreference'] =
-          this.weekdayPreference.map((v) => v.toJson()).toList();
+          this.weekdayPreference!.map((v) => v.toJson()).toList();
     }
     data['isEnabled'] = this.isEnabled;
     data['isActive'] = this.isActive;
     data['slotCounts'] = this.slotCounts;
     if (this.slots != null) {
-      data['slots'] = this.slots.map((v) => v.toJson()).toList();
+      data['slots'] = this.slots!.map((v) => v.toJson()).toList();
     }
     return data;
   }

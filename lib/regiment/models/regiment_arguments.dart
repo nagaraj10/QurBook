@@ -1,5 +1,6 @@
+
 class RegimentArguments {
-  String eventId;
+  String? eventId;
 
   RegimentArguments({this.eventId});
 }

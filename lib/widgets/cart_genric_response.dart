@@ -1,6 +1,7 @@
+
 class CartGenricResponse {
-  bool isSuccess;
-  String message;
+  bool? isSuccess;
+  String? message;
 
   CartGenricResponse({this.isSuccess, this.message});
 

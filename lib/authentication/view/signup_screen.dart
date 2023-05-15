@@ -35,8 +35,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   bool _autoValidateBool = false;
   FlutterToast toast = FlutterToast();
   final _SignupKey = GlobalKey<FormState>();
-  List<UserContactCollection3> userCollection;
-  AuthViewModel authViewModel;
+  List<UserContactCollection3>? userCollection;
+  AuthViewModel? authViewModel;
   var checkedValue = true;
   Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
 
@@ -48,7 +48,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     super.initState();
 
     authViewModel = AuthViewModel();
-    userCollection = List();
+    userCollection = [];
   }
 
   @override
@@ -80,7 +80,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.symmetric(
-                      horizontal: CommonUtil().isTablet ? 50 : 20),
+                      horizontal: CommonUtil().isTablet! ? 50 : 20),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -130,7 +130,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 autovalidate: _autoValidateBool,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .charValidation(value, patternChar,
+                                      .charValidation(value!, patternChar as String,
                                           strEnterFirstname);
                                 },
                                 onSaved: (value) {},
@@ -165,7 +165,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: lastNamController,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .charValidation(value, patternChar,
+                                      .charValidation(value!, patternChar as String,
                                           strEnterLastNamee);
                                 },
                                 onSaved: (value) {},
@@ -212,7 +212,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 ),
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .phoneValidation(value, patternPhoneNew,
+                                      .phoneValidation(value!, patternPhoneNew as String,
                                           strPhoneCantEmpty);
                                 },
                                 controller: mobileNoController,
@@ -251,7 +251,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: emailController,
                                 validator: (value) {
                                   return CommonUtil.toCheckEmailValidiation(
-                                      value, patternEmail, strEmailValidText);
+                                      value, patternEmail as String, strEmailValidText);
                                 },
                                 onSaved: (value) {},
                               ),
@@ -296,8 +296,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: passwordController,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .passwordValidation(value,
-                                          patternPassword, strPassCantEmpty);
+                                      .passwordValidation(value!,
+                                          patternPassword as String, strPassCantEmpty);
                                 },
                               ),
                             ),
@@ -381,17 +381,17 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
   _savePatientDetails() async {
     FocusScope.of(context).unfocus();
-    userCollection.clear();
-    userCollection = List();
-    if (_SignupKey.currentState.validate() && checkedValue) {
-      _SignupKey.currentState.save();
+    userCollection!.clear();
+    userCollection = [];
+    if (_SignupKey.currentState!.validate() && checkedValue) {
+      _SignupKey.currentState!.save();
       LoaderClass.showLoadingDialog(context);
       var user3 = UserContactCollection3();
       user3.phoneNumber =
           '${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
       user3.email = emailController.text.trim();
       user3.isPrimary = true;
-      userCollection.add(user3);
+      userCollection!.add(user3);
       var patientSignUp = PatientSignUp();
       patientSignUp.firstName = firstNameController.text.trim();
       patientSignUp.lastName = lastNamController.text.trim();
@@ -402,8 +402,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
       postMediaData[strlastName] = lastNamController.text.trim();
       postMediaData[strsource] = strSource;
       postMediaData[strpassword] = passwordController.text.trim();
-      postMediaData[struserContactCollection3] = userCollection.toList();
-      final response = await authViewModel.registerPatient(postMediaData);
+      postMediaData[struserContactCollection3] = userCollection!.toList();
+      final response = await authViewModel!.registerPatient(postMediaData);
       print(response.toString());
       _checkResponse(response);
     } else {
@@ -416,7 +416,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   _checkResponse(PatientSignUp response) {
     print(response.toJson().toString());
     LoaderClass.hideLoadingDialog(context);
-    if (response.isSuccess) {
+    if (response.isSuccess!) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -431,7 +431,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
         ),
       );
     } else {
-      toast.getToastWithBuildContext(response.message, Colors.red, context);
+      toast.getToastWithBuildContext(response.message!, Colors.red, context);
     }
   }
 
@@ -483,7 +483,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
           value: checkedValue,
           onChanged: (newValue) {
             setState(() {
-              checkedValue = newValue;
+              checkedValue = newValue!;
             });
           },
         ),
@@ -495,7 +495,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               InkWell(
                 onTap: () {
                   CommonUtil().openWebViewNew(
-                      Constants.terms_of_service, variable.file_terms, true);
+                      Constants.terms_of_service, CommonUtil.isUSRegion()?variable.file_terms_us:variable.file_terms, true);
                 },
                 child: Text(
                   'T&C',
@@ -508,7 +508,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               InkWell(
                 onTap: () {
                   CommonUtil().openWebViewNew(
-                      Constants.privacy_policy, variable.file_privacy, true);
+                      Constants.privacy_policy, CommonUtil.isUSRegion()?variable.file_privacy_us:variable.file_privacy, true);
                 },
                 child: Text(
                   'Privacy Policy ',

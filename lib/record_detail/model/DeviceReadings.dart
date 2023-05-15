@@ -1,9 +1,10 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class DeviceReadings {
-  String parameter;
-  String unit;
-  String value;
+  String? parameter;
+  String? unit;
+  String? value;
 
   DeviceReadings({this.parameter, this.unit, this.value});
 

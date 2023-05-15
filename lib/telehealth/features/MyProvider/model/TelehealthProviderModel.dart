@@ -1,10 +1,11 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/ProfilePic.dart';
 
 class TelehealthProviderModel {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   TelehealthProviderModel(
       {this.status, this.success, this.message, this.response});
@@ -24,15 +25,15 @@ class TelehealthProviderModel {
     data['success'] = this.success;
     data['message'] = this.message;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  int count;
-  MyProvidersData data;
+  int? count;
+  MyProvidersData? data;
 
   Response({this.count, this.data});
 
@@ -45,14 +46,14 @@ class Response {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['count'] = this.count;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class MyProvidersData {
-  MedicalPreferences medicalPreferences;
+  MedicalPreferences? medicalPreferences;
 
   MyProvidersData({this.medicalPreferences});
 
@@ -65,14 +66,14 @@ class MyProvidersData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.medicalPreferences != null) {
-      data['medicalPreferences'] = this.medicalPreferences.toJson();
+      data['medicalPreferences'] = this.medicalPreferences!.toJson();
     }
     return data;
   }
 }
 
 class MedicalPreferences {
-  Preferences preferences;
+  Preferences? preferences;
 
   MedicalPreferences({this.preferences});
 
@@ -85,36 +86,36 @@ class MedicalPreferences {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.preferences != null) {
-      data['preferences'] = this.preferences.toJson();
+      data['preferences'] = this.preferences!.toJson();
     }
     return data;
   }
 }
 
 class Preferences {
-  List<DoctorIds> doctorIds;
-  List<HospitalsIds> hospitalIds;
-  List<LaboratoryIds> laboratoryIds;
+  List<DoctorIds>? doctorIds;
+  List<HospitalsIds>? hospitalIds;
+  List<LaboratoryIds>? laboratoryIds;
 
   Preferences({this.doctorIds, this.hospitalIds, this.laboratoryIds});
 
   Preferences.fromJson(Map<String, dynamic> json) {
     if (json['doctorIds'] != null) {
-      doctorIds = new List<DoctorIds>();
+      doctorIds = <DoctorIds>[];
       json['doctorIds'].forEach((v) {
-        doctorIds.add(new DoctorIds.fromJson(v));
+        doctorIds!.add(new DoctorIds.fromJson(v));
       });
     }
     if (json['hospitalIds'] != null) {
-      hospitalIds = new List<HospitalsIds>();
+      hospitalIds = <HospitalsIds>[];
       json['hospitalIds'].forEach((v) {
-        hospitalIds.add(new HospitalsIds.fromJson(v));
+        hospitalIds!.add(new HospitalsIds.fromJson(v));
       });
     }
     if (json['laboratoryIds'] != null) {
-      laboratoryIds = new List<LaboratoryIds>();
+      laboratoryIds = <LaboratoryIds>[];
       json['laboratoryIds'].forEach((v) {
-        laboratoryIds.add(new LaboratoryIds.fromJson(v));
+        laboratoryIds!.add(new LaboratoryIds.fromJson(v));
       });
     }
   }
@@ -122,54 +123,54 @@ class Preferences {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.doctorIds != null) {
-      data['doctorIds'] = this.doctorIds.map((v) => v.toJson()).toList();
+      data['doctorIds'] = this.doctorIds!.map((v) => v.toJson()).toList();
     }
     if (this.hospitalIds != null) {
-      data['hospitalIds'] = this.hospitalIds.map((v) => v.toJson()).toList();
+      data['hospitalIds'] = this.hospitalIds!.map((v) => v.toJson()).toList();
     }
     if (this.laboratoryIds != null) {
       data['laboratoryIds'] =
-          this.laboratoryIds.map((v) => v.toJson()).toList();
+          this.laboratoryIds!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class DoctorIds {
-  String id;
-  String name;
-  String addressLine1;
-  String addressLine2;
-  String website;
-  String googleMapUrl;
-  String phoneNumber1;
-  String phoneNumber2;
-  String phoneNumber3;
-  String phoneNumber4;
-  String email;
-  String state;
-  String city;
-  bool isActive;
-  String specialization;
-  bool isUserDefined;
-  String description;
-  String createdBy;
-  String lastModifiedOn;
-  ProfilePic profilePic;
-  ProfilePic profilePicThumbnail;
-  String firstName;
-  String lastName;
-  String genderId;
-  String dob;
-  String cityId;
-  String stateId;
-  String pinCode;
-  String aboutMe;
-  String lastModifiedBy;
-  bool isTelehealthEnabled;
-  bool isMCIVerified;
-  bool isDefault;
-  String doctorPatientMappingId;
+  String? id;
+  String? name;
+  String? addressLine1;
+  String? addressLine2;
+  String? website;
+  String? googleMapUrl;
+  String? phoneNumber1;
+  String? phoneNumber2;
+  String? phoneNumber3;
+  String? phoneNumber4;
+  String? email;
+  String? state;
+  String? city;
+  bool? isActive;
+  String? specialization;
+  bool? isUserDefined;
+  String? description;
+  String? createdBy;
+  String? lastModifiedOn;
+  ProfilePic? profilePic;
+  ProfilePic? profilePicThumbnail;
+  String? firstName;
+  String? lastName;
+  String? genderId;
+  String? dob;
+  String? cityId;
+  String? stateId;
+  String? pinCode;
+  String? aboutMe;
+  String? lastModifiedBy;
+  bool? isTelehealthEnabled;
+  bool? isMCIVerified;
+  bool? isDefault;
+  String? doctorPatientMappingId;
 
   DoctorIds(
       {this.id,
@@ -270,10 +271,10 @@ class DoctorIds {
     data['createdBy'] = this.createdBy;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.profilePic != null) {
-      data['profilePic'] = this.profilePic.toJson();
+      data['profilePic'] = this.profilePic!.toJson();
     }
     if (this.profilePicThumbnail != null) {
-      data['profilePicThumbnail'] = this.profilePicThumbnail.toJson();
+      data['profilePicThumbnail'] = this.profilePicThumbnail!.toJson();
     }
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
@@ -295,32 +296,32 @@ class DoctorIds {
 
 
 class HospitalsIds {
-  String id;
-  String createdBy;
-  String name;
-  String phoneNumber1;
-  String phoneNumber2;
-  String phoneNumber3;
-  String phoneNumber4;
-  String addressLine1;
-  String addressLine2;
-  String city;
-  String state;
-  String latitude;
-  String longitude;
-  String logo;
-  String logoThumbnail;
-  int zipCode;
-  String website;
-  String email;
-  String googleMapUrl;
-  String branch;
-  bool isUserDefined;
-  String description;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  bool isDefault;
+  String? id;
+  String? createdBy;
+  String? name;
+  String? phoneNumber1;
+  String? phoneNumber2;
+  String? phoneNumber3;
+  String? phoneNumber4;
+  String? addressLine1;
+  String? addressLine2;
+  String? city;
+  String? state;
+  String? latitude;
+  String? longitude;
+  String? logo;
+  String? logoThumbnail;
+  int? zipCode;
+  String? website;
+  String? email;
+  String? googleMapUrl;
+  String? branch;
+  bool? isUserDefined;
+  String? description;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  bool? isDefault;
 
   HospitalsIds(
       {this.id,
@@ -415,35 +416,35 @@ class HospitalsIds {
 
 
 class LaboratoryIds {
-  String id;
-  String createdBy;
-  String name;
-  String logo;
-  String latitude;
-  String longitude;
-  String logoThumbnail;
-  int zipCode;
-  String website;
-  String city;
-  String googleMapUrl;
-  String branch;
-  String addressLine1;
-  String addressLine2;
-  String state;
-  String email;
-  String description;
-  String phoneNumber1;
-  String phoneNumber2;
-  String phoneNumber3;
-  String phoneNumber4;
-  bool isUserDefined;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String entityCode;
-  String goFhbCode;
-  bool isDefault;
-  String labPatientMappingId;
+  String? id;
+  String? createdBy;
+  String? name;
+  String? logo;
+  String? latitude;
+  String? longitude;
+  String? logoThumbnail;
+  int? zipCode;
+  String? website;
+  String? city;
+  String? googleMapUrl;
+  String? branch;
+  String? addressLine1;
+  String? addressLine2;
+  String? state;
+  String? email;
+  String? description;
+  String? phoneNumber1;
+  String? phoneNumber2;
+  String? phoneNumber3;
+  String? phoneNumber4;
+  bool? isUserDefined;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? entityCode;
+  String? goFhbCode;
+  bool? isDefault;
+  String? labPatientMappingId;
 
   LaboratoryIds(
       {this.id,

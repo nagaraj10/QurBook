@@ -1,4 +1,6 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -28,23 +30,38 @@ class _SymptomListScreen extends State<SymptomListScreen> {
 
   // Future<RegimentResponseModel> symptomsList;
 
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
+
   @override
   void initState() {
     super.initState();
 
-    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+    Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents =
         [];
     controller.getSymptomList(isLoading: true);
 
+    //onInit();
+
     /* symptomsList = Provider.of<SymptomViewModel>(context, listen: false)
         .getSymptomListData();*/
+  }
+
+  onInit() async {
+    try {
+      qurhomeDashboardController.getModuleAccess();
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: OrientationBuilder(builder: (_, orientation) {
-        if (orientation == Orientation.landscape && CommonUtil().isTablet)
+        if (orientation == Orientation.landscape && CommonUtil().isTablet!)
           return Obx(() => controller.loadingData.isTrue
               ? CommonCircularQurHome()
               : Container(
@@ -55,7 +72,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                         child: Column(
                       children: [
                         Expanded(
-                            child: controller.symptomList?.value?.length != 0
+                            child: controller.symptomList.value.length != 0
                                 ? GridView.builder(
                                     controller: scrollController,
                                     shrinkWrap: true,
@@ -71,13 +88,12 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                                     ),
                                     // physics: NeverScrollableScrollPhysics(),
                                     itemCount:
-                                        controller.symptomList?.value?.length ??
-                                            0,
+                                        controller.symptomList.value.length,
                                     itemBuilder: (context, index) {
                                       final symptomData = (index <
                                               controller
-                                                  .symptomList?.value?.length)
-                                          ? controller.symptomList?.value[index]
+                                                  .symptomList.value.length)
+                                          ? controller.symptomList.value[index]
                                           : RegimentDataModel();
                                       return SymptomItemCard(
                                         orientation: orientation,
@@ -132,7 +148,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                       child: Column(
                     children: [
                       Expanded(
-                          child: controller.symptomList?.value?.length != 0
+                          child: controller.symptomList.value.length != 0
                               ? ListView.builder(
                                   controller: scrollController,
                                   shrinkWrap: true,
@@ -141,13 +157,12 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                                   ),
                                   // physics: NeverScrollableScrollPhysics(),
                                   itemCount:
-                                      controller.symptomList?.value?.length ??
-                                          0,
+                                      controller.symptomList.value.length,
                                   itemBuilder: (context, index) {
                                     final symptomData = (index <
                                             controller
-                                                .symptomList?.value?.length)
-                                        ? controller.symptomList?.value[index]
+                                                .symptomList.value.length)
+                                        ? controller.symptomList.value[index]
                                         : RegimentDataModel();
                                     return SymptomItemCard(
                                       orientation: orientation,
@@ -295,8 +310,8 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     );
   }*/
 
-  Color getColor(Activityname activityname, Uformname uformName,
-      Metadata metadata, Orientation orientation) {
+  Color getColor(Activityname? activityname, Uformname? uformName,
+      Metadata? metadata, Orientation orientation) {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
@@ -334,21 +349,21 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     return cardColor;
   }
 
-  dynamic getIcon(Activityname activityname, Uformname uformName,
-      Metadata metadata, Orientation orientation) {
+  dynamic getIcon(Activityname? activityname, Uformname? uformName,
+      Metadata? metadata, Orientation orientation) {
     final iconSize = 40.0.sp;
     try {
       if (metadata?.icon != null) {
-        if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
+        if (metadata?.icon?.toLowerCase().contains('.svg') ?? false) {
           return SvgPicture.network(
-            metadata?.icon,
+            metadata!.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,
           );
         } else {
           return CachedNetworkImage(
-            imageUrl: metadata?.icon,
+            imageUrl: metadata!.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,
@@ -366,7 +381,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     }
   }
 
-  dynamic getDefaultIcon(Activityname activityname, Uformname uformName,
+  dynamic getDefaultIcon(Activityname? activityname, Uformname? uformName,
       double iconSize, Orientation orientation) {
     var isDefault = true;
     dynamic cardIcon = 'assets/launcher/myfhb.png';

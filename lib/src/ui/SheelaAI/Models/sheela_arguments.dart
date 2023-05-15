@@ -1,25 +1,27 @@
+
 class SheelaArgument {
-  bool isSheelaAskForLang = false;
-  String langCode;
-  String sheelaInputs;
-  String rawMessage;
+  bool? isSheelaAskForLang = false;
+  String? langCode;
+  String? sheelaInputs;
+  String? rawMessage;
   bool takeActiveDeviceReadings = false;
   bool isFromBpReading = false;
   bool scheduleAppointment = false;
-  String eId;
+  String? eId;
   bool showUnreadMessage;
   bool isJumperDevice = false;
-  String deviceType;
+  String? deviceType;
   bool isSheelaFollowup;
-  String message;
-  String task;
-  String action;
-  String activityName;
-  String audioMessage;
-  String textSpeechSheela;
-  String eventType;
-  String rawTitle;
-  String others;
+  bool isSurvey = false;
+  String? message;
+  String? task;
+  String? action;
+  String? activityName;
+  String? audioMessage;
+  String? textSpeechSheela;
+  String? eventType;
+  String? rawTitle;
+  String? others;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -34,6 +36,7 @@ class SheelaArgument {
     this.isJumperDevice = false,
     this.deviceType,
     this.isSheelaFollowup = false,
+    this.isSurvey = false,
     this.message,
     this.task,
     this.action,

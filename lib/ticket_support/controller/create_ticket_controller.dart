@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
@@ -14,11 +15,11 @@ import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/services/ticket_service.dart';
 
 class CreateTicketController extends GetxController {
-  List<Hospitals> labsList = [];
+  List<Hospitals>? labsList = [];
   List<Hospitals> hospitalList = [];
-  List<Doctors> doctorsList = [];
+  List<Doctors?>? doctorsList = [];
 
-  ProvidersBloc _providersBloc;
+  late ProvidersBloc _providersBloc;
   var isCTLoading = false.obs;
   var isPreferredLabDisable = false.obs;
   var labBookAppointment = false.obs;
@@ -71,26 +72,26 @@ class CreateTicketController extends GetxController {
           isCTLoading.value = false;
           if (value != null &&
               value.result != null &&
-              value.result.labs != null &&
-              value.result.labs.isNotEmpty) {
-            labsList = value.result.labs;
-            labsList.sort((a, b) => CommonUtil()
+              value.result!.labs != null &&
+              value.result!.labs!.isNotEmpty) {
+            labsList = value.result!.labs;
+            labsList!.sort((a, b) => CommonUtil()
                 .validString(a.name.toString())
                 .toLowerCase()
                 .compareTo(
                     CommonUtil().validString(b.name.toString()).toLowerCase()));
-            labsList.insert(0, new Hospitals(name: 'Select'));
+            labsList!.insert(0, new Hospitals(name: 'Select'));
             isPreferredLabDisable.value = false;
           } else {
             labsList = [];
-            labsList.insert(0, new Hospitals(name: 'Select'));
+            labsList!.insert(0, new Hospitals(name: 'Select'));
             isPreferredLabDisable.value = true;
           }
         });
       } else {}
     } catch (e) {
       labsList = [];
-      labsList.insert(0, new Hospitals(name: 'Select'));
+      labsList!.insert(0, new Hospitals(name: 'Select'));
       isCTLoading.value = false;
       isPreferredLabDisable.value = true;
     }
@@ -106,28 +107,28 @@ class CreateTicketController extends GetxController {
           isCTLoading.value = false;
           if (value != null &&
               value.result != null &&
-              value.result.doctors != null &&
-              value.result.doctors.isNotEmpty) {
-            doctorsList = value.result.doctors;
-            doctorsList.sort((a, b) => CommonUtil()
-                .validString(a.user.name.toString())
+              value.result!.doctors != null &&
+              value.result!.doctors!.isNotEmpty) {
+            doctorsList = value.result!.doctors;
+            doctorsList!.sort((a, b) => CommonUtil()
+                .validString(a!.user!.name.toString())
                 .toLowerCase()
                 .compareTo(CommonUtil()
-                    .validString(b.user.name.toString())
+                    .validString(b!.user!.name.toString())
                     .toLowerCase()));
             // ignore: unnecessary_new
-            doctorsList.insert(0, new Doctors(user: User(name: 'Select')));
+            doctorsList!.insert(0, new Doctors(user: User(name: 'Select')));
             isPreferredDoctorDisable.value = false;
           } else {
             doctorsList = [];
-            doctorsList.insert(0, new Doctors(user: User(name: 'Select')));
+            doctorsList!.insert(0, new Doctors(user: User(name: 'Select')));
             isPreferredDoctorDisable.value = true;
           }
         });
       } else {}
     } catch (e) {
       doctorsList = [];
-      doctorsList.insert(0, new Doctors(user: User(name: 'Select')));
+      doctorsList!.insert(0, new Doctors(user: User(name: 'Select')));
       isCTLoading.value = false;
       isPreferredDoctorDisable.value = true;
     }
@@ -143,11 +144,11 @@ class CreateTicketController extends GetxController {
 
       if (memberShipDetailResponse != null &&
           memberShipDetailResponse.result != null &&
-          memberShipDetailResponse.result.length > 0) {
-        memberShipDetailResponse?.result?.forEach((element) {
+          memberShipDetailResponse.result!.length > 0) {
+        memberShipDetailResponse.result?.forEach((element) {
           providerList.add(FieldData.fromJson({
-            id_sheela: element?.healthOrganizationId??"",
-            strName: element?.healthOrganizationName??"",
+            id_sheela: element.healthOrganizationId,
+            strName: element.healthOrganizationName,
           }));
         });
       }

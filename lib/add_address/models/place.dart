@@ -1,10 +1,11 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/variable_constant.dart' as variable;
 
 class Place {
-  final String title;
-  final String description;
-  final String placeId;
+  final String? title;
+  final String? description;
+  final String? placeId;
 
   Place({this.title, this.description, this.placeId});
 
@@ -23,16 +24,16 @@ class Place {
 }
 
 class PlaceDetail {
-  final String placeId;
-  final String formattedAddress;
-  final String formattedPhoneNumber;
-  final String name;
-  final double rating;
-  final String vicinity;
+  final String? placeId;
+  final String? formattedAddress;
+  final String? formattedPhoneNumber;
+  final String? name;
+  final double? rating;
+  final String? vicinity;
   final String website;
-  final String url;
-  final double lat;
-  final double lng;
+  final String? url;
+  final double? lat;
+  final double? lng;
 
   PlaceDetail({
     this.placeId,

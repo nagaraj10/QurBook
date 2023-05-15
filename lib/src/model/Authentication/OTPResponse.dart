@@ -1,10 +1,11 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class OTPResponse {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   OTPResponse({this.status, this.success, this.message, this.response});
 
@@ -23,18 +24,18 @@ class OTPResponse {
     data[parameters.strSuccess] = success;
     data[parameters.strMessage] = message;
     if (response != null) {
-      data[parameters.strResponse] = response.toJson();
+      data[parameters.strResponse] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  String id;
-  String countryCode;
-  String phoneNumber;
-  String lastLoggedIn;
-  String authToken;
+  String? id;
+  String? countryCode;
+  String? phoneNumber;
+  String? lastLoggedIn;
+  String? authToken;
 
   Response(
       {this.id,

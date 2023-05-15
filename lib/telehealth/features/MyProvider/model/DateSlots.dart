@@ -1,16 +1,17 @@
+
 class DateSlots {
-  List<DateSlotTimings> dateSlotTimings;
+  List<DateSlotTimings>? dateSlotTimings;
 
   DateSlots({this.dateSlotTimings});
 }
 
 class DateSlotTimings {
-  String dateTimings;
-  List<DateTiming> dateTimingsSlots;
+  String? dateTimings;
+  List<DateTiming>? dateTimingsSlots;
   DateSlotTimings({this.dateTimings,this.dateTimingsSlots});
 }
 
 class DateTiming {
-  String timeslots;
+  String? timeslots;
   DateTiming({this.timeslots});
 }

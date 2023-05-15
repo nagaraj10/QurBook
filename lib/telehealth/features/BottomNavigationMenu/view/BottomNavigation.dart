@@ -1,3 +1,4 @@
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,9 @@ class BottomNavigationWidget extends StatefulWidget {
       {this.selectedPageIndex,
       this.myFunc,
       this.bottomNavigationArgumentsList});
-  final int selectedPageIndex;
-  final Function myFunc;
-  final List<BottomNavigationArguments> bottomNavigationArgumentsList;
+  final int? selectedPageIndex;
+  final Function? myFunc;
+  final List<BottomNavigationArguments>? bottomNavigationArgumentsList;
 
   @override
   _BottomNavigationWidgetState createState() => _BottomNavigationWidgetState();
@@ -25,7 +26,7 @@ class BottomNavigationWidget extends StatefulWidget {
 class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   GlobalKey _bottomNavigationKey = GlobalKey();
   bool firstTym = false;
-  bottomNavigationVModel.BottomNavigationViewModel bottomNavigationViewModel;
+  late bottomNavigationVModel.BottomNavigationViewModel bottomNavigationViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
       padding: EdgeInsets.only(top: 20),
       child: CurvedNavigationBar(
           key: _bottomNavigationKey,
-          index: widget.selectedPageIndex,
+          index: widget.selectedPageIndex!,
           height: 60.0.h,
           items: getAllWidgetsInsideBottom(),
           color: Colors.white,
@@ -50,17 +51,17 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           });
         }, */
           onTap: (index) {
-            widget.myFunc(index);
+            widget.myFunc!(index);
           }),
     );
   }
 
   List<Widget> getAllWidgetsInsideBottom() {
-    List<Widget> widgetsForBottom = new List();
+    List<Widget> widgetsForBottom = [];
     int i = 0;
 
     for (BottomNavigationArguments bottomNavigationArguments
-        in widget.bottomNavigationArgumentsList) {
+        in widget.bottomNavigationArgumentsList!) {
       widgetsForBottom.add(new BottomBarWidget(
         name: bottomNavigationArguments.name,
         icon: bottomNavigationArguments.imageIcon,

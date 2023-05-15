@@ -89,6 +89,7 @@ const String enterLastName = 'Enter Last Name';
 const String selectGender = 'Select Gender';
 const String selectDOB = 'Select DOB';
 const String selectYOB = 'Enter year of birth';
+const String selectDateOfBirth = 'Enter Date of birth';
 const String selectRHType = 'Select Rh type';
 const String selectBloodGroup = 'Select Blood group';
 
@@ -149,7 +150,6 @@ const String icon_delete_image = 'assets/icons/delete_image.png';
 const String icon_edit_image = 'assets/icons/edit.png';
 const String icon_photo_image = 'assets/icons/photo_image.png';
 const String icon_save_image = 'assets/icons/save_image.png';
-const String icon_qurplan = 'assets/launcher/qurplan.png';
 const String icon_qurhome = 'assets/Qurhome/Qurhome.png';
 const String icon_calendar = 'assets/Qurhome/calendar.png';
 const String icon_device_scan_measure = 'assets/Qurhome/scan_search_device.gif';
@@ -187,6 +187,7 @@ const String icon_provider = 'assets/navicons/my_providers.png';
 const String icon_orderHistory = 'assets/navicons/orderHistory.png';
 const String icon_lock = 'assets/settings/unlock.png';
 const String lock_icon = 'assets/lock_icon.png';
+const String remove_user = 'assets/settings/remove_user.png';
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';
@@ -201,6 +202,8 @@ const String icon_something_wrong = 'assets/something-wrong.png';
 const String icon_refresh_dash = 'assets/icons/refresh_dash.png';
 const String icon_appointment_regimen = 'assets/icons/appointment_regimen.png';
 const String icon_undo = 'assets/icons/ic_undo.png';
+const String icon_undo_reg = 'assets/icons/ic_undo_reg.png';
+const String icon_view_eye = 'assets/icons/ic_view_eye.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
@@ -218,10 +221,7 @@ const String icon_refer_friend_icon = 'assets/icons/refer_a_friend.png';
 const String icon_report_icon = 'assets/icons/report_icon.png';
 const String icon_help_support = 'assets/icons/help_support.png';
 const String icon_dashboardCard = 'assets/Qurhome/QurhomeCard.svg';
-// const String icon_check_symptoms = 'assets/dashboard/symptoms.svg';
-// const String icon_how_to_use = 'assets/dashboard/information.svg';
-// const String icon_my_family = 'assets/dashboard/home.svg';
-// const String icon_my_health_regimen = 'assets/dashboard/clipboard.svg';
+
 const String icon_my_plan = 'assets/dashboard/my-plan.svg';
 const String icon_my_providers = 'assets/dashboard/my-providers.svg';
 const String icon_record_my_vitals = 'assets/dashboard/record-my-vitals.svg';
@@ -245,6 +245,8 @@ const String file_img_all = 'image/*';
 const String file_audio_mp = 'audio/mp3';
 const String file_terms = 'assets/help_docs/myfhb_terms_of_use.html';
 const String file_faq = 'assets/help_docs/myfhb_faq.html';
+const String file_terms_us = 'assets/help_docs/myfhb_us_terms_of_use.html';
+const String file_privacy_us = 'assets/help_docs/myfhb_us_privacy_policy.html';
 
 //for Family Font
 const String font_poppins = 'Poppins';
@@ -256,7 +258,8 @@ const String strBookmarkRecord = 'bookmark record';
 //lockscreen
 const String strQurbookLocked = 'Qurbook is locked';
 const String strUnlock = 'Unlock';
-const String strQurbookLockDescription = 'For your security, you can only use Qurbook when its unlocked';
+const String strQurbookLockDescription =
+    'For your security, you can only use Qurbook when its unlocked';
 
 //for feedback
 const String strChat = 'Chats';
@@ -401,6 +404,13 @@ const String strSkillsIntegration = 'Skills/Integration';
 const String strIntegration = 'Integration';
 const String strPrivacyAndSecurity = 'Privacy and Security';
 
+// User account
+const String strUserAccount = 'User Account';
+const String strDeleteAccountTitle = 'Delete Account';
+const String strDeleteAccountDes = 'Are you sure, you want to delete the account?';
+const String strNotRetrieveDataDes = "Please note that you'll not be able to retrieve any of your data further, Confirm delete";
+const String strCancel = 'Cancel';
+
 // for my family
 
 const String strFetchFamily = 'Fetching family details';
@@ -449,7 +459,7 @@ const String stAudioPath = 'myFHB/Audio';
 const String strDateOfVisit = 'Date of visit: ';
 
 //for Add remainder
-List<String> selectedInterval = ['Day', 'Week', 'Month'];
+List<String?> selectedInterval = ['Day', 'Week', 'Month'];
 const String strUpdateRemainder = 'Update Reminder';
 const String strAddRemainder = 'Add Reminder';
 const String strTitle = 'Title';
@@ -519,7 +529,7 @@ const String strUpdateData = 'Updating Data';
 const String strgetMediaTypes = 'Getting Media Types';
 const String strGetProfileData = 'Getting ProfileData';
 
-String authToken;
+String? authToken;
 
 const String straccept = 'accept';
 const String strContentType = 'Content-Type';
@@ -865,6 +875,14 @@ const String strPastActivityMsgThree = ' from menu.';
 const String strLocationLink = "Location link";
 const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';
+
+//for regimen
+const String strRecorded = 'Recorded at';
+const String strUndo = 'Undo';
+const String strEdit = 'Edit';
+const String strView = 'View';
+const String strConfirms = 'Are you sure?';
+const String strUpdateMsg = 'Do you want to update the changes';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
