@@ -139,7 +139,7 @@ class SheelaAIController extends GetxController {
             stopTTS();
             try {
               if (!conversations.last.endOfConv) {
-                if ((!isMuted.value)) {
+                if ((CommonUtil.isUSRegion() && !isMuted.value)) {
                   gettingReposnseFromNative();
                 }
               } else if ((conversations.last.redirectTo ?? "") ==
@@ -383,7 +383,7 @@ class SheelaAIController extends GetxController {
             sessionToken = const Uuid().v1();
             relationshipId = userId;
           }
-          if ((!isMuted.value)) {
+          if ((CommonUtil.isUSRegion() && !isMuted.value)) {
             playTTS();
           }
           callToCC(currentResponse);
