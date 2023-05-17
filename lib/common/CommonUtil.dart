@@ -1700,6 +1700,12 @@ class CommonUtil {
     return updatedDate;
   }
 
+  static String dateFormatterWithdatetimesecondsApiFormatAI(DateTime dateTime) {
+    final newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final updatedDate = newFormat.format(dateTime);
+    return updatedDate;
+  }
+
   List<CategoryResult> fliterCategories(List<CategoryResult> data) {
     final filteredCategoryData = <CategoryResult>[];
     for (final dataObj in data) {
