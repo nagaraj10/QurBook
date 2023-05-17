@@ -486,6 +486,7 @@ const String strMonth = 'Month';
 const String strUpate = 'Update';
 const String strSave = 'Save';
 const String strFormatEE = 'EEEE';
+const String strPurpose = 'Purpose';
 
 //for my appointments
 const String strDr = 'Dr.';

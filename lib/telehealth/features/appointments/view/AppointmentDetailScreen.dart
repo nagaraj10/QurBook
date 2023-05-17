@@ -385,7 +385,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             commonWidgetForTitleValue(
-                strTitle, appointmentDetailsController.testName.value),
+                strPurpose, appointmentDetailsController.testName.value),
             SizedBox(height: 5.h),
             commonWidgetForTitleValue(appointmentDescription,
                 appointmentDetailsController.description.value),
@@ -400,7 +400,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             commonWidgetForTitleValue(
-                strTitle, appointmentDetailsController.testName.value),
+                strPurpose, appointmentDetailsController.testName.value),
             SizedBox(height: 5.h),
             commonWidgetForTitleValue(appointmentDescription,
                 appointmentDetailsController.description.value),
