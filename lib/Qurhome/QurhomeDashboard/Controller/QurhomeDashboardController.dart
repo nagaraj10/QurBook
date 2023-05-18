@@ -29,7 +29,6 @@ class QurhomeDashboardController extends GetxController {
   Timer? _bleTimer = null;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
   var isLoading = false.obs;
-  var isQurhomeRegimenScreenActive = false.obs;
   var eventId = ''.obs;
   var estart = ''.obs;
 
@@ -103,11 +102,6 @@ class QurhomeDashboardController extends GetxController {
           ? myProfile.result!.firstName!.capitalizeFirstofEach
           : '';
     } catch (e) {}
-
-    if (currentSelectedIndex.value == 0)
-      isQurhomeRegimenScreenActive.value = true;
-    else
-      isQurhomeRegimenScreenActive.value = false;
 
     switch (currentSelectedIndex.value) {
       case 0:

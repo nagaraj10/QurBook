@@ -99,10 +99,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         controller.dateHeader.value = controller.getFormatedDate();
       });
-
       controller.currLoggedEID.value = "";
       controller.isFirstTime.value = true;
-      onInit();
+      Future.delayed(Duration.zero, () async {
+        onInit();
+      });
       chatGetXController!.getUnreadCountFamily().then(
         (value) {
           if (value != null) {
@@ -125,7 +126,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       controller.timer?.cancel();
       controller.timer = null;
       controller.startTimer();
-      qurhomeDashboardController.isQurhomeRegimenScreenActive.value = true;
       super.initState();
     } catch (e) {
       print(e);
@@ -134,26 +134,32 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   onInit() async {
     try {
-      await controller.getRegimenList(
-          isLoading: true, date: "2023-05-15");
+      String strEventId = CommonUtil()
+          .validString(qurhomeDashboardController.eventId.value ?? "");
+      String strEStart = CommonUtil()
+          .validString(qurhomeDashboardController.estart.value ?? "");
+      if (CommonUtil.isUSRegion() && strEStart.trim().isNotEmpty) {
+        controller.restartTimer();
+        await controller.getRegimenList(isLoading: true, date: strEStart);
+      } else {
+        await controller.getRegimenList();
+      }
+      await Future.delayed(Duration(milliseconds: 10));
       qurhomeDashboardController.enableModuleAccess();
       qurhomeDashboardController.getModuleAccess();
       if (CommonUtil.isUSRegion()) {
-        if (qurhomeDashboardController.eventId.value != null &&
-            qurhomeDashboardController.eventId.value.trim().isNotEmpty &&
+        if (strEventId.trim().isNotEmpty &&
             controller.qurHomeRegimenResponseModel?.regimentsList != null &&
             (controller.qurHomeRegimenResponseModel?.regimentsList?.length ??
                     0) >
                 0) {
-          RegimentDataModel? currRegimen = null;
           for (int i = 0;
               i < controller.qurHomeRegimenResponseModel!.regimentsList!.length;
               i++) {
             RegimentDataModel regimentDataModel =
                 controller.qurHomeRegimenResponseModel!.regimentsList![i];
             if ((regimentDataModel.eid ?? "").toString().toLowerCase() ==
-                qurhomeDashboardController.eventId.value) {
-              currRegimen = regimentDataModel;
+                strEventId) {
               if (regimentDataModel.activityOrgin != strAppointmentRegimen) {
                 showRegimenDialog(regimentDataModel, i);
                 await Future.delayed(Duration(milliseconds: 10));
@@ -162,11 +168,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               }
               break;
             }
-          }
-          if (currRegimen == null) {
-            controller.restartTimer();
-            controller.getRegimenList(
-                isLoading: true, date: qurhomeDashboardController.estart.value);
           }
         }
       }
@@ -178,6 +179,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   initSocketCountUnread() {
+    if (qurhomeDashboardController.estart.value.trim().isNotEmpty) return;
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket!
         .off(notifyQurhomeUser);

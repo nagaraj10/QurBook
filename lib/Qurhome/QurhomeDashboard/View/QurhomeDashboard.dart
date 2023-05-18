@@ -111,10 +111,13 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       );
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
-        sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        Future.delayed(Duration.zero, () async {
+          sheelBadgeController.getSheelaBadgeCount(
+              isNeedSheelaDialog:
+                  controller.estart.value.trim().isEmpty ? true : false);
+        });
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
-      controller.isQurhomeRegimenScreenActive.value = true;
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -139,7 +142,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
       CommonUtil().initPortraitMode();
       MyFHB.routeObserver.unsubscribe(this);
-      controller.isQurhomeRegimenScreenActive.value = false;
       super.dispose();
     } catch (e) {
       print(e);
@@ -327,7 +329,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             size: CommonUtil().isTablet! ? 38.0 : 24.0,
                             onTap: () {
                               Get.back();
-                              controller.isQurhomeRegimenScreenActive.value = false;
                             },
                           )
                     : Container(
@@ -599,7 +600,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
             ),
             onWillPop: () async {
               Get.back();
-              controller.isQurhomeRegimenScreenActive.value = false;
               return true;
             },
           ));
