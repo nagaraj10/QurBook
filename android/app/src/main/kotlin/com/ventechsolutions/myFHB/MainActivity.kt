@@ -2396,6 +2396,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         var uuid = intent.getStringExtra(Constants.PROP_UUID)
         val eventType = intent.getStringExtra(Constants.EVENT_TYPE)
         val others = intent.getStringExtra(Constants.OTHERS)
+        val estart = intent.getStringExtra(Constants.PROP_ESTART)
 
 
 
@@ -2462,6 +2463,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         } else if (redirect_to?.contains(Constants.APPOINTMENT_DETAIL) == true) {
 
             sharedValue = "ack&${redirect_to}&${appointmentID}&${notificationListId}"
+        } else if (redirect_to == "regiment_screen") {
+            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${EVEId}&${estart}"
         } else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
@@ -3134,6 +3137,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         val eDateTime: String = data["estart"] as String  //2021-04-20 06:10:00
         val remindin: String = data["remindin"] as String
         val remindBefore: String = data["remindbefore"] as String
+        val eventId = data["eid"] as String
+        val strEStart: String = data["estart"] as String  //2021-04-20 06:10:00
         val importance: String = data["importance"] as String
         val date: String = eDateTime.split(" ")[0]
         val time: String = eDateTime.split(" ")[1]
@@ -3181,7 +3186,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     calendar.timeInMillis,
                     false,
                     false,
-                    channelId
+                    channelId,
+                    eventId.toString(),
+                    strEStart
                 )
             }
         }
@@ -3209,7 +3216,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 calendar.timeInMillis,
                 false,
                 true,
-                channelId
+                channelId,
+                eventId.toString(),
+                strEStart
             )
         }
 
@@ -3240,7 +3249,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     calendar.timeInMillis,
                     false,
                     false,
-                    channelId
+                    channelId,
+                    eventId.toString(),
+                    strEStart
                 )
             }
         }
@@ -3297,7 +3308,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         currentMillis: Long,
         isCancel: Boolean,
         isButtonShown: Boolean,
-        channelId: String
+        channelId: String,
+        eventId: String,
+        eStart: String
     ) {
         try {
             val _sound: Uri =
@@ -3327,6 +3340,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             snoozeIntent.putExtra(this.getString(R.string.currentMillis), currentMillis)
             snoozeIntent.putExtra(this.getString(R.string.title), title)
             snoozeIntent.putExtra(this.getString(R.string.body), body)
+            snoozeIntent.putExtra(Constants.PROP_EVEID, eventId)
+            snoozeIntent.putExtra(Constants.PROP_ESTART, eStart)
             val snoozePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getBroadcast(
                     this,
@@ -3352,6 +3367,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             onTapNS.putExtra(Constants.PROP_DATA, "")
             onTapNS.putExtra(Constants.PROP_REDIRECT_TO, "regiment_screen")
             onTapNS.putExtra(Constants.PROP_HRMID, "")
+            onTapNS.putExtra(Constants.PROP_EVEID, eventId)
+            onTapNS.putExtra(Constants.PROP_ESTART, eStart)
             val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_IMMUTABLE)
 
@@ -3400,6 +3417,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
             notificationIntent.putExtra(ReminderBroadcaster.EID, eId)
             notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
+            notificationIntent.putExtra(Constants.PROP_EVEID, eventId)
+            notificationIntent.putExtra(Constants.PROP_ESTART, eStart)
             val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getBroadcast(
                     this,

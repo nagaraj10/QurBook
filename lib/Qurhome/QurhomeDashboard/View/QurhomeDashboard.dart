@@ -76,7 +76,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     super.didChangeDependencies();
     MyFHB.routeObserver
         .subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
-    controller.isActive.value = true;
   }
 
   onInit() async {
@@ -115,7 +114,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
-      controller.isActive.value = true;
+      controller.isQurhomeRegimenScreenActive.value = true;
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -140,7 +139,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
       CommonUtil().initPortraitMode();
       MyFHB.routeObserver.unsubscribe(this);
-      controller.isActive.value = false;
+      controller.isQurhomeRegimenScreenActive.value = false;
       super.dispose();
     } catch (e) {
       print(e);
@@ -328,7 +327,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             size: CommonUtil().isTablet! ? 38.0 : 24.0,
                             onTap: () {
                               Get.back();
-                              controller.isActive.value = false;
+                              controller.isQurhomeRegimenScreenActive.value = false;
                             },
                           )
                     : Container(
@@ -600,7 +599,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
             ),
             onWillPop: () async {
               Get.back();
-              controller.isActive.value = false;
+              controller.isQurhomeRegimenScreenActive.value = false;
               return true;
             },
           ));

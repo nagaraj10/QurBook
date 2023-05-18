@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -91,8 +90,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     "fastingbloodsugar"
   ];
 
-  FlutterToast toast = FlutterToast();
-  FToast fToast = FToast();
   var qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
 
@@ -128,6 +125,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       controller.timer?.cancel();
       controller.timer = null;
       controller.startTimer();
+      qurhomeDashboardController.isQurhomeRegimenScreenActive.value = true;
       super.initState();
     } catch (e) {
       print(e);
@@ -136,10 +134,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   onInit() async {
     try {
-      await controller.getRegimenList();
+      await controller.getRegimenList(
+          isLoading: true, date: "2023-05-15");
       qurhomeDashboardController.enableModuleAccess();
       qurhomeDashboardController.getModuleAccess();
-      bool isFirstTime = true;
       if (CommonUtil.isUSRegion()) {
         if (qurhomeDashboardController.eventId.value != null &&
             qurhomeDashboardController.eventId.value.trim().isNotEmpty &&
@@ -147,37 +145,29 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             (controller.qurHomeRegimenResponseModel?.regimentsList?.length ??
                     0) >
                 0) {
-          if (isFirstTime) {
-            isFirstTime = false;
-            RegimentDataModel? currRegimen = null;
-            for (int i = 0;
-                i <
-                    controller
-                        .qurHomeRegimenResponseModel!.regimentsList!.length;
-                i++) {
-              RegimentDataModel regimentDataModel =
-                  controller.qurHomeRegimenResponseModel!.regimentsList![i];
-              if ((regimentDataModel.eid ?? "").toString().toLowerCase() ==
-                  qurhomeDashboardController.eventId.value) {
-                currRegimen = regimentDataModel;
-                if (regimentDataModel.activityOrgin != strAppointmentRegimen &&
-                    regimentDataModel.ack == null) {
-                  showRegimenDialog(regimentDataModel, i);
-                  await Future.delayed(Duration(milliseconds: 50));
-                } else if (regimentDataModel.activityOrgin !=
-                        strAppointmentRegimen &&
-                    regimentDataModel.ack != null) {
-                  toast.getToastWithBuildContext(
-                      variable.strActivityCompleted, Colors.blue, context);
-                }
-                break;
+          RegimentDataModel? currRegimen = null;
+          for (int i = 0;
+              i < controller.qurHomeRegimenResponseModel!.regimentsList!.length;
+              i++) {
+            RegimentDataModel regimentDataModel =
+                controller.qurHomeRegimenResponseModel!.regimentsList![i];
+            if ((regimentDataModel.eid ?? "").toString().toLowerCase() ==
+                qurhomeDashboardController.eventId.value) {
+              currRegimen = regimentDataModel;
+              if (regimentDataModel.activityOrgin != strAppointmentRegimen) {
+                showRegimenDialog(regimentDataModel, i);
+                await Future.delayed(Duration(milliseconds: 10));
+                qurhomeDashboardController.eventId.value = "";
+                qurhomeDashboardController.estart.value = "";
               }
-            }
-            if (currRegimen == null) {
-              getPastActivityToast();
+              break;
             }
           }
-          qurhomeDashboardController.eventId.value = "";
+          if (currRegimen == null) {
+            controller.restartTimer();
+            controller.getRegimenList(
+                isLoading: true, date: qurhomeDashboardController.estart.value);
+          }
         }
       }
     } catch (e) {
@@ -2171,50 +2161,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       rt_Sheela,
       arguments: SheelaArgument(eId: regimen.eid ?? "", isSurvey: isSurvey),
     )?.then((value) => {controller.showCurrLoggedRegimen(regimen)});
-  }
-
-  getPastActivityToast() {
-    try {
-      fToast.init(context);
-      Widget toast = Wrap(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-              color: Colors.amber,
-            ),
-            child: RichText(
-                text: TextSpan(
-              children: [
-                TextSpan(
-                    text: variable.strPastActivityMsgOne,
-                    style: TextStyle(color: Colors.white)),
-                TextSpan(
-                    text: variable.strPastActivityMsgTwo,
-                    style: TextStyle(
-                        color: Colors.white,
-                        decoration: TextDecoration.underline,
-                        decorationColor: Colors.black)),
-                TextSpan(
-                    text: variable.strPastActivityMsgThree,
-                    style: TextStyle(color: Colors.white)),
-              ],
-            )),
-          )
-        ],
-      );
-
-      fToast.showToast(
-        child: toast,
-        gravity: ToastGravity.BOTTOM,
-        toastDuration: Duration(seconds: 2),
-      );
-    } catch (e) {
-      if (kDebugMode) {
-        printError(info: e.toString());
-      }
-    }
   }
 
   getSheelaIcon(RegimentDataModel regimen) {
