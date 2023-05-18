@@ -19,6 +19,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/Controller/HubListViewController.dart';
+import 'Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
 import 'my_family_detail/screens/my_family_detail_screen.dart';
 import 'src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
@@ -666,12 +667,20 @@ class _MyFHBState extends State<MyFHB> {
           if ((CommonUtil.isUSRegion()) &&
               (passedValArr[3] != null) &&
               (passedValArr[3] != 'null')) {
+            var regController =
+            CommonUtil().onInitQurhomeRegimenController();
             var qurhomeDashboardController =
                 CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = passedValArr[2];
             qurhomeDashboardController.estart.value = passedValArr[3];
             qurhomeDashboardController.updateTabIndex(0);
-            Get.offNamedUntil(router.rt_Landing, (route) => false);
+
+            if (regController.meetingId.value.trim().isEmpty) {
+              Get.offNamedUntil(router.rt_Landing, (route) => false);
+            } else {
+              Get.to(() => QurhomeDashboard());
+            }
+
           } else {
             Provider.of<RegimentViewModel>(
               context,

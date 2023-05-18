@@ -144,15 +144,18 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       } else {
         await controller.getRegimenList();
       }
-      await Future.delayed(Duration(milliseconds: 10));
+      await Future.delayed(Duration(milliseconds: 5));
       qurhomeDashboardController.enableModuleAccess();
       qurhomeDashboardController.getModuleAccess();
+      await Future.delayed(Duration(milliseconds: 100));
+
       if (CommonUtil.isUSRegion()) {
         if (strEventId.trim().isNotEmpty &&
             controller.qurHomeRegimenResponseModel?.regimentsList != null &&
             (controller.qurHomeRegimenResponseModel?.regimentsList?.length ??
                     0) >
                 0) {
+          RegimentDataModel? currRegimen = null;
           for (int i = 0;
               i < controller.qurHomeRegimenResponseModel!.regimentsList!.length;
               i++) {
@@ -160,17 +163,25 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 controller.qurHomeRegimenResponseModel!.regimentsList![i];
             if ((regimentDataModel.eid ?? "").toString().toLowerCase() ==
                 strEventId) {
+              currRegimen = regimentDataModel;
               if (regimentDataModel.activityOrgin != strAppointmentRegimen) {
                 showRegimenDialog(regimentDataModel, i);
-                await Future.delayed(Duration(milliseconds: 10));
+                await Future.delayed(Duration(milliseconds: 2000));
                 qurhomeDashboardController.eventId.value = "";
                 qurhomeDashboardController.estart.value = "";
               }
               break;
             }
           }
+          if (currRegimen == null) {
+            FlutterToast().getToast(
+              activity_removed_regimen,
+              Colors.red,
+            );
+          }
         }
       }
+
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());

@@ -6199,6 +6199,7 @@ class VideoCallCommonUtils {
             callStartTime: call_start_time);
         var regController = Get.find<QurhomeRegimenController>();
         regController.onGoingSOSCall.value = false;
+        regController.meetingId.value="";
         Navigator.pop(Get.context!);
       }
     };
@@ -6739,6 +6740,7 @@ class VideoCallCommonUtils {
       CommonUtil.isCallStarted = false;
       Navigator.pop(context);
       var regController = Get.find<QurhomeRegimenController>();
+      regController.meetingId.value = "";
       if (regController.isFromSOS.value) {
         regController.onGoingSOSCall.value = false;
       }
@@ -6808,6 +6810,7 @@ class VideoCallCommonUtils {
                     .collection("call_log")
                     .doc("$cid")
                     .set({"call_status": "call_ended_by_user"});
+                regController.meetingId.value = "";
               } catch (e) {}
               Navigator.pop(context!);
             } catch (e) {
@@ -6841,6 +6844,7 @@ class VideoCallCommonUtils {
                 docName: regController.userName.value,
                 patId: regController.careCoordinatorId.value,
                 bookingId: callMetaData.bookId);
+            regController.meetingId.value = "";
           }
         }
       });
@@ -6909,6 +6913,7 @@ class VideoCallCommonUtils {
           } else {
             unavailabilityOfCC();
           }
+          regController.meetingId.value = "";
           Future.delayed(Duration(seconds: 1), () {
             Navigator.pop(context!);
           });
@@ -6979,6 +6984,7 @@ class VideoCallCommonUtils {
           });*/
       CommonUtil.isCallStarted = false;
       CommonUtil.bookedForId = null;
+      regController.meetingId.value="";
     } catch (e) {}
   }
 
