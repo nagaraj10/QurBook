@@ -139,7 +139,11 @@ class SheelaAIController extends GetxController {
             stopTTS();
             try {
               if (!conversations.last.endOfConv) {
-                if ((CommonUtil.isUSRegion() && !isMuted.value)) {
+                if (CommonUtil.isUSRegion()) {
+                  if (!isMuted.value) {
+                    gettingReposnseFromNative();
+                  }
+                } else {
                   gettingReposnseFromNative();
                 }
               } else if ((conversations.last.redirectTo ?? "") ==
@@ -284,7 +288,7 @@ class SheelaAIController extends GetxController {
         conversationFlag: conversationFlag,
         additionalInfo: json.encode(additionalInfo),
         localDateTime:
-            CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
+            CommonUtil.dateFormatterWithdatetimesecondsApiFormatAI(DateTime.now()),
         endPoint: BASE_URL,
         directCall: isUnAvailableCC ? "UNAVAILABLE" : null,
       );
@@ -383,7 +387,11 @@ class SheelaAIController extends GetxController {
             sessionToken = const Uuid().v1();
             relationshipId = userId;
           }
-          if ((CommonUtil.isUSRegion() && !isMuted.value)) {
+          if (CommonUtil.isUSRegion()) {
+            if (!isMuted.value) {
+              playTTS();
+            }
+          } else {
             playTTS();
           }
           callToCC(currentResponse);
