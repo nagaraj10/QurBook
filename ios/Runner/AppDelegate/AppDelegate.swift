@@ -66,6 +66,7 @@ import LS202_DeviceManager
     var isQurhomeDefaultUI = false
     var ResponseNotificationChannel : FlutterMethodChannel!
     var ReponseAppLockMethodChannel : FlutterMethodChannel!
+    var ReminderMethodChannel : FlutterMethodChannel!
     var connectedWithWeighingscale = false
     
     var isFromKilledStateNotification = false
@@ -87,7 +88,7 @@ import LS202_DeviceManager
             UNUserNotificationCenter.current().delegate = self
             
             let authOptions: UNAuthorizationOptions = [.alert,  .sound]
-            DispatchQueue.main.asyncAfter(deadline: .now()+1, execute:  {
+            DispatchQueue.main.asyncAfter(deadline: .now()+3, execute:  {
                 UNUserNotificationCenter.current().requestAuthorization(
                     options: authOptions,
                     completionHandler: {_, _ in })
@@ -709,14 +710,16 @@ import LS202_DeviceManager
             request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
         }
         //adding the notification
-        notificationCenter.add(request) { (error) in
-            if let error = error {
-                print("Error \(error.localizedDescription)")
+        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute:  { [self] in
+            self.notificationCenter.add(request) { (error) in
+                if let error = error {
+                    print("Error \(error.localizedDescription)")
+                }
+                self.notificationCenter.getPendingNotificationRequests { data in
+                    print("All pending notificaiton count = \(data.count)")
+                }
             }
-            self.notificationCenter.getPendingNotificationRequests { data in
-                print("All pending notificaiton count = \(data.count)")
-            }
-        }
+        });
         if after > 0,!snooze{
             let content = UNMutableNotificationContent()
             content.title = title
@@ -841,8 +844,19 @@ import LS202_DeviceManager
                     }
                 }else if response.actionIdentifier == "Dismiss"{
                 }else{
-                    let reminderChannel = FlutterMethodChannel.init(name: self.reminderChannel, binaryMessenger: controller.binaryMessenger)
-                    reminderChannel.invokeMethod(Constants.navigateToRegimentMethod, arguments: nil)
+                    print("Eid:", data["eid"])
+                    print("estart:", data["estart"])
+                    var newData :NSDictionary
+                    newData  = [
+                        "eid" : data["eid"],
+                        "estart" : data["estart"]
+                    ]
+                    
+                    if(ReminderMethodChannel == nil){
+                        ReminderMethodChannel = FlutterMethodChannel.init(name: Constants.reminderMethodChannel, binaryMessenger: controller.binaryMessenger)
+                        
+                    }
+                    ReminderMethodChannel.invokeMethod(Constants.callLocalNotificationMethod, arguments: newData)
                 }
             }
             else {

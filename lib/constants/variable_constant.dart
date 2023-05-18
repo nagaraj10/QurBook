@@ -292,6 +292,7 @@ const String strBackOnline = 'back to online';
 const String strNoConnection = 'no connection';
 const String strve = 've';
 const String callAppLockFeatureMethod = "callAppLockFeatureMethod";
+const String callLocalNotificationMethod = "callLocalNotificationMethod";
 
 //new icons for menu
 const String activity_non_adherance =
