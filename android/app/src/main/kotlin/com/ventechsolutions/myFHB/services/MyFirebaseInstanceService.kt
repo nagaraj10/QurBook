@@ -256,7 +256,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                     .setOnlyAlertOnce(false)
                     .build()
 
-            notification.flags = Notification.FLAG_INSISTENT
+           // notification.flags = Notification.FLAG_INSISTENT
             nsManager.notify(NS_ID, notification)
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 AutoDismissNotification().setAlarm(this, NS_ID, NS_TIMEOUT)

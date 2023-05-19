@@ -4,7 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import '../common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
-const String prodINURL = "https://tmg1j2slpamjkzvrjs.vsolgmi.com/api/";
+const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
 const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String APP_NAME = 'myFHB';
 const String MOB_NUM = 'Mobile number';
