@@ -388,25 +388,26 @@ const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
 const String strMyClaims = 'My Claims';
 String strCareGiverSettings = 'Caregiver Communication';
-String strNotificationPreference = 'Notification Preferences';
+String strNotificationPreference = 'Notification preferences';
 
-String strNonAdherenceSettings = 'Activity Non-adherence Reminder';
+String strNonAdherenceSettings = 'Activity non-adherence reminder';
 const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
-const String strCareGiverCommunication = 'Caregiver Communication';
+const String strCareGiverCommunication = 'Caregiver communication';
 
-const String strVitalsPreferences = 'Vitals Preferences';
-const String strDisplayDevices = 'Choose Vitals';
-const String strDisplayPreferences = 'Display Preferences';
+const String strVitalsPreferences = 'Vitals preferences';
+const String strDisplayDevices = 'Choose vitals';
+const String strUnitPreferences = 'Unit preferences';
+const String strDisplayPreferences = 'Display preferences';
 
 const String strSkillsIntegration = 'Skills/Integration';
 const String strIntegration = 'Integration';
-const String strPrivacyAndSecurity = 'Privacy and Security';
+const String strPrivacyAndSecurity = 'Privacy and security';
 
 // User account
-const String strUserAccount = 'User Account';
-const String strDeleteAccountTitle = 'Delete Account';
+const String strUserAccount = 'User account';
+const String strDeleteAccountTitle = 'Delete account';
 const String strDeleteAccountDes = 'Are you sure, you want to delete the account?';
 const String strNotRetrieveDataDes = "Please note that you'll not be able to retrieve any of your data further, Confirm delete";
 const String strCancel = 'Cancel';
@@ -663,15 +664,15 @@ const String strAllowDigit = 'Allow digit recognition';
 const String strScanDevices = 'scans for the values from device images';
 const String strAllowDevice = 'Allow device recognition';
 const String strScanAuto = 'scans and auto-detects devices';
-const String strAllowBiometric = 'Enable App lock';
+const String strAllowBiometric = 'Enable app lock';
 const String strEnableApplock =
     'Allow app lock with FaceID/FingerPrint or Passcode';
 const String strAuthToUseApp = 'Please complete the authentication to proceed.';
 
 //for healthKit and googleFit activation and sync
-const String strGoogleFit = 'Google Fit';
+const String strGoogleFit = 'Google fit';
 const String strAllowGoogle = 'Allow app to recieve data from google Fit';
-const String strHealthKit = 'Apple Health';
+const String strHealthKit = 'Apple health';
 const String strAllowHealth = 'Allow app to recieve data from Apple Health';
 const String strAddDevice = 'Tap to add device widgets to your home screen';
 const String strDefaultUI = 'Set Qurhome as default UI';
@@ -680,8 +681,8 @@ const String strDefaultUI = 'Set Qurhome as default UI';
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
 const String strAdvancedRegimen = 'Advanced Regimen';
-const String strConnectedDevices = 'Connected Devices';
-const String strQurHome = 'QurHome';
+const String strConnectedDevices = 'Connected devices';
+const String strQurHome = 'Qurhome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
 const String strAddNewDevice = 'Add New Device';
 const String strQurHubIoTdevice = 'QurHub IoT device';
