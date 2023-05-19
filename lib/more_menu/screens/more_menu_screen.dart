@@ -1401,7 +1401,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         AssetImage(variable.unit_preference),
                         //size: 30,
                       ),
-                      title: Text('Unit Preferences',
+                      title: Text(strUnitPreferences,
                           style: TextStyle(fontWeight: FontWeight.w500)),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
