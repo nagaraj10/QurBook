@@ -589,6 +589,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 refresh: (userChanged) => refresh(
                   userChanged: userChanged,
                 ),
+                showPatientList: () {
+                  CommonUtil().showPatientListOfCaregiver(context);
+                },
               ),
             ),
             onWillPop: () async {
@@ -696,7 +699,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     try {
       sheelBadgeController.getSheelaBadgeCount(
           isNeedSheelaDialog:
-          controller.estart.value.trim().isEmpty ? true : false);
+              controller.estart.value.trim().isEmpty ? true : false);
     } catch (e) {
       if (kDebugMode) {
         print(e);

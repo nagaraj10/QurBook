@@ -10,6 +10,9 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 import '../Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import '../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import '../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
@@ -2160,6 +2163,157 @@ class CommonUtil {
     var myProfile =
         await AddFamilyUserInfoRepository().getMyProfileInfoNew(userid);
     return myProfile;
+  }
+
+  Future<Widget?> showErrorAlert(String text, BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Info'),
+          content: Text(text),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Color(CommonUtil().getQurhomePrimaryColor())),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showSingleLoadingDialog(BuildContext context) {
+    LoaderClass.showLoadingDialog(
+      context,
+      canDismiss: true,
+    );
+  }
+
+  void hideLoadingDialog(BuildContext context) {
+    LoaderClass.hideLoadingDialog(context);
+  }
+
+  showPatientListOfCaregiver(BuildContext context) async {
+    try {
+      showSingleLoadingDialog(context);
+      CareGiverPatientList? response;
+      MyProfileModel? myProfile =
+          await PreferenceUtil.getProfileData(KEY_PROFILE);
+      response = await addFamilyUserInfoRepository.getCareGiverPatientList();
+      hideLoadingDialog(context);
+
+      showDialogPatientList(response?.result, myProfile, context);
+    } catch (e) {
+      hideLoadingDialog(context);
+
+      return showErrorAlert(unassignedMember, context);
+    }
+  }
+
+  Future<Widget?> showDialogPatientList(
+      List<CareGiverPatientListResult?>? result,
+      MyProfileModel? myProfile,
+      BuildContext context) {
+    if (result!.length > 0 && result != null) {
+      CareGiverPatientListResult selfResult = new CareGiverPatientListResult(
+          childId: userID,
+          firstName: myProfile?.result?.firstName,
+          lastName: myProfile?.result?.lastName,
+          middleName: myProfile?.result?.middleName,
+          relationship: "You");
+      result.insert(0, selfResult);
+    }
+    if (result!.length > 0 && result != null) {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SizedBox(
+              width: MediaQuery.of(context)
+                  .size
+                  .width, //  <------- Use SizedBox to limit width
+              child: ListView.separated(
+                  shrinkWrap: true, //            <------  USE SHRINK WRAP
+                  itemCount: result.length,
+                  separatorBuilder: (BuildContext context, index) {
+                    return Divider(
+                      height: 1.0.h,
+                      color: Colors.grey,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        if (result[index]?.relationship == "You") {
+                          Navigator.pop(context);
+                          navigateToQurhomeDasboard();
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                text: result[index]?.firstName,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: CommonUtil().isTablet!
+                                      ? 20.0.sp
+                                      : 18.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                children: [
+                                  TextSpan(text: " "),
+                                  TextSpan(
+                                    text: result[index]?.lastName,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: CommonUtil().isTablet!
+                                          ? 20.0.sp
+                                      : 18.0.sp,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(result[index]?.relationship ?? ''),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          );
+        },
+      );
+    } else {
+      return CommonUtil().showErrorAlert(unassignedMember, context);
+    }
+  }
+
+  void navigateToQurhomeDasboard() {
+    Get.to(
+      () => QurhomeDashboard(),
+      binding: BindingsBuilder(
+        () {
+          Get.lazyPut(
+            () => QurhomeDashboardController(),
+          );
+        },
+      ),
+    );
   }
 
   void getLoggedIDetails() async {
@@ -5944,7 +6098,7 @@ class VideoCallCommonUtils {
               patientPrescriptionId ?? "");
         }
         var qurhomeDashboardController =
-        CommonUtil().onInitQurhomeDashboardController();
+            CommonUtil().onInitQurhomeDashboardController();
         qurhomeDashboardController.getModuleAccess();
         regController.loadingData.value = false;
         regController.meetingId.value =
@@ -6199,7 +6353,7 @@ class VideoCallCommonUtils {
             callStartTime: call_start_time);
         var regController = Get.find<QurhomeRegimenController>();
         regController.onGoingSOSCall.value = false;
-        regController.meetingId.value="";
+        regController.meetingId.value = "";
         Navigator.pop(Get.context!);
       }
     };
@@ -6984,7 +7138,7 @@ class VideoCallCommonUtils {
           });*/
       CommonUtil.isCallStarted = false;
       CommonUtil.bookedForId = null;
-      regController.meetingId.value="";
+      regController.meetingId.value = "";
     } catch (e) {}
   }
 
