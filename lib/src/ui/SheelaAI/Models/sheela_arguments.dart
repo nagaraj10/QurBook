@@ -12,6 +12,7 @@ class SheelaArgument {
   bool isJumperDevice = false;
   String? deviceType;
   bool isSheelaFollowup;
+  bool isSurvey = false;
   String? message;
   String? task;
   String? action;
@@ -35,6 +36,7 @@ class SheelaArgument {
     this.isJumperDevice = false,
     this.deviceType,
     this.isSheelaFollowup = false,
+    this.isSurvey = false,
     this.message,
     this.task,
     this.action,
