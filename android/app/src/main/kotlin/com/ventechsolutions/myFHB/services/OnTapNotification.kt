@@ -48,6 +48,7 @@ class OnTapNotification:BroadcastReceiver() {
 
 
         val appLog = p1?.getStringExtra(p0?.getString(R.string.ns_type_applog))
+        val estart = p1?.getStringExtra(Constants.PROP_ESTART)
 
         var commonMessage=""
         if(message!=null && message!="")
@@ -98,6 +99,7 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.EVENT_TYPE,eventType)
         launchIntent?.putExtra(Constants.OTHERS,others)
         launchIntent?.putExtra(Constants.APPOINTMENTID,appointmentId)
+        launchIntent?.putExtra(Constants.PROP_ESTART,estart)
 
 
         p0.startActivity(launchIntent)

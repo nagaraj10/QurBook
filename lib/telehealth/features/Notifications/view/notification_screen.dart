@@ -1236,39 +1236,21 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "regiment_screen":
-        if (CommonUtil.isUSRegion()) {
-          var qurhomeDashboardController =
-              CommonUtil().onInitQurhomeDashboardController();
-          qurhomeDashboardController.eventId.value =
-              result?.messageDetails?.payload?.eventId ?? '';
-          Get.to(
-            () => QurhomeDashboard(),
-          )?.then(
-            (value) => PageNavigator.goToPermanent(
-              context,
-              router.rt_Landing,
-              arguments: LandingArguments(
-                needFreshLoad: false,
-              ),
-            ),
-          );
-        } else {
-          Provider.of<RegimentViewModel>(
+        Provider.of<RegimentViewModel>(
+          context,
+          listen: false,
+        ).regimentMode = RegimentMode.Schedule;
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .regimentFilter = RegimentFilter.Missed;
+        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())?.then(
+              (value) => PageNavigator.goToPermanent(
             context,
-            listen: false,
-          ).regimentMode = RegimentMode.Schedule;
-          Provider.of<RegimentViewModel>(context, listen: false)
-              .regimentFilter = RegimentFilter.Missed;
-          Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())?.then(
-            (value) => PageNavigator.goToPermanent(
-              context,
-              router.rt_Landing,
-              arguments: LandingArguments(
-                needFreshLoad: false,
-              ),
+            router.rt_Landing,
+            arguments: LandingArguments(
+              needFreshLoad: false,
             ),
-          );
-        }
+          ),
+        );
         readUnreadAction(result);
         break;
       case "claimList":

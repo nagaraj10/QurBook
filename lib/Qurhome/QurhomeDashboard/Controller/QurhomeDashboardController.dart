@@ -29,8 +29,8 @@ class QurhomeDashboardController extends GetxController {
   Timer? _bleTimer = null;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
   var isLoading = false.obs;
-  var isActive = false.obs;
   var eventId = ''.obs;
+  var estart = ''.obs;
 
   var isVitalModuleDisable = true.obs;
   var isSymptomModuleDisable = true.obs;
@@ -102,6 +102,7 @@ class QurhomeDashboardController extends GetxController {
           ? myProfile.result!.firstName!.capitalizeFirstofEach
           : '';
     } catch (e) {}
+
     switch (currentSelectedIndex.value) {
       case 0:
         appBarTitle = '$firstName'.obs;

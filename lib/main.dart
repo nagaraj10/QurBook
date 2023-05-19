@@ -665,16 +665,23 @@ class _MyFHBState extends State<MyFHB> {
                 : 'regiment_screen',
             'navigationPage': 'Regimen Screen',
           });
-          if (CommonUtil.isUSRegion()) {
+          if ((CommonUtil.isUSRegion()) &&
+              (passedValArr[3] != null) &&
+              (passedValArr[3] != 'null')) {
+            var regController =
+            CommonUtil().onInitQurhomeRegimenController();
             var qurhomeDashboardController =
                 CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = passedValArr[2];
-            if (!qurhomeDashboardController.isActive.value) {
-              Get.to(QurhomeDashboard());
+            qurhomeDashboardController.estart.value = passedValArr[3];
+            qurhomeDashboardController.updateTabIndex(0);
+
+            if (regController.meetingId.value.trim().isEmpty) {
+              Get.offNamedUntil(router.rt_Landing, (route) => false);
+            } else {
+              Get.to(() => QurhomeDashboard());
             }
-            qurhomeDashboardController.isLoading.value = true;
-            Future.delayed(Duration(milliseconds: 100)).then(
-                (value) => qurhomeDashboardController.isLoading.value = false);
+
           } else {
             Provider.of<RegimentViewModel>(
               context,
@@ -1330,7 +1337,7 @@ class _MyFHBState extends State<MyFHB> {
               //this need to be navigte to Regiment screen
               return SplashScreen(
                 nsRoute: 'regiment_screen',
-                bundle: parsedData[2],
+                bundle: navRoute,
               );
             } else if (parsedData[1] == 'th_provider_hospital') {
               //this need to be navigte to TH provider screen
