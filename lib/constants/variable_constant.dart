@@ -204,6 +204,7 @@ const String icon_appointment_regimen = 'assets/icons/appointment_regimen.png';
 const String icon_undo = 'assets/icons/ic_undo.png';
 const String icon_undo_reg = 'assets/icons/ic_undo_reg.png';
 const String icon_view_eye = 'assets/icons/ic_view_eye.png';
+const String icon_switch = 'assets/icons/icon_switch.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
@@ -409,8 +410,10 @@ const String strPrivacyAndSecurity = 'Privacy and security';
 // User account
 const String strUserAccount = 'User account';
 const String strDeleteAccountTitle = 'Delete account';
-const String strDeleteAccountDes = 'Are you sure, you want to delete the account?';
-const String strNotRetrieveDataDes = "Please note that you'll not be able to retrieve any of your data further, Confirm delete";
+const String strDeleteAccountDes =
+    'Are you sure, you want to delete the account?';
+const String strNotRetrieveDataDes =
+    "Please note that you'll not be able to retrieve any of your data further, Confirm delete";
 const String strCancel = 'Cancel';
 
 // for my family

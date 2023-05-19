@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
 import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
 import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
@@ -386,5 +387,16 @@ class AddFamilyUserInfoRepository {
     final response = UploadDocumentModel.fromJson(res);
 
     return response;
+  }
+
+  Future<CareGiverPatientList?>? getCareGiverPatientList() async {
+    var userId =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ?? '';
+    var response = await _helper.getProfileInfo(query.qr_userlinking +
+            query.qr_caregiver_family +
+            query.qr_caregiver_user_id +
+            userId ??
+        '');
+    return CareGiverPatientList.fromJson(response);
   }
 }
