@@ -34,14 +34,16 @@ import '../../../constants/router_variable.dart' as router;
 class QurHomeNavigationDrawer extends StatelessWidget {
   const QurHomeNavigationDrawer(
       {required this.myProfile,
-       required this.moveToLoginPage,
+      required this.moveToLoginPage,
       required this.refresh,
-      required this.userChangedbool});
+      required this.userChangedbool,
+      required this.showPatientList});
 
   final MyProfileModel? myProfile;
   final Function() moveToLoginPage;
   final Function(bool userChanged)? refresh;
   final bool? userChangedbool;
+  final Function() showPatientList;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +77,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           children: [
                             AssetImageWidget(
                               icon: myFHB_logo,
-                              height: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
+                              height:
+                                  CommonUtil().isTablet! ? 110.0.h : 100.0.h,
                               width: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
                             ),
                             SizedBox(
@@ -102,6 +105,19 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                   width: 10.0.w,
                                 ),
                                 getNameWidget(),
+                                SizedBox(
+                                  width: 20.0.w,
+                                ),
+                                if (CommonUtil.isUSRegion())
+                                  InkWell(
+                                      child: Image.asset(
+                                        variable.icon_switch,
+                                        height: 26.0.h,
+                                        width: 26.0.h,
+                                      ),
+                                      onTap: () {
+                                        showPatientList();
+                                      })
                               ],
                             )
                           ],
