@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
@@ -116,6 +117,40 @@ class IosNotificationHandler {
         }
       },
     );
+
+    // Receive Local Notification
+    variable.reminderMethodChannel
+        .setMethodCallHandler((call) async {
+      if (call.method == variable.callLocalNotificationMethod) {
+        final data = Map<String, dynamic>.from(call.arguments);
+        if (data != null) {
+          var eventId = data['eid'];
+          var estart = data['estart'];
+
+          if (CommonUtil.isUSRegion() && estart != null) {
+            var qurhomeDashboardController =
+                CommonUtil().onInitQurhomeDashboardController();
+            qurhomeDashboardController.eventId.value = eventId;
+            qurhomeDashboardController.estart.value = estart;
+            qurhomeDashboardController.updateTabIndex(0);
+            PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
+            // await Get.to(() => QurhomeDashboard())?.then((value) =>
+            //     PageNavigator.goToPermanent(Get.context!, router.rt_Landing));
+          } else {
+            // await Get.toNamed(router.rt_Regimen,
+            //     arguments: RegimentArguments(eventId: eventId));
+            Provider.of<RegimentViewModel>(
+              Get.context!,
+              listen: false,
+            ).regimentMode = RegimentMode.Schedule;
+            Provider.of<RegimentViewModel>(Get.context!, listen: false)
+                .regimentFilter = RegimentFilter.Missed;
+            PageNavigator.goToPermanent(Get.context!, router.rt_Regimen,
+                arguments: RegimentArguments(eventId: eventId));
+          }
+        }
+      }
+    });
   }
 
   void updateStatus(String status) async {

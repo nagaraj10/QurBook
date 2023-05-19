@@ -292,6 +292,7 @@ const String strBackOnline = 'back to online';
 const String strNoConnection = 'no connection';
 const String strve = 've';
 const String callAppLockFeatureMethod = "callAppLockFeatureMethod";
+const String callLocalNotificationMethod = "callLocalNotificationMethod";
 
 //new icons for menu
 const String activity_non_adherance =
@@ -870,10 +871,6 @@ const String strFoodDelivery = "food delivery";
 
 const String strGetCityList = 'Getting City List';
 const String strSelValidMsg = 'Please select a valid';
-const String strActivityCompleted = 'The activity has been completed already.';
-const String strPastActivityMsgOne = 'To access past activities please use';
-const String strPastActivityMsgTwo = '\n$strAdvancedRegimen';
-const String strPastActivityMsgThree = ' from menu.';
 const String strLocationLink = "Location link";
 const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';

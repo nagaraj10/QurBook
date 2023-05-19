@@ -132,5 +132,6 @@ object Constants {
     val sayTextSheela = "saytext"
 
     val PATIENT_REFERRAL_ACCEPT="patientReferralAcceptToPatient"
+    val PROP_ESTART ="estart"
 
 }

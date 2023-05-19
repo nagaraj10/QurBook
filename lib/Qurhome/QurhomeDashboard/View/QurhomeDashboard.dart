@@ -76,7 +76,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     super.didChangeDependencies();
     MyFHB.routeObserver
         .subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
-    controller.isActive.value = true;
   }
 
   onInit() async {
@@ -112,10 +111,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       );
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
-        sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
-      controller.isActive.value = true;
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -140,7 +138,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
       CommonUtil().initPortraitMode();
       MyFHB.routeObserver.unsubscribe(this);
-      controller.isActive.value = false;
       super.dispose();
     } catch (e) {
       print(e);
@@ -328,7 +325,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             size: CommonUtil().isTablet! ? 38.0 : 24.0,
                             onTap: () {
                               Get.back();
-                              controller.isActive.value = false;
                             },
                           )
                     : Container(
@@ -338,8 +334,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         child: InkWell(
                             onTap: () {
                               bottomTapped(0);
-                              sheelBadgeController.getSheelaBadgeCount(
-                                  isNeedSheelaDialog: true);
+                              getSheelaBadgeCount();
                             },
                             child: CommonUtil.isUSRegion()
                                 ? Padding(
@@ -410,8 +405,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                 rawMessage: sheelaQueueShowRemind,
                               ),
                             )?.then((value) {
-                              sheelBadgeController.getSheelaBadgeCount(
-                                  isNeedSheelaDialog: true);
+                              getSheelaBadgeCount();
                             });
                           } else {
                             String sheela_lang =
@@ -423,8 +417,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                 langCode: (sheela_lang),
                               ),
                             )?.then((value) {
-                              sheelBadgeController.getSheelaBadgeCount(
-                                  isNeedSheelaDialog: true);
+                              getSheelaBadgeCount();
                             });
                           }
                         },
@@ -600,7 +593,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
             ),
             onWillPop: () async {
               Get.back();
-              controller.isActive.value = false;
               return true;
             },
           ));
@@ -697,6 +689,18 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
     } else {
       return SizedBox(width: 70.w);
+    }
+  }
+
+  getSheelaBadgeCount() {
+    try {
+      sheelBadgeController.getSheelaBadgeCount(
+          isNeedSheelaDialog:
+          controller.estart.value.trim().isEmpty ? true : false);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }
