@@ -2256,6 +2256,8 @@ class CommonUtil {
                         if (result[index]?.relationship == "You") {
                           Navigator.pop(context);
                           navigateToQurhomeDasboard();
+                        } else {
+                          navigateToQurhomePatientDasboard(result[index]);
                         }
                       },
                       child: Container(
@@ -2281,7 +2283,7 @@ class CommonUtil {
                                       color: Colors.black,
                                       fontSize: CommonUtil().isTablet!
                                           ? 20.0.sp
-                                      : 18.0.sp,
+                                          : 18.0.sp,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
@@ -2304,8 +2306,28 @@ class CommonUtil {
   }
 
   void navigateToQurhomeDasboard() {
+    Get.back();
     Get.to(
-      () => QurhomeDashboard(),
+      () => QurhomeDashboard(
+        forPatientList: false,
+        careGiverPatientListResult: null,
+      ),
+      binding: BindingsBuilder(
+        () {
+          Get.lazyPut(
+            () => QurhomeDashboardController(),
+          );
+        },
+      ),
+    );
+  }
+
+  void navigateToQurhomePatientDasboard(CareGiverPatientListResult? result) {
+    Get.to(
+      () => QurhomeDashboard(
+        forPatientList: true,
+        careGiverPatientListResult: result,
+      ),
       binding: BindingsBuilder(
         () {
           Get.lazyPut(
@@ -2463,7 +2485,7 @@ class CommonUtil {
       //     .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
 
       if (newVersion > currentVersion) {
-        _showVersionDialog(context, isForceUpdate);
+        //_showVersionDialog(context, isForceUpdate);
       }
     } on FirebaseException catch (exception) {
       // Fetch throttled.

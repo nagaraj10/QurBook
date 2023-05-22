@@ -35,6 +35,8 @@ class QurhomeDashboardController extends GetxController {
   var isVitalModuleDisable = true.obs;
   var isSymptomModuleDisable = true.obs;
 
+  var loadingData = false.obs;
+
   @override
   void onInit() {
     if (!Get.isRegistered<SheelaAIController>()) {
