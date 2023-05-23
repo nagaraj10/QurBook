@@ -2202,7 +2202,10 @@ class CommonUtil {
     LoaderClass.hideLoadingDialog(context);
   }
 
-  showPatientListOfCaregiver(BuildContext context) async {
+  showPatientListOfCaregiver(
+      BuildContext context,
+      Function(String? user, CareGiverPatientListResult? result)
+          selectedUser) async {
     try {
       showSingleLoadingDialog(context);
       CareGiverPatientList? response;
@@ -2211,7 +2214,7 @@ class CommonUtil {
       response = await addFamilyUserInfoRepository.getCareGiverPatientList();
       hideLoadingDialog(context);
 
-      showDialogPatientList(response?.result, myProfile, context);
+      showDialogPatientList(response?.result, myProfile, context, selectedUser);
     } catch (e) {
       hideLoadingDialog(context);
 
@@ -2222,7 +2225,8 @@ class CommonUtil {
   Future<Widget?> showDialogPatientList(
       List<CareGiverPatientListResult?>? result,
       MyProfileModel? myProfile,
-      BuildContext context) {
+      BuildContext context,
+      Function(String? user, CareGiverPatientListResult? result) selectedUser) {
     if (result!.length > 0 && result != null) {
       CareGiverPatientListResult selfResult = new CareGiverPatientListResult(
           childId: userID,
@@ -2253,12 +2257,9 @@ class CommonUtil {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        if (result[index]?.relationship == "You") {
-                          Navigator.pop(context);
-                          navigateToQurhomeDasboard();
-                        } else {
-                          navigateToQurhomePatientDasboard(result[index]);
-                        }
+                        Navigator.pop(context);
+                        selectedUser(
+                            result[index]?.relationship, result[index]);
                       },
                       child: Container(
                         height: 50,
@@ -2323,6 +2324,7 @@ class CommonUtil {
   }
 
   void navigateToQurhomePatientDasboard(CareGiverPatientListResult? result) {
+    Get.back();
     Get.to(
       () => QurhomeDashboard(
         forPatientList: true,

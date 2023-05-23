@@ -18,7 +18,7 @@ class QurhomePatientDashboard extends StatefulWidget {
 }
 
 class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
-    with RouteAware {
+    with RouteAware, SingleTickerProviderStateMixin {
   final controller = Get.put(QurhomeDashboardController());
   final qurHomeRegimenController =
       CommonUtil().onInitQurhomeRegimenController();
@@ -30,6 +30,34 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool selectedAlertList = true;
+  TabController? tabController;
+  int selectedTab = 0;
+  double sliverBarHeight = 220;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    tabController?.addListener(_handleSelected);
+  }
+
+  void _handleSelected() {
+    this.setState(() {
+      selectedTab = tabController?.index ?? 0;
+      if (selectedTab == 0) {
+        selectedAlertList = true;
+      } else {
+        selectedAlertList = false;
+      }
+      if (selectedTab != 0) {
+        sliverBarHeight = 50;
+      } else {
+        sliverBarHeight = 220;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,106 +70,68 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
     );
   }
 
+  getTabs() {
+    List<Tab> myTabs = <Tab>[
+      Tab(child: getTabWidget("Alerts", selectedAlertList)),
+      Tab(child: getTabWidget("Regimen", !selectedAlertList))
+    ];
+
+    return myTabs;
+  }
+
   renderWidget() {
-    return Column(
-      children: [
-        Container(
-          child: Row(
+    return Center(
+      child: DefaultTabController(
+        length: 2,
+        child: Container(
+          child: Column(
             children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    selectedAlertList = true;
-                    setState(() {});
-                  },
-                  child: Container(
-                    decoration: new BoxDecoration(
-                        color: selectedAlertList
-                            ? Color(CommonUtil().getQurhomePrimaryColor())
-                            : Colors.white,
-                        borderRadius: new BorderRadius.only(
-                            topLeft: const Radius.circular(10.0),
-                            topRight: const Radius.circular(10.0))),
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Alerts',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: selectedAlertList
-                                    ? Colors.white
-                                    : Color(
-                                        CommonUtil().getQurhomePrimaryColor(),
-                                      ),
-                                fontSize: 20,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 24,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              TabBar(
+                indicatorColor: Color(CommonUtil().getQurhomePrimaryColor()),
+                indicatorSize: TabBarIndicatorSize.tab,
+                controller: tabController,
+                physics: BouncingScrollPhysics(),
+                enableFeedback: true,
+                isScrollable: false,
+                tabs: getTabs(),
               ),
               Expanded(
-                child: InkWell(
-                  onTap: () {
-                    selectedAlertList = false;
-                    setState(() {});
-                  },
-                  child: Container(
-                    decoration: new BoxDecoration(
-                        color: !selectedAlertList
-                            ? Color(CommonUtil().getQurhomePrimaryColor())
-                            : Colors.white,
-                        borderRadius: new BorderRadius.only(
-                            topLeft: const Radius.circular(10.0),
-                            topRight: const Radius.circular(10.0))),
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Regimen',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: !selectedAlertList
-                                    ? Colors.white
-                                    : Color(
-                                        CommonUtil().getQurhomePrimaryColor()),
-                                fontSize: 20,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 24,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                child: TabBarView(
+                  controller: tabController,
+                  children: [
+                    Center(child: Text("PatientQurhomeAlert")),
+                    Center(child: Text("Regimen"))
+                  ],
                 ),
-              ),
+              )
             ],
           ),
         ),
-        Expanded(
-            child: selectedAlertList
-                ? QurhomeAlertList()
-                : Container(
-                    child: Center(
-                        child: Text(selectedAlertList ? "Alerts" : "Regimen")),
-                  ))
-      ],
+      ),
     );
+  }
+
+  getTabWidget(String value, bool selectedAlertList) {
+    return Container(
+        width: MediaQuery.of(context).size.width / 2,
+        decoration: new BoxDecoration(
+            color: selectedAlertList
+                ? Color(CommonUtil().getQurhomePrimaryColor())
+                : Colors.white,
+            borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(10.0),
+                topRight: const Radius.circular(10.0))),
+        child: Center(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: selectedAlertList
+                  ? Colors.white
+                  : Color(CommonUtil().getQurhomePrimaryColor()),
+            ),
+          ),
+        ));
   }
 }

@@ -39,7 +39,7 @@ class QurhomeDashboard extends StatefulWidget {
   CareGiverPatientListResult? careGiverPatientListResult;
 
   QurhomeDashboard(
-      {this.forPatientList = false, this.careGiverPatientListResult});
+      {this.forPatientList = false, this.careGiverPatientListResult = null});
 
   @override
   _QurhomeDashboardState createState() => _QurhomeDashboardState();
@@ -262,22 +262,36 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                 color: Colors.black,
                               ),
                               children: <TextSpan>[
-                                if (widget?.forPatientList ?? false) ...{
-                                  TextSpan(text: 'Patient: ')
-                                },
+                                if (controller.forPatientList.value ??
+                                    false) ...{TextSpan(text: 'Patient: ')},
                                 if (controller.currentSelectedIndex.value ==
                                         0 ||
                                     controller.currentSelectedIndex.value ==
                                         1) ...{
-                                  (widget?.forPatientList ?? false)
+                                  (controller.forPatientList.value ?? false)
                                       ? TextSpan(text: "")
                                       : TextSpan(text: 'Hello '),
                                 },
                                 TextSpan(
-                                  text: (widget?.forPatientList ?? false)
-                                      ? widget
-                                          .careGiverPatientListResult?.firstName
-                                      : controller.appBarTitle.value,
+                                  text:
+                                      (controller.forPatientList.value ?? false)
+                                          ? controller
+                                              .careGiverPatientListResult
+                                              ?.firstName
+                                          : controller.appBarTitle.value,
+                                  style: TextStyle(
+                                      fontSize: textFontSize,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                                TextSpan(text: " "),
+                                TextSpan(
+                                  text:
+                                      (controller.forPatientList.value ?? false)
+                                          ? controller
+                                              .careGiverPatientListResult
+                                              ?.lastName
+                                          : '',
                                   style: TextStyle(
                                       fontSize: textFontSize,
                                       fontWeight: FontWeight.bold,
@@ -289,7 +303,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                           if (controller.currentSelectedIndex.value == 0 ||
                               controller.currentSelectedIndex.value == 1) ...{
                             SizedBox(height: 3),
-                            (widget?.forPatientList ?? false)
+                            (controller.forPatientList.value ?? false)
                                 ? Text("")
                                 : Text(
                                     qurHomeRegimenController.dateHeader.value,
@@ -401,13 +415,13 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 //   )
                 // ],
               ),
-              body: widget.forPatientList
+              body: controller.forPatientList.value
                   ? QurhomePatientDashboard(
                       careGiverPatientListResult:
-                          widget.careGiverPatientListResult,
+                          controller.careGiverPatientListResult,
                     )
                   : getCurrentTab(),
-              floatingActionButton: widget.forPatientList
+              floatingActionButton: controller.forPatientList.value
                   ? SizedBox()
                   : Stack(
                       children: [
@@ -483,7 +497,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                     ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
-              bottomNavigationBar: widget.forPatientList
+              bottomNavigationBar: controller.forPatientList.value
                   ? SizedBox()
                   : SizedBox(
                       height: 45.h,
@@ -626,7 +640,23 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                   userChanged: userChanged,
                 ),
                 showPatientList: () {
-                  CommonUtil().showPatientListOfCaregiver(context);
+                  CommonUtil().showPatientListOfCaregiver(context,
+                      (user, result) {
+                    if (user == "You") {
+                      refresh(
+                        userChanged: true,
+                      );
+                      controller.forPatientList.value = false;
+
+                      //CommonUtil().navigateToQurhomeDasboard();
+                    } else {
+                      controller.forPatientList.value = true;
+                      controller.careGiverPatientListResult = null;
+                      controller.careGiverPatientListResult = result;
+                      setState(() {});
+                      //CommonUtil().navigateToQurhomePatientDasboard(result);
+                    }
+                  });
                 },
               ),
             ),
@@ -648,6 +678,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         break;
       case 3:
         landingTab = SymptomListScreen();
+        break;
+      case 4:
+        landingTab = QurhomePatientDashboard();
         break;
       default:
         landingTab = QurHomeRegimenScreen();

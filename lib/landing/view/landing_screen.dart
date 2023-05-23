@@ -433,7 +433,12 @@ class _LandingScreenState extends State<LandingScreen> {
               userChanged: userChanged,
             ),
             showPatientList: () {
-              CommonUtil().showPatientListOfCaregiver(context);
+              CommonUtil().showPatientListOfCaregiver(context, (user, resut) {
+                if (user == "You") {
+                  refresh(userChanged: true);
+                }
+                _onBackPressed();
+              });
             },
           ),
           bottomNavigationBar: Obx(
