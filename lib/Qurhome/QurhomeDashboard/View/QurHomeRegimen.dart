@@ -181,7 +181,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
         }
       }
-
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -260,7 +259,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   elevation: 0,
                   centerTitle: true,
                   title: Text(
-                    strRegimen,
+                    variable.strRegimen,
                     style: TextStyle(
                       color: Colors.black,
                     ),
