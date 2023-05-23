@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeAlertList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientAlert.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 
 class QurhomePatientDashboard extends StatefulWidget {
@@ -77,8 +77,8 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
 
   getTabs() {
     List<Tab> myTabs = <Tab>[
-      Tab(child: getTabWidget("Alerts", selectedAlertList)),
-      Tab(child: getTabWidget("Regimen", !selectedAlertList))
+      Tab(child: getTabWidget(strAlerts, selectedAlertList)),
+      Tab(child: getTabWidget(strRegimen, !selectedAlertList))
     ];
 
     return myTabs;
