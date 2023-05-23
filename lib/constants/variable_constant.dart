@@ -847,7 +847,7 @@ const String strAllowSymptoms = "Allow Symptoms";
 const String strAllowAppointments = "Allow Appointments";
 const String strAlert = 'Alert';
 const String strAlerts = 'Alerts';
-const String strRegimen = 'Regimen';
+
 
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
