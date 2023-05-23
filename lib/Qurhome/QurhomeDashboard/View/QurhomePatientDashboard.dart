@@ -88,11 +88,16 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
             children: [
               TabBar(
                 indicatorColor: Color(CommonUtil().getQurhomePrimaryColor()),
-                indicatorSize: TabBarIndicatorSize.tab,
                 controller: tabController,
                 physics: BouncingScrollPhysics(),
+                indicator: BoxDecoration(
+                    borderRadius: new BorderRadius.only(
+                        topLeft: const Radius.circular(10.0),
+                        topRight: const Radius.circular(10.0)),
+                    color: Color(CommonUtil().getQurhomePrimaryColor())),
                 enableFeedback: true,
                 isScrollable: false,
+                automaticIndicatorColorAdjustment: true,
                 tabs: getTabs(),
               ),
               Expanded(
@@ -113,11 +118,11 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
 
   getTabWidget(String value, bool selectedAlertList) {
     return Container(
-        width: MediaQuery.of(context).size.width / 2,
+        width: double.infinity,
         decoration: new BoxDecoration(
             color: selectedAlertList
                 ? Color(CommonUtil().getQurhomePrimaryColor())
-                : Colors.white,
+                : Colors.transparent,
             borderRadius: new BorderRadius.only(
                 topLeft: const Radius.circular(10.0),
                 topRight: const Radius.circular(10.0))),

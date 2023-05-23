@@ -647,14 +647,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         userChanged: true,
                       );
                       controller.forPatientList.value = false;
-
-                      //CommonUtil().navigateToQurhomeDasboard();
                     } else {
                       controller.forPatientList.value = true;
                       controller.careGiverPatientListResult = null;
                       controller.careGiverPatientListResult = result;
                       setState(() {});
-                      //CommonUtil().navigateToQurhomePatientDasboard(result);
                     }
                   });
                 },
