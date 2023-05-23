@@ -13,6 +13,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 import '../Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import '../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import '../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
@@ -5594,6 +5595,56 @@ class CommonUtil {
         return mainValue;
       }
     });
+  }
+
+  Future<MyProfileModel?> acceptCareGiverTransportRequestReminder(
+      BuildContext context, String userID,String appointmentId,String careGiverUserId,String patientId,bool isAccept) async {
+    final GlobalKey<State> _keyLoader = GlobalKey<State>();
+
+    MyProfileModel myProfile;
+    FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+    var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,careGiverUserId,patientId,isAccept);
+    if(result!=null&&(result?.isSuccess??false)){
+
+    }else{
+
+    }
+    // await addFamilyUserInfoRepository
+    //     .checkIfChildISMember(userID)
+    //     .then((mainValue) async {
+    //   if (mainValue.isSuccess!) {
+    //     await addFamilyUserInfoRepository
+    //         .getMyProfileInfoNew(userID)
+    //         .then((value) {
+    //       myProfile = value;
+    //
+    //       if (myProfile.result != null) {
+    //         Navigator.of(context).pop();
+    //
+    //         Get.toNamed(router.rt_AddFamilyUserInfo,
+    //             arguments: AddFamilyUserInfoArguments(
+    //                 myProfileResult: myProfile.result,
+    //                 fromClass: CommonConstants.user_update,
+    //                 isFromAppointmentOrSlotPage: false,
+    //                 isForFamily: false,
+    //                 isForFamilyAddition: true))!
+    //             .then((value) =>
+    //             PageNavigator.goToPermanent(context, router.rt_Landing));
+    //       } else {
+    //         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+    //
+    //         FlutterToast()
+    //             .getToast('Unable to Fetch User Profile data', Colors.red);
+    //       }
+    //     });
+    //   } else {
+    //     Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+    //
+    //     FlutterToast().getToast(mainValue.message!, Colors.red);
+    //     return mainValue;
+    //   }
+    // });
   }
 
   Future<List<RegimentDataModel>> getMasterData(
