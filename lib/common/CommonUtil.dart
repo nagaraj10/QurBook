@@ -2202,7 +2202,10 @@ class CommonUtil {
     LoaderClass.hideLoadingDialog(context);
   }
 
-  showPatientListOfCaregiver(BuildContext context) async {
+  showPatientListOfCaregiver(
+      BuildContext context,
+      Function(String? user, CareGiverPatientListResult? result)
+          selectedUser) async {
     try {
       showSingleLoadingDialog(context);
       CareGiverPatientList? response;
@@ -2211,7 +2214,7 @@ class CommonUtil {
       response = await addFamilyUserInfoRepository.getCareGiverPatientList();
       hideLoadingDialog(context);
 
-      showDialogPatientList(response?.result, myProfile, context);
+      showDialogPatientList(response?.result, myProfile, context, selectedUser);
     } catch (e) {
       hideLoadingDialog(context);
 
@@ -2222,7 +2225,8 @@ class CommonUtil {
   Future<Widget?> showDialogPatientList(
       List<CareGiverPatientListResult?>? result,
       MyProfileModel? myProfile,
-      BuildContext context) {
+      BuildContext context,
+      Function(String? user, CareGiverPatientListResult? result) selectedUser) {
     if (result!.length > 0 && result != null) {
       CareGiverPatientListResult selfResult = new CareGiverPatientListResult(
           childId: userID,
@@ -2253,10 +2257,9 @@ class CommonUtil {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        if (result[index]?.relationship == "You") {
-                          Navigator.pop(context);
-                          navigateToQurhomeDasboard();
-                        }
+                        Navigator.pop(context);
+                        selectedUser(
+                            result[index]?.relationship, result[index]);
                       },
                       child: Container(
                         height: 50,
@@ -2281,7 +2284,7 @@ class CommonUtil {
                                       color: Colors.black,
                                       fontSize: CommonUtil().isTablet!
                                           ? 20.0.sp
-                                      : 18.0.sp,
+                                          : 18.0.sp,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
@@ -2304,8 +2307,29 @@ class CommonUtil {
   }
 
   void navigateToQurhomeDasboard() {
+    Get.back();
     Get.to(
-      () => QurhomeDashboard(),
+      () => QurhomeDashboard(
+        forPatientList: false,
+        careGiverPatientListResult: null,
+      ),
+      binding: BindingsBuilder(
+        () {
+          Get.lazyPut(
+            () => QurhomeDashboardController(),
+          );
+        },
+      ),
+    );
+  }
+
+  void navigateToQurhomePatientDasboard(CareGiverPatientListResult? result) {
+    Get.back();
+    Get.to(
+      () => QurhomeDashboard(
+        forPatientList: true,
+        careGiverPatientListResult: result,
+      ),
       binding: BindingsBuilder(
         () {
           Get.lazyPut(
@@ -2463,7 +2487,7 @@ class CommonUtil {
       //     .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
 
       if (newVersion > currentVersion) {
-        _showVersionDialog(context, isForceUpdate);
+        //_showVersionDialog(context, isForceUpdate);
       }
     } on FirebaseException catch (exception) {
       // Fetch throttled.
