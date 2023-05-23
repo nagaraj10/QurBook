@@ -39,6 +39,8 @@ class QurhomeDashboardController extends GetxController {
   var loadingData = false.obs;
   var forPatientList = false.obs;
   CareGiverPatientListResult? careGiverPatientListResult;
+  var currentSelectedTab = 0.obs;
+  var isPatientClicked = false.obs;
 
   @override
   void onInit() {

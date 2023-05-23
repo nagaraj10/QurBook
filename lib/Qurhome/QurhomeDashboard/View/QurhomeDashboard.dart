@@ -262,8 +262,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                 color: Colors.black,
                               ),
                               children: <TextSpan>[
-                                if (controller.forPatientList.value ??
-                                    false) ...{TextSpan(text: 'Patient: ')},
                                 if (controller.currentSelectedIndex.value ==
                                         0 ||
                                     controller.currentSelectedIndex.value ==
@@ -279,10 +277,17 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                               .careGiverPatientListResult
                                               ?.firstName
                                           : controller.appBarTitle.value,
-                                  style: TextStyle(
-                                      fontSize: textFontSize,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
+                                  style:
+                                      (controller.forPatientList.value ?? false)
+                                          ? TextStyle(
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(CommonUtil()
+                                                  .getQurhomePrimaryColor()))
+                                          : TextStyle(
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
                                 ),
                                 TextSpan(text: " "),
                                 TextSpan(
@@ -295,7 +300,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                   style: TextStyle(
                                       fontSize: textFontSize,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black),
+                                      color: Color(CommonUtil()
+                                          .getQurhomePrimaryColor())),
                                 ),
                               ],
                             ),
@@ -646,11 +652,20 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       refresh(
                         userChanged: true,
                       );
+                      Navigator.pop(context);
+                      controller.currentSelectedTab.value = 0;
+
                       controller.forPatientList.value = false;
+                      controller.isPatientClicked.value = false;
                     } else {
                       controller.forPatientList.value = true;
                       controller.careGiverPatientListResult = null;
                       controller.careGiverPatientListResult = result;
+                      controller.currentSelectedTab.value = 0;
+                      controller.isPatientClicked.value = true;
+
+                      Navigator.pop(context);
+
                       setState(() {});
                     }
                   });

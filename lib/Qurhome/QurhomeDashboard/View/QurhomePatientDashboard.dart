@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeAlertList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientAlert.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -39,28 +40,32 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
     // TODO: implement initState
     super.initState();
 
-    tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    tabController = TabController(
+        length: 2,
+        vsync: this,
+        initialIndex: controller.currentSelectedTab.value);
     tabController?.addListener(_handleSelected);
   }
 
   void _handleSelected() {
+    if (controller.isPatientClicked.value) {
+      tabController?.index = controller.currentSelectedTab.value;
+      controller.isPatientClicked.value = false;
+    }
     this.setState(() {
       selectedTab = tabController?.index ?? 0;
+      controller.currentSelectedTab?.value = selectedTab;
       if (selectedTab == 0) {
         selectedAlertList = true;
       } else {
         selectedAlertList = false;
-      }
-      if (selectedTab != 0) {
-        sliverBarHeight = 50;
-      } else {
-        sliverBarHeight = 220;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    tabController?.animateTo(controller.currentSelectedTab?.value ?? 0);
     return Obx(
       () => controller.loadingData.isTrue
           ? Center(
@@ -88,13 +93,11 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
             children: [
               TabBar(
                 indicatorColor: Color(CommonUtil().getQurhomePrimaryColor()),
+                labelColor: Colors.white,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorWeight: 2,
+                unselectedLabelColor: Colors.black,
                 controller: tabController,
-                physics: BouncingScrollPhysics(),
-                indicator: BoxDecoration(
-                    borderRadius: new BorderRadius.only(
-                        topLeft: const Radius.circular(10.0),
-                        topRight: const Radius.circular(10.0)),
-                    color: Color(CommonUtil().getQurhomePrimaryColor())),
                 enableFeedback: true,
                 isScrollable: false,
                 automaticIndicatorColorAdjustment: true,
@@ -102,9 +105,10 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
               ),
               Expanded(
                 child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: tabController,
                   children: [
-                    Center(child: Text("PatientQurhomeAlert")),
+                    Center(child: QurhomePatientALert()),
                     Center(child: Text("Regimen"))
                   ],
                 ),
@@ -119,13 +123,6 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
   getTabWidget(String value, bool selectedAlertList) {
     return Container(
         width: double.infinity,
-        decoration: new BoxDecoration(
-            color: selectedAlertList
-                ? Color(CommonUtil().getQurhomePrimaryColor())
-                : Colors.transparent,
-            borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(10.0),
-                topRight: const Radius.circular(10.0))),
         child: Center(
           child: Text(
             value,
@@ -133,8 +130,8 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
               fontWeight: FontWeight.bold,
               fontSize: 20,
               color: selectedAlertList
-                  ? Colors.white
-                  : Color(CommonUtil().getQurhomePrimaryColor()),
+                  ? Color(CommonUtil().getQurhomePrimaryColor())
+                  : Colors.black,
             ),
           ),
         ));
