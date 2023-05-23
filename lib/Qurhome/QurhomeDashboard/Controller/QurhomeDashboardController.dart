@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 
@@ -34,6 +35,12 @@ class QurhomeDashboardController extends GetxController {
 
   var isVitalModuleDisable = true.obs;
   var isSymptomModuleDisable = true.obs;
+
+  var loadingData = false.obs;
+  var forPatientList = false.obs;
+  CareGiverPatientListResult? careGiverPatientListResult;
+  var currentSelectedTab = 0.obs;
+  var isPatientClicked = false.obs;
 
   @override
   void onInit() {
