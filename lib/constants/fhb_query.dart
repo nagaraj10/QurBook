@@ -54,6 +54,8 @@ const String qr_sid = 'sid';
 const String qr_callLogId = 'callLogId';
 const String qr_joinedUid = 'joinedUid';
 const String qr_location = 'location';
+const String patient_alert = 'incident-alert/cg-alert-list?patientId=';
+const String page_no = '&page=1&size=1000';
 
 //modified by parvathi
 const String qr_doctorslot = 'doctorSlots/';

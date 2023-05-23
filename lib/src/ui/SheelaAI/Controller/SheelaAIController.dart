@@ -287,8 +287,8 @@ class SheelaAIController extends GetxController {
             : relationshipId,
         conversationFlag: conversationFlag,
         additionalInfo: json.encode(additionalInfo),
-        localDateTime:
-            CommonUtil.dateFormatterWithdatetimesecondsApiFormatAI(DateTime.now()),
+        localDateTime: CommonUtil.dateFormatterWithdatetimesecondsApiFormatAI(
+            DateTime.now()),
         endPoint: BASE_URL,
         directCall: isUnAvailableCC ? "UNAVAILABLE" : null,
       );

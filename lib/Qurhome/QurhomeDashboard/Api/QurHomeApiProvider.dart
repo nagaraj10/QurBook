@@ -1,14 +1,15 @@
-
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/carecoordinatordata.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_list_model.dart';
 import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -39,18 +40,18 @@ class QurHomeApiProvider {
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
     try {
       RegimentResponseModel regimentsData;
-      String selectedDate='';
-      if(date!=null){
-        selectedDate=date;
-      }else{
-        selectedDate=CommonUtil.dateConversionToApiFormat(
-          date!=null?DateTime.now():DateTime.parse(date),
+      String selectedDate = '';
+      if (date != null) {
+        selectedDate = date;
+      } else {
+        selectedDate = CommonUtil.dateConversionToApiFormat(
+          date != null ? DateTime.now() : DateTime.parse(date),
           isIndianTime: true,
         );
       }
       regimentsData = await RegimentService.getRegimentData(
         dateSelected: CommonUtil.dateConversionToApiFormat(
-            (date.length==0)?DateTime.now():DateTime.parse(date),
+          (date.length == 0) ? DateTime.now() : DateTime.parse(date),
           isIndianTime: true,
         ),
         isSymptoms: 0,
@@ -74,7 +75,8 @@ class QurHomeApiProvider {
     }
   }
 
-  Future<dynamic> getRegimenListCalendar(DateTime startDate,DateTime endDate) async {
+  Future<dynamic> getRegimenListCalendar(
+      DateTime startDate, DateTime endDate) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
@@ -291,7 +293,7 @@ class QurHomeApiProvider {
       jsonData['id'] = appointmentId;
       jsonData['statusCode'] = 'PATDNA';
       final response = (await ApiServices.put(
-          Constants.BASE_URL + qr_callAppointmentUpdate+"statusUpdate",
+          Constants.BASE_URL + qr_callAppointmentUpdate + "statusUpdate",
           headers: header,
           body: convert.jsonEncode(jsonData)))!;
       if (response.statusCode == 200) {
@@ -473,5 +475,34 @@ class QurHomeApiProvider {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<PatientAlertListModel> getPatientAlertList(String patientId) async {
+    var regController = Get.find<QurhomeDashboardController>();
+
+    http.Response responseJson;
+
+    try {
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      responseJson = (await ApiServices.get(
+        '${Constants.BASE_URL}$patient_alert$patientId$page_no',
+        headers: header,
+      ))!;
+      if (responseJson.statusCode == 200) {
+        return PatientAlertListModel.fromJson(json.decode(responseJson.body));
+      } else {
+        regController.careCoordinatorIdEmptyMsg.value =
+            CommonUtil().validString(json.decode(responseJson.body));
+        return PatientAlertListModel();
+      }
+    } on SocketException {
+      regController.careCoordinatorIdEmptyMsg.value =
+          CommonUtil().validString(strNoInternet);
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      regController.careCoordinatorIdEmptyMsg.value =
+          CommonUtil().validString(e.toString());
+      return PatientAlertListModel();
+    }
   }
 }

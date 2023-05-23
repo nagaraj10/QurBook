@@ -1,10 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_list_model.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 
@@ -37,10 +42,19 @@ class QurhomeDashboardController extends GetxController {
   var isSymptomModuleDisable = true.obs;
 
   var loadingData = false.obs;
-  var forPatientList = false.obs;
+  var forPatientList = true.obs;
   CareGiverPatientListResult? careGiverPatientListResult;
   var currentSelectedTab = 0.obs;
   var isPatientClicked = false.obs;
+
+  var careCoordinatorIdEmptyMsg = "".obs;
+
+  final _apiProvider = QurHomeApiProvider();
+  PatientAlertListModel? patientAlert;
+  var loadingPatientData = false.obs;
+
+  int nextAlertPosition = 0;
+  int currentIndex = 0;
 
   @override
   void onInit() {
@@ -247,6 +261,35 @@ class QurhomeDashboardController extends GetxController {
     if (CommonUtil.isUSRegion()) {
       isVitalModuleDisable.value = true;
       isSymptomModuleDisable.value = true;
+    }
+  }
+
+  getPatientAlertList() async {
+    loadingPatientData.value = true;
+    patientAlert = await _apiProvider
+        .getPatientAlertList(careGiverPatientListResult?.childId ?? '');
+    loadingPatientData.value = false;
+
+    if (patientAlert != null &&
+        patientAlert?.result != null &&
+        patientAlert?.result?.data != null &&
+        (patientAlert?.isSuccess ?? false)) {
+      try {
+        patientAlert?.result?.data?.sort((a, b) =>
+            (b?.createdOn?.compareTo(a?.createdOn ?? DateTime.now()) ?? 0));
+
+        update(["newUpdate"]);
+      } catch (e) {
+        FlutterToast().getToast(
+            '${CommonUtil().validString(careCoordinatorIdEmptyMsg.value)}',
+            Colors.red);
+        return;
+      }
+    } else {
+      FlutterToast().getToast(
+          '${CommonUtil().validString(careCoordinatorIdEmptyMsg.value)}',
+          Colors.red);
+      return;
     }
   }
 }

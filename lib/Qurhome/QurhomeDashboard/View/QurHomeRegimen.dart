@@ -259,7 +259,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   elevation: 0,
                   centerTitle: true,
                   title: Text(
-                    variable.strRegimen,
+                    strRegimen,
                     style: TextStyle(
                       color: Colors.black,
                     ),
