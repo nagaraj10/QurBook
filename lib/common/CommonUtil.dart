@@ -5043,7 +5043,7 @@ class CommonUtil {
                       : Color(CommonUtil().getMyPrimaryColor())),
             ),
             // To display the title it is optional
-            content: Text('Record ' + name),
+            content: Text('Record ' + name.trim()+'?'),
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
