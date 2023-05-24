@@ -435,7 +435,7 @@ class _LandingScreenState extends State<LandingScreen> {
               userChanged: userChanged,
             ),
             showPatientList: () {
-              CommonUtil().showPatientListOfCaregiver(context, (user, resut) {
+              CommonUtil().showPatientListOfCaregiver(context, (user, result) {
                 if (user == "You") {
                   refresh(
                     userChanged: true,
@@ -445,17 +445,15 @@ class _LandingScreenState extends State<LandingScreen> {
 
                   qurhomeDashboardController.forPatientList.value = false;
                   qurhomeDashboardController.isPatientClicked.value = false;
+                  CommonUtil().navigateToQurhomeDasboard();
                 } else {
                   qurhomeDashboardController.forPatientList.value = true;
                   qurhomeDashboardController.careGiverPatientListResult = null;
-                  qurhomeDashboardController.careGiverPatientListResult = resut;
+                  qurhomeDashboardController.careGiverPatientListResult =
+                      result;
                   qurhomeDashboardController.currentSelectedTab.value = 0;
                   qurhomeDashboardController.isPatientClicked.value = true;
-
-                  Navigator.pop(context);
-                  CommonUtil().navigateToQurhomePatientDasboard(resut);
-
-                  setState(() {});
+                  CommonUtil().navigateToQurhomePatientDasboard(result);
                 }
               });
             },

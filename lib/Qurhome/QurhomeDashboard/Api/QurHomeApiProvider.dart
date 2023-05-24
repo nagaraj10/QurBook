@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/carecoordinatordata.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_list_model.dart';
 import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -73,11 +75,8 @@ class QurHomeApiProvider {
     }
   }
 
-  Future<dynamic> getRegimenListCalendar(
-    DateTime startDate,
-    DateTime endDate,
-    {String? patientId}
-  ) async {
+  Future<dynamic> getRegimenListCalendar(DateTime startDate, DateTime endDate,
+      {String? patientId}) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
@@ -476,5 +475,34 @@ class QurHomeApiProvider {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<PatientAlertListModel> getPatientAlertList(String patientId) async {
+    var regController = Get.find<QurhomeDashboardController>();
+
+    http.Response responseJson;
+
+    try {
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      responseJson = (await ApiServices.get(
+        '${Constants.BASE_URL}$patient_alert$patientId$page_no',
+        headers: header,
+      ))!;
+      if (responseJson.statusCode == 200) {
+        return PatientAlertListModel.fromJson(json.decode(responseJson.body));
+      } else {
+        regController.careCoordinatorIdEmptyMsg.value =
+            CommonUtil().validString(json.decode(responseJson.body));
+        return PatientAlertListModel();
+      }
+    } on SocketException {
+      regController.careCoordinatorIdEmptyMsg.value =
+          CommonUtil().validString(strNoInternet);
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      regController.careCoordinatorIdEmptyMsg.value =
+          CommonUtil().validString(e.toString());
+      return PatientAlertListModel();
+    }
   }
 }
