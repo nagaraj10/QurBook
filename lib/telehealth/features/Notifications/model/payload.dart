@@ -52,6 +52,7 @@ class Payload {
   String? planId;
   String? userId;
   String? patientName;
+  String? patientId;
   String? claimId;
   String? patientPhoneNumber;
   String? verificationCode;
@@ -87,6 +88,7 @@ class Payload {
     appointmentDate =
         json["appointmentDate"] == null ? null : json["appointmentDate"];
     userName = json["userName"] == null ? null : json["userName"];
+    patientId = json["patientId"] == null ? null : json["patientId"];
     doctorId = json["doctorId"] == null ? null : json["doctorId"];
     payloadMeetingId = json["meetingId"] == null ? null : json["meetingId"];
     templateName = json["templateName"] == null ? null : json["templateName"];

@@ -75,16 +75,17 @@ class FetchAppointmentsService {
   }
 
   Future<CommonResponseModel> acceptOrDeclineAppointment(
-      String appointmentId,String careGiverUserId,String patientId,bool isAccept) async {
+      String appointmentId,String patientId,bool isAccept) async {
     try {
       var headers = await headerRequest.getRequestHeadersAuthContent();
+      String? userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
       final response = await ApiServices.post(
         _baseUrl + respond_transport_request,
         headers: headers,
         body: json.encode({
           "patientId": patientId,
-          "caregiverUserId": careGiverUserId,
+          "caregiverUserId": userId,
           "appointmentId": appointmentId,
           "isAccept": true
         })

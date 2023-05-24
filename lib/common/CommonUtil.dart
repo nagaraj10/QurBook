@@ -5598,18 +5598,20 @@ class CommonUtil {
   }
 
   Future<MyProfileModel?> acceptCareGiverTransportRequestReminder(
-      BuildContext context, String userID,String appointmentId,String careGiverUserId,String patientId,bool isAccept) async {
+      BuildContext context,String appointmentId,String patientId,bool isAccept) async {
     final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
     MyProfileModel myProfile;
     FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
     CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
-    var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,careGiverUserId,patientId,isAccept);
-    if(result!=null&&(result?.isSuccess??false)){
-
-    }else{
-
+    var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
+    if ((appointmentId ?? '').isNotEmpty) {
+      AppointmentDetailsController appointmentDetailsController =
+      CommonUtil().onInitAppointmentDetailsController();
+      appointmentDetailsController.getAppointmentDetail(appointmentId ?? '');
+      Get.to(() => AppointmentDetailScreen());
     }
+    // return result;
     // await addFamilyUserInfoRepository
     //     .checkIfChildISMember(userID)
     //     .then((mainValue) async {

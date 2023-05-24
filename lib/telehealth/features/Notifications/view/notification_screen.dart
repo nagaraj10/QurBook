@@ -1969,8 +1969,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                 onPressed: () async {
                   readUnreadAction(notification, isRead: true);
 
-                  new CommonUtil().getDetailsOfAddedFamilyMember(
-                      context, notification.messageDetails!.payload!.userId!);
+                   new CommonUtil().acceptCareGiverTransportRequestReminder(
+                      context,
+                      notification.messageDetails?.payload?.appointmentId??'',
+                      notification.messageDetails?.payload?.patientId??'',
+                      true);
+
                 },
                 borderSide: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -1991,9 +1995,13 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlineButton(
                 onPressed: () async {
                   readUnreadAction(notification, isRead: true);
+                  new CommonUtil().acceptCareGiverTransportRequestReminder(
+                      context,
+                      notification.messageDetails?.payload?.appointmentId??'',
+                      notification.messageDetails?.payload?.patientId??'',
+                      false);
 
-                  new CommonUtil().getDetailsOfAddedFamilyMember(
-                      context, notification.messageDetails!.payload!.userId!);
+
                 },
                 borderSide: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
