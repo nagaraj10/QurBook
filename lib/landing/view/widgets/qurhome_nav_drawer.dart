@@ -108,16 +108,16 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                 SizedBox(
                                   width: 20.0.w,
                                 ),
-                                if (CommonUtil.isUSRegion())
-                                  InkWell(
-                                      child: Image.asset(
-                                        variable.icon_switch,
-                                        height: 26.0.h,
-                                        width: 26.0.h,
-                                      ),
-                                      onTap: () {
-                                        showPatientList();
-                                      })
+                                //if (CommonUtil.isUSRegion())
+                                InkWell(
+                                    child: Image.asset(
+                                      variable.icon_switch,
+                                      height: 26.0.h,
+                                      width: 26.0.h,
+                                    ),
+                                    onTap: () {
+                                      showPatientList();
+                                    })
                               ],
                             )
                           ],

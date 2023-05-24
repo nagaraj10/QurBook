@@ -109,6 +109,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   double selSheelaOption = 36.0;
 
+  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+
   @override
   void initState() {
     try {
@@ -433,11 +435,23 @@ class _LandingScreenState extends State<LandingScreen> {
               userChanged: userChanged,
             ),
             showPatientList: () {
-              CommonUtil().showPatientListOfCaregiver(context, (user, resut) {
+              CommonUtil().showPatientListOfCaregiver(context, (user, result) {
                 if (user == "You") {
                   refresh(userChanged: true);
+                  qurhomeDashboardController.currentSelectedTab.value = 0;
+
+                  qurhomeDashboardController.forPatientList.value = false;
+                  qurhomeDashboardController.isPatientClicked.value = false;
+                  CommonUtil().navigateToQurhomeDasboard();
+                } else {
+                  qurhomeDashboardController.forPatientList.value = true;
+                  qurhomeDashboardController.careGiverPatientListResult = null;
+                  qurhomeDashboardController.careGiverPatientListResult =
+                      result;
+                  qurhomeDashboardController.currentSelectedTab.value = 0;
+                  qurhomeDashboardController.isPatientClicked.value = true;
+                  CommonUtil().navigateToQurhomePatientDasboard(result);
                 }
-                _onBackPressed();
               });
             },
           ),

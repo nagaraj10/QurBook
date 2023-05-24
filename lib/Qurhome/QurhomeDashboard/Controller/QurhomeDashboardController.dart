@@ -42,7 +42,7 @@ class QurhomeDashboardController extends GetxController {
   var isSymptomModuleDisable = true.obs;
 
   var loadingData = false.obs;
-  var forPatientList = true.obs;
+  var forPatientList = false.obs;
   CareGiverPatientListResult? careGiverPatientListResult;
   var currentSelectedTab = 0.obs;
   var isPatientClicked = false.obs;

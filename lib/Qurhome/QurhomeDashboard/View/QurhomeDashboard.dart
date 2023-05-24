@@ -250,6 +250,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                     if (CommonUtil.isUSRegion()) SizedBox(width: 22.w),
                     Expanded(
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           RichText(
                             overflow: TextOverflow.fade,

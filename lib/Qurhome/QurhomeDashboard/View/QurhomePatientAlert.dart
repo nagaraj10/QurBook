@@ -211,24 +211,29 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           width: 20,
                         ),
                         Expanded(
-                          child: Text(
-                            patientAlertData.typeName ?? '',
-                            maxLines: 2,
-                            style: TextStyle(
-                                color: Color(
-                                    CommonUtil().getQurhomePrimaryColor()),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
+                            child: Text(
+                          CommonUtil().getFormattedString(
+                            patientAlertData.additionalInfo?.title ?? '',
+                            patientAlertData?.typeName ?? '',
+                            patientAlertData?.additionalInfo?.uformname ?? '',
+                            12,
+                            forDetails: false,
                           ),
-                        ),
+                          maxLines: 2,
+                          style: TextStyle(
+                              color: getTextAndIconColor(
+                                  itemIndex, nextAlertPosition),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
+                        )),
                         SizedBox(
                           width: 20,
                         ),
                         IconButton(
                           icon: ImageIcon(
                               getIcons(patientAlertData.typeCode ?? ''),
-                              color:
-                                  Color(CommonUtil().getQurhomePrimaryColor())),
+                              color: getTextAndIconColor(
+                                  itemIndex, nextAlertPosition)),
                           onPressed: () async {},
                         ),
                       ],
@@ -298,5 +303,18 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
     }
 
     return icon ?? AssetImage(myFHB_logo);
+  }
+
+  String getTypeName(String type, PatientAlertData result) {
+    if (type.toLowerCase() == "symptom" || type.toLowerCase() == "symptoms") {
+      if (result?.additionalInfo?.eid == "0" ||
+          result?.additionalInfo?.eid == "" ||
+          result?.additionalInfo?.eid == null) {
+        return "New symptom";
+      }
+    } else {
+      return type ?? '';
+    }
+    return '';
   }
 }
