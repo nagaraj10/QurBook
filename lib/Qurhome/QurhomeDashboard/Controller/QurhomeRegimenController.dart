@@ -147,31 +147,35 @@ class QurhomeRegimenController extends GetxController {
           currentIndex = qurHomeRegimenResponseModel!.regimentsList!.length - 1;
         }
       }
-      for (int i = 0;
-          i < qurHomeRegimenResponseModel!.regimentsList!.length;
-          i++) {
-        if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin !=
-            null) {
-          if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
-              'Appointment') {
-            if (qurHomeRegimenResponseModel!.regimentsList![i].estart != null &&
-                qurHomeRegimenResponseModel!.regimentsList![i].estart != '') {
-              if (qurHomeRegimenResponseModel!.regimentsList![i].eid != null &&
-                  qurHomeRegimenResponseModel!.regimentsList![i].eid != '') {
-                var apiReminder =
-                    qurHomeRegimenResponseModel!.regimentsList![i];
-                const platform = MethodChannel(APPOINTMENT_DETAILS);
-                try {
-                  if (Platform.isIOS) {
-                    platform.invokeMethod(
-                        APPOINTMENT_DETAILS, apiReminder.toJson());
-                  } else {
-                    await platform.invokeMethod(APPOINTMENT_DETAILS,
-                        {'data': jsonEncode(apiReminder.toJson())});
-                  }
-                } catch (e) {
-                  if (kDebugMode) {
-                    print(e);
+      if (patientId == null) {
+        for (int i = 0;
+            i < qurHomeRegimenResponseModel!.regimentsList!.length;
+            i++) {
+          if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin !=
+              null) {
+            if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
+                'Appointment') {
+              if (qurHomeRegimenResponseModel!.regimentsList![i].estart !=
+                      null &&
+                  qurHomeRegimenResponseModel!.regimentsList![i].estart != '') {
+                if (qurHomeRegimenResponseModel!.regimentsList![i].eid !=
+                        null &&
+                    qurHomeRegimenResponseModel!.regimentsList![i].eid != '') {
+                  var apiReminder =
+                      qurHomeRegimenResponseModel!.regimentsList![i];
+                  const platform = MethodChannel(APPOINTMENT_DETAILS);
+                  try {
+                    if (Platform.isIOS) {
+                      platform.invokeMethod(
+                          APPOINTMENT_DETAILS, apiReminder.toJson());
+                    } else {
+                      await platform.invokeMethod(APPOINTMENT_DETAILS,
+                          {'data': jsonEncode(apiReminder.toJson())});
+                    }
+                  } catch (e) {
+                    if (kDebugMode) {
+                      print(e);
+                    }
                   }
                 }
               }
