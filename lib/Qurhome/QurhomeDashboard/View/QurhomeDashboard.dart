@@ -263,35 +263,25 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                     ),
                                     children: <TextSpan>[
                                       TextSpan(
-                                        text:
-                                            (controller.forPatientList.value ??
-                                                    false)
-                                                ? controller
-                                                    .careGiverPatientListResult
-                                                    ?.firstName
-                                                : controller.appBarTitle.value,
-                                        style: (controller
-                                                    .forPatientList.value ??
-                                                false)
-                                            ? TextStyle(
-                                                fontSize: textFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(CommonUtil()
-                                                    .getQurhomePrimaryColor()))
-                                            : TextStyle(
-                                                fontSize: textFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                      ),
+                                          text: patient,
+                                          style: TextStyle(
+                                              fontSize: textFontSize,
+                                              color: Color(CommonUtil()
+                                                  .getQurhomePrimaryColor()))),
+                                      TextSpan(
+                                          text: controller
+                                              .careGiverPatientListResult
+                                              ?.firstName,
+                                          style: TextStyle(
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(CommonUtil()
+                                                  .getQurhomePrimaryColor()))),
                                       TextSpan(text: " "),
                                       TextSpan(
-                                        text:
-                                            (controller.forPatientList.value ??
-                                                    false)
-                                                ? controller
-                                                    .careGiverPatientListResult
-                                                    ?.lastName
-                                                : '',
+                                        text: controller
+                                            .careGiverPatientListResult
+                                            ?.lastName,
                                         style: TextStyle(
                                             fontSize: textFontSize,
                                             fontWeight: FontWeight.bold,
@@ -693,12 +683,20 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
                       controller.forPatientList.value = false;
                       controller.isPatientClicked.value = false;
-                    } else {
-                      controller.forPatientList.value = true;
                       controller.careGiverPatientListResult = null;
-                      controller.careGiverPatientListResult = result;
-                      controller.currentSelectedTab.value = 0;
-                      controller.isPatientClicked.value = true;
+                    } else {
+                      if (controller.careGiverPatientListResult?.childId !=
+                          result?.childId) {
+                        controller.forPatientList.value = true;
+
+                        controller.careGiverPatientListResult = null;
+                        controller.careGiverPatientListResult = result;
+                        controller.currentSelectedTab.value = 0;
+
+                        controller.isPatientClicked.value = true;
+
+                        controller.getPatientAlertList();
+                      }
 
                       Navigator.pop(context);
 

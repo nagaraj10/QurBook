@@ -79,8 +79,12 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
 
   getTabs() {
     List<Tab> myTabs = <Tab>[
-      Tab(child: getTabWidget(strAlerts, selectedAlertList)),
-      Tab(child: getTabWidget(strRegimen, !selectedAlertList))
+      Tab(
+          child: SizedBox(
+              height: 50, child: getTabWidget(strAlerts, selectedAlertList))),
+      Tab(
+          child: SizedBox(
+              height: 50, child: getTabWidget(strRegimen, !selectedAlertList)))
     ];
 
     return myTabs;
@@ -97,7 +101,15 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
                 indicatorColor: Color(CommonUtil().getQurhomePrimaryColor()),
                 labelColor: Colors.white,
                 indicatorSize: TabBarIndicatorSize.tab,
-                indicatorWeight: 2,
+                indicatorWeight: 1,
+                indicator: BoxDecoration(
+                  color: Color(CommonUtil().getQurhomePrimaryColor()),
+                  border: Border.all(
+                      color: Color(new CommonUtil().getQurhomePrimaryColor())),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15.0),
+                      topRight: Radius.circular(15.0)),
+                ),
                 unselectedLabelColor: Colors.black,
                 controller: tabController,
                 enableFeedback: true,
@@ -127,18 +139,17 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
 
   getTabWidget(String value, bool selectedAlertList) {
     return Container(
-        width: double.infinity,
         child: Center(
-          child: Text(
-            value,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: selectedAlertList
-                  ? Color(CommonUtil().getQurhomePrimaryColor())
-                  : Colors.black,
-            ),
-          ),
-        ));
+      child: Text(
+        value,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: selectedAlertList
+              ? Colors.white
+              : Color(CommonUtil().getQurhomePrimaryColor()),
+        ),
+      ),
+    ));
   }
 }
