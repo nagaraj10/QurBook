@@ -33,7 +33,7 @@ class QurHomeApiProvider {
   //DateTime selectedRegimenDate = DateTime.now();
   final ApiBaseHelper apiBaseHelper = ApiBaseHelper();
 
-  Future<dynamic> getRegimenList(String date) async {
+  Future<dynamic> getRegimenList(String date, {String? patientId}) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
@@ -50,12 +50,12 @@ class QurHomeApiProvider {
         );
       }
       regimentsData = await RegimentService.getRegimentData(
-        dateSelected: CommonUtil.dateConversionToApiFormat(
-          (date.length == 0) ? DateTime.now() : DateTime.parse(date),
-          isIndianTime: true,
-        ),
-        isSymptoms: 0,
-      );
+          dateSelected: CommonUtil.dateConversionToApiFormat(
+            (date.length == 0) ? DateTime.now() : DateTime.parse(date),
+            isIndianTime: true,
+          ),
+          isSymptoms: 0,
+          patientId: patientId);
       return regimentsData;
 
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
@@ -75,8 +75,8 @@ class QurHomeApiProvider {
     }
   }
 
-  Future<dynamic> getRegimenListCalendar(
-      DateTime startDate, DateTime endDate) async {
+  Future<dynamic> getRegimenListCalendar(DateTime startDate, DateTime endDate,
+      {String? patientId}) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
@@ -85,16 +85,16 @@ class QurHomeApiProvider {
       RegimentResponseModel regimentsData;
 
       regimentsData = await RegimentService.getRegimentDataCalendar(
-        startDate: CommonUtil.dateConversionToApiFormat(
-          startDate,
-          isIndianTime: true,
-        ),
-        endDate: CommonUtil.dateConversionToApiFormat(
-          endDate,
-          isIndianTime: true,
-        ),
-        isSymptoms: 0,
-      );
+          startDate: CommonUtil.dateConversionToApiFormat(
+            startDate,
+            isIndianTime: true,
+          ),
+          endDate: CommonUtil.dateConversionToApiFormat(
+            endDate,
+            isIndianTime: true,
+          ),
+          isSymptoms: 0,
+          patientId: patientId);
       return regimentsData;
 
       // var header = await HeaderRequest().getRequestHeadersWithoutOffset();

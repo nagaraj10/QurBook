@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientRegimenList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientAlert.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
@@ -122,7 +123,10 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
                   controller: tabController,
                   children: [
                     Center(child: QurhomePatientALert()),
-                    Center(child: Text("Regimen"))
+                    Center(
+                        child: QurHomePatientRegimenListScreen(
+                            careGiverPatientListResult:
+                                widget.careGiverPatientListResult))
                   ],
                 ),
               )
