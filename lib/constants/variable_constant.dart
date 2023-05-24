@@ -395,7 +395,7 @@ String strNotificationPreference = 'Notification preferences';
 String strNonAdherenceSettings = 'Activity non-adherence reminder';
 const String strMsgFromProvider = 'Message from provider';
 
-const String strColorPalete = 'Color palette';
+const String strColorPalete = 'Color Palette';
 const String strCareGiverCommunication = 'Caregiver communication';
 
 const String strVitalsPreferences = 'Vitals preferences';
@@ -679,14 +679,14 @@ const String strAllowGoogle = 'Allow app to recieve data from google Fit';
 const String strHealthKit = 'Apple health';
 const String strAllowHealth = 'Allow app to recieve data from Apple Health';
 const String strAddDevice = 'Tap to add device widgets to your home screen';
-const String strDefaultUI = 'Set Qurhome as default UI';
+const String strDefaultUI = 'Set QurHome as default UI';
 
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
 const String strAdvancedRegimen = 'Advanced Regimen';
 const String strConnectedDevices = 'Connected devices';
-const String strQurHome = 'Qurhome';
+const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
 const String strAddNewDevice = 'Add New Device';
 const String strQurHubIoTdevice = 'QurHub IoT device';
