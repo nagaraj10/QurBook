@@ -102,6 +102,8 @@ class _LandingScreenState extends State<LandingScreen> {
   var userId;
 
   final controller = Get.put(ChatUserListController());
+  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+
   final sheelBadgeController = Get.put(SheelaAIController());
 
   double selOption = 30.0.sp;
@@ -435,9 +437,26 @@ class _LandingScreenState extends State<LandingScreen> {
             showPatientList: () {
               CommonUtil().showPatientListOfCaregiver(context, (user, resut) {
                 if (user == "You") {
-                  refresh(userChanged: true);
+                  refresh(
+                    userChanged: true,
+                  );
+                  Navigator.pop(context);
+                  qurhomeDashboardController.currentSelectedTab.value = 0;
+
+                  qurhomeDashboardController.forPatientList.value = false;
+                  qurhomeDashboardController.isPatientClicked.value = false;
+                } else {
+                  qurhomeDashboardController.forPatientList.value = true;
+                  qurhomeDashboardController.careGiverPatientListResult = null;
+                  qurhomeDashboardController.careGiverPatientListResult = resut;
+                  qurhomeDashboardController.currentSelectedTab.value = 0;
+                  qurhomeDashboardController.isPatientClicked.value = true;
+
+                  Navigator.pop(context);
+                  CommonUtil().navigateToQurhomePatientDasboard(resut);
+
+                  setState(() {});
                 }
-                _onBackPressed();
               });
             },
           ),
