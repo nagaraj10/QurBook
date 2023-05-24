@@ -412,7 +412,6 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           bottom: 20.0,
                         ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               CommonUtil().capitalizeFirstofEach(
@@ -424,6 +423,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 12,
                                 forDetails: false,
                               )),
+                              textAlign: TextAlign.center,
                               maxLines: 3,
                               style: TextStyle(
                                   fontSize: 22.0,
@@ -434,6 +434,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               Text(
                                 getValuesOfVital(patientAlertData) ?? '',
                                 maxLines: 2,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 20.0,
                                     fontWeight: FontWeight.w600),
