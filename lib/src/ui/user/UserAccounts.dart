@@ -265,7 +265,7 @@ class _UserAccountsState extends State<UserAccounts>
               QurPlanReminders.getTheRemindersFromAPI();
 
               (context as Element).markNeedsBuild();
-              setState(() {});
+              // setState(() {});
             },
             true,
           );

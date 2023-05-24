@@ -304,12 +304,13 @@ class SwitchProfile {
     /*Navigator.push(context, MaterialPageRoute(builder: (context) {
       return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
     }));*/
-    Navigator.pushNamed(
-      context,
-      rt_UserAccounts,
-      arguments: UserAccountsArguments(
-        selectedIndex: 1,
-      ),
-    );
+    if (!CommonUtil.isUSRegion())
+      Navigator.pushNamed(
+        context,
+        rt_UserAccounts,
+        arguments: UserAccountsArguments(
+          selectedIndex: 1,
+        ),
+      );
   }
 }

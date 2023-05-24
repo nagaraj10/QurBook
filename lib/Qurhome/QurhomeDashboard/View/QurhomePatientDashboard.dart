@@ -97,25 +97,37 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
         child: Container(
           child: Column(
             children: [
-              TabBar(
-                indicatorColor: Color(CommonUtil().getQurhomePrimaryColor()),
-                labelColor: Colors.white,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicatorWeight: 1,
-                indicator: BoxDecoration(
+              Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
                   color: Color(CommonUtil().getQurhomePrimaryColor()),
-                  border: Border.all(
-                      color: Color(new CommonUtil().getQurhomePrimaryColor())),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15.0),
-                      topRight: Radius.circular(15.0)),
+                  width: 2,
+                ))),
+                height: 50,
+                width: 800,
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                child: TabBar(
+                  indicatorColor: Color(CommonUtil().getQurhomePrimaryColor()),
+                  labelColor: Colors.white,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorWeight: 1,
+                  indicator: BoxDecoration(
+                    color: Color(CommonUtil().getQurhomePrimaryColor()),
+                    border: Border.all(
+                        color:
+                            Color(new CommonUtil().getQurhomePrimaryColor())),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15.0),
+                        topRight: Radius.circular(15.0)),
+                  ),
+                  unselectedLabelColor: Colors.black,
+                  controller: tabController,
+                  enableFeedback: true,
+                  isScrollable: false,
+                  automaticIndicatorColorAdjustment: true,
+                  tabs: getTabs(),
                 ),
-                unselectedLabelColor: Colors.black,
-                controller: tabController,
-                enableFeedback: true,
-                isScrollable: false,
-                automaticIndicatorColorAdjustment: true,
-                tabs: getTabs(),
               ),
               Expanded(
                 child: TabBarView(
