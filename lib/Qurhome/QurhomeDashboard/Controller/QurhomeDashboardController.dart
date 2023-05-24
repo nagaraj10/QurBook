@@ -286,4 +286,40 @@ class QurhomeDashboardController extends GetxController {
       return;
     }
   }
+
+  clear() {
+    loadingData = false.obs;
+    forPatientList = false.obs;
+    careGiverPatientListResult = null;
+    currentSelectedTab = 0.obs;
+    isPatientClicked = false.obs;
+
+    careCoordinatorIdEmptyMsg = "".obs;
+
+    patientAlert = null;
+    loadingPatientData = false.obs;
+
+    nextAlertPosition = 0;
+    currentIndex = 0;
+  }
+
+  Future<bool> careGiverOkAction(
+      CareGiverPatientListResult? careGiverPatientListResult) async {
+    loadingPatientData.value = true;
+    var responseBool =
+        await _apiProvider.careGiverOKAction(careGiverPatientListResult);
+    print(responseBool);
+    loadingPatientData.value = false;
+    return responseBool;
+  }
+
+  Future<bool> caregiverEscalateAction(
+      PatientAlertData patientAlertData) async {
+    loadingPatientData.value = true;
+    var responseBool = await _apiProvider.careGiverEscalateAction(
+        patientAlertData, careGiverPatientListResult);
+    print(responseBool);
+    loadingPatientData.value = false;
+    return responseBool;
+  }
 }

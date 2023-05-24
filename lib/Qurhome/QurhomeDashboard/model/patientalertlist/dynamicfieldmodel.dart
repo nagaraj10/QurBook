@@ -32,7 +32,7 @@ class DynamicFieldModel {
     type = json.containsKey('type') ? json['type'] : '';
     vmax = json.containsKey('vmax') ? json['vmax'] : '';
     vmin = json.containsKey('vmin') ? json['vmin'] : '';
-    alarm = json.containsKey('alarm') ? json['alarm'] : '';
+    alarm = json.containsKey('alarm') ? json['alarm'] : 0;
     value = json.containsKey('value') ? json['value'] : '';
     display = json.containsKey('display') ? json['display'] : '';
     description = json.containsKey('description') ? json['description'] : '';

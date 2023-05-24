@@ -57,6 +57,12 @@ const String qr_location = 'location';
 const String patient_alert = 'incident-alert/cg-alert-list?patientId=';
 const String page_no = '&page=1&size=1000';
 
+const String qr_caregivername = 'caregiverName';
+const String qr_caregiverid = 'id';
+const String qr_caregiver_ok = 'incident-alert/caregiver-action?action=seen';
+const String qr_caregiver_escalate =
+    'incident-alert/caregiver-action?action=escalate';
+
 //modified by parvathi
 const String qr_doctorslot = 'doctorSlots/';
 const String qr_availability = 'getAvailability';
