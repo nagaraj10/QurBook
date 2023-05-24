@@ -102,14 +102,14 @@ class _LandingScreenState extends State<LandingScreen> {
   var userId;
 
   final controller = Get.put(ChatUserListController());
+  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+
   final sheelBadgeController = Get.put(SheelaAIController());
 
   double selOption = 30.0.sp;
   double unSelOption = 28.0.sp;
 
   double selSheelaOption = 36.0;
-
-  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
 
   @override
   void initState() {
@@ -437,7 +437,10 @@ class _LandingScreenState extends State<LandingScreen> {
             showPatientList: () {
               CommonUtil().showPatientListOfCaregiver(context, (user, result) {
                 if (user == "You") {
-                  refresh(userChanged: true);
+                  refresh(
+                    userChanged: true,
+                  );
+                  Navigator.pop(context);
                   qurhomeDashboardController.currentSelectedTab.value = 0;
 
                   qurhomeDashboardController.forPatientList.value = false;

@@ -1,13 +1,13 @@
 class DynamicFieldModel {
-  String? amax;
-  String? amin;
-  String? type;
-  String? vmax;
-  String? vmin;
+  dynamic? amax;
+  dynamic? amin;
+  dynamic? type;
+  dynamic? vmax;
+  dynamic? vmin;
   int? alarm;
-  String? value;
-  String? display;
-  String? description;
+  dynamic? value;
+  dynamic? display;
+  dynamic? description;
   dynamic seq;
   dynamic commonValue;
   dynamic title;
@@ -25,15 +25,17 @@ class DynamicFieldModel {
 
   DynamicFieldModel.fromJson(String title, Map<String, dynamic> json) {
     title = title;
-    amax = json['amax'];
-    amin = json['amin'];
-    type = json['type'];
-    vmax = json['vmax'];
-    vmin = json['vmin'];
-    alarm = json['alarm'];
-    value = json['value'];
-    display = json['display'];
-    description = json['description'];
+    amax = json.containsKey('amax') ? json['amax'] : '';
+    seq = json.containsKey('seq') ? json['seq'] : '';
+
+    amin = json.containsKey('amin') ? json['amin'] : '';
+    type = json.containsKey('type') ? json['type'] : '';
+    vmax = json.containsKey('vmax') ? json['vmax'] : '';
+    vmin = json.containsKey('vmin') ? json['vmin'] : '';
+    alarm = json.containsKey('alarm') ? json['alarm'] : '';
+    value = json.containsKey('value') ? json['value'] : '';
+    display = json.containsKey('display') ? json['display'] : '';
+    description = json.containsKey('description') ? json['description'] : '';
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +49,8 @@ class DynamicFieldModel {
     data['value'] = this.value;
     data['display'] = this.display;
     data['description'] = this.description;
+    data['seq'] = this.seq;
+
     return data;
   }
 }

@@ -249,78 +249,103 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         : SizedBox.shrink(),
                     if (CommonUtil.isUSRegion()) SizedBox(width: 22.w),
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RichText(
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            text: TextSpan(
-                              // Note: Styles for TextSpans must be explicitly defined.
-                              // Child text spans will inherit styles from parent
-                              style: TextStyle(
-                                fontSize: textFontSize,
-                                color: Colors.black,
-                              ),
-                              children: <TextSpan>[
-                                if (controller.currentSelectedIndex.value ==
-                                        0 ||
-                                    controller.currentSelectedIndex.value ==
-                                        1) ...{
-                                  (controller.forPatientList.value ?? false)
-                                      ? TextSpan(text: "")
-                                      : TextSpan(text: 'Hello '),
-                                },
-                                TextSpan(
-                                  text:
-                                      (controller.forPatientList.value ?? false)
-                                          ? controller
+                      child: Center(
+                        child: (controller.forPatientList.value ?? false)
+                            ? RichText(
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                                text: TextSpan(
+                                    // Note: Styles for TextSpans must be explicitly defined.
+                                    // Child text spans will inherit styles from parent
+                                    style: TextStyle(
+                                      fontSize: textFontSize,
+                                      color: Colors.black,
+                                    ),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: patient,
+                                          style: TextStyle(
+                                              fontSize: textFontSize,
+                                              color: Color(CommonUtil()
+                                                  .getQurhomePrimaryColor()))),
+                                      TextSpan(
+                                          text: controller
                                               .careGiverPatientListResult
-                                              ?.firstName
-                                          : controller.appBarTitle.value,
-                                  style:
-                                      (controller.forPatientList.value ?? false)
-                                          ? TextStyle(
+                                              ?.firstName,
+                                          style: TextStyle(
                                               fontSize: textFontSize,
                                               fontWeight: FontWeight.bold,
                                               color: Color(CommonUtil()
-                                                  .getQurhomePrimaryColor()))
-                                          : TextStyle(
-                                              fontSize: textFontSize,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                ),
-                                TextSpan(text: " "),
-                                TextSpan(
-                                  text:
-                                      (controller.forPatientList.value ?? false)
-                                          ? controller
-                                              .careGiverPatientListResult
-                                              ?.lastName
-                                          : '',
-                                  style: TextStyle(
-                                      fontSize: textFontSize,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor())),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (controller.currentSelectedIndex.value == 0 ||
-                              controller.currentSelectedIndex.value == 1) ...{
-                            SizedBox(height: 3),
-                            (controller.forPatientList.value ?? false)
-                                ? Text("")
-                                : Text(
-                                    qurHomeRegimenController.dateHeader.value,
-                                    style: TextStyle(
-                                      fontSize: 12.h,
-                                      color: Colors.grey,
+                                                  .getQurhomePrimaryColor()))),
+                                      TextSpan(text: " "),
+                                      TextSpan(
+                                        text: controller
+                                            .careGiverPatientListResult
+                                            ?.lastName,
+                                        style: TextStyle(
+                                            fontSize: textFontSize,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(CommonUtil()
+                                                .getQurhomePrimaryColor())),
+                                      ),
+                                    ]))
+                            : Column(
+                                children: [
+                                  RichText(
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                    text: TextSpan(
+                                      // Note: Styles for TextSpans must be explicitly defined.
+                                      // Child text spans will inherit styles from parent
+                                      style: TextStyle(
+                                        fontSize: textFontSize,
+                                        color: Colors.black,
+                                      ),
+                                      children: <TextSpan>[
+                                        if (controller.currentSelectedIndex
+                                                    .value ==
+                                                0 ||
+                                            controller.currentSelectedIndex
+                                                    .value ==
+                                                1) ...{
+                                          TextSpan(text: 'Hello '),
+                                        },
+                                        TextSpan(
+                                          text: controller.appBarTitle.value,
+                                          style: (controller
+                                                      .forPatientList.value ??
+                                                  false)
+                                              ? TextStyle(
+                                                  fontSize: textFontSize,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(CommonUtil()
+                                                      .getQurhomePrimaryColor()))
+                                              : TextStyle(
+                                                  fontSize: textFontSize,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                          },
-                        ],
+                                  if (controller.currentSelectedIndex.value ==
+                                          0 ||
+                                      controller.currentSelectedIndex.value ==
+                                          1) ...{
+                                    SizedBox(height: 3),
+                                    (controller.forPatientList.value ?? false)
+                                        ? Text("")
+                                        : Text(
+                                            qurHomeRegimenController
+                                                .dateHeader.value,
+                                            style: TextStyle(
+                                              fontSize: 12.h,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                  },
+                                ],
+                              ),
                       ),
                     ),
                     if (CommonUtil.isUSRegion() &&
@@ -658,12 +683,20 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
                       controller.forPatientList.value = false;
                       controller.isPatientClicked.value = false;
-                    } else {
-                      controller.forPatientList.value = true;
                       controller.careGiverPatientListResult = null;
-                      controller.careGiverPatientListResult = result;
-                      controller.currentSelectedTab.value = 0;
-                      controller.isPatientClicked.value = true;
+                    } else {
+                      if (controller.careGiverPatientListResult?.childId !=
+                          result?.childId) {
+                        controller.forPatientList.value = true;
+
+                        controller.careGiverPatientListResult = null;
+                        controller.careGiverPatientListResult = result;
+                        controller.currentSelectedTab.value = 0;
+
+                        controller.isPatientClicked.value = true;
+
+                        controller.getPatientAlertList();
+                      }
 
                       Navigator.pop(context);
 

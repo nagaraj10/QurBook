@@ -9,6 +9,8 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 
 class QurhomePatientALert extends StatefulWidget {
   @override
@@ -41,106 +43,98 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
   }
 
   getDataFromAPI(QurhomeDashboardController val, var isPortrait) {
-    return val.patientAlert == null
-        ? const Center(
-            child: Text(
-              'Please re-try after some time',
-            ),
-          )
-        : val.patientAlert!.result!.data!.length != 0
-            ? Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50.0),
-                child: Container(
-                  child: PageView.builder(
-                    itemCount: val.patientAlert!.result!.data!.length + 1,
-                    scrollDirection: Axis.vertical,
-                    onPageChanged: (int index) {
-                      setState(() {
-                        controller.currentIndex = index;
-                      });
-                    },
-                    controller: PageController(
-                        initialPage: val.nextAlertPosition,
-                        viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
-                    itemBuilder: (BuildContext context, int itemIndex) {
-                      if (itemIndex ==
-                          (val.patientAlert!.result!.data!.length)) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 22.0),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                noMoreActivity,
-                                height: 50,
-                                width: 50,
+    return (val.patientAlert?.result?.data?.length != 0 &&
+            val.patientAlert?.result != null)
+        ? Padding(
+            padding: const EdgeInsets.symmetric(vertical: 50.0),
+            child: Container(
+              child: PageView.builder(
+                itemCount: val.patientAlert!.result!.data!.length + 1,
+                scrollDirection: Axis.vertical,
+                onPageChanged: (int index) {
+                  setState(() {
+                    controller.currentIndex = index;
+                  });
+                },
+                controller: PageController(
+                    initialPage: 1,
+                    viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
+                itemBuilder: (BuildContext context, int itemIndex) {
+                  if (itemIndex == (val.patientAlert!.result!.data!.length)) {
+                    return SizedBox();
+                  } else {
+                    bool isSameDate = true;
+                    final DateTime? date =
+                        val.patientAlert!.result!.data![itemIndex].createdOn;
+                    final item = val.patientAlert!.result!.data![itemIndex];
+                    if (itemIndex == 0) {
+                      isSameDate = false;
+                    } else {
+                      final DateTime? prevDateString = val
+                          .patientAlert!.result!.data![itemIndex - 1].createdOn;
+
+                      isSameDate = checkDateSame(prevDateString, date) ?? false;
+                    }
+                    if (itemIndex == 0 || !(isSameDate)) {
+                      return Column(children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                noMoreActivites,
-                                style: TextStyle(
-                                    color: Color(
-                                  CommonUtil().getQurhomePrimaryColor(),
-                                )),
-                              )
                             ],
                           ),
-                        );
-                      } else {
-                        bool isSameDate = true;
-                        final DateTime? date = val
-                            .patientAlert!.result!.data![itemIndex].createdOn;
-                        final item = val.patientAlert!.result!.data![itemIndex];
-                        if (itemIndex == 0) {
-                          isSameDate = false;
-                        } else {
-                          final DateTime? prevDateString = val.patientAlert!
-                              .result!.data![itemIndex - 1].createdOn;
-
-                          isSameDate =
-                              checkDateSame(prevDateString, date) ?? false;
-                        }
-                        if (itemIndex == 0 || !(isSameDate)) {
-                          return Column(children: [
-                            Container(
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 5),
-                              color: Colors.white,
-                              child: Text(
-                                qurhomeRegimenController.getFormatedDate(
-                                    date: date.toString()),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                ),
-                              ),
+                          padding: EdgeInsets.only(
+                              left: 10, right: 10, top: 5, bottom: 5),
+                          child: Text(
+                            qurhomeRegimenController.getFormatedDate(
+                                date: date.toString()),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
                             ),
-                            _buildCarouselItem(
-                                context,
-                                itemIndex,
-                                val.patientAlert!.result!.data![itemIndex],
-                                val.nextAlertPosition,
-                                isPortrait)
-                          ]);
-                        } else {
-                          return _buildCarouselItem(
-                              context,
-                              itemIndex,
-                              val.patientAlert!.result!.data![itemIndex],
-                              val.nextAlertPosition,
-                              isPortrait);
-                        }
-                      }
-                    },
-                  ),
-                ),
-              )
-            : const Center(
-                child: Text(
-                  'No activities scheduled today',
-                ),
-              );
+                          ),
+                        ),
+                        _buildCarouselItem(
+                            context,
+                            itemIndex,
+                            val.patientAlert!.result!.data![itemIndex],
+                            val.nextAlertPosition,
+                            isPortrait)
+                      ]);
+                    } else {
+                      return _buildCarouselItem(
+                          context,
+                          itemIndex,
+                          val.patientAlert!.result!.data![itemIndex],
+                          val.nextAlertPosition,
+                          isPortrait);
+                    }
+                  }
+                },
+              ),
+            ),
+          )
+        : Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    noAlert,
+                  )
+                ],
+              ),
+            ),
+          );
   }
 
   getCurrentRatio(int itemIndex) {
@@ -211,20 +205,23 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           width: 20,
                         ),
                         Expanded(
-                            child: Text(
-                          CommonUtil().getFormattedString(
-                            patientAlertData.additionalInfo?.title ?? '',
-                            patientAlertData?.typeName ?? '',
-                            patientAlertData?.additionalInfo?.uformname ?? '',
-                            12,
-                            forDetails: false,
+                            child: Center(
+                          child: Text(
+                            CommonUtil().capitalizeFirstofEach(
+                                CommonUtil().getFormattedString(
+                              patientAlertData.additionalInfo?.title ?? '',
+                              patientAlertData?.typeName ?? '',
+                              patientAlertData?.additionalInfo?.uformname ?? '',
+                              12,
+                              forDetails: false,
+                            )),
+                            maxLines: 2,
+                            style: TextStyle(
+                                color: getTextAndIconColor(
+                                    itemIndex, nextAlertPosition),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
                           ),
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: getTextAndIconColor(
-                                  itemIndex, nextAlertPosition),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
                         )),
                         SizedBox(
                           width: 20,
@@ -254,7 +251,10 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
         CommonUtil().getQurhomePrimaryColor(),
       );
     } else if (nextRegimenPosition == itemIndex) {
-      return Colors.white;
+      if (itemIndex == 0) {
+        return Colors.grey;
+      } else
+        return Colors.white;
     } else {
       return Colors.grey;
     }
@@ -264,9 +264,13 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
     if (controller.currentIndex == itemIndex) {
       return Colors.white;
     } else if (nextRegimenPosition == itemIndex) {
-      return Color(
-        CommonUtil().getQurhomePrimaryColor(),
-      );
+      if (itemIndex == 0) {
+        return Colors.white;
+      } else {
+        return Color(
+          CommonUtil().getQurhomePrimaryColor(),
+        );
+      }
     } else {
       return Colors.white;
     }

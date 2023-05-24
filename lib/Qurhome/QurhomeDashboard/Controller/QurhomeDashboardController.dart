@@ -280,15 +280,9 @@ class QurhomeDashboardController extends GetxController {
 
         update(["newUpdate"]);
       } catch (e) {
-        FlutterToast().getToast(
-            '${CommonUtil().validString(careCoordinatorIdEmptyMsg.value)}',
-            Colors.red);
         return;
       }
     } else {
-      FlutterToast().getToast(
-          '${CommonUtil().validString(careCoordinatorIdEmptyMsg.value)}',
-          Colors.red);
       return;
     }
   }

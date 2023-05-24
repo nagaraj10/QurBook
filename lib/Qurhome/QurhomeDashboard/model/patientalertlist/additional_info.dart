@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'dynamicfieldmodel.dart';
 
 class AdditionalInfo {
   String? ack;
   dynamic? eid;
-  String? uform;
+  dynamic? uform;
   String? cptCode;
   String? dosemeal;
   String? ackLocal;
@@ -55,6 +57,15 @@ class AdditionalInfo {
 
       dynamicFieldModel = [];
     }
+
+    try {
+      if (json['uform'] != null)
+        getDynamicFieldListFromUfrom(jsonDecode(json['uform']));
+    } catch (e) {
+      print(e);
+
+      dynamicFieldModelfromUForm = [];
+    }
     uformname = json['uformname'];
     endDateTime = json['end_date_time'];
     startDateTime = json['start_date_time'];
@@ -70,13 +81,15 @@ class AdditionalInfo {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['ack'] = this.ack;
     data['eid'] = this.eid;
-    data['uform'] = this.uform;
     data['cpt_code'] = this.cptCode;
     data['dosemeal'] = this.dosemeal;
     data['ack_local'] = this.ackLocal;
     data['issymptom'] = this.issymptom;
     if (this.uformdata != null) {
       data['uformdata'] = this.uformdata!.toJson();
+    }
+    if (this.uformdata != null) {
+      data['uform'] = this.uform!.toJson();
     }
     data['uformname'] = this.uformname;
     data['end_date_time'] = this.endDateTime;
@@ -88,6 +101,16 @@ class AdditionalInfo {
     data['activityname'] = this.activityname;
     data['activity_type'] = this.activityType;
     return data;
+  }
+
+  getDynamicFieldListFromUfrom(dynamic json) {
+    json.forEach((fieldTitle, fieldData) => dynamicFieldModelfromUForm.add(
+        DynamicFieldModel.fromJson(fieldTitle, fieldData) != null
+            ? DynamicFieldModel.fromJson(fieldTitle, fieldData)
+            : DynamicFieldModel()));
+    try {
+      dynamicFieldModelfromUForm?.sort((a, b) => a?.seq.compareTo(b?.seq));
+    } catch (e) {}
   }
 
   getDynamicFieldList(dynamic json) {

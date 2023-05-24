@@ -3,13 +3,21 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_al
 class PatientAlertListModel {
   bool? isSuccess;
   PatientAlertListResult? result;
+  Diagnostics? diagnostics;
 
   PatientAlertListModel({this.isSuccess, this.result});
 
   PatientAlertListModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
-    result = json['result'] != null
-        ? new PatientAlertListResult.fromJson(json['result'])
+    result = json.containsKey('result')
+        ? json['result'] != null
+            ? new PatientAlertListResult.fromJson(json['result'])
+            : null
+        : null;
+    diagnostics = json.containsKey('diagnostics')
+        ? json['diagnostics'] != null
+            ? new Diagnostics.fromJson(json['diagnostics'])
+            : null
         : null;
   }
 
@@ -21,4 +29,18 @@ class PatientAlertListModel {
     }
     return data;
   }
+}
+
+class Diagnostics {
+
+
+	Diagnostics();
+
+	Diagnostics.fromJson(Map<String, dynamic> json) {
+	}
+
+	Map<String, dynamic> toJson() {
+		final Map<String, dynamic> data = new Map<String, dynamic>();
+		return data;
+	}
 }
