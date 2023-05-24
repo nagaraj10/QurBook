@@ -123,17 +123,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
               ),
             ),
           )
-        : Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    noAlert,
-                  )
-                ],
-              ),
-            ),
+        : Center(
+            child: Text(noAlert),
           );
   }
 
