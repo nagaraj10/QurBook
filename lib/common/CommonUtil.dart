@@ -5992,6 +5992,33 @@ class CommonUtil {
       }
     }
   }
+
+  String getFormattedString(
+      String title, String type, String name, double fontSize,
+      {bool forDetails: false}) {
+    List<TextSpan> widget = [];
+    if (type == 'Vitals') {
+      try {
+        return name;
+      } catch (e) {
+        return name;
+      }
+    } else {
+      String first = '';
+      String second = '';
+      try {
+        first = title.substring(title.indexOf("{") + 1, title.indexOf("}"));
+        try {
+          second = title.substring(title.indexOf("[") + 1, title.indexOf("]"));
+        } catch (e) {
+          return first;
+        }
+        return first + ' ' + second;
+      } catch (e) {
+        return title;
+      }
+    }
+  }
 }
 
 extension CapExtension on String {
