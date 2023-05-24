@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -89,14 +88,7 @@ class SwitchProfile {
               } else {
                 _familyListBloc = FamilyListBloc();
               }
-
-              /*  PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
-                  ? getDialogBoxWithFamilyMemberScrap(
-                      PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
-                  :*/
               checkInternet(_keyLoader, scaffold_state);
-
-              //return new FamilyListDialog();
             },
             child: isFromDashborad
                 ? getCirleAvatarWithBorderIcon(myProfile)
@@ -117,7 +109,8 @@ class SwitchProfile {
                                         child: Center(
                                           child: Text(
                                             myProfile.result!.firstName != null
-                                                ? myProfile.result!.firstName![0]
+                                                ? myProfile
+                                                    .result!.firstName![0]
                                                     .toUpperCase()
                                                 : '',
                                             style: TextStyle(
@@ -188,8 +181,7 @@ class SwitchProfile {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
               .then((value) {
             Navigator.of(keyLoader.currentContext!, rootNavigator: true).pop();
-            CommonUtil()
-                .getMedicalPreference(callBackToRefresh: callBackToRefresh);
+            callBackToRefresh();
           });
         });
 
@@ -200,7 +192,8 @@ class SwitchProfile {
           Get.put(QurhomeDashboardController());
         }
         qurhomeDashboardController = Get.find();
-        qurhomeDashboardController.updateTabIndex(qurhomeDashboardController.currentSelectedIndex.value);
+        qurhomeDashboardController.updateTabIndex(
+            qurhomeDashboardController.currentSelectedIndex.value);
       });
     });
   }
@@ -208,8 +201,11 @@ class SwitchProfile {
   checkInternet(
       GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState>? scaffoldState) {
     FHBUtils().check().then((intenet) {
+      CommonUtil().showSingleLoadingDialog(context);
       if (intenet != null && intenet) {
         _familyListBloc!.getFamilyMembersListNew().then((familyMembersList) {
+          CommonUtil().hideLoadingDialog(context);
+
           if (familyMembersList != null &&
               familyMembersList.result != null &&
               familyMembersList.result.sharedByUsers.length > 0) {
@@ -308,7 +304,7 @@ class SwitchProfile {
     /*Navigator.push(context, MaterialPageRoute(builder: (context) {
       return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
     }));*/
-     Navigator.pushNamed(
+    Navigator.pushNamed(
       context,
       rt_UserAccounts,
       arguments: UserAccountsArguments(

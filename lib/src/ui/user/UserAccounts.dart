@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
@@ -152,7 +151,8 @@ class _UserAccountsState extends State<UserAccounts>
               } */
             ),
             actions: <Widget>[
-              if (CommonUtil.REGION_CODE != 'IN') getSwitchProfileWidget()
+              if (CommonUtil.REGION_CODE != 'IN')
+                selectedTab == 1 ? getSwitchProfileWidget() : SizedBox()
               // IconButton(
               //     icon: Icon(
               //       Icons.exit_to_app,
@@ -289,14 +289,8 @@ class _UserAccountsState extends State<UserAccounts>
   Future<MyProfileModel> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final userIdMain =
-        await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
-    if (userId != userIdMain) {
-      // isUserMainId = false;
-    }
-    try {
-      // await getDeviceSelectionValues().then((value) => {});
-    } catch (e) {}
     if (userId != null && userId.isNotEmpty) {
       try {
         MyProfileModel value =

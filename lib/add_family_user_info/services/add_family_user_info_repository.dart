@@ -391,7 +391,7 @@ class AddFamilyUserInfoRepository {
 
   Future<CareGiverPatientList?>? getCareGiverPatientList() async {
     var userId =
-        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ?? '';
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID) ?? '';
     var response = await _helper.getProfileInfo(query.qr_userlinking +
             query.qr_caregiver_family +
             query.qr_caregiver_user_id +
