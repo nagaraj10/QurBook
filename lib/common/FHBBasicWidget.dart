@@ -736,15 +736,15 @@ class FHBBasicWidget {
                       )),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 30),
+                  margin: EdgeInsets.symmetric(vertical: CommonUtil().isTablet!?15:30),
                   padding: EdgeInsets.all(4),
                   alignment: FractionalOffset.centerLeft,
                   decoration: BoxDecoration(
                       color: Colors.white, shape: BoxShape.circle),
-                  child: new Image(
-                    image: new AssetImage(variable.icon_mayaMain),
-                    height: 80.0.h,
-                    width: 80.0.h,
+                  child:  Image(
+                    image:  AssetImage(variable.icon_mayaMain),
+                    height: CommonUtil().isTablet!?65:80.0.h,
+                    width: CommonUtil().isTablet!?65:80.0.h,
                   ),
                 ),
               ],
