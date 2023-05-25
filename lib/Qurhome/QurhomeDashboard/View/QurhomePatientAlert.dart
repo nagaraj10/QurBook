@@ -109,7 +109,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           padding: EdgeInsets.only(
                               left: 10, right: 10, top: 5, bottom: 5),
                           child: Text(
-                            qurhomeRegimenController.getFormatedDate(
+                            CommonUtil().getFormatedDate(
                                 date: date.toString()),
                             style: TextStyle(
                               fontSize: 14,
@@ -117,12 +117,13 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                             ),
                           ),
                         ),
-                        _buildCarouselItem(
+                        Expanded(
+                        child: _buildCarouselItem(
                             context,
                             itemIndex,
                             val.patientAlert!.result!.data![itemIndex],
                             val.nextAlertPosition,
-                            isPortrait)
+                            isPortrait))
                       ]);
                     } else {
                       return _buildCarouselItem(
