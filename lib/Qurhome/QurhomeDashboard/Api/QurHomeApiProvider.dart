@@ -533,8 +533,10 @@ class QurHomeApiProvider {
     }
   }
 
-  Future<bool> careGiverEscalateAction(PatientAlertData? patientAlertData,
-      CareGiverPatientListResult? careGiverPatientListResult) async {
+  Future<bool> careGiverEscalateAction(
+      PatientAlertData? patientAlertData,
+      CareGiverPatientListResult? careGiverPatientListResult,
+      String activityName) async {
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
       var userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -554,8 +556,7 @@ class QurHomeApiProvider {
       postMediaData['patientId'] = careGiverPatientListResult?.childId;
       postMediaData['additionalInfo'] =
           patientAlertData?.additionalInfo?.toJson();
-      postMediaData['activityName'] =
-          patientAlertData?.additionalInfo?.activityname;
+      postMediaData['activityName'] = activityName;
       postMediaData['alertCategory'] = CommonUtil()
           .getCategoryFromTypeName(patientAlertData?.typeCode ?? '');
       postMediaData['alertDateTime'] = CommonUtil().getFormattedDate(

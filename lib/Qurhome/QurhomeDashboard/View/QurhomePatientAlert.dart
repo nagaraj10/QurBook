@@ -331,6 +331,17 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
   }
 
   void showRegimenDialog(PatientAlertData patientAlertData, int itemIndex) {
+    String activityName = " ";
+    try {
+      activityName =
+          CommonUtil().capitalizeFirstofEach(CommonUtil().getFormattedString(
+        patientAlertData.additionalInfo?.title ?? '',
+        patientAlertData?.typeName ?? '',
+        patientAlertData?.additionalInfo?.uformname ?? '',
+        12,
+        forDetails: false,
+      ));
+    } catch (e) {}
     showDialog(
         context: context,
         builder: (__) {
@@ -427,15 +438,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                         child: Column(
                           children: [
                             Text(
-                              CommonUtil().capitalizeFirstofEach(
-                                  CommonUtil().getFormattedString(
-                                patientAlertData.additionalInfo?.title ?? '',
-                                patientAlertData?.typeName ?? '',
-                                patientAlertData?.additionalInfo?.uformname ??
-                                    '',
-                                12,
-                                forDetails: false,
-                              )),
+                              activityName,
                               textAlign: TextAlign.center,
                               maxLines: 3,
                               style: TextStyle(
@@ -544,8 +547,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                             InkWell(
                               onTap: () async {
                                 CommonUtil().showSingleLoadingDialog(context);
-                                bool response = await controller
-                                    .caregiverEscalateAction(patientAlertData);
+                                bool response =
+                                    await controller.caregiverEscalateAction(
+                                        patientAlertData, activityName);
                                 if (response) {
                                   Navigator.pop(context);
                                   CommonUtil().hideLoadingDialog(context);

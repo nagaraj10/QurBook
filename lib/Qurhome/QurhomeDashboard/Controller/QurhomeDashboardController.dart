@@ -318,11 +318,11 @@ class QurhomeDashboardController extends GetxController {
   }
 
   Future<bool> caregiverEscalateAction(
-      PatientAlertData patientAlertData) async {
+      PatientAlertData patientAlertData, String activityName) async {
     try {
       loadingPatientData.value = true;
       var responseBool = await _apiProvider.careGiverEscalateAction(
-          patientAlertData, careGiverPatientListResult);
+          patientAlertData, careGiverPatientListResult, activityName);
       loadingPatientData.value = false;
       return responseBool;
     } catch (e) {
