@@ -93,6 +93,7 @@
     <string name="ns_type_applog">FETCH_LOG</string>
     <string name="channel_onboard">doctor onboard</string>
     <string name="channel_renew">plan renewal</string>
+    <string name="transportation_appointment">Transportation Appointment</string>
     <string name="channel_onboard_desc">This channel belong to doctor onboard</string>
     <string name="channel_renew_desc">This channel belong to plan renewal or callback</string>
     <string name="pat_id">patientId</string>
