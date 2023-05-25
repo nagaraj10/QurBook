@@ -2202,6 +2202,29 @@ class CommonUtil {
     LoaderClass.hideLoadingDialog(context);
   }
 
+  getCategoryFromTypeName(String typeName) {
+    String category = '';
+    switch (typeName.toUpperCase()) {
+      case 'MANDACTIVITY':
+        category = 'Missed Mandatory Activities';
+        break;
+      case 'VITALS':
+        category = 'Vital Alerts';
+        break;
+      case 'MEDICATION':
+        category = 'Missed Medication';
+        break;
+      case 'RULEALERT':
+        category = 'Rule Based Alerts';
+        break;
+      case 'SYMPTOM':
+        category = 'Symptom Alerts';
+        break;
+    }
+
+    return category;
+  }
+
   showPatientListOfCaregiver(
       BuildContext context,
       Function(String? user, CareGiverPatientListResult? result)

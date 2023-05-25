@@ -1,4 +1,3 @@
-
 import 'relationships.dart';
 import '../../src/model/user/AddressTypeModel.dart';
 import '../../src/model/user/UserAddressCollection.dart';
@@ -381,8 +380,8 @@ class HeightObj {
 }
 
 class AdditionalInfo {
-  String? height;
-  String? weight;
+  dynamic? height;
+  dynamic? weight;
   String? weightUnitCode;
   HeightObj? heightObj;
 
@@ -397,12 +396,10 @@ class AdditionalInfo {
             json['height'] != null ? HeightObj.fromJson(json['height']) : null;
       }
     } catch (e) {}
-    weight = json['weight'];
     if (json.containsKey('weightUnitCode')) {
       weightUnitCode = json['weightUnitCode'];
     }
     try {
-      height = json['height'];
       weight = json['weight'];
     } catch (e) {}
   }
@@ -499,13 +496,13 @@ class UserContactCollectionFamily {
       this.email});
 
   UserContactCollectionFamily.fromJson(Map<String, dynamic> json) {
-    id = json['id']??"";
-    phoneNumber = json['phoneNumber']??"";
-    isPrimary = json['isPrimary']??false;
-    isActive = json['isActive']??false;
-    createdOn = json['createdOn']??"";
-    lastModifiedOn = json['lastModifiedOn']??"";
-    email = json['email']??"";
+    id = json['id'] ?? "";
+    phoneNumber = json['phoneNumber'] ?? "";
+    isPrimary = json['isPrimary'] ?? false;
+    isActive = json['isActive'] ?? false;
+    createdOn = json['createdOn'] ?? "";
+    lastModifiedOn = json['lastModifiedOn'] ?? "";
+    email = json['email'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
