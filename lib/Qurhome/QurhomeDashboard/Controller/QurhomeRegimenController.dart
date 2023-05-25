@@ -472,7 +472,7 @@ class QurhomeRegimenController extends GetxController {
     isSOSAgentCallDialogOpen.value = newStatus;
   }
 
-  void startTimer({String? patientId}) {
+  void startTimer() {
     try {
       timer = new Timer.periodic(
         Duration(seconds: 1),
@@ -484,8 +484,11 @@ class QurhomeRegimenController extends GetxController {
             this.timer = null;
             dateHeader.value = getFormatedDate();
             //selectedCalendar.value = DateTime.now();
-            if (patientId != null) {
-              getRegimenList(isLoading: false, patientId: patientId);
+            if (qurhomeDashboardController.forPatientList.value) {
+              getRegimenList(
+                  isLoading: false,
+                  patientId: qurhomeDashboardController
+                      .careGiverPatientListResult!.childId);
             } else {
               getRegimenList(isLoading: false);
             }
@@ -505,11 +508,11 @@ class QurhomeRegimenController extends GetxController {
             duration = Duration(seconds: seconds);
           } else {
             if (!isTodaySelected.value) {
-              if (calculateDifference(selectedDate.value) < 0) {
+              if (CommonUtil().calculateDifference(selectedDate.value) < 0) {
                 //past
                 isTodaySelected.value = false;
                 statusText.value = strViewPastDateRegimen;
-              } else if (calculateDifference(selectedDate.value) > 0) {
+              } else if (CommonUtil().calculateDifference(selectedDate.value) > 0) {
                 //future
                 isTodaySelected.value = false;
                 statusText.value = strViewFutureDateRegimen;
@@ -561,18 +564,18 @@ class QurhomeRegimenController extends GetxController {
     DateTime now = date == null ? DateTime.now() : DateTime.parse(date);
     selectedDate.value = now;
     String prefix = '';
-    if (calculateDifference(now) == 0) {
+    if (CommonUtil().calculateDifference(now) == 0) {
       //today
       isTodaySelected.value = true;
       statusText.value = '';
       prefix = 'Today, ';
-    } else if (calculateDifference(now) < 0) {
+    } else if (CommonUtil().calculateDifference(now) < 0) {
       //past
       isTodaySelected.value = false;
       statusText.value = strViewPastDateRegimen;
       String formattedDate = DateFormat('EEEE').format(now);
       prefix = formattedDate + ', ';
-    } else if (calculateDifference(now) > 0) {
+    } else if (CommonUtil().calculateDifference(now) > 0) {
       //future
       isTodaySelected.value = false;
       statusText.value = strViewFutureDateRegimen;
@@ -587,13 +590,6 @@ class QurhomeRegimenController extends GetxController {
 
     String formattedDate = DateFormat('dd MMM').format(now);
     return prefix + formattedDate;
-  }
-
-  int calculateDifference(DateTime date) {
-    DateTime now = DateTime.now();
-    return DateTime(date.year, date.month, date.day)
-        .difference(DateTime(now.year, now.month, now.day))
-        .inDays;
   }
 
   onStopLoadingCircle() async {

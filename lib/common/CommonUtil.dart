@@ -6103,6 +6103,36 @@ class CommonUtil {
       }
     }
   }
+
+  String getFormatedDate({String? date = null}) {
+    DateTime now = date == null ? DateTime.now() : DateTime.parse(date);
+    String prefix = '';
+    if (calculateDifference(now) == 0) {
+      //today
+      prefix = 'Today, ';
+    } else if (calculateDifference(now) < 0) {
+      //past
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix = formattedDate + ', ';
+    } else if (calculateDifference(now) > 0) {
+      //future
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix = formattedDate + ', ';
+    } else {
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix = formattedDate + ', ';
+    }
+    String formattedDate = DateFormat('dd MMM').format(now);
+    return prefix + formattedDate;
+  }
+
+  int calculateDifference(DateTime date) {
+    DateTime now = DateTime.now();
+    return DateTime(date.year, date.month, date.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+  }
+
 }
 
 extension CapExtension on String {
