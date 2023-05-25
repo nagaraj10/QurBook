@@ -236,6 +236,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                         IconButton(
                           icon: ImageIcon(
                               getIcons(patientAlertData.typeCode ?? ''),
+                              size: 30,
                               color: getTextAndIconColor(
                                   itemIndex, nextAlertPosition)),
                           onPressed: () async {},
@@ -367,7 +368,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                         child: Row(
                           children: [
                             ImageIcon(getIcons(patientAlertData.typeCode ?? ''),
-                                color: Colors.grey),
+                                size: 40,
+                                color: Color(
+                                    CommonUtil().getQurhomeGredientColor())),
                             SizedBox(
                               width: 10,
                             ),
@@ -430,7 +433,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               textAlign: TextAlign.center,
                               maxLines: 3,
                               style: TextStyle(
-                                  fontSize: 22.0,
+                                  fontSize: 26.0,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.grey),
                             ),
@@ -440,8 +443,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 maxLines: 2,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
+                                    color: Colors.black,
                                     fontSize: 20.0,
-                                    fontWeight: FontWeight.w600),
+                                    fontWeight: FontWeight.w500),
                               )
                             }
                           ],
@@ -469,6 +473,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                         controller.careGiverPatientListResult,
                                         patientAlertData);
                                 if (response) {
+                                  Navigator.pop(context);
+                                  controller.getPatientAlertList();
                                   CommonUtil().hideLoadingDialog(context);
                                 } else {
                                   CommonUtil().hideLoadingDialog(context);
@@ -517,11 +523,10 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.all(5.0),
-                                      child: SvgPicture.asset(
-                                        icon_call,
-                                        width: 40,
+                                      child: Image.asset(
+                                        icon_call_cg,
                                         height: 40,
-                                        color: Colors.green,
+                                        width: 40,
                                       ),
                                     ),
                                     Text(strCall,
@@ -535,9 +540,10 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 CommonUtil().showSingleLoadingDialog(context);
                                 bool response = await controller
                                     .caregiverEscalateAction(patientAlertData);
-                                if (response)
+                                if (response) {
+                                  Navigator.pop(context);
                                   CommonUtil().hideLoadingDialog(context);
-                                else {
+                                } else {
                                   CommonUtil().hideLoadingDialog(context);
 
                                   FlutterToast().getToast(

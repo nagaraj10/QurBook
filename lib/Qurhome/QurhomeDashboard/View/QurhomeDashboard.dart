@@ -72,7 +72,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     try {
       super.initState();
       controller.forPatientList.value = false;
-      // controller.clear();
 
       onInit();
     } catch (e) {

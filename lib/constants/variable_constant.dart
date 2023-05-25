@@ -208,6 +208,7 @@ const String icon_switch = 'assets/icons/icon_switch.png';
 
 const String icon_ok = 'assets/icons/ic_ok.png';
 const String icon_escalate = 'assets/icons/ic_escalate.png';
+const String icon_call_cg = 'assets/icons/ic_call.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
