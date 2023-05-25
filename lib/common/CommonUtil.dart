@@ -5038,7 +5038,7 @@ class CommonUtil {
             title: Text(
               variable.strConfirm,
               style: TextStyle(
-                fontSize: CommonUtil().isTablet!?18.0.sp:null,
+                fontSize: CommonUtil().isTablet!?22.0.sp:null,
                   color: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
                       : Color(CommonUtil().getMyPrimaryColor())),
@@ -5047,7 +5047,7 @@ class CommonUtil {
             content: CommonUtil().isTablet!?Container(
                 width: MediaQuery.of(context).size.width*0.60,
                 child: Text('Record ' + name.trim()+'?',style: TextStyle(
-                    fontSize: 16.0.sp),)):Text('Record ' + name.trim()+'?'),
+                    fontSize: 20.0.sp),)):Text('Record ' + name.trim()+'?'),
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
@@ -5059,7 +5059,7 @@ class CommonUtil {
                   Navigator.pop(context);
                 },
                 child: Text(variable.strNo,style: TextStyle(
-                    fontSize: CommonUtil().isTablet!?18.0.sp:null),)
+                    fontSize: CommonUtil().isTablet!?22.0.sp:null),)
               ),
               FlatButton(
                   // FlatButton widget is used to make a text to work like a button
@@ -5069,7 +5069,7 @@ class CommonUtil {
                   onPressed: onPressedYes,
                   // function used to perform after pressing the button
                   child: Text(variable.strYes,style: TextStyle(
-                      fontSize: CommonUtil().isTablet!?18.0.sp:null),)),
+                      fontSize: CommonUtil().isTablet!?22.0.sp:null),)),
             ],
           );
         });
