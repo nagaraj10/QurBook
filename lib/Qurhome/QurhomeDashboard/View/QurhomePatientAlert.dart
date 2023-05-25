@@ -379,7 +379,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                         child: Row(
                           children: [
                             ImageIcon(getIcons(patientAlertData.typeCode ?? ''),
-                                size: 40,
+                                size: 30,
                                 color: Color(
                                     CommonUtil().getQurhomeGredientColor())),
                             SizedBox(
@@ -436,6 +436,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           bottom: 20.0,
                         ),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
                               activityName,
@@ -465,119 +466,117 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                       height: CommonUtil().isTablet! ? 3.0 : 10.0,
                     ),
                     Padding(
-                        padding: EdgeInsets.only(
-                          top: 30.0,
-                          left: 15.0,
-                          right: 15.0,
-                          bottom: 30.0,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            InkWell(
-                              onTap: () async {
-                                CommonUtil().showSingleLoadingDialog(context);
-                                bool response =
-                                    await controller.careGiverOkAction(
-                                        controller.careGiverPatientListResult,
-                                        patientAlertData);
-                                if (response) {
-                                  Navigator.pop(context);
-                                  controller.getPatientAlertList();
-                                  CommonUtil().hideLoadingDialog(context);
-                                } else {
-                                  CommonUtil().hideLoadingDialog(context);
+                      padding: const EdgeInsets.all(25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              CommonUtil().showSingleLoadingDialog(context);
+                              bool response =
+                                  await controller.careGiverOkAction(
+                                      controller.careGiverPatientListResult,
+                                      patientAlertData);
+                              if (response) {
+                                Navigator.pop(context);
+                                controller.getPatientAlertList();
+                                CommonUtil().hideLoadingDialog(context);
+                                FlutterToast()
+                                    .getToast(strDiscardMsg, Colors.green);
+                              } else {
+                                CommonUtil().hideLoadingDialog(context);
 
-                                  FlutterToast()
-                                      .getToast(NOT_FILE_IMAGE, Colors.red);
-                                }
+                                FlutterToast()
+                                    .getToast(NOT_FILE_IMAGE, Colors.red);
+                              }
+                            },
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: Image.asset(
+                                    icon_discard,
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                ),
+                                Text(strDiscard,
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        color: Color(CommonUtil()
+                                            .getQurhomePrimaryColor()))),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                              onTap: () {
+                                qurhomeRegimenController
+                                    .careCoordinatorId.value = controller
+                                        .careGiverPatientListResult?.childId ??
+                                    '';
+                                qurhomeRegimenController
+                                    .careCoordinatorName.value = (controller
+                                            .careGiverPatientListResult
+                                            ?.firstName ??
+                                        ' ') +
+                                    (controller.careGiverPatientListResult
+                                            ?.lastName ??
+                                        '');
+                                qurhomeRegimenController
+                                    .callSOSEmergencyServices(1);
                               },
                               child: Column(
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.all(5.0),
                                     child: Image.asset(
-                                      icon_ok,
+                                      icon_call_cg,
                                       height: 40,
                                       width: 40,
                                     ),
                                   ),
-                                  Text(strOK,
+                                  Text(strCall,
                                       style: TextStyle(
-                                          fontSize: 20.0,
-                                          color: Color(CommonUtil()
-                                              .getQurhomePrimaryColor()))),
+                                          fontSize: 20.0, color: Colors.green)),
                                 ],
-                              ),
-                            ),
-                            InkWell(
-                                onTap: () {
-                                  qurhomeRegimenController
-                                      .careCoordinatorId.value = controller
-                                          .careGiverPatientListResult
-                                          ?.childId ??
-                                      '';
-                                  qurhomeRegimenController
-                                      .careCoordinatorName.value = (controller
-                                              .careGiverPatientListResult
-                                              ?.firstName ??
-                                          ' ') +
-                                      (controller.careGiverPatientListResult
-                                              ?.lastName ??
-                                          '');
-                                  qurhomeRegimenController
-                                      .callSOSEmergencyServices(1);
-                                },
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: Image.asset(
-                                        icon_call_cg,
-                                        height: 40,
-                                        width: 40,
-                                      ),
-                                    ),
-                                    Text(strCall,
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                            color: Colors.green)),
-                                  ],
-                                )),
-                            InkWell(
-                              onTap: () async {
-                                CommonUtil().showSingleLoadingDialog(context);
-                                bool response =
-                                    await controller.caregiverEscalateAction(
-                                        patientAlertData, activityName);
-                                if (response) {
-                                  Navigator.pop(context);
-                                  CommonUtil().hideLoadingDialog(context);
-                                } else {
-                                  CommonUtil().hideLoadingDialog(context);
+                              )),
+                          InkWell(
+                            onTap: () async {
+                              CommonUtil().showSingleLoadingDialog(context);
+                              bool response =
+                                  await controller.caregiverEscalateAction(
+                                      patientAlertData, activityName);
+                              if (response) {
+                                Navigator.pop(context);
+                                CommonUtil().hideLoadingDialog(context);
+                                FlutterToast().getToast(
+                                    strEscalateAlertMsg, Colors.green);
+                              } else {
+                                CommonUtil().hideLoadingDialog(context);
 
-                                  FlutterToast().getToast(
-                                      "Error in Acknowledging", Colors.red);
-                                }
-                              },
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Image.asset(
-                                      icon_escalate,
-                                      height: 40,
-                                      width: 40,
-                                    ),
+                                FlutterToast().getToast(
+                                    "Error in Acknowledging", Colors.red);
+                              }
+                            },
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: Image.asset(
+                                    icon_escalate,
+                                    height: 40,
+                                    width: 40,
                                   ),
-                                  Text(strEscalate,
-                                      style: TextStyle(
-                                          fontSize: 20.0, color: Colors.red)),
-                                ],
-                              ),
+                                ),
+                                Text(strEscalate,
+                                    style: TextStyle(
+                                        fontSize: 20.0, color: Colors.red)),
+                              ],
                             ),
-                          ],
-                        ))
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),

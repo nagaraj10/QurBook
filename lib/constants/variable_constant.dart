@@ -209,6 +209,7 @@ const String icon_switch = 'assets/icons/icon_switch.png';
 const String icon_ok = 'assets/icons/ic_ok.png';
 const String icon_escalate = 'assets/icons/ic_escalate.png';
 const String icon_call_cg = 'assets/icons/ic_call.png';
+const String icon_discard = 'assets/icons/ic_discard.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
@@ -732,6 +733,7 @@ const String strValidPhoneNumber = 'Enter a valid mobile number';
 const String strGetAppVersion = 'getAppVersion';
 const String strSecure = 'secureMe';
 const String strpop = 'SystemNavigator.pop';
+const String strDiscard = 'Discard';
 
 const String strformateedAddress = 'formateedAddress';
 const String strformateedPhoneNumber = 'formateedPhoneNumber';
