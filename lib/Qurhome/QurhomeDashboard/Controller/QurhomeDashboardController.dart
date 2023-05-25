@@ -304,22 +304,29 @@ class QurhomeDashboardController extends GetxController {
   }
 
   Future<bool> careGiverOkAction(
-      CareGiverPatientListResult? careGiverPatientListResult) async {
-    loadingPatientData.value = true;
-    var responseBool =
-        await _apiProvider.careGiverOKAction(careGiverPatientListResult);
-    print(responseBool);
-    loadingPatientData.value = false;
-    return responseBool;
+      CareGiverPatientListResult? careGiverPatientListResult,
+      PatientAlertData patientAlertData) async {
+    try {
+      loadingPatientData.value = true;
+      var responseBool = await _apiProvider.careGiverOKAction(
+          careGiverPatientListResult, patientAlertData);
+      loadingPatientData.value = false;
+      return responseBool;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<bool> caregiverEscalateAction(
       PatientAlertData patientAlertData) async {
-    loadingPatientData.value = true;
-    var responseBool = await _apiProvider.careGiverEscalateAction(
-        patientAlertData, careGiverPatientListResult);
-    print(responseBool);
-    loadingPatientData.value = false;
-    return responseBool;
+    try {
+      loadingPatientData.value = true;
+      var responseBool = await _apiProvider.careGiverEscalateAction(
+          patientAlertData, careGiverPatientListResult);
+      loadingPatientData.value = false;
+      return responseBool;
+    } catch (e) {
+      return false;
+    }
   }
 }

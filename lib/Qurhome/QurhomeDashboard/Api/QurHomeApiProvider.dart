@@ -510,15 +510,13 @@ class QurHomeApiProvider {
   }
 
   Future<bool> careGiverOKAction(
-      CareGiverPatientListResult? careGiverPatientListResult) async {
+      CareGiverPatientListResult? careGiverPatientListResult,
+      PatientAlertData patientAlertData) async {
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
       String name = (careGiverPatientListResult?.firstName ?? ' ') +
           (careGiverPatientListResult?.lastName ?? '');
-      var data = {
-        qr_caregivername: name,
-        qr_caregiverid: careGiverPatientListResult?.childId ?? ''
-      };
+      var data = {qr_caregivername: name, qr_caregiverid: patientAlertData?.id};
       http.Response res = (await ApiServices.post(
         Constants.BASE_URL + qr_caregiver_ok,
         headers: header,
@@ -544,28 +542,31 @@ class QurHomeApiProvider {
 
       var postMediaData = Map<String, dynamic>();
       String fullPatientName = (careGiverPatientListResult?.firstName ?? ' ') +
+          " " +
           (careGiverPatientListResult?.lastName ?? '');
       String fullName = (myProf?.result?.firstName ?? ' ') +
+          " " +
           (myProf?.result?.lastName ?? ' ');
 
       postMediaData['caregiverName'] = fullName;
-      postMediaData['id'] = userId;
+      postMediaData['id'] = patientAlertData?.id;
       postMediaData['patientName'] = fullPatientName;
       postMediaData['patientId'] = careGiverPatientListResult?.childId;
       postMediaData['additionalInfo'] =
           patientAlertData?.additionalInfo?.toJson();
       postMediaData['activityName'] =
           patientAlertData?.additionalInfo?.activityname;
-      postMediaData['alertCategory'] =
-          patientAlertData?.additionalInfo?.category;
+      postMediaData['alertCategory'] = CommonUtil()
+          .getCategoryFromTypeName(patientAlertData?.typeCode ?? '');
+      postMediaData['alertDateTime'] = CommonUtil().getFormattedDate(
+          patientAlertData?.createdOn?.toString() ?? '', c_yMd_Hms);
 
       final params = json.encode(postMediaData);
-      print(params);
 
       http.Response res = (await ApiServices.post(
         Constants.BASE_URL + qr_caregiver_escalate,
         headers: header,
-        body: json.encode(patientAlertData?.toJson()),
+        body: params,
       ))!;
       if (res.statusCode == 200) {
         var _response = SuccessModel.fromJson(convert.json.decode(res.body));

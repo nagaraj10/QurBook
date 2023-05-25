@@ -13,6 +13,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_al
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 
@@ -374,7 +375,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 child: Column(children: [
                               Center(
                                 child: Text(
-                                  patientAlertData?.typeName ?? '',
+                                  CommonUtil().getCategoryFromTypeName(
+                                      patientAlertData?.typeCode ?? ''),
+                                  textAlign: TextAlign.center,
                                   overflow: TextOverflow.fade,
                                   maxLines: 2,
                                   style: TextStyle(
@@ -391,6 +394,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                       ? DateFormat('hh:mm a')
                                           .format(patientAlertData.createdOn!)
                                       : '',
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 16,
@@ -462,14 +466,15 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 CommonUtil().showSingleLoadingDialog(context);
                                 bool response =
                                     await controller.careGiverOkAction(
-                                        controller.careGiverPatientListResult);
-                                if (response)
+                                        controller.careGiverPatientListResult,
+                                        patientAlertData);
+                                if (response) {
                                   CommonUtil().hideLoadingDialog(context);
-                                else {
+                                } else {
                                   CommonUtil().hideLoadingDialog(context);
 
-                                  FlutterToast().getToast(
-                                      "Error in Acknowledging", Colors.red);
+                                  FlutterToast()
+                                      .getToast(NOT_FILE_IMAGE, Colors.red);
                                 }
                               },
                               child: Column(
