@@ -1,14 +1,18 @@
-
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/carecoordinatordata.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/SuccessModel.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_list_model.dart';
 import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -32,29 +36,29 @@ class QurHomeApiProvider {
   //DateTime selectedRegimenDate = DateTime.now();
   final ApiBaseHelper apiBaseHelper = ApiBaseHelper();
 
-  Future<dynamic> getRegimenList(String date) async {
+  Future<dynamic> getRegimenList(String date, {String? patientId}) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
     try {
       RegimentResponseModel regimentsData;
-      String selectedDate='';
-      if(date!=null){
-        selectedDate=date;
-      }else{
-        selectedDate=CommonUtil.dateConversionToApiFormat(
-          date!=null?DateTime.now():DateTime.parse(date),
+      String selectedDate = '';
+      if (date != null) {
+        selectedDate = date;
+      } else {
+        selectedDate = CommonUtil.dateConversionToApiFormat(
+          date != null ? DateTime.now() : DateTime.parse(date),
           isIndianTime: true,
         );
       }
       regimentsData = await RegimentService.getRegimentData(
-        dateSelected: CommonUtil.dateConversionToApiFormat(
-            (date.length==0)?DateTime.now():DateTime.parse(date),
-          isIndianTime: true,
-        ),
-        isSymptoms: 0,
-      );
+          dateSelected: CommonUtil.dateConversionToApiFormat(
+            (date.length == 0) ? DateTime.now() : DateTime.parse(date),
+            isIndianTime: true,
+          ),
+          isSymptoms: 0,
+          patientId: patientId);
       return regimentsData;
 
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
@@ -74,7 +78,8 @@ class QurHomeApiProvider {
     }
   }
 
-  Future<dynamic> getRegimenListCalendar(DateTime startDate,DateTime endDate) async {
+  Future<dynamic> getRegimenListCalendar(DateTime startDate, DateTime endDate,
+      {String? patientId}) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
@@ -83,16 +88,16 @@ class QurHomeApiProvider {
       RegimentResponseModel regimentsData;
 
       regimentsData = await RegimentService.getRegimentDataCalendar(
-        startDate: CommonUtil.dateConversionToApiFormat(
-          startDate,
-          isIndianTime: true,
-        ),
-        endDate: CommonUtil.dateConversionToApiFormat(
-          endDate,
-          isIndianTime: true,
-        ),
-        isSymptoms: 0,
-      );
+          startDate: CommonUtil.dateConversionToApiFormat(
+            startDate,
+            isIndianTime: true,
+          ),
+          endDate: CommonUtil.dateConversionToApiFormat(
+            endDate,
+            isIndianTime: true,
+          ),
+          isSymptoms: 0,
+          patientId: patientId);
       return regimentsData;
 
       // var header = await HeaderRequest().getRequestHeadersWithoutOffset();
@@ -291,7 +296,7 @@ class QurHomeApiProvider {
       jsonData['id'] = appointmentId;
       jsonData['statusCode'] = 'PATDNA';
       final response = (await ApiServices.put(
-          Constants.BASE_URL + qr_callAppointmentUpdate+"statusUpdate",
+          Constants.BASE_URL + qr_callAppointmentUpdate + "statusUpdate",
           headers: header,
           body: convert.jsonEncode(jsonData)))!;
       if (response.statusCode == 200) {
@@ -473,5 +478,105 @@ class QurHomeApiProvider {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<PatientAlertListModel> getPatientAlertList(String patientId) async {
+    var regController = Get.find<QurhomeDashboardController>();
+
+    http.Response responseJson;
+
+    try {
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      responseJson = (await ApiServices.get(
+        '${Constants.BASE_URL}$patient_alert$patientId$page_no',
+        headers: header,
+      ))!;
+      if (responseJson.statusCode == 200) {
+        return PatientAlertListModel.fromJson(json.decode(responseJson.body));
+      } else {
+        regController.careCoordinatorIdEmptyMsg.value =
+            CommonUtil().validString(json.decode(responseJson.body));
+        return PatientAlertListModel();
+      }
+    } on SocketException {
+      regController.careCoordinatorIdEmptyMsg.value =
+          CommonUtil().validString(strNoInternet);
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      regController.careCoordinatorIdEmptyMsg.value =
+          CommonUtil().validString(e.toString());
+      return PatientAlertListModel();
+    }
+  }
+
+  Future<bool> careGiverOKAction(
+      CareGiverPatientListResult? careGiverPatientListResult,
+      PatientAlertData patientAlertData) async {
+    try {
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      String name = (careGiverPatientListResult?.firstName ?? ' ') +
+          (careGiverPatientListResult?.lastName ?? '');
+      var data = {qr_caregivername: name, qr_caregiverid: patientAlertData?.id};
+      http.Response res = (await ApiServices.post(
+        Constants.BASE_URL + qr_caregiver_ok,
+        headers: header,
+        body: json.encode(data),
+      ))!;
+      if (res.statusCode == 200) {
+        var _response = SuccessModel.fromJson(convert.json.decode(res.body));
+        return _response.isSuccess ?? false;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> careGiverEscalateAction(
+      PatientAlertData? patientAlertData,
+      CareGiverPatientListResult? careGiverPatientListResult,
+      String activityName) async {
+    try {
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      var userId = PreferenceUtil.getStringValue(KEY_USERID);
+      var myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+
+      var postMediaData = Map<String, dynamic>();
+      String fullPatientName = (careGiverPatientListResult?.firstName ?? ' ') +
+          " " +
+          (careGiverPatientListResult?.lastName ?? '');
+      String fullName = (myProf?.result?.firstName ?? ' ') +
+          " " +
+          (myProf?.result?.lastName ?? ' ');
+
+      postMediaData['caregiverName'] = fullName;
+      postMediaData['id'] = patientAlertData?.id;
+      postMediaData['patientName'] = fullPatientName;
+      postMediaData['patientId'] = careGiverPatientListResult?.childId;
+      postMediaData['additionalInfo'] =
+          patientAlertData?.additionalInfo?.toJson();
+      postMediaData['activityName'] = activityName;
+      postMediaData['alertCategory'] = CommonUtil()
+          .getCategoryFromTypeName(patientAlertData?.typeCode ?? '');
+      postMediaData['alertDateTime'] = CommonUtil().getFormattedDate(
+          patientAlertData?.createdOn?.toString() ?? '', c_yMd_Hms);
+
+      final params = json.encode(postMediaData);
+
+      http.Response res = (await ApiServices.post(
+        Constants.BASE_URL + qr_caregiver_escalate,
+        headers: header,
+        body: params,
+      ))!;
+      if (res.statusCode == 200) {
+        var _response = SuccessModel.fromJson(convert.json.decode(res.body));
+        return _response.isSuccess ?? false;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
   }
 }

@@ -8,6 +8,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientDashboard.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/chat_socket/view/ChatUserList.dart';
@@ -33,6 +35,12 @@ import 'QurHomeRegimen.dart';
 import 'package:myfhb/main.dart';
 
 class QurhomeDashboard extends StatefulWidget {
+  bool forPatientList;
+  CareGiverPatientListResult? careGiverPatientListResult;
+
+  QurhomeDashboard(
+      {this.forPatientList = false, this.careGiverPatientListResult = null});
+
   @override
   _QurhomeDashboardState createState() => _QurhomeDashboardState();
 }
@@ -63,6 +71,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   void initState() {
     try {
       super.initState();
+      controller.forPatientList.value = false;
+
       onInit();
     } catch (e) {
       if (kDebugMode) {
@@ -138,6 +148,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
       CommonUtil().initPortraitMode();
       MyFHB.routeObserver.unsubscribe(this);
+      controller.clear();
       super.dispose();
     } catch (e) {
       print(e);
@@ -241,47 +252,103 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         : SizedBox.shrink(),
                     if (CommonUtil.isUSRegion()) SizedBox(width: 22.w),
                     Expanded(
-                      child: Column(
-                        children: [
-                          RichText(
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            text: TextSpan(
-                              // Note: Styles for TextSpans must be explicitly defined.
-                              // Child text spans will inherit styles from parent
-                              style: TextStyle(
-                                fontSize: textFontSize,
-                                color: Colors.black,
-                              ),
-                              children: <TextSpan>[
-                                if (controller.currentSelectedIndex.value ==
-                                        0 ||
-                                    controller.currentSelectedIndex.value ==
-                                        1) ...{
-                                  TextSpan(text: 'Hello '),
-                                },
-                                TextSpan(
-                                  text: controller.appBarTitle.value,
-                                  style: TextStyle(
+                      child: Center(
+                        child: (controller.forPatientList.value ?? false)
+                            ? RichText(
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                                text: TextSpan(
+                                    // Note: Styles for TextSpans must be explicitly defined.
+                                    // Child text spans will inherit styles from parent
+                                    style: TextStyle(
                                       fontSize: textFontSize,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (controller.currentSelectedIndex.value == 0 ||
-                              controller.currentSelectedIndex.value == 1) ...{
-                            SizedBox(height: 3),
-                            Text(
-                              qurHomeRegimenController.dateHeader.value,
-                              style: TextStyle(
-                                fontSize: 12.h,
-                                color: Colors.grey,
+                                      color: Colors.black,
+                                    ),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: patient,
+                                          style: TextStyle(
+                                              fontSize: textFontSize,
+                                              color: Color(CommonUtil()
+                                                  .getQurhomePrimaryColor()))),
+                                      TextSpan(
+                                          text: controller
+                                              .careGiverPatientListResult
+                                              ?.firstName,
+                                          style: TextStyle(
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(CommonUtil()
+                                                  .getQurhomePrimaryColor()))),
+                                      TextSpan(text: " "),
+                                      TextSpan(
+                                        text: controller
+                                            .careGiverPatientListResult
+                                            ?.lastName,
+                                        style: TextStyle(
+                                            fontSize: textFontSize,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(CommonUtil()
+                                                .getQurhomePrimaryColor())),
+                                      ),
+                                    ]))
+                            : Column(
+                                children: [
+                                  RichText(
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                    text: TextSpan(
+                                      // Note: Styles for TextSpans must be explicitly defined.
+                                      // Child text spans will inherit styles from parent
+                                      style: TextStyle(
+                                        fontSize: textFontSize,
+                                        color: Colors.black,
+                                      ),
+                                      children: <TextSpan>[
+                                        if (controller.currentSelectedIndex
+                                                    .value ==
+                                                0 ||
+                                            controller.currentSelectedIndex
+                                                    .value ==
+                                                1) ...{
+                                          TextSpan(text: 'Hello '),
+                                        },
+                                        TextSpan(
+                                          text: controller.appBarTitle.value,
+                                          style: (controller
+                                                      .forPatientList.value ??
+                                                  false)
+                                              ? TextStyle(
+                                                  fontSize: textFontSize,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(CommonUtil()
+                                                      .getQurhomePrimaryColor()))
+                                              : TextStyle(
+                                                  fontSize: textFontSize,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (controller.currentSelectedIndex.value ==
+                                          0 ||
+                                      controller.currentSelectedIndex.value ==
+                                          1) ...{
+                                    SizedBox(height: 3),
+                                    (controller.forPatientList.value ?? false)
+                                        ? Text("")
+                                        : Text(
+                                            qurHomeRegimenController
+                                                .dateHeader.value,
+                                            style: TextStyle(
+                                              fontSize: 12.h,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                  },
+                                ],
                               ),
-                            ),
-                          },
-                        ],
                       ),
                     ),
                     if (CommonUtil.isUSRegion() &&
@@ -383,205 +450,223 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 //   )
                 // ],
               ),
-              body: getCurrentTab(),
-              floatingActionButton: Stack(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: CommonUtil().isTablet! ? 20.h : 20,
-                    ),
-                    child: SizedBox(
-                      height: buttonSize,
-                      width: buttonSize,
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                        onPressed: () {
-                          if (sheelBadgeController.sheelaIconBadgeCount.value >
-                              0) {
-                            Get.toNamed(
-                              rt_Sheela,
-                              arguments: SheelaArgument(
-                                rawMessage: sheelaQueueShowRemind,
-                              ),
-                            )?.then((value) {
-                              getSheelaBadgeCount();
-                            });
-                          } else {
-                            String sheela_lang =
-                                PreferenceUtil.getStringValue(SHEELA_LANG)!;
-                            Get.toNamed(
-                              rt_Sheela,
-                              arguments: SheelaArgument(
-                                isSheelaAskForLang: !((sheela_lang).isNotEmpty),
-                                langCode: (sheela_lang),
-                              ),
-                            )?.then((value) {
-                              getSheelaBadgeCount();
-                            });
-                          }
-                        },
-                        child: Container(
-                          height: buttonSize,
-                          width: buttonSize,
-                          padding: const EdgeInsets.all(
-                            8,
+              body: controller.forPatientList.value
+                  ? QurhomePatientDashboard(
+                      careGiverPatientListResult:
+                          controller.careGiverPatientListResult,
+                    )
+                  : getCurrentTab(),
+              floatingActionButton: controller.forPatientList.value
+                  ? SizedBox()
+                  : Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: CommonUtil().isTablet! ? 20.h : 20,
                           ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Color(
-                                CommonUtil().getQurhomeGredientColor(),
-                              ),
-                              width: 1,
-                            ),
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: Image.asset(
-                            icon_mayaMain,
+                          child: SizedBox(
                             height: buttonSize,
                             width: buttonSize,
+                            child: FloatingActionButton(
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                              onPressed: () {
+                                if (sheelBadgeController
+                                        .sheelaIconBadgeCount.value >
+                                    0) {
+                                  Get.toNamed(
+                                    rt_Sheela,
+                                    arguments: SheelaArgument(
+                                      rawMessage: sheelaQueueShowRemind,
+                                    ),
+                                  )?.then((value) {
+                                    getSheelaBadgeCount();
+                                  });
+                                } else {
+                                  String sheela_lang =
+                                      PreferenceUtil.getStringValue(
+                                          SHEELA_LANG)!;
+                                  Get.toNamed(
+                                    rt_Sheela,
+                                    arguments: SheelaArgument(
+                                      isSheelaAskForLang:
+                                          !((sheela_lang).isNotEmpty),
+                                      langCode: (sheela_lang),
+                                    ),
+                                  )?.then((value) {
+                                    getSheelaBadgeCount();
+                                  });
+                                }
+                              },
+                              child: Container(
+                                height: buttonSize,
+                                width: buttonSize,
+                                padding: const EdgeInsets.all(
+                                  8,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(
+                                      CommonUtil().getQurhomeGredientColor(),
+                                    ),
+                                    width: 1,
+                                  ),
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
+                                child: Image.asset(
+                                  icon_mayaMain,
+                                  height: buttonSize,
+                                  width: buttonSize,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        if ((sheelBadgeController.sheelaIconBadgeCount.value) >
+                            0)
+                          badge(
+                            sheelBadgeController.sheelaIconBadgeCount.value,
+                          ),
+                      ],
                     ),
-                  ),
-                  if ((sheelBadgeController.sheelaIconBadgeCount.value) > 0)
-                    badge(
-                      sheelBadgeController.sheelaIconBadgeCount.value,
-                    ),
-                ],
-              ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
-              bottomNavigationBar: SizedBox(
-                height: 45.h,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: getBorder(),
+              bottomNavigationBar: controller.forPatientList.value
+                  ? SizedBox()
+                  : SizedBox(
+                      height: 45.h,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: getBorder(),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Flexible(
+                              child: InkWell(
+                                onTap: () {
+                                  if (CommonUtil.isUSRegion() &&
+                                      controller.isVitalModuleDisable.value) {
+                                    FlutterToast().getToast(
+                                        strFeatureNotEnable, Colors.black);
+                                  } else {
+                                    bottomTapped(2);
+                                  }
+                                },
+                                child: Container(
+                                  color: controller.currentSelectedIndex == 2
+                                      ? Color(
+                                          CommonUtil()
+                                              .getQurhomeGredientColor(),
+                                        )
+                                      : Colors.white,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                          Text(
+                                            "Vitals",
+                                            style: TextStyle(
+                                              color: (CommonUtil.isUSRegion() &&
+                                                      controller
+                                                          .isVitalModuleDisable
+                                                          .value)
+                                                  ? Colors.grey
+                                                  : controller.currentSelectedIndex ==
+                                                          2
+                                                      ? Colors.white
+                                                      : Color(
+                                                          CommonUtil()
+                                                              .getQurhomeGredientColor(),
+                                                        ),
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Spacer(
+                                            flex: 2,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: InkWell(
+                                onTap: () {
+                                  if (CommonUtil.isUSRegion() &&
+                                      controller.isSymptomModuleDisable.value) {
+                                    FlutterToast().getToast(
+                                        strFeatureNotEnable, Colors.black);
+                                  } else {
+                                    bottomTapped(3);
+                                  }
+                                },
+                                child: Container(
+                                  color: controller.currentSelectedIndex == 3
+                                      ? Color(
+                                          CommonUtil()
+                                              .getQurhomeGredientColor(),
+                                        )
+                                      : Colors.white,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Spacer(
+                                            flex: 2,
+                                          ),
+                                          Text(
+                                            "Symptoms",
+                                            style: TextStyle(
+                                              color: (CommonUtil.isUSRegion() &&
+                                                      controller
+                                                          .isSymptomModuleDisable
+                                                          .value)
+                                                  ? Colors.grey
+                                                  : controller.currentSelectedIndex ==
+                                                          3
+                                                      ? Colors.white
+                                                      : Color(
+                                                          CommonUtil()
+                                                              .getQurhomeGredientColor(),
+                                                        ),
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Flexible(
-                        child: InkWell(
-                          onTap: () {
-                            if (CommonUtil.isUSRegion() &&
-                                controller.isVitalModuleDisable.value) {
-                              FlutterToast()
-                                  .getToast(strFeatureNotEnable, Colors.black);
-                            } else {
-                              bottomTapped(2);
-                            }
-                          },
-                          child: Container(
-                            color: controller.currentSelectedIndex == 2
-                                ? Color(
-                                    CommonUtil().getQurhomeGredientColor(),
-                                  )
-                                : Colors.white,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Spacer(
-                                      flex: 1,
-                                    ),
-                                    Text(
-                                      "Vitals",
-                                      style: TextStyle(
-                                        color: (CommonUtil.isUSRegion() &&
-                                                controller
-                                                    .isVitalModuleDisable.value)
-                                            ? Colors.grey
-                                            : controller.currentSelectedIndex ==
-                                                    2
-                                                ? Colors.white
-                                                : Color(
-                                                    CommonUtil()
-                                                        .getQurhomeGredientColor(),
-                                                  ),
-                                        fontSize: textFontSize,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Spacer(
-                                      flex: 2,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        child: InkWell(
-                          onTap: () {
-                            if (CommonUtil.isUSRegion() &&
-                                controller.isSymptomModuleDisable.value) {
-                              FlutterToast()
-                                  .getToast(strFeatureNotEnable, Colors.black);
-                            } else {
-                              bottomTapped(3);
-                            }
-                          },
-                          child: Container(
-                            color: controller.currentSelectedIndex == 3
-                                ? Color(
-                                    CommonUtil().getQurhomeGredientColor(),
-                                  )
-                                : Colors.white,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Spacer(
-                                      flex: 2,
-                                    ),
-                                    Text(
-                                      "Symptoms",
-                                      style: TextStyle(
-                                        color: (CommonUtil.isUSRegion() &&
-                                                controller
-                                                    .isSymptomModuleDisable
-                                                    .value)
-                                            ? Colors.grey
-                                            : controller.currentSelectedIndex ==
-                                                    3
-                                                ? Colors.white
-                                                : Color(
-                                                    CommonUtil()
-                                                        .getQurhomeGredientColor(),
-                                                  ),
-                                        fontSize: textFontSize,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Spacer(
-                                      flex: 1,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               drawer: QurHomeNavigationDrawer(
                 myProfile: myProfile,
                 moveToLoginPage: moveToLoginPage,
@@ -590,7 +675,37 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                   userChanged: userChanged,
                 ),
                 showPatientList: () {
-                  CommonUtil().showPatientListOfCaregiver(context);
+                  CommonUtil().showPatientListOfCaregiver(context,
+                      (user, result) {
+                    if (user == "You") {
+                      refresh(
+                        userChanged: true,
+                      );
+                      Navigator.pop(context);
+                      controller.currentSelectedTab.value = 0;
+
+                      controller.forPatientList.value = false;
+                      controller.isPatientClicked.value = false;
+                      controller.careGiverPatientListResult = null;
+                    } else {
+                      if (controller.careGiverPatientListResult?.childId !=
+                          result?.childId) {
+                        controller.forPatientList.value = true;
+
+                        controller.careGiverPatientListResult = null;
+                        controller.careGiverPatientListResult = result;
+                        controller.currentSelectedTab.value = 0;
+
+                        controller.isPatientClicked.value = true;
+
+                        controller.getPatientAlertList();
+                      }
+
+                      Navigator.pop(context);
+
+                      setState(() {});
+                    }
+                  });
                 },
               ),
             ),
@@ -612,6 +727,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         break;
       case 3:
         landingTab = SymptomListScreen();
+        break;
+      case 4:
+        landingTab = QurhomePatientDashboard();
         break;
       default:
         landingTab = QurHomeRegimenScreen();

@@ -28,9 +28,15 @@ class RegimentService {
       {String? dateSelected,
       int isSymptoms = 0,
       bool isForMasterData = false,
-      String searchText = ''}) async {
+      String searchText = '',
+      String? patientId}) async {
     var response;
-    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var userId;
+    if (patientId != null) {
+      userId = patientId;
+    } else {
+      userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    }
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
@@ -90,9 +96,16 @@ class RegimentService {
       String? endDate,
       int isSymptoms = 0,
       bool isForMasterData = false,
-      String searchText = ''}) async {
+      String searchText = '',
+      String? patientId}) async {
     var response;
-    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var userId;
+
+    if (patientId != null) {
+      userId = patientId;
+    } else {
+      userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    }
     var urlForRegiment = Constants.BASE_URL +
         'qurplan-node-mysql/regimen-calendar-filter/' +
         userId! +

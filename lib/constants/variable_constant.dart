@@ -206,6 +206,11 @@ const String icon_undo_reg = 'assets/icons/ic_undo_reg.png';
 const String icon_view_eye = 'assets/icons/ic_view_eye.png';
 const String icon_switch = 'assets/icons/icon_switch.png';
 
+const String icon_ok = 'assets/icons/ic_ok.png';
+const String icon_escalate = 'assets/icons/ic_escalate.png';
+const String icon_call_cg = 'assets/icons/ic_call.png';
+const String icon_discard = 'assets/icons/ic_discard.png';
+
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
 const String icon_chat_dash = 'assets/dashboard/chat.svg';
@@ -395,21 +400,21 @@ String strNotificationPreference = 'Notification preferences';
 String strNonAdherenceSettings = 'Activity non-adherence reminder';
 const String strMsgFromProvider = 'Message from provider';
 
-const String strColorPalete = 'Color palette';
+const String strColorPalete = 'Color Palette';
 const String strCareGiverCommunication = 'Caregiver communication';
 
-const String strVitalsPreferences = 'Vitals preferences';
-const String strDisplayDevices = 'Choose vitals';
-const String strUnitPreferences = 'Unit preferences';
-const String strDisplayPreferences = 'Display preferences';
+const String strVitalsPreferences = 'Vitals Preferences';
+const String strDisplayDevices = 'Choose Vitals';
+const String strUnitPreferences = 'Unit Preferences';
+const String strDisplayPreferences = 'Display Preferences';
 
 const String strSkillsIntegration = 'Skills/Integration';
 const String strIntegration = 'Integration';
-const String strPrivacyAndSecurity = 'Privacy and security';
+const String strPrivacyAndSecurity = 'Privacy and Security';
 
 // User account
-const String strUserAccount = 'User account';
-const String strDeleteAccountTitle = 'Delete account';
+const String strUserAccount = 'User Account';
+const String strDeleteAccountTitle = 'Delete Account';
 const String strDeleteAccountDes =
     'Are you sure, you want to delete the account?';
 const String strNotRetrieveDataDes =
@@ -679,14 +684,14 @@ const String strAllowGoogle = 'Allow app to recieve data from google Fit';
 const String strHealthKit = 'Apple health';
 const String strAllowHealth = 'Allow app to recieve data from Apple Health';
 const String strAddDevice = 'Tap to add device widgets to your home screen';
-const String strDefaultUI = 'Set Qurhome as default UI';
+const String strDefaultUI = 'Set QurHome as default UI';
 
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
 const String strAdvancedRegimen = 'Advanced Regimen';
-const String strConnectedDevices = 'Connected devices';
-const String strQurHome = 'Qurhome';
+const String strConnectedDevices = 'Connected Devices';
+const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
 const String strAddNewDevice = 'Add New Device';
 const String strQurHubIoTdevice = 'QurHub IoT device';
@@ -728,6 +733,7 @@ const String strValidPhoneNumber = 'Enter a valid mobile number';
 const String strGetAppVersion = 'getAppVersion';
 const String strSecure = 'secureMe';
 const String strpop = 'SystemNavigator.pop';
+const String strDiscard = 'Discard';
 
 const String strformateedAddress = 'formateedAddress';
 const String strformateedPhoneNumber = 'formateedPhoneNumber';
@@ -846,6 +852,8 @@ const String strAllowVitals = "Allow Vitals";
 const String strAllowSymptoms = "Allow Symptoms";
 const String strAllowAppointments = "Allow Appointments";
 const String strAlert = 'Alert';
+const String strAlerts = 'Alerts';
+const String patient = 'Patient : ';
 
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
@@ -886,6 +894,11 @@ const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
 const String strDecline='Decline';
+
+//For Alert
+const String strEscalate = 'Escalate';
+const String strCall = 'Call';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');

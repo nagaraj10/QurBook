@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
@@ -152,7 +151,8 @@ class _UserAccountsState extends State<UserAccounts>
               } */
             ),
             actions: <Widget>[
-              if (CommonUtil.REGION_CODE != 'IN') getSwitchProfileWidget()
+              if (CommonUtil.REGION_CODE != 'IN')
+                if (selectedTab == 1) getSwitchProfileWidget()
               // IconButton(
               //     icon: Icon(
               //       Icons.exit_to_app,
@@ -265,7 +265,6 @@ class _UserAccountsState extends State<UserAccounts>
               QurPlanReminders.getTheRemindersFromAPI();
 
               (context as Element).markNeedsBuild();
-              setState(() {});
             },
             true,
           );

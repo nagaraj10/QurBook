@@ -2203,7 +2203,33 @@ class CommonUtil {
     LoaderClass.hideLoadingDialog(context);
   }
 
-  showPatientListOfCaregiver(BuildContext context) async {
+  getCategoryFromTypeName(String typeName) {
+    String category = '';
+    switch (typeName.toUpperCase()) {
+      case 'MANDACTIVITY':
+        category = 'Missed Mandatory Activities';
+        break;
+      case 'VITALS':
+        category = 'Vital Alerts';
+        break;
+      case 'MEDICATION':
+        category = 'Missed Medication';
+        break;
+      case 'RULEALERT':
+        category = 'Rule Based Alerts';
+        break;
+      case 'SYMPTOM':
+        category = 'Symptom Alerts';
+        break;
+    }
+
+    return category;
+  }
+
+  showPatientListOfCaregiver(
+      BuildContext context,
+      Function(String? user, CareGiverPatientListResult? result)
+          selectedUser) async {
     try {
       showSingleLoadingDialog(context);
       CareGiverPatientList? response;
@@ -2212,7 +2238,7 @@ class CommonUtil {
       response = await addFamilyUserInfoRepository.getCareGiverPatientList();
       hideLoadingDialog(context);
 
-      showDialogPatientList(response?.result, myProfile, context);
+      showDialogPatientList(response?.result, myProfile, context, selectedUser);
     } catch (e) {
       hideLoadingDialog(context);
 
@@ -2223,7 +2249,8 @@ class CommonUtil {
   Future<Widget?> showDialogPatientList(
       List<CareGiverPatientListResult?>? result,
       MyProfileModel? myProfile,
-      BuildContext context) {
+      BuildContext context,
+      Function(String? user, CareGiverPatientListResult? result) selectedUser) {
     if (result!.length > 0 && result != null) {
       CareGiverPatientListResult selfResult = new CareGiverPatientListResult(
           childId: userID,
@@ -2254,10 +2281,9 @@ class CommonUtil {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        if (result[index]?.relationship == "You") {
-                          Navigator.pop(context);
-                          navigateToQurhomeDasboard();
-                        }
+                        Navigator.pop(context);
+                        selectedUser(
+                            result[index]?.relationship, result[index]);
                       },
                       child: Container(
                         height: 50,
@@ -2282,7 +2308,7 @@ class CommonUtil {
                                       color: Colors.black,
                                       fontSize: CommonUtil().isTablet!
                                           ? 20.0.sp
-                                      : 18.0.sp,
+                                          : 18.0.sp,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
@@ -2305,8 +2331,29 @@ class CommonUtil {
   }
 
   void navigateToQurhomeDasboard() {
+    Get.back();
     Get.to(
-      () => QurhomeDashboard(),
+      () => QurhomeDashboard(
+        forPatientList: false,
+        careGiverPatientListResult: null,
+      ),
+      binding: BindingsBuilder(
+        () {
+          Get.lazyPut(
+            () => QurhomeDashboardController(),
+          );
+        },
+      ),
+    );
+  }
+
+  void navigateToQurhomePatientDasboard(CareGiverPatientListResult? result) {
+    Get.back();
+    Get.to(
+      () => QurhomeDashboard(
+        forPatientList: true,
+        careGiverPatientListResult: result,
+      ),
       binding: BindingsBuilder(
         () {
           Get.lazyPut(
@@ -2464,7 +2511,7 @@ class CommonUtil {
       //     .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
 
       if (newVersion > currentVersion) {
-        _showVersionDialog(context, isForceUpdate);
+        //_showVersionDialog(context, isForceUpdate);
       }
     } on FirebaseException catch (exception) {
       // Fetch throttled.
@@ -5015,12 +5062,16 @@ class CommonUtil {
             title: Text(
               variable.strConfirm,
               style: TextStyle(
+                fontSize: CommonUtil().isTablet!?22.0.sp:null,
                   color: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
                       : Color(CommonUtil().getMyPrimaryColor())),
             ),
             // To display the title it is optional
-            content: Text('Record ' + name),
+            content: CommonUtil().isTablet!?Container(
+                width: MediaQuery.of(context).size.width*0.60,
+                child: Text('Record ' + name.trim()+'?',style: TextStyle(
+                    fontSize: 20.0.sp),)):Text('Record ' + name.trim()+'?'),
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
@@ -5031,7 +5082,8 @@ class CommonUtil {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(variable.strNo),
+                child: Text(variable.strNo,style: TextStyle(
+                    fontSize: CommonUtil().isTablet!?22.0.sp:null),)
               ),
               FlatButton(
                   // FlatButton widget is used to make a text to work like a button
@@ -5040,7 +5092,8 @@ class CommonUtil {
                       : Color(CommonUtil().getMyPrimaryColor()),
                   onPressed: onPressedYes,
                   // function used to perform after pressing the button
-                  child: Text(variable.strYes)),
+                  child: Text(variable.strYes,style: TextStyle(
+                      fontSize: CommonUtil().isTablet!?22.0.sp:null),)),
             ],
           );
         });
@@ -6021,6 +6074,33 @@ class CommonUtil {
           strCameraPermission,
           Colors.red,
         );
+      }
+    }
+  }
+
+  String getFormattedString(
+      String title, String type, String name, double fontSize,
+      {bool forDetails: false}) {
+    List<TextSpan> widget = [];
+    if (type == 'Vitals') {
+      try {
+        return name;
+      } catch (e) {
+        return name;
+      }
+    } else {
+      String first = '';
+      String second = '';
+      try {
+        first = title.substring(title.indexOf("{") + 1, title.indexOf("}"));
+        try {
+          second = title.substring(title.indexOf("[") + 1, title.indexOf("]"));
+        } catch (e) {
+          return first;
+        }
+        return first + ' ' + second;
+      } catch (e) {
+        return title;
       }
     }
   }

@@ -181,7 +181,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
         }
       }
-
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
