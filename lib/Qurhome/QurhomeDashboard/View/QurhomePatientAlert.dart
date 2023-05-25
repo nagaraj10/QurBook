@@ -200,7 +200,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                         Text(
                           patientAlertData.createdOn != null
                               ? DateFormat('hh:mm a')
-                                  .format(patientAlertData.createdOn!)
+                                  .format(patientAlertData.createdOn!.toLocal())
                               : '',
                           style: TextStyle(
                               color: getTextAndIconColor(
@@ -393,9 +393,15 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               ),
                               Center(
                                 child: Text(
-                                  patientAlertData.createdOn != null
-                                      ? DateFormat('hh:mm a')
-                                          .format(patientAlertData.createdOn!)
+                                  patientAlertData
+                                              .additionalInfo?.startDateTime !=
+                                          null
+                                      ? DateFormat('hh:mm a').format(
+                                          DateTime.tryParse(patientAlertData
+                                                      .additionalInfo
+                                                      ?.startDateTime)
+                                                  ?.toLocal() ??
+                                              DateTime.now())
                                       : '',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
