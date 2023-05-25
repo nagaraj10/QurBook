@@ -270,6 +270,15 @@ class AppointmentDetailsController extends GetxController {
     }
   }
 
+  acceptCareGiverTransportRequestReminder(String appointmentId,String patientId,bool isAccept) async {
+    loadingData.value = true;
+    FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
+    var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
+    print("appoinment status");
+    getAppointmentDetail(appointmentId);
+  }
+
+
   String checkIfEmptyString(String strText) {
     try {
       if (strText == null)

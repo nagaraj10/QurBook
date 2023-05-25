@@ -843,7 +843,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': 'Appointment Detail Page',
                       });
                       if (passedValArr[2] != null) {
-                        if(passedValArr[3]!=null){
+                        if(passedValArr[3]!=null&&passedValArr[4]!=null){
                           new CommonUtil().acceptCareGiverTransportRequestReminder(
                               context,
                               passedValArr[2],

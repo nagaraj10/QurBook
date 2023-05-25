@@ -74,40 +74,131 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           return appointmentDetailsController.appointmentDetailsModel != null &&
                   appointmentDetailsController.appointmentDetailsModel!.result !=
                       null
-              ? InkWell(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        10.0,
-                      ),
-                    ),
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 10.0,
-                        left: 50.0,
-                        right: 50.0,
-                      ),
-                      child: Text(
-                        strOK,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
+              ? appointmentDetailsController.appointmentDetailsModel?.result?.pickupRequestInfo!=null?checkAcceptOrRejectButton():AcceptReject()
               : Container();
         },
       ),
     );
+  }
+
+  Widget checkAcceptOrRejectButton(){
+    if(appointmentDetailsController.appointmentDetailsModel?.result?.pickupRequestInfo?[0]!=null){
+      if(appointmentDetailsController.appointmentDetailsModel?.result?.pickupRequestInfo?[0].isAccepted??false){
+        return AcceptReject();
+      }else{
+        return AcceptButton();
+      }
+
+    }else{
+      return OkButton();
+    }
+  }
+
+  Widget OkButton(){
+    return InkWell(
+      onTap: () {
+        Get.back();
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            10.0,
+          ),
+        ),
+        color: Color(
+          CommonUtil().getMyPrimaryColor(),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 10.0,
+            bottom: 10.0,
+            left: 50.0,
+            right: 50.0,
+          ),
+          child: Text(
+            strOK,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget AcceptButton(){
+    return InkWell(
+      onTap: () {
+        appointmentDetailsController.acceptCareGiverTransportRequestReminder("","",true);
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            10.0,
+          ),
+        ),
+        color: Color(
+          CommonUtil().getMyPrimaryColor(),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 10.0,
+            bottom: 10.0,
+            left: 50.0,
+            right: 50.0,
+          ),
+          child: Text(
+            straccept.capitalizeFirstofEach,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget RejectButton(){
+    return InkWell(
+      onTap: () {
+        appointmentDetailsController.acceptCareGiverTransportRequestReminder("","",false);
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            10.0,
+          ),
+        ),
+        color: Color(
+          CommonUtil().getMyPrimaryColor(),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 10.0,
+            bottom: 10.0,
+            left: 50.0,
+            right: 50.0,
+          ),
+          child: Text(
+            strDecline,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget AcceptReject(){
+    return Align(alignment:Alignment.bottomCenter,child:Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AcceptButton(),
+        SizedBox(width: 5,),
+        RejectButton(),
+      ],
+    ));
   }
 
   Widget getAppointmentDetailWidget() {

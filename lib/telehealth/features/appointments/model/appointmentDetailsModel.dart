@@ -32,7 +32,7 @@ class Result {
   Status? modeOfService;
   HealthOrganization? healthOrganization;
   Doctor? doctor;
-
+  List<PickupRequestInfo>? pickupRequestInfo;
   Result(
       {this.plannedStartDateTime,
       this.plannedEndDateTime,
@@ -62,6 +62,12 @@ class Result {
           : null;
       doctor =
           json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+      if(json['pickupRequestInfo']!=null){
+        pickupRequestInfo = <PickupRequestInfo>[];
+        json['field'].forEach((v) {
+          pickupRequestInfo?.add(PickupRequestInfo.fromJson(v));
+        });
+      }
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -90,6 +96,15 @@ class Result {
       data['doctor'] = this.doctor!.toJson();
     }
     return data;
+  }
+}
+
+class PickupRequestInfo{
+  DateTime? requestTime;
+  bool? isAccepted;
+  PickupRequestInfo.fromJson(Map<String, dynamic> json) {
+    requestTime=json['requestTime']!=null?json['requestTime']:null;
+    isAccepted=json['isAccepted']!=null?json['isAccepted']:null;
   }
 }
 

@@ -5605,6 +5605,7 @@ class CommonUtil {
     FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
     CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
     var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
+    print("appoinment status");
     if ((appointmentId ?? '').isNotEmpty) {
       AppointmentDetailsController appointmentDetailsController =
       CommonUtil().onInitAppointmentDetailsController();

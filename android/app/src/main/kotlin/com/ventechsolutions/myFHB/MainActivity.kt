@@ -2380,6 +2380,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         var planId = intent.getStringExtra(Constants.PROP_PLANID)
         var callType = intent.getStringExtra(getString(R.string.callType))
         var userId = intent.getStringExtra(Constants.PROB_USER_ID)
+        var patientId = intent.getStringExtra(Constants.PATIENT_ID)
+        var status = intent.getStringExtra(Constants.STATUS)
         var isWeb = intent.getStringExtra(getString(R.string.web))
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         val appointmentID = intent.getStringExtra(Constants.APPOINTMENTID)
@@ -2461,8 +2463,11 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
             sharedValue = "ack&${redirect_to}"
         } else if (redirect_to?.contains(Constants.APPOINTMENT_DETAIL) == true) {
-
-            sharedValue = "ack&${redirect_to}&${appointmentID}&${notificationListId}"
+            if(status!=null){
+                sharedValue = "ack&${redirect_to}&${appointmentID}&${patientId}&${status}"
+            }else{
+                sharedValue = "ack&${redirect_to}&${appointmentID}&${notificationListId}"
+            }
         } else if (redirect_to == "regiment_screen") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${EVEId}&${estart}"
         } else if (externalLink != null && externalLink != "") {

@@ -885,7 +885,7 @@ const String strEdit = 'Edit';
 const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
-
+const String strDecline='Decline';
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');
