@@ -11,37 +11,22 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
-import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/CalendarMonth.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/chat_socket/constants/const_socket.dart';
-import 'package:myfhb/chat_socket/model/UnreadChatSocketNotify.dart';
-import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
-import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
-import 'package:myfhb/reminders/ReminderModel.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
-import 'dart:convert' as convert;
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 
 class QurHomePatientRegimenListScreen extends StatefulWidget {
@@ -111,58 +96,20 @@ class _QurHomePatientRegimenListScreenState
       WidgetsBinding.instance?.addObserver(this);
       controller.timer?.cancel();
       controller.timer = null;
-      controller.startTimer(patientId: widget.careGiverPatientListResult!.childId);
+      controller.startTimer();
       super.initState();
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
   onInit() async {
     try {
-      String strEventId = CommonUtil()
-          .validString(qurhomeDashboardController.eventId.value ?? "");
-      String strEStart = CommonUtil()
-          .validString(qurhomeDashboardController.estart.value ?? "");
-      if (CommonUtil.isUSRegion() && strEStart.trim().isNotEmpty) {
-        controller.restartTimer();
-        await controller.getRegimenList(isLoading: true, date: strEStart, patientId: widget.careGiverPatientListResult!.childId);
-      } else {
-        await controller.getRegimenList(isLoading: true, patientId: widget.careGiverPatientListResult!.childId);
-      }
-      await Future.delayed(Duration(milliseconds: 5));
-
-      if (CommonUtil.isUSRegion()) {
-        if (strEventId.trim().isNotEmpty &&
-            controller.qurHomeRegimenResponseModel?.regimentsList != null &&
-            (controller.qurHomeRegimenResponseModel?.regimentsList?.length ??
-                    0) >
-                0) {
-          RegimentDataModel? currRegimen = null;
-          for (int i = 0;
-              i < controller.qurHomeRegimenResponseModel!.regimentsList!.length;
-              i++) {
-            RegimentDataModel regimentDataModel =
-                controller.qurHomeRegimenResponseModel!.regimentsList![i];
-            if ((regimentDataModel.eid ?? "").toString().toLowerCase() ==
-                strEventId) {
-              currRegimen = regimentDataModel;
-              if (regimentDataModel.activityOrgin != strAppointmentRegimen) {
-                await Future.delayed(Duration(milliseconds: 2000));
-                qurhomeDashboardController.eventId.value = "";
-                qurhomeDashboardController.estart.value = "";
-              }
-              break;
-            }
-          }
-          if (currRegimen == null) {
-            FlutterToast().getToast(
-              activity_removed_regimen,
-              Colors.red,
-            );
-          }
-        }
-      }
+      await controller.getRegimenList(
+          isLoading: true,
+          patientId: widget.careGiverPatientListResult!.childId);
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
