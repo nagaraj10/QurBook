@@ -2202,6 +2202,29 @@ class CommonUtil {
     LoaderClass.hideLoadingDialog(context);
   }
 
+  getCategoryFromTypeName(String typeName) {
+    String category = '';
+    switch (typeName.toUpperCase()) {
+      case 'MANDACTIVITY':
+        category = 'Missed Mandatory Activities';
+        break;
+      case 'VITALS':
+        category = 'Vital Alerts';
+        break;
+      case 'MEDICATION':
+        category = 'Missed Medication';
+        break;
+      case 'RULEALERT':
+        category = 'Rule Based Alerts';
+        break;
+      case 'SYMPTOM':
+        category = 'Symptom Alerts';
+        break;
+    }
+
+    return category;
+  }
+
   showPatientListOfCaregiver(
       BuildContext context,
       Function(String? user, CareGiverPatientListResult? result)
@@ -5038,12 +5061,16 @@ class CommonUtil {
             title: Text(
               variable.strConfirm,
               style: TextStyle(
+                fontSize: CommonUtil().isTablet!?22.0.sp:null,
                   color: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
                       : Color(CommonUtil().getMyPrimaryColor())),
             ),
             // To display the title it is optional
-            content: Text('Record ' + name.trim()+'?'),
+            content: CommonUtil().isTablet!?Container(
+                width: MediaQuery.of(context).size.width*0.60,
+                child: Text('Record ' + name.trim()+'?',style: TextStyle(
+                    fontSize: 20.0.sp),)):Text('Record ' + name.trim()+'?'),
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
@@ -5054,7 +5081,8 @@ class CommonUtil {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(variable.strNo),
+                child: Text(variable.strNo,style: TextStyle(
+                    fontSize: CommonUtil().isTablet!?22.0.sp:null),)
               ),
               FlatButton(
                   // FlatButton widget is used to make a text to work like a button
@@ -5063,7 +5091,8 @@ class CommonUtil {
                       : Color(CommonUtil().getMyPrimaryColor()),
                   onPressed: onPressedYes,
                   // function used to perform after pressing the button
-                  child: Text(variable.strYes)),
+                  child: Text(variable.strYes,style: TextStyle(
+                      fontSize: CommonUtil().isTablet!?22.0.sp:null),)),
             ],
           );
         });

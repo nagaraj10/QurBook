@@ -152,7 +152,7 @@ class _UserAccountsState extends State<UserAccounts>
             ),
             actions: <Widget>[
               if (CommonUtil.REGION_CODE != 'IN')
-                selectedTab == 1 ? getSwitchProfileWidget() : SizedBox()
+                if (selectedTab == 1) getSwitchProfileWidget()
               // IconButton(
               //     icon: Icon(
               //       Icons.exit_to_app,
