@@ -274,7 +274,6 @@ class AppointmentDetailsController extends GetxController {
     loadingData.value = true;
     FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
     var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
-    print("appoinment status");
     getAppointmentDetail(appointmentId);
   }
 
