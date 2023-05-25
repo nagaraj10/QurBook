@@ -142,6 +142,8 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+        <receiver android:exported="false" android:name=".services.AcceptTransportationAppointment" />
+        <receiver android:exported="false" android:name=".services.RejectTransportationAppointment" />
         <receiver android:exported="false" android:name=".services.DeclineReciver" />
         <receiver android:exported="false" android:name=".services.AcceptReceiver" />
         <receiver android:exported="false" android:name=".services.CancelAppointment" />

@@ -47,7 +47,7 @@ import LS202_DeviceManager
     let showSingleButtonCat = "showSingleButtonCat"
     let planRenewButton = "planRenewButton"
     let escalateToCareCoordinatorButtons = "escalateToCareCoordinatorButtons"
-    
+    let showTransportationNotification = "transportationRequestAcceptDeclineButtons"
     let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
     let ChatCCAndViewrecordButtons = "showChatCCAndViewrecordButtons"
     let viewDetailsButton = "memberviewDetailsButtons"
@@ -140,6 +140,11 @@ import LS202_DeviceManager
         let viewMemberAction = UNNotificationAction(identifier: "ViewMember", title: "View Member", options: [.foreground])
         let viewDetailsAction = UNNotificationAction(identifier: "ViewDetails", title: "View Details", options: [.foreground])
         let communicationsettingsAction = UNNotificationAction(identifier: "Communicationsettings", title: "Communication settings", options: [.foreground])
+        let declineNewAction = UNNotificationAction(identifier: "Decline", title: "Decline", options: [])
+        let showTransportationcategory = UNNotificationCategory(identifier: showTransportationNotification,
+                                                             actions:  [acceptAction, declineNewAction],
+                                                             intentIdentifiers: [],
+                                                             options: [])
         
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
                                                              actions:  [snoozeAction, declineAction],
@@ -180,7 +185,8 @@ import LS202_DeviceManager
                                                       showViewMemberAndCommunicationButtonscategory,
                                                       esclateButtonscategory,
                                                       chatCCAndViewrecordButtonsCategory,
-                                                      viewDetailButtonCategory])
+                                                      viewDetailButtonCategory,
+                                                      showTransportationcategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -844,8 +850,6 @@ import LS202_DeviceManager
                     }
                 }else if response.actionIdentifier == "Dismiss"{
                 }else{
-                    print("Eid:", data["eid"])
-                    print("estart:", data["estart"])
                     var newData :NSDictionary
                     newData  = [
                         "eid" : data["eid"],
@@ -862,6 +866,11 @@ import LS202_DeviceManager
             else {
                 var newData :NSDictionary
                 if (response.actionIdentifier == "Renew" || response.actionIdentifier == "Callback"){
+                    newData  = [
+                        "action" : response.actionIdentifier,
+                        "data" : data
+                    ]
+                }else if (response.actionIdentifier == "Decline" || response.actionIdentifier == "Accept"){
                     newData  = [
                         "action" : response.actionIdentifier,
                         "data" : data

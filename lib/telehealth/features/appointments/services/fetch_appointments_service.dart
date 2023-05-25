@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/model/common_response_model.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentDetailsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
@@ -70,6 +71,33 @@ class FetchAppointmentsService {
       }
     } on SocketException {
       return AppointmentDetailsModel();
+    }
+  }
+
+  Future<CommonResponseModel> acceptOrDeclineAppointment(
+      String appointmentId,String patientId,bool isAccept) async {
+    try {
+      var headers = await headerRequest.getRequestHeadersAuthContent();
+      String? userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+      final response = await ApiServices.post(
+        _baseUrl + respond_transport_request,
+        headers: headers,
+        body: json.encode({
+          "patientId": patientId,
+          "caregiverUserId": userId,
+          "appointmentId": appointmentId,
+          "isAccept": isAccept
+        })
+      );
+
+      if (response!.statusCode == 200) {
+        return CommonResponseModel.fromJson(jsonDecode(response.body));
+      } else {
+        return CommonResponseModel();
+      }
+    } on SocketException {
+      return CommonResponseModel();
     }
   }
 }

@@ -854,10 +854,27 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Appointment Detail Page',
           });
           if (passedValArr[2] != null) {
-            AppointmentDetailsController appointmentDetailsController =
+            try{
+              if(passedValArr[3]!=null){
+                new CommonUtil().acceptCareGiverTransportRequestReminder(
+                    context,
+                    passedValArr[2],
+                    passedValArr[3],
+                    passedValArr[4].toString().contains("accept"));
+              }else{
+                AppointmentDetailsController appointmentDetailsController =
                 CommonUtil().onInitAppointmentDetailsController();
-            appointmentDetailsController.getAppointmentDetail(passedValArr[2]);
-            Get.to(() => AppointmentDetailScreen());
+                appointmentDetailsController.getAppointmentDetail(passedValArr[2]);
+                Get.to(() => AppointmentDetailScreen());
+              }
+            }catch(e){
+              AppointmentDetailsController appointmentDetailsController =
+              CommonUtil().onInitAppointmentDetailsController();
+              appointmentDetailsController.getAppointmentDetail(passedValArr[2]);
+              Get.to(() => AppointmentDetailScreen());
+            }
+
+
           }
         } else {
           fbaLog(eveParams: {
