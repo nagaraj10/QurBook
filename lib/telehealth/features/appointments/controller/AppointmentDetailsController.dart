@@ -38,12 +38,12 @@ class AppointmentDetailsController extends GetxController {
   var city = "";
   var state = "";
   var locationUrl = "";
-
+  var appointmentId="";
   getAppointmentDetail(String appointmentId) async {
     try {
       onClear();
       loadingData.value = true;
-
+      this.appointmentId=appointmentId;
       appointmentDetailsModel =
           await fetchAppointmentsService.getAppointmentDetail(appointmentId);
 

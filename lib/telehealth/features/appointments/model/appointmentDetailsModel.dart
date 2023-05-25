@@ -32,7 +32,6 @@ class Result {
   Status? modeOfService;
   HealthOrganization? healthOrganization;
   Doctor? doctor;
-  List<PickupRequestInfo>? pickupRequestInfo;
   Result(
       {this.plannedStartDateTime,
       this.plannedEndDateTime,
@@ -62,12 +61,7 @@ class Result {
           : null;
       doctor =
           json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
-      if(json['pickupRequestInfo']!=null){
-        pickupRequestInfo = <PickupRequestInfo>[];
-        json['field'].forEach((v) {
-          pickupRequestInfo?.add(PickupRequestInfo.fromJson(v));
-        });
-      }
+
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -100,10 +94,12 @@ class Result {
 }
 
 class PickupRequestInfo{
-  DateTime? requestTime;
+  String? requestTime;
   bool? isAccepted;
+  String? requestFrom;
   PickupRequestInfo.fromJson(Map<String, dynamic> json) {
     requestTime=json['requestTime']!=null?json['requestTime']:null;
+    requestFrom=json['requestFrom']!=null?json['requestFrom']:null;
     isAccepted=json['isAccepted']!=null?json['isAccepted']:null;
   }
 }
@@ -125,6 +121,8 @@ class AdditionalInfo {
   Status? modeOfService;
   String? providerName;
   bool? isEndTimeOptional;
+  List<PickupRequestInfo>? pickupRequestInfo;
+
   AdditionalInfo(
       {this.to,
       this.from,
@@ -141,10 +139,17 @@ class AdditionalInfo {
       this.locationUrl,
       this.modeOfService,
       this.isEndTimeOptional,
-      this.providerName});
+      this.providerName,
+      this.pickupRequestInfo});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     try {
+      if(json['pickupRequestInfo']!=null){
+        pickupRequestInfo = [];
+        json['pickupRequestInfo'].forEach((v) {
+          pickupRequestInfo?.add(PickupRequestInfo.fromJson(v));
+        });
+      }
       to = json['to'] != null
           ? json['to']
           : json['To'] != null
@@ -187,6 +192,7 @@ class AdditionalInfo {
       modeOfService = json['mode_of_service'] != null
           ? new Status.fromJson(json['mode_of_service'])
           : null;
+
 
     } catch (e) {
       if (kDebugMode) {

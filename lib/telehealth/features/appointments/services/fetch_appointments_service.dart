@@ -87,7 +87,7 @@ class FetchAppointmentsService {
           "patientId": patientId,
           "caregiverUserId": userId,
           "appointmentId": appointmentId,
-          "isAccept": true
+          "isAccept": isAccept
         })
       );
 

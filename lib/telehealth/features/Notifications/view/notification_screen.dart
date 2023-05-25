@@ -1961,7 +1961,7 @@ class _NotificationScreen extends State<NotificationScreen> {
 
         break;
       case parameters.careGiverTransportRequestReminder:
-        return Padding(
+        return (notification.isUnread??true)?Padding(
           padding: const EdgeInsets.all(0),
           child: Row(
             children: [
@@ -2001,7 +2001,6 @@ class _NotificationScreen extends State<NotificationScreen> {
                       notification.messageDetails?.payload?.patientId??'',
                       false);
 
-
                 },
                 borderSide: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -2018,7 +2017,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
             ],
           ),
-        );
+        ):Container();
 
         break;
       default:

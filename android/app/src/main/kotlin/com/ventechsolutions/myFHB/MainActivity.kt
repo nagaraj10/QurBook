@@ -2466,7 +2466,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             if(status!=null){
                 sharedValue = "ack&${redirect_to}&${appointmentID}&${patientId}&${status}"
             }else{
-                sharedValue = "ack&${redirect_to}&${appointmentID}&${notificationListId}"
+                sharedValue = "ack&${redirect_to}&${appointmentID}"
             }
         } else if (redirect_to == "regiment_screen") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${EVEId}&${estart}"

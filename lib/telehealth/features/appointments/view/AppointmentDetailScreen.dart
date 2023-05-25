@@ -74,7 +74,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           return appointmentDetailsController.appointmentDetailsModel != null &&
                   appointmentDetailsController.appointmentDetailsModel!.result !=
                       null
-              ? appointmentDetailsController.appointmentDetailsModel?.result?.pickupRequestInfo!=null?checkAcceptOrRejectButton():AcceptReject()
+              ? appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo!=null?checkAcceptOrRejectButton():OkButton()
               : Container();
         },
       ),
@@ -82,11 +82,15 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   }
 
   Widget checkAcceptOrRejectButton(){
-    if(appointmentDetailsController.appointmentDetailsModel?.result?.pickupRequestInfo?[0]!=null){
-      if(appointmentDetailsController.appointmentDetailsModel?.result?.pickupRequestInfo?[0].isAccepted??false){
-        return AcceptReject();
+    appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?.sort((a, b) =>(DateTime.parse(b?.requestTime??'')).compareTo(DateTime.parse(a?.requestTime??'')));
+
+    if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0]!=null){
+      if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted==null){
+        return AcceptReject(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom);
+      }else if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted??false){
+        return RejectButton(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom??'');
       }else{
-        return AcceptButton();
+        return OkButton();
       }
 
     }else{
@@ -126,10 +130,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       ),
     );
   }
-  Widget AcceptButton(){
+
+  Widget AcceptButton(String s){
     return InkWell(
       onTap: () {
-        appointmentDetailsController.acceptCareGiverTransportRequestReminder("","",true);
+        appointmentDetailsController.acceptCareGiverTransportRequestReminder(appointmentDetailsController.appointmentId,s,true);
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -158,10 +163,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       ),
     );
   }
-  Widget RejectButton(){
+
+  Widget RejectButton(String s){
     return InkWell(
       onTap: () {
-        appointmentDetailsController.acceptCareGiverTransportRequestReminder("","",false);
+        appointmentDetailsController.acceptCareGiverTransportRequestReminder(appointmentDetailsController.appointmentId,s,false);
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -190,13 +196,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       ),
     );
   }
-  Widget AcceptReject(){
+
+  Widget AcceptReject(String? requestFrom){
     return Align(alignment:Alignment.bottomCenter,child:Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        AcceptButton(),
+        AcceptButton(requestFrom??''),
         SizedBox(width: 5,),
-        RejectButton(),
+        RejectButton(requestFrom??''),
       ],
     ));
   }
@@ -597,3 +604,4 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 }
+
