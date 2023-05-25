@@ -206,6 +206,11 @@ const String icon_undo_reg = 'assets/icons/ic_undo_reg.png';
 const String icon_view_eye = 'assets/icons/ic_view_eye.png';
 const String icon_switch = 'assets/icons/icon_switch.png';
 
+const String icon_ok = 'assets/icons/ic_ok.png';
+const String icon_escalate = 'assets/icons/ic_escalate.png';
+const String icon_call_cg = 'assets/icons/ic_call.png';
+const String icon_discard = 'assets/icons/ic_discard.png';
+
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
 const String icon_chat_dash = 'assets/dashboard/chat.svg';
@@ -728,6 +733,7 @@ const String strValidPhoneNumber = 'Enter a valid mobile number';
 const String strGetAppVersion = 'getAppVersion';
 const String strSecure = 'secureMe';
 const String strpop = 'SystemNavigator.pop';
+const String strDiscard = 'Discard';
 
 const String strformateedAddress = 'formateedAddress';
 const String strformateedPhoneNumber = 'formateedPhoneNumber';
@@ -887,6 +893,10 @@ const String strEdit = 'Edit';
 const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
+
+//For Alert
+const String strEscalate = 'Escalate';
+const String strCall = 'Call';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

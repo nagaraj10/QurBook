@@ -71,6 +71,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   void initState() {
     try {
       super.initState();
+      controller.forPatientList.value = false;
+
       onInit();
     } catch (e) {
       if (kDebugMode) {
@@ -146,6 +148,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
       CommonUtil().initPortraitMode();
       MyFHB.routeObserver.unsubscribe(this);
+      controller.clear();
       super.dispose();
     } catch (e) {
       print(e);

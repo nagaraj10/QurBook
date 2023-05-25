@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -117,7 +116,8 @@ class SwitchProfile {
                                         child: Center(
                                           child: Text(
                                             myProfile.result!.firstName != null
-                                                ? myProfile.result!.firstName![0]
+                                                ? myProfile
+                                                    .result!.firstName![0]
                                                     .toUpperCase()
                                                 : '',
                                             style: TextStyle(
@@ -200,7 +200,8 @@ class SwitchProfile {
           Get.put(QurhomeDashboardController());
         }
         qurhomeDashboardController = Get.find();
-        qurhomeDashboardController.updateTabIndex(qurhomeDashboardController.currentSelectedIndex.value);
+        qurhomeDashboardController.updateTabIndex(
+            qurhomeDashboardController.currentSelectedIndex.value);
       });
     });
   }
@@ -308,12 +309,13 @@ class SwitchProfile {
     /*Navigator.push(context, MaterialPageRoute(builder: (context) {
       return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
     }));*/
-     Navigator.pushNamed(
-      context,
-      rt_UserAccounts,
-      arguments: UserAccountsArguments(
-        selectedIndex: 1,
-      ),
-    );
+    if (!CommonUtil.isUSRegion())
+      Navigator.pushNamed(
+        context,
+        rt_UserAccounts,
+        arguments: UserAccountsArguments(
+          selectedIndex: 1,
+        ),
+      );
   }
 }
