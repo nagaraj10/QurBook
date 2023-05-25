@@ -188,7 +188,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     private lateinit var countDownTimerDialog: Dialog
 
     var countDown: CountDownTimer? = null
-
+    var firstTimeSpeechError=true;
     //private lateinit var builder: AlertDialog.Builder
     internal lateinit var displayText: EditText
     internal lateinit var sendBtn: Button
@@ -2705,6 +2705,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             }
         }
         countDown?.start()
+        firstTimeSpeechError=true;
         setRecognizerListener()
         //Timer().schedule(100){
 
@@ -2805,7 +2806,10 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     speechRecognizer?.cancel()
                     speechRecognizer?.stopListening()
                     speechRecognizer?.destroy()
-                    setRecognizerListener()
+                    if(firstTimeSpeechError){
+                        firstTimeSpeechError=false;
+                        setRecognizerListener()
+                    }
 //                    speechRecognizer?.startListening(intent)
                     //close.performClick()
                     //_result?.error("100","no response",errorCode)

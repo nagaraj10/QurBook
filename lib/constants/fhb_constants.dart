@@ -408,6 +408,8 @@ const String CANCEL = "CANCEL";
 const String YES = "YES";
 const String CHAT = "Chats";
 const String CAREPROVIDERS = "Care Coordinator";
+const String strEscalateAlertMsg = "Alert escalated successfully";
+const String strDiscardMsg = 'Alert discarded successfully';
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';

@@ -2202,6 +2202,29 @@ class CommonUtil {
     LoaderClass.hideLoadingDialog(context);
   }
 
+  getCategoryFromTypeName(String typeName) {
+    String category = '';
+    switch (typeName.toUpperCase()) {
+      case 'MANDACTIVITY':
+        category = 'Missed Mandatory Activities';
+        break;
+      case 'VITALS':
+        category = 'Vital Alerts';
+        break;
+      case 'MEDICATION':
+        category = 'Missed Medication';
+        break;
+      case 'RULEALERT':
+        category = 'Rule Based Alerts';
+        break;
+      case 'SYMPTOM':
+        category = 'Symptom Alerts';
+        break;
+    }
+
+    return category;
+  }
+
   showPatientListOfCaregiver(
       BuildContext context,
       Function(String? user, CareGiverPatientListResult? result)
@@ -5043,7 +5066,7 @@ class CommonUtil {
                       : Color(CommonUtil().getMyPrimaryColor())),
             ),
             // To display the title it is optional
-            content: Text('Record ' + name.trim()+'?'),
+            content: Text('Record ' + name.trim() + '?'),
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
@@ -6182,6 +6205,8 @@ class VideoCallCommonUtils {
       }
     }
   }
+
+  
 
   String capitalizeFirstofEach(String data) {
     return data

@@ -6,9 +6,12 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/carecoordinatordata.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/SuccessModel.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_list_model.dart';
 import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -503,6 +506,77 @@ class QurHomeApiProvider {
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(e.toString());
       return PatientAlertListModel();
+    }
+  }
+
+  Future<bool> careGiverOKAction(
+      CareGiverPatientListResult? careGiverPatientListResult,
+      PatientAlertData patientAlertData) async {
+    try {
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      String name = (careGiverPatientListResult?.firstName ?? ' ') +
+          (careGiverPatientListResult?.lastName ?? '');
+      var data = {qr_caregivername: name, qr_caregiverid: patientAlertData?.id};
+      http.Response res = (await ApiServices.post(
+        Constants.BASE_URL + qr_caregiver_ok,
+        headers: header,
+        body: json.encode(data),
+      ))!;
+      if (res.statusCode == 200) {
+        var _response = SuccessModel.fromJson(convert.json.decode(res.body));
+        return _response.isSuccess ?? false;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> careGiverEscalateAction(
+      PatientAlertData? patientAlertData,
+      CareGiverPatientListResult? careGiverPatientListResult,
+      String activityName) async {
+    try {
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      var userId = PreferenceUtil.getStringValue(KEY_USERID);
+      var myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+
+      var postMediaData = Map<String, dynamic>();
+      String fullPatientName = (careGiverPatientListResult?.firstName ?? ' ') +
+          " " +
+          (careGiverPatientListResult?.lastName ?? '');
+      String fullName = (myProf?.result?.firstName ?? ' ') +
+          " " +
+          (myProf?.result?.lastName ?? ' ');
+
+      postMediaData['caregiverName'] = fullName;
+      postMediaData['id'] = patientAlertData?.id;
+      postMediaData['patientName'] = fullPatientName;
+      postMediaData['patientId'] = careGiverPatientListResult?.childId;
+      postMediaData['additionalInfo'] =
+          patientAlertData?.additionalInfo?.toJson();
+      postMediaData['activityName'] = activityName;
+      postMediaData['alertCategory'] = CommonUtil()
+          .getCategoryFromTypeName(patientAlertData?.typeCode ?? '');
+      postMediaData['alertDateTime'] = CommonUtil().getFormattedDate(
+          patientAlertData?.createdOn?.toString() ?? '', c_yMd_Hms);
+
+      final params = json.encode(postMediaData);
+
+      http.Response res = (await ApiServices.post(
+        Constants.BASE_URL + qr_caregiver_escalate,
+        headers: header,
+        body: params,
+      ))!;
+      if (res.statusCode == 200) {
+        var _response = SuccessModel.fromJson(convert.json.decode(res.body));
+        return _response.isSuccess ?? false;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
     }
   }
 }
