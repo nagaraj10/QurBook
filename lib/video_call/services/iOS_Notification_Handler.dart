@@ -46,6 +46,7 @@ class IosNotificationHandler {
   bool acceptAction = false;
   bool escalteAction = false;
   bool rejectAction = false;
+  bool declineAction = false;
   bool? viewMemberAction, viewDetails = false;
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
@@ -80,6 +81,7 @@ class IosNotificationHandler {
             callbackAction = actionKey == "Callback";
             rejectAction = actionKey == "Reject";
             acceptAction = actionKey == "Accept";
+            declineAction = actionKey == "Decline";
             escalteAction = actionKey == "Escalate";
             chatWithCC = actionKey == "chatwithcc";
             viewRecordAction = actionKey == "viewrecord";
@@ -428,6 +430,14 @@ class IosNotificationHandler {
           false,
         );
       }
+    } else if (model.redirect == parameters.strAppointmentDetail &&
+        (model.appointmentId ?? '').isNotEmpty &&
+        (model.patientId ?? '').isNotEmpty &&
+        (acceptAction || declineAction)) {
+      new CommonUtil().acceptCareGiverTransportRequestReminder(
+          Get.context!, model.appointmentId!, model.patientId!, acceptAction);
+      acceptAction = false;
+      declineAction = false;
     } else if (model.redirect == parameters.strAppointmentDetail &&
         (model.appointmentId ?? '').isNotEmpty) {
       AppointmentDetailsController appointmentDetailsController =

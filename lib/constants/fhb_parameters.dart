@@ -347,6 +347,7 @@ const String strfollowupValue = 'followupValue';
 const String strfollowupType = 'followupType';
 const String strdestinationId = 'destinationId';
 const String strFamilyProfile = 'memberAdditionReceiverNotification';
+const String careGiverTransportRequestReminder = 'careGiverTransportRequestReminder';
 
 //Booking Confirm
 const String self = 'Self';
