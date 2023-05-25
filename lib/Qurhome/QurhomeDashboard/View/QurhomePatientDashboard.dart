@@ -102,7 +102,7 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
                     border: Border(
                         bottom: BorderSide(
                   color: Color(CommonUtil().getQurhomePrimaryColor()),
-                  width: 2,
+                  width: 1.3,
                 ))),
                 height: 50,
                 width: 800,
