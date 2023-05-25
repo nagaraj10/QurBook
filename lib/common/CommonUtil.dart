@@ -13,6 +13,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 import '../Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import '../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import '../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
@@ -5649,6 +5650,60 @@ class CommonUtil {
     });
   }
 
+  Future<MyProfileModel?> acceptCareGiverTransportRequestReminder(
+      BuildContext context,String appointmentId,String patientId,bool isAccept) async {
+    final GlobalKey<State> _keyLoader = GlobalKey<State>();
+
+    MyProfileModel myProfile;
+    FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
+    // var dialog=CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+    var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
+    //Navigator.pop(context);
+
+    if ((appointmentId ?? '').isNotEmpty) {
+      AppointmentDetailsController appointmentDetailsController =
+      CommonUtil().onInitAppointmentDetailsController();
+      appointmentDetailsController.getAppointmentDetail(appointmentId ?? '');
+      Get.to(() => AppointmentDetailScreen());
+    }
+    // return result;
+    // await addFamilyUserInfoRepository
+    //     .checkIfChildISMember(userID)
+    //     .then((mainValue) async {
+    //   if (mainValue.isSuccess!) {
+    //     await addFamilyUserInfoRepository
+    //         .getMyProfileInfoNew(userID)
+    //         .then((value) {
+    //       myProfile = value;
+    //
+    //       if (myProfile.result != null) {
+    //         Navigator.of(context).pop();
+    //
+    //         Get.toNamed(router.rt_AddFamilyUserInfo,
+    //             arguments: AddFamilyUserInfoArguments(
+    //                 myProfileResult: myProfile.result,
+    //                 fromClass: CommonConstants.user_update,
+    //                 isFromAppointmentOrSlotPage: false,
+    //                 isForFamily: false,
+    //                 isForFamilyAddition: true))!
+    //             .then((value) =>
+    //             PageNavigator.goToPermanent(context, router.rt_Landing));
+    //       } else {
+    //         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+    //
+    //         FlutterToast()
+    //             .getToast('Unable to Fetch User Profile data', Colors.red);
+    //       }
+    //     });
+    //   } else {
+    //     Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+    //
+    //     FlutterToast().getToast(mainValue.message!, Colors.red);
+    //     return mainValue;
+    //   }
+    // });
+  }
+
   Future<List<RegimentDataModel>> getMasterData(
       BuildContext context, String searchText) async {
     RegimentResponseModel regimentsData;
@@ -6048,6 +6103,36 @@ class CommonUtil {
       }
     }
   }
+
+  String getFormatedDate({String? date = null}) {
+    DateTime now = date == null ? DateTime.now() : DateTime.parse(date);
+    String prefix = '';
+    if (calculateDifference(now) == 0) {
+      //today
+      prefix = 'Today, ';
+    } else if (calculateDifference(now) < 0) {
+      //past
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix = formattedDate + ', ';
+    } else if (calculateDifference(now) > 0) {
+      //future
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix = formattedDate + ', ';
+    } else {
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix = formattedDate + ', ';
+    }
+    String formattedDate = DateFormat('dd MMM').format(now);
+    return prefix + formattedDate;
+  }
+
+  int calculateDifference(DateTime date) {
+    DateTime now = DateTime.now();
+    return DateTime(date.year, date.month, date.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+  }
+
 }
 
 extension CapExtension on String {

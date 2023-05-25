@@ -1960,6 +1960,66 @@ class _NotificationScreen extends State<NotificationScreen> {
         );
 
         break;
+      case parameters.careGiverTransportRequestReminder:
+        return (notification.isUnread??true)?Padding(
+          padding: const EdgeInsets.all(0),
+          child: Row(
+            children: [
+              OutlineButton(
+                onPressed: () async {
+                  readUnreadAction(notification, isRead: true);
+
+                   new CommonUtil().acceptCareGiverTransportRequestReminder(
+                      context,
+                      notification.messageDetails?.payload?.appointmentId??'',
+                      notification.messageDetails?.payload?.patientId??'',
+                      true);
+
+                },
+                borderSide: !notification.isActionDone!
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
+                child: TextWidget(
+                  text: 'Accept',
+                  colors: !notification.isActionDone!
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+              OutlineButton(
+                onPressed: () async {
+                  readUnreadAction(notification, isRead: true);
+                  new CommonUtil().acceptCareGiverTransportRequestReminder(
+                      context,
+                      notification.messageDetails?.payload?.appointmentId??'',
+                      notification.messageDetails?.payload?.patientId??'',
+                      false);
+
+                },
+                borderSide: !notification.isActionDone!
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
+                child: TextWidget(
+                  text: 'Decline',
+                  colors: !notification.isActionDone!
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+            ],
+          ),
+        ):Container();
+
+        break;
       default:
         return Container();
         break;
