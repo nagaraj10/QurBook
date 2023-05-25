@@ -313,4 +313,78 @@ class SwitchProfile {
         ),
       );
   }
+
+  Future<Widget> buildActionsNew(
+      BuildContext _context,
+      GlobalKey<State> _keyLoader,
+      Function _callBackToRefresh,
+      bool isFromDashborad,
+      MyProfileModel myProfile,
+      {GlobalKey<ScaffoldState>? scaffold_state}) async {
+    context = _context;
+    keyLoader = _keyLoader;
+    callBackToRefresh = _callBackToRefresh;
+    isFromDashborad = isFromDashborad;
+    String? profileImage;
+    MyProfileModel? myProfileNew;
+    try {
+      myProfileNew = await PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      profileImage =
+          await PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+    } catch (e) {
+      myProfileNew = null;
+    }
+
+    return Padding(
+        padding: EdgeInsets.all(10),
+        child: InkWell(
+            onTap: () {
+              if (_familyListBloc != null) {
+                _familyListBloc = null;
+                _familyListBloc = FamilyListBloc();
+              } else {
+                _familyListBloc = FamilyListBloc();
+              }
+              checkInternet(_keyLoader, scaffold_state);
+            },
+            child: isFromDashborad
+                ? getCirleAvatarWithBorderIcon(myProfile)
+                : CircleAvatar(
+                    radius: CommonUtil().isTablet! ? 18 : 15,
+                    child: ClipOval(
+                        child: myProfile != null
+                            ? myProfile.result != null
+                                ? myProfile.result!.profilePicThumbnailUrl !=
+                                        null
+                                    ? FHBBasicWidget()
+                                        .getProfilePicWidgeUsingUrl(myProfile)
+                                    : Container(
+                                        height: 50.0.h,
+                                        width: 50.0.h,
+                                        color:
+                                            Color(fhbColors.bgColorContainer),
+                                        child: Center(
+                                          child: Text(
+                                            myProfile.result!.firstName != null
+                                                ? myProfile
+                                                    .result!.firstName![0]
+                                                    .toUpperCase()
+                                                : '',
+                                            style: TextStyle(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor())),
+                                          ),
+                                        ))
+                                : Container(
+                                    height: 50.0.h,
+                                    width: 50.0.h,
+                                    color: Color(fhbColors.bgColorContainer),
+                                  )
+                            : Container(
+                                height: 50.0.h,
+                                width: 50.0.h,
+                                color: Color(fhbColors.bgColorContainer),
+                              )),
+                  )));
+  }
 }
