@@ -609,22 +609,47 @@ class SheelaAIController extends GetxController {
   Future<SheelaResponse?> getGoogleTTSForConversation(
       SheelaResponse conversation) async {
     try {
-      final result = await getGoogleTTSForText(conversation.text);
-      conversation.ttsResponse = result;
-
-//This will increase the delay in the api calls
-
-      // if ((conversation.buttons ?? []).isNotEmpty) {
-      //   for (var button in conversation.buttons) {
-      //     final resultForButton = await getGoogleTTSForText(button.title);
-      //     button.ttsResponse = resultForButton;
-      //   }
-      // }
+      List<Future> apis = [
+        getGoogleTTSForConversationForMessage(
+          conversation,
+        ),
+      ];
+      if ((conversation.buttons ?? []).isNotEmpty) {
+        for (var button in conversation.buttons!) {
+          apis.add(
+            getGoogleTTSForConversationForButton(
+              button,
+            ),
+          );
+        }
+      }
+      final result = await Future.wait(apis);
       return conversation;
     } catch (e) {
       //Failed to get tts in conversation
       FlutterToast()
           .getToast('Failed to get tts in conversation', Colors.black54);
+    }
+  }
+
+  Future<bool> getGoogleTTSForConversationForMessage(
+      SheelaResponse conversation) async {
+    try {
+      final result = await getGoogleTTSForText(conversation.text);
+      conversation.ttsResponse = result;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> getGoogleTTSForConversationForButton(Buttons button) async {
+    try {
+      final result = await getGoogleTTSForText(button.title);
+      button.ttsResponse = result;
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
