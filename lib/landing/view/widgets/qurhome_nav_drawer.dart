@@ -11,6 +11,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardContro
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
@@ -110,7 +111,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                   width: 20.0.w,
                                 ),
                                 if (CommonUtil.isUSRegion())
-                                  InkWell(
+                                  getProfileSwitchWidget()
+                                /*   InkWell(
                                       child: Image.asset(
                                         variable.icon_switch,
                                         height: 26.0.h,
@@ -118,7 +120,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                       ),
                                       onTap: () {
                                         showPatientList();
-                                      })
+                                      })*/
                               ],
                             )
                           ],
@@ -510,5 +512,35 @@ class QurHomeNavigationDrawer extends StatelessWidget {
     controller.isPatientClicked.value = false;
     controller.careGiverPatientListResult = null;
     */
+  }
+
+  Widget getProfileSwitchWidget() {
+    return FutureBuilder<bool>(
+      future: CommonUtil().checkIfUserIdSame(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot?.data ?? false) {
+            return InkWell(
+                child: Image.asset(
+                  variable.icon_switch,
+                  height: 26.0.h,
+                  width: 26.0.h,
+                ),
+                onTap: () {
+                  showPatientList();
+                });
+          } else {
+            return SizedBox();
+          }
+        } else {
+          return Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Center(
+                child: Container(
+                    width: 22, height: 22, child: CommonCircularIndicator())),
+          );
+        }
+      },
+    );
   }
 }
