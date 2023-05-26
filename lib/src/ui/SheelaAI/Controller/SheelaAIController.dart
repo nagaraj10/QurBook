@@ -81,9 +81,10 @@ class SheelaAIController extends GetxController {
   }
 
   setDefaultValues() async {
-    if (BASE_URL == prodINURL) {
-      isProd = true;
-    } else if (BASE_URL == prodUSURL) {
+    if ((BASE_URL == prodINURL) ||
+        (BASE_URL == prodUSURL) ||
+        (BASE_URL == demoINURL) ||
+        (BASE_URL == demoUSURL)) {
       isProd = true;
     }
     if (Platform.isIOS) {
