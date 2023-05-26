@@ -17,6 +17,7 @@ import 'package:myfhb/landing/view/widgets/help_support.dart';
 import 'package:myfhb/my_reports/view/my_report_screen.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/user_plans/view/user_profile_image.dart';
 import '../../../colors/fhb_colors.dart';
@@ -129,19 +130,15 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         onPressed: () async {
                           try {
                             Get.back();
+
                             if (Get.isRegistered<QurhomeDashboardController>())
                               Get.find<QurhomeDashboardController>()
                                   .updateBLETimer(Enable: false);
-                            await Navigator.pushNamed(
-                              context,
-                              router.rt_UserAccounts,
-                              arguments: UserAccountsArguments(
-                                selectedIndex: 0,
-                              ),
-                            );
-                            if (refresh != null) {
-                              refresh!(true)!;
-                            }
+
+                            Get.to(UserAccounts(
+                              arguments:
+                                  UserAccountsArguments(selectedIndex: 0),
+                            ));
                           } catch (e) {
                             //print(e);
                           }
@@ -505,12 +502,13 @@ class QurHomeNavigationDrawer extends StatelessWidget {
   }
 
   void clearControllerValues() {
-    final controller = Get.put(QurhomeDashboardController());
+    /* final controller = Get.put(QurhomeDashboardController());
 
     controller.currentSelectedTab.value = 0;
 
     controller.forPatientList.value = false;
     controller.isPatientClicked.value = false;
     controller.careGiverPatientListResult = null;
+    */
   }
 }
