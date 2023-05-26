@@ -39,6 +39,9 @@ class AppointmentDetailsController extends GetxController {
   var state = "";
   var locationUrl = "";
   var appointmentId="";
+
+  DateTime? endTimeForTransportation;
+  DateTime? startTimeForTransportation;
   getAppointmentDetail(String appointmentId) async {
     try {
       onClear();
@@ -73,6 +76,7 @@ class AppointmentDetailsController extends GetxController {
 
         if (appointmentType.value.toLowerCase() != strTransportation) {
           if(showEndTime){
+            endTimeForTransportation=DateTime.parse(appointmentDetailsModel?.result?.plannedEndDateTime ?? "");
             scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
                 ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel?.result?.plannedEndDateTime ?? "")).toString()}"
                 : "";

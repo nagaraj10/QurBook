@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/divider_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -85,12 +86,21 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?.sort((a, b) =>(DateTime.parse(b?.requestTime??'')).compareTo(DateTime.parse(a?.requestTime??'')));
 
     if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0]!=null){
-      if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted==null){
-        return AcceptReject(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom);
-      }else if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted??false){
-        return RejectButton(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom??'');
-      }else{
+      final userId = PreferenceUtil.getStringValue(KEY_USERID);
+      if((appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom??'').contains(userId??'none')){
         return OkButton();
+      }else{
+        if(!DateTime.now().isBefore(appointmentDetailsController.endTimeForTransportation??DateTime.now().subtract(Duration(hours: 1)))){
+          return OkButton();
+        }else{
+          if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted==null){
+            return AcceptReject(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom);
+          }else if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted??false){
+            return RejectButton(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom??'');
+          }else{
+            return OkButton();
+          }
+        }
       }
 
     }else{
