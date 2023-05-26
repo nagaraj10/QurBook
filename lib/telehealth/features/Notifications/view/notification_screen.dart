@@ -492,13 +492,15 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.redirectTo,
                             );
-                          } else if (payload?.redirectTo ==
+                          }
+                          else if (payload?.redirectTo ==
                               strAppointmentDetail) {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
                             );
-                          } else if (payload?.templateName ==
+                          }
+                          else if (payload?.templateName ==
                               'qurbookServiceRequestStatusUpdate') {
                             notificationOnTapActions(
                               notification,
@@ -1271,7 +1273,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               result?.messageDetails?.payload?.appointmentId ?? '');
           Get.to(() => AppointmentDetailScreen());
         }
-        readUnreadAction(result);
+        // readUnreadAction(result);
         break;
       case strPatientReferralAcceptToPatient:
         if (CommonUtil.isUSRegion())
@@ -1967,7 +1969,7 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  readUnreadAction(notification, isRead: true);
+                  // readUnreadAction(notification, isRead: true);
 
                    new CommonUtil().acceptCareGiverTransportRequestReminder(
                       context,
@@ -1994,13 +1996,12 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               OutlineButton(
                 onPressed: () async {
-                  readUnreadAction(notification, isRead: true);
+                  // readUnreadAction(notification, isRead: true);
                   new CommonUtil().acceptCareGiverTransportRequestReminder(
                       context,
                       notification.messageDetails?.payload?.appointmentId??'',
                       notification.messageDetails?.payload?.patientId??'',
                       false);
-
                 },
                 borderSide: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
