@@ -190,7 +190,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     _addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     addFamilyUserInfoBloc!.getCustomRoles();
     _healthReportListForUserRepository =
-    new HealthReportListForUserRepository();
+        new HealthReportListForUserRepository();
 
     getDefaultHeightAndWeight();
 
@@ -222,7 +222,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Add Family User info Screen',
       'screenSessionTime':
-      '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -334,11 +334,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                           child: ClipOval(
                               child: (imageURI != null && imageURI != '')
                                   ? Image.file(
-                                imageURI!,
-                                fit: BoxFit.cover,
-                                width: 60.0.h,
-                                height: 60.0.h,
-                              )
+                                      imageURI!,
+                                      fit: BoxFit.cover,
+                                      width: 60.0.h,
+                                      height: 60.0.h,
+                                    )
                                   : showProfileImageNew()),
                         ),
                       ),
@@ -377,22 +377,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     maxLength: 35),
                 widget.arguments!.fromClass == CommonConstants.my_family
                     ? (relationShipResponseList != null &&
-                    relationShipResponseList!.isNotEmpty)
-                    ? Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: getRelationshipDetails(
-                          relationShipResponseList!),
-                    )
-                  ],
-                )
-                    : _showRelationShipTextField()
+                            relationShipResponseList!.isNotEmpty)
+                        ? Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: getRelationshipDetails(
+                                    relationShipResponseList!),
+                              )
+                            ],
+                          )
+                        : _showRelationShipTextField()
                     : widget.arguments!.isForFamilyAddition == true
-                    ? getAllCustomRoles()
-                    : widget.arguments!.fromClass ==
-                    CommonConstants.user_update
-                    ? Container()
-                    : _showRelationShipTextField(),
+                        ? getAllCustomRoles()
+                        : widget.arguments!.fromClass ==
+                                CommonConstants.user_update
+                            ? Container()
+                            : _showRelationShipTextField(),
                 _showCommonEditText(
                     emailController,
                     emailFocus,
@@ -402,9 +402,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         : CommonConstants.emailWithoutStar,
                     CommonConstants.email_address_optional,
                     (widget.arguments!.fromClass ==
-                        CommonConstants.user_update ||
-                        widget.arguments!.fromClass ==
-                            CommonConstants.add_family)
+                                CommonConstants.user_update ||
+                            widget.arguments!.fromClass ==
+                                CommonConstants.add_family)
                         ? true
                         : false,
                     maxLength: 50),
@@ -419,150 +419,152 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ),
                 isFeetOrInches
                     ? Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: _showCommonEditText(
-                                heightController,
-                                heightFocus,
-                                heightInchFocus,
-                                CommonConstants.heightNameFeetInd,
-                                CommonConstants.heightNameFeetInd,
-                                true,
-                                isheightOrWeight: true,
-                                maxLength: 3)),
-                        Expanded(
-                            child: _showCommonEditText(
-                                heightInchController,
-                                heightInchFocus,
-                                middleNameFocus,
-                                CommonConstants.heightNameInchInd,
-                                CommonConstants.heightNameInchInd,
-                                true,
-                                isheightOrWeight: true,
-                                maxLength: 3)),
-                        Expanded(
-                            child: _showCommonEditText(
-                                weightController,
-                                weightFocus,
-                                middleNameFocus,
-                                isKg
-                                    ? CommonConstants.weightName
-                                    : CommonConstants.weightNameUS,
-                                isKg
-                                    ? CommonConstants.weightName
-                                    : CommonConstants.weightNameUS,
-                                true,
-                                isheightOrWeight: true,
-                                maxLength: 3))
-                      ],
-                    ))
+                        child: Row(
+                        children: [
+                          Expanded(
+                              child: _showCommonEditText(
+                                  heightController,
+                                  heightFocus,
+                                  heightInchFocus,
+                                  CommonConstants.heightNameFeetInd,
+                                  CommonConstants.heightNameFeetInd,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3)),
+                          Expanded(
+                              child: _showCommonEditText(
+                                  heightInchController,
+                                  heightInchFocus,
+                                  middleNameFocus,
+                                  CommonConstants.heightNameInchInd,
+                                  CommonConstants.heightNameInchInd,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3)),
+                          Expanded(
+                              child: _showCommonEditText(
+                                  weightController,
+                                  weightFocus,
+                                  middleNameFocus,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3))
+                        ],
+                      ))
                     : Row(
-                  children: [
-                    Expanded(
-                        child: _showCommonEditText(
-                            heightController,
-                            heightFocus,
-                            middleNameFocus,
-                            CommonConstants.heightName,
-                            CommonConstants.heightName,
-                            true,
-                            isheightOrWeight: true,
-                            maxLength: 3)),
-                    Expanded(
-                        child: _showCommonEditText(
-                            weightController,
-                            weightFocus,
-                            middleNameFocus,
-                            isKg
-                                ? CommonConstants.weightName
-                                : CommonConstants.weightNameUS,
-                            isKg
-                                ? CommonConstants.weightName
-                                : CommonConstants.weightNameUS,
-                            true,
-                            isheightOrWeight: true,
-                            maxLength: 3))
-                  ],
-                ),
+                        children: [
+                          Expanded(
+                              child: _showCommonEditText(
+                                  heightController,
+                                  heightFocus,
+                                  middleNameFocus,
+                                  CommonConstants.heightName,
+                                  CommonConstants.heightName,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3)),
+                          Expanded(
+                              child: _showCommonEditText(
+                                  weightController,
+                                  weightFocus,
+                                  middleNameFocus,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3))
+                        ],
+                      ),
                 if (widget.arguments!.fromClass == CommonConstants.user_update)
                   getLanguageWidget()
                 else
                   Container(),
                 if (widget.arguments!.fromClass == CommonConstants.user_update)
-                //getDropDownWithTagsdrop()
+                  //getDropDownWithTagsdrop()
                   Column(
                     children: [
                       getTagsWithButton(context),
                       selectedTags != null && selectedTags!.length > 0
                           ? Container(
-                          child: GridView.count(
-                              crossAxisCount: 3,
-                              padding: EdgeInsets.only(
-                                  left: 20, right: 20, top: 5),
-                              mainAxisSpacing: 10.0,
-                              childAspectRatio: (itemWidth / itemHeight) > 0
-                                  ? (itemWidth / itemHeight)
-                                  : 2.0,
-                              crossAxisSpacing: 10.0,
-                              controller: new ScrollController(
-                                  keepScrollOffset: false),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              children: selectedTags!.map((Tags tagObj) {
-                                return Container(
-                                  height: 60.0.h,
-                                  margin: new EdgeInsets.all(
-                                    1.0.sp,
-                                  ),
-                                  padding: EdgeInsets.all(
-                                    5.0.sp,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Color(new CommonUtil()
-                                            .getMyPrimaryColor())),
-                                    borderRadius: BorderRadius.circular(
-                                      10.0.sp,
-                                    ),
-                                  ),
-                                  child: new Row(
-                                    children: [
-                                      Expanded(
-                                        child: Center(
-                                          child: new TextWidget(
-                                            text: tagObj.name,
-                                            fontsize: 16.0.sp,
-                                            colors: Color(new CommonUtil()
-                                                .getMyPrimaryColor()),
-                                          ),
+                              child: GridView.count(
+                                  crossAxisCount: 3,
+                                  padding: EdgeInsets.only(
+                                      left: 20, right: 20, top: 5),
+                                  mainAxisSpacing: 10.0,
+                                  childAspectRatio: (itemWidth / itemHeight) > 0
+                                      ? (itemWidth / itemHeight)
+                                      : 2.0,
+                                  crossAxisSpacing: 10.0,
+                                  controller: new ScrollController(
+                                      keepScrollOffset: false),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  children: selectedTags!.map((Tags tagObj) {
+                                    return Container(
+                                      height: 60.0.h,
+                                      margin: new EdgeInsets.all(
+                                        1.0.sp,
+                                      ),
+                                      padding: EdgeInsets.all(
+                                        5.0.sp,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Color(new CommonUtil()
+                                                .getMyPrimaryColor())),
+                                        borderRadius: BorderRadius.circular(
+                                          10.0.sp,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                );
-                              }).toList()))
+                                      child: new Row(
+                                        children: [
+                                          Expanded(
+                                            child: Center(
+                                              child: new TextWidget(
+                                                text: tagObj.name,
+                                                fontsize: 16.0.sp,
+                                                colors: Color(new CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList()))
                           : SizedBox()
                     ],
                   )
                 else
                   Container(),
 
-                CommonUtil.isUSRegion()?_showDateOfBirthTextField():_showDateOfBirthTextFieldNew(),
+                CommonUtil.isUSRegion()
+                    ? _showDateOfBirthTextField()
+                    : _showDateOfBirthTextFieldNew(),
                 cntrlr_corp_name.text != ''
                     ? Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                  child: TextField(
-                    textCapitalization: TextCapitalization.sentences,
-                    style: TextStyle(fontSize: 16.0.sp),
-                    controller: cntrlr_corp_name,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 16.0.sp),
-                      labelText: CommonConstants.corpname,
-                    ),
-                  ),
-                )
+                        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                        child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
+                          style: TextStyle(fontSize: 16.0.sp),
+                          controller: cntrlr_corp_name,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            hintStyle: TextStyle(fontSize: 16.0.sp),
+                            labelText: CommonConstants.corpname,
+                          ),
+                        ),
+                      )
                     : SizedBox(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
@@ -722,28 +724,27 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         dateofBirthStr =
             FHBUtils().getFormattedDateForUserBirth(dateTime.toString());
-        if (CommonUtil.isUSRegion())
-        {
+        if (CommonUtil.isUSRegion()) {
           dateOfBirthController.text =
-          FHBUtils().getFormattedDateOnly(dateTime.toString())!;
-        }else {
+              FHBUtils().getFormattedDateOnly(dateTime.toString())!;
+        } else {
           dateOfBirthController.text =
-          FHBUtils().getFormattedDateOnlyNew(dateTime.toString())!;
+              FHBUtils().getFormattedDateOnlyNew(dateTime.toString())!;
         }
       });
     }
   }
 
   Widget _showCommonEditText(
-      TextEditingController textEditingController,
-      FocusNode focusNode,
-      FocusNode? nextFocusNode,
-      String labelText,
-      String hintText,
-      bool isEnabled, {
-        int? maxLength,
-        bool isheightOrWeight = false,
-      }) {
+    TextEditingController textEditingController,
+    FocusNode focusNode,
+    FocusNode? nextFocusNode,
+    String labelText,
+    String hintText,
+    bool isEnabled, {
+    int? maxLength,
+    bool isheightOrWeight = false,
+  }) {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
@@ -760,7 +761,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           enableInteractiveSelection: false,
           maxLength: maxLength,
           keyboardType:
-          isheightOrWeight ? TextInputType.number : TextInputType.text,
+              isheightOrWeight ? TextInputType.number : TextInputType.text,
           focusNode: focusNode,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
@@ -791,8 +792,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
           inputFormatters: (textEditingController == firstNameController ||
-              textEditingController == lastNameController ||
-              textEditingController == middleNameController)
+                  textEditingController == lastNameController ||
+                  textEditingController == middleNameController)
               ? [WhitelistingTextInputFormatter(RegExp('[a-zA-Z ]*'))]
               : [],
         ));
@@ -888,10 +889,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 );
               },
               onSuggestionSelected: (suggestion) {
-                cntrlr_addr_city.text = suggestion.name??'';
+                cntrlr_addr_city.text = suggestion.name ?? '';
                 cityVal = suggestion;
                 if (cityVal != null && cityVal?.state != null) {
-                  cntrlr_addr_state.text = suggestion.state!.name??'';
+                  cntrlr_addr_state.text = suggestion.state!.name ?? '';
                   stateVal = suggestion.state;
                 }
                 //stateVal = suggestion.state;
@@ -934,7 +935,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               itemBuilder: (context, suggestion) {
                 return ListTile(
                   title: Text(
-                    suggestion.name??'',
+                    suggestion.name ?? '',
                     style: TextStyle(
                       fontSize: 16.0.sp,
                     ),
@@ -956,7 +957,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 );
               },
               onSuggestionSelected: (suggestion) {
-                cntrlr_addr_state.text = suggestion.name??'';
+                cntrlr_addr_state.text = suggestion.name ?? '';
                 stateVal = suggestion;
                 cntrlr_addr_city.text = "";
                 cityVal = null;
@@ -1026,11 +1027,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 (widget.arguments!.isForFamilyAddition == true)
                     ? CommonConstants.add
                     : (widget.arguments!.fromClass ==
-                    CommonConstants.my_family ||
-                    widget.arguments!.fromClass ==
-                        CommonConstants.user_update)
-                    ? CommonConstants.update
-                    : CommonConstants.save,
+                                CommonConstants.my_family ||
+                            widget.arguments!.fromClass ==
+                                CommonConstants.user_update)
+                        ? CommonConstants.update
+                        : CommonConstants.save,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0.sp,
@@ -1105,15 +1106,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         Navigator.of(context)
             .push(MaterialPageRoute(
-            builder: (context) => OtpVerifyScreen(
-              enteredMobNumber:
-              PreferenceUtil.getStringValue(Constants.MOB_NUM),
-              selectedCountryCode: PreferenceUtil.getIntValue(
-                  CommonConstants.KEY_COUNTRYCODE)
-                  .toString(),
-              fromSignIn: true,
-              forEmailVerify: true,
-            )))
+                builder: (context) => OtpVerifyScreen(
+                      enteredMobNumber:
+                          PreferenceUtil.getStringValue(Constants.MOB_NUM),
+                      selectedCountryCode: PreferenceUtil.getIntValue(
+                              CommonConstants.KEY_COUNTRYCODE)
+                          .toString(),
+                      fromSignIn: true,
+                      forEmailVerify: true,
+                    )))
             .then((value) {
           Navigator.popUntil(context, (route) {
             var shouldPop = false;
@@ -1184,23 +1185,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           onTap: () {
             widget.arguments!.fromClass == CommonConstants.my_family
                 ? relationShipResponseList != null
-                ? Row(
-              children: <Widget>[
-                getRelationshipDetails(relationShipResponseList!)
-              ],
-            )
-                : getAllCustomRoles()
+                    ? Row(
+                        children: <Widget>[
+                          getRelationshipDetails(relationShipResponseList!)
+                        ],
+                      )
+                    : getAllCustomRoles()
                 : widget.arguments!.isForFamilyAddition == true
-                ? getAllCustomRoles()
-                : widget.arguments!.fromClass == CommonConstants.user_update
-                ? Container()
-                : _showRelationShipTextField();
+                    ? getAllCustomRoles()
+                    : widget.arguments!.fromClass == CommonConstants.user_update
+                        ? Container()
+                        : _showRelationShipTextField();
           },
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
           enabled: (widget.arguments!.fromClass == CommonConstants.my_family ||
-              widget.arguments!.fromClass == CommonConstants.add_family ||
-              widget.arguments!.isForFamilyAddition == true)
+                  widget.arguments!.fromClass == CommonConstants.add_family ||
+                  widget.arguments!.isForFamilyAddition == true)
               ? true
               : false,
           keyboardType: TextInputType.text,
@@ -1367,22 +1368,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Future<List<City>> getCitybasedOnSearch(
-      String cityname,
-      String apibody,
-      ) async {
+    String cityname,
+    String apibody,
+  ) async {
     List<City> citylist;
     citylist = await addFamilyUserInfoBloc!.getCityDataList(cityname, apibody)
-    as List<City>;
+        as List<City>;
     return citylist;
   }
 
   Future<List<stateObj.State>> getStateBasedOnSearch(
-      String stateName,
-      String apibody,
-      ) async {
+    String stateName,
+    String apibody,
+  ) async {
     List<stateObj.State> stateList;
     stateList = await addFamilyUserInfoBloc!.geStateDataList(stateName, apibody)
-    as List<stateObj.State>;
+        as List<stateObj.State>;
     return stateList;
   }
 
@@ -1407,11 +1408,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       strErrorMsg = CommonUtil.isUSRegion()
           ? variable.selectDateOfBirth
           : variable.selectYOB;
-    } else if (!CommonUtil.isUSRegion()&&dateOfBirthController.text.length < 4) {
+    } else if (!CommonUtil.isUSRegion() &&
+        dateOfBirthController.text.length < 4) {
       isValid = false;
       strErrorMsg = "Enter a Valid Year";
-    } else if (!CommonUtil.isUSRegion()&&checkIfYearIsGreaterThanCurrentYear(
-        int.parse(dateOfBirthController.text))) {
+    } else if (!CommonUtil.isUSRegion() &&
+        checkIfYearIsGreaterThanCurrentYear(
+            int.parse(dateOfBirthController.text))) {
       isValid = false;
     } else if (_addressResult == null || _addressResult.id == null) {
       isValid = false;
@@ -1454,9 +1457,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (widget.arguments!.sharedbyme!.child!.userContactCollection3!
               .isNotEmpty) {
             mobileNoController.text = widget.arguments!.sharedbyme!.child!
-                .userContactCollection3![0].phoneNumber??'';
+                    .userContactCollection3![0].phoneNumber ??
+                '';
             emailController.text = widget.arguments!.sharedbyme!.child!
-                .userContactCollection3![0].email??'';
+                    .userContactCollection3![0].email ??
+                '';
           }
         } catch (e) {
           mobileNoController.text = '';
@@ -1468,9 +1473,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             if (widget.arguments!.myProfileResult!.userContactCollection3!
                 .isNotEmpty) {
               mobileNoController.text = widget.arguments!.myProfileResult!
-                  .userContactCollection3![0]!.phoneNumber??'';
+                      .userContactCollection3![0]!.phoneNumber ??
+                  '';
               emailController.text = widget.arguments!.myProfileResult!
-                  .userContactCollection3![0]!.email??'';
+                      .userContactCollection3![0]!.email ??
+                  '';
             }
           } catch (e) {
             mobileNoController.text = '';
@@ -1485,9 +1492,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 myProf.result!.userContactCollection3!.length > 0) {
               if (myProf.result!.userContactCollection3!.isNotEmpty) {
                 mobileNoController.text =
-                    myProf.result!.userContactCollection3![0]!.phoneNumber??'';
+                    myProf.result!.userContactCollection3![0]!.phoneNumber ??
+                        '';
                 emailController.text =
-                    myProf.result!.userContactCollection3![0]!.email??'';
+                    myProf.result!.userContactCollection3![0]!.email ?? '';
               }
             } else {
               var myProf = await PreferenceUtil.getProfileData(
@@ -1496,24 +1504,27 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   myProf.result!.userContactCollection3!.length > 0) {
                 if (myProf.result!.userContactCollection3!.isNotEmpty) {
                   mobileNoController.text =
-                      myProf.result!.userContactCollection3![0]!.phoneNumber??'';
+                      myProf.result!.userContactCollection3![0]!.phoneNumber ??
+                          '';
                   emailController.text =
-                      myProf.result!.userContactCollection3![0]!.email??'';
+                      myProf.result!.userContactCollection3![0]!.email ?? '';
                 }
               }
             }
           } catch (e) {
             if (widget.arguments!.myProfileResult!.userContactCollection3 !=
-                null &&
+                    null &&
                 widget.arguments!.myProfileResult!.userContactCollection3!
-                    .length >
+                        .length >
                     0) {
               if (widget.arguments!.myProfileResult!.userContactCollection3!
                   .isNotEmpty) {
                 mobileNoController.text = widget.arguments!.myProfileResult!
-                    .userContactCollection3![0]!.phoneNumber??'';
+                        .userContactCollection3![0]!.phoneNumber ??
+                    '';
                 emailController.text = widget.arguments!.myProfileResult!
-                    .userContactCollection3![0]!.email??'';
+                        .userContactCollection3![0]!.email ??
+                    '';
               }
             }
           }
@@ -1522,10 +1533,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments!.myProfileResult!.dateOfBirth != null) {
           dateofBirthStr = FHBUtils().getFormattedDateForUserBirth(
               widget.arguments!.myProfileResult!.dateOfBirth!);
-          if(CommonUtil.isUSRegion()){
+          if (CommonUtil.isUSRegion()) {
             dateOfBirthController.text = FHBUtils().getFormattedDateOnly(
-                widget.arguments!.myProfileResult!.dateOfBirth??"");
-          }else{
+                widget.arguments!.myProfileResult!.dateOfBirth ?? "");
+          } else {
             dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
                 widget.arguments!.myProfileResult!.dateOfBirth)!;
           }
@@ -1537,15 +1548,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             widget.arguments!.myProfileResult!.userAddressCollection3!.length >
                 0) {
           cntrlr_addr_one.text = widget.arguments!.myProfileResult!
-              .userAddressCollection3![0].addressLine1??'';
+                  .userAddressCollection3![0].addressLine1 ??
+              '';
           cntrlr_addr_two.text = widget.arguments!.myProfileResult!
-              .userAddressCollection3![0].addressLine2??'';
+                  .userAddressCollection3![0].addressLine2 ??
+              '';
           cntrlr_addr_city.text = widget.arguments!.myProfileResult!
-              .userAddressCollection3![0].city!.name??'';
+                  .userAddressCollection3![0].city!.name ??
+              '';
           cntrlr_addr_state.text = widget.arguments!.myProfileResult!
-              .userAddressCollection3![0].state!.name??'';
-          cntrlr_addr_zip.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].pincode??'';
+                  .userAddressCollection3![0].state!.name ??
+              '';
+          cntrlr_addr_zip.text = widget.arguments!.myProfileResult!
+                  .userAddressCollection3![0].pincode ??
+              '';
 
           cityVal = widget
               .arguments!.myProfileResult!.userAddressCollection3![0].city;
@@ -1554,11 +1570,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           setState(() {
             _addressResult = AddressResult(
                 id: widget.arguments!.myProfileResult!
-                    .userAddressCollection3![0].addressType!.id??'',
+                        .userAddressCollection3![0].addressType!.id ??
+                    '',
                 code: widget.arguments!.myProfileResult!
-                    .userAddressCollection3![0].addressType!.code??'',
+                        .userAddressCollection3![0].addressType!.code ??
+                    '',
                 name: widget.arguments!.myProfileResult!
-                    .userAddressCollection3![0].addressType!.name??'');
+                        .userAddressCollection3![0].addressType!.name ??
+                    '');
           });
         } else {
           try {
@@ -1572,60 +1591,62 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (widget.arguments!.myProfileResult!.firstName != null) {
           firstNameController.text =
-          (widget.arguments!.myProfileResult!.firstName != null
-              ? widget.arguments?.myProfileResult?.firstName
-              ?.capitalizeFirstofEach
-              : '')!;
+              (widget.arguments!.myProfileResult!.firstName != null
+                  ? widget.arguments?.myProfileResult?.firstName
+                      ?.capitalizeFirstofEach
+                  : '')!;
           middleNameController.text =
-          (widget.arguments?.myProfileResult?.middleName != null
-              ? widget.arguments?.myProfileResult?.middleName
-              ?.capitalizeFirstofEach
-              : '')!;
+              (widget.arguments?.myProfileResult?.middleName != null
+                  ? widget.arguments?.myProfileResult?.middleName
+                      ?.capitalizeFirstofEach
+                  : '')!;
           lastNameController.text =
-          (widget.arguments?.myProfileResult?.lastName != null
-              ? widget.arguments?.myProfileResult?.lastName
-              ?.capitalizeFirstofEach
-              : '')!;
+              (widget.arguments?.myProfileResult?.lastName != null
+                  ? widget.arguments?.myProfileResult?.lastName
+                      ?.capitalizeFirstofEach
+                  : '')!;
         }
 
         if (widget.arguments!.myProfileResult!.additionalInfo != null) {
           if (isFeetOrInches) {
             heightController.text = widget.arguments!.myProfileResult!
-                .additionalInfo?.heightObj?.valueFeet ??
+                    .additionalInfo?.heightObj?.valueFeet ??
                 '';
             heightInchController.text = widget.arguments!.myProfileResult!
-                .additionalInfo?.heightObj?.valueInches ??
+                    .additionalInfo?.heightObj?.valueInches ??
                 '';
           } else {
             heightController.text =
                 widget.arguments!.myProfileResult!.additionalInfo!.height ?? '';
           }
 
-          weightController.text =
-              widget.arguments!.myProfileResult!.additionalInfo!.weight ?? '';
+          weightController.text = widget
+                  .arguments!.myProfileResult!.additionalInfo!.weight
+                  .toString() ??
+              '';
         }
         if (commonUtil.checkIfStringisNull(
             widget.arguments!.myProfileResult!.bloodGroup)) {
           currentselectedBloodGroup =
-          widget.arguments!.myProfileResult!.bloodGroup!.split(' ')[0];
+              widget.arguments!.myProfileResult!.bloodGroup!.split(' ')[0];
           currentselectedBloodGroupRange =
-          widget.arguments!.myProfileResult!.bloodGroup!.split(' ')[1];
+              widget.arguments!.myProfileResult!.bloodGroup!.split(' ')[1];
         } else {
           currentselectedBloodGroup = null;
           currentselectedBloodGroupRange = null;
         }
 
         if (widget.arguments!.myProfileResult!.gender != null) {
-          selectedGender = widget.arguments!.myProfileResult!.gender??'';
+          selectedGender = widget.arguments!.myProfileResult!.gender ?? '';
         }
 
         if (widget.arguments!.myProfileResult!.membershipOfferedBy != null &&
             widget.arguments!.myProfileResult!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget.arguments!.myProfileResult!.membershipOfferedBy??'';
+              widget.arguments!.myProfileResult!.membershipOfferedBy ?? '';
         }
         selectedTags = addFamilyUserInfoBloc!.tagsList != null &&
-            addFamilyUserInfoBloc!.tagsList!.length > 0
+                addFamilyUserInfoBloc!.tagsList!.length > 0
             ? addFamilyUserInfoBloc!.tagsList
             : [];
         setTheValuesForDropdown(selectedTags);
@@ -1652,9 +1673,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               if (myProf!.result!.userContactCollection3 != null) {
                 if (myProf.result!.userContactCollection3!.isNotEmpty) {
                   mobileNoController.text =
-                      myProf.result!.userContactCollection3![0]!.phoneNumber??'';
+                      myProf.result!.userContactCollection3![0]!.phoneNumber ??
+                          '';
                   emailController.text =
-                      myProf.result!.userContactCollection3![0]!.email??'';
+                      myProf.result!.userContactCollection3![0]!.email ?? '';
                 }
               }
             } catch (e) {
@@ -1678,9 +1700,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             if (widget.arguments!.sharedbyme!.child!.userContactCollection3!
                 .isNotEmpty) {
               mobileNoController.text = widget.arguments!.sharedbyme!.child!
-                  .userContactCollection3![0].phoneNumber??'';
+                      .userContactCollection3![0].phoneNumber ??
+                  '';
               emailController.text = widget.arguments!.sharedbyme!.child!
-                  .userContactCollection3![0].email??'';
+                      .userContactCollection3![0].email ??
+                  '';
             } else {
               mobileNoController.text = '';
               emailController.text = '';
@@ -1694,39 +1718,41 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments!.sharedbyme!.membershipOfferedBy != null &&
             widget.arguments!.sharedbyme!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget.arguments!.sharedbyme!.membershipOfferedBy??'';
+              widget.arguments!.sharedbyme!.membershipOfferedBy ?? '';
         }
       } else {
         if (widget
             .arguments!.sharedbyme!.child!.userContactCollection3!.isNotEmpty) {
           mobileNoController.text = widget.arguments!.sharedbyme!.child!
-              .userContactCollection3![0].phoneNumber??'';
-          emailController.text = widget
-              .arguments!.sharedbyme!.child!.userContactCollection3![0].email??'';
+                  .userContactCollection3![0].phoneNumber ??
+              '';
+          emailController.text = widget.arguments!.sharedbyme!.child!
+                  .userContactCollection3![0].email ??
+              '';
         }
         if (widget.arguments!.sharedbyme!.membershipOfferedBy != null &&
             widget.arguments!.sharedbyme!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget.arguments!.sharedbyme!.membershipOfferedBy??'';
+              widget.arguments!.sharedbyme!.membershipOfferedBy ?? '';
         }
       }
       if (widget.arguments!.sharedbyme != null) {
         if (widget.arguments!.sharedbyme!.child!.firstName != null) {
           firstNameController.text =
-          (widget.arguments!.sharedbyme!.child!.firstName != null
-              ? widget.arguments?.sharedbyme?.child?.firstName
-              ?.capitalizeFirstofEach
-              : '')!;
+              (widget.arguments!.sharedbyme!.child!.firstName != null
+                  ? widget.arguments?.sharedbyme?.child?.firstName
+                      ?.capitalizeFirstofEach
+                  : '')!;
           middleNameController.text =
-          (widget.arguments!.sharedbyme!.child!.middleName != null
-              ? widget.arguments?.sharedbyme?.child?.middleName
-              ?.capitalizeFirstofEach
-              : '')!;
+              (widget.arguments!.sharedbyme!.child!.middleName != null
+                  ? widget.arguments?.sharedbyme?.child?.middleName
+                      ?.capitalizeFirstofEach
+                  : '')!;
           lastNameController.text =
-          (widget.arguments!.sharedbyme!.child!.lastName != null
-              ? widget.arguments?.sharedbyme?.child?.lastName
-              ?.capitalizeFirstofEach
-              : '')!;
+              (widget.arguments!.sharedbyme!.child!.lastName != null
+                  ? widget.arguments?.sharedbyme?.child?.lastName
+                      ?.capitalizeFirstofEach
+                  : '')!;
         } else {
           firstNameController.text = '';
         }
@@ -1736,10 +1762,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               null) {
             isFeetOrInches = true;
             heightController.text = widget.arguments!.sharedbyme!.child!
-                .additionalInfo?.heightObj?.valueFeet ??
+                    .additionalInfo?.heightObj?.valueFeet ??
                 '';
             heightInchController.text = widget.arguments!.sharedbyme!.child!
-                .additionalInfo?.heightObj?.valueInches ??
+                    .additionalInfo?.heightObj?.valueInches ??
                 '';
           } else {
             isFeetOrInches = false;
@@ -1750,7 +1776,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
 
           if (widget.arguments!.sharedbyme!.child!.additionalInfo!
-              .weightUnitCode ==
+                  .weightUnitCode ==
               'lb') {
             isKg = false;
           } else {
@@ -1762,32 +1788,32 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (commonUtil.checkIfStringisNull(
             widget.arguments!.sharedbyme!.child!.bloodGroup)) {
           currentselectedBloodGroup =
-          widget.arguments!.sharedbyme!.child!.bloodGroup!.split(' ')[0];
+              widget.arguments!.sharedbyme!.child!.bloodGroup!.split(' ')[0];
           currentselectedBloodGroupRange =
-          widget.arguments!.sharedbyme!.child!.bloodGroup!.split(' ')[1];
+              widget.arguments!.sharedbyme!.child!.bloodGroup!.split(' ')[1];
         } else {
           currentselectedBloodGroup = null;
           currentselectedBloodGroupRange = null;
         }
 
         if (widget.arguments!.sharedbyme!.child!.gender != null) {
-          selectedGender = widget.arguments!.sharedbyme!.child!.gender??'';
+          selectedGender = widget.arguments!.sharedbyme!.child!.gender ?? '';
         }
 
         if (widget
             .arguments!.sharedbyme!.child!.userAddressCollection3!.isNotEmpty) {
           var currentAddress =
-          widget.arguments!.sharedbyme!.child!.userAddressCollection3![0];
-          cntrlr_addr_one.text = currentAddress.addressLine1??'';
-          cntrlr_addr_two.text = currentAddress.addressLine2??'';
-          cntrlr_addr_city.text = currentAddress.city!.name??'';
-          cntrlr_addr_state.text = currentAddress.state!.name??'';
-          cntrlr_addr_zip.text = currentAddress.pincode??'';
+              widget.arguments!.sharedbyme!.child!.userAddressCollection3![0];
+          cntrlr_addr_one.text = currentAddress.addressLine1 ?? '';
+          cntrlr_addr_two.text = currentAddress.addressLine2 ?? '';
+          cntrlr_addr_city.text = currentAddress.city!.name ?? '';
+          cntrlr_addr_state.text = currentAddress.state!.name ?? '';
+          cntrlr_addr_zip.text = currentAddress.pincode ?? '';
           setState(() {
             _addressResult = AddressResult(
-                id: currentAddress.addressType!.id??'',
-                code: currentAddress.addressType!.code??'',
-                name: currentAddress.addressType!.name??'');
+                id: currentAddress.addressType!.id ?? '',
+                code: currentAddress.addressType!.code ?? '',
+                name: currentAddress.addressType!.name ?? '');
           });
 
           cityVal = currentAddress.city;
@@ -1802,13 +1828,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (widget.arguments!.sharedbyme!.child!.dateOfBirth != null) {
           dateofBirthStr = FHBUtils().getFormattedDateForUserBirth(
-              widget.arguments!.sharedbyme!.child!.dateOfBirth??'');
-          if(CommonUtil.isUSRegion()) {
+              widget.arguments!.sharedbyme!.child!.dateOfBirth ?? '');
+          if (CommonUtil.isUSRegion()) {
             dateOfBirthController.text = FHBUtils().getFormattedDateOnly(
-                widget.arguments!.sharedbyme!.child!.dateOfBirth??"") ?? '';
-          }else{
+                    widget.arguments!.sharedbyme!.child!.dateOfBirth ?? "") ??
+                '';
+          } else {
             dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
-                widget.arguments!.sharedbyme!.child!.dateOfBirth) ?? '';
+                    widget.arguments!.sharedbyme!.child!.dateOfBirth) ??
+                '';
           }
         }
       }
@@ -1823,21 +1851,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments!.isPrimaryNoSelected!) {
           try {
             var myProf =
-            PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
             mobileNoController.text =
-                myProf!.result!.userContactCollection3![0]!.phoneNumber??'';
+                myProf!.result!.userContactCollection3![0]!.phoneNumber ?? '';
             emailController.text =
-                myProf.result!.userContactCollection3![0]!.email??'';
+                myProf.result!.userContactCollection3![0]!.email ?? '';
           } catch (e) {
             setMobileAndEmail();
           }
         } else {
           mobileNoController.text =
-              value!.result!.userContactCollection3![0]!.phoneNumber??'';
+              value!.result!.userContactCollection3![0]!.phoneNumber ?? '';
           if (value.result?.userContactCollection3![0]!.email != null &&
               value.result?.userContactCollection3![0]!.email != '') {
             emailController.text =
-                value.result!.userContactCollection3![0]!.email??'';
+                value.result!.userContactCollection3![0]!.email ?? '';
           }
 
           mContactInfo = value.result?.userContactCollection3![0];
@@ -1845,17 +1873,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         //*user already user exist set the address data if available
         if (value!.result!.userAddressCollection3!.isNotEmpty) {
           UserAddressCollection3 currentAddress =
-          value.result!.userAddressCollection3![0];
-          cntrlr_addr_one.text = currentAddress.addressLine1??'';
-          cntrlr_addr_two.text = currentAddress.addressLine2??'';
-          cntrlr_addr_city.text = currentAddress.city!.name??'';
-          cntrlr_addr_state.text = currentAddress.state!.name??'';
-          cntrlr_addr_zip.text = currentAddress.pincode??'';
+              value.result!.userAddressCollection3![0];
+          cntrlr_addr_one.text = currentAddress.addressLine1 ?? '';
+          cntrlr_addr_two.text = currentAddress.addressLine2 ?? '';
+          cntrlr_addr_city.text = currentAddress.city!.name ?? '';
+          cntrlr_addr_state.text = currentAddress.state!.name ?? '';
+          cntrlr_addr_zip.text = currentAddress.pincode ?? '';
           setState(() {
             _addressResult = AddressResult(
-                id: currentAddress.addressType!.id??'',
-                code: currentAddress.addressType!.code??'',
-                name: currentAddress.addressType!.name??'');
+                id: currentAddress.addressType!.id ?? '',
+                code: currentAddress.addressType!.code ?? '',
+                name: currentAddress.addressType!.name ?? '');
           });
 
           cityVal = currentAddress.city;
@@ -1864,23 +1892,26 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         firstNameController.text =
-            value.result!.firstName!.capitalizeFirstofEach??'';
+            value.result!.firstName!.capitalizeFirstofEach ?? '';
         middleNameController.text =
-            value.result!.middleName!.capitalizeFirstofEach??'';
-        lastNameController.text = value.result!.lastName!.capitalizeFirstofEach??'';
+            value.result!.middleName!.capitalizeFirstofEach ?? '';
+        lastNameController.text =
+            value.result!.lastName!.capitalizeFirstofEach ?? '';
         //? check relatioship id against logged in user
         if (value.result!.userRelationshipCollection!.isNotEmpty) {
           for (var cRelationship in value.result!.userRelationshipCollection!) {
             if (cRelationship.parent?.id ==
                 PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-              relationShipController.text = cRelationship.relationship!.name??'';
+              relationShipController.text =
+                  cRelationship.relationship!.name ?? '';
             } else {
               relationShipController.text =
-                  widget.arguments!.relationShip!.name??'';
+                  widget.arguments!.relationShip!.name ?? '';
             }
           }
         } else {
-          relationShipController.text = widget.arguments!.relationShip!.name??'';
+          relationShipController.text =
+              widget.arguments!.relationShip!.name ?? '';
         }
         try {
           setState(() {
@@ -1890,7 +1921,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (commonUtil.checkIfStringisNull(value.result!.bloodGroup)) {
           currentselectedBloodGroup = value.result!.bloodGroup!.split(' ')[0];
           currentselectedBloodGroupRange =
-          value.result!.bloodGroup!.split(' ')[1];
+              value.result!.bloodGroup!.split(' ')[1];
         } else {
           currentselectedBloodGroup = null;
           currentselectedBloodGroupRange = null;
@@ -1901,10 +1932,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         dateofBirthStr = value.result!.dateOfBirth != null
             ? FHBUtils()
-            .getFormattedDateForUserBirth(value.result!.dateOfBirth??'')
+                .getFormattedDateForUserBirth(value.result!.dateOfBirth ?? '')
             : '';
         dateOfBirthController.text = value.result!.dateOfBirth != null
-            ? CommonUtil.isUSRegion()?FHBUtils().getFormattedDateOnly(value.result!.dateOfBirth??"")??'':FHBUtils().getFormattedDateOnlyNew(value.result!.dateOfBirth)??''
+            ? CommonUtil.isUSRegion()
+                ? FHBUtils().getFormattedDateOnly(
+                        value.result!.dateOfBirth ?? "") ??
+                    ''
+                : FHBUtils()
+                        .getFormattedDateOnlyNew(value.result!.dateOfBirth) ??
+                    ''
             : '';
 
         if (value.result?.additionalInfo != null) {
@@ -1914,7 +1951,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (value.result!.membershipOfferedBy != null &&
             value.result!.membershipOfferedBy != '') {
-          cntrlr_corp_name.text = value.result!.membershipOfferedBy??'';
+          cntrlr_corp_name.text = value.result!.membershipOfferedBy ?? '';
         }
       });
     }
@@ -1945,7 +1982,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     profileResult.lastModifiedOn =
         addFamilyUserInfoBloc?.myprofileObject?.result?.lastModifiedOn ?? null;
     profileResult.profilePicThumbnailUrl = addFamilyUserInfoBloc
-        ?.myprofileObject?.result?.profilePicThumbnailUrl ??
+            ?.myprofileObject?.result?.profilePicThumbnailUrl ??
         '';
 
     AdditionalInfo? additionalInfo = AdditionalInfo();
@@ -1986,7 +2023,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     try {
       List<UserProfileSettingCollection3>? userProfileSettingCollection = [];
       List<UserProfileSettingCollection3> userProfileSettingCollectionClone =
-      [];
+          [];
 
       var userProfileSettingCollection3Obj = UserProfileSettingCollection3();
       var profileSetting = ProfileSetting();
@@ -1997,7 +2034,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .myprofileObject!.result!.userProfileSettingCollection3![0];
         if (userProfileSettingCollection3Obj.profileSetting != null) {
           var profileSettingClone =
-          userProfileSettingCollection3Obj.profileSetting!;
+              userProfileSettingCollection3Obj.profileSetting!;
           var preferredMeasuremntClone =
               profileSettingClone.preferredMeasurement;
 
@@ -2192,7 +2229,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (widget
           .arguments!.myProfileResult!.userContactCollection3!.isNotEmpty) {
         UserContactCollection3 userContact =
-        widget.arguments!.myProfileResult!.userContactCollection3![0]!;
+            widget.arguments!.myProfileResult!.userContactCollection3![0]!;
         userContact.email = emailController.text;
         final List<UserContactCollection3> userContactCollection3List = [];
         userContactCollection3List.add(userContact);
@@ -2272,7 +2309,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
-                  Constants.KEY_FAMILYMEMBER, value.result)
+                      Constants.KEY_FAMILYMEMBER, value.result)
                   .then((value) {
                 //saveProfileImage();
                 /* MySliverAppBar.imageURI = null;
@@ -2368,7 +2405,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
-                  Constants.KEY_FAMILYMEMBER, value?.result)
+                      Constants.KEY_FAMILYMEMBER, value?.result)
                   .then((value) {
                 //saveProfileImage();
                 /*  MySliverAppBar.imageURI = null;
@@ -2409,7 +2446,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   Future<void> setMyProfilePic(String userId, File image) async {
     var response =
-    await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
+        await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
     if (response.isSuccess!) {
       if (!Platform.isIOS) {
         imageCache!.clear();
@@ -2437,8 +2474,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     snapshot.data!.result!,
                     headers: {
                       HttpHeaders.authorizationHeader:
-                      PreferenceUtil.getStringValue(
-                          Constants.KEY_AUTHTOKEN)!,
+                          PreferenceUtil.getStringValue(
+                              Constants.KEY_AUTHTOKEN)!,
                       Constants.KEY_OffSet: CommonUtil().setTimeZone()
                     },
                   ),
@@ -2452,21 +2489,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 return Center(
                   child: Text(
                     widget.arguments!.sharedbyme!.child!.firstName != null &&
-                        widget.arguments!.sharedbyme!.child!.lastName !=
-                            null
+                            widget.arguments!.sharedbyme!.child!.lastName !=
+                                null
                         ? widget.arguments!.sharedbyme!.child!.firstName![0]
-                        .toUpperCase() +
-                        (widget.arguments!.sharedbyme!.child!.lastName!
-                            .length >
-                            0
-                            ? widget
-                            .arguments!.sharedbyme!.child!.lastName![0]
-                            .toUpperCase()
-                            : '')
+                                .toUpperCase() +
+                            (widget.arguments!.sharedbyme!.child!.lastName!
+                                        .length >
+                                    0
+                                ? widget
+                                    .arguments!.sharedbyme!.child!.lastName![0]
+                                    .toUpperCase()
+                                : '')
                         : widget.arguments!.sharedbyme!.child!.firstName != null
-                        ? widget.arguments!.sharedbyme!.child!.firstName![0]
-                        .toUpperCase()
-                        : '',
+                            ? widget.arguments!.sharedbyme!.child!.firstName![0]
+                                .toUpperCase()
+                            : '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 50.0.sp,
@@ -2479,20 +2516,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               return Center(
                 child: Text(
                   widget.arguments!.sharedbyme!.child!.firstName != null &&
-                      widget.arguments!.sharedbyme!.child!.lastName != null
+                          widget.arguments!.sharedbyme!.child!.lastName != null
                       ? widget.arguments!.sharedbyme!.child!.firstName![0]
-                      .toUpperCase() +
-                      (widget.arguments!.sharedbyme!.child!.lastName!
-                          .length >
-                          0
-                          ? widget
-                          .arguments!.sharedbyme!.child!.lastName![0]
-                          .toUpperCase()
-                          : '')
+                              .toUpperCase() +
+                          (widget.arguments!.sharedbyme!.child!.lastName!
+                                      .length >
+                                  0
+                              ? widget
+                                  .arguments!.sharedbyme!.child!.lastName![0]
+                                  .toUpperCase()
+                              : '')
                       : widget.arguments!.sharedbyme!.child!.firstName != null
-                      ? widget.arguments!.sharedbyme!.child!.firstName![0]
-                      .toUpperCase()
-                      : '',
+                          ? widget.arguments!.sharedbyme!.child!.firstName![0]
+                              .toUpperCase()
+                          : '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 50.0.sp,
@@ -2507,18 +2544,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             return Center(
               child: Text(
                 widget.arguments!.sharedbyme!.child!.firstName != null &&
-                    widget.arguments!.sharedbyme!.child!.lastName != null
+                        widget.arguments!.sharedbyme!.child!.lastName != null
                     ? widget.arguments!.sharedbyme!.child!.firstName![0]
-                    .toUpperCase() +
-                    (widget.arguments!.sharedbyme!.child!.lastName!.length >
-                        0
-                        ? widget.arguments!.sharedbyme!.child!.lastName![0]
-                        .toUpperCase()
-                        : '')
+                            .toUpperCase() +
+                        (widget.arguments!.sharedbyme!.child!.lastName!.length >
+                                0
+                            ? widget.arguments!.sharedbyme!.child!.lastName![0]
+                                .toUpperCase()
+                            : '')
                     : widget.arguments!.sharedbyme!.child!.firstName != null
-                    ? widget.arguments!.sharedbyme!.child!.firstName![0]
-                    .toUpperCase()
-                    : '',
+                        ? widget.arguments!.sharedbyme!.child!.firstName![0]
+                            .toUpperCase()
+                        : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 50.0.sp,
@@ -2546,7 +2583,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   height: 60.0.h,
                   headers: {
                     HttpHeaders.authorizationHeader:
-                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
+                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
                     Constants.KEY_OffSet: CommonUtil().setTimeZone()
                   },
                 );
@@ -2554,20 +2591,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 return Center(
                   child: Text(
                     widget.arguments!.myProfileResult!.firstName != null &&
-                        widget.arguments!.myProfileResult!.lastName != null
+                            widget.arguments!.myProfileResult!.lastName != null
                         ? widget.arguments!.myProfileResult!.firstName![0]
-                        .toUpperCase() +
-                        (widget.arguments!.myProfileResult!.lastName!
-                            .length >
-                            0
-                            ? widget
-                            .arguments!.myProfileResult!.lastName![0]
-                            .toUpperCase()
-                            : '')
+                                .toUpperCase() +
+                            (widget.arguments!.myProfileResult!.lastName!
+                                        .length >
+                                    0
+                                ? widget
+                                    .arguments!.myProfileResult!.lastName![0]
+                                    .toUpperCase()
+                                : '')
                         : widget.arguments!.myProfileResult!.firstName != null
-                        ? widget.arguments!.myProfileResult!.firstName![0]
-                        .toUpperCase()
-                        : '',
+                            ? widget.arguments!.myProfileResult!.firstName![0]
+                                .toUpperCase()
+                            : '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 50.0.sp,
@@ -2580,18 +2617,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               return Center(
                 child: Text(
                   widget.arguments!.myProfileResult!.firstName != null &&
-                      widget.arguments!.myProfileResult!.lastName != null
+                          widget.arguments!.myProfileResult!.lastName != null
                       ? widget.arguments!.myProfileResult!.firstName![0]
-                      .toUpperCase() +
-                      (widget.arguments!.myProfileResult!.lastName!.length >
-                          0
-                          ? widget.arguments!.myProfileResult!.lastName![0]
-                          .toUpperCase()
-                          : '')
+                              .toUpperCase() +
+                          (widget.arguments!.myProfileResult!.lastName!.length >
+                                  0
+                              ? widget.arguments!.myProfileResult!.lastName![0]
+                                  .toUpperCase()
+                              : '')
                       : widget.arguments!.myProfileResult!.firstName != null
-                      ? widget.arguments!.myProfileResult!.firstName![0]
-                      .toUpperCase()
-                      : '',
+                          ? widget.arguments!.myProfileResult!.firstName![0]
+                              .toUpperCase()
+                          : '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 50.0.sp,
@@ -2606,17 +2643,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             return Center(
               child: Text(
                 widget.arguments!.myProfileResult!.firstName != null &&
-                    widget.arguments!.myProfileResult!.lastName != null
+                        widget.arguments!.myProfileResult!.lastName != null
                     ? widget.arguments!.myProfileResult!.firstName![0]
-                    .toUpperCase() +
-                    (widget.arguments!.myProfileResult!.lastName!.length > 0
-                        ? widget.arguments!.myProfileResult!.lastName![0]
-                        .toUpperCase()
-                        : '')
+                            .toUpperCase() +
+                        (widget.arguments!.myProfileResult!.lastName!.length > 0
+                            ? widget.arguments!.myProfileResult!.lastName![0]
+                                .toUpperCase()
+                            : '')
                     : widget.arguments!.myProfileResult!.firstName != null
-                    ? widget.arguments!.myProfileResult!.firstName![0]
-                    .toUpperCase()
-                    : '',
+                        ? widget.arguments!.myProfileResult!.firstName![0]
+                            .toUpperCase()
+                        : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 50.0.sp,
@@ -2644,7 +2681,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   height: 60.0.h,
                   headers: {
                     HttpHeaders.authorizationHeader:
-                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
+                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
                     Constants.KEY_OffSet: CommonUtil().setTimeZone()
                   },
                 );
@@ -2652,13 +2689,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 return Center(
                   child: Text(
                     widget.arguments!.enteredFirstName != null &&
-                        widget.arguments!.enteredLastName != null
+                            widget.arguments!.enteredLastName != null
                         ? widget.arguments!.enteredFirstName![0].toUpperCase() +
-                        widget.arguments!.enteredLastName![0].toUpperCase()
+                            widget.arguments!.enteredLastName![0].toUpperCase()
                         : widget.arguments!.enteredFirstName != null
-                        ? widget.arguments!.enteredFirstName![0]
-                        .toUpperCase()
-                        : '',
+                            ? widget.arguments!.enteredFirstName![0]
+                                .toUpperCase()
+                            : '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 50.0.sp,
@@ -2671,12 +2708,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               return Center(
                 child: Text(
                   widget.arguments!.enteredFirstName != null &&
-                      widget.arguments!.enteredLastName != null
+                          widget.arguments!.enteredLastName != null
                       ? widget.arguments!.enteredFirstName![0].toUpperCase() +
-                      widget.arguments!.enteredLastName![0].toUpperCase()
+                          widget.arguments!.enteredLastName![0].toUpperCase()
                       : widget.arguments!.enteredFirstName != null
-                      ? widget.arguments!.enteredFirstName![0].toUpperCase()
-                      : '',
+                          ? widget.arguments!.enteredFirstName![0].toUpperCase()
+                          : '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 50.0.sp,
@@ -2691,12 +2728,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             return Center(
               child: Text(
                 widget.arguments!.enteredFirstName != null &&
-                    widget.arguments!.enteredLastName != null
+                        widget.arguments!.enteredLastName != null
                     ? widget.arguments!.enteredFirstName![0].toUpperCase() +
-                    widget.arguments!.enteredLastName![0].toUpperCase()
+                        widget.arguments!.enteredLastName![0].toUpperCase()
                     : widget.arguments!.enteredFirstName != null
-                    ? widget.arguments!.enteredFirstName![0].toUpperCase()
-                    : '',
+                        ? widget.arguments!.enteredFirstName![0].toUpperCase()
+                        : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 50.0.sp,
@@ -2852,7 +2889,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     for (var languageResultObj in languageModelList.result!) {
       if (languageResultObj.referenceValueCollection!.isNotEmpty) {
         for (var referenceValueCollection
-        in languageResultObj.referenceValueCollection!) {
+            in languageResultObj.referenceValueCollection!) {
           if (selectedLanguage == referenceValueCollection.code) {
             languageList.add(referenceValueCollection.id);
           }
@@ -2865,8 +2902,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   void setMobileAndEmail() {
     mobileNoController.text =
-        myProfile.result!.userContactCollection3![0]!.phoneNumber??'';
-    emailController.text = myProfile.result!.userContactCollection3![0]!.email??'';
+        myProfile.result!.userContactCollection3![0]!.phoneNumber ?? '';
+    emailController.text =
+        myProfile.result!.userContactCollection3![0]!.email ?? '';
   }
 
   Future<String?> setValueLanguages() async {
@@ -2991,7 +3029,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           getUnitFromPreferredMeasurement(profileSetting);
         } else {
           var profileModel =
-          await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+              await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
           if (profileModel!.result!.userProfileSettingCollection3 != null &&
               profileModel.result!.userProfileSettingCollection3!.length > 0) {
             var profileSetting = profileModel
@@ -3001,7 +3039,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
       } catch (e) {
         var profileModel =
-        await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+            await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
         if (profileModel!.result!.userProfileSettingCollection3 != null &&
             profileModel.result!.userProfileSettingCollection3!.length > 0) {
           var profileSetting = profileModel
@@ -3038,7 +3076,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             return CommonCircularIndicator();
           }
           final List<Tags> tagslist = snapshot.data
-          as List<Tags>; // snapshot.data.result to snapshot.data
+              as List<Tags>; // snapshot.data.result to snapshot.data
 
           mediaResultFiltered = removeUnwantedCategories(tagslist);
 
@@ -3221,7 +3259,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           Navigator.pop(_keyLoader.currentContext!);
           Navigator.pop(context);
           MyProfileModel myProfileModel =
-          new MyProfileModel(isSuccess: true, message: userLinking.message);
+              new MyProfileModel(isSuccess: true, message: userLinking.message);
           Navigator.of(context)
               .pop({"myProfileData": convert.jsonEncode(myProfileModel)});
         }
@@ -3263,9 +3301,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (profileSetting?.preferredMeasurement != null) {
       try {
         heightUnit =
-            await profileSetting?.preferredMeasurement?.height?.unitCode??'';
+            await profileSetting?.preferredMeasurement?.height?.unitCode ?? '';
         weightUnit =
-            await profileSetting?.preferredMeasurement?.weight?.unitCode??'';
+            await profileSetting?.preferredMeasurement?.weight?.unitCode ?? '';
         setHeightAndWeightUnit();
       } catch (e) {
         setUnitBasedOnRegion();

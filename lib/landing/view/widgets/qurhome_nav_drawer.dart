@@ -152,6 +152,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         icon: variable.icon_th,
                         onPressed: () async {
                           try {
+                            clearControllerValues();
                             Get.back();
                             Get.to(AppointmentsMain(isFromQurday: true));
                           } catch (e) {
@@ -168,6 +169,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             if (Get.isRegistered<QurhomeDashboardController>())
                               Get.find<QurhomeDashboardController>()
                                   .updateBLETimer(Enable: false);
+                            clearControllerValues();
 
                             Get.to(MyRecords(
                               argument: MyRecordsArgument(),
@@ -309,6 +311,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () {
                           try {
+                            clearControllerValues();
+
                             Get.back();
                             Get.to(() => MoreMenuScreen(refresh: refresh));
                           } catch (e) {
@@ -326,6 +330,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () {
                           try {
+                            clearControllerValues();
+
                             Get.back();
                             Get.to(() => HelpSupport());
                           } catch (e) {
@@ -362,6 +368,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           color: Colors.black54,
                         ),
                         onPressed: () async {
+                          clearControllerValues();
+
                           Get.back();
                           if (Get.isRegistered<QurhomeDashboardController>())
                             Get.find<QurhomeDashboardController>()
@@ -494,5 +502,15 @@ class QurHomeNavigationDrawer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void clearControllerValues() {
+    final controller = Get.put(QurhomeDashboardController());
+
+    controller.currentSelectedTab.value = 0;
+
+    controller.forPatientList.value = false;
+    controller.isPatientClicked.value = false;
+    controller.careGiverPatientListResult = null;
   }
 }

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
@@ -107,7 +106,8 @@ class PreferenceUtil {
     _prefsInstance ??= await _prefs;
     var dataInMap = data.toMap();
     var jsonData = json.encode(dataInMap);
-    return await _prefsInstance!.setString(Constants.NotificationData, jsonData);
+    return await _prefsInstance!
+        .setString(Constants.NotificationData, jsonData);
   }
 
   static Future<NotificationModel> getNotifiationData() async {
@@ -156,21 +156,21 @@ class PreferenceUtil {
     return instance.setString(keyProfile, profile);
   }
 
-  static MyProfileModel? getProfileData(String keyProfile) { // FUcrash
+  static MyProfileModel? getProfileData(String keyProfile) {
+    // FUcrash
     // if (_prefsInstance == null) {}
-         try{
-           if (_prefsInstance == null) {}
+    try {
+      if (_prefsInstance == null) {}
 
-    var jsonData = _prefsInstance!.getString(keyProfile) ?? '';
- var data = json.decode(jsonData);
-  return MyProfileModel.fromJson(data);
-}catch(e){
-  print(e);
-  return null;
-}
-     // return MyProfileModel.fromJson(json.decode(_prefsInstance!.getString(keyProfile) ?? ''));
-    
-   }
+      var jsonData = _prefsInstance!.getString(keyProfile) ?? '';
+      var data = json.decode(jsonData);
+      return MyProfileModel.fromJson(data);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+    // return MyProfileModel.fromJson(json.decode(_prefsInstance!.getString(keyProfile) ?? ''));
+  }
 
   static List<CategoryResult>? getCategoryType() {
     final categoryData = <CategoryResult>[];
@@ -375,7 +375,7 @@ class PreferenceUtil {
 
       return instance.setString(keyFamily, family);
     } catch (e) {
-      return instance.setString(keyFamily, "");// null to ""
+      return instance.setString(keyFamily, ""); // null to ""
     }
   }
 
@@ -411,13 +411,12 @@ class PreferenceUtil {
   static Future<bool> saveFamilyRelationShip(
       String keyFamilyrel, RelationShipResponseList? familyData) async {
     final instance = await _prefs!;
-              
+
     try {
       final family = json.encode(familyData);
 
       return instance.setString(keyFamilyrel, family);
     } catch (e) {
-      
       return instance.setString(keyFamilyrel, ""); // null to ""
     }
   }
@@ -492,7 +491,6 @@ class PreferenceUtil {
       appLockStatus,
     );
   }
-
 
   static Future<bool> saveEnableDeleteAccount({
     bool deleteAccountStatus = false,
@@ -605,7 +603,8 @@ class PreferenceUtil {
     return instance.setString(keyCompletedData, completeDataStr);
   }
 
-  static PreferredMeasurement? getPreferredMeasurement(String keyCompletedData) {
+  static PreferredMeasurement? getPreferredMeasurement(
+      String keyCompletedData) {
     try {
       if (_prefsInstance == null) {}
       return PreferredMeasurement.fromJson(

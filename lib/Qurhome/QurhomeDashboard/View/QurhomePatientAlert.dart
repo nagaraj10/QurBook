@@ -555,8 +555,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               } else {
                                 CommonUtil().hideLoadingDialog(context);
 
-                                FlutterToast().getToast(
-                                    "Error in Acknowledging", Colors.red);
+                                 FlutterToast()
+                                    .getToast(NOT_FILE_IMAGE, Colors.red);
                               }
                             },
                             child: Column(
