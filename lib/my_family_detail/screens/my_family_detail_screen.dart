@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 
@@ -211,10 +210,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                 //TODO we need to pass the logged in user id
                                 isForFamilyAddition: false,
                                 isFromAppointmentOrSlotPage: false,
-                                id: widget.arguments!
-                                    .profilesSharedByMe![_currentPage!].child!.id,
-                                sharedbyme: widget
-                                    .arguments!.profilesSharedByMe![_currentPage!],
+                                id: widget
+                                    .arguments!
+                                    .profilesSharedByMe![_currentPage!]
+                                    .child!
+                                    .id,
+                                sharedbyme: widget.arguments!
+                                    .profilesSharedByMe![_currentPage!],
                                 fromClass: CommonConstants.my_family,
                                 isForFamily: false,
                                 defaultrelationShips:
@@ -399,7 +401,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       } else {
         isKg = true;
       }
-      weightController.text = sharedbyme.child?.additionalInfo!.weight ?? '';
+      weightController.text =
+          sharedbyme.child?.additionalInfo!.weight.toString() ?? '';
     } else {
       var preferredMeasurement = PreferenceUtil.getPreferredMeasurement(
           Constants.KEY_PREFERREDMEASUREMENT);
@@ -408,8 +411,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         try {
           if (preferredMeasurement.height?.unitCode ==
                   Constants.STR_VAL_HEIGHT_IND ||
-              preferredMeasurement.height?.unitCode ==
-                  STR_VAL_HEIGHT_IND_NEW) {
+              preferredMeasurement.height?.unitCode == STR_VAL_HEIGHT_IND_NEW) {
             isFeetOrInches = true;
           } else {
             isFeetOrInches = false;
@@ -450,27 +452,26 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.child!.dateOfBirth != null) {
-      if (CommonUtil.isUSRegion())
-      {
+      if (CommonUtil.isUSRegion()) {
+        dateOfBirthController.text = FHBUtils()
+            .getFormattedDateOnly(sharedbyme.child!.dateOfBirth ?? "");
+      } else {
         dateOfBirthController.text =
-        FHBUtils().getFormattedDateOnly(sharedbyme.child!.dateOfBirth??"");
-      }else {
-        dateOfBirthController.text =
-        FHBUtils().getFormattedDateOnlyNew(sharedbyme.child!.dateOfBirth)!;
+            FHBUtils().getFormattedDateOnlyNew(sharedbyme.child!.dateOfBirth)!;
       }
     }
 
     if (sharedbyme.child!.userAddressCollection3!.isNotEmpty) {
       cntrlr_addr_one.text =
-          sharedbyme.child!.userAddressCollection3![0].addressLine1??"";
+          sharedbyme.child!.userAddressCollection3![0].addressLine1 ?? "";
       cntrlr_addr_two.text =
-          sharedbyme.child!.userAddressCollection3![0].addressLine2??"";
+          sharedbyme.child!.userAddressCollection3![0].addressLine2 ?? "";
       cntrlr_addr_city.text =
-          sharedbyme.child!.userAddressCollection3![0].city?.name??"";
+          sharedbyme.child!.userAddressCollection3![0].city?.name ?? "";
       cntrlr_addr_state.text =
-          sharedbyme.child!.userAddressCollection3![0].state?.name??"";
+          sharedbyme.child!.userAddressCollection3![0].state?.name ?? "";
       cntrlr_addr_zip.text =
-          sharedbyme.child!.userAddressCollection3![0].pincode??"";
+          sharedbyme.child!.userAddressCollection3![0].pincode ?? "";
     }
 
     if (sharedbyme.membershipOfferedBy != null &&
@@ -1207,12 +1208,18 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontSize: 16.0.sp,
                 color: ColorUtils.blackcolor),
             decoration: InputDecoration(
-              suffixIcon: CommonUtil.isUSRegion()?IconButton(
-                icon: Icon(Icons.calendar_today),
-                onPressed: () {},
-              ):null,
-              labelText: CommonUtil.isUSRegion()?CommonConstants.date_of_birthWithStar:CommonConstants.year_of_birth_with_star,
-              hintText: CommonUtil.isUSRegion()?CommonConstants.date_of_birth:CommonConstants.year_of_birth,
+              suffixIcon: CommonUtil.isUSRegion()
+                  ? IconButton(
+                      icon: Icon(Icons.calendar_today),
+                      onPressed: () {},
+                    )
+                  : null,
+              labelText: CommonUtil.isUSRegion()
+                  ? CommonConstants.date_of_birthWithStar
+                  : CommonConstants.year_of_birth_with_star,
+              hintText: CommonUtil.isUSRegion()
+                  ? CommonConstants.date_of_birth
+                  : CommonConstants.year_of_birth,
               labelStyle: TextStyle(
                   fontSize: 14.0.sp,
                   fontWeight: FontWeight.w400,

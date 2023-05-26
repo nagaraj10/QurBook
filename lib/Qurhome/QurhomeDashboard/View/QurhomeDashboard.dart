@@ -671,9 +671,16 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 myProfile: myProfile,
                 moveToLoginPage: moveToLoginPage,
                 userChangedbool: false,
-                refresh: (userChanged) => refresh(
-                  userChanged: userChanged,
-                ),
+                refresh: ((userChanged) {
+                  controller.currentSelectedTab.value = 0;
+
+                  controller.forPatientList.value = false;
+                  controller.isPatientClicked.value = false;
+                  controller.careGiverPatientListResult = null;
+                  refresh(
+                    userChanged: userChanged,
+                  );
+                }),
                 showPatientList: () {
                   CommonUtil().showPatientListOfCaregiver(context,
                       (user, result) {
