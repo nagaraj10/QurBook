@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -16,7 +15,6 @@ import '../../widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 class RegimentScreen extends StatelessWidget {
-
   final RegimentArguments? aruguments;
 
   RegimentScreen({this.aruguments});
@@ -37,7 +35,7 @@ class RegimentScreen extends StatelessWidget {
           onTap: () => onBackPressed(context),
         ),
         actions: [
-          SwitchProfile().buildActions(
+          /*SwitchProfile().buildActions(
             context,
             _key,
             () {
@@ -50,7 +48,7 @@ class RegimentScreen extends StatelessWidget {
               (context as Element).markNeedsBuild();
             },
             true,
-          ),
+          ),*/
         ],
       ),
       body: WillPopScope(
@@ -58,7 +56,9 @@ class RegimentScreen extends StatelessWidget {
           onBackPressed(context);
           return Future.value(false);
         },
-        child: RegimentTab(eventId: aruguments?.eventId,),
+        child: RegimentTab(
+          eventId: aruguments?.eventId,
+        ),
       ),
     );
   }
