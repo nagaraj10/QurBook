@@ -2226,6 +2226,21 @@ class CommonUtil {
     return category;
   }
 
+  Future<bool> checkIfUserIdSame() async {
+    bool isUserMainId = false;
+    final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
+    final userIdMain =
+        await PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
+
+    if (userId != userIdMain) {
+      isUserMainId = false;
+    } else {
+      isUserMainId = true;
+    }
+
+    return isUserMainId;
+  }
+
   showPatientListOfCaregiver(
       BuildContext context,
       Function(String? user, CareGiverPatientListResult? result)
@@ -6296,6 +6311,8 @@ class VideoCallCommonUtils {
       }
     }
   }
+
+  
 
   String capitalizeFirstofEach(String data) {
     return data
