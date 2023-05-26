@@ -893,6 +893,7 @@ const String strEdit = 'Edit';
 const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
+const String strDecline='Decline';
 
 //For Alert
 const String strEscalate = 'Escalate';

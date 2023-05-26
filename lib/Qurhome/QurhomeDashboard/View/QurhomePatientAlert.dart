@@ -78,14 +78,16 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                     return SizedBox();
                   } else {
                     bool isSameDate = true;
-                    final DateTime? date =
-                        val.patientAlert!.result!.data![itemIndex].createdOn;
+                    final DateTime? date = val
+                        .patientAlert!.result!.data![itemIndex].createdOn
+                        ?.toLocal();
                     final item = val.patientAlert!.result!.data![itemIndex];
                     if (itemIndex == 0) {
                       isSameDate = false;
                     } else {
                       final DateTime? prevDateString = val
-                          .patientAlert!.result!.data![itemIndex - 1].createdOn;
+                          .patientAlert!.result!.data![itemIndex - 1].createdOn
+                          ?.toLocal();
 
                       isSameDate = checkDateSame(prevDateString, date) ?? false;
                     }
@@ -109,20 +111,24 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           padding: EdgeInsets.only(
                               left: 10, right: 10, top: 5, bottom: 5),
                           child: Text(
-                            qurhomeRegimenController.getFormatedDate(
-                                date: date.toString()),
+                            CommonUtil().getFormatedDate(
+                                date: val.patientAlert!.result!.data![itemIndex]
+                                    .createdOn
+                                    ?.toLocal()
+                                    .toString()),
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black,
                             ),
                           ),
                         ),
-                        _buildCarouselItem(
-                            context,
-                            itemIndex,
-                            val.patientAlert!.result!.data![itemIndex],
-                            val.nextAlertPosition,
-                            isPortrait)
+                        Expanded(
+                            child: _buildCarouselItem(
+                                context,
+                                itemIndex,
+                                val.patientAlert!.result!.data![itemIndex],
+                                val.nextAlertPosition,
+                                isPortrait))
                       ]);
                     } else {
                       return _buildCarouselItem(
@@ -554,8 +560,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               } else {
                                 CommonUtil().hideLoadingDialog(context);
 
-                                FlutterToast().getToast(
-                                    "Error in Acknowledging", Colors.red);
+                                FlutterToast()
+                                    .getToast(NOT_FILE_IMAGE, Colors.red);
                               }
                             },
                             child: Column(

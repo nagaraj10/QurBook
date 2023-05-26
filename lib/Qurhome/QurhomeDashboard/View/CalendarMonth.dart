@@ -52,7 +52,11 @@ class _HomePageState extends State<CalendarMonth> {
             onPageChanged: (dateTime) {
               controller.selectedDate.value = dateTime;
               onPageChanged = true;
-              controller.getCalendarRegimenList();
+              if (widget.patientId != null) {
+                controller.getCalendarRegimenList(patientId: widget.patientId);
+              } else {
+                controller.getCalendarRegimenList();
+              }
             },
             eventLoader: (DateTime dateTime) {
               return _events[DateTime(

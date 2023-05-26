@@ -38,12 +38,12 @@ class AppointmentDetailsController extends GetxController {
   var city = "";
   var state = "";
   var locationUrl = "";
-
+  var appointmentId="";
   getAppointmentDetail(String appointmentId) async {
     try {
       onClear();
       loadingData.value = true;
-
+      this.appointmentId=appointmentId;
       appointmentDetailsModel =
           await fetchAppointmentsService.getAppointmentDetail(appointmentId);
 
@@ -269,6 +269,14 @@ class AppointmentDetailsController extends GetxController {
       }
     }
   }
+
+  acceptCareGiverTransportRequestReminder(String appointmentId,String patientId,bool isAccept) async {
+    loadingData.value = true;
+    FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
+    var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
+    getAppointmentDetail(appointmentId);
+  }
+
 
   String checkIfEmptyString(String strText) {
     try {
