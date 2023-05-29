@@ -158,7 +158,9 @@ class RegimentDataModel {
             : null,
         remindin: json['remindin'],
         remindinType: json['remindin_type'],
-        ack: DateTime.tryParse(json['ack_utc'] ?? '')?.toLocal(),
+        ack: json['ack_utc'] == null
+            ? null
+            : DateTime.tryParse(json['ack_utc'] ?? '')?.toLocal(),
         ackIST: DateTime.tryParse(json['ack'] ?? ''),
         ack_local: (json['ack_local'] ?? '').isEmpty
             ? null
