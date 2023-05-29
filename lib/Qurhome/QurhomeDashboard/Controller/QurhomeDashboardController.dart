@@ -190,7 +190,8 @@ class QurhomeDashboardController extends GetxController {
             redirectToSheelaScheduleAppointment();
           }
         }
-      } as Future<dynamic> Function(MethodCall)?);
+        return Future.value('');
+      });
     }
   }
 
