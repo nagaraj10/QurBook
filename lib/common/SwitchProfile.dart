@@ -66,70 +66,75 @@ class SwitchProfile {
   Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
       Function _callBackToRefresh, bool isFromDashborad,
       {GlobalKey<ScaffoldState>? scaffold_state}) {
-    context = _context;
-    keyLoader = _keyLoader;
-    callBackToRefresh = _callBackToRefresh;
-    isFromDashborad = isFromDashborad;
-    String? profileImage;
-    MyProfileModel? myProfile;
-    try {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      profileImage = PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-    } catch (e) {
-      myProfile = null;
-    }
+    if (!CommonUtil.isUSRegion()) {
+      context = _context;
+      keyLoader = _keyLoader;
+      callBackToRefresh = _callBackToRefresh;
+      isFromDashborad = isFromDashborad;
+      String? profileImage;
+      MyProfileModel? myProfile;
+      try {
+        myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        profileImage =
+            PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+      } catch (e) {
+        myProfile = null;
+      }
 
-    return Padding(
-        padding: EdgeInsets.all(10),
-        child: InkWell(
-            onTap: () {
-              if (_familyListBloc != null) {
-                _familyListBloc = null;
-                _familyListBloc = FamilyListBloc();
-              } else {
-                _familyListBloc = FamilyListBloc();
-              }
-              checkInternet(_keyLoader, scaffold_state);
-            },
-            child: isFromDashborad
-                ? getCirleAvatarWithBorderIcon(myProfile)
-                : CircleAvatar(
-                    radius: CommonUtil().isTablet! ? 18 : 15,
-                    child: ClipOval(
-                        child: myProfile != null
-                            ? myProfile.result != null
-                                ? myProfile.result!.profilePicThumbnailUrl !=
-                                        null
-                                    ? FHBBasicWidget()
-                                        .getProfilePicWidgeUsingUrl(myProfile)
-                                    : Container(
-                                        height: 50.0.h,
-                                        width: 50.0.h,
-                                        color:
-                                            Color(fhbColors.bgColorContainer),
-                                        child: Center(
-                                          child: Text(
-                                            myProfile.result!.firstName != null
-                                                ? myProfile
-                                                    .result!.firstName![0]
-                                                    .toUpperCase()
-                                                : '',
-                                            style: TextStyle(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor())),
-                                          ),
-                                        ))
-                                : Container(
-                                    height: 50.0.h,
-                                    width: 50.0.h,
-                                    color: Color(fhbColors.bgColorContainer),
-                                  )
-                            : Container(
-                                height: 50.0.h,
-                                width: 50.0.h,
-                                color: Color(fhbColors.bgColorContainer),
-                              )),
-                  )));
+      return Padding(
+          padding: EdgeInsets.all(10),
+          child: InkWell(
+              onTap: () {
+                if (_familyListBloc != null) {
+                  _familyListBloc = null;
+                  _familyListBloc = FamilyListBloc();
+                } else {
+                  _familyListBloc = FamilyListBloc();
+                }
+                checkInternet(_keyLoader, scaffold_state);
+              },
+              child: isFromDashborad
+                  ? getCirleAvatarWithBorderIcon(myProfile)
+                  : CircleAvatar(
+                      radius: CommonUtil().isTablet! ? 18 : 15,
+                      child: ClipOval(
+                          child: myProfile != null
+                              ? myProfile.result != null
+                                  ? myProfile.result!.profilePicThumbnailUrl !=
+                                          null
+                                      ? FHBBasicWidget()
+                                          .getProfilePicWidgeUsingUrl(myProfile)
+                                      : Container(
+                                          height: 50.0.h,
+                                          width: 50.0.h,
+                                          color:
+                                              Color(fhbColors.bgColorContainer),
+                                          child: Center(
+                                            child: Text(
+                                              myProfile.result!.firstName !=
+                                                      null
+                                                  ? myProfile
+                                                      .result!.firstName![0]
+                                                      .toUpperCase()
+                                                  : '',
+                                              style: TextStyle(
+                                                  color: Color(CommonUtil()
+                                                      .getMyPrimaryColor())),
+                                            ),
+                                          ))
+                                  : Container(
+                                      height: 50.0.h,
+                                      width: 50.0.h,
+                                      color: Color(fhbColors.bgColorContainer),
+                                    )
+                              : Container(
+                                  height: 50.0.h,
+                                  width: 50.0.h,
+                                  color: Color(fhbColors.bgColorContainer),
+                                )),
+                    )));
+    } else
+      return Container();
   }
 
   Future<Widget?> getDialogBoxWithFamilyMemberScrap(
