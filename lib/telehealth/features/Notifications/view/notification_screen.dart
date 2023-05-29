@@ -1969,7 +1969,7 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  // readUnreadAction(notification, isRead: true);
+                  readUnreadAction(notification, isRead: true);
 
                    new CommonUtil().acceptCareGiverTransportRequestReminder(
                       context,
@@ -1996,7 +1996,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               OutlineButton(
                 onPressed: () async {
-                  // readUnreadAction(notification, isRead: true);
+                  readUnreadAction(notification, isRead: true);
                   new CommonUtil().acceptCareGiverTransportRequestReminder(
                       context,
                       notification.messageDetails?.payload?.appointmentId??'',
