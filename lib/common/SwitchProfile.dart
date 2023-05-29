@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
@@ -181,6 +182,7 @@ class SwitchProfile {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
               .then((value) {
             Navigator.of(keyLoader.currentContext!, rootNavigator: true).pop();
+
             callBackToRefresh();
           });
         });
@@ -194,6 +196,9 @@ class SwitchProfile {
         qurhomeDashboardController = Get.find();
         qurhomeDashboardController.updateTabIndex(
             qurhomeDashboardController.currentSelectedIndex.value);
+        try {
+          Get.find<QurhomeRegimenController>().getRegimenList();
+        } catch (e) {}
       });
     });
   }
