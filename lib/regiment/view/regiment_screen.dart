@@ -35,7 +35,7 @@ class RegimentScreen extends StatelessWidget {
           onTap: () => onBackPressed(context),
         ),
         actions: [
-          /*SwitchProfile().buildActions(
+          SwitchProfile().buildActions(
             context,
             _key,
             () {
@@ -48,7 +48,7 @@ class RegimentScreen extends StatelessWidget {
               (context as Element).markNeedsBuild();
             },
             true,
-          ),*/
+          ),
         ],
       ),
       body: WillPopScope(
