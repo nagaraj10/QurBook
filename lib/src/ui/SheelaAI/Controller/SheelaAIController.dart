@@ -646,7 +646,25 @@ class SheelaAIController extends GetxController {
 
   Future<bool> getGoogleTTSForConversationForButton(Buttons button) async {
     try {
-      final result = await getGoogleTTSForText(button.title);
+      String toSpeech = '';
+      if ((button.sayText ?? '').isNotEmpty) {
+        var stringToSpeech = button.sayText;
+        if (button.sayText!.contains(".")) {
+          stringToSpeech = button.sayText!.split(".")[1];
+          toSpeech = stringToSpeech;
+        } else {
+          toSpeech = button.sayText!;
+        }
+      } else {
+        var stringToSpeech = button.title;
+        if (button.title!.contains(".")) {
+          stringToSpeech = button.title!.split(".")[1];
+          toSpeech = stringToSpeech;
+        } else {
+          toSpeech = button.title!;
+        }
+      }
+      final result = await getGoogleTTSForText(toSpeech);
       button.ttsResponse = result;
       return true;
     } catch (e) {
