@@ -154,8 +154,8 @@ class _UserAccountsState extends State<UserAccounts>
               } */
             ),
             actions: <Widget>[
-              if (CommonUtil.REGION_CODE != 'IN')
-                if (selectedTab == 1) getSwitchProfileWidget()
+              // if (CommonUtil.REGION_CODE != 'IN')
+              // if (selectedTab == 1) getSwitchProfileWidget()
             ],
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(50.0.h),
