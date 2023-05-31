@@ -72,7 +72,8 @@ class _UserAccountsState extends State<UserAccounts>
   }
 
   fetchUserProfileInfo() async {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!;
+    var userid =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!;
     myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
   }
 
@@ -230,7 +231,7 @@ class _UserAccountsState extends State<UserAccounts>
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data != null && snapshot.hasData)
               PreferenceUtil.saveProfileData(
-                  Constants.KEY_PROFILE, snapshot.data);
+                  Constants.KEY_PROFILE_MAIN, snapshot.data);
 
             imageCache!.clear();
             imageCache!.clearLiveImages();
@@ -267,10 +268,10 @@ class _UserAccountsState extends State<UserAccounts>
     final userIdMain =
         await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
-    if (userId != null && userId.isNotEmpty) {
+    if (userIdMain != null && userIdMain.isNotEmpty) {
       try {
         MyProfileModel value =
-            await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+            await addFamilyUserInfoRepository.getMyProfileInfoNew(userIdMain);
         myProfile = value;
 
         if (value != null) {
