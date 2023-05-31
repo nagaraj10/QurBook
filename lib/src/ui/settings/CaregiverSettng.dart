@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'dart:io';
 
@@ -243,22 +242,22 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text('Do you want to update the changes'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => closeDialog(),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () => createDeviceSelection(),
-                child: Text('Yes'),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text('Do you want to update the changes'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => closeDialog(),
+            child: Text('No'),
           ),
-        ).then((value) => value as bool);
+          FlatButton(
+            onPressed: () => createDeviceSelection(),
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   closeDialog() {
@@ -272,56 +271,62 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
       _isdeviceRecognition = getDeviceSelectionModel!
                       .result![0].profileSetting!.allowDevice !=
                   null &&
-              getDeviceSelectionModel.result![0].profileSetting!.allowDevice != ''
+              getDeviceSelectionModel.result![0].profileSetting!.allowDevice !=
+                  ''
           ? getDeviceSelectionModel.result![0].profileSetting!.allowDevice
           : true;
-      _isdigitRecognition =
-          getDeviceSelectionModel.result![0].profileSetting!.allowDigit != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.allowDigit !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
-              : true;
+      _isdigitRecognition = getDeviceSelectionModel
+                      .result![0].profileSetting!.allowDigit !=
+                  null &&
+              getDeviceSelectionModel.result![0].profileSetting!.allowDigit !=
+                  ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
+          : true;
       /*_isGFActive =
           getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
                   getDeviceSelectionModel.result[0].profileSetting.googleFit !=
                       ''
               ? getDeviceSelectionModel.result[0].profileSetting.googleFit
               : false;*/
-      _isHKActive =
-          getDeviceSelectionModel.result![0].profileSetting!.healthFit != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.healthFit !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.healthFit
-              : false;
-      _isBPActive =
-          getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.bpMonitor !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.bpMonitor
-              : true;
-      _isGLActive =
-          getDeviceSelectionModel.result![0].profileSetting!.glucoMeter != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.glucoMeter !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.glucoMeter
-              : true;
-      _isOxyActive = getDeviceSelectionModel
-                      .result![0].profileSetting!.pulseOximeter !=
+      _isHKActive = getDeviceSelectionModel
+                      .result![0].profileSetting!.healthFit !=
                   null &&
-              getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter !=
-                  ''
-          ? getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter
+              getDeviceSelectionModel.result![0].profileSetting!.healthFit != ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.healthFit
+          : false;
+      _isBPActive = getDeviceSelectionModel
+                      .result![0].profileSetting!.bpMonitor !=
+                  null &&
+              getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.bpMonitor
           : true;
-      _isWSActive =
-          getDeviceSelectionModel.result![0].profileSetting!.weighScale != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.weighScale !=
+      _isGLActive = getDeviceSelectionModel
+                      .result![0].profileSetting!.glucoMeter !=
+                  null &&
+              getDeviceSelectionModel.result![0].profileSetting!.glucoMeter !=
+                  ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.glucoMeter
+          : true;
+      _isOxyActive =
+          getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter !=
+                      null &&
+                  getDeviceSelectionModel
+                          .result![0].profileSetting!.pulseOximeter !=
                       ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.weighScale
+              ? getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter
               : true;
+      _isWSActive = getDeviceSelectionModel
+                      .result![0].profileSetting!.weighScale !=
+                  null &&
+              getDeviceSelectionModel.result![0].profileSetting!.weighScale !=
+                  ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.weighScale
+          : true;
       _isTHActive = getDeviceSelectionModel
                       .result![0].profileSetting!.thermoMeter !=
                   null &&
-              getDeviceSelectionModel.result![0].profileSetting!.thermoMeter != ''
+              getDeviceSelectionModel.result![0].profileSetting!.thermoMeter !=
+                  ''
           ? getDeviceSelectionModel.result![0].profileSetting!.thermoMeter
           : true;
 
@@ -331,51 +336,52 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
               getDeviceSelectionModel
                       .result![0].profileSetting!.preferred_language !=
                   ''
-          ? getDeviceSelectionModel.result![0].profileSetting!.preferred_language
+          ? getDeviceSelectionModel
+              .result![0].profileSetting!.preferred_language
           : 'undef';
 
-      qa_subscription =
-          getDeviceSelectionModel.result![0].profileSetting!.qa_subscription !=
-                      null &&
-                  getDeviceSelectionModel
-                          .result![0].profileSetting!.qa_subscription !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
-              : 'Y';
+      qa_subscription = getDeviceSelectionModel
+                      .result![0].profileSetting!.qa_subscription !=
+                  null &&
+              getDeviceSelectionModel
+                      .result![0].profileSetting!.qa_subscription !=
+                  ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
+          : 'Y';
 
       tagsList = getDeviceSelectionModel.result![0].tags != null &&
               getDeviceSelectionModel.result![0].tags!.length > 0
           ? getDeviceSelectionModel.result![0].tags
           : [];
 
-      allowAppointmentNotification = getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+      allowAppointmentNotification = getDeviceSelectionModel.result![0]
+                      .profileSetting!.caregiverCommunicationSetting !=
                   null &&
-              getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+              getDeviceSelectionModel.result![0].profileSetting!
+                      .caregiverCommunicationSetting !=
                   ''
           ? getDeviceSelectionModel.result![0].profileSetting!
               .caregiverCommunicationSetting?.appointments
           : true;
 
-      allowVitalNotification = getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+      allowVitalNotification = getDeviceSelectionModel.result![0]
+                      .profileSetting!.caregiverCommunicationSetting !=
                   null &&
-              getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+              getDeviceSelectionModel.result![0].profileSetting!
+                      .caregiverCommunicationSetting !=
                   ''
           ? getDeviceSelectionModel
               .result![0].profileSetting!.caregiverCommunicationSetting?.vitals
           : true;
 
-      allowSymptomsNotification = getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+      allowSymptomsNotification = getDeviceSelectionModel.result![0]
+                      .profileSetting!.caregiverCommunicationSetting !=
                   null &&
-              getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+              getDeviceSelectionModel.result![0].profileSetting!
+                      .caregiverCommunicationSetting !=
                   ''
-          ? getDeviceSelectionModel
-              .result![0].profileSetting!.caregiverCommunicationSetting?.symptoms
+          ? getDeviceSelectionModel.result![0].profileSetting!
+              .caregiverCommunicationSetting?.symptoms
           : true;
 
       preferredMeasurement =
@@ -395,7 +401,8 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
         } else {
           Navigator.pop(context, false);
         }
-      } as Future<bool> Function()?,
+        return Future.value(false);
+      },
       child: Scaffold(
         backgroundColor: const Color(fhbColors.bgColorContainer),
         appBar: AppBar(
