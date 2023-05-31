@@ -1,4 +1,3 @@
-
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 
@@ -259,9 +258,12 @@ class AdditionalInfo {
       }
     } catch (e) {}
 
-    if (json.containsKey('mrdNumber') && json['mrdNumber'] != null) mrdNumber = json['mrdNumber'];
-    if (json.containsKey('uhidNumber') && json['uhidNumber'] != null) uhidNumber = json['uhidNumber'];
-    if (json.containsKey('visitReason') && json['visitReason'] != null) visitReason = json['visitReason'];
+    if (json.containsKey('mrdNumber') && json['mrdNumber'] != null)
+      mrdNumber = json['mrdNumber'];
+    if (json.containsKey('uhidNumber') && json['uhidNumber'] != null)
+      uhidNumber = json['uhidNumber'];
+    if (json.containsKey('visitReason') && json['visitReason'] != null)
+      visitReason = json['visitReason'];
     if (json.containsKey('patientHistory') && json['patientHistory'] != null) {
       patientHistory = json['patientHistory'];
     }
@@ -307,12 +309,12 @@ class UserContactCollection3 {
 
   UserContactCollection3.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    phoneNumber = json['phoneNumber']??"";
+    phoneNumber = json['phoneNumber'] ?? "";
     isPrimary = json['isPrimary'];
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
-    email = json['email']??"";
+    email = json['email'] ?? "";
     phoneNumberType = json['phoneNumberType'] != null
         ? AddressType.fromJson(json['phoneNumberType'])
         : null;
