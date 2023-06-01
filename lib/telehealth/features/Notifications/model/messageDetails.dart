@@ -46,4 +46,8 @@ class MessageDetails {
     }
     return data;
   }
+
+  void setAccepted(bool bool) {
+    isAccepted=bool;
+  }
 }

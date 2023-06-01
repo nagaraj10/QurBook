@@ -558,7 +558,15 @@ class _NotificationScreen extends State<NotificationScreen> {
                           //     notification?.result[index]?.messageDetails?.content
                           //         ?.templateName);
                         }
-                      : null,
+                      : (){
+                if (payload?.redirectTo ==
+                    strAppointmentDetail) {
+                  notificationOnTapActions(
+                    notification,
+                    payload?.redirectTo,
+                  );
+                }
+              },
               child: Container(
                 color: notification.deleteSelected ? Colors.grey : Colors.white,
                 child: Column(
@@ -1278,7 +1286,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               result?.messageDetails?.payload?.appointmentId ?? '');
           Get.to(() => AppointmentDetailScreen());
         }
-        // readUnreadAction(result);
+        readUnreadAction(result);
         break;
       case strPatientReferralAcceptToPatient:
         if (CommonUtil.isUSRegion())
@@ -1974,19 +1982,21 @@ class _NotificationScreen extends State<NotificationScreen> {
 
         break;
       case parameters.careGiverTransportRequestReminder:
-        return (notification.messageDetails?.isAccepted??true)?Container():Padding(
+        return (notification.messageDetails?.isAccepted==null)?Padding(
           padding: const EdgeInsets.all(0),
           child: Row(
             children: [
               OutlineButton(
                 onPressed: () async {
-                  readUnreadAction(notification, isRead: true);
 
                   new CommonUtil().acceptCareGiverTransportRequestReminder(
                       context,
                       notification.messageDetails?.payload?.appointmentId??'',
                       notification.messageDetails?.payload?.patientId??'',
-                      true);
+                      true).then((value){
+                    readUnreadAction(notification, isRead: true);
+                    notification.messageDetails?.setAccepted(true);
+                  });
 
                 },
                 borderSide: !notification.isActionDone!
@@ -2007,12 +2017,15 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               OutlineButton(
                 onPressed: () async {
-                  readUnreadAction(notification, isRead: true);
+
                   new CommonUtil().acceptCareGiverTransportRequestReminder(
                       context,
                       notification.messageDetails?.payload?.appointmentId??'',
                       notification.messageDetails?.payload?.patientId??'',
-                      false);
+                      false).then((value){
+                    readUnreadAction(notification, isRead: true);
+                    notification.messageDetails?.setAccepted(true);
+                  });
                 },
                 borderSide: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -2029,7 +2042,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
             ],
           ),
-        );
+        ):Container();
 
         break;
       default:
