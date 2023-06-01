@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -58,7 +57,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   ProfileResponseModel? profileResponseModel;
 
   var qurhomeDashboardController =
-  CommonUtil().onInitQurhomeDashboardController();
+      CommonUtil().onInitQurhomeDashboardController();
 
   @override
   void initState() {
@@ -213,7 +212,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(int.parse(metadata!.color!.replaceFirst('#', '0xFF')));
+        cardColor =
+            Color(int.parse(metadata!.color!.replaceFirst('#', '0xFF')));
       } else {
         switch (activityname) {
           case Activityname.DIET:
@@ -445,7 +445,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                     Future.delayed(
                                         Duration(milliseconds: 1000),
                                         () => ShowCaseWidget.of(_myContext)
-                                            ?.startShowCase([_SymptomsCardKey]));
+                                            ?.startShowCase(
+                                                [_SymptomsCardKey]));
                                   }
                                 }
                               },
