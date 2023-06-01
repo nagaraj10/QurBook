@@ -427,7 +427,7 @@ class SymptomItemCard extends StatelessWidget {
                           Expanded(child: Container()),
                           Visibility(
                             visible: (regimentData.isModifiedToday) ||
-                                regimentData.ack_local != null,
+                                regimentData.ack != null,
                             child: Padding(
                               padding: EdgeInsets.only(
                                 top: 5.0.h,
@@ -448,7 +448,7 @@ class SymptomItemCard extends StatelessWidget {
                                         ),
                                       ),
                                       Visibility(
-                                        visible: regimentData.ack_local != null,
+                                        visible: regimentData.ack != null,
                                         child: Padding(
                                           padding: EdgeInsets.only(
                                               left: regimentData.isModifiedToday
@@ -457,9 +457,9 @@ class SymptomItemCard extends StatelessWidget {
                                           child: Text(
                                             '${CommonUtil().regimentDateFormat(
                                               regimentData.asNeeded
-                                                  ? regimentData.ack_local ??
+                                                  ? regimentData.ack ??
                                                       DateTime.now()
-                                                  : regimentData.ack_local ??
+                                                  : regimentData.ack ??
                                                       DateTime.now(),
                                               isAck: true,
                                             )}',
@@ -479,8 +479,7 @@ class SymptomItemCard extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         Visibility(
-                                          visible:
-                                              regimentData.ack_local != null,
+                                          visible: regimentData.ack != null,
                                           child: InkWell(
                                             onTap: () async {
                                               LoaderQurHome.showLoadingDialog(
@@ -640,7 +639,7 @@ class SymptomItemCard extends StatelessWidget {
                                 ),
                                 Visibility(
                                   visible: (regimentData.isModifiedToday) ||
-                                      regimentData.ack_local != null,
+                                      regimentData.ack != null,
                                   child: Padding(
                                     padding: EdgeInsets.only(
                                       top: 5.0.h,
@@ -659,8 +658,7 @@ class SymptomItemCard extends StatelessWidget {
                                           ),
                                         ),
                                         Visibility(
-                                          visible:
-                                              regimentData.ack_local != null,
+                                          visible: regimentData.ack != null,
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
@@ -668,11 +666,9 @@ class SymptomItemCard extends StatelessWidget {
                                               Text(
                                                 '${CommonUtil().regimentDateFormat(
                                                   regimentData.asNeeded
-                                                      ? regimentData
-                                                              .ack_local ??
+                                                      ? regimentData.ack ??
                                                           DateTime.now()
-                                                      : regimentData
-                                                              .ack_local ??
+                                                      : regimentData.ack ??
                                                           DateTime.now(),
                                                   isAck: true,
                                                 )}',
