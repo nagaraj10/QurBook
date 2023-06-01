@@ -1974,7 +1974,7 @@ class _NotificationScreen extends State<NotificationScreen> {
 
         break;
       case parameters.careGiverTransportRequestReminder:
-        return (notification.isUnread??true)?Padding(
+        return (notification.messageDetails?.isAccepted??true)?Container():Padding(
           padding: const EdgeInsets.all(0),
           child: Row(
             children: [
@@ -1982,7 +1982,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                 onPressed: () async {
                   readUnreadAction(notification, isRead: true);
 
-                   new CommonUtil().acceptCareGiverTransportRequestReminder(
+                  new CommonUtil().acceptCareGiverTransportRequestReminder(
                       context,
                       notification.messageDetails?.payload?.appointmentId??'',
                       notification.messageDetails?.payload?.patientId??'',
@@ -2029,7 +2029,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
             ],
           ),
-        ):Container();
+        );
 
         break;
       default:
