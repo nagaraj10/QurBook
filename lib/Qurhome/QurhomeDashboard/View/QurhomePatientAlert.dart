@@ -16,6 +16,7 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class QurhomePatientALert extends StatefulWidget {
   @override
@@ -117,7 +118,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                     ?.toLocal()
                                     .toString()),
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 14.h,
                               color: Colors.black,
                             ),
                           ),
@@ -211,7 +212,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           style: TextStyle(
                               color: getTextAndIconColor(
                                   itemIndex, nextAlertPosition),
-                              fontSize: 15,
+                              fontSize: 15.h,
                               fontWeight: FontWeight.w500),
                         ),
                         SizedBox(
@@ -232,7 +233,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                             style: TextStyle(
                                 color: getTextAndIconColor(
                                     itemIndex, nextAlertPosition),
-                                fontSize: 14,
+                                fontSize: 16.h,
                                 fontWeight: FontWeight.w600),
                           ),
                         )),
@@ -401,11 +402,11 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                   overflow: TextOverflow.fade,
                                   maxLines: 2,
                                   style: TextStyle(
-                                      color: Color(
-                                        CommonUtil().getQurhomeGredientColor(),
-                                      ),
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w400),
+                                    color: Color(
+                                      CommonUtil().getQurhomeGredientColor(),
+                                    ),
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ),
                               Center(
@@ -423,7 +424,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.grey,
-                                      fontSize: 16,
+                                      fontSize: 16.h,
                                       fontWeight: FontWeight.w500),
                                 ),
                               ),
@@ -449,8 +450,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               textAlign: TextAlign.center,
                               maxLines: 3,
                               style: TextStyle(
-                                  fontSize: 26.0,
                                   fontWeight: FontWeight.w600,
+                                  fontSize: 16.h,
                                   color: Colors.grey),
                             ),
                             if (patientAlertData?.typeCode == CODE_VITAL) ...{
@@ -460,7 +461,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 20.0,
+                                    fontSize: 16.h,
                                     fontWeight: FontWeight.w500),
                               )
                             }
@@ -508,7 +509,6 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 ),
                                 Text(strDiscard,
                                     style: TextStyle(
-                                        fontSize: 20.0,
                                         color: Color(CommonUtil()
                                             .getQurhomePrimaryColor()))),
                               ],
@@ -541,9 +541,12 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                       width: 40,
                                     ),
                                   ),
-                                  Text(strCall,
-                                      style: TextStyle(
-                                          fontSize: 20.0, color: Colors.green)),
+                                  Text(
+                                    strCall,
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                    ),
+                                  ),
                                 ],
                               )),
                           InkWell(
@@ -551,7 +554,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               CommonUtil().showSingleLoadingDialog(context);
                               bool response =
                                   await controller.caregiverEscalateAction(
-                                      patientAlertData, activityName);
+                                patientAlertData,
+                                activityName,
+                              );
                               if (response) {
                                 Navigator.pop(context);
                                 CommonUtil().hideLoadingDialog(context);
@@ -574,9 +579,12 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                     width: 40,
                                   ),
                                 ),
-                                Text(strEscalate,
-                                    style: TextStyle(
-                                        fontSize: 20.0, color: Colors.red)),
+                                Text(
+                                  strEscalate,
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
