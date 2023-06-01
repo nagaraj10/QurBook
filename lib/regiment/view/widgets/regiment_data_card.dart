@@ -165,7 +165,7 @@ class RegimentDataCard extends StatelessWidget {
                           ),
                           Visibility(
                             visible: (regimentData.isModifiedToday) ||
-                                regimentData.ack_local != null,
+                                regimentData.ack != null,
                             child: Padding(
                               padding: EdgeInsets.only(
                                 top: 5.0.h,
@@ -184,16 +184,16 @@ class RegimentDataCard extends StatelessWidget {
                                     ),
                                   ),
                                   Visibility(
-                                    visible: regimentData.ack_local != null,
+                                    visible: regimentData.ack != null,
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
                                           '${CommonUtil().regimentDateFormat(
                                             regimentData.asNeeded
-                                                ? regimentData.ack_local ??
+                                                ? regimentData.ack ??
                                                     DateTime.now()
-                                                : regimentData.ack_local ??
+                                                : regimentData.ack ??
                                                     DateTime.now(),
                                             isAck: true,
                                           )}',
