@@ -266,6 +266,8 @@ const String CODE_MEDI = 'MEDICATION';
 const String CODE_RULE = 'RULEALERT';
 const String CODE_SYM = 'SYMPTOM';
 
+
+
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(
     scheme: 'mailto',
