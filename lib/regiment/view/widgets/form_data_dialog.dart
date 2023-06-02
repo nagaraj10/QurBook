@@ -114,9 +114,15 @@ class FormDataDialogState extends State<FormDataDialog> {
   @override
   void initState() {
     super.initState();
-    try {
-      widget.fieldsData?.sort((a, b) => (a.seq ?? 0).compareTo(b.seq ?? 0));
-    } catch (e) {}
+    widget.fieldsData?.sort(
+      (a, b) => intOrStringValue(
+        a.seq,
+      ).compareTo(
+        intOrStringValue(
+          b.seq,
+        ),
+      ),
+    );
     if ((widget.fieldsData?.length ?? 0) > 1 && CommonUtil.isUSRegion()) {
       widget.fieldsData?.forEach((fieldData) {
         String strSeq =
@@ -144,6 +150,19 @@ class FormDataDialogState extends State<FormDataDialog> {
         }
       });
     }
+  }
+
+  int intOrStringValue(dynamic o) {
+    if (o == null) {
+      return 0;
+    }
+    var result = 0;
+    if (o is String) {
+      result = int.tryParse(o) ?? 0;
+    } else if (o is int) {
+      result = o;
+    }
+    return result;
   }
 
   @override
