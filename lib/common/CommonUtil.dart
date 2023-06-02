@@ -5669,7 +5669,7 @@ class CommonUtil {
       BuildContext context,String appointmentId,String patientId,bool isAccept) async {
     final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
-    MyProfileModel myProfile;
+    MyProfileModel myProfile=MyProfileModel();
     FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
     // var dialog=CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
     var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
@@ -5681,6 +5681,8 @@ class CommonUtil {
       appointmentDetailsController.getAppointmentDetail(appointmentId ?? '');
       Get.to(() => AppointmentDetailScreen());
     }
+
+    return myProfile;
     // return result;
     // await addFamilyUserInfoRepository
     //     .checkIfChildISMember(userID)
