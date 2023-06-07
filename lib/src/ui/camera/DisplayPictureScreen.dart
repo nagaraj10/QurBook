@@ -373,11 +373,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     } else {
       var digitRecog = true;
 
-      digitRecog =
-          PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
-                  variable.strFalse
-              ? false
-              : true;
+      digitRecog = false;
+      // PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
+      //         variable.strFalse
+      //     ? false
+      //     : true;
 
       if (digitRecog) {
         skipTapped = false;

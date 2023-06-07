@@ -978,8 +978,7 @@ class AddProvidersState extends State<AddProviders> {
       }
 
       if (CommonUtil.isUSRegion()) {
-        Navigator.popUntil(
-            context, ModalRoute.withName(router.rt_UserAccounts));
+        closeScreenWhileSaveorAdd(3);
       } else {
         Navigator.popUntil(context, (route) {
           var shouldPop = false;
@@ -1004,8 +1003,7 @@ class AddProvidersState extends State<AddProviders> {
       }
 
       if (CommonUtil.isUSRegion()) {
-        Navigator.popUntil(
-            context, ModalRoute.withName(router.rt_UserAccounts));
+        closeScreenWhileSaveorAdd(3);
       }else{
         Navigator.popUntil(context, (route) {
           var shouldPop = false;
@@ -1031,8 +1029,7 @@ class AddProvidersState extends State<AddProviders> {
       }
 
       if (CommonUtil.isUSRegion()) {
-        Navigator.popUntil(
-            context, ModalRoute.withName(router.rt_UserAccounts));
+        closeScreenWhileSaveorAdd(3);
       }else {
         Navigator.popUntil(context, (route) {
           var shouldPop = false;
@@ -1043,6 +1040,10 @@ class AddProvidersState extends State<AddProviders> {
         });
       }
     });
+  }
+
+  closeScreenWhileSaveorAdd(int times){
+    Get.close(times);
   }
 
   void _addBtnTapped() {
@@ -1441,15 +1442,19 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   navigateToRefresh() {
-    Navigator.popUntil(context, (route) {
-      var shouldPop = false;
-      var routeClassName = '';
-      routeClassName = router.rt_UserAccounts;
-      if (route.settings.name == routeClassName) {
-        shouldPop = true;
-      }
-      return shouldPop;
-    });
+    if (CommonUtil.isUSRegion()) {
+      closeScreenWhileSaveorAdd(2);
+    }else{
+      Navigator.popUntil(context, (route) {
+        var shouldPop = false;
+        var routeClassName = '';
+        routeClassName = router.rt_UserAccounts;
+        if (route.settings.name == routeClassName) {
+          shouldPop = true;
+        }
+        return shouldPop;
+      });
+    }
     widget.arguments!.isRefresh!();
   }
 
