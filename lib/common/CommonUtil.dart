@@ -209,6 +209,10 @@ class CommonUtil {
   final String CONTENT_NO_REFUND =
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
 
+  final String sheelaDialogTitle = 'Activity is not completed.';
+
+  final String sheelaDialogBody = 'Do you wish to cancel now?';
+
   static getProviderType(String type) {
     return 'health-organization/search/efhb?healthOrganizationType=%5B%22${type}%22%5D&limit=100&sortBy=asc';
   }
@@ -5669,7 +5673,7 @@ class CommonUtil {
       BuildContext context,String appointmentId,String patientId,bool isAccept) async {
     final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
-    MyProfileModel myProfile;
+    MyProfileModel myProfile=MyProfileModel();
     FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
     // var dialog=CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
     var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
@@ -5681,6 +5685,8 @@ class CommonUtil {
       appointmentDetailsController.getAppointmentDetail(appointmentId ?? '');
       Get.to(() => AppointmentDetailScreen());
     }
+
+    return myProfile;
     // return result;
     // await addFamilyUserInfoRepository
     //     .checkIfChildISMember(userID)
@@ -6148,6 +6154,38 @@ class CommonUtil {
         .inDays;
   }
 
+  Future<void> alertForSheelaDiscardOnConversation(BuildContext context,
+      {Function()? pressYes, Function()? pressNo}) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(sheelaDialogTitle, style: TextStyle(fontSize: 20.sp)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(sheelaDialogBody, style: TextStyle(fontSize: 18.sp)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(strCamelNo),
+              onPressed: () {
+                pressNo!();
+              },
+            ),
+            TextButton(
+              child: Text(strCamelYes),
+              onPressed: () {
+                pressYes!();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 extension CapExtension on String {

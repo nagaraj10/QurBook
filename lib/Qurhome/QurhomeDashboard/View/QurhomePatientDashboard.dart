@@ -156,7 +156,6 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
         value,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 20,
           color: selectedAlertList
               ? Colors.white
               : Color(CommonUtil().getQurhomePrimaryColor()),

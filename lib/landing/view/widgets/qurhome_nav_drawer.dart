@@ -465,13 +465,15 @@ class QurHomeNavigationDrawer extends StatelessWidget {
 
     try {
       myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
-      name = toBeginningOfSentenceCase((myProfile.result!.name != null &&
-              myProfile.result!.name != '')
-          ? myProfile.result!.name!.capitalizeFirstofEach
-          : myProfile.result!.firstName != null &&
-                  myProfile.result!.lastName != null
-              ? ('${myProfile.result!.firstName!.capitalizeFirstofEach} ${myProfile.result!.lastName!.capitalizeFirstofEach}')
-              : '');
+      if (myProfile.result?.firstName != null &&
+          myProfile.result?.firstName != "") {
+        name = '${myProfile.result?.firstName?.capitalizeFirstofEach} ';
+      }
+      if (myProfile.result?.lastName != null &&
+          myProfile.result?.lastName != "") {
+        name += '${myProfile.result?.lastName?.capitalizeFirstofEach}';
+      }
+
       phoneNumber = (myProfile.result!.userContactCollection3!.length) > 0
           ? myProfile.result!.userContactCollection3![0]!.phoneNumber!
           : '';

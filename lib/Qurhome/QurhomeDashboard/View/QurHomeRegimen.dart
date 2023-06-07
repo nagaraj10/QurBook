@@ -1163,8 +1163,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             Text(
                               '${CommonUtil().regimentDateFormat(
                                 regimen.asNeeded
-                                    ? regimen.ack_local ?? DateTime.now()
-                                    : regimen.ack_local ?? DateTime.now(),
+                                    ? regimen.ack ?? DateTime.now()
+                                    : regimen.ack ?? DateTime.now(),
                                 isAck: true,
                                 ackDate: true,
                               )}',

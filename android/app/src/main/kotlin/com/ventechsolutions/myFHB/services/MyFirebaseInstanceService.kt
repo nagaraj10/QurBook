@@ -27,6 +27,7 @@ import com.ventechsolutions.myFHB.constants.Constants
 class MyFirebaseInstanceService : FirebaseMessagingService() {
     val CHANNEL_INCOMING = "cha_call"
     val CHANNEL_ACK = "cha_ack"
+    val CareGiverTransportRequestReminder = "CareGiverTransportRequestReminder"
     val CHANNEL_MISS_CALL = "cha_missed_call_ns"
     val CHANNEL_CANCEL_APP = "cha_cancel_app"
     val CHANNEL_ONBOARD = "cha_doc_onboard"
@@ -2211,7 +2212,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val manager = getSystemService(NotificationManager::class.java)
             val channelCancelApps = NotificationChannel(
-                CHANNEL_ACK,
+                CareGiverTransportRequestReminder,
                 getString(R.string.transportation_appointment),
                 NotificationManager.IMPORTANCE_HIGH
             )
@@ -2298,10 +2299,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
 
 
-
-
-
-        var notification = NotificationCompat.Builder(this, CHANNEL_RENEW)
+        var notification = NotificationCompat.Builder(this, CareGiverTransportRequestReminder)
             .setSmallIcon(R.mipmap.app_ns_icon)
             .setLargeIcon(
                 BitmapFactory.decodeResource(

@@ -9,6 +9,7 @@ class MessageDetails {
   Content? content;
   Payload? payload;
   MessageContent? messageContent;
+  bool? isAccepted;
 
   MessageDetails(
       {this.content, this.payload, this.messageContent, this.rawMessage});
@@ -23,6 +24,9 @@ class MessageDetails {
         json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
     messageContent = json['messageContent'] != null
         ? new MessageContent.fromJson(json['messageContent'])
+        : null;
+    isAccepted=json['isAccepted'] != null
+        ? json['isAccepted']
         : null;
   }
 
@@ -41,5 +45,9 @@ class MessageDetails {
       data['messageContent'] = this.messageContent!.toJson();
     }
     return data;
+  }
+
+  void setAccepted(bool bool) {
+    isAccepted=bool;
   }
 }
