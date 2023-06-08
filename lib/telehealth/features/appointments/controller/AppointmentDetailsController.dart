@@ -75,6 +75,7 @@ class AppointmentDetailsController extends GetxController {
         }
 
         if (appointmentType.value.toLowerCase() != strTransportation) {
+          endTimeForTransportation=DateTime.parse(appointmentDetailsModel?.result?.plannedStartDateTime ?? "");
           if(showEndTime){
             scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
                 ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel?.result?.plannedEndDateTime ?? "")).toString()}"
@@ -85,7 +86,6 @@ class AppointmentDetailsController extends GetxController {
                 : "";
           }
         }
-          endTimeForTransportation=DateTime.parse(appointmentDetailsModel?.result?.plannedStartDateTime ?? "");
 
         if (appointmentDetailsModel!.result?.healthOrganization != null) {
           if (appointmentType.value.toLowerCase() == strDoctorAppointment) {
