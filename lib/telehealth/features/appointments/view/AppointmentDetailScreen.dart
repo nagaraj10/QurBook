@@ -90,7 +90,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       if((appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom??'').contains(userId??'none')){
         return OkButton();
       }else{
-        if(!DateTime.now().isBefore(appointmentDetailsController.endTimeForTransportation??DateTime.now().subtract(Duration(hours: 1)))){
+        var temp = DateTime.now();
+        var d1 = DateTime.utc(temp.year,temp.month,temp.day,temp.hour,temp.minute,temp.second);
+
+        if(d1.isAfter(appointmentDetailsController.endTimeForTransportation?.toUtc()??DateTime.now())){
           return OkButton();
         }else{
           if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted==null){

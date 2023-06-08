@@ -80,11 +80,11 @@ class TakePictureScreenForDevicesState
             ? Constants.IS_CATEGORYNAME_DEVICES
             : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
 
-    isObjectDetecting =
-        PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
-                'false'
-            ? false
-            : true;
+    isObjectDetecting = false;
+    // PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
+    //         'false'
+    //     ? false
+    //     : true;
 
     initilzeData();
 
