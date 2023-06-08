@@ -73,13 +73,13 @@ class AppointmentDetailsController extends GetxController {
         if(CommonUtil.REGION_CODE == 'US' && appointmentDetailsModel?.result?.serviceCategory?.code!='CONSLTN'){
           showEndTime=!(appointmentDetailsModel?.result?.additionalInfo?.isEndTimeOptional??false);
         }
-
-        if (appointmentType.value.toLowerCase() != strTransportation) {
           try{
             endTimeForTransportation=DateTime.parse(appointmentDetailsModel?.result?.plannedStartDateTime ?? "");
           }catch(e){
 
           }
+        if (appointmentType.value.toLowerCase() != strTransportation) {
+
           if(showEndTime){
             scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
                 ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel?.result?.plannedEndDateTime ?? "")).toString()}"
