@@ -73,10 +73,14 @@ class AppointmentDetailsController extends GetxController {
         if(CommonUtil.REGION_CODE == 'US' && appointmentDetailsModel?.result?.serviceCategory?.code!='CONSLTN'){
           showEndTime=!(appointmentDetailsModel?.result?.additionalInfo?.isEndTimeOptional??false);
         }
+          try{
+            endTimeForTransportation=DateTime.parse(appointmentDetailsModel?.result?.plannedStartDateTime ?? "");
+          }catch(e){
 
+          }
         if (appointmentType.value.toLowerCase() != strTransportation) {
+
           if(showEndTime){
-            endTimeForTransportation=DateTime.parse(appointmentDetailsModel?.result?.plannedEndDateTime ?? "");
             scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
                 ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel?.result?.plannedEndDateTime ?? "")).toString()}"
                 : "";
@@ -85,7 +89,6 @@ class AppointmentDetailsController extends GetxController {
                 ? "${scheduleDateTime.value}"
                 : "";
           }
-
         }
 
         if (appointmentDetailsModel!.result?.healthOrganization != null) {
