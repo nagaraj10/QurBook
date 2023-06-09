@@ -1,9 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/model/common_response_model.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentDetailsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
@@ -277,13 +281,28 @@ class AppointmentDetailsController extends GetxController {
     }
   }
 
-  acceptCareGiverTransportRequestReminder(String appointmentId,String patientId,bool isAccept) async {
+  acceptCareGiverTransportRequestReminder(
+      String appointmentId, String patientId, bool isAccept) async {
     loadingData.value = true;
-    FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
-    var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
-    getAppointmentDetail(appointmentId);
+    FetchAppointmentsService fetchAppointmentsService =
+        FetchAppointmentsService();
+    CommonResponseModel commonResponseModel = await fetchAppointmentsService
+        .acceptOrDeclineAppointment(appointmentId, patientId, isAccept);
+    if (commonResponseModel.isSuccess ?? false) {
+      FlutterToast().getToast(
+        isAccept
+            ? strTransportationRequestAccepted
+            : strTransportationRequestDeclined,
+        Colors.green,
+      );
+      getAppointmentDetail(appointmentId);
+    } else {
+      FlutterToast().getToast(
+        commonResponseModel.message ?? strWentWrong,
+        Colors.red,
+      );
+    }
   }
-
 
   String checkIfEmptyString(String strText) {
     try {

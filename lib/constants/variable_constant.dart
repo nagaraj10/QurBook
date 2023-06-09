@@ -899,6 +899,9 @@ const String strDecline='Decline';
 const String strEscalate = 'Escalate';
 const String strCall = 'Call';
 
+const String strTransportationRequestAccepted = 'Transportation request accepted';
+const String strTransportationRequestDeclined = 'Transportation request declined';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');
