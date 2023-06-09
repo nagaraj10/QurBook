@@ -548,7 +548,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   commonWidgetForTitleValue(String header, String value,
       {bool isLocationLink = false}) {
-    return Row(
+    String strValue = appointmentDetailsController.checkIfEmptyString(value);
+    bool isShow = strValue == "--" ? false : true;
+    return isShow?Row(
       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -588,7 +590,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     }
                   },
                   child: Text(
-                    appointmentDetailsController.checkIfEmptyString(value),
+                    strValue,
                     style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue),
@@ -597,7 +599,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             : Expanded(
                 flex: 2,
                 child: Text(
-                  appointmentDetailsController.checkIfEmptyString(value),
+                  strValue,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.visible,
                   softWrap: true,
@@ -605,8 +607,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   style: TextStyle(
                     fontSize: 13.0.sp,
                     fontWeight: FontWeight.w600,
-                    color: appointmentDetailsController
-                                .checkIfEmptyString(value) ==
+                    color: strValue ==
                             "--"
                         ? Colors.grey
                         : Colors.black.withOpacity(0.7),
@@ -614,7 +615,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 ),
               ),
       ],
-    );
+    ):SizedBox.shrink();
   }
 }
 
