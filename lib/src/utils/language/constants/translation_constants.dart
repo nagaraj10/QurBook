@@ -506,7 +506,7 @@ class TranslationConstants {
   static const String strChat = 'Chats';
   static const String strFeedBack = 'Feedback';
   static const String strFeedbackExp =
-      'We would like to hear from you on your experience with QurBook';
+      'We would like to hear from you on your experience with QurHome';
   static const String strAttachImage = 'Attach Image';
   static const String strAddVoice = 'Add Voice';
   static const String strFeedbackEmpty = 'Feedback should not be empty';

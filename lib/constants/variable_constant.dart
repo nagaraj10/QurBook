@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-const String strAPP_NAME = 'QurBook US';
+const String strAPP_NAME = 'QurHome';
 const String strAppPackage =
     'com.qurhealth.qurbook.us'; //'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';
@@ -262,16 +262,16 @@ const String font_roboto = 'Roboto';
 const String strBookmarkRecord = 'bookmark record';
 
 //lockscreen
-const String strQurbookLocked = 'Qurbook is locked';
+const String strQurbookLocked = 'QurHome is locked';
 const String strUnlock = 'Unlock';
 const String strQurbookLockDescription =
-    'For your security, you can only use Qurbook when its unlocked';
+    'For your security, you can only use QurHome when its unlocked';
 
 //for feedback
 const String strChat = 'Chats';
 const String strFeedBack = 'Feedback';
 const String strFeedbackExp =
-    'We would like to hear from you on your experience with QurBook';
+    'We would like to hear from you on your experience with QurHome';
 const String strAttachImage = 'Attach Image';
 const String strAddVoice = 'Add Voice';
 const String strcategoryInfo = 'categoryInfo';
