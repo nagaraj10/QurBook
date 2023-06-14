@@ -71,6 +71,7 @@ import PushKit
     var isQurhomeDefaultUI = false
     var ResponseNotificationChannel : FlutterMethodChannel!
     var ReponseAppLockMethodChannel : FlutterMethodChannel!
+    var ReponsePushKitTokenMethodChannel : FlutterMethodChannel!
     var connectedWithWeighingscale = false
     
     var isFromKilledStateNotification = false

@@ -19,8 +19,10 @@ extension AppDelegate : PKPushRegistryDelegate {
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         print("Successfully registered for notifications!")
         print("TOKEN:", pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
+        
+        triggerPushKitTokenMethod(token: pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
     }
-
+    
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         if type == .voIP {
             triggerCallKit(payload: payload)
@@ -84,6 +86,19 @@ extension AppDelegate : PKPushRegistryDelegate {
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         action.fail()
         return
+    }
+    
+    func triggerPushKitTokenMethod(token: String){
+        let data = [ Constants.token : token];
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [self] in
+            if let controller = self.navigationController?.children.first as? FlutterViewController{
+                if (self.ReponsePushKitTokenMethodChannel == nil){
+                    self.ReponsePushKitTokenMethodChannel = FlutterMethodChannel.init(name: Constants.reponseToTriggerPushKitTokenMethodChannel, binaryMessenger: controller.binaryMessenger)
+                }
+            }
+            self.ReponsePushKitTokenMethodChannel.invokeMethod(Constants.pushKitTokenMethod, arguments:data)
+        }
     }
 }
 

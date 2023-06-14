@@ -171,6 +171,7 @@ class CommonUtil {
   static String TRUE_DESK_URL = '';
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
+  static String PUSH_KIT_TOKEN = '';
 
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
@@ -1989,6 +1990,9 @@ class CommonUtil {
     } catch (e) {}
     await PreferenceUtil.saveString(
         Constants.STR_PUSH_TOKEN, token ?? 'not available');
+
+    String? pushkitToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_PUSH_KIT_TOKEN);
     var deviceInfo = Map<String, dynamic>();
     var user = Map<String, dynamic>();
     var jsonData = Map<String, dynamic>();
@@ -2003,8 +2007,8 @@ class CommonUtil {
     jsonData['deviceInfo'] = deviceInfo;
 
     if (Platform.isIOS) {
-      deviceInfo['iosDeviceToken'] =
-          '1fd16ea92837a7270372e9c6f311c0e5694e7be2bb1ad2c12431e3dca2816347';
+      deviceInfo['iosDeviceToken'] = pushkitToken;
+      // '1fd16ea92837a7270372e9c6f311c0e5694e7be2bb1ad2c12431e3dca2816347';
     }
     if (Platform.isIOS) {
       jsonData['platformCode'] = 'IOSPLT';

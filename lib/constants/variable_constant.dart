@@ -292,6 +292,7 @@ const String strBackOnline = 'back to online';
 const String strNoConnection = 'no connection';
 const String strve = 've';
 const String callAppLockFeatureMethod = "callAppLockFeatureMethod";
+const String pushKitTokenMethod = "pushKitTokenMethod";
 
 //new icons for menu
 const String activity_non_adherance =
@@ -810,6 +811,8 @@ const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
 const reponseToTriggerAppLockMethodChannel =
     MethodChannel('flutter.native.QurBook/appLockMethodChannel');
+const reponseToTriggerPushKitTokenMethodChannel =
+    MethodChannel('flutter.native.QurBook/pushKitTokenMethodChannel');
 const notificationResponseMethod = 'notificationResponse';
 const iOSMethodChannel = MethodChannel('flutter.native/iOS');
 const getWifiDetailsMethod = 'getWifiDetails';

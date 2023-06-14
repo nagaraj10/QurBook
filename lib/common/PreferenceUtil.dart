@@ -190,7 +190,14 @@ class PreferenceUtil {
   static Future<bool> clearAllData() async {
     if (_prefsInstance == null) {}
     final instance = await _prefs!;
-    return instance.clear();
+    for (String key in instance.getKeys()) {
+      if (key != KEY_PUSH_KIT_TOKEN) {
+        return instance.remove(key);
+      }
+    }
+
+    return true;
+    // return instance.clear();
   }
 
   static Future<bool> savePrefereDoctors(
