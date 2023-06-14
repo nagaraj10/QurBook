@@ -85,10 +85,7 @@ import PushKit
         // 1
         // Google Api Key
         GMSServices.provideAPIKey(Constants.googlekey)
-        
-        // Create a Push kit
-        initializePushKit()
-        
+                
         // 1
         // Local Notification
         if #available(iOS 10.0, *) {
@@ -321,6 +318,9 @@ import PushKit
                 }
             }
         }else{
+            // Create a Push kit
+            initializePushKit()
+
             //Not launched from push notification
             triggerAppLockMethod(isCallRecieved: false)
             //            let alert = UIAlertController(title: nil, message: "Triggered", preferredStyle: .actionSheet)

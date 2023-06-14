@@ -2001,6 +2001,11 @@ class CommonUtil {
     deviceInfo['deviceTokenId'] = token ?? 'NOT AVAILABLE';
 
     jsonData['deviceInfo'] = deviceInfo;
+
+    if (Platform.isIOS) {
+      deviceInfo['iosDeviceToken'] =
+          '1fd16ea92837a7270372e9c6f311c0e5694e7be2bb1ad2c12431e3dca2816347';
+    }
     if (Platform.isIOS) {
       jsonData['platformCode'] = 'IOSPLT';
       jsonData['deviceTypeCode'] = 'IPHONE';
@@ -2010,6 +2015,8 @@ class CommonUtil {
     }
 
     final params = json.encode(jsonData);
+
+    print('DEVICE TOKEN INPUT: $params');
 
     var response =
         await apiBaseHelper.postDeviceId('device-info', params, isActive);
