@@ -41,7 +41,7 @@
 
     <application
         android:name="com.ventechsolutions.myFHB.MyApp"
-        android:label="QurBook US"
+        android:label="QurHome"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
         android:fullBackupOnly="false"
