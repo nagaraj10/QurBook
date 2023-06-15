@@ -17,7 +17,8 @@ extension AppDelegate : PKPushRegistryDelegate {
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
-        print("Successfully registered for notifications!")
+        print("Successfully registered for VoIP push notifications.")
+//        let deviceToken = (pushCredentials.token as NSData).description
         print("TOKEN:", pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
         
         triggerPushKitTokenMethod(token: pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
@@ -25,6 +26,7 @@ extension AppDelegate : PKPushRegistryDelegate {
     
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         if type == .voIP {
+            pkPushPayload = payload
             triggerCallKit(payload: payload)
         }
         //        if type == .voIP {
@@ -79,12 +81,44 @@ extension AppDelegate : PKPushRegistryDelegate {
     // What happens when the user accepts the call by pressing the incoming call button? You should implement the method below and call the fulfill method if the call is successful.
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         action.fulfill()
+        
+        if var payloadDict = pkPushPayload.dictionaryPayload as? Dictionary<String, Any>, let controller = navigationController?.children.first as? FlutterViewController {
+            
+            payloadDict["status"] = "Accept";
+            
+            let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
+            navigationController?.children.first?.present(alert, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 4) {
+                alert.dismiss(animated: true)
+                
+                if (self.ResponseNotificationChannel == nil){
+                    self.ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+                    
+                }
+                self.ResponseNotificationChannel.invokeMethod(Constants.notificationResponseMethod, arguments:payloadDict)
+            }
+        }
         return
     }
     
     // What happens when the user taps the reject button? Call the fail method if the call is unsuccessful. It checks the call based on the UUID. It uses the network to connect to the end call method you provide.
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
-        action.fail()
+        action.fulfill()
+        
+        if var payloadDict = pkPushPayload.dictionaryPayload as? Dictionary<String, Any>, let controller = navigationController?.children.first as? FlutterViewController {
+            
+            payloadDict["status"] = "Decline";
+            
+//            let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
+//            navigationController?.children.first?.present(alert, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+//                alert.dismiss(animated: true)
+                if (self.ResponseNotificationChannel == nil){
+                    self.ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+                }
+                self.ResponseNotificationChannel.invokeMethod(Constants.notificationResponseMethod, arguments:payloadDict)
+            }
+        }
         return
     }
     
@@ -104,10 +138,11 @@ extension AppDelegate : PKPushRegistryDelegate {
 
 extension AppDelegate {
     func triggerCallKit(payload: PKPushPayload){
+        
         if let payloadDict = payload.dictionaryPayload as? Dictionary<String, Any>,
            let callerName =  payloadDict["patientName"] as? String,
            let callType =  payloadDict["callType"] as? String{
-            
+            print("PUSH KIT PAYLOAD:", payloadDict);
             //  1: Create an incoming call update object. This object stores different types of information about the caller. You can use it in setting whether the call has a video.
             let update = CXCallUpdate()
             
@@ -119,7 +154,11 @@ extension AppDelegate {
             //  2: Create and set configurations about how the calling application should behave
             if #available(iOS 14.0, *) {
                 let config = CallKit.CXProviderConfiguration()
-//                config.iconTemplateImageData = UIImage(named: "")!.pngData()
+                if let callerImg =  payloadDict["doctorPicture"] as? String{
+                    if let data = try? Data(contentsOf: URL(string:callerImg)!) {
+                        config.iconTemplateImageData = data
+                    }
+                }
                 config.includesCallsInRecents = false;
                 config.supportsVideo = callType == "audio" ? false : true;
                 update.hasVideo = callType == "audio" ? false : true;
@@ -133,7 +172,6 @@ extension AppDelegate {
                 
                 //  4. Post local notification to the user that there is an incoming call. When using CallKit, you do not need to rely on only displaying incoming calls using the local notification API because it helps to show incoming calls to users using the native full-screen incoming call UI on iOS. Add the helper method below `reportIncomingCall` to show the full-screen UI. It must contain `UUID()` that helps to identify the caller using a random identifier. You should also provide the `CXCallUpdate` that comprises metadata information about the incoming call. You can also check for errors to see if everything works fine.
                 provider.reportNewIncomingCall(with: UUID(), update: update, completion: { error in })
-                
             } else {
                 //  Fallback on earlier versions
             }

@@ -68,10 +68,10 @@ class CallMain extends StatefulWidget {
   _CallMainState createState() => _CallMainState();
 }
 
+RtcEngine? rtcEngine;
+
 class _CallMainState extends State<CallMain> {
   late BuildContext globalContext;
-
-  RtcEngine? rtcEngine;
 
   bool _isFirstTime = true;
 

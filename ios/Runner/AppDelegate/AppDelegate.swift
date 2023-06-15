@@ -78,6 +78,8 @@ import PushKit
     var payloadResonse: UNNotificationResponse!
     var voipRegistry: PKPushRegistry!
     
+    var pkPushPayload : PKPushPayload!
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?

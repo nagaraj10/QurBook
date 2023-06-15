@@ -52,6 +52,7 @@ class NotificationModel {
   String? eventType;
   String? others;
   String? appointmentId;
+  String? status;
 
   NotificationModel(
       {this.title,
@@ -93,7 +94,8 @@ class NotificationModel {
       this.sheelaAudioMsgUrl,
       this.eventType,
       this.others,
-      this.appointmentId});
+      this.appointmentId,
+      this.status});
 
   Map<String, dynamic> toMap() {
     return {
@@ -174,6 +176,8 @@ class NotificationModel {
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
+    print('Call Payload: ${messageFromNative}');
+
     if (messageFromNative[parameters.notification] != null) {
       setData(messageFromNative[parameters.notification]);
     } else if (messageFromNative[parameters.aps] != null) {
@@ -419,6 +423,10 @@ class NotificationModel {
   }
 
   void setData(Map<String, dynamic> message) {
+    if (message[parameters.status] != null) {
+      status = message[parameters.status];
+    }
+
     if (message[parameters.title] != null) {
       title = message[parameters.title];
     }
