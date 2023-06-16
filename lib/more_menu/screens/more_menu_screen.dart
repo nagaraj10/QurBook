@@ -141,7 +141,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       getAvailableDevices();
     }
     PackageInfo.fromPlatform().then((packageInfo) {
-      version = packageInfo.version;
+      version = packageInfo.version + " + " + packageInfo.buildNumber;
     });
     selectedList = [];
     _deviceModel = new DevicesViewModel();
