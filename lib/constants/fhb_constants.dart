@@ -35,6 +35,9 @@ const String IsAppLockChecked = "IsAppLockChecked";
 const String ScanningForDevices = 'Scanning for devices...';
 const String SettingUpTheDevice = 'Setting up the Device...';
 const String ScanningForBpDevices = 'Scanning for Bp devices...';
+const String IsCallEnded = "IsCallEnded";
+const String IsCallMuted = "IsCallMuted";
+
 const String CallingEmergencyServiceIn = 'Calling \n emergency service in';
 const String sec = 'Sec';
 const String callNow = 'Call now';

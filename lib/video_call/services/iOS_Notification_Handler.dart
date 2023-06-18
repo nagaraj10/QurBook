@@ -152,7 +152,8 @@ class IosNotificationHandler {
       }
     } else if (status == parameters.decline.toLowerCase() &&
         CommonUtil.isCallStarted) {
-      // End the iOS call
+      // End the iOS call if the call is still running
+      CommonUtil.isCallStarted = false;
       Get.key.currentState!.pop();
       rtcEngine!.leaveChannel();
       rtcEngine!.destroy();

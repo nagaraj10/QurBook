@@ -27,7 +27,9 @@ struct Constants {
     "flutter.native.QurBook/appLockMethodChannel";
     static let reponseToTriggerPushKitTokenMethodChannel =
     "flutter.native.QurBook/pushKitTokenMethodChannel";
-
+    static let reponseToCallKitMethodChannel =
+        "flutter.native.QurBook/callKitMethodChannel";
+    
     static let notificationResponseMethod = "notificationResponse";
     static let callAppLockFeatureMethod = "callAppLockFeatureMethod";
     static let pushKitTokenMethod = "pushKitTokenMethod";
@@ -71,6 +73,8 @@ struct Constants {
     static let BLEAdvDataServiceUUIDs = "kCBAdvDataServiceUUIDs";
     static let QurhomeDefaultUI = "QurhomeDefaultUI";
     static let IsAppLockChecked = "IsAppLockChecked";
+    static let IsCallEnded = "IsCallEnded";
+    static let IsCallMuted = "IsCallMuted";
     static let call = "call";
     static let Mike = "Mike";
     static let WOWGOSPO2 = "GSH601";

@@ -408,8 +408,10 @@ const String strPrivacyAndSecurity = 'Privacy and Security';
 // User account
 const String strUserAccount = 'User Account';
 const String strDeleteAccountTitle = 'Delete Account';
-const String strDeleteAccountDes = 'Are you sure, you want to delete the account?';
-const String strNotRetrieveDataDes = "Please note that you'll not be able to retrieve any of your data further, Confirm delete";
+const String strDeleteAccountDes =
+    'Are you sure, you want to delete the account?';
+const String strNotRetrieveDataDes =
+    "Please note that you'll not be able to retrieve any of your data further, Confirm delete";
 const String strCancel = 'Cancel';
 
 // for my family
@@ -813,6 +815,8 @@ const reponseToTriggerAppLockMethodChannel =
     MethodChannel('flutter.native.QurBook/appLockMethodChannel');
 const reponseToTriggerPushKitTokenMethodChannel =
     MethodChannel('flutter.native.QurBook/pushKitTokenMethodChannel');
+const responseToCallKitMethodChannel =
+    MethodChannel('flutter.native.QurBook/callKitMethodChannel');
 const notificationResponseMethod = 'notificationResponse';
 const iOSMethodChannel = MethodChannel('flutter.native/iOS');
 const getWifiDetailsMethod = 'getWifiDetails';

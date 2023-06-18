@@ -72,14 +72,23 @@ import PushKit
     var ResponseNotificationChannel : FlutterMethodChannel!
     var ReponseAppLockMethodChannel : FlutterMethodChannel!
     var ReponsePushKitTokenMethodChannel : FlutterMethodChannel!
+    var ResponseCallKitMethodChannel : FlutterMethodChannel!
+
     var connectedWithWeighingscale = false
     
     var isFromKilledStateNotification = false
     var payloadResonse: UNNotificationResponse!
     var voipRegistry: PKPushRegistry!
     
+    // CallKit components
     var pkPushPayload : PKPushPayload!
-    
+    var cxCallUDID: UUID!
+    var cxCallProvider: CXProvider!
+    var cxCallKitCallController: CXCallController!
+    var flutterController : FlutterViewController!
+    var isMuteCalledFromFlutter = false
+    var isSplashScreenLaunched = false
+
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -114,6 +123,10 @@ import PushKit
         // locationManager = CLLocationManager()
         // locationManager?.delegate = self
         // locationManager?.requestWhenInUseAuthorization()
+        
+        receiveCallKitMethodFromNative()
+        
+        flutterController = window?.rootViewController as! FlutterViewController
         
         // 2
         // Speech Recognization
@@ -281,6 +294,8 @@ import PushKit
             }
             if call.method == Constants.IsAppLockChecked{
                 if let QurhomeDefault = call.arguments as? NSDictionary,let status = QurhomeDefault["status"] as? Bool{
+                    self.isSplashScreenLaunched = true
+
                     if(status == true && self.payloadResonse != nil){
                         self.isFromKilledStateNotification = false;
                         let data = self.payloadResonse.notification.request.content.userInfo

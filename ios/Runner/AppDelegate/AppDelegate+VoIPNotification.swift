@@ -9,18 +9,19 @@
 import Foundation
 import PushKit
 import CallKit
+import AVFAudio
 
 extension AppDelegate : PKPushRegistryDelegate {
     
     // CALLKIT DELEGATES
     func providerDidReset(_ provider: CXProvider) {
+        
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         print("Successfully registered for VoIP push notifications.")
-//        let deviceToken = (pushCredentials.token as NSData).description
+        //        let deviceToken = (pushCredentials.token as NSData).description
         print("TOKEN:", pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
-        
         triggerPushKitTokenMethod(token: pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
     }
     
@@ -29,53 +30,6 @@ extension AppDelegate : PKPushRegistryDelegate {
             pkPushPayload = payload
             triggerCallKit(payload: payload)
         }
-        //        if type == .voIP {
-        //                 if application.applicationState == .active {
-        //                     var message = "VOIP PUSH from Admin"
-        //                     if let alertMessage = payload.dictionaryPayload["alertMessage"] as? String {
-        //                         message = alertMessage
-        //                     }
-        //                     message = "VOIP: " + message
-        //                     delegate?.notificationsProvider(self, didReceive: [message])
-        //                     completion()
-        //                 }
-        //             }
-        
-        //        let payloadDict = payload.dictionaryPayload as! Dictionary<String, Any>
-        //        as! Dictionary<String, Any>
-        //        let name = payloadDict["name"]! as Any
-        //        let userId = payloadDict["userID"]! as Any
-        
-        // Responses
-        //        {
-        //            "isWeb": true,
-        //            "meetingId": 1303758,
-        //            "type": call,
-        //            "doctorPicture": https: //dwtg3mk9sjz8epmqfo.vsolgmi.com/api/file-guard/fileData/profilePicture64a43ea4-c6d1-4bd7-8ad9-b0395a547643,
-        //                "rawTitle": ,
-        //            "isCaregiver": true,
-        //            "doctorId": 64 a43ea4 - c6d1 - 4 bd7 - 8 ad9 - b0395a547643,
-        //            "externalLink": ,
-        //            "meeting_id": 1303758,
-        //            "pushNotificationType": call,
-        //            "callType": audio,
-        //            "sound": ping.aiff,
-        //            "aps": {
-        //                alert = "Incoming Audio call";
-        //                badge = 3;
-        //                sound = "ping.aiff";
-        //            },
-        //            "body": Incoming Audio call,
-        //            "userName": Lex Appointment,
-        //            "patientName": Aaaaaaa Babu,
-        //            "patientId": 0 c0fd9e0 - 8398 - 4 bd7 - b33f - 36e431 b7c923,
-        //            "rawBody": ,
-        //            "username": Lex Appointment,
-        //            "priority": high,
-        //            "notificationListId": a28ce4f7 - b43c - 4592 - 8 da7 - d868a4530eb9,
-        //            "title": Lex Appointment,
-        //            "patientPicture": https: //dwtg3mk9sjz8epmqfo.vsolgmi.com/api/file-guard/fileData/profilePicture/0c0fd9e0-8398-4bd7-b33f-36e431b7c923
-        //        }
     }
     
     // What happens when the user accepts the call by pressing the incoming call button? You should implement the method below and call the fulfill method if the call is successful.
@@ -88,7 +42,7 @@ extension AppDelegate : PKPushRegistryDelegate {
             
             let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
             navigationController?.children.first?.present(alert, animated: true)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 4) {
+            DispatchQueue.main.asyncAfter(deadline: isSplashScreenLaunched ?  DispatchTime.now() : DispatchTime.now() + 4) {
                 alert.dismiss(animated: true)
                 
                 if (self.ResponseNotificationChannel == nil){
@@ -103,16 +57,22 @@ extension AppDelegate : PKPushRegistryDelegate {
     
     // What happens when the user taps the reject button? Call the fail method if the call is unsuccessful. It checks the call based on the UUID. It uses the network to connect to the end call method you provide.
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+        //  let update = CXCallUpdate()
+        //
+        //  // Set the remoteHandle, so you can call from System Call History
+        //  update.remoteHandle = CXHandle(type: .generic, value: yourHandle)
+        //  cxCallProvider.reportCall(with: uuid, updated: update)
+        
         action.fulfill()
         
         if var payloadDict = pkPushPayload.dictionaryPayload as? Dictionary<String, Any>, let controller = navigationController?.children.first as? FlutterViewController {
             
             payloadDict["status"] = "Decline";
             
-//            let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
-//            navigationController?.children.first?.present(alert, animated: true)
+            //            let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
+            //            navigationController?.children.first?.present(alert, animated: true)
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
-//                alert.dismiss(animated: true)
+                //                alert.dismiss(animated: true)
                 if (self.ResponseNotificationChannel == nil){
                     self.ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
                 }
@@ -120,6 +80,110 @@ extension AppDelegate : PKPushRegistryDelegate {
             }
         }
         return
+    }
+    
+    func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
+        if(self.isMuteCalledFromFlutter == false){
+            action.fulfill()
+            if(flutterController != nil){
+                if (ResponseCallKitMethodChannel == nil){
+                    ResponseCallKitMethodChannel = FlutterMethodChannel.init(name: Constants.reponseToCallKitMethodChannel, binaryMessenger: flutterController.binaryMessenger)
+                    
+                }
+                var newData  = ["Status": action.isMuted]
+                
+                ResponseCallKitMethodChannel.invokeMethod(Constants.IsCallMuted, arguments:newData)
+            }
+        }else{
+            self.isMuteCalledFromFlutter = false
+        }
+    }
+}
+
+extension AppDelegate {
+    func triggerCallKit(payload: PKPushPayload){
+        if let payloadDict = payload.dictionaryPayload as? Dictionary<String, Any>,
+           let callerName =  payloadDict["username"] as? String,
+           let callType =  payloadDict["callType"] as? String{
+            print("PUSH KIT PAYLOAD:", payloadDict);
+            
+            //  1: Create an incoming call update object. This object stores different types of information about the caller. You can use it in setting whether the call has a video.
+            let cxCallUpdate = CXCallUpdate()
+            cxCallUpdate.remoteHandle = CXHandle(type: .generic, value: callerName)
+            
+            //  2: Create and set configurations about how the calling application should behave
+            if #available(iOS 14.0, *) {
+                let cxCallConfig = CallKit.CXProviderConfiguration()
+                let iconMaskImage = #imageLiteral(resourceName: "appLogo")
+                cxCallConfig.iconTemplateImageData = iconMaskImage.pngData()
+                cxCallConfig.includesCallsInRecents = false;
+                cxCallConfig.supportedHandleTypes = [.generic]
+                cxCallConfig.supportsVideo = callType == "audio" ? false : true;
+                cxCallConfig.maximumCallGroups = 1 // To disable the add call button
+                cxCallConfig.maximumCallsPerCallGroup = 1 // To disable the add call button
+                // Provide a custom ringtone
+                cxCallConfig.ringtoneSound = "iPHONE RINGTONE.aiff";
+                
+                cxCallUpdate.hasVideo = callType == "audio" ? false : true;
+                cxCallUpdate.supportsGrouping = false; // To disable the add call button
+                cxCallUpdate.supportsUngrouping = false; // To disable the add call button
+                cxCallUpdate.supportsHolding = false; // To disable the add call button
+                cxCallUpdate.supportsDTMF = false
+                
+                // 3: Create a CXProvider instance and set its delegate
+                cxCallProvider = CXProvider(configuration: cxCallConfig)
+                cxCallProvider.setDelegate(self, queue: nil)
+                
+                //  4. Post local notification to the user that there is an incoming call. Add the helper method below `reportIncomingCall` to show the full-screen UI. It must contain `UUID()` that helps to identify the caller using a random identifier. You should also provide the `CXCallUpdate` that comprises metadata information about the incoming call.
+                cxCallKitCallController = CXCallController()
+                
+                cxCallUDID = UUID()
+                cxCallProvider.reportNewIncomingCall(with: cxCallUDID, update: cxCallUpdate, completion: { error in })
+            } else {
+                //  Fallback on earlier versions
+            }
+        }
+    }
+    
+    func receiveCallKitMethodFromNative(){
+        //        configureAudioSession()
+        //        try? AVAudioSession.sharedInstance().setCategory(
+        //            AVAudioSession.Category.playAndRecord,
+        //            mode: AVAudioSession.Mode.voiceChat,
+        //            options: [.duckOthers, .allowBluetoothA2DP, .allowBluetooth]
+        //        )
+        
+        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+        if (ResponseCallKitMethodChannel == nil){
+            ResponseCallKitMethodChannel = FlutterMethodChannel.init(name: Constants.reponseToCallKitMethodChannel, binaryMessenger: controller.binaryMessenger)
+        }
+        
+        ResponseCallKitMethodChannel.setMethodCallHandler {[weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
+            guard let self = self else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            // 1
+            // Use this to notify CallKit the call is disconnected
+            if call.method == Constants.IsCallEnded{
+                if let QurhomeDefault = call.arguments as? NSDictionary,let status = QurhomeDefault["status"] as? Bool{
+                    if(status == true){
+                        // End the call
+                        self.cxCallProvider.reportCall(with: self.cxCallUDID, endedAt: Date(), reason: .remoteEnded)
+                    }
+                }
+            }
+            
+            // 2
+            // Mute the call
+            if call.method == Constants.IsCallMuted{
+                if let QurhomeDefault = call.arguments as? NSDictionary,let status = QurhomeDefault["status"] as? Bool{
+                    self.isMuteCalledFromFlutter = true
+                    // Mute the call
+                    self.muteTheCall(isMuted: status)
+                }
+            }
+        }
     }
     
     func triggerPushKitTokenMethod(token: String){
@@ -134,47 +198,41 @@ extension AppDelegate : PKPushRegistryDelegate {
             self.ReponsePushKitTokenMethodChannel.invokeMethod(Constants.pushKitTokenMethod, arguments:data)
         }
     }
-}
-
-extension AppDelegate {
-    func triggerCallKit(payload: PKPushPayload){
-        
-        if let payloadDict = payload.dictionaryPayload as? Dictionary<String, Any>,
-           let callerName =  payloadDict["patientName"] as? String,
-           let callType =  payloadDict["callType"] as? String{
-            print("PUSH KIT PAYLOAD:", payloadDict);
-            //  1: Create an incoming call update object. This object stores different types of information about the caller. You can use it in setting whether the call has a video.
-            let update = CXCallUpdate()
+    
+    // Mute or unmute from the app. This is to sync the CallKit UI with app UI
+    func muteTheCall(isMuted: Bool) {
+        if let uuid = cxCallUDID{
+            let muteAction = CXSetMutedCallAction(call: uuid, muted: !isMuted)
+            let transaction = CXTransaction(action: muteAction)
             
-            //  Specify the type of information to display about the caller during an incoming call. The different types of information available include `.generic`. For example, you could use the caller's name for the generic type. During an incoming call, the name displays to the other user. Other available information types are emails and phone numbers.
-            update.remoteHandle = CXHandle(type: .generic, value: callerName)
-//            update.remoteHandle = CXHandle(type: .emailAddress, value: "senthil@gmail.com")
-//            update.remoteHandle = CXHandle(type: .phoneNumber, value: "a+35846599990")
-            
-            //  2: Create and set configurations about how the calling application should behave
-            if #available(iOS 14.0, *) {
-                let config = CallKit.CXProviderConfiguration()
-                if let callerImg =  payloadDict["doctorPicture"] as? String{
-                    if let data = try? Data(contentsOf: URL(string:callerImg)!) {
-                        config.iconTemplateImageData = data
+            cxCallKitCallController.request(transaction)  { error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        NSLog("SetMutedCallAction transaction request failed: \(error.localizedDescription)")
+                        return
                     }
+                    NSLog("SetMutedCallAction transaction request successful")
                 }
-                config.includesCallsInRecents = false;
-                config.supportsVideo = callType == "audio" ? false : true;
-                update.hasVideo = callType == "audio" ? false : true;
-                
-                // Provide a custom ringtone
-                config.ringtoneSound = "iPHONE RINGTONE.aiff";
-                
-                // 3: Create a CXProvider instance and set its delegate
-                let provider = CXProvider(configuration: config)
-                provider.setDelegate(self, queue: nil)
-                
-                //  4. Post local notification to the user that there is an incoming call. When using CallKit, you do not need to rely on only displaying incoming calls using the local notification API because it helps to show incoming calls to users using the native full-screen incoming call UI on iOS. Add the helper method below `reportIncomingCall` to show the full-screen UI. It must contain `UUID()` that helps to identify the caller using a random identifier. You should also provide the `CXCallUpdate` that comprises metadata information about the incoming call. You can also check for errors to see if everything works fine.
-                provider.reportNewIncomingCall(with: UUID(), update: update, completion: { error in })
-            } else {
-                //  Fallback on earlier versions
             }
+        }
+    }
+    
+    func configureAudioSession() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            //            if audioSession.category != .playAndRecord {
+            try audioSession.setCategory(AVAudioSession.Category.playAndRecord,
+                                         options: AVAudioSession.CategoryOptions.mixWithOthers)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+            try audioSession.setMode(.default)
+            try audioSession.overrideOutputAudioPort(.none)
+            try audioSession.setActive(true)
+            //            }
+            //            if audioSession.mode != .voiceChat {
+            //                try audioSession.setMode(.voiceChat)
+            //            }
+        } catch {
+            print("Error configuring AVAudioSession: \(error.localizedDescription)")
         }
     }
 }
