@@ -2530,7 +2530,7 @@ class CommonUtil {
       //     .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
 
       if (newVersion > currentVersion) {
-        //_showVersionDialog(context, isForceUpdate);
+        _showVersionDialog(context, isForceUpdate);
       }
     } on FirebaseException catch (exception) {
       // Fetch throttled.
