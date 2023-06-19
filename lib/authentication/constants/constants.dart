@@ -38,7 +38,7 @@ const String membership = 'Membership';
 const String platinum = 'Platinum';
 const String getStarted = 'Let\'s Get Started';
 const String longDescription =
-    'Membership for Qurbook app\nThat brings you the best-in-class health ecosystem partners for all your healthcare needs.';
+    'Membership for QurHome app\nThat brings you the best-in-class health ecosystem partners for all your healthcare needs.';
 const String careEmployees =
     'Cares for its employees and\ntheir family\'s health\n&\nHas offered you the';
 
