@@ -843,9 +843,9 @@ const String activity_removed_regimen =
     'Activity has been removed from your regimen';
 
 
-const String Str_Exit = 'Exit';
+const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
-const String Str_UndoAll = 'Undo all';
+const String StrUndoAll = 'Undo all';
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
