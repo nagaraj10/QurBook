@@ -73,6 +73,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   @override
   void dispose() {
     animationController?.dispose();
+    controller.clearTimer();
     WidgetsBinding.instance!.removeObserver(this);
     controller.stopTTS();
     controller.isSheelaScreenActive = false;
@@ -137,6 +138,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               controller.isSheelaScreenActive = false;
               controller.getSheelaBadgeCount();
               controller.updateTimer(enable: false);
+              controller.clearTimer();
               Get.back();
               return true;
             }
@@ -253,6 +255,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 },
                 child: FloatingActionButton(
                   onPressed: () {
+                    controller.clearTimer();
                     if (controller.isLoading.isFalse) {
                       if (controller.currentPlayingConversation != null &&
                           controller
