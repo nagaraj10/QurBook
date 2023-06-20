@@ -29,6 +29,7 @@ class PickImageController {
         ((file.path.toString().toLowerCase().contains(strJpgDot)) ||
             (file.path.toString().toLowerCase().contains(strJpegDot)) ||
             (file.path.toString().toLowerCase().contains(strPngDot)))) {
+      croppedFile = file;
     } else {
       croppedFile = file;
     }
