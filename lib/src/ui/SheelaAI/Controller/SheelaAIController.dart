@@ -67,6 +67,7 @@ class SheelaAIController extends GetxController {
   bool lastMsgIsOfButtons = false;
   late AudioCache _audioCache;
   Timer? _popTimer;
+  Timer? _exitAutoTimer;
   var sheelaIconBadgeCount = 0.obs;
   bool isUnAvailableCC = false;
   bool isProd = false;
@@ -162,6 +163,10 @@ class SheelaAIController extends GetxController {
                   strMyFamilyList.toLowerCase()) {
                 Get.to(UserAccounts(
                     arguments: UserAccountsArguments(selectedIndex: 1)));
+              }
+              else if ((conversations.last.redirectTo ?? "") ==
+                  strHomeScreen.toLowerCase()) {
+                startTimer();
               }
             } catch (e) {
               //gettingReposnseFromNative();
@@ -1029,6 +1034,19 @@ class SheelaAIController extends GetxController {
       }
     } catch (e) {
       printError(info: e.toString());
+    }
+  }
+
+  void startTimer() {
+    _exitAutoTimer = Timer(const Duration(seconds: 10), () {
+      Get.back();
+    });
+  }
+
+  clearTimer() {
+    if (_exitAutoTimer != null && _exitAutoTimer!.isActive) {
+      _exitAutoTimer!.cancel();
+      _exitAutoTimer = null;
     }
   }
 
