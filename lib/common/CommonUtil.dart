@@ -173,6 +173,7 @@ class CommonUtil {
   static String POWER_BI_URL = 'IN';
   static String BASE_URL_QURHUB = '';
   static String TRUE_DESK_URL = '';
+  static String WEB_URL = '';
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
 

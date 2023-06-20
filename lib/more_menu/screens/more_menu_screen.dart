@@ -13,6 +13,7 @@ import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/otp_remove_account_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
+import 'package:myfhb/common/DeleteAccountWebScreen.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -1644,37 +1645,19 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   style: TextStyle(
                       fontWeight: FontWeight.w500, color: Colors.black)),
               children: [
-                ListTile(
+                InkWell(
+                  onTap: (){
+                    Get.to(DeleteAccountWebScreen());
+                  },
+                  child: ListTile(
                     leading: ImageIcon(
                       AssetImage(variable.remove_user),
                       //size: 30,
                       color: Colors.black,
                     ),
                     title: Text(variable.strDeleteAccountTitle),
-                    trailing: Transform.scale(
-                      scale: 0.8,
-                      child: Switch(
-                        value: PreferenceUtil.getEnableDeleteAccount(),
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                        onChanged: (bool newValue) async {
-                          if (newValue) {
-                            _confirmDeletion();
-                            setState(() {
-                              PreferenceUtil.saveEnableDeleteAccount(
-                                deleteAccountStatus: true,
-                              );
-                            });
-                          } else {
-                            setState(() {
-                              PreferenceUtil.saveEnableDeleteAccount(
-                                deleteAccountStatus: false,
-                              );
-                            });
-                          }
-                        },
-                      ),
-                    )),
+                  ),
+                )
               ],
             )),
         Divider(),
