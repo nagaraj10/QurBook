@@ -1044,7 +1044,6 @@ class SheelaAIController extends GetxController {
   }
 
   clearTimer() {
-    print('clear the timerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
     if (_exitAutoTimer != null && _exitAutoTimer!.isActive) {
       _exitAutoTimer!.cancel();
       _exitAutoTimer = null;
