@@ -210,6 +210,10 @@ class CommonUtil {
   final String CONTENT_NO_REFUND =
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
 
+  final String sheelaDialogTitle = 'Activity is not completed.';
+
+  final String sheelaDialogBody = 'Do you wish to cancel now?';
+
   static getProviderType(String type) {
     return 'health-organization/search/efhb?healthOrganizationType=%5B%22${type}%22%5D&limit=100&sortBy=asc';
   }
@@ -2527,7 +2531,7 @@ class CommonUtil {
       //     .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
 
       if (newVersion > currentVersion) {
-        //_showVersionDialog(context, isForceUpdate);
+        _showVersionDialog(context, isForceUpdate);
       }
     } on FirebaseException catch (exception) {
       // Fetch throttled.
@@ -6151,6 +6155,38 @@ class CommonUtil {
         .inDays;
   }
 
+  Future<void> alertForSheelaDiscardOnConversation(BuildContext context,
+      {Function()? pressYes, Function()? pressNo}) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(sheelaDialogTitle, style: TextStyle(fontSize: 20.sp)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(sheelaDialogBody, style: TextStyle(fontSize: 18.sp)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(strCamelNo),
+              onPressed: () {
+                pressNo!();
+              },
+            ),
+            TextButton(
+              child: Text(strCamelYes),
+              onPressed: () {
+                pressYes!();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 extension CapExtension on String {

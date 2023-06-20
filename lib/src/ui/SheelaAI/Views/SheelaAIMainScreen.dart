@@ -356,12 +356,19 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         ),
         child: InkWell(
             onTap: () {
-              controller.stopTTS();
-              controller.canSpeak = false;
-              controller.isSheelaScreenActive = false;
-              controller.getSheelaBadgeCount();
-              controller.updateTimer(enable: false);
-              Get.back();
+              if ((CommonUtil.isUSRegion()) &&
+                  ((controller.conversations.length ?? 0) > 0) &&
+                  !(controller.conversations.last?.endOfConv ?? true)) {
+                CommonUtil().alertForSheelaDiscardOnConversation(context,
+                    pressYes: () {
+                  goToBackScreen();
+                  Get.back();
+                }, pressNo: () {
+                  Get.back();
+                });
+              } else {
+                goToBackScreen();
+              }
             },
             child: CommonUtil().isTablet!
                 ? IconWidget(
@@ -411,6 +418,15 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         ),
       ),
     );
+  }
+
+  goToBackScreen() {
+    controller.stopTTS();
+    controller.canSpeak = false;
+    controller.isSheelaScreenActive = false;
+    controller.getSheelaBadgeCount();
+    controller.updateTimer(enable: false);
+    Get.back();
   }
 
   Widget _getMuteUnMuteIcon() {

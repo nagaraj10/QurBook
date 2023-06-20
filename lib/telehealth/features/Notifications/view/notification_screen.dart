@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -1982,72 +1983,97 @@ class _NotificationScreen extends State<NotificationScreen> {
 
         break;
       case parameters.careGiverTransportRequestReminder:
-        return (notification.messageDetails?.isAccepted==null)?Padding(
-          padding: const EdgeInsets.all(0),
-          child: Row(
-            children: [
-              OutlineButton(
-                onPressed: () async {
-
-                  new CommonUtil().acceptCareGiverTransportRequestReminder(
-                      context,
-                      notification.messageDetails?.payload?.appointmentId??'',
-                      notification.messageDetails?.payload?.patientId??'',
-                      true).then((value){
-                    readUnreadAction(notification, isRead: true);
-                    notification.messageDetails?.setAccepted(true);
-                  });
-
-                },
-                borderSide: !notification.isActionDone!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
-                child: TextWidget(
-                  text: 'Accept',
-                  colors: !notification.isActionDone!
-                      ? Color(CommonUtil().getMyPrimaryColor())
-                      : Colors.grey,
-                  overflow: TextOverflow.visible,
-                  fontWeight: FontWeight.w600,
-                  fontsize: 14.0.sp,
-                ),
-              ),
-              SizedBox(
-                width: 15.0.w,
-              ),
-              OutlineButton(
-                onPressed: () async {
-
-                  new CommonUtil().acceptCareGiverTransportRequestReminder(
-                      context,
-                      notification.messageDetails?.payload?.appointmentId??'',
-                      notification.messageDetails?.payload?.patientId??'',
-                      false).then((value){
-                    readUnreadAction(notification, isRead: true);
-                    notification.messageDetails?.setAccepted(true);
-                  });
-                },
-                borderSide: !notification.isActionDone!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
-                child: TextWidget(
-                  text: 'Decline',
-                  colors: !notification.isActionDone!
-                      ? Color(CommonUtil().getMyPrimaryColor())
-                      : Colors.grey,
-                  overflow: TextOverflow.visible,
-                  fontWeight: FontWeight.w600,
-                  fontsize: 14.0.sp,
-                ),
-              ),
-            ],
-          ),
-        ):Container();
+        return (notification.messageDetails?.isAccepted==null)?(isAppointmentExpired(notification.messageDetails?.payload?.appointmentDate??'')?getAppointmentAcceptAndReject(notification):Container()):Container();
 
         break;
       default:
         return Container();
         break;
+    }
+  }
+
+  Widget getAppointmentAcceptAndReject(NotificationResult notification){
+    return Padding(
+      padding: const EdgeInsets.all(0),
+      child: Row(
+        children: [
+          OutlineButton(
+            onPressed: () async {
+
+              new CommonUtil().acceptCareGiverTransportRequestReminder(
+                  context,
+                  notification.messageDetails?.payload?.appointmentId??'',
+                  notification.messageDetails?.payload?.patientId??'',
+                  true).then((value){
+                readUnreadAction(notification, isRead: true);
+                notification.messageDetails?.setAccepted(true);
+              });
+
+            },
+            borderSide: !notification.isActionDone!
+                ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                : BorderSide(color: Colors.grey),
+            child: TextWidget(
+              text: 'Accept',
+              colors: !notification.isActionDone!
+                  ? Color(CommonUtil().getMyPrimaryColor())
+                  : Colors.grey,
+              overflow: TextOverflow.visible,
+              fontWeight: FontWeight.w600,
+              fontsize: 14.0.sp,
+            ),
+          ),
+          SizedBox(
+            width: 15.0.w,
+          ),
+          OutlineButton(
+            onPressed: () async {
+
+              new CommonUtil().acceptCareGiverTransportRequestReminder(
+                  context,
+                  notification.messageDetails?.payload?.appointmentId??'',
+                  notification.messageDetails?.payload?.patientId??'',
+                  false).then((value){
+                readUnreadAction(notification, isRead: true);
+                notification.messageDetails?.setAccepted(true);
+              });
+            },
+            borderSide: !notification.isActionDone!
+                ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                : BorderSide(color: Colors.grey),
+            child: TextWidget(
+              text: 'Decline',
+              colors: !notification.isActionDone!
+                  ? Color(CommonUtil().getMyPrimaryColor())
+                  : Colors.grey,
+              overflow: TextOverflow.visible,
+              fontWeight: FontWeight.w600,
+              fontsize: 14.0.sp,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool isAppointmentExpired(String date){
+    if(date.isNotEmpty){
+      try{
+        var time=DateTime.parse(date);
+        var temp = DateTime.now();
+        var d1 = DateTime.utc(temp.year,temp.month,temp.day,temp.hour,temp.minute,temp.second);
+
+        if(d1.isAfter(time.toUtc())){
+          return false;
+        }else{
+          return true;
+        }
+
+        }catch(e){
+        return false;
+      }
+    }else{
+      return false;
     }
   }
 
