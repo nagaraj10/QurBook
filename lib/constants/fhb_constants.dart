@@ -594,6 +594,7 @@ const String strAppointment = 'Appointments';
 const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
 const String strMyFamilyList = 'myfamily_list';
+const String strHomeScreen = 'home_screen';
 const String strManageActivities = 'Enable / Disable Activities';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Plans';
@@ -840,6 +841,11 @@ const String strFeatureNotEnable =
 const String sheela_hdn_btn_yes = 'yes';
 const String activity_removed_regimen =
     'Activity has been removed from your regimen';
+
+
+const String Str_Exit = 'Exit';
+const String str_Undo = 'Undo';
+const String Str_UndoAll = 'Undo all';
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
