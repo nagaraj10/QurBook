@@ -255,7 +255,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.POWER_BI_URL = values[11];
   CommonUtil.BASE_URL_QURHUB = values[12];
   CommonUtil.TRUE_DESK_URL = values[13];
-  CommonUtil.WEB_URL = values[14];
+  // CommonUtil.WEB_URL = values[14];
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {

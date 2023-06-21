@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "MicrosoftTeams-image (9).png",
+      "filename" : "callKitLogo1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "callKitLogo2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "callKitLogo3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

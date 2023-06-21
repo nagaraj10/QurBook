@@ -3,7 +3,6 @@
 //  Runner
 //
 //  Created by Senthil on 15/05/23.
-//  Copyright © 2023 The Chromium Authors. All rights reserved.
 //
 
 import Foundation
