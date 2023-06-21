@@ -67,10 +67,13 @@ class SheelaAIController extends GetxController {
   bool lastMsgIsOfButtons = false;
   late AudioCache _audioCache;
   Timer? _popTimer;
+  Timer? _exitAutoTimer;
   var sheelaIconBadgeCount = 0.obs;
   bool isUnAvailableCC = false;
   bool isProd = false;
   SheelaBadgeServices sheelaBadgeServices = SheelaBadgeServices();
+
+  Rx<bool> isMuted = false.obs;
 
   @override
   void onInit() {
@@ -79,9 +82,10 @@ class SheelaAIController extends GetxController {
   }
 
   setDefaultValues() async {
-    if (BASE_URL == prodINURL) {
-      isProd = true;
-    } else if (BASE_URL == prodUSURL) {
+    if ((BASE_URL == prodINURL) ||
+        (BASE_URL == prodUSURL) ||
+        (BASE_URL == demoINURL) ||
+        (BASE_URL == demoUSURL)) {
       isProd = true;
     }
     if (Platform.isIOS) {
@@ -137,7 +141,13 @@ class SheelaAIController extends GetxController {
             stopTTS();
             try {
               if (!conversations.last.endOfConv) {
-                gettingReposnseFromNative();
+                if (CommonUtil.isUSRegion()) {
+                  if (!isMuted.value) {
+                    gettingReposnseFromNative();
+                  }
+                } else {
+                  gettingReposnseFromNative();
+                }
               } else if ((conversations.last.redirectTo ?? "") ==
                   strRegimen.toLowerCase()) {
                 if (PreferenceUtil.getIfQurhomeisAcive()) {
@@ -153,6 +163,10 @@ class SheelaAIController extends GetxController {
                   strMyFamilyList.toLowerCase()) {
                 Get.to(UserAccounts(
                     arguments: UserAccountsArguments(selectedIndex: 1)));
+              }
+              else if ((conversations.last.redirectTo ?? "") ==
+                  strHomeScreen.toLowerCase()) {
+                startTimer();
               }
             } catch (e) {
               //gettingReposnseFromNative();
@@ -279,8 +293,8 @@ class SheelaAIController extends GetxController {
             : relationshipId,
         conversationFlag: conversationFlag,
         additionalInfo: json.encode(additionalInfo),
-        localDateTime:
-            CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
+        localDateTime: CommonUtil.dateFormatterWithdatetimesecondsApiFormatAI(
+            DateTime.now()),
         endPoint: BASE_URL,
         directCall: isUnAvailableCC ? "UNAVAILABLE" : null,
       );
@@ -379,7 +393,13 @@ class SheelaAIController extends GetxController {
             sessionToken = const Uuid().v1();
             relationshipId = userId;
           }
-          playTTS();
+          if (CommonUtil.isUSRegion()) {
+            if (!isMuted.value) {
+              playTTS();
+            }
+          } else {
+            playTTS();
+          }
           callToCC(currentResponse);
           if (currentResponse.lang != null && currentResponse.lang != '') {
             PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang ?? "");
@@ -479,7 +499,9 @@ class SheelaAIController extends GetxController {
       if (playButtons) {
         final currentButton = currentPlayingConversation!
             .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
-        if (currentButton.title!.contains("Exit")) {
+        if (currentButton.title!.contains(StrExit) ||
+            (currentButton.title!.contains(str_Undo) ||
+                (currentButton.title!.contains(StrUndoAll)))) {
           gettingReposnseFromNative();
           return;
         } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
@@ -595,22 +617,65 @@ class SheelaAIController extends GetxController {
   Future<SheelaResponse?> getGoogleTTSForConversation(
       SheelaResponse conversation) async {
     try {
-      final result = await getGoogleTTSForText(conversation.text);
-      conversation.ttsResponse = result;
-
-//This will increase the delay in the api calls
-
-      // if ((conversation.buttons ?? []).isNotEmpty) {
-      //   for (var button in conversation.buttons) {
-      //     final resultForButton = await getGoogleTTSForText(button.title);
-      //     button.ttsResponse = resultForButton;
-      //   }
-      // }
+      List<Future> apis = [
+        getGoogleTTSForConversationForMessage(
+          conversation,
+        ),
+      ];
+      if ((conversation.buttons ?? []).isNotEmpty) {
+        for (var button in conversation.buttons!) {
+          apis.add(
+            getGoogleTTSForConversationForButton(
+              button,
+            ),
+          );
+        }
+      }
+      final result = await Future.wait(apis);
       return conversation;
     } catch (e) {
       //Failed to get tts in conversation
       FlutterToast()
           .getToast('Failed to get tts in conversation', Colors.black54);
+    }
+  }
+
+  Future<bool> getGoogleTTSForConversationForMessage(
+      SheelaResponse conversation) async {
+    try {
+      final result = await getGoogleTTSForText(conversation.text);
+      conversation.ttsResponse = result;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> getGoogleTTSForConversationForButton(Buttons button) async {
+    try {
+      String toSpeech = '';
+      if ((button.sayText ?? '').isNotEmpty) {
+        var stringToSpeech = button.sayText;
+        if (button.sayText!.contains(".")) {
+          stringToSpeech = button.sayText!.split(".")[1];
+          toSpeech = stringToSpeech;
+        } else {
+          toSpeech = button.sayText!;
+        }
+      } else {
+        var stringToSpeech = button.title;
+        if (button.title!.contains(".")) {
+          stringToSpeech = button.title!.split(".")[1];
+          toSpeech = stringToSpeech;
+        } else {
+          toSpeech = button.title!;
+        }
+      }
+      final result = await getGoogleTTSForText(toSpeech);
+      button.ttsResponse = result;
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -971,6 +1036,19 @@ class SheelaAIController extends GetxController {
       }
     } catch (e) {
       printError(info: e.toString());
+    }
+  }
+
+  void startTimer() {
+    _exitAutoTimer = Timer(const Duration(seconds: 10), () {
+      Get.back();
+    });
+  }
+
+  clearTimer() {
+    if (_exitAutoTimer != null && _exitAutoTimer!.isActive) {
+      _exitAutoTimer!.cancel();
+      _exitAutoTimer = null;
     }
   }
 

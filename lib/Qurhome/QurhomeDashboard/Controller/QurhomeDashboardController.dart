@@ -1,9 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_list_model.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 
@@ -29,11 +35,26 @@ class QurhomeDashboardController extends GetxController {
   Timer? _bleTimer = null;
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
   var isLoading = false.obs;
-  var isActive = false.obs;
   var eventId = ''.obs;
+  var estart = ''.obs;
 
   var isVitalModuleDisable = true.obs;
   var isSymptomModuleDisable = true.obs;
+
+  var loadingData = false.obs;
+  var forPatientList = false.obs;
+  CareGiverPatientListResult? careGiverPatientListResult;
+  var currentSelectedTab = 0.obs;
+  var isPatientClicked = false.obs;
+
+  var careCoordinatorIdEmptyMsg = "".obs;
+
+  final _apiProvider = QurHomeApiProvider();
+  PatientAlertListModel? patientAlert;
+  var loadingPatientData = false.obs;
+
+  int nextAlertPosition = 0;
+  int currentIndex = 0;
 
   @override
   void onInit() {
@@ -102,6 +123,7 @@ class QurhomeDashboardController extends GetxController {
           ? myProfile.result!.firstName!.capitalizeFirstofEach
           : '';
     } catch (e) {}
+
     switch (currentSelectedIndex.value) {
       case 0:
         appBarTitle = '$firstName'.obs;
@@ -168,7 +190,8 @@ class QurhomeDashboardController extends GetxController {
             redirectToSheelaScheduleAppointment();
           }
         }
-      } as Future<dynamic> Function(MethodCall)?);
+        return Future.value('');
+      });
     }
   }
 
@@ -239,6 +262,72 @@ class QurhomeDashboardController extends GetxController {
     if (CommonUtil.isUSRegion()) {
       isVitalModuleDisable.value = true;
       isSymptomModuleDisable.value = true;
+    }
+  }
+
+  getPatientAlertList() async {
+    loadingPatientData.value = true;
+    patientAlert = await _apiProvider
+        .getPatientAlertList(careGiverPatientListResult?.childId ?? '');
+    loadingPatientData.value = false;
+
+    if (patientAlert != null &&
+        patientAlert?.result != null &&
+        patientAlert?.result?.data != null &&
+        (patientAlert?.isSuccess ?? false)) {
+      try {
+        patientAlert?.result?.data?.sort((a, b) =>
+            (b?.createdOn?.compareTo(a?.createdOn ?? DateTime.now()) ?? 0));
+
+        update(["newUpdate"]);
+      } catch (e) {
+        return;
+      }
+    } else {
+      return;
+    }
+  }
+
+  clear() {
+    loadingData = false.obs;
+    forPatientList = false.obs;
+    careGiverPatientListResult = null;
+    currentSelectedTab = 0.obs;
+    isPatientClicked = false.obs;
+
+    careCoordinatorIdEmptyMsg = "".obs;
+
+    patientAlert = null;
+    loadingPatientData = false.obs;
+
+    nextAlertPosition = 0;
+    currentIndex = 0;
+  }
+
+  Future<bool> careGiverOkAction(
+      CareGiverPatientListResult? careGiverPatientListResult,
+      PatientAlertData patientAlertData) async {
+    try {
+      loadingPatientData.value = true;
+      var responseBool = await _apiProvider.careGiverOKAction(
+          careGiverPatientListResult, patientAlertData);
+      loadingPatientData.value = false;
+      return responseBool;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> caregiverEscalateAction(
+      PatientAlertData patientAlertData, String activityName) async {
+    try {
+      loadingPatientData.value = true;
+      var responseBool = await _apiProvider.careGiverEscalateAction(
+          patientAlertData, careGiverPatientListResult, activityName);
+      loadingPatientData.value = false;
+      return responseBool;
+    } catch (e) {
+      return false;
     }
   }
 }

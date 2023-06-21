@@ -27,6 +27,7 @@ import com.ventechsolutions.myFHB.constants.Constants
 class MyFirebaseInstanceService : FirebaseMessagingService() {
     val CHANNEL_INCOMING = "cha_call"
     val CHANNEL_ACK = "cha_ack"
+    val CareGiverTransportRequestReminder = "CareGiverTransportRequestReminder"
     val CHANNEL_MISS_CALL = "cha_missed_call_ns"
     val CHANNEL_CANCEL_APP = "cha_cancel_app"
     val CHANNEL_ONBOARD = "cha_doc_onboard"
@@ -256,7 +257,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                     .setOnlyAlertOnce(false)
                     .build()
 
-            notification.flags = Notification.FLAG_INSISTENT
+           // notification.flags = Notification.FLAG_INSISTENT
             nsManager.notify(NS_ID, notification)
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 AutoDismissNotification().setAlarm(this, NS_ID, NS_TIMEOUT)
@@ -341,7 +342,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotification4MissedEvents(data)
         } else if (data["templateName"] == "notifyCaregiverForMedicalRecord") {
             createNotificationCaregiverForMedicalRecord(data)
-        } else if (data[Constants.PROB_EXTERNAL_LINK] != null && data[Constants.PROB_EXTERNAL_LINK] != "") {
+        } else if (data["templateName"] == "careGiverTransportRequestReminder") {
+            careGiverTransportRequestReminder(data)
+        }else if (data[Constants.PROB_EXTERNAL_LINK] != null && data[Constants.PROB_EXTERNAL_LINK] != "") {
             openURLFromNotification(data)
         } else if (data[Constants.PROP_REDIRECT_TO] == "mycartdetails") {
             renewNotification(data)
@@ -2199,6 +2202,129 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         nsManager.notify(NS_ID, notification)
    
     }
+
+    private fun careGiverTransportRequestReminder(data: Map<String, String> = HashMap()) {
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val PAT_NAME = data[getString(R.string.pat_name)]
+        val ack_sound: Uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelCancelApps = NotificationChannel(
+                CareGiverTransportRequestReminder,
+                getString(R.string.transportation_appointment),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channelCancelApps.description = getString(R.string.channel_renew_desc)
+            val attributes =
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCancelApps.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelCancelApps)
+        }
+
+        val renewIntent = Intent(applicationContext, AcceptTransportationAppointment::class.java)
+        renewIntent.putExtra(getString(R.string.nsid), NS_ID)
+        renewIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_RENEW)
+        renewIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        renewIntent.putExtra(Constants.PATIENT_ID, data[Constants.PATIENT_ID])
+        renewIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
+        renewIntent.putExtra(Constants.STATUS,"accept")
+        val renewPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                NS_ID,
+                renewIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                NS_ID,
+                renewIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+        }
+
+
+
+        val callBackIntent = Intent(applicationContext, RejectTransportationAppointment::class.java)
+        callBackIntent.putExtra(getString(R.string.nsid), NS_ID)
+        callBackIntent.putExtra(Intent.EXTRA_TEXT, Constants.APPOINTMENT_DETAIL)
+        callBackIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        callBackIntent.putExtra(Constants.PATIENT_ID, data[Constants.PATIENT_ID])
+        callBackIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
+        callBackIntent.putExtra(Constants.STATUS,"decline")
+        val callBackPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                NS_ID,
+                callBackIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                NS_ID,
+                callBackIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+        }
+
+
+
+        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        onTapNS.putExtra(getString(R.string.nsid), NS_ID)
+        onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
+        onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
+
+
+        val onTapPendingIntent =if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                NS_ID,
+                onTapNS,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                NS_ID,
+                onTapNS,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+        }
+
+
+
+        var notification = NotificationCompat.Builder(this, CareGiverTransportRequestReminder)
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentTitle(data[getString(R.string.pro_ns_title)])
+            .setContentText(data[getString(R.string.pro_ns_body)])
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setWhen(0)
+            .setContentIntent(onTapPendingIntent)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .addAction(R.drawable.ic_add_doc, "Accept", renewPendingIntent)
+            .addAction(R.drawable.ic_decline_doc, "Decline", callBackPendingIntent)
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+            )
+            .setSound(ack_sound)
+            .setAutoCancel(true)
+            .build()
+        //notification.flags=Notification.FLAG_INSISTENT
+        nsManager.notify(NS_ID, notification)
+    }
+
 
 
 

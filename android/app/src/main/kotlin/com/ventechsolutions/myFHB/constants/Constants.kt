@@ -88,6 +88,7 @@ object Constants {
     val BLE_CONNECT ="bleConnect"
     val CARE_COORDINATOR_USER_ID ="careCoordinatorUserId"
     val PATIENT_NAME ="patientName"
+    val PATIENT_ID ="patientId"
     val CARE_GIVER_NAME ="careGiverName"
     val ACTIVITY_TIME ="activityTime"
     val ACTIVITY_NAME ="activityName"
@@ -110,6 +111,7 @@ object Constants {
     val APPOINTMENT_DATE="appointmentDate";
     val BOOKINGID="bookingId";
     val APPOINTMENTID="appointmentId";
+    val STATUS="status";
     val MEETINGID="meetingId";
     val PAYMENTLINKVIAPUSH="paymentLinkViaPush";
     val CARTID="cartId";
@@ -132,5 +134,6 @@ object Constants {
     val sayTextSheela = "saytext"
 
     val PATIENT_REFERRAL_ACCEPT="patientReferralAcceptToPatient"
+    val PROP_ESTART ="estart"
 
 }

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -67,7 +66,8 @@ import 'widgets/navigation_drawer.dart';
 
 class LandingScreen extends StatefulWidget {
   static _LandingScreenState? of(BuildContext context) =>
-      context.findAncestorStateOfType<State<LandingScreen>>() as _LandingScreenState?;
+      context.findAncestorStateOfType<State<LandingScreen>>()
+          as _LandingScreenState?;
 
   const LandingScreen({
     this.landingArguments,
@@ -102,6 +102,8 @@ class _LandingScreenState extends State<LandingScreen> {
   var userId;
 
   final controller = Get.put(ChatUserListController());
+  final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+
   final sheelBadgeController = Get.put(SheelaAIController());
 
   double selOption = 30.0.sp;
@@ -121,13 +123,12 @@ class _LandingScreenState extends State<LandingScreen> {
           profileData = getMyProfile();
         }
       } as Future<String?> Function(String?)?);
-
     } catch (e) {
       //print(e);
     }
   }
 
-   onInit() async {
+  onInit() async {
     try {
       controller.updateNewChatFloatShown(false);
       mInitialTime = DateTime.now();
@@ -164,7 +165,7 @@ class _LandingScreenState extends State<LandingScreen> {
       //   }
       // });
 
-       CommonUtil().initSocket();
+      CommonUtil().initSocket();
       sheelBadgeController.getSheelaBadgeCount();
     } catch (e) {
       print(e);
@@ -262,7 +263,8 @@ class _LandingScreenState extends State<LandingScreen> {
         value.isSuccess! ? (value.result ?? []).length > 0 : false);
     if (value.isSuccess!) {
       bool isShown =
-          await (PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown() as FutureOr<bool>);
+          await (PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown()
+              as FutureOr<bool>);
 
       if (!isShown) {
         MyProfileResult? cpUser = await getIsCpUser();
@@ -282,27 +284,27 @@ class _LandingScreenState extends State<LandingScreen> {
       return Future.value(false);
     } else {
       return showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text('Do you want to exit for now?'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('CANCEL'),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                  FlatButton(
-                    child: Text('OK'),
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                    },
-                  )
-                ],
-              );
-            },
-          ).then((value) => value as bool);
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text('Do you want to exit for now?'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              )
+            ],
+          );
+        },
+      ).then((value) => value as bool);
     }
   }
 
@@ -358,8 +360,9 @@ class _LandingScreenState extends State<LandingScreen> {
                                     Icons.menu_rounded,
                                   ),
                                   color: Colors.white,
-                                  iconSize:
-                                      CommonUtil().isTablet! ? 34.0.sp : 24.0.sp,
+                                  iconSize: CommonUtil().isTablet!
+                                      ? 34.0.sp
+                                      : 24.0.sp,
                                   onPressed: () {
                                     _scaffoldKey.currentState!.openDrawer();
                                   },
@@ -431,6 +434,29 @@ class _LandingScreenState extends State<LandingScreen> {
             refresh: (userChanged) => refresh(
               userChanged: userChanged,
             ),
+            showPatientList: () {
+              CommonUtil().showPatientListOfCaregiver(context, (user, result) {
+                if (user == "You") {
+                  refresh(
+                    userChanged: true,
+                  );
+                  Navigator.pop(context);
+                  qurhomeDashboardController.currentSelectedTab.value = 0;
+
+                  qurhomeDashboardController.forPatientList.value = false;
+                  qurhomeDashboardController.isPatientClicked.value = false;
+                  CommonUtil().navigateToQurhomeDasboard();
+                } else {
+                  qurhomeDashboardController.forPatientList.value = true;
+                  qurhomeDashboardController.careGiverPatientListResult = null;
+                  qurhomeDashboardController.careGiverPatientListResult =
+                      result;
+                  qurhomeDashboardController.currentSelectedTab.value = 0;
+                  qurhomeDashboardController.isPatientClicked.value = true;
+                  CommonUtil().navigateToQurhomePatientDasboard(result);
+                }
+              });
+            },
           ),
           bottomNavigationBar: Obx(
             () => Container(
@@ -571,7 +597,8 @@ class _LandingScreenState extends State<LandingScreen> {
           snapshot.data!.docs.forEach((element) {
             if (element.data()[constants.STR_IS_READ_COUNT] != null &&
                 element.data()[constants.STR_IS_READ_COUNT] != '') {
-              count = count + element.data()[constants.STR_IS_READ_COUNT] as int;
+              count =
+                  count + element.data()[constants.STR_IS_READ_COUNT] as int;
             }
           });
           return BadgeIcon(
@@ -659,13 +686,13 @@ class _LandingScreenState extends State<LandingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  /*CommonUtil().getUserName()*/myProfile?.result != null &&
-                    myProfile?.result?.firstName != null &&
-                    myProfile?.result?.firstName != ''
-                    ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
-                    : myProfile != null
-                    ? 'Hey User'
-                    : '',
+                  /*CommonUtil().getUserName()*/ myProfile?.result != null &&
+                          myProfile?.result?.firstName != null &&
+                          myProfile?.result?.firstName != ''
+                      ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
+                      : myProfile != null
+                          ? 'Hey User'
+                          : '',
                   style: TextStyle(
                     fontSize: CommonUtil().isTablet! ? 20.0.sp : 18.0.sp,
                     color: Colors.white,
@@ -862,7 +889,6 @@ class _LandingScreenState extends State<LandingScreen> {
         commonUtil.versionCheck(context);
       } catch (e) {}
     }
-
   }
 
   void dbInitialize() {
@@ -870,7 +896,7 @@ class _LandingScreenState extends State<LandingScreen> {
     commonConstants.getCountryMetrics();
   }
 
- callImportantsMethod() async {
+  callImportantsMethod() async {
     Get.lazyPut(
       () => PDFViewController(),
     );
@@ -918,37 +944,40 @@ class _LandingScreenState extends State<LandingScreen> {
       selectionResult = value;
       if (selectionResult!.isSuccess!) {
         if (selectionResult!.result != null) {
-          bpMonitor =
-              selectionResult!.result![0].profileSetting!.bpMonitor != null &&
-                      selectionResult!.result![0].profileSetting!.bpMonitor != ''
-                  ? selectionResult!.result![0].profileSetting!.bpMonitor
-                  : true;
-          glucoMeter =
-              selectionResult!.result![0].profileSetting!.glucoMeter != null &&
-                      selectionResult!.result![0].profileSetting!.glucoMeter != ''
-                  ? selectionResult!.result![0].profileSetting!.glucoMeter
-                  : true;
-          pulseOximeter =
-              selectionResult!.result![0].profileSetting!.pulseOximeter != null &&
-                      selectionResult!.result![0].profileSetting!.pulseOximeter !=
-                          ''
-                  ? selectionResult!.result![0].profileSetting!.pulseOximeter
-                  : true;
+          bpMonitor = selectionResult!.result![0].profileSetting!.bpMonitor !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.bpMonitor != ''
+              ? selectionResult!.result![0].profileSetting!.bpMonitor
+              : true;
+          glucoMeter = selectionResult!.result![0].profileSetting!.glucoMeter !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.glucoMeter != ''
+              ? selectionResult!.result![0].profileSetting!.glucoMeter
+              : true;
+          pulseOximeter = selectionResult!
+                          .result![0].profileSetting!.pulseOximeter !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.pulseOximeter !=
+                      ''
+              ? selectionResult!.result![0].profileSetting!.pulseOximeter
+              : true;
           thermoMeter =
               selectionResult!.result![0].profileSetting!.thermoMeter != null &&
-                      selectionResult!.result![0].profileSetting!.thermoMeter != ''
+                      selectionResult!.result![0].profileSetting!.thermoMeter !=
+                          ''
                   ? selectionResult!.result![0].profileSetting!.thermoMeter
                   : true;
-          weighScale =
-              selectionResult!.result![0].profileSetting!.weighScale != null &&
-                      selectionResult!.result![0].profileSetting!.weighScale != ''
-                  ? selectionResult!.result![0].profileSetting!.weighScale
-                  : true;
+          weighScale = selectionResult!.result![0].profileSetting!.weighScale !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.weighScale != ''
+              ? selectionResult!.result![0].profileSetting!.weighScale
+              : true;
           if (selectionResult!.result![0].profileSetting != null) {
-            if (selectionResult!.result![0].profileSetting!.preferred_language !=
+            if (selectionResult!
+                    .result![0].profileSetting!.preferred_language !=
                 null) {
-              final preferredLanguage =
-                  selectionResult!.result![0].profileSetting!.preferred_language;
+              final preferredLanguage = selectionResult!
+                  .result![0].profileSetting!.preferred_language;
               var currentLanguage = '';
               if (preferredLanguage != 'undef') {
                 currentLanguage = preferredLanguage!.split('-').first;

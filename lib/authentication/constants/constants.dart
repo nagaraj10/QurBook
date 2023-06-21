@@ -50,10 +50,10 @@ const String strOtpHint = 'One Time Password Here';
 const String strOtpText =
     'Enter One Time Password below which we sent to your mobile number ';
 
-const String strOtpTextVirtual =
-    ' and to your mail id';
+const String strOtpTextVirtual = ' and to your mail id';
 
-const String strOtpTextForFamilyMember = 'Please enter the One Time Password received to ';
+const String strOtpTextForFamilyMember =
+    'Please enter the One Time Password received to ';
 const String mobileNumber = "'s mobile number ";
 
 //Strings used in VerifyPatient
@@ -132,6 +132,8 @@ const String strResendGenerateOTP = 'user-relationship/generate-otp';
 const String strAdditionalInstructions = 'Additional Instructions';
 const String noMoreActivites = 'No more activites for the day';
 const String strDeleteAccountOtpVerifyEndpoint = 'user/verify-otp';
+const String noMoreAlert = 'No more alerts for the day';
+const String noAlert = 'No Alerts';
 
 //tickets
 const String ticketCreatedSuccessfully = 'Ticket Created Successfully';
@@ -189,7 +191,8 @@ const String strNetworkIssue = 'Please Check Network Connection';
 const String strresendOtp = 'Resend One Time Password';
 const String strVerifyCall = 'Confirm via Call';
 const String strOrText = 'OR';
-const String strOtpNotReceived = 'Didn\'t receive the One Time Password ? Retry in ';
+const String strOtpNotReceived =
+    'Didn\'t receive the One Time Password ? Retry in ';
 const String strCallDirect =
     'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
 const String strSOSCallDirect =
@@ -247,6 +250,23 @@ const String strNoPlansCheckFree =
 const String strCallMyCC = 'Call my CC';
 
 const String strSurvey = 'Survey';
+
+//show icons for alerts
+
+const String MISSED_MAND_ACTIVITES = 'assets/icons/missed_mad_activities.png';
+const String MISSED_MEDICATION_ALERTS =
+    'assets/icons/missed_medication_alerts.png';
+const String RULE_BASED_ALERTS = 'assets/icons/rule_based_alerts.png';
+const String SYMPTOMS_ALERTS = 'assets/icons/symptomsAlert.png';
+const String VITAL_ALERTS = 'assets/icons/vital_alerts.png';
+
+const String CODE_MAND = 'MANDACTIVITY';
+const String CODE_VITAL = 'VITALS';
+const String CODE_MEDI = 'MEDICATION';
+const String CODE_RULE = 'RULEALERT';
+const String CODE_SYM = 'SYMPTOM';
+
+
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(

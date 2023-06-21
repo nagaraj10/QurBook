@@ -34,6 +34,7 @@ struct Constants {
     static let callAppLockFeatureMethod = "callAppLockFeatureMethod";
     static let pushKitTokenMethod = "pushKitTokenMethod";
 
+    static let callLocalNotificationMethod = "callLocalNotificationMethod";
     static let devicesEventChannel = "QurbookBLE/stream"
     static let reminderMethodChannel = "flutter.native/reminder"
     static let addReminderMethod = "addReminder"

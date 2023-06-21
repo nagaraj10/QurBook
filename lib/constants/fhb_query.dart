@@ -54,6 +54,14 @@ const String qr_sid = 'sid';
 const String qr_callLogId = 'callLogId';
 const String qr_joinedUid = 'joinedUid';
 const String qr_location = 'location';
+const String patient_alert = 'incident-alert/cg-alert-list?patientId=';
+const String page_no = '&page=1&size=1000';
+
+const String qr_caregivername = 'caregiverName';
+const String qr_caregiverid = 'id';
+const String qr_caregiver_ok = 'incident-alert/caregiver-action?action=seen';
+const String qr_caregiver_escalate =
+    'incident-alert/caregiver-action?action=escalate';
 
 //modified by parvathi
 const String qr_doctorslot = 'doctorSlots/';
@@ -151,6 +159,9 @@ const String qr_latlng = 'latlng=';
 const String qr_placedid = 'place_id=';
 const String qr_lang_ko = 'language=ko';
 const String qr_sessiontoken = 'sessiontoken=';
+
+const String qr_caregiver_family = '/caregiver-family';
+const String qr_caregiver_user_id = '?caregiverUserId=';
 
 const String qr_LastSync = 'latest-sync';
 const String qr_LastMeasureSync = 'latest-measure-sync';
@@ -287,7 +298,8 @@ const String qr_subscribePlan = 'Action=Subscribe&packageid=';
 const String qr_UnsubscribePlan = 'Action=UnSubscribe&packageid=';
 const String qr_get = 'get';
 const String regiment = 'plan-package-master/wrapperApi';
-const String regimentCalendar = 'qurplan-node-mysql/regimen-calendar-filter/363ba935-3e4d-4024-b81c-bfd04fdc1ef4?startDate=2023-03-01%2000%3A00%3A00&endDate=2023-05-31%2000%3A00%3A00';
+const String regimentCalendar =
+    'qurplan-node-mysql/regimen-calendar-filter/363ba935-3e4d-4024-b81c-bfd04fdc1ef4?startDate=2023-03-01%2000%3A00%3A00&endDate=2023-05-31%2000%3A00%3A00';
 const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
 const String getEventId = 'activity-master/save-personal-plan-symptom';

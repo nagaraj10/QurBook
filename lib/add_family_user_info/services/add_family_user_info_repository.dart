@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
 import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
 import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
@@ -9,6 +10,7 @@ import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_in
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
 import 'package:myfhb/add_new_plan/model/PlanCode.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as query;
@@ -65,23 +67,22 @@ class AddFamilyUserInfoRepository {
       response = await _helper.getProfileInfo(
           query.qr_user + userID + query.qr_sections + query.qr_generalInfo);
     }
+    var userIDNotMain =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (response != null) {
-      await PreferenceUtil.saveProfileData(
-          Constants.KEY_PROFILE, MyProfileModel.fromJson(response));
-
-      try {
-        if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
-            PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
-          await PreferenceUtil.saveProfileData(
-              Constants.KEY_PROFILE, MyProfileModel.fromJson(response));
-        } else {
-          await PreferenceUtil.saveProfileData(
-              Constants.KEY_PROFILE, MyProfileModel.fromJson(response));
+      CommonUtil().checkIfUserIdSame().then((value) {
+        if (!value) {
+          if (userIDNotMain == userID) {
+            PreferenceUtil.saveProfileData(
+                    Constants.KEY_PROFILE, MyProfileModel.fromJson(response))
+                .then((value) {
+              if (value) {
+                return MyProfileModel.fromJson(response);
+              }
+            });
+          }
         }
-      } catch (e) {
-        await PreferenceUtil.saveProfileData(
-            Constants.KEY_PROFILE, MyProfileModel.fromJson(response));
-      }
+      });
     }
 
     return MyProfileModel.fromJson(response);
@@ -386,5 +387,16 @@ class AddFamilyUserInfoRepository {
     final response = UploadDocumentModel.fromJson(res);
 
     return response;
+  }
+
+  Future<CareGiverPatientList?>? getCareGiverPatientList() async {
+    var userId =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID) ?? '';
+    var response = await _helper.getProfileInfo(query.qr_userlinking +
+            query.qr_caregiver_family +
+            query.qr_caregiver_user_id +
+            userId ??
+        '');
+    return CareGiverPatientList.fromJson(response);
   }
 }

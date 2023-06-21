@@ -52,7 +52,7 @@ import PushKit
     let showSingleButtonCat = "showSingleButtonCat"
     let planRenewButton = "planRenewButton"
     let escalateToCareCoordinatorButtons = "escalateToCareCoordinatorButtons"
-    
+    let showTransportationNotification = "transportationRequestAcceptDeclineButtons"
     let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
     let ChatCCAndViewrecordButtons = "showChatCCAndViewrecordButtons"
     let viewDetailsButton = "memberviewDetailsButtons"
@@ -74,6 +74,7 @@ import PushKit
     var ReponsePushKitTokenMethodChannel : FlutterMethodChannel!
     var ResponseCallKitMethodChannel : FlutterMethodChannel!
 
+    var ReminderMethodChannel : FlutterMethodChannel!
     var connectedWithWeighingscale = false
     
     var isFromKilledStateNotification = false
@@ -106,7 +107,7 @@ import PushKit
             UNUserNotificationCenter.current().delegate = self
             
             let authOptions: UNAuthorizationOptions = [.alert,  .sound]
-            DispatchQueue.main.asyncAfter(deadline: .now()+1, execute:  {
+            DispatchQueue.main.asyncAfter(deadline: .now()+3, execute:  {
                 UNUserNotificationCenter.current().requestAuthorization(
                     options: authOptions,
                     completionHandler: {_, _ in })
@@ -162,6 +163,11 @@ import PushKit
         let viewMemberAction = UNNotificationAction(identifier: "ViewMember", title: "View Member", options: [.foreground])
         let viewDetailsAction = UNNotificationAction(identifier: "ViewDetails", title: "View Details", options: [.foreground])
         let communicationsettingsAction = UNNotificationAction(identifier: "Communicationsettings", title: "Communication settings", options: [.foreground])
+        let declineNewAction = UNNotificationAction(identifier: "Decline", title: "Decline", options: [])
+        let showTransportationcategory = UNNotificationCategory(identifier: showTransportationNotification,
+                                                             actions:  [acceptAction, declineNewAction],
+                                                             intentIdentifiers: [],
+                                                             options: [])
         
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
                                                              actions:  [snoozeAction, declineAction],
@@ -202,7 +208,8 @@ import PushKit
                                                       showViewMemberAndCommunicationButtonscategory,
                                                       esclateButtonscategory,
                                                       chatCCAndViewrecordButtonsCategory,
-                                                      viewDetailButtonCategory])
+                                                      viewDetailButtonCategory,
+                                                      showTransportationcategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -745,14 +752,16 @@ import PushKit
             request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
         }
         //adding the notification
-        notificationCenter.add(request) { (error) in
-            if let error = error {
-                print("Error \(error.localizedDescription)")
+        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute:  { [self] in
+            self.notificationCenter.add(request) { (error) in
+                if let error = error {
+                    print("Error \(error.localizedDescription)")
+                }
+                self.notificationCenter.getPendingNotificationRequests { data in
+                    print("All pending notificaiton count = \(data.count)")
+                }
             }
-            self.notificationCenter.getPendingNotificationRequests { data in
-                print("All pending notificaiton count = \(data.count)")
-            }
-        }
+        });
         if after > 0,!snooze{
             let content = UNMutableNotificationContent()
             content.title = title
@@ -877,13 +886,27 @@ import PushKit
                     }
                 }else if response.actionIdentifier == "Dismiss"{
                 }else{
-                    let reminderChannel = FlutterMethodChannel.init(name: self.reminderChannel, binaryMessenger: controller.binaryMessenger)
-                    reminderChannel.invokeMethod(Constants.navigateToRegimentMethod, arguments: nil)
+                    var newData :NSDictionary
+                    newData  = [
+                        "eid" : data["eid"],
+                        "estart" : data["estart"]
+                    ]
+                    
+                    if(ReminderMethodChannel == nil){
+                        ReminderMethodChannel = FlutterMethodChannel.init(name: Constants.reminderMethodChannel, binaryMessenger: controller.binaryMessenger)
+                        
+                    }
+                    ReminderMethodChannel.invokeMethod(Constants.callLocalNotificationMethod, arguments: newData)
                 }
             }
             else {
                 var newData :NSDictionary
                 if (response.actionIdentifier == "Renew" || response.actionIdentifier == "Callback"){
+                    newData  = [
+                        "action" : response.actionIdentifier,
+                        "data" : data
+                    ]
+                }else if (response.actionIdentifier == "Decline" || response.actionIdentifier == "Accept"){
                     newData  = [
                         "action" : response.actionIdentifier,
                         "data" : data

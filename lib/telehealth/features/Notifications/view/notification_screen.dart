@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -7,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -236,11 +236,10 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
         );
       }
-     
     } catch (e) {
       //print(e);
     }
-     return true;
+    return true;
   }
 
   Future<void> _showNotificationClearDialog() async {
@@ -443,7 +442,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                                         payload?.healthRecordMetaIds
                                   });
                             } else {
-                              final List<String> split = payload!.redirectTo!.split('|');
+                              final List<String> split =
+                                  payload!.redirectTo!.split('|');
                               var redirectData = {
                                 for (int i = 0; i < split.length; i++)
                                   i: split[i]
@@ -544,8 +544,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                             );
                           } else if (payload?.redirectTo ==
                               parameters.strNotificationChat) {
-                            if(payload?.templateName ==
-                                parameters.strChoosePrefDate){
+                            if (payload?.templateName ==
+                                parameters.strChoosePrefDate) {
                               notificationOnTapActions(
                                 notification,
                                 payload?.templateName,
@@ -559,7 +559,15 @@ class _NotificationScreen extends State<NotificationScreen> {
                           //     notification?.result[index]?.messageDetails?.content
                           //         ?.templateName);
                         }
-                      : null,
+                      : (){
+                if (payload?.redirectTo ==
+                    strAppointmentDetail) {
+                  notificationOnTapActions(
+                    notification,
+                    payload?.redirectTo,
+                  );
+                }
+              },
               child: Container(
                 color: notification.deleteSelected ? Colors.grey : Colors.white,
                 child: Column(
@@ -1010,7 +1018,8 @@ class _NotificationScreen extends State<NotificationScreen> {
     return cancelAppointment!;
   }
 
-  void notificationOnTapActions(NotificationResult? result, String? templateName,
+  void notificationOnTapActions(
+      NotificationResult? result, String? templateName,
       {dynamic bundles}) {
     switch (templateName) {
       case "AppointmentReminder180":
@@ -1023,8 +1032,9 @@ class _NotificationScreen extends State<NotificationScreen> {
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        ))!.then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+        ))!
+            .then((value) =>
+                PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
@@ -1050,8 +1060,9 @@ class _NotificationScreen extends State<NotificationScreen> {
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        ))!.then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+        ))!
+            .then((value) =>
+                PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "SlotsFull":
@@ -1061,8 +1072,9 @@ class _NotificationScreen extends State<NotificationScreen> {
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        ))!.then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+        ))!
+            .then((value) =>
+                PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "PatientPrescription":
@@ -1173,8 +1185,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                   arguments: SheelaArgument(
                     textSpeechSheela: rawBody,
                   ),
-                )!.then((value) =>
-                    PageNavigator.goToPermanent(context, router.rt_Landing));
+                )!
+                    .then((value) => PageNavigator.goToPermanent(
+                        context, router.rt_Landing));
               } else {
                 Get.toNamed(
                   routervariable.rt_Sheela,
@@ -1182,8 +1195,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                     isSheelaAskForLang: true,
                     rawMessage: rawBody,
                   ),
-                )!.then((value) =>
-                    PageNavigator.goToPermanent(context, router.rt_Landing));
+                )!
+                    .then((value) => PageNavigator.goToPermanent(
+                        context, router.rt_Landing));
               }
 
               readUnreadAction(result);
@@ -1196,7 +1210,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                   audioMessage:
                       result.messageDetails?.payload?.sheelaAudioMsgUrl,
                 ),
-              )!.then((value) {
+              )!
+                  .then((value) {
                 readUnreadAction(result, isRead: true);
               });
             }
@@ -1224,7 +1239,8 @@ class _NotificationScreen extends State<NotificationScreen> {
         Get.toNamed(
           router.rt_HomeScreen,
           arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
-        )!.then(
+        )!
+            .then(
           (value) => PageNavigator.goToPermanent(
             context,
             router.rt_Landing,
@@ -1236,39 +1252,21 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "regiment_screen":
-        if (CommonUtil.isUSRegion()) {
-          var qurhomeDashboardController =
-              CommonUtil().onInitQurhomeDashboardController();
-          qurhomeDashboardController.eventId.value =
-              result?.messageDetails?.payload?.eventId ?? '';
-          Get.to(
-            () => QurhomeDashboard(),
-          )?.then(
-            (value) => PageNavigator.goToPermanent(
-              context,
-              router.rt_Landing,
-              arguments: LandingArguments(
-                needFreshLoad: false,
-              ),
-            ),
-          );
-        } else {
-          Provider.of<RegimentViewModel>(
+        Provider.of<RegimentViewModel>(
+          context,
+          listen: false,
+        ).regimentMode = RegimentMode.Schedule;
+        Provider.of<RegimentViewModel>(context, listen: false).regimentFilter =
+            RegimentFilter.Missed;
+        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())?.then(
+          (value) => PageNavigator.goToPermanent(
             context,
-            listen: false,
-          ).regimentMode = RegimentMode.Schedule;
-          Provider.of<RegimentViewModel>(context, listen: false)
-              .regimentFilter = RegimentFilter.Missed;
-          Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())?.then(
-            (value) => PageNavigator.goToPermanent(
-              context,
-              router.rt_Landing,
-              arguments: LandingArguments(
-                needFreshLoad: false,
-              ),
+            router.rt_Landing,
+            arguments: LandingArguments(
+              needFreshLoad: false,
             ),
-          );
-        }
+          ),
+        );
         readUnreadAction(result);
         break;
       case "claimList":
@@ -1306,7 +1304,8 @@ class _NotificationScreen extends State<NotificationScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) => ChatDetail(
-                    peerId: result?.messageDetails?.payload?.careCoordinatorUserId,
+                    peerId:
+                        result?.messageDetails?.payload?.careCoordinatorUserId,
                     peerAvatar:
                         result?.messageDetails?.payload?.senderProfilePic,
                     peerName: result?.messageDetails?.payload?.patientName,
@@ -1395,8 +1394,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                                         healthOrganization: City(
                                             id: notification.messageDetails!
                                                 .payload!.healthOrganizationId),
-                                        bookingId: notification
-                                            .messageDetails!.payload!.bookingId),
+                                        bookingId: notification.messageDetails!
+                                            .payload!.bookingId),
                                     body: body,
                                   )),
                         ).then((value) {
@@ -1505,8 +1504,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   .messageDetails?.payload?.templateName,
                               showRenew: true,
                             ),
-                          )!.then((value) => PageNavigator.goToPermanent(
-                              context, router.rt_Landing));
+                          )!
+                              .then((value) => PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
                         } else {
                           CommonUtil.showFamilyMemberPlanExpiryDialog(
                               notification
@@ -1615,8 +1615,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   ?.patientPhoneNumber ??
                               '')
                           .isNotEmpty &&
-                      (notification
-                                  .messageDetails?.payload?.verificationCode ??
+                      (notification.messageDetails?.payload?.verificationCode ??
                               '')
                           .isNotEmpty) {
                     CaregiverAPIProvider().approveCareGiver(
@@ -1648,8 +1647,8 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               OutlineButton(
                 onPressed: () async {
-                  if ((notification.messageDetails?.payload
-                                  ?.caregiverReceiver ??
+                  if ((notification
+                                  .messageDetails?.payload?.caregiverReceiver ??
                               '')
                           .isNotEmpty &&
                       (notification.messageDetails?.payload
@@ -1723,28 +1722,32 @@ class _NotificationScreen extends State<NotificationScreen> {
               SizedBox(
                 width: 15.0.w,
               ),
-              OutlineButton(
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CareGiverSettings(),
+              Flexible(
+                child: OutlineButton(
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CareGiverSettings(),
+                      ),
+                    );
+                  },
+                  borderSide: BorderSide(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
                     ),
-                  );
-                },
-                borderSide: BorderSide(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
                   ),
-                ),
-                child: TextWidget(
-                  text: parameters.communicationSetting,
-                  colors: Color(
-                    CommonUtil().getMyPrimaryColor(),
+                  child: SizedBox(
+                    child: TextWidget(
+                      text: parameters.communicationSetting,
+                      colors: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
+                      overflow: TextOverflow.visible,
+                      fontWeight: FontWeight.w600,
+                      fontsize: 14.0.sp,
+                    ),
                   ),
-                  overflow: TextOverflow.visible,
-                  fontWeight: FontWeight.w600,
-                  fontsize: 14.0.sp,
                 ),
               ),
             ],
@@ -1837,7 +1840,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                     cartId: notification.messageDetails?.payload?.bookingId,
                     patientName:
                         notification.messageDetails?.payload?.patientName,
-                  ))!.then((value) {});
+                  ))!
+                      .then((value) {});
                 },
                 borderSide: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -1978,9 +1982,98 @@ class _NotificationScreen extends State<NotificationScreen> {
         );
 
         break;
+      case parameters.careGiverTransportRequestReminder:
+        return (notification.messageDetails?.isAccepted==null)?(isAppointmentExpired(notification.messageDetails?.payload?.appointmentDate??'')?getAppointmentAcceptAndReject(notification):Container()):Container();
+
+        break;
       default:
         return Container();
         break;
+    }
+  }
+
+  Widget getAppointmentAcceptAndReject(NotificationResult notification){
+    return Padding(
+      padding: const EdgeInsets.all(0),
+      child: Row(
+        children: [
+          OutlineButton(
+            onPressed: () async {
+
+              new CommonUtil().acceptCareGiverTransportRequestReminder(
+                  context,
+                  notification.messageDetails?.payload?.appointmentId??'',
+                  notification.messageDetails?.payload?.patientId??'',
+                  true).then((value){
+                readUnreadAction(notification, isRead: true);
+                notification.messageDetails?.setAccepted(true);
+              });
+
+            },
+            borderSide: !notification.isActionDone!
+                ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                : BorderSide(color: Colors.grey),
+            child: TextWidget(
+              text: 'Accept',
+              colors: !notification.isActionDone!
+                  ? Color(CommonUtil().getMyPrimaryColor())
+                  : Colors.grey,
+              overflow: TextOverflow.visible,
+              fontWeight: FontWeight.w600,
+              fontsize: 14.0.sp,
+            ),
+          ),
+          SizedBox(
+            width: 15.0.w,
+          ),
+          OutlineButton(
+            onPressed: () async {
+
+              new CommonUtil().acceptCareGiverTransportRequestReminder(
+                  context,
+                  notification.messageDetails?.payload?.appointmentId??'',
+                  notification.messageDetails?.payload?.patientId??'',
+                  false).then((value){
+                readUnreadAction(notification, isRead: true);
+                notification.messageDetails?.setAccepted(true);
+              });
+            },
+            borderSide: !notification.isActionDone!
+                ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                : BorderSide(color: Colors.grey),
+            child: TextWidget(
+              text: 'Decline',
+              colors: !notification.isActionDone!
+                  ? Color(CommonUtil().getMyPrimaryColor())
+                  : Colors.grey,
+              overflow: TextOverflow.visible,
+              fontWeight: FontWeight.w600,
+              fontsize: 14.0.sp,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool isAppointmentExpired(String date){
+    if(date.isNotEmpty){
+      try{
+        var time=DateTime.parse(date);
+        var temp = DateTime.now();
+        var d1 = DateTime.utc(temp.year,temp.month,temp.day,temp.hour,temp.minute,temp.second);
+
+        if(d1.isAfter(time.toUtc())){
+          return false;
+        }else{
+          return true;
+        }
+
+        }catch(e){
+        return false;
+      }
+    }else{
+      return false;
     }
   }
 

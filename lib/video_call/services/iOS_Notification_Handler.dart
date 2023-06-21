@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
@@ -47,6 +48,7 @@ class IosNotificationHandler {
   bool acceptAction = false;
   bool escalteAction = false;
   bool rejectAction = false;
+  bool declineAction = false;
   bool? viewMemberAction, viewDetails = false;
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
@@ -81,6 +83,7 @@ class IosNotificationHandler {
             callbackAction = actionKey == "Callback";
             rejectAction = actionKey == "Reject";
             acceptAction = actionKey == "Accept";
+            declineAction = actionKey == "Decline";
             escalteAction = actionKey == "Escalate";
             chatWithCC = actionKey == "chatwithcc";
             viewRecordAction = actionKey == "viewrecord";
@@ -118,6 +121,40 @@ class IosNotificationHandler {
         }
       },
     );
+
+    // Receive Local Notification
+    variable.reminderMethodChannel
+        .setMethodCallHandler((call) async {
+      if (call.method == variable.callLocalNotificationMethod) {
+        final data = Map<String, dynamic>.from(call.arguments);
+        if (data != null) {
+          var eventId = data['eid'];
+          var estart = data['estart'];
+
+          if (CommonUtil.isUSRegion() && estart != null) {
+            var qurhomeDashboardController =
+                CommonUtil().onInitQurhomeDashboardController();
+            qurhomeDashboardController.eventId.value = eventId;
+            qurhomeDashboardController.estart.value = estart;
+            qurhomeDashboardController.updateTabIndex(0);
+            PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
+            // await Get.to(() => QurhomeDashboard())?.then((value) =>
+            //     PageNavigator.goToPermanent(Get.context!, router.rt_Landing));
+          } else {
+            // await Get.toNamed(router.rt_Regimen,
+            //     arguments: RegimentArguments(eventId: eventId));
+            Provider.of<RegimentViewModel>(
+              Get.context!,
+              listen: false,
+            ).regimentMode = RegimentMode.Schedule;
+            Provider.of<RegimentViewModel>(Get.context!, listen: false)
+                .regimentFilter = RegimentFilter.Missed;
+            PageNavigator.goToPermanent(Get.context!, router.rt_Regimen,
+                arguments: RegimentArguments(eventId: eventId));
+          }
+        }
+      }
+    });
   }
 
   void updateStatus(String status) async {
@@ -409,6 +446,14 @@ class IosNotificationHandler {
           false,
         );
       }
+    } else if (model.redirect == parameters.strAppointmentDetail &&
+        (model.appointmentId ?? '').isNotEmpty &&
+        (model.patientId ?? '').isNotEmpty &&
+        (acceptAction || declineAction)) {
+      new CommonUtil().acceptCareGiverTransportRequestReminder(
+          Get.context!, model.appointmentId!, model.patientId!, acceptAction);
+      acceptAction = false;
+      declineAction = false;
     } else if (model.redirect == parameters.strAppointmentDetail &&
         (model.appointmentId ?? '').isNotEmpty) {
       AppointmentDetailsController appointmentDetailsController =

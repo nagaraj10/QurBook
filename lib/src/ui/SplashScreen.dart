@@ -601,20 +601,23 @@ class _SplashScreenState extends State<SplashScreen> {
                                   groupId: '',
                                   lastDate: passedValArr[4]))).then((value) {});
                     } else if (widget.nsRoute == 'regiment_screen') {
+                      var passedValArr = widget.bundle?.split('&');
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
                         'ns_type': CommonUtil.isUSRegion()?'QurHomeRegimenScreen':'regiment_screen',
                         'navigationPage': 'Regimen Screen',
                       });
-                      if (CommonUtil.isUSRegion()) {
+                      if ((CommonUtil.isUSRegion()) &&
+                          (passedValArr[3] != null) &&
+                          (passedValArr[3] != 'null')) {
                         var qurhomeDashboardController =
                         CommonUtil().onInitQurhomeDashboardController();
-                        qurhomeDashboardController.eventId.value = widget.bundle != null
-                            ? widget.bundle
-                            : "";
-                        Get.to(() => QurhomeDashboard())
-                            ?.then((value) => PageNavigator.goToPermanent(
-                                context, router.rt_Landing));
+                        qurhomeDashboardController.eventId.value =
+                        passedValArr[2];
+                        qurhomeDashboardController.estart.value =
+                        passedValArr[3];
+                        qurhomeDashboardController.updateTabIndex(0);
+                        PageNavigator.goToPermanent(context, router.rt_Landing);
                       } else {
                         Provider.of<RegimentViewModel>(
                           context,
@@ -624,7 +627,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             .regimentFilter = RegimentFilter.Missed;
                         PageNavigator.goToPermanent(context, router.rt_Regimen,
                             arguments:
-                                RegimentArguments(eventId: widget.bundle));
+                                RegimentArguments(eventId: passedValArr[2]));
                       }
                     } else if (widget.nsRoute == 'th_provider_hospital') {
                       fbaLog(eveParams: {
@@ -849,14 +852,23 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': 'Appointment Detail Page',
                       });
                       if (passedValArr[2] != null) {
-                        AppointmentDetailsController
-                            appointmentDetailsController =
-                            CommonUtil().onInitAppointmentDetailsController();
-                        appointmentDetailsController
-                            .getAppointmentDetail(passedValArr[2]);
-                        Get.to(() => AppointmentDetailScreen())!.then((value) =>
-                            PageNavigator.goToPermanent(
-                                context, router.rt_Landing));
+                        if(passedValArr[3]!=null&&passedValArr[4]!=null){
+                          new CommonUtil().acceptCareGiverTransportRequestReminder(
+                              context,
+                              passedValArr[2],
+                              passedValArr[3],
+                              passedValArr[4].toString().contains("accept"));
+                        }else{
+                          AppointmentDetailsController
+                          appointmentDetailsController =
+                          CommonUtil().onInitAppointmentDetailsController();
+                          appointmentDetailsController
+                              .getAppointmentDetail(passedValArr[2]);
+                          Get.to(() => AppointmentDetailScreen())!.then((value) =>
+                              PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
+                        }
+
                       }
                     } else if (widget.nsRoute == call) {
                       CommonUtil().startTheCall(widget.bundle);

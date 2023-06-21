@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -16,7 +15,6 @@ import '../../widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 class RegimentScreen extends StatelessWidget {
-
   final RegimentArguments? aruguments;
 
   RegimentScreen({this.aruguments});
@@ -58,7 +56,9 @@ class RegimentScreen extends StatelessWidget {
           onBackPressed(context);
           return Future.value(false);
         },
-        child: RegimentTab(eventId: aruguments?.eventId,),
+        child: RegimentTab(
+          eventId: aruguments?.eventId,
+        ),
       ),
     );
   }

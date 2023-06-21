@@ -64,11 +64,16 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               }
             },
           );
+
+    if (CommonUtil.isUSRegion()) {
+      controller.isMuted.value = false;
+    }
   }
 
   @override
   void dispose() {
     animationController?.dispose();
+    controller.clearTimer();
     WidgetsBinding.instance!.removeObserver(this);
     controller.stopTTS();
     controller.isSheelaScreenActive = false;
@@ -133,6 +138,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               controller.isSheelaScreenActive = false;
               controller.getSheelaBadgeCount();
               controller.updateTimer(enable: false);
+              controller.clearTimer();
               Get.back();
               return true;
             }
@@ -249,6 +255,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 },
                 child: FloatingActionButton(
                   onPressed: () {
+                    controller.clearTimer();
                     if (controller.isLoading.isFalse) {
                       if (controller.currentPlayingConversation != null &&
                           controller
@@ -294,22 +301,32 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       elevation: 0,
       title: CommonUtil().isTablet!
           ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Image.asset(
-                  icon_mayaMain,
-                  height: 32.h,
-                  width: 32.h,
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  strMaya,
-                  style: const TextStyle(
-                    color: Colors.black,
+                Expanded(
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          icon_mayaMain,
+                          height: 32.h,
+                          width: 32.h,
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          strMaya,
+                          style: const TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+                if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
               ],
             )
           : Row(
@@ -333,6 +350,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 const Spacer(
                   flex: 2,
                 ),
+                if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
               ],
             ),
       leading: Container(
@@ -341,12 +359,19 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         ),
         child: InkWell(
             onTap: () {
-              controller.stopTTS();
-              controller.canSpeak = false;
-              controller.isSheelaScreenActive = false;
-              controller.getSheelaBadgeCount();
-              controller.updateTimer(enable: false);
-              Get.back();
+              if ((CommonUtil.isUSRegion()) &&
+                  ((controller.conversations.length ?? 0) > 0) &&
+                  !(controller.conversations.last?.endOfConv ?? true)) {
+                CommonUtil().alertForSheelaDiscardOnConversation(context,
+                    pressYes: () {
+                  goToBackScreen();
+                  Get.back();
+                }, pressNo: () {
+                  Get.back();
+                });
+              } else {
+                goToBackScreen();
+              }
             },
             child: CommonUtil().isTablet!
                 ? IconWidget(
@@ -394,6 +419,41 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           ),
           height: 1.0,
         ),
+      ),
+    );
+  }
+
+  goToBackScreen() {
+    controller.stopTTS();
+    controller.canSpeak = false;
+    controller.isSheelaScreenActive = false;
+    controller.getSheelaBadgeCount();
+    controller.updateTimer(enable: false);
+    Get.back();
+  }
+
+  Widget _getMuteUnMuteIcon() {
+    return Container(
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () {
+              if (controller.isMuted.value) {
+                controller.isMuted.value = false;
+              } else {
+                controller.isMuted.value = true;
+                controller.stopTTS();
+              }
+            },
+            child: Icon(
+              controller.isMuted.value ? Icons.volume_off : Icons.volume_up,
+              size: 32.sp,
+              color: controller.isMuted.value
+                  ? Colors.grey
+                  : Color(CommonUtil().getQurhomePrimaryColor()),
+            ),
+          )
+        ],
       ),
     );
   }

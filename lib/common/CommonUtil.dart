@@ -10,6 +10,10 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 import '../Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import '../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import '../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
@@ -169,6 +173,7 @@ class CommonUtil {
   static String POWER_BI_URL = 'IN';
   static String BASE_URL_QURHUB = '';
   static String TRUE_DESK_URL = '';
+  static String WEB_URL = '';
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
   static String PUSH_KIT_TOKEN = '';
@@ -205,6 +210,10 @@ class CommonUtil {
 
   final String CONTENT_NO_REFUND =
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
+
+  final String sheelaDialogTitle = 'Activity is not completed.';
+
+  final String sheelaDialogBody = 'Do you wish to cancel now?';
 
   static getProviderType(String type) {
     return 'health-organization/search/efhb?healthOrganizationType=%5B%22${type}%22%5D&limit=100&sortBy=asc';
@@ -1701,6 +1710,12 @@ class CommonUtil {
     return updatedDate;
   }
 
+  static String dateFormatterWithdatetimesecondsApiFormatAI(DateTime dateTime) {
+    final newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final updatedDate = newFormat.format(dateTime);
+    return updatedDate;
+  }
+
   List<CategoryResult> fliterCategories(List<CategoryResult> data) {
     final filteredCategoryData = <CategoryResult>[];
     for (final dataObj in data) {
@@ -2165,6 +2180,219 @@ class CommonUtil {
     var myProfile =
         await AddFamilyUserInfoRepository().getMyProfileInfoNew(userid);
     return myProfile;
+  }
+
+  Future<Widget?> showErrorAlert(String text, BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Info'),
+          content: Text(text),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Color(CommonUtil().getQurhomePrimaryColor())),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showSingleLoadingDialog(BuildContext context) {
+    LoaderClass.showLoadingDialog(
+      context,
+      canDismiss: true,
+    );
+  }
+
+  void hideLoadingDialog(BuildContext context) {
+    LoaderClass.hideLoadingDialog(context);
+  }
+
+  getCategoryFromTypeName(String typeName) {
+    String category = '';
+    switch (typeName.toUpperCase()) {
+      case 'MANDACTIVITY':
+        category = 'Missed Mandatory Activities';
+        break;
+      case 'VITALS':
+        category = 'Vital Alerts';
+        break;
+      case 'MEDICATION':
+        category = 'Missed Medication';
+        break;
+      case 'RULEALERT':
+        category = 'Rule Based Alerts';
+        break;
+      case 'SYMPTOM':
+        category = 'Symptom Alerts';
+        break;
+    }
+
+    return category;
+  }
+
+  Future<bool> checkIfUserIdSame() async {
+    bool isUserMainId = false;
+    final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
+    final userIdMain =
+        await PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
+
+    if (userId != userIdMain) {
+      isUserMainId = false;
+    } else {
+      isUserMainId = true;
+    }
+
+    return isUserMainId;
+  }
+
+  showPatientListOfCaregiver(
+      BuildContext context,
+      Function(String? user, CareGiverPatientListResult? result)
+          selectedUser) async {
+    try {
+      showSingleLoadingDialog(context);
+      CareGiverPatientList? response;
+      MyProfileModel? myProfile =
+          await PreferenceUtil.getProfileData(KEY_PROFILE);
+      response = await addFamilyUserInfoRepository.getCareGiverPatientList();
+      hideLoadingDialog(context);
+
+      showDialogPatientList(response?.result, myProfile, context, selectedUser);
+    } catch (e) {
+      hideLoadingDialog(context);
+
+      return showErrorAlert(unassignedMember, context);
+    }
+  }
+
+  Future<Widget?> showDialogPatientList(
+      List<CareGiverPatientListResult?>? result,
+      MyProfileModel? myProfile,
+      BuildContext context,
+      Function(String? user, CareGiverPatientListResult? result) selectedUser) {
+    if (result!.length > 0 && result != null) {
+      CareGiverPatientListResult selfResult = new CareGiverPatientListResult(
+          childId: userID,
+          firstName: myProfile?.result?.firstName,
+          lastName: myProfile?.result?.lastName,
+          middleName: myProfile?.result?.middleName,
+          relationship: "You");
+      result.insert(0, selfResult);
+    }
+    if (result!.length > 0 && result != null) {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SizedBox(
+              width: MediaQuery.of(context)
+                  .size
+                  .width, //  <------- Use SizedBox to limit width
+              child: ListView.separated(
+                  shrinkWrap: true, //            <------  USE SHRINK WRAP
+                  itemCount: result.length,
+                  separatorBuilder: (BuildContext context, index) {
+                    return Divider(
+                      height: 1.0.h,
+                      color: Colors.grey,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        selectedUser(
+                            result[index]?.relationship, result[index]);
+                      },
+                      child: Container(
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                text: result[index]?.firstName,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: CommonUtil().isTablet!
+                                      ? 20.0.sp
+                                      : 18.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                children: [
+                                  TextSpan(text: " "),
+                                  TextSpan(
+                                    text: result[index]?.lastName,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: CommonUtil().isTablet!
+                                          ? 20.0.sp
+                                          : 18.0.sp,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(result[index]?.relationship ?? ''),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          );
+        },
+      );
+    } else {
+      return CommonUtil().showErrorAlert(unassignedMember, context);
+    }
+  }
+
+  void navigateToQurhomeDasboard() {
+    Get.back();
+    Get.to(
+      () => QurhomeDashboard(
+        forPatientList: false,
+        careGiverPatientListResult: null,
+      ),
+      binding: BindingsBuilder(
+        () {
+          Get.lazyPut(
+            () => QurhomeDashboardController(),
+          );
+        },
+      ),
+    );
+  }
+
+  void navigateToQurhomePatientDasboard(CareGiverPatientListResult? result) {
+    Get.back();
+    Get.to(
+      () => QurhomeDashboard(
+        forPatientList: true,
+        careGiverPatientListResult: result,
+      ),
+      binding: BindingsBuilder(
+        () {
+          Get.lazyPut(
+            () => QurhomeDashboardController(),
+          );
+        },
+      ),
+    );
   }
 
   void getLoggedIDetails() async {
@@ -4865,12 +5093,16 @@ class CommonUtil {
             title: Text(
               variable.strConfirm,
               style: TextStyle(
+                fontSize: CommonUtil().isTablet!?22.0.sp:null,
                   color: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
                       : Color(CommonUtil().getMyPrimaryColor())),
             ),
             // To display the title it is optional
-            content: Text('Record ' + name),
+            content: CommonUtil().isTablet!?Container(
+                width: MediaQuery.of(context).size.width*0.60,
+                child: Text('Record ' + name.trim()+'?',style: TextStyle(
+                    fontSize: 20.0.sp),)):Text('Record ' + name.trim()+'?'),
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
@@ -4881,7 +5113,8 @@ class CommonUtil {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(variable.strNo),
+                child: Text(variable.strNo,style: TextStyle(
+                    fontSize: CommonUtil().isTablet!?22.0.sp:null),)
               ),
               FlatButton(
                   // FlatButton widget is used to make a text to work like a button
@@ -4890,7 +5123,8 @@ class CommonUtil {
                       : Color(CommonUtil().getMyPrimaryColor()),
                   onPressed: onPressedYes,
                   // function used to perform after pressing the button
-                  child: Text(variable.strYes)),
+                  child: Text(variable.strYes,style: TextStyle(
+                      fontSize: CommonUtil().isTablet!?22.0.sp:null),)),
             ],
           );
         });
@@ -5447,6 +5681,62 @@ class CommonUtil {
     });
   }
 
+  Future<MyProfileModel?> acceptCareGiverTransportRequestReminder(
+      BuildContext context,String appointmentId,String patientId,bool isAccept) async {
+    final GlobalKey<State> _keyLoader = GlobalKey<State>();
+
+    MyProfileModel myProfile=MyProfileModel();
+    FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
+    // var dialog=CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+    var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
+    //Navigator.pop(context);
+
+    if ((appointmentId ?? '').isNotEmpty) {
+      AppointmentDetailsController appointmentDetailsController =
+      CommonUtil().onInitAppointmentDetailsController();
+      appointmentDetailsController.getAppointmentDetail(appointmentId ?? '');
+      Get.to(() => AppointmentDetailScreen());
+    }
+
+    return myProfile;
+    // return result;
+    // await addFamilyUserInfoRepository
+    //     .checkIfChildISMember(userID)
+    //     .then((mainValue) async {
+    //   if (mainValue.isSuccess!) {
+    //     await addFamilyUserInfoRepository
+    //         .getMyProfileInfoNew(userID)
+    //         .then((value) {
+    //       myProfile = value;
+    //
+    //       if (myProfile.result != null) {
+    //         Navigator.of(context).pop();
+    //
+    //         Get.toNamed(router.rt_AddFamilyUserInfo,
+    //             arguments: AddFamilyUserInfoArguments(
+    //                 myProfileResult: myProfile.result,
+    //                 fromClass: CommonConstants.user_update,
+    //                 isFromAppointmentOrSlotPage: false,
+    //                 isForFamily: false,
+    //                 isForFamilyAddition: true))!
+    //             .then((value) =>
+    //             PageNavigator.goToPermanent(context, router.rt_Landing));
+    //       } else {
+    //         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+    //
+    //         FlutterToast()
+    //             .getToast('Unable to Fetch User Profile data', Colors.red);
+    //       }
+    //     });
+    //   } else {
+    //     Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+    //
+    //     FlutterToast().getToast(mainValue.message!, Colors.red);
+    //     return mainValue;
+    //   }
+    // });
+  }
+
   Future<List<RegimentDataModel>> getMasterData(
       BuildContext context, String searchText) async {
     RegimentResponseModel regimentsData;
@@ -5819,6 +6109,95 @@ class CommonUtil {
       }
     }
   }
+
+  String getFormattedString(
+      String title, String type, String name, double fontSize,
+      {bool forDetails: false}) {
+    List<TextSpan> widget = [];
+    if (type == 'Vitals') {
+      try {
+        return name;
+      } catch (e) {
+        return name;
+      }
+    } else {
+      String first = '';
+      String second = '';
+      try {
+        first = title.substring(title.indexOf("{") + 1, title.indexOf("}"));
+        try {
+          second = title.substring(title.indexOf("[") + 1, title.indexOf("]"));
+        } catch (e) {
+          return first;
+        }
+        return first + ' ' + second;
+      } catch (e) {
+        return title;
+      }
+    }
+  }
+
+  String getFormatedDate({String? date = null}) {
+    DateTime now = date == null ? DateTime.now() : DateTime.parse(date);
+    String prefix = '';
+    if (calculateDifference(now) == 0) {
+      //today
+      prefix = 'Today, ';
+    } else if (calculateDifference(now) < 0) {
+      //past
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix = formattedDate + ', ';
+    } else if (calculateDifference(now) > 0) {
+      //future
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix = formattedDate + ', ';
+    } else {
+      String formattedDate = DateFormat('EEEE').format(now);
+      prefix = formattedDate + ', ';
+    }
+    String formattedDate = DateFormat('dd MMM').format(now);
+    return prefix + formattedDate;
+  }
+
+  int calculateDifference(DateTime date) {
+    DateTime now = DateTime.now();
+    return DateTime(date.year, date.month, date.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+  }
+
+  Future<void> alertForSheelaDiscardOnConversation(BuildContext context,
+      {Function()? pressYes, Function()? pressNo}) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(sheelaDialogTitle, style: TextStyle(fontSize: 20.sp)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(sheelaDialogBody, style: TextStyle(fontSize: 18.sp)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(strCamelNo),
+              onPressed: () {
+                pressNo!();
+              },
+            ),
+            TextButton(
+              child: Text(strCamelYes),
+              onPressed: () {
+                pressYes!();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 extension CapExtension on String {
@@ -5949,7 +6328,7 @@ class VideoCallCommonUtils {
               patientPrescriptionId ?? "");
         }
         var qurhomeDashboardController =
-        CommonUtil().onInitQurhomeDashboardController();
+            CommonUtil().onInitQurhomeDashboardController();
         qurhomeDashboardController.getModuleAccess();
         regController.loadingData.value = false;
         regController.meetingId.value =
@@ -5982,6 +6361,8 @@ class VideoCallCommonUtils {
       }
     }
   }
+
+  
 
   String capitalizeFirstofEach(String data) {
     return data
@@ -6204,6 +6585,7 @@ class VideoCallCommonUtils {
             callStartTime: call_start_time);
         var regController = Get.find<QurhomeRegimenController>();
         regController.onGoingSOSCall.value = false;
+        regController.meetingId.value = "";
         Navigator.pop(Get.context!);
       }
     };
@@ -6744,6 +7126,7 @@ class VideoCallCommonUtils {
       CommonUtil.isCallStarted = false;
       Navigator.pop(context);
       var regController = Get.find<QurhomeRegimenController>();
+      regController.meetingId.value = "";
       if (regController.isFromSOS.value) {
         regController.onGoingSOSCall.value = false;
       }
@@ -6813,6 +7196,7 @@ class VideoCallCommonUtils {
                     .collection("call_log")
                     .doc("$cid")
                     .set({"call_status": "call_ended_by_user"});
+                regController.meetingId.value = "";
               } catch (e) {}
               Navigator.pop(context!);
             } catch (e) {
@@ -6846,6 +7230,7 @@ class VideoCallCommonUtils {
                 docName: regController.userName.value,
                 patId: regController.careCoordinatorId.value,
                 bookingId: callMetaData.bookId);
+            regController.meetingId.value = "";
           }
         }
       });
@@ -6914,6 +7299,7 @@ class VideoCallCommonUtils {
           } else {
             unavailabilityOfCC();
           }
+          regController.meetingId.value = "";
           Future.delayed(Duration(seconds: 1), () {
             Navigator.pop(context!);
           });
@@ -6984,6 +7370,7 @@ class VideoCallCommonUtils {
           });*/
       CommonUtil.isCallStarted = false;
       CommonUtil.bookedForId = null;
+      regController.meetingId.value = "";
     } catch (e) {}
   }
 

@@ -204,6 +204,12 @@ const String icon_appointment_regimen = 'assets/icons/appointment_regimen.png';
 const String icon_undo = 'assets/icons/ic_undo.png';
 const String icon_undo_reg = 'assets/icons/ic_undo_reg.png';
 const String icon_view_eye = 'assets/icons/ic_view_eye.png';
+const String icon_switch = 'assets/icons/icon_switch.png';
+
+const String icon_ok = 'assets/icons/ic_ok.png';
+const String icon_escalate = 'assets/icons/ic_escalate.png';
+const String icon_call_cg = 'assets/icons/ic_call.png';
+const String icon_discard = 'assets/icons/ic_discard.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
@@ -293,6 +299,7 @@ const String strNoConnection = 'no connection';
 const String strve = 've';
 const String callAppLockFeatureMethod = "callAppLockFeatureMethod";
 const String pushKitTokenMethod = "pushKitTokenMethod";
+const String callLocalNotificationMethod = "callLocalNotificationMethod";
 
 //new icons for menu
 const String activity_non_adherance =
@@ -389,16 +396,17 @@ const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
 const String strMyClaims = 'My Claims';
 String strCareGiverSettings = 'Caregiver Communication';
-String strNotificationPreference = 'Notification Preferences';
+String strNotificationPreference = 'Notification preferences';
 
-String strNonAdherenceSettings = 'Activity Non-adherence Reminder';
+String strNonAdherenceSettings = 'Activity non-adherence reminder';
 const String strMsgFromProvider = 'Message from provider';
 
-const String strColorPalete = 'Color palette';
-const String strCareGiverCommunication = 'Caregiver Communication';
+const String strColorPalete = 'Color Palette';
+const String strCareGiverCommunication = 'Caregiver communication';
 
 const String strVitalsPreferences = 'Vitals Preferences';
 const String strDisplayDevices = 'Choose Vitals';
+const String strUnitPreferences = 'Unit Preferences';
 const String strDisplayPreferences = 'Display Preferences';
 
 const String strSkillsIntegration = 'Skills/Integration';
@@ -489,6 +497,7 @@ const String strMonth = 'Month';
 const String strUpate = 'Update';
 const String strSave = 'Save';
 const String strFormatEE = 'EEEE';
+const String strPurpose = 'Purpose';
 
 //for my appointments
 const String strDr = 'Dr.';
@@ -665,18 +674,18 @@ const String strAllowDigit = 'Allow digit recognition';
 const String strScanDevices = 'scans for the values from device images';
 const String strAllowDevice = 'Allow device recognition';
 const String strScanAuto = 'scans and auto-detects devices';
-const String strAllowBiometric = 'Enable App lock';
+const String strAllowBiometric = 'Enable app lock';
 const String strEnableApplock =
     'Allow app lock with FaceID/FingerPrint or Passcode';
 const String strAuthToUseApp = 'Please complete the authentication to proceed.';
 
 //for healthKit and googleFit activation and sync
-const String strGoogleFit = 'Google Fit';
+const String strGoogleFit = 'Google fit';
 const String strAllowGoogle = 'Allow app to recieve data from google Fit';
-const String strHealthKit = 'Apple Health';
+const String strHealthKit = 'Apple health';
 const String strAllowHealth = 'Allow app to recieve data from Apple Health';
 const String strAddDevice = 'Tap to add device widgets to your home screen';
-const String strDefaultUI = 'Set Qurhome as default UI';
+const String strDefaultUI = 'Set QurHome as default UI';
 
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
@@ -725,6 +734,7 @@ const String strValidPhoneNumber = 'Enter a valid mobile number';
 const String strGetAppVersion = 'getAppVersion';
 const String strSecure = 'secureMe';
 const String strpop = 'SystemNavigator.pop';
+const String strDiscard = 'Discard';
 
 const String strformateedAddress = 'formateedAddress';
 const String strformateedPhoneNumber = 'formateedPhoneNumber';
@@ -847,6 +857,8 @@ const String strAllowVitals = "Allow Vitals";
 const String strAllowSymptoms = "Allow Symptoms";
 const String strAllowAppointments = "Allow Appointments";
 const String strAlert = 'Alert';
+const String strAlerts = 'Alerts';
+const String patient = 'Patient : ';
 
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
@@ -875,10 +887,6 @@ const String strFoodDelivery = "food delivery";
 
 const String strGetCityList = 'Getting City List';
 const String strSelValidMsg = 'Please select a valid';
-const String strActivityCompleted = 'The activity has been completed already.';
-const String strPastActivityMsgOne = 'To access past activities please use';
-const String strPastActivityMsgTwo = '\n$strAdvancedRegimen';
-const String strPastActivityMsgThree = ' from menu.';
 const String strLocationLink = "Location link";
 const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';
@@ -890,6 +898,14 @@ const String strEdit = 'Edit';
 const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
+const String strDecline='Decline';
+
+//For Alert
+const String strEscalate = 'Escalate';
+const String strCall = 'Call';
+
+const String strTransportationRequestAccepted = 'Transportation request accepted';
+const String strTransportationRequestDeclined = 'Transportation request declined';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

@@ -68,8 +68,8 @@ class QurhomeRegimenController extends GetxController {
   var currLoggedEID = "".obs;
 
   var dateHeader = "".obs;
-  var selectedDate=DateTime.now().obs;
-  var selectedCalendar=DateTime.now().obs;
+  var selectedDate = DateTime.now().obs;
+  var selectedCalendar = DateTime.now().obs;
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
 
@@ -77,32 +77,35 @@ class QurhomeRegimenController extends GetxController {
 
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
   var qurhomeDashboardController =
-  CommonUtil().onInitQurhomeDashboardController();
-  Duration duration = CommonUtil.isUSRegion()?Duration(minutes: 2):Duration(seconds: 30);
+      CommonUtil().onInitQurhomeDashboardController();
+  Duration duration =
+      CommonUtil.isUSRegion() ? Duration(minutes: 2) : Duration(seconds: 30);
   Timer? timer;
 
   var isFirstTime = true.obs;
 
-  getRegimenList({bool isLoading = true,String? date}) async {
+  getRegimenList(
+      {bool isLoading = true, String? date, String? patientId}) async {
     try {
       if (!isLoading) {
         loadingDataWithoutProgress.value = true;
       }
-      if(date!=null){
+      if (date != null) {
         dateHeader.value = getFormatedDate(date: date);
-      }else{
-        date='';
+      } else {
+        date = '';
       }
       loadingData.value = true;
-      qurHomeRegimenResponseModel = await _apiProvider.getRegimenList(date);
+      qurHomeRegimenResponseModel =
+          await _apiProvider.getRegimenList(date, patientId: patientId);
       qurHomeRegimenResponseModel?.regimentsList?.removeWhere((element) =>
-      element!.isEventDisabled && !element!.isSymptom ||
+          element!.isEventDisabled && !element!.isSymptom ||
           !element!.scheduled &&
               !(element?.dayrepeat?.trim().toLowerCase() ==
                   strText.trim().toLowerCase()));
-      bool allActivitiesCompleted=true;
+      bool allActivitiesCompleted = true;
 
-    for (int i = 0;
+      for (int i = 0;
           i < qurHomeRegimenResponseModel!.regimentsList!.length;
           i++) {
         String strCurrLoggedEID = CommonUtil().validString(currLoggedEID.value);
@@ -113,7 +116,7 @@ class QurhomeRegimenController extends GetxController {
           nextRegimenPosition = i;
           currentIndex = i;
           currLoggedEID.value = "";
-          allActivitiesCompleted=false;
+          allActivitiesCompleted = false;
           restartTimer();
           break;
         } else if (DateTime.now()
@@ -123,55 +126,56 @@ class QurhomeRegimenController extends GetxController {
             if (qurHomeRegimenResponseModel!.regimentsList!.length > (i + 1)) {
               nextRegimenPosition = i + 1;
               currentIndex = i + 1;
-              allActivitiesCompleted=false;
-
-
+              allActivitiesCompleted = false;
             } else {
               nextRegimenPosition = i;
               currentIndex = i;
-              allActivitiesCompleted=false;
-
-
+              allActivitiesCompleted = false;
             }
           } else {
             nextRegimenPosition = i;
             currentIndex = i;
-            allActivitiesCompleted=false;
-
+            allActivitiesCompleted = false;
           }
           break;
         }
       }
-      if(allActivitiesCompleted){
-        if((qurHomeRegimenResponseModel?.regimentsList?.length ?? 0)>0){
-          nextRegimenPosition = qurHomeRegimenResponseModel!.regimentsList!.length-1;
-          currentIndex = qurHomeRegimenResponseModel!.regimentsList!.length-1;
+      if (allActivitiesCompleted) {
+        if ((qurHomeRegimenResponseModel?.regimentsList?.length ?? 0) > 0) {
+          nextRegimenPosition =
+              qurHomeRegimenResponseModel!.regimentsList!.length - 1;
+          currentIndex = qurHomeRegimenResponseModel!.regimentsList!.length - 1;
         }
       }
-      for (int i = 0;
-          i < qurHomeRegimenResponseModel!.regimentsList!.length;
-          i++) {
-        if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin !=
-            null) {
-          if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
-              'Appointment') {
-            if (qurHomeRegimenResponseModel!.regimentsList![i].estart != null &&
-                qurHomeRegimenResponseModel!.regimentsList![i].estart != '') {
-              if (qurHomeRegimenResponseModel!.regimentsList![i].eid != null &&
-                  qurHomeRegimenResponseModel!.regimentsList![i].eid != '') {
-                var apiReminder = qurHomeRegimenResponseModel!.regimentsList![i];
-                const platform = MethodChannel(APPOINTMENT_DETAILS);
-                try {
-                  if (Platform.isIOS) {
-                    platform.invokeMethod(
-                        APPOINTMENT_DETAILS, apiReminder.toJson());
-                  } else {
-                    await platform.invokeMethod(APPOINTMENT_DETAILS,
-                        {'data': jsonEncode(apiReminder.toJson())});
-                  }
-                } catch (e) {
-                  if (kDebugMode) {
-                    print(e);
+      if (patientId == null) {
+        for (int i = 0;
+            i < qurHomeRegimenResponseModel!.regimentsList!.length;
+            i++) {
+          if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin !=
+              null) {
+            if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
+                'Appointment') {
+              if (qurHomeRegimenResponseModel!.regimentsList![i].estart !=
+                      null &&
+                  qurHomeRegimenResponseModel!.regimentsList![i].estart != '') {
+                if (qurHomeRegimenResponseModel!.regimentsList![i].eid !=
+                        null &&
+                    qurHomeRegimenResponseModel!.regimentsList![i].eid != '') {
+                  var apiReminder =
+                      qurHomeRegimenResponseModel!.regimentsList![i];
+                  const platform = MethodChannel(APPOINTMENT_DETAILS);
+                  try {
+                    if (Platform.isIOS) {
+                      platform.invokeMethod(
+                          APPOINTMENT_DETAILS, apiReminder.toJson());
+                    } else {
+                      await platform.invokeMethod(APPOINTMENT_DETAILS,
+                          {'data': jsonEncode(apiReminder.toJson())});
+                    }
+                  } catch (e) {
+                    if (kDebugMode) {
+                      print(e);
+                    }
                   }
                 }
               }
@@ -196,14 +200,31 @@ class QurhomeRegimenController extends GetxController {
     }
   }
 
-  getCalendarRegimenList({DateTime? nextPreviousDate=null}) async {
-    DateTime startDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month,1).subtract(Duration(days: 7));
-    DateTime endDate=DateTime(nextPreviousDate!=null?nextPreviousDate.year:selectedDate.value.year,nextPreviousDate!=null?nextPreviousDate.month:selectedDate.value.month+1,0).add(Duration(days: 7));
-    loadingCalendar.value=true;
-    qurHomeRegimenCalendarResponseModel = await _apiProvider.getRegimenListCalendar(startDate,endDate);
-    loadingCalendar.value=false;
+  getCalendarRegimenList(
+      {DateTime? nextPreviousDate = null, String? patientId}) async {
+    DateTime startDate = DateTime(
+            nextPreviousDate != null
+                ? nextPreviousDate.year
+                : selectedDate.value.year,
+            nextPreviousDate != null
+                ? nextPreviousDate.month
+                : selectedDate.value.month,
+            1)
+        .subtract(Duration(days: 7));
+    DateTime endDate = DateTime(
+            nextPreviousDate != null
+                ? nextPreviousDate.year
+                : selectedDate.value.year,
+            nextPreviousDate != null
+                ? nextPreviousDate.month
+                : selectedDate.value.month + 1,
+            0)
+        .add(Duration(days: 7));
+    loadingCalendar.value = true;
+    qurHomeRegimenCalendarResponseModel = await _apiProvider
+        .getRegimenListCalendar(startDate, endDate, patientId: patientId);
+    loadingCalendar.value = false;
     update(["refreshCalendar"]);
-
   }
 
   @override
@@ -267,7 +288,7 @@ class QurhomeRegimenController extends GetxController {
         var coordinates = Coordinates(latitude, longitude);
         final addresses =
             await Geocoder.local.findAddressesFromCoordinates(coordinates);
-        Address address = addresses.first;  //FU2.5
+        Address address = addresses.first; //FU2.5
         // var address;//  FU2.5
 
         if (address != null) {
@@ -397,8 +418,8 @@ class QurhomeRegimenController extends GetxController {
     try {
       prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
       userName.value = prof.result != null
-          ? CommonUtil()
-              .validString(prof.result!.firstName! + ' ' + prof.result!.lastName!)
+          ? CommonUtil().validString(
+              prof.result!.firstName! + ' ' + prof.result!.lastName!)
           : '';
       userId.value = PreferenceUtil.getStringValue(constants.KEY_USERID)!;
       userProfilePic.value = prof.result != null
@@ -453,46 +474,55 @@ class QurhomeRegimenController extends GetxController {
 
   void startTimer() {
     try {
-        timer = new Timer.periodic(
-          Duration(seconds: 1),
-              (Timer timer) {
-                final addSeconds =  -1 ;
-                final seconds = duration.inSeconds + addSeconds;
-            if (seconds == 0) {
-              this.timer?.cancel();
-              this.timer=null;
-              dateHeader.value = getFormatedDate();
-              //selectedCalendar.value = DateTime.now();
-              getRegimenList(isLoading: false);
-              qurhomeDashboardController.getModuleAccess();
-              if(CommonUtil.isUSRegion()){
-                duration = Duration(minutes: 2);
-              }else{
-                duration = Duration(seconds: 30);
-              }
-              startTimer();
-            }else if(seconds<11){
-              if(!isTodaySelected.value){
-                statusText.value='${strRegimenRedirection} ${seconds.toString()}';
-                update(["refershStatusText"]);
-              }
-              duration = Duration(seconds: seconds);
+      timer = new Timer.periodic(
+        Duration(seconds: 1),
+        (Timer timer) {
+          final addSeconds = -1;
+          final seconds = duration.inSeconds + addSeconds;
+          if (seconds == 0) {
+            this.timer?.cancel();
+            this.timer = null;
+            dateHeader.value = getFormatedDate();
+            //selectedCalendar.value = DateTime.now();
+            if (qurhomeDashboardController.forPatientList.value) {
+              getRegimenList(
+                  isLoading: false,
+                  patientId: qurhomeDashboardController
+                      .careGiverPatientListResult!.childId);
             } else {
-              if(!isTodaySelected.value){
-                if(calculateDifference(selectedDate.value)<0){//past
-                  isTodaySelected.value=false;
-                  statusText.value=strViewPastDateRegimen;
-                }else if(calculateDifference(selectedDate.value)>0){//future
-                  isTodaySelected.value=false;
-                  statusText.value=strViewFutureDateRegimen;
-                }
-                update(["refershStatusText"]);
-              }
-              duration = Duration(seconds: seconds);
+              getRegimenList(isLoading: false);
             }
-          },
-        );
-
+            qurhomeDashboardController.getModuleAccess();
+            if (CommonUtil.isUSRegion()) {
+              duration = Duration(minutes: 2);
+            } else {
+              duration = Duration(seconds: 30);
+            }
+            startTimer();
+          } else if (seconds < 11) {
+            if (!isTodaySelected.value) {
+              statusText.value =
+                  '${strRegimenRedirection} ${seconds.toString()}';
+              update(["refershStatusText"]);
+            }
+            duration = Duration(seconds: seconds);
+          } else {
+            if (!isTodaySelected.value) {
+              if (CommonUtil().calculateDifference(selectedDate.value) < 0) {
+                //past
+                isTodaySelected.value = false;
+                statusText.value = strViewPastDateRegimen;
+              } else if (CommonUtil().calculateDifference(selectedDate.value) > 0) {
+                //future
+                isTodaySelected.value = false;
+                statusText.value = strViewFutureDateRegimen;
+              }
+              update(["refershStatusText"]);
+            }
+            duration = Duration(seconds: seconds);
+          }
+        },
+      );
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
@@ -503,10 +533,10 @@ class QurhomeRegimenController extends GetxController {
   void restartTimer() {
     try {
       timer?.cancel();
-      this.timer=null;
-      if(CommonUtil.isUSRegion()){
+      this.timer = null;
+      if (CommonUtil.isUSRegion()) {
         duration = Duration(minutes: 2);
-      }else{
+      } else {
         duration = Duration(seconds: 30);
       }
 
@@ -525,43 +555,41 @@ class QurhomeRegimenController extends GetxController {
     getRegimenList(date: selectedDate.value.toString());
   }
 
-  cancelTimer(){
+  cancelTimer() {
     timer?.cancel();
-    timer=null;
+    timer = null;
   }
 
-  String getFormatedDate({String? date=null}) {
-    DateTime now = date==null?DateTime.now():DateTime.parse(date);
-    selectedDate.value=now;
-    String prefix='';
-    if(calculateDifference(now)==0){//today
-      isTodaySelected.value=true;
-      statusText.value='';
-      prefix='Today, ';
-    }else if(calculateDifference(now)<0){//past
-      isTodaySelected.value=false;
-      statusText.value=strViewPastDateRegimen;
+  String getFormatedDate({String? date = null}) {
+    DateTime now = date == null ? DateTime.now() : DateTime.parse(date);
+    selectedDate.value = now;
+    String prefix = '';
+    if (CommonUtil().calculateDifference(now) == 0) {
+      //today
+      isTodaySelected.value = true;
+      statusText.value = '';
+      prefix = 'Today, ';
+    } else if (CommonUtil().calculateDifference(now) < 0) {
+      //past
+      isTodaySelected.value = false;
+      statusText.value = strViewPastDateRegimen;
       String formattedDate = DateFormat('EEEE').format(now);
-      prefix=formattedDate+', ';
-    }else if(calculateDifference(now)>0){//future
-      isTodaySelected.value=false;
-      statusText.value=strViewFutureDateRegimen;
+      prefix = formattedDate + ', ';
+    } else if (CommonUtil().calculateDifference(now) > 0) {
+      //future
+      isTodaySelected.value = false;
+      statusText.value = strViewFutureDateRegimen;
       String formattedDate = DateFormat('EEEE').format(now);
-      prefix=formattedDate+', ';
-    }else{
-      isTodaySelected.value=false;
+      prefix = formattedDate + ', ';
+    } else {
+      isTodaySelected.value = false;
       String formattedDate = DateFormat('EEEE').format(now);
-      prefix=formattedDate+', ';
+      prefix = formattedDate + ', ';
     }
     update(["refershStatusText"]);
 
     String formattedDate = DateFormat('dd MMM').format(now);
-    return prefix+formattedDate;
-  }
-
-  int calculateDifference(DateTime date) {
-    DateTime now = DateTime.now();
-    return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
+    return prefix + formattedDate;
   }
 
   onStopLoadingCircle() async {

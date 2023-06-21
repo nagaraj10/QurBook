@@ -1,4 +1,3 @@
-
 // ignore: file_names
 import 'dart:convert' as convert;
 import 'dart:io';
@@ -8,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
+import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import '../../add_family_otp/models/add_family_otp_arguments.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
@@ -71,6 +71,8 @@ class _MyFamilyState extends State<MyFamily> {
 
   bool firstTym = true;
 
+  late FamilyMemberListRepository _familyResponseListRepository;
+
   // Option 2
   String? selectedBloodGroup;
   RelationsShipModel? selectedRelationShip;
@@ -96,8 +98,10 @@ class _MyFamilyState extends State<MyFamily> {
     mInitialTime = DateTime.now();
     super.initState();
     _familyListBloc = FamilyListBloc();
-    _familyListBloc!.getFamilyMembersListNew();
+    //_familyListBloc!.getFamilyMembersListNew();
     _familyListBloc!.getCustomRoles();
+    _familyResponseListRepository = FamilyMemberListRepository();
+
     parentProfilePic =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
@@ -132,7 +136,36 @@ class _MyFamilyState extends State<MyFamily> {
             size: 24.0.sp,
           ),
         ),
-        body: getAllFamilyMembers());
+        body: getAllFamilyMembersNew());
+  }
+
+  Widget getAllFamilyMembersNew() {
+    return FutureBuilder<FamilyMembers?>(
+        future: _familyResponseListRepository.getFamilyMembersListNew(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SafeArea(
+              child: SizedBox(
+                height: 1.sh / 4.5,
+                child: Center(
+                  child: SizedBox(
+                    width: 30.0.h,
+                    height: 30.0.h,
+                    child: CommonCircularIndicator(),
+                  ),
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return ErrorsWidget();
+          } else {
+            if (snapshot.hasData && snapshot.data?.result != null) {
+              return getMyFamilyMembers(snapshot.data?.result);
+            } else {
+              return refreshIndicatorWithEmptyContainer();
+            }
+          }
+        });
   }
 
   Widget getAllFamilyMembers() {
@@ -388,7 +421,8 @@ class _MyFamilyState extends State<MyFamily> {
                                     child: Text(
                                   data.child?.firstName != null &&
                                           data.child!.lastName != null
-                                      ? data.child!.firstName![0].toUpperCase() +
+                                      ? data.child!.firstName![0]
+                                              .toUpperCase() +
                                           (data.child!.lastName!.length > 0
                                               ? data.child!.lastName![0]
                                                   .toUpperCase()
@@ -450,7 +484,9 @@ class _MyFamilyState extends State<MyFamily> {
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
-                                fulName != null  && fulName.isNotEmpty ? fulName[0].toUpperCase() : '',
+                                fulName != null && fulName.isNotEmpty
+                                    ? fulName[0].toUpperCase()
+                                    : '',
                                 style: TextStyle(
                                     fontSize: 22.0.sp,
                                     color: Color(
@@ -470,7 +506,7 @@ class _MyFamilyState extends State<MyFamily> {
                   children: <Widget>[
                     Text(
                       position == 0
-                          ? fulName != null&& fulName.isNotEmpty
+                          ? fulName != null && fulName.isNotEmpty
                               ? CommonUtil().titleCase(fulName.toLowerCase())
                               : ''
                           : data.child?.firstName != null
@@ -1147,8 +1183,7 @@ class _MyFamilyState extends State<MyFamily> {
                             isPrimaryNoSelected: isPrimaryNoSelected,
                             id: addFamilyOTPResponse.result!.childInfo!.id,
                             isForFamily: false,
-                            addFamilyUserInfo:
-                                addFamilyOTPResponse.result!),
+                            addFamilyUserInfo: addFamilyOTPResponse.result!),
                       ).then((value) {
                         mobileNoController.text = '';
                         nameController.text = '';
@@ -1391,7 +1426,7 @@ class _MyFamilyState extends State<MyFamily> {
   refreshIndicatorWithEmptyContainer() {
     return RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () async{
+        onRefresh: () async {
           _refreshIndicatorKey.currentState?.show(atTop: true);
           rebuildFamilyBlock();
           setState(() {});

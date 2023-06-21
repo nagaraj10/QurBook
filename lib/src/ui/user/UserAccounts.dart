@@ -1,7 +1,8 @@
-
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/keysofmodel.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/myPlan/view/myPlanList.dart';
@@ -51,9 +52,10 @@ class _UserAccountsState extends State<UserAccounts>
   MyProfileModel? myProfile;
   bool islogout = false;
   final GlobalKey<State> _key = GlobalKey<State>();
-  Future? profileData;
+  MyProfileModel? profileData;
   bool isUserMainId = true;
   LandingViewModel? landingViewModel;
+  bool firstTym = true;
 
   @override
   void initState() {
@@ -64,13 +66,14 @@ class _UserAccountsState extends State<UserAccounts>
         vsync: this, length: 4, initialIndex: widget.arguments!.selectedIndex!);
     _sliverTabController!.addListener(_handleSelected);
 
-    profileData = getMyProfile();
+    setValueForProfile();
     Provider.of<LandingViewModel>(context, listen: false)
         .getQurPlanDashBoard(needNotify: true);
   }
 
   fetchUserProfileInfo() async {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!;
+    var userid =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!;
     myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
   }
 
@@ -152,58 +155,8 @@ class _UserAccountsState extends State<UserAccounts>
               } */
             ),
             actions: <Widget>[
-              if (CommonUtil.REGION_CODE != 'IN') getSwitchProfileWidget()
-              // IconButton(
-              //     icon: Icon(
-              //       Icons.exit_to_app,
-              //       size: 24.0.sp,
-              //     ),
-              //     onPressed: () {
-              //       new FHBBasicWidget().exitApp(context, () {
-              //         islogout = true;
-              //         new CommonUtil().logout(moveToLoginPage);
-              //       });
-              //     })
-              /* selectedTab == 0
-                  ? IconButton(
-                      icon: _isEditable
-                          ? Visibility(visible: false, child: Icon(Icons.save))
-                          : Icon(Icons.edit),
-                      onPressed: () {
-                        setState(() {
-                          if (_isEditable) {
-                            _isEditable = false;
-                          } else {
-                            _isEditable = true;
-                            //sliverBarHeight = 50;
-                            if (myProfile?.result != null) {
-                              Navigator.pushNamed(
-                                      context, router.rt_AddFamilyUserInfo,
-                                      arguments: AddFamilyUserInfoArguments(
-                                          myProfileResult: myProfile?.result,
-                                          fromClass:
-                                              CommonConstants.user_update))
-                                  .then((value) {
-                                setState(() {
-                                  _isEditable = false;
-                                });
-                              });
-                            } else {
-                              FlutterToast().getToast(
-                                  'Unable to Fetch User Profile data',
-                                  Colors.red);
-                              setState(() {
-                                _isEditable = false;
-                              });
-                            }
-                          }
-                          sliverBarHeight = 220;
-                        });
-                      })
-                  : Container(
-                      height: 0.0.h,
-                      width: 0.0.h,
-                    )*/
+              // if (CommonUtil.REGION_CODE != 'IN')
+              // if (selectedTab == 1) getSwitchProfileWidget()
             ],
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(50.0.h),
@@ -241,34 +194,58 @@ class _UserAccountsState extends State<UserAccounts>
     new CommonUtil().moveToLoginPage();
   }
 
+  Widget getProfileSwitchWidget() {
+    return FutureBuilder<Widget>(
+      future: getSwitchIcon(),
+      initialData: const SizedBox.shrink(),
+      builder: (context, snapshot) {
+        return snapshot.data ?? SizedBox();
+      },
+    );
+  }
+
+  Future<Widget> getSwitchIcon() {
+    return SwitchProfile().buildActionsNew(context, _key, () {
+      setValueForProfile();
+      firstTym = false;
+      checkIfUserIdSame();
+      landingViewModel!.getQurPlanDashBoard(needNotify: true);
+      landingViewModel!.checkIfUserIdSame().then((value) {
+        isUserMainId = value;
+      });
+      QurPlanReminders.getTheRemindersFromAPI();
+
+      (context as Element).markNeedsBuild();
+      setState(() {});
+    }, true, (profileData ?? MyProfileModel())).then((widget) {
+      return widget;
+    });
+  }
+
   Widget getSwitchProfileWidget() {
+    Widget profileWidget = SizedBox();
+
     return FutureBuilder<MyProfileModel>(
         future: getMyProfile(),
         builder: (context, snapshot) {
-          if (snapshot != null) if (snapshot.data != null && snapshot.hasData)
-            PreferenceUtil.saveProfileData(
-                Constants.KEY_PROFILE, snapshot.data);
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data != null && snapshot.hasData)
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE_MAIN, snapshot.data);
 
-          imageCache!.clear();
-          imageCache!.clearLiveImages();
+            imageCache!.clear();
+            imageCache!.clearLiveImages();
 
-          return SwitchProfile().buildActions(
-            context,
-            _key,
-            () {
-              profileData = getMyProfile();
-              checkIfUserIdSame();
-              landingViewModel!.getQurPlanDashBoard(needNotify: true);
-              landingViewModel!.checkIfUserIdSame().then((value) {
-                isUserMainId = value;
-              });
-              QurPlanReminders.getTheRemindersFromAPI();
-
-              (context as Element).markNeedsBuild();
-              setState(() {});
-            },
-            true,
-          );
+            profileWidget = getProfileSwitchWidget();
+            return profileWidget;
+          } else {
+            return Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: Center(
+                  child: Container(
+                      width: 22, height: 22, child: CommonCircularIndicator())),
+            );
+          }
         });
   }
 
@@ -289,18 +266,12 @@ class _UserAccountsState extends State<UserAccounts>
   Future<MyProfileModel> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final userIdMain =
-        await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
-    if (userId != userIdMain) {
-      // isUserMainId = false;
-    }
-    try {
-      // await getDeviceSelectionValues().then((value) => {});
-    } catch (e) {}
-    if (userId != null && userId.isNotEmpty) {
+    if (userIdMain != null && userIdMain.isNotEmpty) {
       try {
         MyProfileModel value =
-            await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+            await addFamilyUserInfoRepository.getMyProfileInfoNew(userIdMain);
         myProfile = value;
 
         if (value != null) {
@@ -339,6 +310,12 @@ class _UserAccountsState extends State<UserAccounts>
       CommonUtil().logout(moveToLoginPage);
     }
     return myProfile!;
+  }
+
+  void setValueForProfile() {
+    getMyProfile().then((profile) {
+      profileData = profile;
+    });
   }
 }
 

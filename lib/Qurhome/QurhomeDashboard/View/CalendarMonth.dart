@@ -8,6 +8,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CalendarMonth extends StatefulWidget {
+  String? patientId;
+  CalendarMonth({this.patientId});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -32,7 +35,7 @@ class _HomePageState extends State<CalendarMonth> {
   }
 
   getMonthList() {
-    controller.getCalendarRegimenList();
+    controller.getCalendarRegimenList(patientId: widget.patientId);
   }
 
   Widget? getEventList(List<RegimentDataModel> data) {
@@ -49,7 +52,11 @@ class _HomePageState extends State<CalendarMonth> {
             onPageChanged: (dateTime) {
               controller.selectedDate.value = dateTime;
               onPageChanged = true;
-              controller.getCalendarRegimenList();
+              if (widget.patientId != null) {
+                controller.getCalendarRegimenList(patientId: widget.patientId);
+              } else {
+                controller.getCalendarRegimenList();
+              }
             },
             eventLoader: (DateTime dateTime) {
               return _events[DateTime(

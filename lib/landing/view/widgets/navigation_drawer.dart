@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -32,12 +31,14 @@ class NavigationDrawer extends StatelessWidget {
       {required this.myProfile,
       required this.moveToLoginPage,
       required this.refresh,
-      required this.userChangedbool});
+      required this.userChangedbool,
+      required this.showPatientList});
 
   final MyProfileModel? myProfile;
   final Function moveToLoginPage;
   final Function(bool userChanged) refresh;
   final bool userChangedbool;
+  final Function() showPatientList;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +72,8 @@ class NavigationDrawer extends StatelessWidget {
                           children: [
                             AssetImageWidget(
                               icon: myFHB_logo,
-                              height: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
+                              height:
+                                  CommonUtil().isTablet! ? 110.0.h : 100.0.h,
                               width: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
                             ),
                             SizedBox(
@@ -98,6 +100,19 @@ class NavigationDrawer extends StatelessWidget {
                                   width: 10.0.w,
                                 ),
                                 getNameWidget(),
+                                SizedBox(
+                                  width: 20.0.w,
+                                ),
+                                if (CommonUtil.isUSRegion())
+                                  InkWell(
+                                      child: Image.asset(
+                                        variable.icon_switch,
+                                        height: 26.0.h,
+                                        width: 26.0.h,
+                                      ),
+                                      onTap: () {
+                                        showPatientList();
+                                      })
                               ],
                             )
                           ],
@@ -348,7 +363,8 @@ class NavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () {
                           FHBBasicWidget().exitApp(context, () {
-                            CommonUtil().logout(moveToLoginPage as dynamic Function());
+                            CommonUtil()
+                                .logout(moveToLoginPage as dynamic Function());
                           });
                         },
                       ),
@@ -370,13 +386,14 @@ class NavigationDrawer extends StatelessWidget {
 
     try {
       myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
-      name = toBeginningOfSentenceCase((myProfile.result?.name != null &&
-              myProfile.result?.name != '')
-          ? myProfile.result?.name?.capitalizeFirstofEach
-          : myProfile.result?.firstName != null &&
-                  myProfile.result?.lastName != null
-              ? ('${myProfile.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile.result?.lastName?.capitalizeFirstofEach}')
-              : '');
+      if (myProfile.result?.firstName != null &&
+          myProfile.result?.firstName != "") {
+        name = '${myProfile.result?.firstName?.capitalizeFirstofEach} ';
+      }
+      if (myProfile.result?.lastName != null &&
+          myProfile.result?.lastName != "") {
+        name += '${myProfile.result?.lastName?.capitalizeFirstofEach}';
+      }
       phoneNumber = (myProfile.result?.userContactCollection3?.length ?? 0) > 0
           ? myProfile.result?.userContactCollection3![0]!.phoneNumber
           : '';

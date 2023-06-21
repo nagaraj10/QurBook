@@ -692,9 +692,9 @@ class _MySettingsState extends State<MySettings> {
                         }
                         return snapshot.hasData
                             ? Container(
-                                height: 75,
+                                height: CommonUtil().isTablet!?75.h:75,
                                 color: Colors.white,
-                                child: new ListView.builder(
+                                child: ListView.builder(
                                   shrinkWrap: true,
                                   scrollDirection: Axis.horizontal,
                                   itemCount: snapshot.data!.length,

@@ -3,30 +3,25 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:local_auth/auth_strings.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/otp_remove_account_screen.dart';
-import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
+import 'package:myfhb/common/DeleteAccountWebScreen.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/landing/view/widgets/drawer_tile.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,7 +49,6 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 
 class MoreMenuScreen extends StatefulWidget {
@@ -148,7 +142,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       getAvailableDevices();
     }
     PackageInfo.fromPlatform().then((packageInfo) {
-      version = packageInfo.version;
+      version = packageInfo.version + " + " + packageInfo.buildNumber;
     });
     selectedList = [];
     _deviceModel = new DevicesViewModel();
@@ -1308,9 +1302,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                     }
                                     return snapshot.hasData
                                         ? Container(
-                                            height: 75,
+                                            height: CommonUtil().isTablet!?75.h:75,
                                             color: Colors.white,
-                                            child: new ListView.builder(
+                                            child: ListView.builder(
                                               shrinkWrap: true,
                                               scrollDirection: Axis.horizontal,
                                               itemCount: snapshot.data!.length,
@@ -1399,7 +1393,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         AssetImage(variable.unit_preference),
                         //size: 30,
                       ),
-                      title: Text('Unit Preferences',
+                      title: Text(strUnitPreferences,
                           style: TextStyle(fontWeight: FontWeight.w500)),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
@@ -1649,37 +1643,19 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   style: TextStyle(
                       fontWeight: FontWeight.w500, color: Colors.black)),
               children: [
-                ListTile(
+                InkWell(
+                  onTap: (){
+                    Get.to(DeleteAccountWebScreen());
+                  },
+                  child: ListTile(
                     leading: ImageIcon(
                       AssetImage(variable.remove_user),
                       //size: 30,
                       color: Colors.black,
                     ),
                     title: Text(variable.strDeleteAccountTitle),
-                    trailing: Transform.scale(
-                      scale: 0.8,
-                      child: Switch(
-                        value: PreferenceUtil.getEnableDeleteAccount(),
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                        onChanged: (bool newValue) async {
-                          if (newValue) {
-                            _confirmDeletion();
-                            setState(() {
-                              PreferenceUtil.saveEnableDeleteAccount(
-                                deleteAccountStatus: true,
-                              );
-                            });
-                          } else {
-                            setState(() {
-                              PreferenceUtil.saveEnableDeleteAccount(
-                                deleteAccountStatus: false,
-                              );
-                            });
-                          }
-                        },
-                      ),
-                    )),
+                  ),
+                )
               ],
             )),
         Divider(),

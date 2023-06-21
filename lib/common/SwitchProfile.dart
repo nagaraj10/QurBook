@@ -1,9 +1,9 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
@@ -89,14 +89,7 @@ class SwitchProfile {
               } else {
                 _familyListBloc = FamilyListBloc();
               }
-
-              /*  PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
-                  ? getDialogBoxWithFamilyMemberScrap(
-                      PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
-                  :*/
               checkInternet(_keyLoader, scaffold_state);
-
-              //return new FamilyListDialog();
             },
             child: isFromDashborad
                 ? getCirleAvatarWithBorderIcon(myProfile)
@@ -117,7 +110,8 @@ class SwitchProfile {
                                         child: Center(
                                           child: Text(
                                             myProfile.result!.firstName != null
-                                                ? myProfile.result!.firstName![0]
+                                                ? myProfile
+                                                    .result!.firstName![0]
                                                     .toUpperCase()
                                                 : '',
                                             style: TextStyle(
@@ -188,8 +182,8 @@ class SwitchProfile {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
               .then((value) {
             Navigator.of(keyLoader.currentContext!, rootNavigator: true).pop();
-            CommonUtil()
-                .getMedicalPreference(callBackToRefresh: callBackToRefresh);
+
+            callBackToRefresh();
           });
         });
 
@@ -200,7 +194,11 @@ class SwitchProfile {
           Get.put(QurhomeDashboardController());
         }
         qurhomeDashboardController = Get.find();
-        qurhomeDashboardController.updateTabIndex(qurhomeDashboardController.currentSelectedIndex.value);
+        qurhomeDashboardController.updateTabIndex(
+            qurhomeDashboardController.currentSelectedIndex.value);
+        try {
+          Get.find<QurhomeRegimenController>().getRegimenList();
+        } catch (e) {}
       });
     });
   }
@@ -208,8 +206,11 @@ class SwitchProfile {
   checkInternet(
       GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState>? scaffoldState) {
     FHBUtils().check().then((intenet) {
+      CommonUtil().showSingleLoadingDialog(context);
       if (intenet != null && intenet) {
         _familyListBloc!.getFamilyMembersListNew().then((familyMembersList) {
+          CommonUtil().hideLoadingDialog(context);
+
           if (familyMembersList != null &&
               familyMembersList.result != null &&
               familyMembersList.result.sharedByUsers.length > 0) {
@@ -308,12 +309,87 @@ class SwitchProfile {
     /*Navigator.push(context, MaterialPageRoute(builder: (context) {
       return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
     }));*/
-     Navigator.pushNamed(
-      context,
-      rt_UserAccounts,
-      arguments: UserAccountsArguments(
-        selectedIndex: 1,
-      ),
-    );
+    if (!CommonUtil.isUSRegion())
+      Navigator.pushNamed(
+        context,
+        rt_UserAccounts,
+        arguments: UserAccountsArguments(
+          selectedIndex: 1,
+        ),
+      );
+  }
+
+  Future<Widget> buildActionsNew(
+      BuildContext _context,
+      GlobalKey<State> _keyLoader,
+      Function _callBackToRefresh,
+      bool isFromDashborad,
+      MyProfileModel myProfile,
+      {GlobalKey<ScaffoldState>? scaffold_state}) async {
+    context = _context;
+    keyLoader = _keyLoader;
+    callBackToRefresh = _callBackToRefresh;
+    isFromDashborad = isFromDashborad;
+    String? profileImage;
+    MyProfileModel? myProfileNew;
+    try {
+      myProfileNew = await PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      profileImage =
+          await PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+    } catch (e) {
+      myProfileNew = null;
+    }
+
+    return Padding(
+        padding: EdgeInsets.all(10),
+        child: InkWell(
+            onTap: () {
+              if (_familyListBloc != null) {
+                _familyListBloc = null;
+                _familyListBloc = FamilyListBloc();
+              } else {
+                _familyListBloc = FamilyListBloc();
+              }
+              checkInternet(_keyLoader, scaffold_state);
+            },
+            child: isFromDashborad
+                ? getCirleAvatarWithBorderIcon(myProfile)
+                : CircleAvatar(
+                    radius: CommonUtil().isTablet! ? 18 : 15,
+                    child: ClipOval(
+                        child: myProfile != null
+                            ? myProfile.result != null
+                                ? myProfile.result!.profilePicThumbnailUrl !=
+                                        null
+                                    ? FHBBasicWidget()
+                                        .getProfilePicWidgeUsingUrl(myProfile)
+                                    : Container(
+                                        height: 50.0.h,
+                                        width: 50.0.h,
+                                        color:
+                                            Color(fhbColors.bgColorContainer),
+                                        child: Center(
+                                          child: Text(
+                                            myProfile.result!.firstName != null
+                                                ? myProfile
+                                                    .result!.firstName![0]
+                                                    .toUpperCase()
+                                                : '',
+                                            style: TextStyle(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor())),
+                                          ),
+                                        ))
+                                : Container(
+                                    height: 50.0.h,
+                                    width: 50.0.h,
+                                    color: Color(fhbColors.bgColorContainer),
+                                  )
+                            : Container(
+                                height: 50.0.h,
+                                width: 50.0.h,
+                                color: Color(fhbColors.bgColorContainer),
+                              )),
+                  )));
   }
 }

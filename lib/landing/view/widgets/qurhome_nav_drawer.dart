@@ -11,12 +11,14 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardContro
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
 import 'package:myfhb/my_reports/view/my_report_screen.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/user_plans/view/user_profile_image.dart';
 import '../../../colors/fhb_colors.dart';
@@ -34,14 +36,16 @@ import '../../../constants/router_variable.dart' as router;
 class QurHomeNavigationDrawer extends StatelessWidget {
   const QurHomeNavigationDrawer(
       {required this.myProfile,
-       required this.moveToLoginPage,
+      required this.moveToLoginPage,
       required this.refresh,
-      required this.userChangedbool});
+      required this.userChangedbool,
+      required this.showPatientList});
 
   final MyProfileModel? myProfile;
   final Function() moveToLoginPage;
   final Function(bool userChanged)? refresh;
   final bool? userChangedbool;
+  final Function() showPatientList;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +79,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           children: [
                             AssetImageWidget(
                               icon: myFHB_logo,
-                              height: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
+                              height:
+                                  CommonUtil().isTablet! ? 110.0.h : 100.0.h,
                               width: CommonUtil().isTablet! ? 110.0.h : 100.0.h,
                             ),
                             SizedBox(
@@ -102,6 +107,20 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                   width: 10.0.w,
                                 ),
                                 getNameWidget(),
+                                SizedBox(
+                                  width: 20.0.w,
+                                ),
+                                if (CommonUtil.isUSRegion())
+                                  getProfileSwitchWidget()
+                                /*   InkWell(
+                                      child: Image.asset(
+                                        variable.icon_switch,
+                                        height: 26.0.h,
+                                        width: 26.0.h,
+                                      ),
+                                      onTap: () {
+                                        showPatientList();
+                                      })*/
                               ],
                             )
                           ],
@@ -113,19 +132,15 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         onPressed: () async {
                           try {
                             Get.back();
+
                             if (Get.isRegistered<QurhomeDashboardController>())
                               Get.find<QurhomeDashboardController>()
                                   .updateBLETimer(Enable: false);
-                            await Navigator.pushNamed(
-                              context,
-                              router.rt_UserAccounts,
-                              arguments: UserAccountsArguments(
-                                selectedIndex: 0,
-                              ),
-                            );
-                            if (refresh != null) {
-                              refresh!(true)!;
-                            }
+
+                            Get.to(UserAccounts(
+                              arguments:
+                                  UserAccountsArguments(selectedIndex: 0),
+                            ));
                           } catch (e) {
                             //print(e);
                           }
@@ -136,6 +151,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         icon: variable.icon_th,
                         onPressed: () async {
                           try {
+                            clearControllerValues();
                             Get.back();
                             Get.to(AppointmentsMain(isFromQurday: true));
                           } catch (e) {
@@ -152,6 +168,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             if (Get.isRegistered<QurhomeDashboardController>())
                               Get.find<QurhomeDashboardController>()
                                   .updateBLETimer(Enable: false);
+                            clearControllerValues();
 
                             Get.to(MyRecords(
                               argument: MyRecordsArgument(),
@@ -293,6 +310,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () {
                           try {
+                            clearControllerValues();
+
                             Get.back();
                             Get.to(() => MoreMenuScreen(refresh: refresh));
                           } catch (e) {
@@ -310,6 +329,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () {
                           try {
+                            clearControllerValues();
+
                             Get.back();
                             Get.to(() => HelpSupport());
                           } catch (e) {
@@ -346,6 +367,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           color: Colors.black54,
                         ),
                         onPressed: () async {
+                          clearControllerValues();
+
                           Get.back();
                           if (Get.isRegistered<QurhomeDashboardController>())
                             Get.find<QurhomeDashboardController>()
@@ -442,13 +465,15 @@ class QurHomeNavigationDrawer extends StatelessWidget {
 
     try {
       myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
-      name = toBeginningOfSentenceCase((myProfile.result!.name != null &&
-              myProfile.result!.name != '')
-          ? myProfile.result!.name!.capitalizeFirstofEach
-          : myProfile.result!.firstName != null &&
-                  myProfile.result!.lastName != null
-              ? ('${myProfile.result!.firstName!.capitalizeFirstofEach} ${myProfile.result!.lastName!.capitalizeFirstofEach}')
-              : '');
+      if (myProfile.result?.firstName != null &&
+          myProfile.result?.firstName != "") {
+        name = '${myProfile.result?.firstName?.capitalizeFirstofEach} ';
+      }
+      if (myProfile.result?.lastName != null &&
+          myProfile.result?.lastName != "") {
+        name += '${myProfile.result?.lastName?.capitalizeFirstofEach}';
+      }
+
       phoneNumber = (myProfile.result!.userContactCollection3!.length) > 0
           ? myProfile.result!.userContactCollection3![0]!.phoneNumber!
           : '';
@@ -477,6 +502,47 @@ class QurHomeNavigationDrawer extends StatelessWidget {
               : null,
         ),
       ),
+    );
+  }
+
+  void clearControllerValues() {
+    /* final controller = Get.put(QurhomeDashboardController());
+
+    controller.currentSelectedTab.value = 0;
+
+    controller.forPatientList.value = false;
+    controller.isPatientClicked.value = false;
+    controller.careGiverPatientListResult = null;
+    */
+  }
+
+  Widget getProfileSwitchWidget() {
+    return FutureBuilder<bool>(
+      future: CommonUtil().checkIfUserIdSame(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot?.data ?? false) {
+            return InkWell(
+                child: Image.asset(
+                  variable.icon_switch,
+                  height: 26.0.h,
+                  width: 26.0.h,
+                ),
+                onTap: () {
+                  showPatientList();
+                });
+          } else {
+            return SizedBox();
+          }
+        } else {
+          return Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Center(
+                child: Container(
+                    width: 22, height: 22, child: CommonCircularIndicator())),
+          );
+        }
+      },
     );
   }
 }
