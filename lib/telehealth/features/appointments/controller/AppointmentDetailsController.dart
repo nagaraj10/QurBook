@@ -30,6 +30,7 @@ class AppointmentDetailsController extends GetxController {
   var providerAddress = "".obs;
   var testName = "".obs;
   var description = "".obs;
+  var notes = "".obs;
   var pickUpAddress = "".obs;
   var dropAddress = "".obs;
   var scheduleDateTime = "".obs;
@@ -56,6 +57,12 @@ class AppointmentDetailsController extends GetxController {
 
       if (appointmentDetailsModel != null &&
           appointmentDetailsModel?.result != null) {
+
+        if(appointmentDetailsModel?.result?.additionalInfo!=null){
+          if(appointmentDetailsModel?.result?.additionalInfo?.notesDisplay!=null){
+            notes.value = appointmentDetailsModel?.result?.additionalInfo?.notesDisplay??'';
+          }
+        }
 
           appointmentType.value = appointmentDetailsModel?.result?.serviceCategory?.name ?? "";
 
@@ -227,6 +234,7 @@ class AppointmentDetailsController extends GetxController {
       providerAddress.value = "";
       testName.value = "";
       description.value = "";
+      notes.value = "";
       pickUpAddress.value = "";
       dropAddress.value = "";
       scheduleDateTime.value = "";
