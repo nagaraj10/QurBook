@@ -133,14 +133,20 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           onWillPop: () async {
             if (controller.isLoading.isFalse ||
                 (controller.arguments!.audioMessage ?? '').isNotEmpty) {
-              controller.stopTTS();
-              controller.canSpeak = false;
-              controller.isSheelaScreenActive = false;
-              controller.getSheelaBadgeCount();
-              controller.updateTimer(enable: false);
-              controller.clearTimer();
-              Get.back();
-              return true;
+              if ((CommonUtil.isUSRegion()) &&
+                  ((controller.conversations.length ?? 0) > 0) &&
+                  !(controller.conversations.last?.endOfConv ?? true)) {
+                CommonUtil().alertForSheelaDiscardOnConversation(context,
+                    pressYes: () {
+                      goToBackScreen();
+                      Get.back();
+                    }, pressNo: () {
+                      Get.back();
+                    });
+              } else {
+                goToBackScreen();
+                return true;
+              }
             }
             return false;
           },
@@ -429,6 +435,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.isSheelaScreenActive = false;
     controller.getSheelaBadgeCount();
     controller.updateTimer(enable: false);
+    controller.clearTimer();
     Get.back();
   }
 
