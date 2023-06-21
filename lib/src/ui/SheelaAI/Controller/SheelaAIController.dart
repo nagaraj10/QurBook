@@ -499,7 +499,9 @@ class SheelaAIController extends GetxController {
       if (playButtons) {
         final currentButton = currentPlayingConversation!
             .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
-        if (currentButton.title!.contains("Exit")) {
+        if (currentButton.title!.contains(StrExit) ||
+            (currentButton.title!.contains(str_Undo) ||
+                (currentButton.title!.contains(StrUndoAll)))) {
           gettingReposnseFromNative();
           return;
         } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
