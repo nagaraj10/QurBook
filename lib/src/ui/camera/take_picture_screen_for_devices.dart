@@ -52,7 +52,7 @@ class TakePictureScreenForDevicesState
   String? categoryName;
   String? deviceName;
   String? chosenDevice;
-  bool isObjectDetecting = true;
+  bool isObjectDetecting = false;
 
   int maxImageNo = 10;
   bool selectSingleImage = false;
@@ -135,13 +135,7 @@ class TakePictureScreenForDevicesState
             child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            isObjectDetecting == true ||
-                    PreferenceUtil.getStringValue(
-                            Constants.allowDeviceRecognition) ==
-                        null ||
-                    PreferenceUtil.getStringValue(
-                            Constants.allowDeviceRecognition) ==
-                        'true'
+            isObjectDetecting == true
                 ? Camera(
                     widget.cameras,
                     _model,
