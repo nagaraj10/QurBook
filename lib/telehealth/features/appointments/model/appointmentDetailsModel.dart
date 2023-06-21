@@ -110,6 +110,7 @@ class AdditionalInfo {
   String? city;
   String? cityName;
   String? notes;
+  String? notesDisplay;
   String? state;
   String? title;
   String? labName;
@@ -129,6 +130,7 @@ class AdditionalInfo {
       this.city,
       this.cityName,
       this.notes,
+      this.notesDisplay,
       this.state,
       this.title,
       this.labName,
@@ -170,6 +172,7 @@ class AdditionalInfo {
           : json['description'] != null
               ? json['description']
               : "";
+      notesDisplay = json['notes'] != null ? json['notes'] : '';
       state = json['state'];
       title = json['title'];
       labName = json['lab_name'];
@@ -207,6 +210,7 @@ class AdditionalInfo {
     data['from'] = this.from;
     data['city'] = this.city;
     data['notes'] = this.notes;
+    data['notes'] = this.notesDisplay;
     data['state'] = this.state;
     data['title'] = this.title;
     data['lab_name'] = this.labName;
