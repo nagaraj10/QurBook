@@ -511,13 +511,7 @@ class SheelaAIController extends GetxController {
           var result;
           try {
             if (currentButton.sayText != null && currentButton.sayText != '') {
-              var stringToSpeech = currentButton.sayText;
-              if (currentButton.sayText!.contains(".")) {
-                stringToSpeech = currentButton.sayText!.split(".")[1];
-                result = await getGoogleTTSForText(stringToSpeech);
-              } else {
-                result = await getGoogleTTSForText(currentButton.sayText);
-              }
+              result = await getGoogleTTSForText(currentButton.sayText);
             } else {
               var stringToSpeech = currentButton.title;
               if (currentButton.title!.contains(".")) {
@@ -655,13 +649,7 @@ class SheelaAIController extends GetxController {
     try {
       String toSpeech = '';
       if ((button.sayText ?? '').isNotEmpty) {
-        var stringToSpeech = button.sayText;
-        if (button.sayText!.contains(".")) {
-          stringToSpeech = button.sayText!.split(".")[1];
-          toSpeech = stringToSpeech;
-        } else {
-          toSpeech = button.sayText!;
-        }
+        toSpeech = button.sayText!;
       } else {
         var stringToSpeech = button.title;
         if (button.title!.contains(".")) {
