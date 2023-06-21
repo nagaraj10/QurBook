@@ -88,6 +88,7 @@ import PushKit
     var flutterController : FlutterViewController!
     var isMuteCalledFromFlutter = false
     var isSplashScreenLaunched = false
+    var isCallStarted = false
 
     override func application(
         _ application: UIApplication,
@@ -349,7 +350,9 @@ import PushKit
     }
     
     func initializePushKit(){
-        voipRegistry = PKPushRegistry(queue: DispatchQueue(label: "voipQueue"))
+        let mainQueue = DispatchQueue.main
+//        voipRegistry = PKPushRegistry(queue: DispatchQueue(label: "voipQueue"))
+        voipRegistry = PKPushRegistry(queue: mainQueue)
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = [PKPushType.voIP]
     }
@@ -950,9 +953,9 @@ import PushKit
         //        }
     }
     
-    override func applicationDidBecomeActive(_ application: UIApplication) {
-        initializePushKit()
-    }
+//    override func applicationDidBecomeActive(_ application: UIApplication) {
+//        initializePushKit()
+//    }
     
     override func applicationWillTerminate(_ application: UIApplication) {
         if(isQurhomeDefaultUI){

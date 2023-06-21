@@ -103,6 +103,7 @@ class _CallMainState extends State<CallMain> {
 
   @override
   void dispose() {
+    CommonUtil.isCallStarted = false;
     rtcEngine!.leaveChannel();
     rtcEngine!.destroy();
     Provider.of<RTCEngineProvider>(context, listen: false).isVideoPaused =

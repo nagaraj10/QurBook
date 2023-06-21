@@ -10,6 +10,7 @@ import Foundation
 import PushKit
 import CallKit
 import AVFAudio
+import FirebaseFirestore
 
 extension AppDelegate : PKPushRegistryDelegate {
     
@@ -27,8 +28,11 @@ extension AppDelegate : PKPushRegistryDelegate {
     
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         if type == .voIP {
-            pkPushPayload = payload
-            triggerCallKit(payload: payload)
+            if(cxCallUDID == nil){
+                pkPushPayload = payload
+                print("UDIDI Trigger:", payload)
+                triggerCallKit(payload: payload)
+            }
         }
     }
     
@@ -39,6 +43,12 @@ extension AppDelegate : PKPushRegistryDelegate {
         if var payloadDict = pkPushPayload.dictionaryPayload as? Dictionary<String, Any>, let controller = navigationController?.children.first as? FlutterViewController {
             
             payloadDict["status"] = "Accept";
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1200)) {
+                self.configurAudioSession()
+            }
+            
+            isCallStarted = true
             
             let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
             navigationController?.children.first?.present(alert, animated: true)
@@ -62,10 +72,12 @@ extension AppDelegate : PKPushRegistryDelegate {
         //  // Set the remoteHandle, so you can call from System Call History
         //  update.remoteHandle = CXHandle(type: .generic, value: yourHandle)
         //  cxCallProvider.reportCall(with: uuid, updated: update)
-        
         action.fulfill()
         
         if var payloadDict = pkPushPayload.dictionaryPayload as? Dictionary<String, Any>, let controller = navigationController?.children.first as? FlutterViewController {
+            print("UDIDI END CALL Delegate:", cxCallUDID)
+            
+            isCallStarted = false
             
             payloadDict["status"] = "Decline";
             
@@ -77,12 +89,15 @@ extension AppDelegate : PKPushRegistryDelegate {
                     self.ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
                 }
                 self.ResponseNotificationChannel.invokeMethod(Constants.notificationResponseMethod, arguments:payloadDict)
+                self.cxCallUDID = nil
             }
         }
+        
         return
     }
     
     func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
+        
         if(self.isMuteCalledFromFlutter == false){
             action.fulfill()
             if(flutterController != nil){
@@ -90,17 +105,28 @@ extension AppDelegate : PKPushRegistryDelegate {
                     ResponseCallKitMethodChannel = FlutterMethodChannel.init(name: Constants.reponseToCallKitMethodChannel, binaryMessenger: flutterController.binaryMessenger)
                     
                 }
-                var newData  = ["Status": action.isMuted]
+                let newData  = ["Status": action.isMuted]
                 
                 ResponseCallKitMethodChannel.invokeMethod(Constants.IsCallMuted, arguments:newData)
             }
         }else{
             self.isMuteCalledFromFlutter = false
         }
+        
+        //        configurAudioSession()
+    }
+    
+    func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
+        //        configurAudioSession()
+    }
+    
+    func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
+        
     }
 }
 
 extension AppDelegate {
+    
     func triggerCallKit(payload: PKPushPayload){
         if let payloadDict = payload.dictionaryPayload as? Dictionary<String, Any>,
            let callerName =  payloadDict["username"] as? String,
@@ -114,7 +140,7 @@ extension AppDelegate {
             //  2: Create and set configurations about how the calling application should behave
             if #available(iOS 14.0, *) {
                 let cxCallConfig = CallKit.CXProviderConfiguration()
-                let iconMaskImage = #imageLiteral(resourceName: "appLogo")
+                let iconMaskImage = #imageLiteral(resourceName: "callkitLogo")
                 cxCallConfig.iconTemplateImageData = iconMaskImage.pngData()
                 cxCallConfig.includesCallsInRecents = false;
                 cxCallConfig.supportedHandleTypes = [.generic]
@@ -137,8 +163,23 @@ extension AppDelegate {
                 //  4. Post local notification to the user that there is an incoming call. Add the helper method below `reportIncomingCall` to show the full-screen UI. It must contain `UUID()` that helps to identify the caller using a random identifier. You should also provide the `CXCallUpdate` that comprises metadata information about the incoming call.
                 cxCallKitCallController = CXCallController()
                 
+                configurAudioSession()
+                
                 cxCallUDID = UUID()
-                cxCallProvider.reportNewIncomingCall(with: cxCallUDID, update: cxCallUpdate, completion: { error in })
+                if(isSplashScreenLaunched == true){
+                    callLogListener()
+                }else{
+//                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 6) {
+//                        self.callLogListener()
+//                    }
+                }
+                print("UDIDI END Initiate:", cxCallUDID)
+                
+                cxCallProvider.reportNewIncomingCall(with: cxCallUDID, update: cxCallUpdate, completion: { error in
+                    if(error == nil) {
+                        //                        self.configurAudioSession()
+                    }
+                })
             } else {
                 //  Fallback on earlier versions
             }
@@ -169,7 +210,8 @@ extension AppDelegate {
                 if let QurhomeDefault = call.arguments as? NSDictionary,let status = QurhomeDefault["status"] as? Bool{
                     if(status == true){
                         // End the call
-                        self.cxCallProvider.reportCall(with: self.cxCallUDID, endedAt: Date(), reason: .remoteEnded)
+                        self.endCall()
+                        //                    self.cxCallProvider.reportCall(with: self.cxCallUDID, endedAt: Date(), reason: .remoteEnded)
                     }
                 }
             }
@@ -199,6 +241,28 @@ extension AppDelegate {
         }
     }
     
+    func endCall() {
+//        isCallStarted = false
+        
+        if let uuid = cxCallUDID{
+            print("UDIDI END CALL:", cxCallUDID)
+            let endCallAction = CXEndCallAction(call: uuid)
+            let callTransaction = CXTransaction()
+            callTransaction.addAction(endCallAction)
+            //requestCall
+            cxCallKitCallController.request(callTransaction)  { error in
+                DispatchQueue.main.async { [self] in
+                    if let error = error {
+                        NSLog("CallEnded transaction request failed: \(error.localizedDescription)")
+                        return
+                    }
+                    NSLog("CallEnded transaction request successful")
+                    self.cxCallUDID = nil
+                }
+            }
+        }
+    }
+    
     // Mute or unmute from the app. This is to sync the CallKit UI with app UI
     func muteTheCall(isMuted: Bool) {
         if let uuid = cxCallUDID{
@@ -217,22 +281,50 @@ extension AppDelegate {
         }
     }
     
-    func configureAudioSession() {
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            //            if audioSession.category != .playAndRecord {
-            try audioSession.setCategory(AVAudioSession.Category.playAndRecord,
-                                         options: AVAudioSession.CategoryOptions.mixWithOthers)
-            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-            try audioSession.setMode(.default)
-            try audioSession.overrideOutputAudioPort(.none)
-            try audioSession.setActive(true)
-            //            }
-            //            if audioSession.mode != .voiceChat {
-            //                try audioSession.setMode(.voiceChat)
-            //            }
-        } catch {
+    func configurAudioSession(){
+        let session = AVAudioSession.sharedInstance()
+        do{
+            //            try session.setCategory(AVAudioSession.Category.playAndRecord, options: [.duckOthers,.allowBluetooth])
+            try session.setMode(.default)
+            try session.setActive(true)
+            try session.setPreferredSampleRate(44100.0)
+            try session.setPreferredIOBufferDuration(0.005)
+        }catch{
             print("Error configuring AVAudioSession: \(error.localizedDescription)")
+        }
+    }
+    
+    func callLogListener(){
+        // It's to dismiss the callkitUI
+        if let payloadDict = pkPushPayload.dictionaryPayload as? Dictionary<String, Any>,
+           let meetingID =  payloadDict["meeting_id"] as? String {
+            
+            let db = Firestore.firestore()
+            db.collection("call_log").document(meetingID).addSnapshotListener({ listenerSnapshot, error in
+                print("CALLKIT callUDID:", self.cxCallUDID)
+
+                if(self.cxCallUDID == nil) {return}
+                
+                if let error = error{
+                    print("CALLKIT Error:", error.localizedDescription)
+                    return
+                }
+                print("CALLKIT data 1:", listenerSnapshot?.data())
+
+                guard let data = listenerSnapshot?.data() else {
+                    if(self.isCallStarted){
+                        self.endCall()
+                        self.isCallStarted = false
+                    }
+                    return
+                }
+                print("CALLKIT data 2:", data)
+                if(!data.isEmpty){
+                    if(data["call_status"] as! String == "call_ended_by_user"){
+                        self.endCall()
+                    }
+                }
+            })
         }
     }
 }

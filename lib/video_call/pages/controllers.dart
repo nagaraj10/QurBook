@@ -377,8 +377,8 @@ class _MyControllersState extends State<MyControllers> {
         {'status': widget.muted},
       );
     }
-    // widget.controllerState(widget.muted, widget._isHideMyVideo);
-    // widget.rtcEngine!.muteLocalAudioStream(widget.muted);
+    widget.controllerState(widget.muted, widget._isHideMyVideo);
+    widget.rtcEngine!.muteLocalAudioStream(widget.muted);
   }
 
   void _onToggleVideo() async {
