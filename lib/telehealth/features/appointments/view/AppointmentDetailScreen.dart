@@ -447,6 +447,17 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ),
             SizedBox(height: 10.h),
             showWidget(),
+            if ((appointmentDetailsController.notes.value != null) &&
+                (appointmentDetailsController.notes.value != ''))
+              Container(
+                child: Column(
+                  children: [
+                    SizedBox(height: 5.h),
+                    commonWidgetForTitleValue(parameters.strNotes,
+                        appointmentDetailsController.notes.value),
+                  ],
+                ),
+              ),
             showLocationField(),
             SizedBox(height: 20.h),
           ],

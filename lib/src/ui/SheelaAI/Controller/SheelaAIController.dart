@@ -74,6 +74,7 @@ class SheelaAIController extends GetxController {
   SheelaBadgeServices sheelaBadgeServices = SheelaBadgeServices();
 
   Rx<bool> isMuted = false.obs;
+  Rx<bool> isDiscardDialogShown = false.obs;
 
   @override
   void onInit() {
@@ -143,7 +144,9 @@ class SheelaAIController extends GetxController {
               if (!conversations.last.endOfConv) {
                 if (CommonUtil.isUSRegion()) {
                   if (!isMuted.value) {
-                    gettingReposnseFromNative();
+                    if(!isDiscardDialogShown.value){
+                      gettingReposnseFromNative();
+                    }
                   }
                 } else {
                   gettingReposnseFromNative();
@@ -389,7 +392,7 @@ class SheelaAIController extends GetxController {
           if (currentResponse.endOfConv ?? false) {
             QurPlanReminders.getTheRemindersFromAPI();
             conversationFlag = null;
-            additionalInfo = {};
+            //additionalInfo = {};
             sessionToken = const Uuid().v1();
             relationshipId = userId;
           }
