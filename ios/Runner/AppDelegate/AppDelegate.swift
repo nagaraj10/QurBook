@@ -1116,7 +1116,6 @@ extension AppDelegate : PKPushRegistryDelegate {
     func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
         
         if(self.isMuteCalledFromFlutter == false){
-            action.fulfill()
             if(flutterController != nil){
                 if (ResponseCallKitMethodChannel == nil){
                     ResponseCallKitMethodChannel = FlutterMethodChannel.init(name: Constants.reponseToCallKitMethodChannel, binaryMessenger: flutterController.binaryMessenger)
@@ -1129,6 +1128,8 @@ extension AppDelegate : PKPushRegistryDelegate {
         }else{
             self.isMuteCalledFromFlutter = false
         }
+        
+        action.fulfill()
         
         //        configurAudioSession()
     }
@@ -1283,7 +1284,7 @@ extension AppDelegate {
     // Mute or unmute from the app. This is to sync the CallKit UI with app UI
     func muteTheCall(isMuted: Bool) {
         if let uuid = cxCallUDID{
-            let muteAction = CXSetMutedCallAction(call: uuid, muted: !isMuted)
+            let muteAction = CXSetMutedCallAction(call: uuid, muted: isMuted)
             let transaction = CXTransaction(action: muteAction)
             
             cxCallKitCallController.request(transaction)  { error in
