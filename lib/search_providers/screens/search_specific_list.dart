@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
@@ -1871,14 +1872,18 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               routeClassName = router.rt_TelehealthProvider;
             }
 
-            Navigator.popUntil(context, (route) {
-              var shouldPop = false;
-              if (route.settings.name == routeClassName ||
-                  route.settings == null) {
-                shouldPop = true;
-              }
-              return shouldPop;
-            });
+            if (CommonUtil.isUSRegion()) {
+              Get.close(3);
+            } else {
+              Navigator.popUntil(context, (route) {
+                var shouldPop = false;
+                if (route.settings.name == routeClassName ||
+                    route.settings == null) {
+                  shouldPop = true;
+                }
+                return shouldPop;
+              });
+            }
           },
         );
 

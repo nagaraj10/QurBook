@@ -156,10 +156,9 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                                     ?.user?.lastName !=
                                                 null))
                                     ? getProfilePicWidget(
-                                        eachDoctorModel!
-                                            .user!.profilePicThumbnailUrl!,
-                                        eachDoctorModel.user!.firstName!,
-                                        eachDoctorModel.user!.lastName!,
+                                        eachDoctorModel?.user?.profilePicThumbnailUrl??"",
+                                        eachDoctorModel?.user?.firstName??"",
+                                        eachDoctorModel?.user?.lastName??"",
                                         Color(CommonUtil().getMyPrimaryColor()),
                                         authtoken: authtoken)
                                     : Container(
