@@ -139,13 +139,14 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   ((controller.conversations.length ?? 0) > 0) &&
                   !(controller.conversations.last?.endOfConv ?? true)) {
                 controller.isDiscardDialogShown.value = true;
-                CommonUtil().alertForSheelaDiscardOnConversation(context,
+                CommonUtil().alertForSheelaDiscardOnConversation(
+                    context, PreferenceUtil.getIfQurhomeisAcive(),
                     pressYes: () {
-                      goToBackScreen();
-                      Get.back();
-                    }, pressNo: () {
-                      Get.back();
-                    }).then((value) {
+                  goToBackScreen();
+                  Get.back();
+                }, pressNo: () {
+                  Get.back();
+                }).then((value) {
                   controller.isDiscardDialogShown.value = false;
                 });
               } else {
@@ -374,7 +375,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   ((controller.conversations.length ?? 0) > 0) &&
                   !(controller.conversations.last?.endOfConv ?? true)) {
                 controller.isDiscardDialogShown.value = true;
-                CommonUtil().alertForSheelaDiscardOnConversation(context,
+                CommonUtil().alertForSheelaDiscardOnConversation(
+                    context, PreferenceUtil.getIfQurhomeisAcive(),
                     pressYes: () {
                   goToBackScreen();
                   Get.back();
