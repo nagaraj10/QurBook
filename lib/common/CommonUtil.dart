@@ -212,7 +212,7 @@ class CommonUtil {
 
   final String sheelaDialogTitle = 'Activity is not completed.';
 
-  final String sheelaDialogBody = 'Do you wish to cancel now ?';
+  final String sheelaDialogBody = 'Do you wish to exit the conversation?';
 
   static getProviderType(String type) {
     return 'health-organization/search/efhb?healthOrganizationType=%5B%22${type}%22%5D&limit=100&sortBy=asc';
@@ -6162,7 +6162,6 @@ class CommonUtil {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(sheelaDialogTitle, style: TextStyle(fontSize: 20.sp)),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
