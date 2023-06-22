@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,22 +18,41 @@ class DeleteAccountWebScreen extends StatefulWidget {
 }
 
 class _DeleteAccountWebScreenState extends State<DeleteAccountWebScreen> {
+  late WebViewController _controller;
 
-
+  @override
+  void initState() {
+    super.initState();
+    // Enable hybrid composition.
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Delete Account'),
-      ),
-      body: Container(
-        child: WebView(
-          javascriptChannels: <JavascriptChannel>{
-            _toasterJavascriptChannel(context),
-          },
-          initialUrl: CommonUtil.WEB_URL,
-          javascriptMode: JavascriptMode.unrestricted,
+    return WillPopScope(
+      onWillPop: () async {
+        if (await _controller.canGoBack()) {
+          await _controller.goBack();
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Delete Account'),
+        ),
+        body: Container(
+          child: WebView(
+            javascriptChannels: <JavascriptChannel>{
+              _toasterJavascriptChannel(context),
+            },
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller=webViewController;
+            },
+            initialUrl: CommonUtil.WEB_URL,
+            javascriptMode: JavascriptMode.unrestricted,
+          ),
         ),
       ),
     );
