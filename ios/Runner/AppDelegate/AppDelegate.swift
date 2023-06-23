@@ -1037,9 +1037,7 @@ extension AppDelegate : PKPushRegistryDelegate {
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
-        print("Successfully registered for VoIP push notifications.")
-        //        let deviceToken = (pushCredentials.token as NSData).description
-        print("TOKEN:", pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
+//        print("TOKEN:", pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
         triggerPushKitTokenMethod(token: pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
     }
     
@@ -1047,7 +1045,6 @@ extension AppDelegate : PKPushRegistryDelegate {
         if type == .voIP {
             if(cxCallUDID == nil){
                 pkPushPayload = payload
-                print("UDIDI Trigger:", payload)
                 triggerCallKit(payload: payload)
             }
         }
@@ -1092,7 +1089,6 @@ extension AppDelegate : PKPushRegistryDelegate {
         action.fulfill()
         
         if var payloadDict = pkPushPayload.dictionaryPayload as? Dictionary<String, Any>, let controller = navigationController?.children.first as? FlutterViewController {
-            print("UDIDI END CALL Delegate:", cxCallUDID)
             
             isCallStarted = false
             
@@ -1149,7 +1145,6 @@ extension AppDelegate {
         if let payloadDict = payload.dictionaryPayload as? Dictionary<String, Any>,
            let callerName =  payloadDict["username"] as? String,
            let callType =  payloadDict["callType"] as? String{
-            print("PUSH KIT PAYLOAD:", payloadDict);
             
             //  1: Create an incoming call update object. This object stores different types of information about the caller. You can use it in setting whether the call has a video.
             let cxCallUpdate = CXCallUpdate()
@@ -1191,7 +1186,6 @@ extension AppDelegate {
 //                        self.callLogListener()
 //                    }
                 }
-                print("UDIDI END Initiate:", cxCallUDID)
                 
                 cxCallProvider.reportNewIncomingCall(with: cxCallUDID, update: cxCallUpdate, completion: { error in
                     if(error == nil) {
@@ -1205,13 +1199,6 @@ extension AppDelegate {
     }
     
     func receiveCallKitMethodFromNative(){
-        //        configureAudioSession()
-        //        try? AVAudioSession.sharedInstance().setCategory(
-        //            AVAudioSession.Category.playAndRecord,
-        //            mode: AVAudioSession.Mode.voiceChat,
-        //            options: [.duckOthers, .allowBluetoothA2DP, .allowBluetooth]
-        //        )
-        
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         if (ResponseCallKitMethodChannel == nil){
             ResponseCallKitMethodChannel = FlutterMethodChannel.init(name: Constants.reponseToCallKitMethodChannel, binaryMessenger: controller.binaryMessenger)
@@ -1263,7 +1250,6 @@ extension AppDelegate {
 //        isCallStarted = false
         
         if let uuid = cxCallUDID{
-            print("UDIDI END CALL:", cxCallUDID)
             let endCallAction = CXEndCallAction(call: uuid)
             let callTransaction = CXTransaction()
             callTransaction.addAction(endCallAction)
@@ -1271,10 +1257,10 @@ extension AppDelegate {
             cxCallKitCallController.request(callTransaction)  { error in
                 DispatchQueue.main.async { [self] in
                     if let error = error {
-                        NSLog("CallEnded transaction request failed: \(error.localizedDescription)")
+//                        NSLog("CallEnded transaction request failed: \(error.localizedDescription)")
                         return
                     }
-                    NSLog("CallEnded transaction request successful")
+//                    NSLog("CallEnded transaction request successful")
                     self.cxCallUDID = nil
                 }
             }
@@ -1290,10 +1276,10 @@ extension AppDelegate {
             cxCallKitCallController.request(transaction)  { error in
                 DispatchQueue.main.async {
                     if let error = error {
-                        NSLog("SetMutedCallAction transaction request failed: \(error.localizedDescription)")
+//                        NSLog("SetMutedCallAction transaction request failed: \(error.localizedDescription)")
                         return
                     }
-                    NSLog("SetMutedCallAction transaction request successful")
+//                    NSLog("SetMutedCallAction transaction request successful")
                 }
             }
         }
@@ -1308,7 +1294,7 @@ extension AppDelegate {
             try session.setPreferredSampleRate(44100.0)
             try session.setPreferredIOBufferDuration(0.005)
         }catch{
-            print("Error configuring AVAudioSession: \(error.localizedDescription)")
+//            print("Error configuring AVAudioSession: \(error.localizedDescription)")
         }
     }
     
@@ -1319,7 +1305,6 @@ extension AppDelegate {
             
             let db = Firestore.firestore()
             db.collection("call_log").document(meetingID).addSnapshotListener({ listenerSnapshot, error in
-                print("CALLKIT callUDID:", self.cxCallUDID)
 
                 if(self.cxCallUDID == nil) {return}
                 
@@ -1327,7 +1312,6 @@ extension AppDelegate {
                     print("CALLKIT Error:", error.localizedDescription)
                     return
                 }
-                print("CALLKIT data 1:", listenerSnapshot?.data())
 
                 guard let data = listenerSnapshot?.data() else {
                     if(self.isCallStarted){
@@ -1336,7 +1320,6 @@ extension AppDelegate {
                     }
                     return
                 }
-                print("CALLKIT data 2:", data)
                 if(!data.isEmpty){
                     if(data["call_status"] as! String == "call_ended_by_user"){
                         self.endCall()
