@@ -74,6 +74,7 @@ class SheelaAIController extends GetxController {
   SheelaBadgeServices sheelaBadgeServices = SheelaBadgeServices();
 
   Rx<bool> isMuted = false.obs;
+  Rx<bool> isDiscardDialogShown = false.obs;
 
   @override
   void onInit() {
@@ -143,7 +144,9 @@ class SheelaAIController extends GetxController {
               if (!conversations.last.endOfConv) {
                 if (CommonUtil.isUSRegion()) {
                   if (!isMuted.value) {
-                    gettingReposnseFromNative();
+                    if (!isDiscardDialogShown.value) {
+                      gettingReposnseFromNative();
+                    }
                   }
                 } else {
                   gettingReposnseFromNative();
@@ -163,8 +166,7 @@ class SheelaAIController extends GetxController {
                   strMyFamilyList.toLowerCase()) {
                 Get.to(UserAccounts(
                     arguments: UserAccountsArguments(selectedIndex: 1)));
-              }
-              else if ((conversations.last.redirectTo ?? "") ==
+              } else if ((conversations.last.redirectTo ?? "") ==
                   strHomeScreen.toLowerCase()) {
                 startTimer();
               }
@@ -389,7 +391,7 @@ class SheelaAIController extends GetxController {
           if (currentResponse.endOfConv ?? false) {
             QurPlanReminders.getTheRemindersFromAPI();
             conversationFlag = null;
-            additionalInfo = {};
+            //additionalInfo = {};
             sessionToken = const Uuid().v1();
             relationshipId = userId;
           }
@@ -510,27 +512,14 @@ class SheelaAIController extends GetxController {
         } else if ((currentButton.title ?? '').isNotEmpty) {
           var result;
           try {
-            if (currentButton.sayText != null && currentButton.sayText != '') {
-              var stringToSpeech = currentButton.sayText;
-              if (currentButton.sayText!.contains(".")) {
-                stringToSpeech = currentButton.sayText!.split(".")[1];
-                result = await getGoogleTTSForText(stringToSpeech);
-              } else {
-                result = await getGoogleTTSForText(currentButton.sayText);
-              }
+            if ((currentButton.sayText ?? '').isNotEmpty) {
+              result = await getGoogleTTSForText(currentButton.sayText);
             } else {
-              var stringToSpeech = currentButton.title;
-              if (currentButton.title!.contains(".")) {
-                stringToSpeech = currentButton.title!.split(".")[1];
-                result = await getGoogleTTSForText(stringToSpeech);
-              } else {
-                result = await getGoogleTTSForText(currentButton.title);
-              }
+              result = await getGoogleTTSForText(currentButton.title);
             }
           } catch (e) {
             result = await getGoogleTTSForText(currentButton.title);
           }
-
           if ((result.payload?.audioContent ?? '').isNotEmpty) {
             textForPlaying = result.payload.audioContent;
           }
@@ -655,21 +644,9 @@ class SheelaAIController extends GetxController {
     try {
       String toSpeech = '';
       if ((button.sayText ?? '').isNotEmpty) {
-        var stringToSpeech = button.sayText;
-        if (button.sayText!.contains(".")) {
-          stringToSpeech = button.sayText!.split(".")[1];
-          toSpeech = stringToSpeech;
-        } else {
-          toSpeech = button.sayText!;
-        }
+        toSpeech = button.sayText!;
       } else {
-        var stringToSpeech = button.title;
-        if (button.title!.contains(".")) {
-          stringToSpeech = button.title!.split(".")[1];
-          toSpeech = stringToSpeech;
-        } else {
-          toSpeech = button.title!;
-        }
+        toSpeech = button.title!;
       }
       final result = await getGoogleTTSForText(toSpeech);
       button.ttsResponse = result;

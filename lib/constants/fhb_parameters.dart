@@ -355,6 +355,7 @@ const String theAppointmentIsFor = 'The Appointment is for';
 const String thePlanIsFor = 'The Plan is for';
 
 const String dateAndTime = 'Date & Time';
+const String strNotes = 'Notes';
 const String confirmDetails = 'Confirmation Details';
 const String preConsultingDetails = 'Pre Consulting Details';
 const String addNotes = 'Add Notes';

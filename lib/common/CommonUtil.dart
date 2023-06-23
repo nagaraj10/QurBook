@@ -213,7 +213,7 @@ class CommonUtil {
 
   final String sheelaDialogTitle = 'Activity is not completed.';
 
-  final String sheelaDialogBody = 'Do you wish to cancel now?';
+  final String sheelaDialogBody = 'Do you wish to exit the conversation?';
 
   static getProviderType(String type) {
     return 'health-organization/search/efhb?healthOrganizationType=%5B%22${type}%22%5D&limit=100&sortBy=asc';
@@ -6166,13 +6166,13 @@ class CommonUtil {
         .inDays;
   }
 
-  Future<void> alertForSheelaDiscardOnConversation(BuildContext context,
+  Future<void> alertForSheelaDiscardOnConversation(
+      BuildContext context, bool isQurhome,
       {Function()? pressYes, Function()? pressNo}) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(sheelaDialogTitle, style: TextStyle(fontSize: 20.sp)),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -6182,13 +6182,21 @@ class CommonUtil {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(strCamelNo),
+              child: Text(strCamelNo,
+                  style: TextStyle(
+                      color: isQurhome
+                          ? Color(CommonUtil().getQurhomePrimaryColor())
+                          : Color(CommonUtil().getMyPrimaryColor()))),
               onPressed: () {
                 pressNo!();
               },
             ),
             TextButton(
-              child: Text(strCamelYes),
+              child: Text(strCamelYes,
+                  style: TextStyle(
+                      color: isQurhome
+                          ? Color(CommonUtil().getQurhomePrimaryColor())
+                          : Color(CommonUtil().getMyPrimaryColor()))),
               onPressed: () {
                 pressYes!();
               },
