@@ -101,6 +101,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       if (Platform.isIOS) {
+              // Get the iOS push kit Token
+        variable.reponseToTriggerPushKitTokenMethodChannel
+            .setMethodCallHandler((call) async {
+          if (call.method == variable.pushKitTokenMethod) {
+            final data = Map<String, dynamic>.from(call.arguments);
+            PreferenceUtil.saveString(
+                Constants.KEY_PUSH_KIT_TOKEN, data[isTokenStr]);
+          }
+        });
         if (widget.isFromCallScreen) {
           // It comes from callscreen on iOS after clicking the cancel call button
           callAppLockFeatureMethod(false);

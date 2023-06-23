@@ -25,8 +25,15 @@ struct Constants {
     "flutter.native.QurBook/notificationResponse";
     static let reponseToTriggerAppLockMethodChannel =
     "flutter.native.QurBook/appLockMethodChannel";
+    static let reponseToTriggerPushKitTokenMethodChannel =
+    "flutter.native.QurBook/pushKitTokenMethodChannel";
+    static let reponseToCallKitMethodChannel =
+        "flutter.native.QurBook/callKitMethodChannel";
+    
     static let notificationResponseMethod = "notificationResponse";
     static let callAppLockFeatureMethod = "callAppLockFeatureMethod";
+    static let pushKitTokenMethod = "pushKitTokenMethod";
+
     static let callLocalNotificationMethod = "callLocalNotificationMethod";
     static let devicesEventChannel = "QurbookBLE/stream"
     static let reminderMethodChannel = "flutter.native/reminder"
@@ -46,6 +53,7 @@ struct Constants {
     static let beepSound = "beep_beep.mp3";
     static let before = "remindbefore";
     static let isCallRecieved = "isCallRecieved";
+    static let token = "Token";
     static let type = "type";
     struct paramaters {
         static let message = "message"
@@ -66,6 +74,8 @@ struct Constants {
     static let BLEAdvDataServiceUUIDs = "kCBAdvDataServiceUUIDs";
     static let QurhomeDefaultUI = "QurhomeDefaultUI";
     static let IsAppLockChecked = "IsAppLockChecked";
+    static let IsCallEnded = "IsCallEnded";
+    static let IsCallMuted = "IsCallMuted";
     static let call = "call";
     static let Mike = "Mike";
     static let WOWGOSPO2 = "GSH601";
