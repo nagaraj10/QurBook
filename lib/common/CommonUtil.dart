@@ -2023,7 +2023,6 @@ class CommonUtil {
 
     if (Platform.isIOS) {
       deviceInfo['iosDeviceToken'] = pushkitToken;
-      // '1fd16ea92837a7270372e9c6f311c0e5694e7be2bb1ad2c12431e3dca2816347';
     }
     if (Platform.isIOS) {
       jsonData['platformCode'] = 'IOSPLT';
