@@ -5,6 +5,7 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -202,14 +203,27 @@ class _CallPageState extends State<CallPage> {
           widget.rtcEngine?.enableVideo();
         });
       });
-    } 
+    }
     await widget.rtcEngine?.setEnableSpeakerphone(true);
     await widget.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await widget.rtcEngine?.setClientRole(widget.role!);
-  await widget.rtcEngine?.muteLocalAudioStream(true);
+    await widget.rtcEngine?.muteLocalAudioStream(true);
+    if (Platform.isIOS) {
+      responseToCallKitMethodChannel.invokeListMethod(
+        IsCallMuted,
+        {'status': true},
+      );
+    }
+
     Future.delayed(const Duration(seconds: 3)).then((value) {
       setState(() {
         widget.rtcEngine?.muteLocalAudioStream(false);
+        if (Platform.isIOS) {
+          responseToCallKitMethodChannel.invokeListMethod(
+            IsCallMuted,
+            {'status': false},
+          );
+        }
       });
     });
   }

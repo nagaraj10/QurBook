@@ -176,6 +176,7 @@ class CommonUtil {
   static String WEB_URL = '';
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
+  static String PUSH_KIT_TOKEN = '';
 
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
@@ -2004,6 +2005,9 @@ class CommonUtil {
     } catch (e) {}
     await PreferenceUtil.saveString(
         Constants.STR_PUSH_TOKEN, token ?? 'not available');
+
+    String? pushkitToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_PUSH_KIT_TOKEN);
     var deviceInfo = Map<String, dynamic>();
     var user = Map<String, dynamic>();
     var jsonData = Map<String, dynamic>();
@@ -2016,6 +2020,10 @@ class CommonUtil {
     deviceInfo['deviceTokenId'] = token ?? 'NOT AVAILABLE';
 
     jsonData['deviceInfo'] = deviceInfo;
+
+    if (Platform.isIOS) {
+      deviceInfo['iosDeviceToken'] = pushkitToken;
+    }
     if (Platform.isIOS) {
       jsonData['platformCode'] = 'IOSPLT';
       jsonData['deviceTypeCode'] = 'IPHONE';
@@ -2025,6 +2033,8 @@ class CommonUtil {
     }
 
     final params = json.encode(jsonData);
+
+    print('DEVICE TOKEN INPUT: $params');
 
     var response =
         await apiBaseHelper.postDeviceId('device-info', params, isActive);

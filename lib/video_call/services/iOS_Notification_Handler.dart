@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/video_call/pages/callmain.dart';
+import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -164,29 +166,43 @@ class IosNotificationHandler {
     } catch (e) {
       print(e);
     }
-    if (model.callArguments != null) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'call',
-        'navigationPage': 'TeleHelath Call screen',
-      });
-      if (model.callType!.toLowerCase() == 'audio') {
-        Provider.of<AudioCallProvider>(Get.context!, listen: false)
-            .enableAudioCall();
-      } else if (model.callType!.toLowerCase() == 'video') {
-        Provider.of<AudioCallProvider>(Get.context!, listen: false)
-            .disableAudioCall();
+    if (status == parameters.accept.toLowerCase()) {
+      if (model.callArguments != null) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'call',
+          'navigationPage': 'TeleHelath Call screen',
+        });
+        if (model.callType!.toLowerCase() == 'audio') {
+          Provider.of<AudioCallProvider>(Get.context!, listen: false)
+              .enableAudioCall();
+        } else if (model.callType!.toLowerCase() == 'video') {
+          Provider.of<AudioCallProvider>(Get.context!, listen: false)
+              .disableAudioCall();
+        }
+        CommonUtil.isCallStarted = true;
+
+        await Get.key.currentState!.pushNamed(
+          router.rt_CallMain,
+          arguments: model.callArguments,
+        );
       }
-      await Get.key.currentState!.pushNamed(
-        router.rt_CallMain,
-        arguments: model.callArguments,
-      );
+    } else if (status == parameters.decline.toLowerCase() &&
+        CommonUtil.isCallStarted) {
+      // End the iOS call if the call is still running
+      CommonUtil.isCallStarted = false;
+      Get.key.currentState!.pop();
+      rtcEngine!.leaveChannel();
+      rtcEngine!.destroy();
+      Provider.of<RTCEngineProvider>(Get.context!, listen: false)
+          .isVideoPaused = false;
     }
   }
 
   actionForTheNotification() async {
     if (model.isCall!) {
-      updateStatus(parameters.accept.toLowerCase());
+      updateStatus(model.status!.toLowerCase());
+      // updateStatus(parameters.accept.toLowerCase());
     } else if (callbackAction) {
       callbackAction = false;
       model.redirect = "";

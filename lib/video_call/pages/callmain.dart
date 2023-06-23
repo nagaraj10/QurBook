@@ -68,10 +68,10 @@ class CallMain extends StatefulWidget {
   _CallMainState createState() => _CallMainState();
 }
 
+RtcEngine? rtcEngine;
+
 class _CallMainState extends State<CallMain> {
   late BuildContext globalContext;
-
-  RtcEngine? rtcEngine;
 
   bool _isFirstTime = true;
 
@@ -103,6 +103,7 @@ class _CallMainState extends State<CallMain> {
 
   @override
   void dispose() {
+    CommonUtil.isCallStarted = false;
     rtcEngine!.leaveChannel();
     rtcEngine!.destroy();
     Provider.of<RTCEngineProvider>(context, listen: false).isVideoPaused =

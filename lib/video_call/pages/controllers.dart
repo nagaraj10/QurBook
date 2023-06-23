@@ -9,6 +9,9 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/video_call/model/videocallStatus.dart';
@@ -21,6 +24,7 @@ import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class MyControllers extends StatefulWidget {
   CallStatus callStatus;
@@ -80,6 +84,12 @@ class _MyControllersState extends State<MyControllers> {
   void initState() {
     super.initState();
     //acknowledgeForVideoCallRequest();
+    variable.responseToCallKitMethodChannel.setMethodCallHandler((call) async {
+      if (call.method == IsCallMuted) {
+        // final data = Map<String, dynamic>.from(call.arguments);
+        _onToggleMute(isFromNative: true);
+      }
+    });
   }
 
   /* acknowledgeForVideoCallRequest() {
@@ -330,6 +340,12 @@ class _MyControllersState extends State<MyControllers> {
   void _onCallEnd(BuildContext context) async {
     try {
       if (Platform.isIOS) {
+        // Trigger the call ended event to the native iOS application so we can dismiss the default iPhone call UI
+      responseToCallKitMethodChannel.invokeListMethod(
+        IsCallEnded,
+        {'status': true},
+      );
+
         if (PreferenceUtil.getCallNotificationReceived()) {
           PreferenceUtil.setCallNotificationRecieved(isCalled: false);
           Navigator.pushAndRemoveUntil(
@@ -361,10 +377,18 @@ class _MyControllersState extends State<MyControllers> {
     }
   }
 
-  void _onToggleMute() {
+  void _onToggleMute({bool isFromNative = false}) {
     setState(() {
       widget.muted = !widget.muted;
     });
+
+    if (isFromNative == false && Platform.isIOS) {
+      // Trigger the call mute event to the native iOS application so we can mute the call in the default iPhone call UI
+      responseToCallKitMethodChannel.invokeListMethod(
+        IsCallMuted,
+        {'status': widget.muted},
+      );
+    }
     widget.controllerState(widget.muted, widget._isHideMyVideo);
     widget.rtcEngine!.muteLocalAudioStream(widget.muted);
   }
