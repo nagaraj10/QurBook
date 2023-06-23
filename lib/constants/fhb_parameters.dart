@@ -717,6 +717,7 @@ const String CARE_COORDINATOR_USER_ID = "careCoordinatorUserId";
 const String CARE_GIVER_NAME = "careGiverName";
 const String ACTIVITY_TIME = "activityTime";
 const String ACTIVITY_NAME = "activityName";
+const String status = 'status';
 
 const String decline = 'Decline';
 const String meetingId = 'meeting_id';
