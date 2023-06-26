@@ -376,9 +376,9 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.conversationFlag ?? '').isNotEmpty) {
             conversationFlag = currentResponse.conversationFlag;
           }
-          if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
+          //if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
             additionalInfo = currentResponse.additionalInfo;
-          }
+         // }
           if ((currentResponse.audioURL != null) &&
               (currentResponse.audioURL ?? '').isNotEmpty) {
             isLoading(true);
