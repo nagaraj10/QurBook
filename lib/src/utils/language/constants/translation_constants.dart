@@ -49,7 +49,7 @@ class TranslationConstants {
   static const String notAvailable = 'notAvailable';
   static const String cancellationCharge = 'cancellationCharge';
 
-  static const String APP_NAME = 'myFHB';
+  static const String APP_NAME = 'QurBook';
   static const String MOB_NUM = 'Mobile number';
   static const String ENTER_MOB_NUM = 'Enter your mobile number';
   static const String SignInOtpText = 'We will send you an one time password';
@@ -475,7 +475,8 @@ class TranslationConstants {
 
   static const String strVerifyOtp = 'Verifying One Time Password';
   static const String strOTPVerification = 'One Time Password Verification';
-  static const String strEnterOtp = 'Please enter the received One Time Password';
+  static const String strEnterOtp =
+      'Please enter the received One Time Password';
 
   static const String strError = 'Error';
   static const String strSuccessfully = 'Successfully';
@@ -635,8 +636,10 @@ class TranslationConstants {
   static const String strVoiceRecord = 'Voice Record';
 
   static const String strOtpVerification = 'One Time Password Verification';
-  static const String strPlsEnterotpReceived = 'Please enter the One Time Password received';
-  static const String strEnterotpReceived = 'Enter the One Time Password received at';
+  static const String strPlsEnterotpReceived =
+      'Please enter the One Time Password received';
+  static const String strEnterotpReceived =
+      'Enter the One Time Password received at';
   static const String strdidtReceive = 'Didn\'t receive the One Time Password?';
   static const String strResendCode = 'Resend Code';
   static const String strAgree = 'By completing Sign Up, you agree to our ';
@@ -645,7 +648,7 @@ class TranslationConstants {
   static const String strPrivacyPolicy = 'Privacy Policy';
 
   static const String strwelcome = 'Welcome';
-  static const String strgetStart = 'Get started with myFHB';
+  static const String strgetStart = 'Get started with QurBook';
   static const String strNext = 'NEXT';
 
   static const String strMobileNum = 'Mobile Number';

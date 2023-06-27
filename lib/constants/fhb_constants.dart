@@ -6,9 +6,9 @@ import '../common/CommonUtil.dart';
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
 const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
-const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1"; 
+const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
-const String APP_NAME = 'myFHB';
+const String APP_NAME = 'QurBook';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
 const String SignInOtpText = 'We will send you an one time password';
@@ -846,7 +846,6 @@ const String strFeatureNotEnable =
 const String sheela_hdn_btn_yes = 'yes';
 const String activity_removed_regimen =
     'Activity has been removed from your regimen';
-
 
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
