@@ -361,12 +361,12 @@ class SheelaAIController extends GetxController {
               (await getGoogleTTSForConversation(currentResponse))!;
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
-          if ((currentResponse.buttons ?? []).length > 0) {
+          /*if ((currentResponse.buttons ?? []).length > 0) {
             currentResponse.endOfConv = false;
             lastMsgIsOfButtons = true;
           } else {
             lastMsgIsOfButtons = false;
-          }
+          }*/
           if ((currentResponse.sessionId ?? '').isNotEmpty) {
             sessionToken = currentResponse.sessionId;
           }
@@ -376,9 +376,9 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.conversationFlag ?? '').isNotEmpty) {
             conversationFlag = currentResponse.conversationFlag;
           }
-          if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
+          //if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
             additionalInfo = currentResponse.additionalInfo;
-          }
+         // }
           if ((currentResponse.audioURL != null) &&
               (currentResponse.audioURL ?? '').isNotEmpty) {
             isLoading(true);
@@ -504,8 +504,13 @@ class SheelaAIController extends GetxController {
         if (currentButton.title!.contains(StrExit) ||
             (currentButton.title!.contains(str_Undo) ||
                 (currentButton.title!.contains(StrUndoAll)))) {
-          gettingReposnseFromNative();
-          return;
+          if (conversations.last.endOfConv) {
+            currentPlayingConversation!.isPlaying.value = false;
+            currentButton.isPlaying.value = false;
+          } else {
+            gettingReposnseFromNative();
+            return;
+          }
         } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
             .isNotEmpty) {
           textForPlaying = currentButton.ttsResponse!.payload!.audioContent;

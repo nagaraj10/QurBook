@@ -509,9 +509,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             commonWidgetForTitleValue(
                 strPurpose, appointmentDetailsController.testName.value),
             SizedBox(height: 5.h),
-            commonWidgetForTitleValue(appointmentDescription,
+            /*commonWidgetForTitleValue(appointmentDescription,
                 appointmentDetailsController.description.value),
-            SizedBox(height: 5.h),
+            SizedBox(height: 5.h),*/
             commonWidgetForTitleValue(appointmentAddress,
                 appointmentDetailsController.providerAddress.value),
           ],
@@ -524,9 +524,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             commonWidgetForTitleValue(
                 strPurpose, appointmentDetailsController.testName.value),
             SizedBox(height: 5.h),
-            commonWidgetForTitleValue(appointmentDescription,
+            /*commonWidgetForTitleValue(appointmentDescription,
                 appointmentDetailsController.description.value),
-            SizedBox(height: 5.h),
+            SizedBox(height: 5.h),*/
             commonWidgetForTitleValue(appointmentPickupaddress,
                 appointmentDetailsController.pickUpAddress.value),
             SizedBox(height: 5.h),
