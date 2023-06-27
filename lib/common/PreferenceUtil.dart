@@ -192,7 +192,7 @@ class PreferenceUtil {
     final instance = await _prefs!;
     for (String key in instance.getKeys()) {
       if (key != KEY_PUSH_KIT_TOKEN) {
-        return instance.remove(key);
+        instance.remove(key);
       }
     }
 
