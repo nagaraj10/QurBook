@@ -257,7 +257,7 @@ class AppointmentDetailsController extends GetxController {
       testName.value =
           appointmentDetailsModel!.result?.additionalInfo!.title ?? "";
       description.value =
-          appointmentDetailsModel!.result?.additionalInfo!.notes ?? "";
+          appointmentDetailsModel!.result?.additionalInfo!.description ?? "";
     } catch (e) {
       if (kDebugMode) {
         printError(info: e.toString());
