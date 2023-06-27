@@ -586,7 +586,7 @@ const String strPrivacyPolicy = 'Privacy Policy';
 // for signIn
 
 const String strwelcome = 'Welcome';
-const String strgetStart = 'Get started with myFHB';
+const String strgetStart = 'Get started with QurBook';
 const String strNext = 'NEXT';
 
 // for Sign Up
@@ -761,7 +761,7 @@ const String strRs = 'Rs';
 const String strDollar = '\$';
 
 //webcognito
-const source = 'myFHB';
+const source = 'QurBook';
 const sourceCode = 'e13019a4-1446-441b-8af1-72c40c725548';
 const entityCode = '28858877-4710-4dd3-899f-0efe0e9255db';
 const roleCode = '285bbe41-3030-4b0e-b914-00e404a77032';
@@ -898,14 +898,16 @@ const String strEdit = 'Edit';
 const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
-const String strDecline='Decline';
+const String strDecline = 'Decline';
 
 //For Alert
 const String strEscalate = 'Escalate';
 const String strCall = 'Call';
 
-const String strTransportationRequestAccepted = 'Transportation request accepted';
-const String strTransportationRequestDeclined = 'Transportation request declined';
+const String strTransportationRequestAccepted =
+    'Transportation request accepted';
+const String strTransportationRequestDeclined =
+    'Transportation request declined';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

@@ -1,4 +1,3 @@
-
 import 'CommonUtil.dart';
 import 'PreferenceUtil.dart';
 import '../database/model/CountryMetrics.dart';
@@ -206,7 +205,7 @@ class CommonConstants {
   static String preferred_providers =
       'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
 
-  static String app_name = 'myFHB';
+  static String app_name = 'QurBook';
   static String preferred_providers_descrip =
       'Do you want to ser this as preferred. Previous preferred will be updated';
 
@@ -354,7 +353,8 @@ class CommonConstants {
     return countryMetrics;
   }
 
-  Future<UnitsMesurements?> getValuesForUnit(String? units, String? range) async {
+  Future<UnitsMesurements?> getValuesForUnit(
+      String? units, String? range) async {
     final db = DatabaseHelper();
 
     unitsMeasurements =
