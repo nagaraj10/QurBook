@@ -41,7 +41,8 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    controller.currentSelectedTab?.value = 0;
+    selectedAlertList = true;
     tabController = TabController(
         length: 2,
         vsync: this,
@@ -50,10 +51,9 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
   }
 
   void _handleSelected() {
-    if (controller.isPatientClicked.value) {
-      tabController?.index = controller.currentSelectedTab.value;
+    if (controller.isPatientClicked.value)
       controller.isPatientClicked.value = false;
-    }
+
     this.setState(() {
       selectedTab = tabController?.index ?? 0;
       controller.currentSelectedTab?.value = selectedTab;
