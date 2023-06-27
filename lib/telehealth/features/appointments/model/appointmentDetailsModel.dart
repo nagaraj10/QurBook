@@ -109,7 +109,7 @@ class AdditionalInfo {
   String? from;
   String? city;
   String? cityName;
-  String? notes;
+  String? description;
   String? notesDisplay;
   String? state;
   String? title;
@@ -129,7 +129,7 @@ class AdditionalInfo {
       this.from,
       this.city,
       this.cityName,
-      this.notes,
+      this.description,
       this.notesDisplay,
       this.state,
       this.title,
@@ -167,11 +167,9 @@ class AdditionalInfo {
       if(cityName!=null){
         city = cityName;
       }
-      notes = json['notes'] != null
-          ? json['notes']
-          : json['description'] != null
-              ? json['description']
-              : "";
+      description = json['description'] != null
+          ? json['description']
+          : "";
       notesDisplay = json['notes'] != null ? json['notes'] : '';
       state = json['state'];
       title = json['title'];
@@ -209,7 +207,7 @@ class AdditionalInfo {
     data['to'] = this.to;
     data['from'] = this.from;
     data['city'] = this.city;
-    data['notes'] = this.notes;
+    data['description'] = this.description;
     data['notes'] = this.notesDisplay;
     data['state'] = this.state;
     data['title'] = this.title;

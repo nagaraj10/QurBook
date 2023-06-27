@@ -8,7 +8,6 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:url_launcher/url_launcher.dart';
@@ -508,10 +507,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           children: [
             commonWidgetForTitleValue(
                 strPurpose, appointmentDetailsController.testName.value),
+            getDescriptionWidget(),
             SizedBox(height: 5.h),
-            /*commonWidgetForTitleValue(appointmentDescription,
-                appointmentDetailsController.description.value),
-            SizedBox(height: 5.h),*/
             commonWidgetForTitleValue(appointmentAddress,
                 appointmentDetailsController.providerAddress.value),
           ],
@@ -523,10 +520,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           children: [
             commonWidgetForTitleValue(
                 strPurpose, appointmentDetailsController.testName.value),
+            getDescriptionWidget(),
             SizedBox(height: 5.h),
-            /*commonWidgetForTitleValue(appointmentDescription,
-                appointmentDetailsController.description.value),
-            SizedBox(height: 5.h),*/
             commonWidgetForTitleValue(appointmentPickupaddress,
                 appointmentDetailsController.pickUpAddress.value),
             SizedBox(height: 5.h),
@@ -627,6 +622,23 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               ),
       ],
     ):SizedBox.shrink();
+  }
+
+
+  getDescriptionWidget() {
+    return (appointmentDetailsController.description.value != null) &&
+            (appointmentDetailsController.description.value.trim().isNotEmpty)
+        ? Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5.h),
+                commonWidgetForTitleValue(appointmentDescription,
+                    appointmentDetailsController.description.value),
+              ],
+            ),
+          )
+        : SizedBox.shrink();
   }
 }
 
