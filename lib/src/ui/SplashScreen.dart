@@ -845,30 +845,45 @@ class _SplashScreenState extends State<SplashScreen> {
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == strAppointmentDetail) {
+
                       var passedValArr = widget.bundle?.split('&');
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
                         'ns_type': 'appointmentDetail',
                         'navigationPage': 'Appointment Detail Page',
                       });
+
                       if (passedValArr[2] != null) {
-                        if(passedValArr[3]!=null&&passedValArr[4]!=null){
-                          new CommonUtil().acceptCareGiverTransportRequestReminder(
-                              context,
-                              passedValArr[2],
-                              passedValArr[3],
-                              passedValArr[4].toString().contains("accept"));
-                        }else{
+                        try {
+                          if (passedValArr[3] != null) {
+                            new CommonUtil()
+                                .acceptCareGiverTransportRequestReminder(
+                                    context,
+                                    passedValArr[2],
+                                    passedValArr[3],
+                                    passedValArr[4]
+                                        .toString()
+                                        .contains("accept"));
+                          } else {
+                            AppointmentDetailsController
+                                appointmentDetailsController = CommonUtil()
+                                    .onInitAppointmentDetailsController();
+                            appointmentDetailsController
+                                .getAppointmentDetail(passedValArr[2]);
+                            Get.to(() => AppointmentDetailScreen())!.then(
+                                (value) => PageNavigator.goToPermanent(
+                                    context, router.rt_Landing));
+                          }
+                        } catch (e) {
                           AppointmentDetailsController
-                          appointmentDetailsController =
-                          CommonUtil().onInitAppointmentDetailsController();
+                              appointmentDetailsController =
+                              CommonUtil().onInitAppointmentDetailsController();
                           appointmentDetailsController
                               .getAppointmentDetail(passedValArr[2]);
-                          Get.to(() => AppointmentDetailScreen())!.then((value) =>
-                              PageNavigator.goToPermanent(
+                          Get.to(() => AppointmentDetailScreen())!.then(
+                              (value) => PageNavigator.goToPermanent(
                                   context, router.rt_Landing));
                         }
-
                       }
                     } else if (widget.nsRoute == call) {
                       CommonUtil().startTheCall(widget.bundle);
