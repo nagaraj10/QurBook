@@ -8,7 +8,7 @@ const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
 const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
-const String APP_NAME = 'QurBook';
+const String APP_NAME = 'QurHome';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
 const String SignInOtpText = 'We will send you an one time password';
@@ -772,7 +772,6 @@ const String filterTitleMonth = 'Month';
 const String filterApiDay = 'day';
 const String filterApiWeek = 'week';
 const String filterApiMonth = 'month';
-
 
 // sheela queue
 const String sheelaQueueShowRemind = 'My reminders';

@@ -9,7 +9,7 @@ object Constants {
     val FUN_VALIDATE_MIC_AVAIL= "validateMicAvailability"
     val VOICE_ASST_PROMPT = "Need to speak"
     val FUN_TEXT2SPEECH = "textToSpeech"
-    val KEY_GAURD_TITLE = "QurBook"
+    val KEY_GAURD_TITLE = "QurHome"
     val KEY_GAURD_TITLE_DESC = "Please Authorize to use the Application"
     val KEY_GAURD_AUTH_SUCC = 1002
     val KEY_GAURD_AUTH_FAIL = 1002

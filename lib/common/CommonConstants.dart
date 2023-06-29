@@ -205,7 +205,7 @@ class CommonConstants {
   static String preferred_providers =
       'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
 
-  static String app_name = 'QurBook';
+  static String app_name = 'QurHome';
   static String preferred_providers_descrip =
       'Do you want to ser this as preferred. Previous preferred will be updated';
 

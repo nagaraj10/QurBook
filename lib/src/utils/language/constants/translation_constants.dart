@@ -49,7 +49,7 @@ class TranslationConstants {
   static const String notAvailable = 'notAvailable';
   static const String cancellationCharge = 'cancellationCharge';
 
-  static const String APP_NAME = 'QurBook';
+  static const String APP_NAME = 'QurHome';
   static const String MOB_NUM = 'Mobile number';
   static const String ENTER_MOB_NUM = 'Enter your mobile number';
   static const String SignInOtpText = 'We will send you an one time password';
@@ -648,7 +648,7 @@ class TranslationConstants {
   static const String strPrivacyPolicy = 'Privacy Policy';
 
   static const String strwelcome = 'Welcome';
-  static const String strgetStart = 'Get started with QurBook';
+  static const String strgetStart = 'Get started with QurHome';
   static const String strNext = 'NEXT';
 
   static const String strMobileNum = 'Mobile Number';

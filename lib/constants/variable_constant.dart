@@ -586,7 +586,7 @@ const String strPrivacyPolicy = 'Privacy Policy';
 // for signIn
 
 const String strwelcome = 'Welcome';
-const String strgetStart = 'Get started with QurBook';
+const String strgetStart = 'Get started with QurHome';
 const String strNext = 'NEXT';
 
 // for Sign Up
@@ -761,7 +761,7 @@ const String strRs = 'Rs';
 const String strDollar = '\$';
 
 //webcognito
-const source = 'QurBook';
+const source = 'QurHome';
 const sourceCode = 'e13019a4-1446-441b-8af1-72c40c725548';
 const entityCode = '28858877-4710-4dd3-899f-0efe0e9255db';
 const roleCode = '285bbe41-3030-4b0e-b914-00e404a77032';
