@@ -29,6 +29,10 @@
 		54C1996A2848885200BC3B10 /* BSOSessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199682848885200BC3B10 /* BSOSessionData.m */; };
 		54CE079F2923A7A800C29FFB /* LoaderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54CE079E2923A7A800C29FFB /* LoaderVC.swift */; };
 		54DE869A2861E78A0005B940 /* beep_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 54DE86992861E78A0005B940 /* beep_beep.mp3 */; };
+		54E34BAE2A4C5E2F000EB933 /* blecommentedcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BAD2A4C5E2F000EB933 /* blecommentedcode.swift */; };
+		54E34BB02A4C8DCD000EB933 /* AppDelegateNE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BAF2A4C8DCD000EB933 /* AppDelegateNE.swift */; };
+		54E34BB22A4C8ECE000EB933 /* AppDelegateTTS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BB12A4C8ECE000EB933 /* AppDelegateTTS.swift */; };
+		54E34BB42A4C90FE000EB933 /* AppDelegateCKE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BB32A4C90FE000EB933 /* AppDelegateCKE.swift */; };
 		54FE478C28FEE33000B8564F /* BleManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; };
 		54FE478D28FEE33000B8564F /* BleManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		54FE478E28FEE33200B8564F /* DB62M_DeviceManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */; platformFilter = ios; };
@@ -158,6 +162,10 @@
 		54C199692848885200BC3B10 /* BSOSessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSOSessionData.h; sourceTree = "<group>"; };
 		54CE079E2923A7A800C29FFB /* LoaderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderVC.swift; sourceTree = "<group>"; };
 		54DE86992861E78A0005B940 /* beep_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep_beep.mp3; sourceTree = "<group>"; };
+		54E34BAD2A4C5E2F000EB933 /* blecommentedcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blecommentedcode.swift; sourceTree = "<group>"; };
+		54E34BAF2A4C8DCD000EB933 /* AppDelegateNE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateNE.swift; sourceTree = "<group>"; };
+		54E34BB12A4C8ECE000EB933 /* AppDelegateTTS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTTS.swift; sourceTree = "<group>"; };
+		54E34BB32A4C90FE000EB933 /* AppDelegateCKE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateCKE.swift; sourceTree = "<group>"; };
 		54FE478428FEE31000B8564F /* BleManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BleManager.framework; sourceTree = "<group>"; };
 		54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DB62M_DeviceManager.framework; sourceTree = "<group>"; };
 		54FE478628FEE31000B8564F /* LS202_DeviceManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = LS202_DeviceManager.framework; sourceTree = "<group>"; };
@@ -408,6 +416,10 @@
 			children = (
 				9C07AB8024F394B500DCE725 /* AppDelegate.swift */,
 				54FE479428FEF04300B8564F /* AppDelegateBLE.swift */,
+				54E34BAF2A4C8DCD000EB933 /* AppDelegateNE.swift */,
+				54E34BB12A4C8ECE000EB933 /* AppDelegateTTS.swift */,
+				54E34BB32A4C90FE000EB933 /* AppDelegateCKE.swift */,
+				54E34BAD2A4C5E2F000EB933 /* blecommentedcode.swift */,
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
@@ -870,6 +882,7 @@
 				9C07AB7324F3948900DCE725 /* NVActivityIndicatorAnimationTriangleSkewSpin.swift in Sources */,
 				9C07AB8124F394B500DCE725 /* AppDelegate.swift in Sources */,
 				54C199562848805100BC3B10 /* CBUUID+Description.m in Sources */,
+				54E34BB02A4C8DCD000EB933 /* AppDelegateNE.swift in Sources */,
 				9C07AB5C24F3948900DCE725 /* NVActivityIndicatorShape.swift in Sources */,
 				9C07AB6F24F3948900DCE725 /* NVActivityIndicatorAnimationBallPulse.swift in Sources */,
 				9C07AB8C24F3954700DCE725 /* constants.swift in Sources */,
@@ -904,6 +917,7 @@
 				9C07AB7024F3948900DCE725 /* NVActivityIndicatorAnimationBlank.swift in Sources */,
 				9C07AB5E24F3948900DCE725 /* NVActivityIndicatorAnimationBallRotate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				54E34BB22A4C8ECE000EB933 /* AppDelegateTTS.swift in Sources */,
 				54C1996A2848885200BC3B10 /* BSOSessionData.m in Sources */,
 				9C07AB6124F3948900DCE725 /* NVActivityIndicatorAnimationBallClipRotateMultiple.swift in Sources */,
 				9C07AB5924F3948900DCE725 /* NVActivityIndicatorAnimationDelegate.swift in Sources */,
@@ -914,8 +928,10 @@
 				9C07AB7224F3948900DCE725 /* NVActivityIndicatorAnimationAudioEqualizer.swift in Sources */,
 				9C07AB7D24F3948900DCE725 /* NVActivityIndicatorAnimationLineScalePulseOutRapid.swift in Sources */,
 				9C07AB7424F3948900DCE725 /* NVActivityIndicatorAnimationBallGridBeat.swift in Sources */,
+				54E34BAE2A4C5E2F000EB933 /* blecommentedcode.swift in Sources */,
 				54C199552848805100BC3B10 /* OHQStateMachine.m in Sources */,
 				9C07AB5D24F3948900DCE725 /* NVActivityIndicatorView.swift in Sources */,
+				54E34BB42A4C90FE000EB933 /* AppDelegateCKE.swift in Sources */,
 				9C07AB8924F3951100DCE725 /* Loading.swift in Sources */,
 				54C1995C2848805100BC3B10 /* OHQLog.m in Sources */,
 				9C07AB6A24F3948900DCE725 /* NVActivityIndicatorAnimationSemiCircleSpin.swift in Sources */,

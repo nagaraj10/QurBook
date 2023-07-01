@@ -668,8 +668,7 @@ class _MyFHBState extends State<MyFHB> {
           if ((CommonUtil.isUSRegion()) &&
               (passedValArr[3] != null) &&
               (passedValArr[3] != 'null')) {
-            var regController =
-            CommonUtil().onInitQurhomeRegimenController();
+            var regController = CommonUtil().onInitQurhomeRegimenController();
             var qurhomeDashboardController =
                 CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = passedValArr[2];
@@ -681,7 +680,6 @@ class _MyFHBState extends State<MyFHB> {
             } else {
               Get.to(() => QurhomeDashboard());
             }
-
           } else {
             Provider.of<RegimentViewModel>(
               context,
@@ -854,27 +852,27 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Appointment Detail Page',
           });
           if (passedValArr[2] != null) {
-            try{
-              if(passedValArr[3]!=null){
+            try {
+              if (passedValArr[3] != null) {
                 new CommonUtil().acceptCareGiverTransportRequestReminder(
                     context,
                     passedValArr[2],
                     passedValArr[3],
                     passedValArr[4].toString().contains("accept"));
-              }else{
+              } else {
                 AppointmentDetailsController appointmentDetailsController =
-                CommonUtil().onInitAppointmentDetailsController();
-                appointmentDetailsController.getAppointmentDetail(passedValArr[2]);
+                    CommonUtil().onInitAppointmentDetailsController();
+                appointmentDetailsController
+                    .getAppointmentDetail(passedValArr[2]);
                 Get.to(() => AppointmentDetailScreen());
               }
-            }catch(e){
+            } catch (e) {
               AppointmentDetailsController appointmentDetailsController =
-              CommonUtil().onInitAppointmentDetailsController();
-              appointmentDetailsController.getAppointmentDetail(passedValArr[2]);
+                  CommonUtil().onInitAppointmentDetailsController();
+              appointmentDetailsController
+                  .getAppointmentDetail(passedValArr[2]);
               Get.to(() => AppointmentDetailScreen());
             }
-
-
           }
         } else {
           fbaLog(eveParams: {
