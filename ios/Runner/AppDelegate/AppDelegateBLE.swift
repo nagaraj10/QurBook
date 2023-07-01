@@ -59,7 +59,7 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
                                 deviceID = device
                             }
                             self.selectedDevicesType = BLEDeviceType.BP(deviceID: deviceID)
-                        }else if (deviceType == "WEIGHT"){
+                        }else if (deviceType.lowercased() == "weight"){
                             var deviceID:String? = nil
                             if let device = data["deviceId"] as? String{
                                 deviceID = device
@@ -269,7 +269,7 @@ extension AppDelegate:GoldenSPO2ManagerCallback,
         
         if let _device = device  as? BaseBLEDevice{
             if((_device.deviceName == Constants.WOWGOWT1) || (_device.deviceName == Constants.WOWGOWT2) || (_device.deviceName == Constants.WOWGOWT3)){
-                eventSink?("macid|"+_device.connectIOSUUID)
+                eventSink?("macid|"+_device.connectIOSUUID+"1")
                 eventSink?("manufacturer|WOWGo")
                 eventSink?("bleDeviceType|WEIGHT")
             }else  if(_device.deviceName == Constants.WOWGOSPO2){
@@ -280,6 +280,10 @@ extension AppDelegate:GoldenSPO2ManagerCallback,
                 eventSink?("macid|"+_device.connectIOSUUID+"1")
                 eventSink?("manufacturer|WOWGo")
                 eventSink?("bleDeviceType|BP")
+            }else if((_device.showName == Constants.WOWGOWT1) || (_device.showName == Constants.WOWGOWT2) || (_device.showName == Constants.WOWGOWT3)){
+                eventSink?("macid|"+_device.connectIOSUUID+"1")
+                eventSink?("manufacturer|WOWGo")
+                eventSink?("bleDeviceType|WEIGHT")
             }
         }
     }
