@@ -1,7 +1,7 @@
 
 import Foundation
 import CoreBluetooth
-
+import LSBluetoothPlugin
 struct Constants {
     static let googlekey = "AIzaSyCQ26mjgJ8T00uCWigel-zWQKU6fkhsGX4"
     
@@ -90,4 +90,6 @@ struct Constants {
     static let closeSheelaDialog = "closeSheelaDialog"
     static let deviceInformationServiceUUID = CBUUID(string: "180a")
     static let deviceSerialNumberServiceUUID = CBUUID(string: "2A25")
+    static let TransteckBGLDeviceType = LSDeviceType.bloodGlucoseMeter.rawValue
+    static let TransteckWeightDeviceType = LSDeviceType.weightScale.rawValue
 }

@@ -11,6 +11,7 @@ import GSH601_DeviceManager
 import DB62M_DeviceManager
 import LS202_DeviceManager
 import Flutter
+import LSBluetoothPlugin
 
 enum BLEDeviceManufacture {
     case WOWGo,Transteck
@@ -28,6 +29,7 @@ enum BLEDeviceFilterType{
     case All,Single(manufacture : BLEDeviceManufacture)
 }
 
+//WOW GO
 extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeripheralDelegate{
     
     func setupBLEMethodChannels(){
@@ -377,4 +379,154 @@ extension AppDelegate:GoldenSPO2ManagerCallback,
     func showLogMessage(_ log: String!) {
         eventSink?("error|Bluetooth disconnected")
     }
+}
+
+// Transteck Devices
+extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDevicePairingDelegate{
+    
+    func scanTransteckDevices(){
+        //Initializing the BLE manager
+        LSBluetoothManager.default()?.initManager(withDispatch: DispatchQueue.init(label: "bluetoothQueue"));
+        LSBluetoothManager.default()?.checkingBluetoothStatus(self);
+    }
+    
+    func systemDidBluetoothStatusChange(_ bleState: CBManagerState) {
+        switch bleState {
+        case .unknown:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .resetting:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .unsupported:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .unauthorized:
+            eventSink?("permissiondenied|no permission granted")
+        case .poweredOff:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .poweredOn:
+            eventSink?("scanstarted|connection started")
+            searchForTransteckBLEDevices()
+        default:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        }
+    }
+    
+    func searchForTransteckBLEDevices(){
+        var selectedDevices = [Constants.TransteckBGLDeviceType,Constants.TransteckWeightDeviceType]
+        if let selectedDevicesFilter = selectedDevicesFilter{
+            if selectedDevicesFilter == BLEDeviceFilter.SingleType(filterType: .Single(manufacture: .Transteck)){
+                
+            }
+        }
+    
+        
+        LSBluetoothManager.default()?.searchDevice(selectedDevices) { [weak self]CurrentDeviceData in
+            guard let self = self,let CurrentDeviceData = CurrentDeviceData else { return  }
+//            let data = DeviceInfoData(device: CurrentDeviceData)?.toDictionary()
+//            guard let updatedData = data else { return  }
+//            if let serlized = updatedData.jsonStringRepresentation{
+//                self.eventSink?("searchresults|"+serlized)
+//            }else{
+//                self.eventSink?("failed|"+"Failed to parse the device data")
+//            }
+        }
+    }
+    
+    func bleDevice(_ device: LSDeviceInfo!, didPairStateChanged state: LSPairState) {
+        print(state.rawValue)
+        if(state == LSPairState.success){
+            LSBluetoothManager.default()?.addDevice(device);
+            LSBluetoothManager.default()?.startDeviceSync(self);
+        }
+    }
+    
+    func bleDevice(_ device: LSDeviceInfo!, didConnectStateChanged state: LSConnectState) {
+        if(state.rawValue == 6){
+            eventSink?("connected|Device connected successfully")
+        }
+    }
+    
+    func bleDevice(_ device: LSDeviceInfo!, didDataUpdateForNotification obj: LSDeviceData!) {
+        let className:String=type(of: obj).description();
+        print(className)
+        var currentBGLData = BloodGlucose() ;
+        for (key, value) in obj.toString() {
+            let dataStr:String=String.init(format: "%@=%@", key as CVarArg,value as! CVarArg);
+            print(dataStr);
+            if(className == "BGStatusInfo"){
+                let components = dataStr.components(separatedBy: "=")
+                if components.count > 1, components.first == "glucose"{
+                    if let bgl = value as? BloodGlucose{
+                        currentBGLData = bgl
+                    }
+                } else if components.count > 1, components.first == "status"{
+                    let value = components[1]
+                    if(value == "17"){
+                        eventSink?("connected|Strip inserted successfully")
+                    }else if (value == "34"){
+                        eventSink?("connected|Add Blood sample")
+                    }else if (value == "221"){
+                        eventSink?("connected|Disconnected")
+                    }else if (value == "51"){
+                        eventSink?("connected|Blood sample collected successfully")
+                    }else if (value == "68"){
+                        eventSink?("connected|Your BGL value is \(currentBGLData.value)")
+                    }
+                }
+                
+            }
+        }
+    }
+    
+    func bleDevice(_ device: LSDeviceInfo!, didDataUpdateForScale weight: LSScaleWeight!) {
+        
+        var dataLabel = "";
+        let str:String = String.init(format: "\nsrcData=%@\n",weight.srcData!.hexadecimal);
+        dataLabel = dataLabel + str + "\n"
+        eventSink?("connected|"+dataLabel)
+        dataLabel = "";
+        //log class name
+        let className:String=type(of: weight).description();
+        //log class properties
+        dataLabel = dataLabel + className + "\n"
+        for (key, value) in weight.toString() {
+            let dataStr:String=String.init(format: "%@=%@", key as CVarArg,value as! CVarArg);
+            dataLabel = dataLabel + dataStr
+        }
+        let utcStr:String = String.init(format: "utc=%d", weight.utc);
+        dataLabel = dataLabel + utcStr
+        eventSink?("connected|"+dataLabel)
+        
+    }
+
+    func bleDevice(_ device: LSDeviceInfo!, didDataUpdateForBloodPressureMonitor data: LSBloodPressure!)
+    {
+        var dataLabel = "";
+        let str:String = String.init(format: "\nsrcData=%@\n",data.srcData!.hexadecimal);
+        dataLabel = dataLabel + str + "\n"
+        eventSink?("connected|"+dataLabel)
+        dataLabel = "";
+        //log class name
+        let className:String=type(of: data).description();
+        dataLabel = dataLabel + className + "\n"
+        //log class properties
+        for (key, value) in data.toString() {
+            let dataStr:String=String.init(format: "%@=%@", key as CVarArg,value as! CVarArg);
+            dataLabel = dataLabel + dataStr
+        }
+        let utcStr:String = String.init(format: "utc=%d", data.utc);
+        dataLabel = dataLabel + utcStr
+        eventSink?("connected|"+dataLabel)
+        
+    }
+    
+    func bleDevice(_ device: LSDeviceInfo!, didDataUpdateForBloodGlucose data: BGDataSummary!) {
+//        let newData = BloodGlucoseSummaryData(data: data).toJson()
+//        if let serlized = newData.jsonStringRepresentation{
+//            self.eventSink?("bloodglucosesummarydata|"+serlized)
+//        }else{
+//            self.eventSink?("failed|"+"Failed to parse the bloodglucosesummarydata")
+//        }
+    }
+    
+  
 }
