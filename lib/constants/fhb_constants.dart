@@ -851,6 +851,21 @@ const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
 const String StrUndoAll = 'Undo all';
 
+const double tabFontTitle = 25.0;
+const double mobileFontTitle = 18.0;
+
+const double tabHeader1 = 22.0;
+const double mobileHeader1 = 14.0;
+
+const double tabHeader2 = 20.0;
+const double mobileHeader2 = 13.0;
+
+const double tabHeader3 = 18.0;
+const double mobileHeader3 = 12.0;
+
+const double imageTabHeader = 70.0;
+const double imageMobileHeader = 40.0;
+
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(

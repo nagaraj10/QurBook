@@ -101,7 +101,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       if (Platform.isIOS) {
-              // Get the iOS push kit Token
+        // Get the iOS push kit Token
         variable.reponseToTriggerPushKitTokenMethodChannel
             .setMethodCallHandler((call) async {
           if (call.method == variable.pushKitTokenMethod) {
@@ -142,7 +142,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Constants.KEY_AUTHTOKEN)!; // To check whether it's logged in or not
         if (PreferenceUtil.getEnableAppLock() && authToken != null) {
           _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
-          if(_loaded){
+          if (_loaded) {
             setState(() {});
             if (Platform.isIOS) {
               reponseToRemoteNotificationMethodChannel.invokeListMethod(
@@ -150,10 +150,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 {'status': _loaded},
               );
             }
-          }else{
+          } else {
             _showMyDialog();
           }
-
         } else {
           if (Platform.isIOS) {
             PreferenceUtil.setCallNotificationRecieved(isCalled: false);
@@ -189,39 +188,64 @@ class _SplashScreenState extends State<SplashScreen> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return WillPopScope( onWillPop: ()async{
-          Navigator.pop(context);
-          Navigator.pop(context);
-          return true;
-        },child:AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                SizedBox(height: 10,),
-                Image.asset(
-                  variable.lock_icon,
-                  height: 20,
-                  width: 20,
-                  color: Color(0xff5f059b),
+        return WillPopScope(
+            onWillPop: () async {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              return true;
+            },
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.asset(
+                      variable.lock_icon,
+                      height: 20,
+                      width: 20,
+                      color: Color(0xff5f059b),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      variable.strQurbookLocked,
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      variable.strQurbookLockDescription,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextButton(
+                      child: Text(
+                        variable.strUnlock,
+                        style: TextStyle(
+                          color: Color(0xff2a08c0),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        callAppLockFeatureMethod(false);
+                      },
+                    ),
+                  ],
                 ),
-                SizedBox(height: 20,),
-                Text(variable.strQurbookLocked,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
-                SizedBox(height: 10,),
-                Text(variable.strQurbookLockDescription,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
-                SizedBox(height: 10,),
-                TextButton(
-                  child: Text(variable.strUnlock,style: TextStyle(color: Color(0xff2a08c0),),),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    callAppLockFeatureMethod(false);
-                  },
-                ),
-              ],
-            ),
-          ),
-        ));
+              ),
+            ));
       },
     );
   }
@@ -302,8 +326,9 @@ class _SplashScreenState extends State<SplashScreen> {
                             bookingId: widget.bookingID,
                             date: widget.appointmentDate,
                             templateName: widget.templateName),
-                      ))!.then((value) => PageNavigator.goToPermanent(
-                          context, router.rt_Landing));
+                      ))!
+                          .then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
                     } else if (widget.nsRoute ==
                         parameters.doctorCancellation) {
                       Get.to(NotificationMain());
@@ -348,8 +373,9 @@ class _SplashScreenState extends State<SplashScreen> {
                             bookingId: widget.bookingID,
                             date: widget.appointmentDate,
                             templateName: widget.templateName),
-                      ))!.then((value) => PageNavigator.goToPermanent(
-                          context, router.rt_Landing));
+                      ))!
+                          .then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
                     } else if (widget.nsRoute == 'sheela') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -394,8 +420,9 @@ class _SplashScreenState extends State<SplashScreen> {
                               isSheelaAskForLang: true,
                               textSpeechSheela: rawTitle,
                             ),
-                          )!.then((value) => PageNavigator.goToPermanent(
-                              context, router.rt_Landing));
+                          )!
+                              .then((value) => PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
                         } else {
                           Get.toNamed(
                             rt_Sheela,
@@ -405,8 +432,9 @@ class _SplashScreenState extends State<SplashScreen> {
                               eventType: eventType,
                               others: others,
                             ),
-                          )!.then((value) => PageNavigator.goToPermanent(
-                              context, router.rt_Landing));
+                          )!
+                              .then((value) => PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
                         }
                       } else {
                         Get.to(SuperMaya())!.then((value) =>
@@ -422,8 +450,9 @@ class _SplashScreenState extends State<SplashScreen> {
                           arguments: SheelaArgument(
                             audioMessage: temp[1].toString(),
                           ),
-                        )!.then((value) => PageNavigator.goToPermanent(
-                            context, router.rt_Landing));
+                        )!
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
                       } else {
                         Get.toNamed(
                           rt_Sheela,
@@ -431,8 +460,9 @@ class _SplashScreenState extends State<SplashScreen> {
                             isSheelaFollowup: true,
                             message: temp[1],
                           ),
-                        )!.then((value) => PageNavigator.goToPermanent(
-                            context, router.rt_Landing));
+                        )!
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
                       }
                     } else if (widget.nsRoute ==
                         'familyMemberCaregiverRequest') {
@@ -604,18 +634,20 @@ class _SplashScreenState extends State<SplashScreen> {
                       var passedValArr = widget.bundle?.split('&');
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
-                        'ns_type': CommonUtil.isUSRegion()?'QurHomeRegimenScreen':'regiment_screen',
+                        'ns_type': CommonUtil.isUSRegion()
+                            ? 'QurHomeRegimenScreen'
+                            : 'regiment_screen',
                         'navigationPage': 'Regimen Screen',
                       });
                       if ((CommonUtil.isUSRegion()) &&
                           (passedValArr[3] != null) &&
                           (passedValArr[3] != 'null')) {
                         var qurhomeDashboardController =
-                        CommonUtil().onInitQurhomeDashboardController();
+                            CommonUtil().onInitQurhomeDashboardController();
                         qurhomeDashboardController.eventId.value =
-                        passedValArr[2];
+                            passedValArr[2];
                         qurhomeDashboardController.estart.value =
-                        passedValArr[3];
+                            passedValArr[3];
                         qurhomeDashboardController.updateTabIndex(0);
                         PageNavigator.goToPermanent(context, router.rt_Landing);
                       } else {
@@ -663,8 +695,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                   UserAccountsArguments(selectedIndex: 2))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
-                    } else if (CommonUtil.isUSRegion() && widget.nsRoute ==
-                        strPatientReferralAcceptToPatient) {
+                    } else if (CommonUtil.isUSRegion() &&
+                        widget.nsRoute == strPatientReferralAcceptToPatient) {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
                         'ns_type': 'myprovider_list',
@@ -696,8 +728,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         router.rt_HomeScreen,
                         arguments: HomeScreenArguments(
                             selectedIndex: 1, thTabIndex: 1),
-                      )!.then((value) => PageNavigator.goToPermanent(
-                          context, router.rt_Landing));
+                      )!
+                          .then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
                     } else if (widget.nsRoute == 'bills') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -708,8 +741,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         router.rt_HomeScreen,
                         arguments: HomeScreenArguments(
                             selectedIndex: 1, thTabIndex: 4),
-                      )!.then((value) => PageNavigator.goToPermanent(
-                          context, router.rt_Landing));
+                      )!
+                          .then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
                     } else if (widget.nsRoute == 'openurl') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -746,8 +780,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         notificationListId: passedValArr[3],
                         cartId: passedValArr[4],
                         patientName: passedValArr[6],
-                      ))!.then((value) => PageNavigator.goToPermanent(
-                          context, router.rt_Landing));
+                      ))!
+                          .then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
                     } else if (widget.nsRoute == "familyProfile") {
                       var passedValArr = widget.bundle?.split('&');
 
@@ -789,8 +824,9 @@ class _SplashScreenState extends State<SplashScreen> {
                               showRenew: widget.nsRoute != 'myplandetails',
                               templateName: template,
                             ),
-                          )!.then((value) => PageNavigator.goToPermanent(
-                              context, router.rt_Landing));
+                          )!
+                              .then((value) => PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
                         } else {
                           CommonUtil.showFamilyMemberPlanExpiryDialog(patName,
                               redirect: widget.nsRoute);
@@ -833,8 +869,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         ClaimRecordDisplay(
                           claimID: claimId,
                         ),
-                      )!.then((value) => PageNavigator.goToPermanent(
-                          context, router.rt_Landing));
+                      )!
+                          .then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
                     } else if (widget.nsRoute == 'manageActivities') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -845,7 +882,6 @@ class _SplashScreenState extends State<SplashScreen> {
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == strAppointmentDetail) {
-
                       var passedValArr = widget.bundle?.split('&');
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

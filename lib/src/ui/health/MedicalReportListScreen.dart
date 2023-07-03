@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -213,7 +212,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                             )
                           :*/
                       CircleAvatar(
-                radius: 25,
+                radius: CommonUtil().isTablet! ? 35 : 25,
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 child: Image.network(
                   /*Constants.BASE_URL + */ data
@@ -243,13 +242,14 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                         ? Text(
                             data.metadata!.hospital!.healthOrganizationName !=
                                     null
-                                ? toBeginningOfSentenceCase(data
-                                    .metadata!.hospital!.healthOrganizationName)!
+                                ? toBeginningOfSentenceCase(data.metadata!
+                                    .hospital!.healthOrganizationName)!
                                 : '',
                             style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.0.sp,
-                            ),
+                                fontWeight: FontWeight.w500,
+                                fontSize: CommonUtil().isTablet!
+                                    ? tabHeader1
+                                    : mobileHeader1),
                           )
                         : Text(''),
                     Text(
@@ -263,16 +263,19 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                       data.metadata!.doctor!.lastName!)!
                           : '',
                       style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16.0.sp,
-                      ),
+                          color: Colors.grey,
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader2
+                              : mobileHeader2),
                     ),
                     Text(
                       new FHBUtils().getFormattedDateString(data.createdOn),
                       style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,
-                          fontSize: 14.0.sp),
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader3
+                              : mobileHeader3),
                     )
                   ],
                 ),
@@ -290,12 +293,16 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                 //TODO chnage theme
                                 color:
                                     Color(new CommonUtil().getMyPrimaryColor()),
-                                size: 20,
+                                size: CommonUtil().isTablet!
+                                    ? tabHeader2
+                                    : mobileHeader2,
                               )
                             : ImageIcon(
                                 AssetImage(variable.icon_record_fav),
                                 color: Colors.black,
-                                size: 20,
+                                size: CommonUtil().isTablet!
+                                    ? tabHeader2
+                                    : mobileHeader2,
                               ),
                         onPressed: () {
                           new CommonUtil().bookMarkRecord(data, _refresh);
@@ -323,8 +330,8 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
-      future:
-          _healthReportListForUserBlock.getProfilePic(data.metaInfo!.doctor!.id!),
+      future: _healthReportListForUserBlock
+          .getProfilePic(data.metaInfo!.doctor!.id!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(

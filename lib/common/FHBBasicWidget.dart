@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
@@ -304,16 +303,18 @@ class FHBBasicWidget {
       if (myProfile.result!.profilePicThumbnailUrl != '') {
         return Image.network(
           myProfile.result!.profilePicThumbnailUrl!,
-          height: 50.0.h,
-          width: 50.0.h,
+          height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+          width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
           fit: BoxFit.cover,
           headers: {
-            HttpHeaders.authorizationHeader: authToken??"",
+            HttpHeaders.authorizationHeader: authToken ?? "",
           },
           errorBuilder: (context, exception, stackTrace) {
             return Container(
-              height: 50.0.h,
-              width: 50.0.h,
+              height:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+              width:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
               color: PreferenceUtil.getIfQurhomeisAcive()
                   ? Color(CommonUtil().getQurhomeGredientColor())
                   : Color(CommonUtil().getMyPrimaryColor()),
@@ -326,15 +327,15 @@ class FHBBasicWidget {
       } else {
         return Container(
           color: Color(fhbColors.bgColorContainer),
-          height: 50.0.h,
-          width: 50.0.h,
+          height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+          width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
         );
       }
     } else {
       return Container(
         color: Color(fhbColors.bgColorContainer),
-        height: 50.0.h,
-        width: 50.0.h,
+        height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+        width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
       );
     }
   }
@@ -555,38 +556,38 @@ class FHBBasicWidget {
 
   Future<bool> exitApp(BuildContext context, Function logout) {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(
-              variable.strLogout,
-              style: TextStyle(
-                  fontSize: 16.0.sp,
-                  color: Color(CommonUtil().getMyPrimaryColor())),
-            ),
-            content: Text(
-              variable.strLogoutMsg,
-              style: TextStyle(fontSize: 16.0.sp),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: Text(variable.Cancel,
-                    style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()))),
-              ),
-              FlatButton(
-                onPressed: () {
-                  logout();
-                },
-                child: Text(variable.strYes,
-                    style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()))),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          variable.strLogout,
+          style: TextStyle(
+              fontSize: 16.0.sp,
+              color: Color(CommonUtil().getMyPrimaryColor())),
+        ),
+        content: Text(
+          variable.strLogoutMsg,
+          style: TextStyle(fontSize: 16.0.sp),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            child: Text(variable.Cancel,
+                style:
+                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
           ),
-        ).then((value) => value as bool);
+          FlatButton(
+            onPressed: () {
+              logout();
+            },
+            child: Text(variable.strYes,
+                style:
+                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   static customShowCaseNew(
@@ -733,15 +734,16 @@ class FHBBasicWidget {
                       )),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: CommonUtil().isTablet!?15:30),
+                  margin: EdgeInsets.symmetric(
+                      vertical: CommonUtil().isTablet! ? 15 : 30),
                   padding: EdgeInsets.all(4),
                   alignment: FractionalOffset.centerLeft,
                   decoration: BoxDecoration(
                       color: Colors.white, shape: BoxShape.circle),
-                  child:  Image(
-                    image:  AssetImage(variable.icon_mayaMain),
-                    height: CommonUtil().isTablet!?65:80.0.h,
-                    width: CommonUtil().isTablet!?65:80.0.h,
+                  child: Image(
+                    image: AssetImage(variable.icon_mayaMain),
+                    height: CommonUtil().isTablet! ? 65 : 80.0.h,
+                    width: CommonUtil().isTablet! ? 65 : 80.0.h,
                   ),
                 ),
               ],
@@ -770,38 +772,38 @@ class FHBBasicWidget {
   Future<bool> showDialogWithTwoButtons(
       BuildContext context, Function logout, String title, String msg) {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(
-              title,
-              style: TextStyle(
-                  fontSize: 16.0.sp,
-                  color: Color(CommonUtil().getMyPrimaryColor())),
-            ),
-            content: Text(
-              msg,
-              style: TextStyle(fontSize: 16.0.sp),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: Text(variable.Cancel,
-                    style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()))),
-              ),
-              FlatButton(
-                onPressed: () {
-                  logout();
-                },
-                child: Text(variable.strYes,
-                    style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()))),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          title,
+          style: TextStyle(
+              fontSize: 16.0.sp,
+              color: Color(CommonUtil().getMyPrimaryColor())),
+        ),
+        content: Text(
+          msg,
+          style: TextStyle(fontSize: 16.0.sp),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            child: Text(variable.Cancel,
+                style:
+                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
           ),
-        ).then((value) => value as bool);
+          FlatButton(
+            onPressed: () {
+              logout();
+            },
+            child: Text(variable.strYes,
+                style:
+                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   Widget getRichTextFieldWithNoCallbacks(
@@ -1026,7 +1028,8 @@ class FHBBasicWidget {
 
   showPopupForNotInRange() {}
 
-  getColorBasedOnDevice(String? deviceName, String? unitsTosearch, String text) {
+  getColorBasedOnDevice(
+      String? deviceName, String? unitsTosearch, String text) {
     switch (deviceName) {
       case Constants.STR_BP_MONITOR:
         if (text != null && text != '') {
@@ -1203,7 +1206,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
               : ''),
       style: TextStyle(
         color: Colors.white,
-        fontSize: 18.0.sp,
+        fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -1212,7 +1215,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
       myProfile.result!.firstName![0].toUpperCase(),
       style: TextStyle(
         color: Colors.white,
-        fontSize: 18.0.sp,
+        fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -1221,7 +1224,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
       '',
       style: TextStyle(
         color: Colors.white,
-        fontSize: 22.0.sp,
+        fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w200,
       ),
     );

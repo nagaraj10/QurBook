@@ -1,8 +1,8 @@
-
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../src/blocs/health/HealthReportListForUserBlock.dart';
@@ -52,8 +52,12 @@ class RecordInfoCard {
                             metaInfo
                                 .doctor) //getDoctorProfileImageWidget(metaInfo)
                         : Container(
-                            width: 50.0.h,
-                            height: 50.0.h,
+                            width: CommonUtil().isTablet!
+                                ? imageTabHeader
+                                : imageMobileHeader,
+                            height: CommonUtil().isTablet!
+                                ? imageTabHeader
+                                : imageMobileHeader,
                             color: Color(fhbColors.bgColorContainer))),
                 Expanded(
                   child: Padding(
@@ -63,29 +67,22 @@ class RecordInfoCard {
                       children: <Widget>[
                         if (metaInfo.doctor != null)
                           Text(
-                            /* toBeginningOfSentenceCase(
-                                    metaInfo.doctor != null
-                                        ? (metaInfo.doctor.name != null &&
-                                                metaInfo.doctor.name != '')
-                                            ? metaInfo.doctor.name
-                                            : metaInfo.doctor.firstName +
-                                                ' ' +
-                                                metaInfo.doctor.lastName
-                                        : ''), */
                             metaInfo.doctor != null
                                 ? ((metaInfo.doctor!.name != null &&
                                         metaInfo.doctor!.name != '')
                                     ? metaInfo
                                         .doctor!.name?.capitalizeFirstofEach
-                                    : metaInfo.doctor!.firstName
-                                            !.capitalizeFirstofEach +
+                                    : metaInfo.doctor!.firstName!
+                                            .capitalizeFirstofEach +
                                         ' ' +
-                                        metaInfo.doctor!.lastName
-                                            !.capitalizeFirstofEach)!
+                                        metaInfo.doctor!.lastName!
+                                            .capitalizeFirstofEach)!
                                 : '',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 16.0.sp,
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader1
+                                  : mobileHeader1,
                             ),
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -104,7 +101,9 @@ class RecordInfoCard {
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 15.0.sp,
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2,
                             ),
                           )
                         else
@@ -116,7 +115,9 @@ class RecordInfoCard {
                               ? variable.strDateOfVisit + metaInfo.dateOfVisit!
                               : '',
                           style: TextStyle(
-                            fontSize: 13.0.sp,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader3
+                                : mobileHeader3,
                           ),
                         ),
                       ],
@@ -135,7 +136,8 @@ class RecordInfoCard {
                       toBeginningOfSentenceCase(metaInfo.memoText)!,
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        fontSize: 14.0.sp,
+                        fontSize:
+                            CommonUtil().isTablet! ? tabHeader3 : mobileHeader3,
                       ),
                     )
                   : Text(''),
@@ -183,11 +185,13 @@ class RecordInfoCard {
                               ? Text(
                                   /* toBeginningOfSentenceCase(metaInfo
                                         .hospital.healthOrganizationName), */
-                                  metaInfo.hospital!.healthOrganizationName
-                                      !.capitalizeFirstofEach,
+                                  metaInfo.hospital!.healthOrganizationName!
+                                      .capitalizeFirstofEach,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 16.0.sp,
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader1
+                                        : mobileHeader1,
                                   ),
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
@@ -216,14 +220,16 @@ class RecordInfoCard {
                                         metaInfo.doctor!.name != '')
                                     ? metaInfo
                                         .doctor?.name?.capitalizeFirstofEach
-                                    : metaInfo.doctor!.firstName
-                                            !.capitalizeFirstofEach +
+                                    : metaInfo.doctor!.firstName!
+                                            .capitalizeFirstofEach +
                                         ' ' +
                                         metaInfo.doctor!.lastName!
                                             .capitalizeFirstofEach)!
                                 : '',
                             style: TextStyle(
-                              fontSize: 15.0.sp,
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2,
                             ),
                           )
                         else
@@ -233,7 +239,9 @@ class RecordInfoCard {
                         Text(
                           variable.strDateOfVisit + metaInfo.dateOfVisit!,
                           style: TextStyle(
-                            fontSize: 13.0.sp,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader3
+                                : mobileHeader3,
                           ),
                         ),
                       ],
@@ -252,7 +260,8 @@ class RecordInfoCard {
                       toBeginningOfSentenceCase(metaInfo.memoText)!,
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        fontSize: 14.0.sp,
+                        fontSize:
+                            CommonUtil().isTablet! ? tabHeader3 : mobileHeader3,
                       ),
                     )
                   : Text(''),
@@ -304,7 +313,9 @@ class RecordInfoCard {
                                       .capitalizeFirstofEach,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 16.0.sp,
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader1
+                                        : mobileHeader1,
                                   ),
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
@@ -333,14 +344,16 @@ class RecordInfoCard {
                                         metaInfo.doctor!.name != '')
                                     ? metaInfo
                                         .doctor?.name?.capitalizeFirstofEach
-                                    : metaInfo.doctor!.firstName
-                                            !.capitalizeFirstofEach +
+                                    : metaInfo.doctor!.firstName!
+                                            .capitalizeFirstofEach +
                                         ' ' +
-                                        metaInfo.doctor!.lastName
-                                            !.capitalizeFirstofEach)!
+                                        metaInfo.doctor!.lastName!
+                                            .capitalizeFirstofEach)!
                                 : '',
                             style: TextStyle(
-                              fontSize: 15.0.sp,
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2,
                             ),
                           )
                         else
@@ -350,7 +363,9 @@ class RecordInfoCard {
                         Text(
                           variable.strDateOfVisit + metaInfo.dateOfVisit!,
                           style: TextStyle(
-                            fontSize: 13.0.sp,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader3
+                                : mobileHeader3,
                           ),
                         ),
                       ],
@@ -369,7 +384,8 @@ class RecordInfoCard {
                       toBeginningOfSentenceCase(metaInfo.memoText)!,
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        fontSize: 14.0.sp,
+                        fontSize:
+                            CommonUtil().isTablet! ? tabHeader3 : mobileHeader3,
                       ),
                     )
                   : Text(''),
@@ -423,7 +439,7 @@ class RecordInfoCard {
             Text(
               metaInfo.memoText ?? '',
               style: TextStyle(
-                fontSize: 15.0.sp,
+                fontSize: CommonUtil().isTablet! ? tabHeader3 : mobileHeader3,
               ),
             ),
             SizedBox(
@@ -457,7 +473,9 @@ class RecordInfoCard {
           ),
           Text(
             metaInfo.fileName ?? '',
-            style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
+                fontWeight: FontWeight.w500),
           ),
           /*metaInfo.memoText != null
               ? Text(toBeginningOfSentenceCase(metaInfo.memoText))
@@ -469,7 +487,7 @@ class RecordInfoCard {
             Text(
               metaInfo.doctor!.name!.capitalizeFirstofEach,
               style: TextStyle(
-                fontSize: 15.0.sp,
+                fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               ),
             )
           else
@@ -478,7 +496,7 @@ class RecordInfoCard {
             Text(
               metaInfo.memoText!,
               style: TextStyle(
-                fontSize: 15.0.sp,
+                fontSize: CommonUtil().isTablet! ? tabHeader3 : mobileHeader3,
               ),
             )
           else
@@ -520,7 +538,9 @@ class RecordInfoCard {
           ),
           Text(
             metaInfo.fileName ?? '',
-            style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
+                fontWeight: FontWeight.w500),
           ),
           /*metaInfo.memoText != null
               ? Text(toBeginningOfSentenceCase(metaInfo.memoText))
@@ -531,14 +551,18 @@ class RecordInfoCard {
           if (metaInfo.doctor != null)
             Text(
               metaInfo.doctor!.name!,
-              style: TextStyle(fontSize: 15.0.sp),
+              style: TextStyle(
+                fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
+              ),
             )
           else
             SizedBox(height: 0.0.h),
           if (metaInfo.memoText != null)
             Text(
               metaInfo.memoText!,
-              style: TextStyle(fontSize: 15.0.sp),
+              style: TextStyle(
+                  fontSize:
+                      CommonUtil().isTablet! ? tabHeader3 : mobileHeader3),
             )
           else
             SizedBox(height: 0.0.h),
@@ -569,17 +593,26 @@ class RecordInfoCard {
             ),
             Text(
               metaInfo.fileName!,
-              style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
+                  fontWeight: FontWeight.w500),
             ),
             if (metaInfo.dateOfVisit != null)
               Text(
                 variable.strValidThru + metaInfo.dateOfVisit!,
-                style: TextStyle(fontSize: 15.0.sp),
+                style: TextStyle(
+                  fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
+                ),
               )
             else
               SizedBox(height: 0.0.h),
             if (metaInfo.memoText != null)
-              Text(metaInfo.memoText!)
+              Text(
+                metaInfo.memoText!,
+                style: TextStyle(
+                    fontSize:
+                        CommonUtil().isTablet! ? tabHeader3 : mobileHeader3),
+              )
             else
               SizedBox(height: 0.0.h),
             SizedBox(
@@ -625,11 +658,14 @@ class RecordInfoCard {
                               ? Text(
                                   /* toBeginningOfSentenceCase(metaInfo
                                         .hospital.healthOrganizationName) */
-                                  metaInfo.hospital!.healthOrganizationName
-                                      !.capitalizeFirstofEach,
+                                  metaInfo.hospital!.healthOrganizationName!
+                                      .capitalizeFirstofEach,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0.sp),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader1
+                                        : mobileHeader1,
+                                  ),
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                 )
@@ -644,16 +680,23 @@ class RecordInfoCard {
                           Text(
                             //toBeginningOfSentenceCase(metaInfo.doctor.name),
                             metaInfo.doctor!.name!.capitalizeFirstofEach,
-                            style: TextStyle(fontSize: 15.0.sp),
+                            style: TextStyle(
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2,
+                            ),
                           )
                         else
                           SizedBox(height: 0.0.h),
                         Text(
                           FHBUtils().getFormattedDateString(createdDate),
                           style: TextStyle(
-                              color: Colors.grey[400],
-                              fontWeight: FontWeight.w200,
-                              fontSize: 14.0.sp),
+                            color: Colors.grey[400],
+                            fontWeight: FontWeight.w200,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader3
+                                : mobileHeader3,
+                          ),
                         ),
                       ],
                     ),
@@ -670,7 +713,10 @@ class RecordInfoCard {
                   ? Text(
                       toBeginningOfSentenceCase(metaInfo.memoText)!,
                       textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 14.0.sp),
+                      style: TextStyle(
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader3
+                              : mobileHeader3),
                     )
                   : Text(''),
             ),
@@ -709,9 +755,11 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                     Text(
                       deviceReadings[i].value.toString(),
                       style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16.0.sp),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize:
+                            CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
+                      ),
                     ),
                     Text(
                         deviceReadings[i].unit.toLowerCase() ==
@@ -720,7 +768,11 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                             : getUnitForTemperature(
                                 " " + deviceReadings[i].unit),
                         style: TextStyle(
-                            color: Colors.black54, fontSize: 14.0.sp)),
+                          color: Colors.black54,
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader2
+                              : mobileHeader2,
+                        )),
                   ],
                 ),
               )
@@ -804,7 +856,10 @@ getCardForBillsAndOthers(MetaInfo metaInfo, String createdDate) {
               Text(FHBUtils().getFormattedDateString(createdDate))
             ],
           ),
-          Text(metaInfo.memoText!),
+          Text(metaInfo.memoText!,
+              style: TextStyle(
+                  fontSize:
+                      CommonUtil().isTablet! ? tabHeader3 : mobileHeader3)),
           SizedBox(
             height: 60.0.h,
           ),

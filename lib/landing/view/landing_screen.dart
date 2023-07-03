@@ -694,7 +694,9 @@ class _LandingScreenState extends State<LandingScreen> {
                           ? 'Hey User'
                           : '',
                   style: TextStyle(
-                    fontSize: CommonUtil().isTablet! ? 20.0.sp : 18.0.sp,
+                    fontSize: CommonUtil().isTablet!
+                        ? constants.tabFontTitle
+                        : constants.mobileFontTitle,
                     color: Colors.white,
                     fontWeight: FontWeight.w400,
                   ),
