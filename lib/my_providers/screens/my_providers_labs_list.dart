@@ -121,7 +121,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                         Row(
                           children: <Widget>[
                             CircleAvatar(
-                              radius: 18,
+                              radius: CommonUtil().isTablet! ? 35 : 20,
                               child: ClipOval(
                                   child: eachLabModel != null
                                       ? /*myProfile.result.profilePicThumbnailUrl != null

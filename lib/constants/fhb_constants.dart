@@ -866,6 +866,10 @@ const double mobileHeader3 = 12.0;
 const double imageTabHeader = 70.0;
 const double imageMobileHeader = 40.0;
 
+const double imageProfileTabHeader = 65.0;
+const double imageProfileMobileHeader = 40.0;
+
+
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(

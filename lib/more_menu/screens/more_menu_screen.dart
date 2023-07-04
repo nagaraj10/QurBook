@@ -869,11 +869,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               child: profileImage != null
                   ? Image.file(profileImage!,
                       width: CommonUtil().isTablet!
-                          ? imageTabHeader
-                          : imageMobileHeader,
+                          ? imageProfileTabHeader
+                          : imageProfileMobileHeader,
                       height: CommonUtil().isTablet!
-                          ? imageTabHeader
-                          : imageMobileHeader,
+                          ? imageProfileTabHeader
+                          : imageProfileMobileHeader,
                       fit: BoxFit.cover)
                   : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile),
             ),

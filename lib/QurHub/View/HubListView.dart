@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
@@ -34,6 +33,9 @@ class HubListView extends GetView<HubListViewController> {
             ),
             title: Text(
               strConnectedDevices,
+              style: TextStyle(
+                  fontSize:
+                      CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle),
             ),
             centerTitle: false,
             elevation: 0,
@@ -112,7 +114,7 @@ class HubListView extends GetView<HubListViewController> {
               color: Color(
                 CommonUtil().getMyPrimaryColor(),
               ),
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.all(
                   10.0,
                 ),
@@ -120,6 +122,8 @@ class HubListView extends GetView<HubListViewController> {
                   strAddNewDevice,
                   style: TextStyle(
                     color: Colors.white,
+                    fontSize:
+                        CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -157,8 +161,8 @@ class HubListView extends GetView<HubListViewController> {
               controller.checkForConnectedDevices();
             },
             child: Container(
-              width: 260.0.w,
-              height: 48.0.h,
+              width: CommonUtil().isTablet! ? 400.w : 260.0.w,
+              height: CommonUtil().isTablet! ? 70.0.h : 48.0.h,
               decoration: BoxDecoration(
                 color: Color(
                   CommonUtil().getMyPrimaryColor(),
@@ -189,7 +193,8 @@ class HubListView extends GetView<HubListViewController> {
                   strAddNewDevice,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16.0.sp,
+                    fontSize:
+                        CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -227,15 +232,15 @@ class HubListView extends GetView<HubListViewController> {
         shape: BoxShape.circle,
         color: Colors.grey[200],
       ),
-      height: 60,
-      width: 60,
+      height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+      width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Center(
           child: Image.asset(
             path,
-            height: 60,
-            width: 60,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             color: Color(
               CommonUtil().getMyPrimaryColor(),
             ),
@@ -278,8 +283,10 @@ class HubListView extends GetView<HubListViewController> {
                                 .userDeviceCollection![index].user!.firstName,
                           ),
                           style: TextStyle(
-                            color: Colors.black,
-                          ),
+                              color: Colors.black,
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader1
+                                  : mobileHeader1),
                         ),
                         Row(
                           children: [
@@ -287,7 +294,9 @@ class HubListView extends GetView<HubListViewController> {
                               'Device Type - ',
                               style: TextStyle(
                                 color: Colors.grey[600],
-                                fontSize: 12,
+                                fontSize: CommonUtil().isTablet!
+                                    ? tabHeader2
+                                    : mobileHeader2,
                               ),
                             ),
                             Expanded(
@@ -304,7 +313,9 @@ class HubListView extends GetView<HubListViewController> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 12,
+                                  fontSize: CommonUtil().isTablet!
+                                      ? tabHeader2
+                                      : mobileHeader2,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -316,9 +327,10 @@ class HubListView extends GetView<HubListViewController> {
                             Text(
                               'Device ID - ',
                               style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                              ),
+                                  color: Colors.grey[600],
+                                  fontSize: CommonUtil().isTablet!
+                                      ? tabHeader2
+                                      : mobileHeader2),
                             ),
                             Expanded(
                               child: Text(
@@ -333,7 +345,9 @@ class HubListView extends GetView<HubListViewController> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 12,
+                                  fontSize: CommonUtil().isTablet!
+                                      ? tabHeader2
+                                      : mobileHeader2,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -345,18 +359,20 @@ class HubListView extends GetView<HubListViewController> {
                             Text(
                               'Connected on - ',
                               style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                              ),
+                                  color: Colors.grey[600],
+                                  fontSize: CommonUtil().isTablet!
+                                      ? tabHeader2
+                                      : mobileHeader2),
                             ),
                             Expanded(
                               child: Text(
                                 "${changeDateFormat(CommonUtil().validString(controller.hubListResponse!.result!.userDeviceCollection![index].createdOn))}",
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                ),
+                                    color: Colors.black,
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader2
+                                        : mobileHeader2),
                               ),
                             ),
                           ],
@@ -382,7 +398,9 @@ class HubListView extends GetView<HubListViewController> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader2
+                                : mobileHeader2,
                           ),
                         ),
                       ),
@@ -422,14 +440,22 @@ class HubListView extends GetView<HubListViewController> {
                       children: [
                         Image.asset(
                           'assets/warning_icon.png',
-                          height: 30,
-                          width: 30,
+                          height: CommonUtil().isTablet!
+                              ? tabHeader1
+                              : mobileHeader1,
+                          width: CommonUtil().isTablet!
+                              ? tabHeader1
+                              : mobileHeader1,
                         ),
                         const SizedBox(
                           height: 15,
                         ),
                         Text(
                           unPairDevice,
+                          style: TextStyle(
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader1
+                                  : mobileHeader1),
                         ),
                         const SizedBox(
                           height: 15,
@@ -454,8 +480,10 @@ class HubListView extends GetView<HubListViewController> {
                                   child: Text(
                                     'Yes',
                                     style: TextStyle(
-                                      color: Colors.white,
-                                    ),
+                                        color: Colors.white,
+                                        fontSize: CommonUtil().isTablet!
+                                            ? tabHeader2
+                                            : mobileHeader2),
                                   ),
                                 ),
                               ),
@@ -477,8 +505,10 @@ class HubListView extends GetView<HubListViewController> {
                                   child: Text(
                                     'No',
                                     style: TextStyle(
-                                      color: Colors.white,
-                                    ),
+                                        color: Colors.white,
+                                        fontSize: CommonUtil().isTablet!
+                                            ? tabHeader2
+                                            : mobileHeader2),
                                   ),
                                 ),
                               ),

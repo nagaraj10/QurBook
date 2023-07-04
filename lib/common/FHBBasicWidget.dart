@@ -303,18 +303,24 @@ class FHBBasicWidget {
       if (myProfile.result!.profilePicThumbnailUrl != '') {
         return Image.network(
           myProfile.result!.profilePicThumbnailUrl!,
-          height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
-          width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+          height: CommonUtil().isTablet!
+              ? imageProfileTabHeader
+              : imageProfileMobileHeader,
+          width: CommonUtil().isTablet!
+              ? imageProfileTabHeader
+              : imageProfileMobileHeader,
           fit: BoxFit.cover,
           headers: {
             HttpHeaders.authorizationHeader: authToken ?? "",
           },
           errorBuilder: (context, exception, stackTrace) {
             return Container(
-              height:
-                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
-              width:
-                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+              height: CommonUtil().isTablet!
+                  ? imageProfileTabHeader
+                  : imageProfileMobileHeader,
+              width: CommonUtil().isTablet!
+                  ? imageProfileTabHeader
+                  : imageProfileMobileHeader,
               color: PreferenceUtil.getIfQurhomeisAcive()
                   ? Color(CommonUtil().getQurhomeGredientColor())
                   : Color(CommonUtil().getMyPrimaryColor()),
@@ -327,15 +333,23 @@ class FHBBasicWidget {
       } else {
         return Container(
           color: Color(fhbColors.bgColorContainer),
-          height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
-          width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+          height: CommonUtil().isTablet!
+              ? imageProfileTabHeader
+              : imageProfileMobileHeader,
+          width: CommonUtil().isTablet!
+              ? imageProfileTabHeader
+              : imageProfileMobileHeader,
         );
       }
     } else {
       return Container(
         color: Color(fhbColors.bgColorContainer),
-        height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
-        width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+        height: CommonUtil().isTablet!
+            ? imageProfileTabHeader
+            : imageProfileMobileHeader,
+        width: CommonUtil().isTablet!
+            ? imageProfileTabHeader
+            : imageProfileMobileHeader,
       );
     }
   }

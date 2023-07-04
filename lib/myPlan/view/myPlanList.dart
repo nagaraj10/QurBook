@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -60,8 +59,7 @@ class _MyPlanState extends State<MyPlanList> {
         listen: false,
       ).updateTabIndex(currentIndex: 3);
     }
-    Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCreditBalance();
+    Provider.of<PlanWizardViewModel>(context, listen: false).getCreditBalance();
     Provider.of<PlanWizardViewModel>(context, listen: false).fetchCartItem();
     Provider.of<PlanWizardViewModel>(context, listen: false).updateCareCount();
     Provider.of<PlanWizardViewModel>(context, listen: false).updateDietCount();
@@ -86,8 +84,9 @@ class _MyPlanState extends State<MyPlanList> {
         await PreferenceUtil.getUnSubscribeValue();
     print('addplanbtn: ' + addplanbutton.toString());
     setState(() {
-      this.addplanbutton = addplanbutton?? false; // FUcrash add ?? false
-      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton?? false;// FUcrash add ?? false;
+      this.addplanbutton = addplanbutton ?? false; // FUcrash add ?? false
+      this.showRenewOrSubscribeButton =
+          showRenewOrSubscribeButton ?? false; // FUcrash add ?? false;
     });
   }
 
@@ -129,7 +128,11 @@ class _MyPlanState extends State<MyPlanList> {
                     color: Colors.white,
                   ),
                   label: Text(strAddPlan,
-                      style: TextStyle(fontSize: 18.sp, color: Colors.white)),
+                      style: TextStyle(
+                          fontSize: (CommonUtil().isTablet ?? false)
+                              ? tabFontTitle
+                              : mobileFontTitle,
+                          color: Colors.white)),
                 )
               : Container(),
           body: Stack(
@@ -158,7 +161,7 @@ class _MyPlanState extends State<MyPlanList> {
                     height: 5.0.h,
                   ),
                   Expanded(
-                    child: myPlanListModel != null 
+                    child: myPlanListModel != null
                         ? hospitalList(myPlanListModel!.result)
                         : getPlanList(),
                   )

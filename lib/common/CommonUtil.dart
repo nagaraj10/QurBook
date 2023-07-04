@@ -6245,6 +6245,13 @@ class CommonUtil {
       },
     );
   }
+
+  getTitleStyle() {
+    return TextStyle(
+      fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
+      fontWeight: FontWeight.w600,
+    );
+  }
 }
 
 extension CapExtension on String {
