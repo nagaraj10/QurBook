@@ -83,10 +83,8 @@ import PushKit
     var BloodpressureManager : GoldenBloodpressureManager!
     var LS202DeviceManager : GoldenLS202DeviceManager!
     var eventSink: FlutterEventSink? = nil
-    var selectedDevicesFilter:BLEDeviceFilter?
-    var selectedDevicesType:BLEDeviceType?
-    var selectedManufacturer:BLEDeviceManufacture?
-    
+    var selectedDevicesList : [SelectedDevices] = []
+    var deviceSearched = false
     //Reminders
     var id = "";
     var title = "";

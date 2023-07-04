@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		540C66992A5440DC00B4D41E /* LSBluetoothPlugin.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54E34BB52A5098C1000EB933 /* LSBluetoothPlugin.xcframework */; };
+		540C669A2A5440DC00B4D41E /* LSBluetoothPlugin.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54E34BB52A5098C1000EB933 /* LSBluetoothPlugin.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		54306596271580D00009B704 /* SheelaAIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54306594271580D00009B704 /* SheelaAIVC.swift */; };
 		54306597271580D00009B704 /* SheelaAI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54306595271580D00009B704 /* SheelaAI.storyboard */; };
 		54952BF22834E7C600F8C975 /* ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54952BF12834E7C600F8C975 /* ext.swift */; };
@@ -33,7 +35,6 @@
 		54E34BB02A4C8DCD000EB933 /* AppDelegateNE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BAF2A4C8DCD000EB933 /* AppDelegateNE.swift */; };
 		54E34BB22A4C8ECE000EB933 /* AppDelegateTTS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BB12A4C8ECE000EB933 /* AppDelegateTTS.swift */; };
 		54E34BB42A4C90FE000EB933 /* AppDelegateCKE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BB32A4C90FE000EB933 /* AppDelegateCKE.swift */; };
-		54E34BB62A5098C1000EB933 /* LSBluetoothPlugin.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54E34BB52A5098C1000EB933 /* LSBluetoothPlugin.xcframework */; };
 		54FE478C28FEE33000B8564F /* BleManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; };
 		54FE478D28FEE33000B8564F /* BleManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		54FE478E28FEE33200B8564F /* DB62M_DeviceManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */; platformFilter = ios; };
@@ -103,6 +104,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				540C669A2A5440DC00B4D41E /* LSBluetoothPlugin.xcframework in Embed Frameworks */,
 				54FE478F28FEE33200B8564F /* DB62M_DeviceManager.framework in Embed Frameworks */,
 				54FE478D28FEE33000B8564F /* BleManager.framework in Embed Frameworks */,
 				54FE479328FEE33600B8564F /* LS202_DeviceManager.framework in Embed Frameworks */,
@@ -251,7 +253,7 @@
 				54FE478E28FEE33200B8564F /* DB62M_DeviceManager.framework in Frameworks */,
 				54FE479028FEE33400B8564F /* GSH601_DeviceManager.framework in Frameworks */,
 				80C941095C6CF7AF9EE96CDA /* Pods_Runner.framework in Frameworks */,
-				54E34BB62A5098C1000EB933 /* LSBluetoothPlugin.xcframework in Frameworks */,
+				540C66992A5440DC00B4D41E /* LSBluetoothPlugin.xcframework in Frameworks */,
 				54FE479228FEE33600B8564F /* LS202_DeviceManager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

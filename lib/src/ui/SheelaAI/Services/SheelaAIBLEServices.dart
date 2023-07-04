@@ -274,14 +274,17 @@ class SheelaBLEController extends GetxController {
       final devicesList =
           (hublistController.hubListResponse!.result!.userDeviceCollection ??
               []);
+      List pairedDevices = [];
       for (var device in devicesList) {
         var deviceManufacturer = device.manufacturer;
         var deviceType = getDeviceCode(device.device?.deviceType?.code);
-        bleMethodChannel.invokeListMethod('scanSingle', {
+        final deviceDetails = {
           'deviceType': deviceType,
           'manufacture': deviceManufacturer,
-        });
+        };
+        pairedDevices.add(deviceDetails);
       }
+      bleMethodChannel.invokeListMethod('scanSingle', pairedDevices);
     }
   }
 
