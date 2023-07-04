@@ -103,11 +103,24 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.experimental.and
 import kotlin.system.exitProcess
-
+import com.lifesense.plugin.ble.LSBluetoothManager
+import com.lifesense.plugin.ble.OnPairingListener
+import com.lifesense.plugin.ble.OnSearchingListener
+import com.lifesense.plugin.ble.OnSyncingListener
+import com.lifesense.plugin.ble.data.*
+import com.lifesense.plugin.ble.data.bgm.BGDataSummary
+import com.lifesense.plugin.ble.data.bpm.LSBloodPressure
+import com.lifesense.plugin.ble.data.scale.LSScaleState
+import com.lifesense.plugin.ble.data.scale.LSScaleWeight
+import com.lifesense.plugin.ble.data.tracker.ATDeviceData
+import com.lifesense.plugin.ble.data.tracker.ATPairResultsCode
+import com.lifesense.plugin.ble.data.tracker.ATUserInfo
 
 class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
-
+    private var macIdLsDevice=""
+    private var deviceName=""
+    private lateinit var lsDeviceInfo: LSDeviceInfo
     private var enableBackgroundNotification = false
 
     //    private lateinit var bluetoothFlutterResult: MethodChannel.Result
@@ -222,6 +235,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     private val DEVICE_WT = 3
     private val DEVICE_BP = 4
     private val DEVICE_BGL = 5
+    private val DEVICE_WEIGHT = 3
+
 
     var autoRepeatScan = 1
 
@@ -906,7 +921,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 DataToPost += " \"hubId\" : \"HB:AD:00:00:00:$DevSeq\" ,"
                 DataToPost += " \"deviceId\" : \"DV:WG:BG:00:00:$DevSeq\" ,"
                 DataToPost += " \"deviceType\" : \"BGL\" , \"Data\" : {"
-                DataToPost += " \"Bgl\" : \""
+                DataToPost += " \"BGL\" : \""
                 DataToPost += v1
                 DataToPost += "\" "
                 DataToPost += " }}"
@@ -1139,6 +1154,346 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
     }
 
+    private val onSyncingListener: OnSyncingListener = object : OnSyncingListener() {
+
+        override fun onBloodPressureDataUpdate(p0: String?, p1: LSBloodPressure?) {
+            super.onBloodPressureDataUpdate(p0, p1)
+            runOnUiThread {
+//                resultStream.success("\n\nonBloodPressureDataUpdate: "+p1.toString());
+            }
+            Log.e("bluetoothnew", "onBloodPressureDataUpdate: " )
+
+        }
+
+        override fun onScaleWeightDataUpdate(p0: String?, p1: LSScaleWeight?) {
+            super.onScaleWeightDataUpdate(p0, p1)
+            runOnUiThread {
+
+                Handler().postDelayed({
+                    p1?.weight?.let {
+                        sendPost(
+                            "Measurement",
+                            DEVICE_WEIGHT,
+                            0,
+                            0,
+                            0,
+                            weight=it
+                        )
+                    }
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
+                    }
+                }, 2000)
+
+                LSBluetoothManager.getInstance().stopDeviceSync()
+                LSBluetoothManager.getInstance().stopDiscovery()
+                LSBluetoothManager.getInstance().stopSearch()
+            }
+
+            Log.e("bluetoothnew", "onScaleWeightDataUpdate: " )
+
+        }
+
+        override fun onStateChanged(p0: String?, p1: LSConnectState?) {
+            super.onStateChanged(p0, p1)
+            runOnUiThread {
+//                resultStream.success("\n\nonStateChanged: "+p1.toString());
+            }
+            var status=p1?.status
+            if(status==null){
+                status=0
+            }
+            if(status!=null&&status==1){
+                if (::BLEEventChannel.isInitialized) {
+                    MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+//                            BLEEventChannel.success("scanstarted|connection started")
+                }
+            }else if(status!=null&&status==2){
+                if (::BLEEventChannel.isInitialized) {
+                    MainThreadEventSink(BLEEventChannel).success("macid|" + macIdLsDevice)
+//                                BLEEventChannel.success("macid|" + bleMacId)
+                }
+                if(lsDeviceInfo.deviceName?.contains("BLE-Vivachek") == true || lsDeviceInfo.deviceName?.contains("TeleBGM Gen1 BLE") == true) {
+                    sendPost("Connected", DEVICE_BGL, 0, 0, 0)
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "bgl")
+//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                    }
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("connected|" + "bgl" + " connected successfully!!!")
+//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                    }
+                }else if(lsDeviceInfo.deviceName?.contains("GBS-2012-B") == true){
+                    sendPost("Connected", DEVICE_WEIGHT, 0, 0, 0,weight=0.0)
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "weight")
+//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                    }
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("connected|" + "weight" + " connected successfully!!!")
+//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                    }
+                }
+                Log.e("bluetoothnew", "bleNameInLSdeviceinfo: "+lsDeviceInfo.deviceName )
+
+            }else{
+//                if (::BLEEventChannel.isInitialized) {
+//                    MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+////                            BLEEventChannel.success("scanstarted|connection started")
+//                }
+            }
+            Log.e("bluetoothnew", "onStateChanged: "+p1?.name+" "+p1?.status )
+        }
+
+        override fun onDeviceInformationUpdate(p0: String?, p1: LSDeviceInfo?) {
+            super.onDeviceInformationUpdate(p0, p1)
+            runOnUiThread {
+//                resultStream.success("\n\nonDeviceInformationUpdate: "+p1.toString());
+
+            }
+
+            if (p1 != null) {
+                lsDeviceInfo.setFirmwareVersion(p1?.getFirmwareVersion())
+                lsDeviceInfo.setHardwareVersion(p1?.getHardwareVersion());
+                lsDeviceInfo.setModelNumber(p1?.getModelNumber());
+                if(p1?.getPassword()!=null){
+                    lsDeviceInfo.setPassword(p1?.getPassword());
+                }
+            };
+
+            Log.e("bluetoothnew", "onDeviceInformationUpdate: "+p1?.deviceName+" "+p1?.deviceType )
+        }
+
+
+
+        override fun onNotificationDataUpdate(p0: String?, p1: IDeviceData?) {
+            super.onNotificationDataUpdate(p0, p1)
+            runOnUiThread {
+//                resultStream.success("\n\nonNotificationDataUpdate: "+p1.toString());
+
+            }
+
+            if (p1 is LSScaleState) {
+                handleScaleState(p0!!, (p1 as LSScaleState?)!!)
+            }
+
+            if(lsDeviceInfo.deviceName?.contains("BLE-Vivachek") == true || lsDeviceInfo.deviceName?.contains("TeleBGM Gen1 BLE") == true) {
+
+
+                if (p1.toString().contains("InsertStrip")) {
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("update|" + "Strip inserted")
+                    }
+                }
+                if (p1.toString().contains("Collecting")) {
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("update|" + "Waiting for the blood sample")
+                    }
+                } else if (p1.toString().contains("Collected")) {
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("update|" + "Blood collected. Please wait.")
+                    }
+                } else if (p1.toString().contains("Result")) {
+                    val result = p1.toString().substringAfter("value=").substringBefore(',')
+                    sendPost(
+                        "Measurement",
+                        DEVICE_BGL,
+                        result.toFloat().toInt(),
+                        0,
+                        0
+                    )
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
+                    }
+//                    LSBluetoothManager.getInstance().stopDeviceSync()
+//                    LSBluetoothManager.getInstance().stopDiscovery()
+//                    LSBluetoothManager.getInstance().stopSearch()
+                }
+            }
+
+            if (p1.toString().contains("PowerOff")) {
+                if (::BLEEventChannel.isInitialized) {
+                    runOnUiThread {
+                        Log.e("qurhealth", "wowgostatus: connectionfailed")
+                    }
+
+                    MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
+
+                }
+                LSBluetoothManager.getInstance().stopDeviceSync()
+                LSBluetoothManager.getInstance().stopDiscovery()
+                LSBluetoothManager.getInstance().stopSearch()
+            }
+            if(p1.toString().contains("Disconnect")){
+                //connectToBle()
+            }
+            Log.e("bluetoothnew", "onNotificationDataUpdate: " )
+
+        }
+
+        override fun onActivityTrackerDataUpdate(p0: String?, p1: Int, p2: ATDeviceData?) {
+            super.onActivityTrackerDataUpdate(p0, p1, p2)
+            runOnUiThread {
+//                resultStream.success("\n\nonActivityTrackerDataUpdate: "+p1.toString());
+
+            }
+            Log.e("bluetoothnew", "onActivityTrackerDataUpdate: " )
+
+        }
+
+        override fun onBloodGlucoseDataUpdate(p0: String?, p1: BGDataSummary?) {
+            super.onBloodGlucoseDataUpdate(p0, p1)
+            runOnUiThread {
+
+//                resultStream.success("\n\nonBloodGlucoseDataUpdate: "+p1.toString());
+            }
+//            if(p1?.items!=null&&p1?.items.size>0){
+//                var length=p1?.items.size-1
+//                if( !p1?.items!![length].isHistoricalData){
+//                    sendPost(
+//                        "Measurement",
+//                        DEVICE_BGL,
+//                        p1?.items!![length].value.toInt(),
+//                        0,
+//                        0
+//                    )
+//                    if (::BLEEventChannel.isInitialized) {
+//                        MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
+////                            BLEEventChannel.success("measurement|" + postBleData)
+//                    }
+//                }
+//
+//            }
+
+
+            Log.e("bluetoothnew", "onBloodGlucoseDataUpdate: " )
+
+        }
+
+    }
+
+    private fun connectToBle(){
+        LSBluetoothManager.getInstance().stopSearch()
+        LSBluetoothManager.getInstance().addDevice(lsDeviceInfo)
+        LSBluetoothManager.getInstance().startDeviceSync(onSyncingListener)
+    }
+
+    private fun handleScaleState(devMac: String, obj: LSScaleState) {
+        if (obj.isReset) {
+            LSBluetoothManager.getInstance().deleteDevice(devMac)
+            LSBluetoothManager.getInstance().stopDeviceSync()
+            connectToBle()
+        }
+    }
+
+    private fun checkSupportRegisterAndConnect(){
+        LSBluetoothManager.getInstance().stopSearch()
+        LSBluetoothManager.getInstance().stopDeviceSync()
+        LSBluetoothManager.getInstance().setDevices(null)
+        if(isSupportRegister(lsDeviceInfo)){
+            //set scale user info
+            val userInfo = ATUserInfo()
+            userInfo.age = 24
+            userInfo.isAthlete = false
+            userInfo.height = 1.73f
+            userInfo.weight = 74f
+            userInfo.userGender = LSUserGender.Male
+            lsDeviceInfo.setUserInfo(userInfo)
+            LSBluetoothManager.getInstance().pairDevice(lsDeviceInfo, mPairCallback)
+        }else{
+            connectDevice()
+        }
+    }
+    private val mPairCallback: OnPairingListener = object : OnPairingListener() {
+        override fun onStateChanged(lsDevice: LSDeviceInfo, status: Int) {
+            if (status == ATPairResultsCode.PAIR_SUCCESSFULLY) {
+//                runOnUiThread {
+//                    resultStream.success("\n\nPaired Successfullly: ");
+//                }
+                Toast.makeText(this@MainActivity,"Paired successfully",Toast.LENGTH_SHORT)
+                connectDevice()
+            } else {
+//                runOnUiThread {
+//                    resultStream.success("\n\nPaired failed: ");
+//                }
+                Toast.makeText(this@MainActivity,"Connection failed",Toast.LENGTH_SHORT)
+            }
+        }
+
+        override fun onMessageUpdate(macAddress: String, msg: LSDevicePairSetting) {
+            if (msg.pairCmd == LSPairCommand.DeviceIdRequest) {
+                //注册设备ID
+                msg.obj = macAddress.replace(":", "")
+                LSBluetoothManager.getInstance().pushPairSetting(macAddress, msg)
+            }
+        }
+    }
+
+    private fun isSupportRegister(lsDevice: LSDeviceInfo?): Boolean {
+        if (lsDevice == null || lsDevice.protocolType == null) {
+            return false
+        }
+        val state = LSProtocolType.A6.toString().equals(lsDevice.protocolType, ignoreCase = true)
+        return if (state && lsDevice.registerStatus == 0x00) {
+            true
+        } else false
+    }
+
+    private fun connectDevice() {
+        if (LSBluetoothManager.getInstance().managerStatus == LSManagerStatus.Syncing
+            && LSBluetoothManager.getInstance()
+                .checkConnectState(lsDeviceInfo.getMacAddress()) == LSConnectState.ConnectSuccess
+        ) {
+            LSBluetoothManager.getInstance().resetSyncingListener(onSyncingListener)
+            return
+        }
+        if (LSBluetoothManager.getInstance().managerStatus == LSManagerStatus.Syncing) {
+            return
+        }
+        createConnection()
+    }
+
+    private fun createConnection() {
+        LSBluetoothManager.getInstance().stopDeviceSync()
+        //clear measure device list
+        LSBluetoothManager.getInstance().devices = null
+        if (lsDeviceInfo.deviceName.equals("1014B", ignoreCase = true)) {
+            lsDeviceInfo.isDelayDisconnect = true
+        }
+        //add target measurement device
+        LSBluetoothManager.getInstance().addDevice(lsDeviceInfo)
+        //start data syncing service
+        LSBluetoothManager.getInstance().startDeviceSync(onSyncingListener)
+        //update connect state
+    }
+
+
+    private val searchingListener: OnSearchingListener = object : OnSearchingListener() {
+        override fun onSearchResults(lsDevice: LSDeviceInfo) {
+            super.onSearchResults(lsDevice)
+            Log.e("bluetoothsearch", "\n\nonSearchResults: "+lsDevice.deviceName )
+            var add=false;
+
+            if(lsDevice.deviceName?.contains(deviceName) == true){
+                Log.e("bluetoothsearch", "\n\nonSearchResults: "+lsDevice.deviceName+ "connect " )
+                macIdLsDevice=lsDevice.macAddress;
+                lsDeviceInfo=lsDevice
+                checkSupportRegisterAndConnect()
+            }
+        }
+
+        override fun onSystemConnectedDevice(name: String, macAddress: String) {
+            super.onSystemConnectedDevice(name, macAddress)
+
+        }
+
+        override fun onSystemBondDevice(device: BluetoothDevice) {
+            super.onSystemBondDevice(device)
+
+        }
+    }
+
+
     private fun startScan() {
         try {
             BleManager.getInstance().scan(object : BleScanCallback() {
@@ -1171,6 +1526,19 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     if (DevName == "Mike") {
                         stopScan()
                         connectToSPO2(bleDevice)
+                    }
+
+                    if (DevName == "TeleBGM Gen1 BLE") {
+                        stopScan()
+                        deviceName="TeleBGM Gen1 BLE";
+                        LSBluetoothManager.getInstance().resetSyncingListener(onSyncingListener)
+                        LSBluetoothManager.getInstance().searchDevice(listOf(LSDeviceType.Unknown,LSDeviceType.ActivityTracker,LSDeviceType.KitchenScale,LSDeviceType.HeightMeter,LSDeviceType.FatScale,LSDeviceType.BloodGlucoseMeter,LSDeviceType.WeightScale,LSDeviceType.BloodPressureMeter),searchingListener)
+                    }
+                    if (DevName == "GBS-2012-B") {
+                        stopScan()
+                        deviceName="GBS-2012-B";
+                        LSBluetoothManager.getInstance().resetSyncingListener(onSyncingListener)
+                        LSBluetoothManager.getInstance().searchDevice(listOf(LSDeviceType.Unknown,LSDeviceType.ActivityTracker,LSDeviceType.KitchenScale,LSDeviceType.HeightMeter,LSDeviceType.FatScale,LSDeviceType.BloodGlucoseMeter,LSDeviceType.WeightScale,LSDeviceType.BloodPressureMeter),searchingListener)
                     }
 // BP DEVICE SCANNING
                     if (DevName.lowercase(Locale.getDefault()).contains("blesmart")) {

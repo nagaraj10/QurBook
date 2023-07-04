@@ -153,6 +153,8 @@ dependencies {
     implementation files('libs/GSH601_Device.jar')
     implementation files('libs/DB62M_Device.jar')
     implementation files('libs/LS202_Device.jar')
+    implementation files('libs/lifesense-device-ble-2.3.0-beta12.jar')
+
 //    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
 

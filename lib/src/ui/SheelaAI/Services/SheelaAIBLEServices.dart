@@ -108,7 +108,7 @@ class SheelaBLEController extends GetxController {
     }
 
     timerSubscription = stream.listen(
-      (val) async {
+          (val) async {
         print("Val in ");
 
         if (val == null || val == "") {
@@ -137,19 +137,19 @@ class SheelaBLEController extends GetxController {
                 hublistController.searchingBleDevice(false);
               break;
             case "macid":
-              // FlutterToast().getToast(
-              //   receivedValues.last,
-              //   Colors.red,
-              // );
+            // FlutterToast().getToast(
+            //   receivedValues.last,
+            //   Colors.red,
+            // );
               hublistController.bleMacId = CommonUtil().validString(
                 receivedValues.last,
               );
               break;
             case "bleDeviceType":
-              // FlutterToast().getToast(
-              //   receivedValues.last,
-              //   Colors.red,
-              // );
+            // FlutterToast().getToast(
+            //   receivedValues.last,
+            //   Colors.red,
+            // );
               hublistController.bleDeviceType = CommonUtil().validString(
                 receivedValues.last,
               );
@@ -171,11 +171,12 @@ class SheelaBLEController extends GetxController {
                 return;
               }
               String deviceType =
-                  hublistController.bleDeviceType!.toLowerCase();
+              hublistController.bleDeviceType!.toLowerCase();
               if (deviceType.isNotEmpty &&
                   (deviceType == "spo2" ||
                       deviceType == "bp" ||
-                      deviceType == "weight")) {
+                      deviceType == "weight"||
+                      deviceType == "bgl")) {
                 if (isFromVitals || isFromRegiment) {
                   Get.back();
                 }
@@ -203,6 +204,18 @@ class SheelaBLEController extends GetxController {
                 });
               }
               break;
+            case "update":
+              if (SheelaController.isSheelaScreenActive) {
+                addToConversationAndPlay(
+
+                  SheelaResponse(
+
+                    recipientId: conversationType,
+
+                    text: receivedValues.last,),);
+                return;
+              }
+              break;
             case "measurement":
               if (!checkForParedDevice()) return;
               String deviceType =
@@ -210,7 +223,8 @@ class SheelaBLEController extends GetxController {
               receivedData = true;
               if (deviceType == "bp" ||
                   deviceType == "spo2" ||
-                  deviceType == "weight") {
+                  deviceType == "weight"||
+                  deviceType == "bgl") {
                 if (SheelaController.isSheelaScreenActive) {
                   updateUserData(
                     data: receivedValues.last,
@@ -271,6 +285,7 @@ class SheelaBLEController extends GetxController {
     );
   }
 
+
   bool checkForParedDevice() {
     try {
       final devicesList =
@@ -328,12 +343,18 @@ class SheelaBLEController extends GetxController {
     final arguments = SheelaController.arguments!;
     isCompleted = false;
     var msg = '';
+    String deviceType="";
     if ((arguments.deviceType ?? '').isNotEmpty) {
       String strText = CommonUtil().validString(arguments.deviceType);
+      deviceType=strText;
       if (strText.toLowerCase() == "weight") {
         strText = "Weighing scale";
       }
-      msg = "Your $strText device is connected & reading values. Please wait";
+      if (strText.toLowerCase() == "bgl") {
+        msg = "Your Blood Glucose device is connected. Please insert a strip to take a reading.";
+      }else{
+        msg = "Your $strText device is connected & reading values. Please wait";
+      }
     }
 
     if (msg.isNotEmpty) {
@@ -343,6 +364,12 @@ class SheelaBLEController extends GetxController {
           text: msg,
         ),
       );
+      if(strText.toLowerCase().contains("bgl")){
+        playConversations.add(SheelaResponse(
+          recipientId: conversationType,
+          text: "Please insert strip",
+        ));
+      }
       refreshTimeoutTimer();
     }
   }
@@ -467,6 +494,20 @@ class SheelaBLEController extends GetxController {
                 recipientId: conversationType,
                 text:
                     "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye!.",
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+          } else {
+            receivedData = false;
+            showFailure();
+          }
+        }else if(model.deviceType?.toLowerCase() == "bgl"){
+          if ((model.data!.BGL ?? '').isNotEmpty) {
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text:
+                "Thank you. Your blood glucose value of ${model.data!.BGL} mg/dL has been successfully recorded. Bye!.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
