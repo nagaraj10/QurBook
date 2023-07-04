@@ -89,16 +89,16 @@ class QurhomeDashboardController extends GetxController {
 
   updateBLETimer({bool Enable = true}) {
     if (Enable) {
-      if (_bleTimer != null) return;
-      _bleTimer = Timer.periodic(
-          const Duration(
-            seconds: 20,
-          ), (time) {
-        if (Get.find<SheelaAIController>().isSheelaScreenActive) {
-          return;
-        }
-        _sheelaBLEController.setupListenerForReadings();
-      });
+      // if (_bleTimer != null) return;
+      // _bleTimer = Timer.periodic(
+      //     const Duration(
+      //       seconds: 20,
+      //     ), (time) {
+      //   if (Get.find<SheelaAIController>().isSheelaScreenActive) {
+      //     return;
+      //   }
+      _sheelaBLEController.setupListenerForReadings();
+      // });
     } else {
       _sheelaBLEController.stopScanning();
       _sheelaBLEController.stopTTS();

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -9,17 +8,17 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../QurHub/Controller/HubListViewController.dart';
 import '../../../../Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import '../../../../Qurhome/BleConnect/Models/ble_data_model.dart';
 import '../../../../Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
+import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import '../../../../common/CommonUtil.dart';
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../constants/fhb_constants.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
@@ -28,7 +27,9 @@ import '../Views/SheelaAIMainScreen.dart';
 class SheelaBLEController extends GetxController {
   late SheelaAIController SheelaController;
   late HubListViewController hublistController;
-  Stream stream = EventChannel('QurbookBLE/stream').receiveBroadcastStream();
+  EventChannel bleStream = const EventChannel('QurbookBLE/stream');
+  MethodChannel bleMethodChannel = const MethodChannel('QurbookBLE/method');
+  late Stream stream;
   StreamSubscription? timerSubscription;
 
   Timer? timeOutTimer;
@@ -52,6 +53,7 @@ class SheelaBLEController extends GetxController {
     listnerForAudioPlayer();
     SheelaController = Get.find();
     hublistController = Get.find();
+    stream = bleStream.receiveBroadcastStream();
   }
 
   listnerForAudioPlayer() {
@@ -103,18 +105,25 @@ class SheelaBLEController extends GetxController {
   }
 
   void _enableTimer() {
+    if (!addingDevicesInHublist) {
+      final devicesList =
+          (hublistController.hubListResponse!.result!.userDeviceCollection ??
+              []);
+      if (devicesList.isEmpty) {
+        return;
+      }
+    }
+
     if (timerSubscription != null) {
       return;
     }
 
     timerSubscription = stream.listen(
-          (val) async {
+      (val) async {
         print("Val in ");
-
         if (val == null || val == "") {
           return;
         }
-
         print("Val in " + val.toString());
         final List<String>? receivedValues = val.split('|');
         if ((receivedValues ?? []).length > 0) {
@@ -137,19 +146,14 @@ class SheelaBLEController extends GetxController {
                 hublistController.searchingBleDevice(false);
               break;
             case "macid":
-            // FlutterToast().getToast(
-            //   receivedValues.last,
-            //   Colors.red,
-            // );
               hublistController.bleMacId = CommonUtil().validString(
                 receivedValues.last,
               );
               break;
+            case "manufacturer":
+              hublistController.manufacturer = receivedValues.last;
+              break;
             case "bleDeviceType":
-            // FlutterToast().getToast(
-            //   receivedValues.last,
-            //   Colors.red,
-            // );
               hublistController.bleDeviceType = CommonUtil().validString(
                 receivedValues.last,
               );
@@ -162,16 +166,11 @@ class SheelaBLEController extends GetxController {
               break;
             case "connected":
               receivedData = false;
-              // FlutterToast().getToast(
-              //   receivedValues.last,
-              //   Colors.red,
-              // );
               if (!checkForParedDevice()) {
-                //_disableTimer();
                 return;
               }
               String deviceType =
-              hublistController.bleDeviceType!.toLowerCase();
+                  hublistController.bleDeviceType!.toLowerCase();
               if (deviceType.isNotEmpty &&
                   (deviceType == "spo2" ||
                       deviceType == "bp" ||
@@ -274,8 +273,7 @@ class SheelaBLEController extends GetxController {
             case "connectionfailed":
               _disableTimer();
               await Future.delayed(const Duration(seconds: 2));
-              setupListenerForReadings();
-
+              //setupListenerForReadings();
               break;
 
             default:
@@ -283,15 +281,55 @@ class SheelaBLEController extends GetxController {
         }
       },
     );
+
+    if (addingDevicesInHublist) {
+      bleMethodChannel.invokeListMethod('scanAll');
+    } else {
+      final devicesList =
+          (hublistController.hubListResponse!.result!.userDeviceCollection ??
+              []);
+      for (var device in devicesList) {
+        var deviceManufacturer = device.manufacturer;
+        var deviceType = getDeviceCode(device.device?.deviceType?.code);
+        bleMethodChannel.invokeListMethod('scanSingle', {
+          'deviceType': deviceType,
+          'manufacture': deviceManufacturer,
+        });
+      }
+    }
+  }
+
+  String getDeviceCode(String? deviceCode) {
+    String deviceType;
+    switch (deviceCode) {
+      case 'BPMONT':
+        deviceType = 'BP';
+        break;
+      case 'GLUCMT':
+        deviceType = 'BGL';
+        break;
+      case 'PULOXY':
+        deviceType = 'SPO2';
+        break;
+      case 'THERMO':
+        deviceType = 'Temp';
+        break;
+      case 'WEIGHS':
+        deviceType = 'Weight';
+        break;
+      default:
+        deviceType = 'All';
+    }
+    return deviceType;
   }
 
 
   bool checkForParedDevice() {
     try {
       final devicesList =
-          (hublistController.hubListResponse!.result!.userDeviceCollection ?? []);
+          (hublistController.hubListResponse!.result!.userDeviceCollection ??
+              []);
       if (devicesList.isEmpty) {
-        //no paired devices
         return false;
       }
       var index = -1;
@@ -576,7 +614,7 @@ class SheelaBLEController extends GetxController {
             }
             final tempFile =
                 await File('${dir.path}/tempAudioFile$randomNum.mp3').create();
-             tempFile.writeAsBytesSync(
+            tempFile.writeAsBytesSync(
               bytes,
             );
             SheelaController.conversations.add(currentPlayingConversation);
@@ -635,14 +673,14 @@ class SheelaBLEController extends GetxController {
   }
 
   void _disableTimer() {
-    isFromRegiment = false;
-    addingDevicesInHublist = false;
-    isFromVitals = false;
-    filteredDeviceType = '';
     if (timerSubscription != null) {
       timerSubscription!.cancel();
       timerSubscription = null;
     }
+    isFromRegiment = false;
+    addingDevicesInHublist = false;
+    isFromVitals = false;
+    filteredDeviceType = '';
     removeTimeOutTimer();
   }
 }

@@ -1,4 +1,3 @@
-
 class HubListResponse {
   bool? isSuccess;
   Result? result;
@@ -145,39 +144,42 @@ class UserDeviceCollection {
   String? userId;
   User? user;
   Device? device;
-
-  UserDeviceCollection(
-      {this.id,
-      this.userHubId,
-      this.pairHash,
-      this.additionalDetails,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.hubId,
-      this.deviceId,
-      this.userId,
-      this.user,
-      this.device});
+  String? manufacturer;
+  UserDeviceCollection({
+    this.id,
+    this.userHubId,
+    this.pairHash,
+    this.additionalDetails,
+    this.isActive,
+    this.createdOn,
+    this.lastModifiedOn,
+    this.hubId,
+    this.deviceId,
+    this.userId,
+    this.user,
+    this.device,
+    this.manufacturer,
+  });
 
   UserDeviceCollection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userHubId = json['userHubId'];
     pairHash = json['pairHash'];
     // additionalDetails = json['additionalDetails'];
+    var addDetails = json['additionalDetails'];
+    manufacturer = addDetails['manufacturer'];
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     hubId = json['hubId'];
     deviceId = json['deviceId'];
     userId = json['userId'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    device =
-        json['device'] != null ? new Device.fromJson(json['device']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
+    device = json['device'] != null ? Device.fromJson(json['device']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['userHubId'] = this.userHubId;
     data['pairHash'] = this.pairHash;
@@ -195,6 +197,7 @@ class UserDeviceCollection {
   }
 }
 
+// need to add a key additionalDetails with manufactures data
 class Device {
   String? id;
   String? serialNumber;
@@ -219,7 +222,7 @@ class Device {
       id = json['id'];
       serialNumber = json['serialNumber'];
       deviceType = json['deviceType'] != null
-          ? new DeviceType.fromJson(json['deviceType'])
+          ? DeviceType.fromJson(json['deviceType'])
           : null;
       name = json['name'];
       isActive = json['isActive'];
@@ -243,16 +246,17 @@ class DeviceType {
   String? createdOn;
   String? lastModifiedOn;
 
-  DeviceType(
-      {this.id,
-      this.code,
-      this.name,
-      this.description,
-      this.sortOrder,
-      this.isActive,
-      this.createdBy,
-      this.createdOn,
-      this.lastModifiedOn});
+  DeviceType({
+    this.id,
+    this.code,
+    this.name,
+    this.description,
+    this.sortOrder,
+    this.isActive,
+    this.createdBy,
+    this.createdOn,
+    this.lastModifiedOn,
+  });
 
   DeviceType.fromJson(Map<String, dynamic> json) {
     try {
@@ -371,7 +375,7 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['userName'] = this.userName;
@@ -448,7 +452,7 @@ class AdditionalInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['age'] = this.age;
     data['height'] = this.height;
     data['offset'] = this.offset;

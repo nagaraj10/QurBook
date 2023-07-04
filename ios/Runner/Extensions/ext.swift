@@ -24,8 +24,11 @@ extension Date {
     }
     
 }
-
 extension Data{
+    var hexadecimal: String {
+        return map { String(format: "%02X", $0) }.joined();
+    }
+    
     func hexEncodedString() -> String {
         let hexDigits = Array("0123456789abcdef".utf16)
         var hexChars = [UTF16.CodeUnit]()
