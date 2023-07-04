@@ -33,6 +33,7 @@
 		54E34BB02A4C8DCD000EB933 /* AppDelegateNE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BAF2A4C8DCD000EB933 /* AppDelegateNE.swift */; };
 		54E34BB22A4C8ECE000EB933 /* AppDelegateTTS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BB12A4C8ECE000EB933 /* AppDelegateTTS.swift */; };
 		54E34BB42A4C90FE000EB933 /* AppDelegateCKE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BB32A4C90FE000EB933 /* AppDelegateCKE.swift */; };
+		54E34BB62A5098C1000EB933 /* LSBluetoothPlugin.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54E34BB52A5098C1000EB933 /* LSBluetoothPlugin.xcframework */; };
 		54FE478C28FEE33000B8564F /* BleManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; };
 		54FE478D28FEE33000B8564F /* BleManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		54FE478E28FEE33200B8564F /* DB62M_DeviceManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */; platformFilter = ios; };
@@ -166,6 +167,7 @@
 		54E34BAF2A4C8DCD000EB933 /* AppDelegateNE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateNE.swift; sourceTree = "<group>"; };
 		54E34BB12A4C8ECE000EB933 /* AppDelegateTTS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTTS.swift; sourceTree = "<group>"; };
 		54E34BB32A4C90FE000EB933 /* AppDelegateCKE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateCKE.swift; sourceTree = "<group>"; };
+		54E34BB52A5098C1000EB933 /* LSBluetoothPlugin.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LSBluetoothPlugin.xcframework; sourceTree = "<group>"; };
 		54FE478428FEE31000B8564F /* BleManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BleManager.framework; sourceTree = "<group>"; };
 		54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DB62M_DeviceManager.framework; sourceTree = "<group>"; };
 		54FE478628FEE31000B8564F /* LS202_DeviceManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = LS202_DeviceManager.framework; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				54FE478E28FEE33200B8564F /* DB62M_DeviceManager.framework in Frameworks */,
 				54FE479028FEE33400B8564F /* GSH601_DeviceManager.framework in Frameworks */,
 				80C941095C6CF7AF9EE96CDA /* Pods_Runner.framework in Frameworks */,
+				54E34BB62A5098C1000EB933 /* LSBluetoothPlugin.xcframework in Frameworks */,
 				54FE479228FEE33600B8564F /* LS202_DeviceManager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -361,6 +364,7 @@
 				54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */,
 				54FE478728FEE31000B8564F /* GSH601_DeviceManager.framework */,
 				54FE478628FEE31000B8564F /* LS202_DeviceManager.framework */,
+				54E34BB52A5098C1000EB933 /* LSBluetoothPlugin.xcframework */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,

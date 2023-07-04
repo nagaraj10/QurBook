@@ -22,11 +22,7 @@ enum BLEDeviceType {
 }
 
 enum BLEDeviceFilter {
-    case All,SingleType(filterType : BLEDeviceFilterType)
-}
-
-enum BLEDeviceFilterType{
-    case All,Single(manufacture : BLEDeviceManufacture)
+    case All,Single
 }
 
 //WOW GO
@@ -71,9 +67,11 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
                     }
                     if let manu = data["manufacture"] as? String{
                         if manu == "WOWGo"{
-                            self.selectedDevicesFilter = .SingleType(filterType: .Single(manufacture: .WOWGo))
+                            self.selectedDevicesFilter = .Single
+                            self.selectedManufacturer = .WOWGo
                         }else if manu == "Transteck"{
-                            self.selectedDevicesFilter = .SingleType(filterType: .Single(manufacture: .Transteck))
+                            self.selectedDevicesFilter = .Single
+                            self.selectedManufacturer = .Transteck
                         }
                     }
                 }
@@ -115,70 +113,46 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
         }
         return nil
     }
-    
-    //Call this function to start the BLE which filters out the scan level.
+//    Call this function to start the BLE which filters out the scan level.
     func startBLEScan(){
         if(selectedDevicesFilter != nil){
             switch selectedDevicesFilter{
-            case .All:
+            case .All :
                 startAllDevicesScan()
                 break
-            case let .SingleType(filterType):
-                if(selectedDevicesType != nil){
+            case .Single:
+                startBLEScanForSingleManufacturer()
+                break
+            case .none:
+                break
+            }
+        }
+    }
+
+    func startBLEScanForSingleManufacturer(){
+        if(selectedManufacturer != nil){
+            switch selectedManufacturer {
+            case .WOWGo:
+                if (selectedDevicesType != nil){
                     switch selectedDevicesType{
-                    case let .SPO2(deviceId) :
-                        switch filterType{
-                        case .All :
-                            startAllSPO2DevicesScan()
-                            break
-                        case let .Single(manufacture) :
-                            switch manufacture{
-                            case .WOWGo :
-                                startWOWGoSPO2DeviceScan(deviceId: deviceId)
-                                break
-                            case .Transteck :
-                                break
-                            }
-                            break
-                        }
-                        break
-                    case let .BP(deviceId)  :
-                        switch filterType{
-                        case .All :
-                            startAllBPDevicesScan()
-                            break
-                        case let .Single(manufacture) :
-                            switch manufacture{
-                            case .WOWGo :
-                                startWOWGoBPDeviceScan(deviceId: deviceId)
-                                break
-                            case .Transteck :
-                                break
-                            }
-                            break
-                        }
-                        break
-                    case let .Weight(deviceId)  :
-                        switch filterType{
-                        case .All :
-                            startAllWeighingDevicesScan()
-                            break
-                        case let .Single(manufacture) :
-                            switch manufacture{
-                            case .WOWGo :
-                                startWOWGoWeighingDeviceScan(deviceId: deviceId)
-                                break
-                            case .Transteck :
-                                break
-                            }
-                            break
-                        }
-                        break
-                    case let .BGL(deviceId)  :
-                        print(deviceId ?? "")
-                        break
-                    case .none:
-                        break
+                    case .SPO2(deviceID: _): break
+                    case .BP(deviceID: _): break
+                    case .BGL(deviceID: _): break
+                    case .Weight(deviceID: _): break
+                    case .none:break
+                    }
+                }else{
+                    
+                }
+                break
+            case .Transteck:
+                if (selectedDevicesType != nil){
+                    switch selectedDevicesType{
+                    case .SPO2(deviceID: _): break
+                    case .BP(deviceID: _): break
+                    case .BGL(deviceID: _): break
+                    case .Weight(deviceID: _): break
+                    case .none:break
                     }
                 }
                 break
@@ -188,35 +162,110 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
         }
     }
     
-    
+    //Call this function to start the BLE which filters out the scan level.
+//    func startBLEScan(){
+//        if(selectedDevicesFilter != nil){
+//            switch selectedDevicesFilter{
+//            case .All:
+//                startAllDevicesScan()
+//                break
+//            case let .SingleType(filterType):
+//                if(selectedDevicesType != nil){
+//                    switch selectedDevicesType{
+//                    case let .SPO2(deviceId) :
+//                        switch filterType{
+//                        case .All :
+//                            startAllSPO2DevicesScan()
+//                            break
+//                        case let .Single(manufacture) :
+//                            switch manufacture{
+//                            case .WOWGo :
+//                                startWOWGoSPO2DeviceScan(deviceId: deviceId)
+//                                break
+//                            case .Transteck :
+//                                break
+//                            }
+//                            break
+//                        }
+//                        break
+//                    case let .BP(deviceId)  :
+//                        switch filterType{
+//                        case .All :
+//                            startAllBPDevicesScan()
+//                            break
+//                        case let .Single(manufacture) :
+//                            switch manufacture{
+//                            case .WOWGo :
+//                                startWOWGoBPDeviceScan(deviceId: deviceId)
+//                                break
+//                            case .Transteck :
+//                                break
+//                            }
+//                            break
+//                        }
+//                        break
+//                    case let .Weight(deviceId)  :
+//                        switch filterType{
+//                        case .All :
+//                            startAllWeighingDevicesScan()
+//                            break
+//                        case let .Single(manufacture) :
+//                            switch manufacture{
+//                            case .WOWGo :
+//                                startWOWGoWeighingDeviceScan(deviceId: deviceId)
+//                                break
+//                            case .Transteck :
+//                                break
+//                            }
+//                            break
+//                        }
+//                        break
+//                    case let .BGL(deviceId)  :
+//                        print(deviceId ?? "")
+//                        break
+//                    case .none:
+//                        break
+//                    }
+//                }
+//                break
+//            case .none:
+//                break
+//            }
+//        }
+//    }
+//
+//
     
     //Call This function to Scan for all the devices from all the Manufactures
     func startAllDevicesScan(){
         //Add function if there is a new device added
-        startAllSPO2DevicesScan()
-        startAllBPDevicesScan()
-        startAllWeighingDevicesScan()
+        startAllDevicesScanForWOWGo()
     }
     
-    // All the devices from all the manufactures
-    
-    //Call these functions to scan for all the devices with specific types for all the Manufactures.
-    func startAllSPO2DevicesScan(){
-        //Add functions if there is a new Manufacturer is supported
-        startWOWGoSPO2DeviceScan()
-    }
-    func startAllBPDevicesScan(){
-        //Add functions if there is a new Manufacturer is supported
-        startWOWGoBPDeviceScan()
-    }
-    func startAllWeighingDevicesScan(){
-        //Add functions if there is a new Manufacturer is supported
-        startWOWGoWeighingDeviceScan()
-    }
+//    // All the devices from all the manufactures
+//
+//    //Call these functions to scan for all the devices with specific types for all the Manufactures.
+//    func startAllSPO2DevicesScan(){
+//        //Add functions if there is a new Manufacturer is supported
+//        startWOWGoSPO2DeviceScan()
+//    }
+//    func startAllBPDevicesScan(){
+//        //Add functions if there is a new Manufacturer is supported
+//        startWOWGoBPDeviceScan()
+//    }
+//    func startAllWeighingDevicesScan(){
+//        //Add functions if there is a new Manufacturer is supported
+//        startWOWGoWeighingDeviceScan()
+//    }
     
     
     //Single Manufacture with All the devices
-    
+    func startAllDevicesScanForWOWGo(){
+        //Add function if there is a new device added
+        startWOWGoSPO2DeviceScan()
+        startWOWGoBPDeviceScan()
+        startWOWGoWeighingDeviceScan()
+    }
     //Call these functions to scan for specific devices with specific types from a specific Manufactures.
     func startWOWGoSPO2DeviceScan(deviceId : String? = nil){
         if(SPO2Manager == nil){
@@ -412,11 +461,11 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
     
     func searchForTransteckBLEDevices(){
         var selectedDevices = [Constants.TransteckBGLDeviceType,Constants.TransteckWeightDeviceType]
-        if let selectedDevicesFilter = selectedDevicesFilter{
-            if selectedDevicesFilter == BLEDeviceFilter.SingleType(filterType: .Single(manufacture: .Transteck)){
-                
-            }
-        }
+//        if let selectedDevicesFilter = selectedDevicesFilter{
+//            if selectedDevicesFilter == BLEDeviceFilter.SingleType(filterType: .Single(manufacture: .Transteck)){
+//
+//            }
+//        }
     
         
         LSBluetoothManager.default()?.searchDevice(selectedDevices) { [weak self]CurrentDeviceData in

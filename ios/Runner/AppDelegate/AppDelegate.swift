@@ -85,6 +85,7 @@ import PushKit
     var eventSink: FlutterEventSink? = nil
     var selectedDevicesFilter:BLEDeviceFilter?
     var selectedDevicesType:BLEDeviceType?
+    var selectedManufacturer:BLEDeviceManufacture?
     
     //Reminders
     var id = "";
