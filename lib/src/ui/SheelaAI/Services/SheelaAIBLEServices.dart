@@ -430,6 +430,14 @@ class SheelaBLEController extends GetxController {
     }
   }
 
+// final model = BleDataModel(
+//         data: Data(bgl: "115.0"),
+//         status: "Measurement",
+//         deviceType: "BGL",
+//       );
+// Future.delayed(const Duration(seconds: 5)).then((_) {
+//                   updateUserData();
+//                 });
   updateUserData({String data = ''}) async {
     await Future.delayed(
       const Duration(
@@ -444,6 +452,12 @@ class SheelaBLEController extends GetxController {
         final model = BleDataModel.fromJson(
           jsonDecode(data),
         );
+
+        if (model.deviceType?.toLowerCase() == "bgl" &&
+            (model.data!.bgl ?? '').isNotEmpty) {
+          var val = double.tryParse(model.data!.bgl!) ?? 0.0;
+          model.data!.bgl = val.truncate().toString();
+        }
         if (model.deviceType?.toLowerCase() == "weight" &&
             (model.data!.weight ?? '').isNotEmpty) {
           model.deviceType = model.deviceType?.toUpperCase();

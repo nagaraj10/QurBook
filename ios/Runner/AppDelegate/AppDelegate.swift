@@ -227,7 +227,7 @@ import PushKit
             initializePushKit()
             triggerAppLockMethod(isCallRecieved: false)
         }
-        LSBluetoothManager.default()?.initManager(withDispatch: DispatchQueue.init(label: "bluetoothQueue"));
+        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     

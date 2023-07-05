@@ -8,8 +8,13 @@ class BleDataModel {
   String? uid;
   String? ackLocal;
 
-  BleDataModel(
-      {this.status, this.hubId, this.deviceId, this.deviceType, this.data});
+  BleDataModel({
+    this.status,
+    this.hubId,
+    this.deviceId,
+    this.deviceType,
+    this.data,
+  });
 
   BleDataModel.fromJson(Map<String, dynamic> json) {
     try {

@@ -119,6 +119,8 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
     
     func onCancel(withArguments arguments: Any?) -> FlutterError? {
         eventSink = nil
+        LSBluetoothManager.default()?.stopSearch()
+        LSBluetoothManager.default().stopDeviceSync()
         selectedDevicesList = []
         if(centralManager != nil){
             centralManager.stopScan()
@@ -378,28 +380,29 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
     
     //Single Manufacture with All the devices
     func startAllDevicesScanForTransteck(){
-      
-        searchForTransteckBLEDevices()
+     
+        LSBluetoothManager.default()?.initManager(withDispatch: DispatchQueue.init(label: "bluetoothQueue"));
+        LSBluetoothManager.default()?.checkingBluetoothStatus(self);
     }
     
     func systemDidBluetoothStatusChange(_ bleState: CBManagerState) {
-//        switch bleState {
-//        case .unknown:
-//            eventSink?("enablebluetooth|please enable bluetooth")
-//        case .resetting:
-//            eventSink?("enablebluetooth|please enable bluetooth")
-//        case .unsupported:
-//            eventSink?("enablebluetooth|please enable bluetooth")
-//        case .unauthorized:
-//            eventSink?("permissiondenied|no permission granted")
-//        case .poweredOff:
-//            eventSink?("enablebluetooth|please enable bluetooth")
-//        case .poweredOn:
-//            eventSink?("scanstarted|connection started")
-//            searchForTransteckBLEDevices()
-//        default:
-//            eventSink?("enablebluetooth|please enable bluetooth")
-//        }
+        switch bleState {
+        case .unknown:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .resetting:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .unsupported:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .unauthorized:
+            eventSink?("permissiondenied|no permission granted")
+        case .poweredOff:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .poweredOn:
+            eventSink?("scanstarted|connection started")
+            searchForTransteckBLEDevices()
+        default:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        }
     }
     //bloodGlucoseMeter "TeleBGM GenlBLE"
     //weightScale    "GBS-2012-B"
@@ -420,7 +423,6 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
                     self.eventSink?("macid|"+macId)
                     self.eventSink?("manufacturer|Transteck")
                     self.eventSink?("bleDeviceType|WEIGHT")
-                    LSBluetoothManager.default()?.stopSearch();
                     if currentDeviceData?.isRegistered ?? false{
                         LSBluetoothManager.default().addDevice(currentDeviceData!)
                         LSBluetoothManager.default().startDeviceSync(self)
@@ -534,6 +536,7 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
                 eventSink?("measurement|"+serlized)
                 eventSink = nil
             }
+        
         
     }
     
