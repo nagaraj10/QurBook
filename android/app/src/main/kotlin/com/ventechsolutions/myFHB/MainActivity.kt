@@ -58,7 +58,6 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.gsh.api.BleDevice
 import com.gsh.api.BluetoothStatus
 import com.gsh.spo2.api.GoldenBLEDeviceManager
 import com.gsh.spo2.api.GoldenBLEDeviceManagerCallback
@@ -119,6 +118,9 @@ import com.lifesense.plugin.ble.data.tracker.ATUserInfo
 
 class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
+    private var deviceType=""
+    private var manufacture=""
+    private var scanType=""
     private var macIdLsDevice=""
     private var deviceName=""
     private lateinit var lsDeviceInfo: LSDeviceInfo
@@ -518,6 +520,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                         if(p0?.address!=null ) {
                             if (::BLEEventChannel.isInitialized) {
                                 MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+                                MainThreadEventSink(BLEEventChannel).success("manufacturer|WOWGo")
 //                                BLEEventChannel.success("macid|" + bleMacId)
                             }
                         }
@@ -621,6 +624,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                                 Log.e("qurhealth","wowgostatus: macid")
                             }
                             MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+                            MainThreadEventSink(BLEEventChannel).success("manufacturer|WOWGo")
 //                            BLEEventChannel.success("macid|" + bleMacId)
                         }
                     }
@@ -759,6 +763,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                             }
 
                             MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+                            MainThreadEventSink(BLEEventChannel).success("manufacturer|WOWGo")
+
 //                            BLEEventChannel.success("macid|" + bleMacId)
                         }
                     }
@@ -1213,19 +1219,12 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             }else if(status!=null&&status==2){
                 if (::BLEEventChannel.isInitialized) {
                     MainThreadEventSink(BLEEventChannel).success("macid|" + macIdLsDevice)
+                    MainThreadEventSink(BLEEventChannel).success("manufacturer|Transteck")
+
 //                                BLEEventChannel.success("macid|" + bleMacId)
                 }
-                if(lsDeviceInfo.deviceName?.contains("BLE-Vivachek") == true || lsDeviceInfo.deviceName?.contains("TeleBGM Gen1 BLE") == true) {
-                    sendPost("Connected", DEVICE_BGL, 0, 0, 0)
-                    if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "bgl")
-//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
-                    }
-                    if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("connected|" + "bgl" + " connected successfully!!!")
-//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
-                    }
-                }else if(lsDeviceInfo.deviceName?.contains("GBS-2012-B") == true){
+
+                if(deviceType.equals("Weight")) {
                     sendPost("Connected", DEVICE_WEIGHT, 0, 0, 0,weight=0.0)
                     if (::BLEEventChannel.isInitialized) {
                         MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "weight")
@@ -1235,7 +1234,41 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                         MainThreadEventSink(BLEEventChannel).success("connected|" + "weight" + " connected successfully!!!")
 //                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
                     }
+                }else if(deviceType.equals("BGL")){
+                    sendPost("Connected", DEVICE_BGL, 0, 0, 0)
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "BGL")
+//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                    }
+                    if (::BLEEventChannel.isInitialized) {
+                        MainThreadEventSink(BLEEventChannel).success("connected|" + "bgl" + " connected successfully!!!")
+//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                    }
                 }
+                if(scanType.equals("scanAll")){
+                    if(lsDeviceInfo.deviceName?.contains("BLE-Vivachek") == true || lsDeviceInfo.deviceName?.contains("TeleBGM Gen1 BLE") == true) {
+                        sendPost("Connected", DEVICE_BGL, 0, 0, 0)
+                        if (::BLEEventChannel.isInitialized) {
+                            MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "BGL")
+//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                        }
+                        if (::BLEEventChannel.isInitialized) {
+                            MainThreadEventSink(BLEEventChannel).success("connected|" + "bgl" + " connected successfully!!!")
+//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                        }
+                    }else if(lsDeviceInfo.deviceName?.contains("GBS-2012-B") == true){
+                        sendPost("Connected", DEVICE_WEIGHT, 0, 0, 0,weight=0.0)
+                        if (::BLEEventChannel.isInitialized) {
+                            MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "weight")
+//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                        }
+                        if (::BLEEventChannel.isInitialized) {
+                            MainThreadEventSink(BLEEventChannel).success("connected|" + "weight" + " connected successfully!!!")
+//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                        }
+                    }
+                }
+
                 Log.e("bluetoothnew", "bleNameInLSdeviceinfo: "+lsDeviceInfo.deviceName )
 
             }else{
@@ -2282,7 +2315,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             DEVICES_CHANNEL
         ).setMethodCallHandler { call, result ->
             if (call.method == "scanAll") {
-//                scanType=call.method
+                scanType=call.method
+                deviceType=""
+                manufacture=""
                 // bluetoothFlutterResult=result
                 Log.d("BLE VITALS", "StartingPoint")
                 BleManager.getInstance().init(application)
@@ -2292,23 +2327,59 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     .setConnectOverTime(20000).operateTimeout = 5000
 
                 val temp = checkPermissionStartScan(false)
-
 
             }
 
             if (call.method == "scanSingle") {
                 // bluetoothFlutterResult=result
-//                deviceType = call.argument<String>("deviceType")
-//                manufacture = call.argument<String>("manufacture")
-//                scanType=call.method
+                deviceType = call.argument<String>("deviceType").toString()
+                manufacture = call.argument<String>("manufacture").toString()
+                scanType=call.method.toString()
                 Log.d("BLE VITALS", "StartingPoint")
-                BleManager.getInstance().init(application)
-                BleManager.getInstance()
-                    .enableLog(true)
-                    .setReConnectCount(1, 5000)
-                    .setConnectOverTime(20000).operateTimeout = 5000
+                if(manufacture.equals("WOWGo")){
+                    when(deviceType){
+                        "spo2"->{
+                            stopScan()
+                            Handler().postDelayed({
+                                selectedBle = "spo2"
+                                gManager = GoldenBLEDeviceManager(applicationContext, gCallback)
+                                gManager?.scanLeDevice(true)
+                                WOWGoDataUpload = 0
+                            }, 500)
+                        }
+                        "bp"->{
+                            stopScan()
+                            Handler().postDelayed({
+                                selectedBle = "bp"
+                                gManagerBP = com.gsh.bloodpressure.api.GoldenBLEDeviceManager(
+                                    applicationContext,
+                                    gCallBackBP
+                                )
+                                gManagerBP?.scanLeDevice(true)
+                            }, 500)
+                        }
+                        "weight"->{
+                            stopScan()
+                            Handler().postDelayed({
+                                selectedBle = "weight"
+                                gManagerFat = com.gsh.weightscale.api.GoldenBLEDeviceManager(
+                                    applicationContext,
+                                    gCallbackFat
+                                )
+                                gManagerFat?.scanLeDevice(true)
+                            }, 500)
+                        }
+                    }
+                }else if(manufacture.equals("Transteck")){
 
-                val temp = checkPermissionStartScan(false)
+                }
+//                BleManager.getInstance().init(application)
+//                BleManager.getInstance()
+//                    .enableLog(true)
+//                    .setReConnectCount(1, 5000)
+//                    .setConnectOverTime(20000).operateTimeout = 5000
+
+//                val temp = checkPermissionStartScan(false)
 
 
             }
