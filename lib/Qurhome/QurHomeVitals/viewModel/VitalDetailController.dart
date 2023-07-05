@@ -123,6 +123,9 @@ class VitalDetailController extends GetxController {
     } else if (deviceName == strWeight) {
       device = strConnectWeighingScale;
       filterKey = 'weight';
+    } else if (deviceName == 'Blood Glucose') {
+      device = strConnectBGL;
+      filterKey = 'bgl';
     }
     if (device.isEmpty) {
       return;

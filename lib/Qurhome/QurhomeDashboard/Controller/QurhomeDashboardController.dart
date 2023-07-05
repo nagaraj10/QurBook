@@ -92,7 +92,7 @@ class QurhomeDashboardController extends GetxController {
       if (_bleTimer != null) return;
       _bleTimer = Timer.periodic(
           const Duration(
-            seconds: 10,
+            seconds: 20,
           ), (time) {
         if (Get.find<SheelaAIController>().isSheelaScreenActive) {
           return;

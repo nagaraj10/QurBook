@@ -112,6 +112,22 @@ class SheelaBLEController extends GetxController {
       if (devicesList.isEmpty) {
         return;
       }
+
+      // if (isFromVitals || isFromRegiment) {
+      //   if (filteredDeviceType.isNotEmpty) {
+      //     bool filteredDeviceTypeCheck = true;
+      //     for (var device in devicesList) {
+      //       var deviceType =
+      //           getDeviceCode(device.device?.deviceType?.code).toLowerCase();
+      //       if (deviceType == filteredDeviceType) {
+      //         filteredDeviceTypeCheck = false;
+      //       }
+      //     }
+      //     if (filteredDeviceTypeCheck) {
+      //       return;
+      //     }
+      //   }
+      // }
     }
 
     if (timerSubscription != null) {

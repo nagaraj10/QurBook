@@ -120,7 +120,13 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
     func onCancel(withArguments arguments: Any?) -> FlutterError? {
         eventSink = nil
         LSBluetoothManager.default()?.stopSearch()
-        LSBluetoothManager.default().stopDeviceSync()
+        LSBluetoothManager.default()?.stopDeviceSync()
+        var devices = LSBluetoothManager.default().getDevices()
+        for currentDevice in devices ?? [] {
+            if let device = currentDevice as? LSDeviceInfo,let broadcastId = device.broadcastId{
+                LSBluetoothManager.default()?.deleteDevice(broadcastId)
+            }
+        }
         selectedDevicesList = []
         if(centralManager != nil){
             centralManager.stopScan()
@@ -248,7 +254,6 @@ extension AppDelegate:GoldenSPO2ManagerCallback,
         if(BloodpressureManager == nil){
             BloodpressureManager = GoldenBloodpressureManager(delegate: self)
         }
-        
         BloodpressureManager.scanLeDevice(true)
     }
     
@@ -264,7 +269,7 @@ extension AppDelegate:GoldenSPO2ManagerCallback,
         
         if let _device = device  as? BaseBLEDevice{
             if((_device.deviceName == Constants.WOWGOWT1) || (_device.deviceName == Constants.WOWGOWT2) || (_device.deviceName == Constants.WOWGOWT3)){
-                eventSink?("macid|"+_device.connectIOSUUID+"1")
+                eventSink?("macid|"+_device.connectIOSUUID)
                 eventSink?("manufacturer|WOWGo")
                 eventSink?("bleDeviceType|WEIGHT")
             }else  if(_device.deviceName == Constants.WOWGOSPO2){
@@ -272,11 +277,11 @@ extension AppDelegate:GoldenSPO2ManagerCallback,
                 eventSink?("manufacturer|WOWGo")
                 eventSink?("bleDeviceType|SPO2")
             }else if((_device.deviceName == Constants.WOWGOBP) || (_device.deviceName == Constants.WOWGOBPB)){
-                eventSink?("macid|"+_device.connectIOSUUID+"1")
+                eventSink?("macid|"+_device.connectIOSUUID)
                 eventSink?("manufacturer|WOWGo")
                 eventSink?("bleDeviceType|BP")
             }else if((_device.showName == Constants.WOWGOWT1) || (_device.showName == Constants.WOWGOWT2) || (_device.showName == Constants.WOWGOWT3)){
-                eventSink?("macid|"+_device.connectIOSUUID+"1")
+                eventSink?("macid|"+_device.connectIOSUUID)
                 eventSink?("manufacturer|WOWGo")
                 eventSink?("bleDeviceType|WEIGHT")
             }
@@ -380,7 +385,6 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
     
     //Single Manufacture with All the devices
     func startAllDevicesScanForTransteck(){
-     
         LSBluetoothManager.default()?.initManager(withDispatch: DispatchQueue.init(label: "bluetoothQueue"));
         LSBluetoothManager.default()?.checkingBluetoothStatus(self);
     }
@@ -506,63 +510,63 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
     
     func bleDevice(_ device: LSDeviceInfo!, didDataUpdateForScale weight: LSScaleWeight!) {
         
-        var dataLabel = "";
-        let str:String = String.init(format: "\nsrcData=%@\n",weight.srcData!.hexadecimal);
-        dataLabel = dataLabel + str + "\n"
-        print("----------------------------------1----------------------------------")
-        print(dataLabel)
-        dataLabel = "";
-        //log class name
-        let className:String=type(of: weight).description();
-        //log class properties
-        dataLabel = dataLabel + className + "\n"
-        for (key, value) in weight.toString() {
-            let dataStr:String=String.init(format: "%@=%@", key as CVarArg,value as! CVarArg);
-            dataLabel = dataLabel + dataStr
-        }
-        let utcStr:String = String.init(format: "utc=%d", weight.utc);
-        dataLabel = dataLabel + utcStr
-        print("----------------------------------2----------------------------------")
-        print(dataLabel)
+        //        var dataLabel = "";
+        //        let str:String = String.init(format: "\nsrcData=%@\n",weight.srcData!.hexadecimal);
+        //        dataLabel = dataLabel + str + "\n"
+        //        print("----------------------------------1----------------------------------")
+        //        print(dataLabel)
+        //        dataLabel = "";
+        //        //log class name
+        //        let className:String=type(of: weight).description();
+        //        //log class properties
+        //        dataLabel = dataLabel + className + "\n"
+        //        for (key, value) in weight.toString() {
+        //            let dataStr:String=String.init(format: "%@=%@", key as CVarArg,value as! CVarArg);
+        //            dataLabel = dataLabel + dataStr
+        //        }
+        //        let utcStr:String = String.init(format: "utc=%d", weight.utc);
+        //        dataLabel = dataLabel + utcStr
+        //        print("----------------------------------2----------------------------------")
+        //        print(dataLabel)
         
-            let data : [String:Any] = [
-                "Status" : "Measurement",
-                "deviceType" : "weight",
-                "Data" : [
-                    "Weight" : String(format: "%.2f", weight.weight),
-                ]
+        let data : [String:Any] = [
+            "Status" : "Measurement",
+            "deviceType" : "weight",
+            "Data" : [
+                "Weight" : String(format: "%.2f", weight.weight),
             ]
-            if let serlized = data.jsonStringRepresentation{
-                eventSink?("measurement|"+serlized)
-                eventSink = nil
-            }
+        ]
+        if let serlized = data.jsonStringRepresentation{
+            eventSink?("measurement|"+serlized)
+            eventSink = nil
+        }
         
         
     }
     
     func bleDevice(_ device: LSDeviceInfo!, didDataUpdateForBloodPressureMonitor data: LSBloodPressure!)
     {
-        var dataLabel = "";
-        let str:String = String.init(format: "\nsrcData=%@\n",data.srcData!.hexadecimal);
-        dataLabel = dataLabel + str + "\n"
-        eventSink?("connected|"+dataLabel)
-        dataLabel = "";
-        //log class name
-        let className:String=type(of: data).description();
-        dataLabel = dataLabel + className + "\n"
-        //log class properties
-        for (key, value) in data.toString() {
-            let dataStr:String=String.init(format: "%@=%@", key as CVarArg,value as! CVarArg);
-            dataLabel = dataLabel + dataStr
-        }
-        let utcStr:String = String.init(format: "utc=%d", data.utc);
-        dataLabel = dataLabel + utcStr
-        eventSink?("connected|"+dataLabel)
+        //        var dataLabel = "";
+        //        let str:String = String.init(format: "\nsrcData=%@\n",data.srcData!.hexadecimal);
+        //        dataLabel = dataLabel + str + "\n"
+        //        eventSink?("connected|"+dataLabel)
+        //        dataLabel = "";
+        //        //log class name
+        //        let className:String=type(of: data).description();
+        //        dataLabel = dataLabel + className + "\n"
+        //        //log class properties
+        //        for (key, value) in data.toString() {
+        //            let dataStr:String=String.init(format: "%@=%@", key as CVarArg,value as! CVarArg);
+        //            dataLabel = dataLabel + dataStr
+        //        }
+        //        let utcStr:String = String.init(format: "utc=%d", data.utc);
+        //        dataLabel = dataLabel + utcStr
+        //        eventSink?("connected|"+dataLabel)
         
     }
     
     func bleDevice(_ device: LSDeviceInfo!, didDataUpdateForBloodGlucose data: BGDataSummary!) {
-        print("hello")
+        
         //        let newData = BloodGlucoseSummaryData(data: data).toJson()
         //        if let serlized = newData.jsonStringRepresentation{
         //            self.eventSink?("bloodglucosesummarydata|"+serlized)
@@ -573,96 +577,3 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
     
     
 }
-
-
-//Call this function to start the BLE which filters out the scan level.
-//    func startBLEScan(){
-//        if(selectedDevicesFilter != nil){
-//            switch selectedDevicesFilter{
-//            case .All:
-//                startAllDevicesScan()
-//                break
-//            case let .SingleType(filterType):
-//                if(selectedDevicesType != nil){
-//                    switch selectedDevicesType{
-//                    case let .SPO2(deviceId) :
-//                        switch filterType{
-//                        case .All :
-//                            startAllSPO2DevicesScan()
-//                            break
-//                        case let .Single(manufacture) :
-//                            switch manufacture{
-//                            case .WOWGo :
-//                                startWOWGoSPO2DeviceScan(deviceId: deviceId)
-//                                break
-//                            case .Transteck :
-//                                break
-//                            }
-//                            break
-//                        }
-//                        break
-//                    case let .BP(deviceId)  :
-//                        switch filterType{
-//                        case .All :
-//                            startAllBPDevicesScan()
-//                            break
-//                        case let .Single(manufacture) :
-//                            switch manufacture{
-//                            case .WOWGo :
-//                                startWOWGoBPDeviceScan(deviceId: deviceId)
-//                                break
-//                            case .Transteck :
-//                                break
-//                            }
-//                            break
-//                        }
-//                        break
-//                    case let .Weight(deviceId)  :
-//                        switch filterType{
-//                        case .All :
-//                            startAllWeighingDevicesScan()
-//                            break
-//                        case let .Single(manufacture) :
-//                            switch manufacture{
-//                            case .WOWGo :
-//                                startWOWGoWeighingDeviceScan(deviceId: deviceId)
-//                                break
-//                            case .Transteck :
-//                                break
-//                            }
-//                            break
-//                        }
-//                        break
-//                    case let .BGL(deviceId)  :
-//                        print(deviceId ?? "")
-//                        break
-//                    case .none:
-//                        break
-//                    }
-//                }
-//                break
-//            case .none:
-//                break
-//            }
-//        }
-//    }
-//
-//
-
-
-
-//    // All the devices from all the manufactures
-//
-//    //Call these functions to scan for all the devices with specific types for all the Manufactures.
-//    func startAllSPO2DevicesScan(){
-//        //Add functions if there is a new Manufacturer is supported
-//        startWOWGoSPO2DeviceScan()
-//    }
-//    func startAllBPDevicesScan(){
-//        //Add functions if there is a new Manufacturer is supported
-//        startWOWGoBPDeviceScan()
-//    }
-//    func startAllWeighingDevicesScan(){
-//        //Add functions if there is a new Manufacturer is supported
-//        startWOWGoWeighingDeviceScan()
-//    }
