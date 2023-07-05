@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import '../../../constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'PreferenceUtil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -19,6 +19,7 @@ class DeleteAccountWebScreen extends StatefulWidget {
 
 class _DeleteAccountWebScreenState extends State<DeleteAccountWebScreen> {
   late WebViewController _controller;
+  bool isLoading=true;
 
   @override
   void initState() {
@@ -43,15 +44,27 @@ class _DeleteAccountWebScreenState extends State<DeleteAccountWebScreen> {
           title: Text('Delete Account'),
         ),
         body: Container(
-          child: WebView(
-            javascriptChannels: <JavascriptChannel>{
-              _toasterJavascriptChannel(context),
-            },
-            onWebViewCreated: (WebViewController webViewController) {
-              _controller=webViewController;
-            },
-            initialUrl: CommonUtil.WEB_URL,
-            javascriptMode: JavascriptMode.unrestricted,
+          child: Stack(
+            children: [
+              WebView(
+                javascriptChannels: <JavascriptChannel>{
+                  _toasterJavascriptChannel(context),
+                },
+                onWebViewCreated: (WebViewController webViewController) {
+                  _controller=webViewController;
+                },
+                initialUrl: CommonUtil.WEB_URL,
+                javascriptMode: JavascriptMode.unrestricted,
+                backgroundColor: Colors.transparent,
+                onPageFinished: (finish) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                },
+              ),
+              isLoading ? CommonCircularIndicator()
+                  : Stack(),
+            ],
           ),
         ),
       ),
