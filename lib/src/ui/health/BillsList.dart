@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -201,7 +200,7 @@ class _BillsListState extends State<BillsList> {
         child: Row(
           children: <Widget>[
             CircleAvatar(
-              radius: 25,
+              radius: CommonUtil().isTablet! ? 35 : 25,
               backgroundColor: const Color(fhbColors.bgColorContainer),
               child: Image.network(
                 /* mediaMetaInfoObj.metadata.healthRecordType.url != null
@@ -228,7 +227,11 @@ class _BillsListState extends State<BillsList> {
                     mediaMetaInfoObj.metadata!.fileName != null
                         ? mediaMetaInfoObj.metadata!.fileName!
                         : '',
-                    style: TextStyle(fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: CommonUtil().isTablet!
+                            ? tabHeader1
+                            : mobileHeader1),
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -237,8 +240,11 @@ class _BillsListState extends State<BillsList> {
                         ? new FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn)
                         : '',
-                    style:
-                        TextStyle(color: Colors.grey[400], fontSize: 14.0.sp),
+                    style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: CommonUtil().isTablet!
+                            ? tabHeader2
+                            : mobileHeader2),
                   )
                 ],
               ),
@@ -256,12 +262,16 @@ class _BillsListState extends State<BillsList> {
                               //TODO chnage theme
                               color:
                                   Color(new CommonUtil().getMyPrimaryColor()),
-                              size: 20,
+                              size: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2,
                             )
                           : ImageIcon(
                               AssetImage(variable.icon_record_fav),
                               color: Colors.black,
-                              size: 20,
+                              size: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2,
                             ),
                       onPressed: () {
                         new CommonUtil()

@@ -100,7 +100,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                         right: 10,
                         top: 10,
                         bottom: CommonUtil.isUSRegion() &&
-                                    eachLabModel.isPrimaryProvider !
+                                eachLabModel.isPrimaryProvider!
                             ? 0
                             : 10),
                     margin: EdgeInsets.only(left: 12, right: 12, top: 12),
@@ -121,7 +121,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                         Row(
                           children: <Widget>[
                             CircleAvatar(
-                              radius: 18,
+                              radius: CommonUtil().isTablet! ? 35 : 20,
                               child: ClipOval(
                                   child: eachLabModel != null
                                       ? /*myProfile.result.profilePicThumbnailUrl != null
@@ -129,8 +129,12 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                       myProfile.result.profilePicThumbnailUrl)
                                   :*/
                                       Container(
-                                          height: 50.0.h,
-                                          width: 50.0.h,
+                                          height: CommonUtil().isTablet!
+                                              ? imageTabHeader
+                                              : imageMobileHeader,
+                                          width: CommonUtil().isTablet!
+                                              ? imageTabHeader
+                                              : imageMobileHeader,
                                           color:
                                               Color(fhbColors.bgColorContainer),
                                           child: Center(
@@ -140,13 +144,21 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                                       .toUpperCase()
                                                   : '',
                                               style: TextStyle(
+                                                  fontSize:
+                                                      CommonUtil().isTablet!
+                                                          ? tabHeader1
+                                                          : mobileHeader1,
                                                   color: Color(CommonUtil()
                                                       .getMyPrimaryColor())),
                                             ),
                                           ))
                                       : Container(
-                                          height: 50.0.h,
-                                          width: 50.0.h,
+                                          height: CommonUtil().isTablet!
+                                              ? imageTabHeader
+                                              : imageMobileHeader,
+                                          width: CommonUtil().isTablet!
+                                              ? imageTabHeader
+                                              : imageMobileHeader,
                                           color:
                                               Color(fhbColors.bgColorContainer),
                                         )),
@@ -168,7 +180,9 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                         : "",
                                     maxLines: 1,
                                     style: TextStyle(
-                                      fontSize: 16.0.sp,
+                                      fontSize: CommonUtil().isTablet!
+                                          ? tabHeader1
+                                          : mobileHeader1,
                                       fontWeight: FontWeight.w500,
                                     ),
                                     textAlign: TextAlign.start,
@@ -180,7 +194,9 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                             .getCityHospital(eachLabModel)!,
                                     maxLines: 1,
                                     style: TextStyle(
-                                        fontSize: 15.0.sp,
+                                        fontSize: CommonUtil().isTablet!
+                                            ? tabHeader2
+                                            : mobileHeader2,
                                         fontWeight: FontWeight.w400,
                                         color: ColorUtils.lightgraycolor),
                                   ),
@@ -211,7 +227,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                           ],
                         ),
                         if (CommonUtil.isUSRegion() &&
-                                eachLabModel.isPrimaryProvider!)
+                            eachLabModel.isPrimaryProvider!)
                           CommonUtil().primaryProviderIndication(),
                       ],
                     )));

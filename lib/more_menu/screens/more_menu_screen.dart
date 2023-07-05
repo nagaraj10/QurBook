@@ -263,7 +263,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             leading: ClipOval(
               child: profileImage != null
                   ? Image.file(profileImage!,
-                      width: 50.0.h, height: 50.0.h, fit: BoxFit.cover)
+                      width: CommonUtil().isTablet!
+                          ? imageTabHeader
+                          : Constants.imageMobileHeader,
+                      height: CommonUtil().isTablet!
+                          ? imageTabHeader
+                          : Constants.imageMobileHeader,
+                      fit: BoxFit.cover)
                   : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile),
             ),
             title: Column(
@@ -280,7 +286,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           '' ' ' +
                               myProfile!.result!.lastName!.capitalizeFirstofEach
                       : '',
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      fontSize:
+                          CommonUtil().isTablet! ? tabHeader1 : mobileHeader2),
                 ),
                 Text(
                   (myProfile!.result!.userContactCollection3 != null &&
@@ -289,7 +297,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               .phoneNumber ??
                           ''
                       : '',
-                  style: TextStyle(fontSize: 14.0.sp),
+                  style: TextStyle(
+                      fontSize:
+                          CommonUtil().isTablet! ? tabHeader2 : mobileHeader2),
                 ),
                 Text(
                   (myProfile!.result!.userContactCollection3 != null &&
@@ -297,7 +307,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ? myProfile!.result!.userContactCollection3![0]!.email ??
                           ''
                       : '',
-                  style: TextStyle(fontSize: 13.0.sp),
+                  style: TextStyle(
+                      fontSize:
+                          CommonUtil().isTablet! ? tabHeader3 : mobileHeader3),
                 )
               ],
             ),
@@ -858,25 +870,36 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             leading: ClipOval(
               child: profileImage != null
                   ? Image.file(profileImage!,
-                      width: 50.0.h, height: 50.0.h, fit: BoxFit.cover)
+                      width: CommonUtil().isTablet!
+                          ? imageProfileTabHeader
+                          : imageProfileMobileHeader,
+                      height: CommonUtil().isTablet!
+                          ? imageProfileTabHeader
+                          : imageProfileMobileHeader,
+                      fit: BoxFit.cover)
                   : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile),
             ),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  myProfile!.result != null
-                      ? /* toBeginningOfSentenceCase(
+                    myProfile!.result != null
+                        ? /* toBeginningOfSentenceCase(
                               myProfile.result.firstName ?? '') +
                           ' ' +
                           toBeginningOfSentenceCase(
                               myProfile.result.lastName ?? '') */
-                      myProfile?.result?.firstName?.capitalizeFirstofEach ??
-                          '' ' ' +
-                              myProfile!.result!.lastName!.capitalizeFirstofEach
-                      : '',
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
+                        myProfile?.result?.firstName?.capitalizeFirstofEach ??
+                            '' ' ' +
+                                myProfile!
+                                    .result!.lastName!.capitalizeFirstofEach
+                        : '',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: CommonUtil().isTablet!
+                          ? Constants.tabHeader1
+                          : mobileHeader1,
+                    )),
                 Text(
                   (myProfile!.result!.userContactCollection3 != null &&
                           myProfile!.result!.userContactCollection3!.isNotEmpty)
@@ -884,7 +907,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               .phoneNumber ??
                           ''
                       : '',
-                  style: TextStyle(fontSize: 14.0.sp),
+                  style: TextStyle(
+                    fontSize: CommonUtil().isTablet!
+                        ? Constants.tabHeader2
+                        : mobileHeader2,
+                  ),
                 ),
                 Text(
                   (myProfile!.result!.userContactCollection3 != null &&
@@ -892,7 +919,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ? myProfile!.result!.userContactCollection3![0]!.email ??
                           ''
                       : '',
-                  style: TextStyle(fontSize: 13.0.sp),
+                  style: TextStyle(
+                    fontSize: CommonUtil().isTablet!
+                        ? Constants.tabHeader3
+                        : mobileHeader3,
+                  ),
                 )
               ],
             ),
@@ -1147,7 +1178,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     )),
               ],
             )),
-        isCareGiver ? Divider() : Container(),
+        Divider(),
         isCareGiver
             ? Theme(
                 data: theme,
@@ -1304,7 +1335,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                     }
                                     return snapshot.hasData
                                         ? Container(
-                                            height: CommonUtil().isTablet!?75.h:75,
+                                            height: CommonUtil().isTablet!
+                                                ? 75.h
+                                                : 75,
                                             color: Colors.white,
                                             child: ListView.builder(
                                               shrinkWrap: true,
@@ -1646,7 +1679,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       fontWeight: FontWeight.w500, color: Colors.black)),
               children: [
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     Get.to(DeleteAccountWebScreen());
                   },
                   child: ListTile(

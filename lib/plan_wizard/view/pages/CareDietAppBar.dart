@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -19,13 +18,13 @@ class CareDietAppBar extends StatelessWidget implements PreferredSizeWidget {
           Tab(
             child: Text(
               CommonConstants.my_providers_plan,
-              style: TextStyle(fontSize: 18.sp),
+              style: CommonUtil().getTitleStyle(),
             ),
           ),
           Tab(
             child: Text(
               CommonConstants.all_free_plans,
-              style: TextStyle(fontSize: 18.sp),
+              style: CommonUtil().getTitleStyle(),
             ),
           ),
         ],

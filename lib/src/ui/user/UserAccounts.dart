@@ -168,10 +168,14 @@ class _UserAccountsState extends State<UserAccounts>
                 indicatorSize: TabBarIndicatorSize.label,
                 indicatorWeight: 2,
                 tabs: [
-                  Tab(text: variable.strMyInfo),
-                  Tab(text: variable.strMyFamily),
-                  Tab(text: variable.strMyProvider),
-                  Tab(text: variable.strMyPlans)
+                  Tab(child: Text(variable.strMyInfo, style: getTitleStyle())),
+                  Tab(
+                      child:
+                          Text(variable.strMyFamily, style: getTitleStyle())),
+                  Tab(
+                      child:
+                          Text(variable.strMyProvider, style: getTitleStyle())),
+                  Tab(child: Text(variable.strMyPlans, style: getTitleStyle()))
                 ],
               ),
             ),
@@ -316,6 +320,15 @@ class _UserAccountsState extends State<UserAccounts>
     getMyProfile().then((profile) {
       profileData = profile;
     });
+  }
+
+  getTitleStyle() {
+    return TextStyle(
+      fontSize: CommonUtil().isTablet!
+          ? Constants.tabHeader1
+          : Constants.mobileHeader1,
+      fontWeight: FontWeight.w600,
+    );
   }
 }
 

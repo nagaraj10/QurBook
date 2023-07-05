@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -200,7 +199,7 @@ class _IDDocsListState extends State<IDDocsList> {
           child: Row(
             children: <Widget>[
               CircleAvatar(
-                radius: 25,
+                radius: CommonUtil().isTablet! ? 35 : 25,
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 child: Image.network(
                   /*mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
@@ -227,7 +226,11 @@ class _IDDocsListState extends State<IDDocsList> {
                       mediaMetaInfoObj.metadata!.fileName != null
                           ? mediaMetaInfoObj.metadata!.fileName!
                           : '',
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader1
+                              : mobileHeader1),
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -242,13 +245,19 @@ class _IDDocsListState extends State<IDDocsList> {
                               : '',
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2),
                         )),
                     Text(
                       new FHBUtils()
                           .getFormattedDateString(mediaMetaInfoObj.createdOn),
                       style: TextStyle(
-                          fontSize: 14.0.sp,
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader3
+                              : mobileHeader3,
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200),
                     )

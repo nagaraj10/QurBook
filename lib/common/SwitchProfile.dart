@@ -61,7 +61,10 @@ class SwitchProfile {
   FlutterToast toast = FlutterToast();
 
   static const double ActionWidgetSize = 55;
+  static const double ActionWidgetTabSize = 60;
+
   static const double PlusIconSize = 14;
+  static const double PlusIconTabSize = 25;
 
   Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
       Function _callBackToRefresh, bool isFromDashborad,
@@ -103,8 +106,12 @@ class SwitchProfile {
                                     ? FHBBasicWidget()
                                         .getProfilePicWidgeUsingUrl(myProfile)
                                     : Container(
-                                        height: 50.0.h,
-                                        width: 50.0.h,
+                                        height: CommonUtil().isTablet!
+                                            ? imageTabHeader
+                                            : imageMobileHeader,
+                                        width: CommonUtil().isTablet!
+                                            ? imageTabHeader
+                                            : imageMobileHeader,
                                         color:
                                             Color(fhbColors.bgColorContainer),
                                         child: Center(
@@ -115,6 +122,9 @@ class SwitchProfile {
                                                     .toUpperCase()
                                                 : '',
                                             style: TextStyle(
+                                                fontSize: CommonUtil().isTablet!
+                                                    ? Constants.tabHeader1
+                                                    : mobileHeader1,
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor())),
                                           ),
@@ -242,7 +252,7 @@ class SwitchProfile {
     return Stack(
       children: [
         CircleAvatar(
-          radius: CommonUtil().isTablet! ? 20 : 18,
+          radius: CommonUtil().isTablet! ? 25 : 18,
           child: ClipOval(
               child: myProfile != null
                   ? myProfile.result != null
@@ -283,15 +293,21 @@ class SwitchProfile {
   Widget _getPlusIcon() {
     return Positioned(
       bottom: 0,
-      left: (ActionWidgetSize / 2) - (PlusIconSize / 2),
+      left: CommonUtil().isTablet!
+          ? 28
+          : ((ActionWidgetSize / 2) - (PlusIconSize / 2)),
       child: InkWell(
         onTap: () {
           navigateToAddFamily();
         },
         child: Container(
-            width: PlusIconSize, // PlusIconSize = 20.0;
+            width: CommonUtil().isTablet!
+                ? PlusIconTabSize
+                : PlusIconSize, // PlusIconSize = 20.0;
 
-            height: PlusIconSize, // PlusIconSize = 20.0;
+            height: CommonUtil().isTablet!
+                ? PlusIconTabSize
+                : PlusIconSize, // PlusIconSize = 20.0;
 
             decoration: BoxDecoration(
                 color: ColorUtils.countColor,
@@ -299,7 +315,7 @@ class SwitchProfile {
             child: Icon(
               Icons.add,
               color: Colors.white,
-              size: CommonUtil().isTablet! ? 14 : 12,
+              size: CommonUtil().isTablet! ? 18 : 12,
             )),
       ),
     );

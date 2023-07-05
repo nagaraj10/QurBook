@@ -447,8 +447,12 @@ class _MyFamilyState extends State<MyFamily> {
                                 ? FHBBasicWidget()
                                     .getProfilePicWidgeUsingUrl(myProfile)
                                 : Container(
-                                    width: 60.0.h,
-                                    height: 60.0.h,
+                                    width: CommonUtil().isTablet!
+                                        ? imageProfileTabHeader
+                                        : imageProfileMobileHeader,
+                                    height: CommonUtil().isTablet!
+                                        ? imageProfileTabHeader
+                                        : imageProfileMobileHeader,
                                     color: Color(fhbColors.bgColorContainer),
                                     child: Center(
                                       child: Text(
@@ -683,8 +687,8 @@ class _MyFamilyState extends State<MyFamily> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
             content: Container(
-                width: 1.sw,
-                height: 1.sh / 1.5,
+                width: CommonUtil().isTablet! ? 0.7.sw : 1.sw,
+                height: CommonUtil().isTablet! ? (1.sh / 1.8) : (1.sh / 1.5),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -908,14 +912,20 @@ class _MyFamilyState extends State<MyFamily> {
           flex: 8,
           child: DropdownButton(
             isExpanded: true,
-            hint: Text(CommonConstants.relationshipWithStar),
+            hint: Text(
+              CommonConstants.relationshipWithStar,
+              style: TextStyle(
+                  fontSize:
+                      CommonUtil().isTablet! ? tabHeader1 : mobileHeader1),
+            ),
             value: selectedRelationShip,
             items: data!.map((relationShipDetail) {
               return DropdownMenuItem(
                 child: Text(relationShipDetail.name!,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 16.0.sp,
+                        fontSize:
+                            CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
                         color: ColorUtils.blackcolor)),
                 value: relationShipDetail,
               );

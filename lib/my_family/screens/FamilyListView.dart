@@ -1,5 +1,6 @@
-
 import 'dart:typed_data';
+import 'package:myfhb/constants/fhb_constants.dart';
+
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -172,8 +173,12 @@ class FamilyListView {
                                               .getProfilePicWidgeUsingUrl(
                                                   myProfile)
                                           : Container(
-                                              height: 50.0.h,
-                                              width: 50.0.h,
+                                              height: CommonUtil().isTablet!
+                                                  ? imageProfileTabHeader
+                                                  : imageProfileMobileHeader,
+                                              width: CommonUtil().isTablet!
+                                                  ? imageProfileTabHeader
+                                                  : imageProfileMobileHeader,
                                               color: const Color(
                                                   fhbColors.bgColorContainer),
                                               child: Center(
@@ -182,7 +187,8 @@ class FamilyListView {
                                                           ? myProfile.result!
                                                                       .firstName !=
                                                                   null
-                                                              ? myProfile.result!
+                                                              ? myProfile
+                                                                  .result!
                                                                   .firstName![0]
                                                                   .toUpperCase()
                                                               : 'S'
@@ -283,7 +289,8 @@ class FamilyListView {
                                                 ? getName(
                                                     sharedByMe[index].child!)!
                                                 : 'Self'
-                                            : (sharedByMe[index].nickName != null
+                                            : (sharedByMe[index].nickName !=
+                                                    null
                                                 ? sharedByMe[index]
                                                     .nickName
                                                     ?.capitalizeFirstofEach
@@ -332,7 +339,8 @@ class FamilyListView {
                                 sharedByMe[index].id,
                                 sharedByMe[index].nickName,
                                 sharedByMe[index].nickName == variable.Self
-                                    ? myProfile!.result!.profilePicThumbnailUrl ??
+                                    ? myProfile!
+                                            .result!.profilePicThumbnailUrl ??
                                         ""
                                     : myProfile!.result != null
                                         ? myProfile.result!.firstName != null

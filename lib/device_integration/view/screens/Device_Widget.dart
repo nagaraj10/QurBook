@@ -1,4 +1,3 @@
-
 // ignore: file_names
 import 'dart:io';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -232,37 +231,40 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       selectionResult = value;
       if (selectionResult!.isSuccess!) {
         if (selectionResult!.result != null) {
-          bpMonitor =
-              selectionResult!.result![0].profileSetting!.bpMonitor != null &&
-                      selectionResult!.result![0].profileSetting!.bpMonitor != ''
-                  ? selectionResult!.result![0].profileSetting!.bpMonitor
-                  : true;
-          glucoMeter =
-              selectionResult!.result![0].profileSetting!.glucoMeter != null &&
-                      selectionResult!.result![0].profileSetting!.glucoMeter != ''
-                  ? selectionResult!.result![0].profileSetting!.glucoMeter
-                  : true;
-          pulseOximeter =
-              selectionResult!.result![0].profileSetting!.pulseOximeter != null &&
-                      selectionResult!.result![0].profileSetting!.pulseOximeter !=
-                          ''
-                  ? selectionResult!.result![0].profileSetting!.pulseOximeter
-                  : true;
+          bpMonitor = selectionResult!.result![0].profileSetting!.bpMonitor !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.bpMonitor != ''
+              ? selectionResult!.result![0].profileSetting!.bpMonitor
+              : true;
+          glucoMeter = selectionResult!.result![0].profileSetting!.glucoMeter !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.glucoMeter != ''
+              ? selectionResult!.result![0].profileSetting!.glucoMeter
+              : true;
+          pulseOximeter = selectionResult!
+                          .result![0].profileSetting!.pulseOximeter !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.pulseOximeter !=
+                      ''
+              ? selectionResult!.result![0].profileSetting!.pulseOximeter
+              : true;
           thermoMeter =
               selectionResult!.result![0].profileSetting!.thermoMeter != null &&
-                      selectionResult!.result![0].profileSetting!.thermoMeter != ''
+                      selectionResult!.result![0].profileSetting!.thermoMeter !=
+                          ''
                   ? selectionResult!.result![0].profileSetting!.thermoMeter
                   : true;
-          weighScale =
-              selectionResult!.result![0].profileSetting!.weighScale != null &&
-                      selectionResult!.result![0].profileSetting!.weighScale != ''
-                  ? selectionResult!.result![0].profileSetting!.weighScale
-                  : true;
+          weighScale = selectionResult!.result![0].profileSetting!.weighScale !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.weighScale != ''
+              ? selectionResult!.result![0].profileSetting!.weighScale
+              : true;
           if (selectionResult!.result![0].profileSetting != null) {
-            if (selectionResult!.result![0].profileSetting!.preferred_language !=
+            if (selectionResult!
+                    .result![0].profileSetting!.preferred_language !=
                 null) {
-              final preferredLanguage =
-                  selectionResult!.result![0].profileSetting!.preferred_language;
+              final preferredLanguage = selectionResult!
+                  .result![0].profileSetting!.preferred_language;
               var currentLanguage = '';
               if (preferredLanguage != 'undef') {
                 currentLanguage = preferredLanguage!.split('-').first;
@@ -554,14 +556,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue2ForBp =
           deviceValues!.bloodPressure!.entities![0].diastolic.toString();
 
-      if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord != null) {
+      if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord !=
+          null) {
         sourceForBp = deviceValues!
             .bloodPressure!.entities![0].deviceHealthRecord!.sourceType!.code
             .toString();
       }
 
       try {
-        if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord != null) {
+        if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord !=
+            null) {
           if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord!
               .heartRateCollection!.isNotEmpty) {
             if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord!
@@ -597,15 +601,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         }
 
         if (deviceValues!.bloodPressure!.entities![0].averageAsOfNow != null) {
-          averageForSys = deviceValues!.bloodPressure!.entities![0].averageAsOfNow!
-                      .systolicAverage !=
+          averageForSys = deviceValues!.bloodPressure!.entities![0]
+                      .averageAsOfNow!.systolicAverage !=
                   null
               ? deviceValues!
                   .bloodPressure!.entities![0].averageAsOfNow!.systolicAverage
                   .toString()
               : '';
-          averageForDia = deviceValues!.bloodPressure!.entities![0].averageAsOfNow!
-                      .diastolicAverage !=
+          averageForDia = deviceValues!.bloodPressure!.entities![0]
+                      .averageAsOfNow!.diastolicAverage !=
                   null
               ? deviceValues!
                   .bloodPressure!.entities![0].averageAsOfNow!.diastolicAverage
@@ -645,8 +649,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           deviceValues!.bloodGlucose!.entities![0].bloodGlucoseLevel.toString();
 
       if (deviceValues!.bloodGlucose!.entities![0].mealContext != null) {
-        deviceMealContext =
-            deviceValues!.bloodGlucose!.entities![0].mealContext!.name.toString();
+        deviceMealContext = deviceValues!
+            .bloodGlucose!.entities![0].mealContext!.name
+            .toString();
       } else {
         deviceMealContext = 'Random';
       }
@@ -662,19 +667,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       }
 
       try {
-        averageForFasting = deviceValues!
-                    .bloodGlucose!.entities![0].averageAsOfNow!.fastingAverage !=
+        averageForFasting = deviceValues!.bloodGlucose!.entities![0]
+                    .averageAsOfNow!.fastingAverage !=
                 null
             ? deviceValues!
                 .bloodGlucose!.entities![0].averageAsOfNow!.fastingAverage
                 .toString()
             : '';
-        averageForPP =
-            deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage !=
-                    null
-                ? deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage
-                    .toString()
-                : '';
+        averageForPP = deviceValues!
+                    .bloodGlucose!.entities![0].averageAsOfNow!.ppAverage !=
+                null
+            ? deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage
+                .toString()
+            : '';
       } catch (e) {
         averageForFasting = '';
         averageForPP = '';
@@ -698,8 +703,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           .format(dateTimeStampForOs);
       timeForOs = DateFormat(parameters.strTimeHM, variable.strenUs)
           .format(dateTimeStampForOs);
-      devicevalue1ForOs =
-          deviceValues!.oxygenSaturation!.entities![0].oxygenSaturation.toString();
+      devicevalue1ForOs = deviceValues!
+          .oxygenSaturation!.entities![0].oxygenSaturation
+          .toString();
       if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord !=
           null) {
         sourceForPulse = deviceValues!
@@ -713,8 +719,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
               .heartRateCollection!.isNotEmpty) {
             try {
-              if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
-                      .heartRateCollection![0].bpm !=
+              if (deviceValues!.oxygenSaturation!.entities![0]
+                      .deviceHealthRecord!.heartRateCollection![0].bpm !=
                   null) {
                 prbPMOxi = deviceValues!.oxygenSaturation!.entities![0]
                     .deviceHealthRecord!.heartRateCollection![0].bpm
@@ -723,11 +729,20 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 prbPMOxi = '';
               }
 
-              if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
-                      .heartRateCollection![0].averageAsOfNow !=
+              if (deviceValues!
+                      .oxygenSaturation!
+                      .entities![0]
+                      .deviceHealthRecord!
+                      .heartRateCollection![0]
+                      .averageAsOfNow !=
                   null) {
-                if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
-                        .heartRateCollection![0].averageAsOfNow!.pulseAverage !=
+                if (deviceValues!
+                        .oxygenSaturation!
+                        .entities![0]
+                        .deviceHealthRecord!
+                        .heartRateCollection![0]
+                        .averageAsOfNow!
+                        .pulseAverage !=
                     null) {
                   averageForPRBpm = deviceValues!
                       .oxygenSaturation!
@@ -746,8 +761,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               averageForPul =
                   deviceValues!.oxygenSaturation!.entities![0].averageAsOfNow !=
                           null
-                      ? deviceValues!.oxygenSaturation!.entities![0].averageAsOfNow!
-                          .oxygenLevelAverage
+                      ? deviceValues!.oxygenSaturation!.entities![0]
+                          .averageAsOfNow!.oxygenLevelAverage
                           .toString()
                       : '';
             } catch (e) {
@@ -775,8 +790,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         averageForSPO2 = deviceValues!.oxygenSaturation!.entities![0]
                     .averageAsOfNow!.oxygenLevelAverage !=
                 null
-            ? deviceValues!
-                .oxygenSaturation!.entities![0].averageAsOfNow!.oxygenLevelAverage
+            ? deviceValues!.oxygenSaturation!.entities![0].averageAsOfNow!
+                .oxygenLevelAverage
                 .toString()
             : '';
       } catch (e) {
@@ -801,18 +816,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForTemp =
           deviceValues!.bodyTemperature!.entities![0].temperature.toString();
 
-      if (deviceValues!.bodyTemperature!.entities![0].deviceHealthRecord != null) {
+      if (deviceValues!.bodyTemperature!.entities![0].deviceHealthRecord !=
+          null) {
         sourceForThermo = deviceValues!
             .bodyTemperature!.entities![0].deviceHealthRecord!.sourceType!.code
             .toString();
       }
 
       try {
-        averageForTemp = deviceValues!.bodyTemperature!.entities![0].averageAsOfNow!
-                    .temperatureAverage !=
+        averageForTemp = deviceValues!.bodyTemperature!.entities![0]
+                    .averageAsOfNow!.temperatureAverage !=
                 null
-            ? deviceValues!
-                .bodyTemperature!.entities![0].averageAsOfNow!.temperatureAverage
+            ? deviceValues!.bodyTemperature!.entities![0].averageAsOfNow!
+                .temperatureAverage
                 .toString()
             : '';
       } catch (e) {
@@ -821,7 +837,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       try {
         unitForTemp =
             deviceValues!.bodyTemperature!.entities![0].temperatureUnit != null
-                ? deviceValues!.bodyTemperature!.entities![0].temperatureUnit!.code
+                ? deviceValues!
+                    .bodyTemperature!.entities![0].temperatureUnit!.code
                 : '';
       } catch (e) {
         unitForTemp = '';
@@ -856,7 +873,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         averageForWeigh = deviceValues!
                     .bodyWeight!.entities![0].averageAsOfNow!.weightAverage !=
                 null
-            ? deviceValues!.bodyWeight!.entities![0].averageAsOfNow!.weightAverage
+            ? deviceValues!
+                .bodyWeight!.entities![0].averageAsOfNow!.weightAverage
                 .toString()
             : '';
       } catch (e) {
@@ -864,9 +882,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       }
 
       try {
-        unitForWeight = deviceValues!.bodyWeight!.entities![0].weightUnit != null
-            ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
-            : '';
+        unitForWeight =
+            deviceValues!.bodyWeight!.entities![0].weightUnit != null
+                ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
+                : '';
       } catch (e) {
         unitForWeight = '';
       }
@@ -1008,95 +1027,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          // Container(
-          //   height: 1.sw * 0.18,
-          //   decoration: BoxDecoration(
-          //       gradient: LinearGradient(
-          //           begin: Alignment.centerLeft,
-          //           end: Alignment.centerRight,
-          //           colors: <Color>[
-          //         Color(new CommonUtil().getMyPrimaryColor()),
-          //         Color(new CommonUtil().getMyGredientColor())
-          //       ],
-          //           stops: [
-          //         0.3,
-          //         1.0
-          //       ])),
-          //   child: SafeArea(
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: <Widget>[
-          //         PreferredSize(
-          //           preferredSize: Size.fromHeight(1.sh * 0.15),
-          //           child: Container(
-          //             decoration: BoxDecoration(
-          //                 gradient: LinearGradient(
-          //                     begin: Alignment.centerLeft,
-          //                     end: Alignment.centerRight,
-          //                     colors: <Color>[
-          //                   Color(new CommonUtil().getMyPrimaryColor()),
-          //                   Color(new CommonUtil().getMyGredientColor())
-          //                 ],
-          //                     stops: [
-          //                   0.3,
-          //                   1.0
-          //                 ])),
-          //             child: SafeArea(
-          //               child: Column(
-          //                 mainAxisAlignment: MainAxisAlignment.center,
-          //                 children: <Widget>[
-          //                   Container(
-          //                     child: Row(
-          //                       children: <Widget>[
-          //                         SizedBox(
-          //                           width: 0.05.sw,
-          //                         ),
-          //                         Container(
-          //                           width: 0.66.sw,
-          //                           child: _getUserName(),
-          //                         ),
-          //                         GestureDetector(
-          //                           onTap: () {
-          //                             toast.getToastForLongTime(
-          //                                 strSync, Colors.green);
-          //                             Platform.isIOS
-          //                                 ? _deviceDataHelper
-          //                                     .syncHealthKit()
-          //                                     .then((value) {
-          //                                     setState(() {});
-          //                                   })
-          //                                 : _deviceDataHelper
-          //                                     .syncGoogleFit()
-          //                                     .then((value) {
-          //                                     setState(() {});
-          //                                   });
-          //                           },
-          //                           child: Image.asset(
-          //                             icon_refresh_dash,
-          //                             height: 26.0.h,
-          //                             width: 26.0.h,
-          //                             color: Colors.white,
-          //                           ),
-          //                         ),
-          //                         SizedBox(
-          //                           width: 0.03.sw,
-          //                         ),
-          //                         isFamilyAvail
-          //                             ? SwitchProfile().buildActions(context,
-          //                                 _key, callBackToRefresh, true)
-          //                             : getMaterialPlusIcon(context),
-          //                       ],
-          //                     ),
-          //                   ),
-          //                 ],
-          //               ),
-          //             ),
-          //           ),
-          //         )
-          //       ],
-          //     ),
-          //   ),
-          // ),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 25.0.w,
@@ -3036,14 +2966,14 @@ Widget TypeIcon(String type, Color color) {
       width: 20.0.h,
       color: color,
     );
-  } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) || (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
-      return Image.asset(
-        'assets/Qurhome/Qurhome.png',
-        height: 20.0.h,
-        width: 20.0.h,
-      );
-    } 
-  else {
+  } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) ||
+      (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
+    return Image.asset(
+      'assets/Qurhome/Qurhome.png',
+      height: 20.0.h,
+      width: 20.0.h,
+    );
+  } else {
     return Image.asset(
       'assets/icons/myfhb_source.png',
       height: 18.0.h,
