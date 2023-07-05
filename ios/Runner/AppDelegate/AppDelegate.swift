@@ -12,6 +12,7 @@ import BleManager
 import GSH601_DeviceManager
 import DB62M_DeviceManager
 import LS202_DeviceManager
+import LSBluetoothPlugin
 import CallKit
 import PushKit
 
@@ -226,6 +227,7 @@ import PushKit
             initializePushKit()
             triggerAppLockMethod(isCallRecieved: false)
         }
+        LSBluetoothManager.default()?.initManager(withDispatch: DispatchQueue.init(label: "bluetoothQueue"));
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
