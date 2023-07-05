@@ -58,6 +58,7 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.gsh.api.BleDevice
 import com.gsh.api.BluetoothStatus
 import com.gsh.spo2.api.GoldenBLEDeviceManager
 import com.gsh.spo2.api.GoldenBLEDeviceManagerCallback
@@ -136,6 +137,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     private val SPEECH_TO_TEXT_STREAM = Constants.SPEECH_TO_TEXT_STREAM
     private val WIFICONNECT = Constants.WIFI_WORKS
     private val BLECONNECT = Constants.BLE_CONNECT
+    private val DEVICES_CHANNEL = Constants.DEVICES_CHANNEL
     private val BPCONNECT = Constants.BP_CONNECT
     private val BLE_SCAN_CANCEL = Constants.BLE_SCAN_CANCEL
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
@@ -1523,6 +1525,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     if (bleDevice.name == null) return
                     val DevName: String = bleDevice.name
                     Log.d("startScan", "Found " + DevName + " " + bleDevice.mac)
+
                     if (DevName == "Mike") {
                         stopScan()
                         connectToSPO2(bleDevice)
@@ -2273,6 +2276,44 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 result.success(temp)
             }
         }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            DEVICES_CHANNEL
+        ).setMethodCallHandler { call, result ->
+            if (call.method == "scanAll") {
+//                scanType=call.method
+                // bluetoothFlutterResult=result
+                Log.d("BLE VITALS", "StartingPoint")
+                BleManager.getInstance().init(application)
+                BleManager.getInstance()
+                    .enableLog(true)
+                    .setReConnectCount(1, 5000)
+                    .setConnectOverTime(20000).operateTimeout = 5000
+
+                val temp = checkPermissionStartScan(false)
+
+
+            }
+
+            if (call.method == "scanSingle") {
+                // bluetoothFlutterResult=result
+//                deviceType = call.argument<String>("deviceType")
+//                manufacture = call.argument<String>("manufacture")
+//                scanType=call.method
+                Log.d("BLE VITALS", "StartingPoint")
+                BleManager.getInstance().init(application)
+                BleManager.getInstance()
+                    .enableLog(true)
+                    .setReConnectCount(1, 5000)
+                    .setConnectOverTime(20000).operateTimeout = 5000
+
+                val temp = checkPermissionStartScan(false)
+
+
+            }
+        }
+
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
