@@ -12,6 +12,7 @@ import BleManager
 import GSH601_DeviceManager
 import DB62M_DeviceManager
 import LS202_DeviceManager
+import LSBluetoothPlugin
 import CallKit
 import PushKit
 
@@ -83,10 +84,8 @@ import PushKit
     var BloodpressureManager : GoldenBloodpressureManager!
     var LS202DeviceManager : GoldenLS202DeviceManager!
     var eventSink: FlutterEventSink? = nil
-    var selectedDevicesFilter:BLEDeviceFilter?
-    var selectedDevicesType:BLEDeviceType?
-    var selectedManufacturer:BLEDeviceManufacture?
-    
+    var selectedDevicesList : [SelectedDevices] = []
+    var deviceSearched = false
     //Reminders
     var id = "";
     var title = "";
@@ -228,6 +227,7 @@ import PushKit
             initializePushKit()
             triggerAppLockMethod(isCallRecieved: false)
         }
+        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
