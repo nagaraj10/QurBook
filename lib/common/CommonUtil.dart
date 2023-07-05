@@ -2433,50 +2433,64 @@ class CommonUtil {
               }
 
               return GestureDetector(
-                  onTap: () {
-                    try {
-                      var qurhomeDashboardController =
-                          CommonUtil().onInitQurhomeDashboardController();
-                      qurhomeDashboardController.updateBLETimer(Enable: false);
+                onTap: () {
+                  try {
+                    var qurhomeDashboardController =
+                        CommonUtil().onInitQurhomeDashboardController();
+                    qurhomeDashboardController.updateBLETimer(Enable: false);
 
-                      navigateToNotificationScreen(isFromQurday);
-                    } catch (e) {
-                      print(e);
-                    }
-                  },
-                  child: Badge(
-                    position: BadgePosition.topEnd(top: -8, end: -11),
-                    toAnimate: false,
-                    badgeColor: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
-                    badgeContent: Container(
-                      constraints:
-                          BoxConstraints(minWidth: 6.w, minHeight: 6.h),
-                      alignment: Alignment.center,
-                      child: Center(
-                        child: Text(
-                          (count! > 99) ? '99+' : count.toString(),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: CommonUtil().isTablet! ? 14 : 9,
-                              fontWeight: FontWeight.w400),
+                    navigateToNotificationScreen(isFromQurday);
+                  } catch (e) {
+                    print(e);
+                  }
+                },
+                child: count! > 0
+                    ? Badge(
+                        position: BadgePosition.topEnd(
+                          top: -8,
+                          end: -5,
                         ),
-                      ),
-                    ),
-                    child: IconWidget(
-                      icon: Icons.notifications,
-                      colors: Colors.white,
-                      size: 27.0.sp,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NotificationMain()),
-                        );
-                      },
-                    ),
-                  ));
+                        toAnimate: false,
+                        badgeColor: ColorUtils.countColor,
+                        badgeContent: Container(
+                          constraints:
+                              BoxConstraints(minWidth: 6.w, minHeight: 6.h),
+                          alignment: Alignment.center,
+                          child: Center(
+                            child: Text(
+                              (count! > 99) ? '99+' : count.toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: CommonUtil().isTablet! ? 14 : 9,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        ),
+                        child: IconWidget(
+                          icon: Icons.notifications,
+                          colors: isFromQurday
+                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              : Colors.white,
+                          size: CommonUtil().isTablet! ? 33.0.sp : 27.0.sp,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NotificationMain()),
+                            );
+                          },
+                        ),
+                      )
+                    : BadgeIcon(
+                        icon: Icon(
+                          Icons.notifications,
+                          color: isFromQurday
+                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              : Colors.white,
+                          size: 30.0.sp,
+                        ),
+                        badgeColor: ColorUtils.countColor),
+              );
             } else {
               return GestureDetector(
                 onTap: () {
@@ -2489,7 +2503,9 @@ class CommonUtil {
                 child: BadgeIcon(
                     icon: Icon(
                       Icons.notifications,
-                      color: color ?? Colors.white,
+                      color: isFromQurday
+                          ? Color(CommonUtil().getQurhomePrimaryColor())
+                          : Colors.white,
                       size: 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor),
@@ -2508,7 +2524,9 @@ class CommonUtil {
         child: BadgeIcon(
             icon: Icon(
               Icons.notifications,
-              color: color ?? Colors.white,
+              color: isFromQurday
+                  ? Color(CommonUtil().getQurhomePrimaryColor())
+                  : Colors.white,
               size: 30.0.sp,
             ),
             badgeColor: ColorUtils.countColor),
