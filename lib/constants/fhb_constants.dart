@@ -2,6 +2,7 @@ library fhb_constants;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import '../common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
@@ -869,6 +870,11 @@ const double imageMobileHeader = 40.0;
 const double imageProfileTabHeader = 65.0;
 const double imageProfileMobileHeader = 40.0;
 
+double imageCloseTab = 25.0.sp;
+double imageCloseMobile = 30.0.sp;
+
+double dialogIconTab = 35.0.sp;
+double dialogIconMobile = 35.0.sp;
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
