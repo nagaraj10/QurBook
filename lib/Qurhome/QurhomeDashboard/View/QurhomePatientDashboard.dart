@@ -155,6 +155,7 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
       child: Text(
         value,
         style: TextStyle(
+          fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
           fontWeight: FontWeight.bold,
           color: selectedAlertList
               ? Colors.white

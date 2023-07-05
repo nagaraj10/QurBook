@@ -2,6 +2,7 @@ library fhb_constants;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import '../common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
@@ -850,6 +851,30 @@ const String activity_removed_regimen =
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
 const String StrUndoAll = 'Undo all';
+
+const double tabFontTitle = 25.0;
+const double mobileFontTitle = 18.0;
+
+const double tabHeader1 = 22.0;
+const double mobileHeader1 = 14.0;
+
+const double tabHeader2 = 20.0;
+const double mobileHeader2 = 13.0;
+
+const double tabHeader3 = 18.0;
+const double mobileHeader3 = 12.0;
+
+const double imageTabHeader = 70.0;
+const double imageMobileHeader = 40.0;
+
+const double imageProfileTabHeader = 65.0;
+const double imageProfileMobileHeader = 40.0;
+
+double imageCloseTab = 25.0.sp;
+double imageCloseMobile = 30.0.sp;
+
+double dialogIconTab = 35.0.sp;
+double dialogIconMobile = 35.0.sp;
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {

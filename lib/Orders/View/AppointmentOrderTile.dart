@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/Model/OrderModel.dart';
 import 'package:myfhb/Orders/View/OrderTile.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 class AppointmentOrderTile extends StatelessWidget {
   final OrderModel order;
@@ -23,20 +23,22 @@ class AppointmentOrderTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Order id : ${order.orderId}',
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+            Text('Order id : ${order.orderId}',
+                style: TextStyle(
                     fontWeight: FontWeight.bold,
-                  ),
-            ),
+                    fontSize: (CommonUtil().isTablet ?? false)
+                        ? tabHeader2
+                        : mobileHeader2)),
             const SizedBox(
               height: 2,
             ),
             order.date != null
                 ? Text(
                     "Date of Payment : ${DateFormat('MMMM dd, hh:mm a').format(order.date!)}",
-                    style: Theme.of(context).textTheme.bodyText2,
-                  )
+                    style: TextStyle(
+                        fontSize: (CommonUtil().isTablet ?? false)
+                            ? tabHeader2
+                            : mobileHeader2))
                 : Container(),
             const SizedBox(
               height: 4,
@@ -44,8 +46,10 @@ class AppointmentOrderTile extends StatelessWidget {
             order.patientFirstName!.isNotEmpty
                 ? Text(
                     "Patient name : ${order.patientFirstName} ${order.patientLastName} ",
-                    style: Theme.of(context).textTheme.bodyText2,
-                  )
+                    style: TextStyle(
+                        fontSize: (CommonUtil().isTablet ?? false)
+                            ? tabHeader2
+                            : mobileHeader2))
                 : Container(),
             const SizedBox(
               height: 4,
@@ -53,8 +57,10 @@ class AppointmentOrderTile extends StatelessWidget {
             order.doctorFirstName!.isNotEmpty
                 ? Text(
                     "Doctor name : ${order.doctorFirstName} ${order.doctorLastName} ",
-                    style: Theme.of(context).textTheme.bodyText2,
-                  )
+                    style: TextStyle(
+                        fontSize: (CommonUtil().isTablet ?? false)
+                            ? tabHeader2
+                            : mobileHeader2))
                 : Container(),
             const SizedBox(
               height: 4,
@@ -62,8 +68,10 @@ class AppointmentOrderTile extends StatelessWidget {
             order.appointmentDateTime != null
                 ? Text(
                     "Appointment Date : ${DateFormat('MMMM dd, hh:mm a').format(order.appointmentDateTime!)}",
-                    style: Theme.of(context).textTheme.bodyText2,
-                  )
+                    style: TextStyle(
+                        fontSize: (CommonUtil().isTablet ?? false)
+                            ? tabHeader2
+                            : mobileHeader2))
                 : Container(),
             const SizedBox(
               height: 4,
@@ -75,19 +83,21 @@ class AppointmentOrderTile extends StatelessWidget {
                     ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Text('Paid  ',
+                              style: TextStyle(
+                                  fontSize: (CommonUtil().isTablet ?? false)
+                                      ? tabHeader3
+                                      : mobileHeader3)),
                           Text(
-                            'Paid  ',
-                            style: Theme.of(context).textTheme.subtitle1,
-                          ),
-                          Text(
-                            '${CommonUtil.CURRENCY}${double.parse(order.feePaid!)}',
-                            style:
-                                Theme.of(context).textTheme.subtitle1!.copyWith(
-                                      color: Color(
-                                        CommonUtil().getMyPrimaryColor(),
-                                      ),
-                                    ),
-                          ),
+                              '${CommonUtil.CURRENCY}${double.parse(order.feePaid!)}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(
+                                    CommonUtil().getMyPrimaryColor(),
+                                  ),
+                                  fontSize: (CommonUtil().isTablet ?? false)
+                                      ? tabHeader3
+                                      : mobileHeader3)),
                         ],
                       )
                     : Container(),

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:ui';
 
@@ -105,7 +104,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     // Navigator.of(context).pop(true);
 
     if (widget.isFromNotification) {
-       Get.offAll(NotificationMain());
+      Get.offAll(NotificationMain());
     } else if (Navigator.canPop(context)) {
       Get.back();
     } else {
@@ -128,6 +127,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
         appBar: AppBar(
           title: Text(
             'My Cart',
+            style: TextStyle(
+                fontSize: (CommonUtil().isTablet ?? false)
+                    ? tabFontTitle
+                    : mobileFontTitle),
           ),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           actions: [
@@ -166,7 +169,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               // if (value.cartType == CartType.DEFAULT_CART ||
               //     value.cartType == CartType.RETRY_CART) {
               //default cart with items
-              int? cartCount =           // FUcrash var to int?
+              int? cartCount = // FUcrash var to int?
                   value.fetchingCartItemsModel!.result?.productsCount ?? 0;
               //value?.updateCartCount(cartCount,isNeedRelod: true);
               return (!(value.fetchingCartItemsModel!.isSuccess ?? false) ||
@@ -205,9 +208,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             listen: false)
                                         .changeCurrentPage(0);
                                     if (Provider.of<PlanWizardViewModel>(
-                                                context,
-                                                listen: false)
-                                            .isPlanWizardActive) {
+                                            context,
+                                            listen: false)
+                                        .isPlanWizardActive) {
                                       Get.back();
                                     } else {
                                       Get.offAndToNamed(router.rt_PlanWizard);
@@ -417,7 +420,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         SizedBox(
                                                           width: 10,
                                                         ),
-                                                        Text(widget.patientName!,
+                                                        Text(
+                                                            widget.patientName!,
                                                             style: TextStyle(
                                                                 fontSize:
                                                                     18.0.sp,
@@ -437,19 +441,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           physics:
                                               NeverScrollableScrollPhysics(),
                                           itemCount: value
-                                                  .fetchingCartItemsModel
-                                                  !.result
-                                                  !.productsCount ??
+                                                  .fetchingCartItemsModel!
+                                                  .result!
+                                                  .productsCount ??
                                               0,
                                           shrinkWrap: true,
                                           itemBuilder: (context, index) {
                                             return _cartItem(
                                                 context,
                                                 value
-                                                    .fetchingCartItemsModel
-                                                    !.result
-                                                    !.cart
-                                                    !.productList![index]);
+                                                    .fetchingCartItemsModel!
+                                                    .result!
+                                                    .cart!
+                                                    .productList![index]);
                                           },
                                         ),
                                       ],
@@ -492,7 +496,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           ],
                                         ),
                                         DottedLine(
-                                            height: 1, color: Colors.grey[400]!),
+                                            height: 1,
+                                            color: Colors.grey[400]!),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -1200,8 +1205,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           if (result.result != null) {
             var checkValidation = await CheckoutPageWidgets()
                 .profileValidationCheckOnCart(context,
-                    feeZero:
-                        (value.totalProductCount) > 0 ? false : true);
+                    feeZero: (value.totalProductCount) > 0 ? false : true);
             if (checkValidation ?? false) {
               planSubLogic(value);
             }

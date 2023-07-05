@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -18,13 +18,13 @@ class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
       flexibleSpace: TabBar(
         tabs: [
           Tab(
-            text: CommonConstants.doctors,
+            child: Text(CommonConstants.doctors, style: getTitleStyle()),
           ),
           Tab(
-            text: CommonConstants.hospitals,
+            child: Text(CommonConstants.hospitals, style: getTitleStyle()),
           ),
           Tab(
-            text: CommonConstants.labs,
+            child: Text(CommonConstants.labs, style: getTitleStyle()),
           ),
         ],
         controller: tabController,
@@ -46,4 +46,11 @@ class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(30.0.h);
+
+  getTitleStyle() {
+    return TextStyle(
+      fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
+      fontWeight: FontWeight.w600,
+    );
+  }
 }

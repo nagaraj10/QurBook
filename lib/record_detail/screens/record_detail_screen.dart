@@ -1,7 +1,7 @@
-
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -179,18 +179,24 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         key: scaffold_state,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          title: Text( //FU2.5
-         // AutoSizeText( FU2.5
+          title: Text(
+            //FU2.5
             widget.data.metadata!.fileName == null
                 ? toBeginningOfSentenceCase(
                     widget.data.metadata!.healthRecordType!.name)!
                 : widget.data.metadata!.fileName!.contains('.pdf')
                     ? getFileNameForPdf(toBeginningOfSentenceCase(
                         widget.data.metadata!.fileName)!)
-                    : toBeginningOfSentenceCase(widget.data.metadata!.fileName)!,
+                    : toBeginningOfSentenceCase(
+                        widget.data.metadata!.fileName)!,
             maxLines: 1,
+            style: TextStyle(
+              fontSize: CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle,
+              color: Colors.white,
+              fontWeight: FontWeight.w400,
+            ),
             //maxFontSize: 16, FU2.5
-          ),  
+          ),
           leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -299,11 +305,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           if (widget.data.metadata!.sourceName ==
                               strsourceCARGIVER)
                             IconButton(
-                                icon: ImageIcon(
-                              AssetImage(variable.icon_record_switch),
-                              color: Colors.grey,
-                            ),
-                            onPressed: (){},
+                              icon: ImageIcon(
+                                AssetImage(variable.icon_record_switch),
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {},
                             )
                           else
                             IconButton(
@@ -345,11 +351,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                   strsourceCARGIVER ||
                               widget.data.healthRecordCollection!.length == 0)
                             IconButton(
-                                icon: ImageIcon(
-                              AssetImage(variable.icon_edit),
-                              color: Colors.grey,
-                            ),
-                            onPressed: (){},
+                              icon: ImageIcon(
+                                AssetImage(variable.icon_edit),
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {},
                             )
                           else
                             IconButton(
@@ -377,10 +383,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           widget.data.metadata!.sourceName == strsourceCARGIVER
                               ? IconButton(
                                   icon: ImageIcon(
-                                  AssetImage(variable.icon_delete),
-                                  color: Colors.grey,
-                                ),
-                                onPressed: (){},
+                                    AssetImage(variable.icon_delete),
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {},
                                 )
                               : IconButton(
                                   icon: ImageIcon(
@@ -544,7 +550,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               onPressed: () async {
                 await OpenFilex.open(
                   path?.path,
-                );//FU2.5
+                ); //FU2.5
                 final controller = Get.find<PDFViewController>();
                 final data = OpenPDF(
                     type: PDFLocation.Path,
@@ -573,7 +579,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   onPressed: () async {
                     await OpenFilex.open(
                       pdfFile,
-                    );//FU2.5
+                    ); //FU2.5
                   },
                 ),
               ),
@@ -794,8 +800,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
 
             Future.delayed(const Duration(seconds: 2), () {
-              FHBBasicWidget()
-                  .showInSnackBar(moveMetaDataResponse.message!, scaffold_state);
+              FHBBasicWidget().showInSnackBar(
+                  moveMetaDataResponse.message!, scaffold_state);
             });
 
             Navigator.pop(context);
@@ -1116,10 +1122,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 widget.data.metadata!.deviceReadings != null
                     ? widget.data.metadata!.deviceReadings![0].value
                     : '';
-            var isSelected =
-                widget.data.metadata!.deviceReadings![1].unit == variable.strAfter
-                    ? [false, true]
-                    : [true, false];
+            var isSelected = widget.data.metadata!.deviceReadings![1].unit ==
+                    variable.strAfter
+                ? [false, true]
+                : [true, false];
             CommonDialogBox().getDialogBoxForGlucometer(
                 context,
                 deviceName,
@@ -1342,7 +1348,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          widget.data.metadata!.healthRecordType!.name != AppConstants.voiceNotes
+          widget.data.metadata!.healthRecordType!.name !=
+                  AppConstants.voiceNotes
               ? (imagesPath != null && imagesPath.isNotEmpty)
                   ? Expanded(
                       child: CarouselSlider(
@@ -1357,7 +1364,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     height: 200.0.h,
                                     width: 200.0.h,
                                     headers: {
-                                      HttpHeaders.authorizationHeader: authToken!
+                                      HttpHeaders.authorizationHeader:
+                                          authToken!
                                     },
                                   ));
                               /*Container(
@@ -1478,12 +1486,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               // return getCarousalImage(snapshot.data.data);
               break;
           }
-        } 
+        }
         // else {
-          return Container(
-            width: 100.0.h,
-            height: 100.0.h,
-          );
+        return Container(
+          width: 100.0.h,
+          height: 100.0.h,
+        );
         // }
       },
     );

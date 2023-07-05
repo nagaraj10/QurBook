@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -113,11 +112,11 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
         bottom: TabBar(
           tabs: [
             Tab(
-              text: CommonConstants.insurance,
-            ),
+                child: Text(CommonConstants.insurance,
+                    style: CommonUtil().getTitleStyle())),
             Tab(
-              text: CommonConstants.hospitals,
-            ),
+                child: Text(CommonConstants.hospitals,
+                    style: CommonUtil().getTitleStyle())),
           ],
           controller: tabController,
           labelColor: Colors.white,
@@ -198,7 +197,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
     myFamilyDetailViewBloc = MyFamilyDetailViewBloc();
     myFamilyDetailViewBloc!.userId = widget.arguments!.sharedbyme!.child!.id;
     //getCategories();
-    myFamilyDetailViewBloc!.getHelthReportLists(myFamilyDetailViewBloc!.userId!);
+    myFamilyDetailViewBloc!
+        .getHelthReportLists(myFamilyDetailViewBloc!.userId!);
 
     return StreamBuilder<ApiResponse<HealthRecordList>>(
       stream: myFamilyDetailViewBloc!.healthReportStreams,
@@ -257,7 +257,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   }
 
   Future<List<CategoryResult>?> getCategories() async {
-    final categoryDatalist = await (myFamilyDetailViewBloc!.getCategoryLists() as FutureOr<CategoryDataList>);
+    final categoryDatalist = await (myFamilyDetailViewBloc!.getCategoryLists()
+        as FutureOr<CategoryDataList>);
     categoryData = categoryDatalist.result;
     return categoryData;
   }

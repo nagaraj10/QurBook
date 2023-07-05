@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -212,7 +211,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                             )
                           :*/
                       CircleAvatar(
-                radius: 25,
+                radius: CommonUtil().isTablet! ? 35 : 25,
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 child: Image.network(
                   /*Constants.BASE_URL + */ data
@@ -242,12 +241,14 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                         ? Text(
                             data.metadata!.hospital!.healthOrganizationName !=
                                     null
-                                ? toBeginningOfSentenceCase(data
-                                    .metadata!.hospital!.healthOrganizationName)!
+                                ? toBeginningOfSentenceCase(data.metadata!
+                                    .hospital!.healthOrganizationName)!
                                 : '',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 16.0.sp,
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader1
+                                  : mobileHeader1,
                             ),
                           )
                         : Text(''),
@@ -260,7 +261,8 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                           : '',
                       style: TextStyle(
                         color: Colors.grey,
-                        fontSize: 16.0.sp,
+                        fontSize:
+                            CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
                       ),
                     ),
                     Text(
@@ -268,7 +270,9 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                       style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,
-                          fontSize: 14.0.sp),
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader3
+                              : mobileHeader3),
                     )
                   ],
                 ),
@@ -286,12 +290,16 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                                 //TODO chnage theme
                                 color:
                                     Color(new CommonUtil().getMyPrimaryColor()),
-                                size: 20,
+                                size: CommonUtil().isTablet!
+                                    ? tabHeader2
+                                    : mobileHeader2,
                               )
                             : ImageIcon(
                                 AssetImage(variable.icon_record_fav),
                                 color: Colors.black,
-                                size: 20,
+                                size: CommonUtil().isTablet!
+                                    ? tabHeader2
+                                    : mobileHeader2,
                               ),
                         onPressed: () {
                           new CommonUtil().bookMarkRecord(data, _refresh);
@@ -319,8 +327,8 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
-      future:
-          _healthReportListForUserBlock.getProfilePic(data.metaInfo!.doctor!.id!),
+      future: _healthReportListForUserBlock
+          .getProfilePic(data.metaInfo!.doctor!.id!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(

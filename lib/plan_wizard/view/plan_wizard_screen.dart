@@ -87,7 +87,13 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
           flexibleSpace: GradientAppBar(),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           elevation: 0,
-          title: Text(_getAppBarText(planWizardViewModel.currentPage)!),
+          title: Text(
+            _getAppBarText(planWizardViewModel.currentPage)!,
+            style: TextStyle(
+                fontSize: (CommonUtil().isTablet ?? false)
+                    ? tabFontTitle
+                    : mobileFontTitle),
+          ),
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
             colors: Colors.white,

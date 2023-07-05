@@ -147,29 +147,42 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                       children: <Widget>[
                         ClipOval(
                             child: eachDoctorModel?.user != null
-                                ? (eachDoctorModel?.user
-                                                ?.profilePicThumbnailUrl !=
+                                ? (eachDoctorModel?.user?.profilePicThumbnailUrl !=
                                             null ||
-                                        (eachDoctorModel?.user?.firstName !=
-                                                null &&
-                                            eachDoctorModel
-                                                    ?.user?.lastName !=
+                                        (eachDoctorModel?.user?.firstName != null &&
+                                            eachDoctorModel?.user?.lastName !=
                                                 null))
                                     ? getProfilePicWidget(
-                                        eachDoctorModel?.user?.profilePicThumbnailUrl??"",
-                                        eachDoctorModel?.user?.firstName??"",
-                                        eachDoctorModel?.user?.lastName??"",
+                                        eachDoctorModel?.user
+                                                ?.profilePicThumbnailUrl ??
+                                            "",
+                                        eachDoctorModel?.user?.firstName ?? "",
+                                        eachDoctorModel?.user?.lastName ?? "",
                                         Color(CommonUtil().getMyPrimaryColor()),
+                                        CommonUtil().isTablet!
+                                            ? imageTabHeader
+                                            : Constants.imageMobileHeader,
+                                        CommonUtil().isTablet!
+                                            ? tabHeader1
+                                            : Constants.mobileHeader1,
                                         authtoken: authtoken)
                                     : Container(
-                                        width: 50.0.h,
-                                        height: 50.0.h,
+                                        width: CommonUtil().isTablet!
+                                            ? imageTabHeader
+                                            : Constants.imageMobileHeader,
+                                        height: CommonUtil().isTablet!
+                                            ? imageTabHeader
+                                            : Constants.imageMobileHeader,
                                         padding: EdgeInsets.all(12),
                                         color:
                                             Color(fhbColors.bgColorContainer))
                                 : Container(
-                                    width: 50.0.h,
-                                    height: 50.0.h,
+                                    width: CommonUtil().isTablet!
+                                        ? imageTabHeader
+                                        : Constants.imageMobileHeader,
+                                    height: CommonUtil().isTablet!
+                                        ? imageTabHeader
+                                        : Constants.imageMobileHeader,
                                     padding: EdgeInsets.all(12),
                                     color: Color(fhbColors.bgColorContainer))),
                         SizedBox(
@@ -189,7 +202,9 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                     : '',
                                 maxLines: 1,
                                 style: TextStyle(
-                                  fontSize: 16.0.sp,
+                                  fontSize: CommonUtil().isTablet!
+                                      ? tabHeader1
+                                      : Constants.mobileHeader1,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 textAlign: TextAlign.start,
@@ -203,7 +218,9 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
-                                      fontSize: 15.0.sp,
+                                      fontSize: CommonUtil().isTablet!
+                                          ? tabHeader2
+                                          : Constants.mobileHeader2,
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
                                   textAlign: TextAlign.start,

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
@@ -39,9 +38,7 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
               MaterialPageRoute(builder: (context) => TicketTypesScreen()),
             ).then((value) {
               print('intent working');
-              setState(() {
-                
-              });
+              setState(() {});
             });
           },
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -60,7 +57,11 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
             onBackPressed(context);
           },
         ),
-        title: Text(strMyTickets),
+        title: Text(strMyTickets,
+            style: TextStyle(
+                fontSize: (CommonUtil().isTablet ?? false)
+                    ? tabFontTitle
+                    : mobileFontTitle)),
       ),
       body: TicketsList(),
     );

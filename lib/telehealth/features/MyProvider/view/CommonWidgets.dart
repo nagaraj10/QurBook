@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money_formatter/money_formatter.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
@@ -316,12 +317,12 @@ class CommonWidgets {
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
                 color: Color(new CommonUtil().getMyPrimaryColor()),
-                size: fhbStyles.imageWidth,
+                size: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               )
             : ImageIcon(
                 AssetImage('assets/icons/record_fav.png'),
                 color: Colors.black,
-                size: fhbStyles.imageWidth,
+                size: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               ));
   }
 
@@ -334,12 +335,12 @@ class CommonWidgets {
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
                 color: Color(new CommonUtil().getMyPrimaryColor()),
-                size: 18.0,
+                size: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               )
             : ImageIcon(
                 AssetImage('assets/icons/record_fav.png'),
                 color: Colors.black,
-                size: 18.0,
+                size: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               ));
   }
 
@@ -352,12 +353,12 @@ class CommonWidgets {
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
                 color: Color(new CommonUtil().getMyPrimaryColor()),
-                size: 17.0,
+                size: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               )
             : ImageIcon(
                 AssetImage('assets/icons/record_fav.png'),
                 color: Colors.black,
-                size: 17.0,
+                size: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               ));
   }
 
@@ -435,13 +436,15 @@ class CommonWidgets {
   Widget getProfilePicWidgetForHos(DoctorFromHos docs) {
     return docs.user!.profilePicThumbnailUrl != null
         ? Image.network(docs.user!.profilePicThumbnailUrl!,
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             fit: BoxFit.cover, errorBuilder: (BuildContext context,
                 Object exception, StackTrace? stackTrace) {
             return Container(
-              height: 40.0.h,
-              width: 40.0.h,
+              height:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+              width:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
               color: Colors.grey[200],
               child: Center(
                 child: getFirstLastNameTextDoctorFromHos(docs),
@@ -450,21 +453,23 @@ class CommonWidgets {
           })
         : Container(
             color: Color(fhbColors.bgColorContainer),
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
           );
   }
 
   Widget getProfilePicWidgetForDoctorIds(DoctorIds docs) {
     return docs.profilePicThumbnailURL != null
         ? Image.network(docs.profilePicThumbnailURL!,
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             fit: BoxFit.cover, errorBuilder: (BuildContext context,
                 Object exception, StackTrace? stackTrace) {
             return Container(
-              height: 50.0.h,
-              width: 50.0.h,
+              height:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+              width:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
               color: Colors.grey[200],
               child: Center(
                 child: getFirstLastNameTextDoctorIds(docs),
@@ -473,8 +478,8 @@ class CommonWidgets {
           })
         : Container(
             color: Color(fhbColors.bgColorContainer),
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
           );
   }
 
@@ -484,8 +489,10 @@ class CommonWidgets {
             errorBuilder: (BuildContext context, Object exception,
                 StackTrace? stackTrace) {
             return Container(
-              height: 50.0.h,
-              width: 50.0.h,
+              height:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+              width:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
               color: Colors.grey[200],
               child: Center(
                 child: Container(),
@@ -494,8 +501,8 @@ class CommonWidgets {
           })
         : Container(
             color: Color(fhbColors.bgColorContainer),
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             child: Text(''),
           );
   }
@@ -503,13 +510,15 @@ class CommonWidgets {
   Widget getProfilePicWidget(Doctors? docs) {
     return docs?.user?.profilePicThumbnailUrl != null
         ? Image.network(docs!.user!.profilePicThumbnailUrl!,
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             fit: BoxFit.cover, errorBuilder: (BuildContext context,
                 Object exception, StackTrace? stackTrace) {
             return Container(
-              height: 40.0.h,
-              width: 40.0.h,
+              height:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+              width:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
               color: Colors.grey[200],
               child: Center(
                 child: getFirstLastNameText(docs),
@@ -518,21 +527,23 @@ class CommonWidgets {
           })
         : Container(
             color: Color(fhbColors.bgColorContainer),
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
           );
   }
 
   Widget getProfilePicWidgetForReschedule(DoctorResult docs) {
     return docs.user!.profilePicThumbnailUrl != null
         ? Image.network(docs.user!.profilePicThumbnailUrl!,
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             fit: BoxFit.cover, errorBuilder: (BuildContext context,
                 Object exception, StackTrace? stackTrace) {
             return Container(
-              height: 40.0.h,
-              width: 40.0.h,
+              height:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+              width:
+                  CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
               color: Colors.grey[200],
               child: Center(
                 child: getFirstLastNameForReschedule(docs),
@@ -541,8 +552,8 @@ class CommonWidgets {
           })
         : Container(
             color: Color(fhbColors.bgColorContainer),
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
           );
   }
 

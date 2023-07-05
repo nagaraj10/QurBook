@@ -366,7 +366,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                             padding: EdgeInsets.all(8.0),
                             icon: Icon(
                               Icons.close,
-                              size: 30.0,
+                              size: CommonUtil().isTablet!
+                                  ? imageCloseTab
+                                  : imageCloseMobile,
                             ),
                             onPressed: () {
                               try {
@@ -386,7 +388,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                         child: Row(
                           children: [
                             ImageIcon(getIcons(patientAlertData.typeCode ?? ''),
-                                size: 30,
+                                size: CommonUtil().isTablet!
+                                    ? dialogIconTab
+                                    : dialogIconMobile,
                                 color: Color(
                                     CommonUtil().getQurhomeGredientColor())),
                             SizedBox(
@@ -402,6 +406,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                   overflow: TextOverflow.fade,
                                   maxLines: 2,
                                   style: TextStyle(
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader1
+                                        : mobileHeader1,
                                     color: Color(
                                       CommonUtil().getQurhomeGredientColor(),
                                     ),
@@ -424,7 +431,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.grey,
-                                      fontSize: 16.h,
+                                      fontSize: CommonUtil().isTablet!
+                                          ? tabHeader3
+                                          : mobileHeader3,
                                       fontWeight: FontWeight.w500),
                                 ),
                               ),
@@ -451,7 +460,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               maxLines: 3,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 16.h,
+                                  fontSize: CommonUtil().isTablet!
+                                      ? tabHeader1
+                                      : mobileHeader1,
                                   color: Colors.grey),
                             ),
                             if (patientAlertData?.typeCode == CODE_VITAL) ...{
@@ -461,7 +472,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 16.h,
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader1
+                                        : mobileHeader1,
                                     fontWeight: FontWeight.w500),
                               )
                             }
@@ -503,8 +516,12 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                   padding: EdgeInsets.all(5.0),
                                   child: Image.asset(
                                     icon_discard,
-                                    height: 40,
-                                    width: 40,
+                                    height: CommonUtil().isTablet!
+                                        ? dialogIconTab
+                                        : dialogIconMobile,
+                                    width: CommonUtil().isTablet!
+                                        ? dialogIconTab
+                                        : dialogIconMobile,
                                   ),
                                 ),
                                 Text(strDiscard,
@@ -537,8 +554,12 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                     padding: EdgeInsets.all(5.0),
                                     child: Image.asset(
                                       icon_call_cg,
-                                      height: 40,
-                                      width: 40,
+                                      height: CommonUtil().isTablet!
+                                          ? dialogIconTab
+                                          : dialogIconMobile,
+                                      width: CommonUtil().isTablet!
+                                          ? dialogIconTab
+                                          : dialogIconMobile,
                                     ),
                                   ),
                                   Text(
@@ -575,8 +596,12 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                   padding: EdgeInsets.all(5.0),
                                   child: Image.asset(
                                     icon_escalate,
-                                    height: 40,
-                                    width: 40,
+                                    height: CommonUtil().isTablet!
+                                        ? dialogIconTab
+                                        : dialogIconMobile,
+                                    width: CommonUtil().isTablet!
+                                        ? dialogIconTab
+                                        : dialogIconMobile,
                                   ),
                                 ),
                                 Text(
