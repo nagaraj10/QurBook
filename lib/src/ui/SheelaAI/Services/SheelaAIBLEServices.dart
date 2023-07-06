@@ -219,6 +219,18 @@ class SheelaBLEController extends GetxController {
                 });
               }
               break;
+            case "update":
+              if (SheelaController.isSheelaScreenActive) {
+                addToConversationAndPlay(
+
+                  SheelaResponse(
+
+                    recipientId: conversationType,
+
+                    text: receivedValues.last,),);
+                return;
+              }
+              break;
             case "measurement":
               if (!checkForParedDevice()) return;
               String deviceType =
@@ -300,8 +312,8 @@ class SheelaBLEController extends GetxController {
         var deviceManufacturer = device.manufacturer;
         var deviceType = getDeviceCode(device.device?.deviceType?.code);
         final deviceDetails = {
-          'deviceType': deviceType,
-          'manufacture': deviceManufacturer,
+          'deviceType': deviceType.toString(),
+          'manufacture': deviceManufacturer.toString(),
         };
         pairedDevices.add(deviceDetails);
       }
@@ -410,6 +422,12 @@ class SheelaBLEController extends GetxController {
           text: msg,
         ),
       );
+      if(strText.toLowerCase().contains("bgl")){
+        playConversations.add(SheelaResponse(
+          recipientId: conversationType,
+          text: "Please insert strip",
+        ));
+      }
       refreshTimeoutTimer();
     }
   }

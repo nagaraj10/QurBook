@@ -53,7 +53,7 @@ class Data {
   String? systolic;
   String? diastolic;
   String? weight;
-  String? BGL;
+  String? bgl;
 
   Data({
     this.sPO2,
@@ -61,7 +61,7 @@ class Data {
     this.systolic,
     this.diastolic,
     this.weight,
-    this.BGL,
+    this.bgl,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -71,7 +71,7 @@ class Data {
       systolic = json['Systolic'].toString();
       diastolic = json['Diastolic'].toString();
       weight = json['Weight'].toString();
-      BGL = json['BGL'].toString();
+      bgl = json['BGL'].toString();
     } catch (e) {
       print(e);
     }
@@ -85,7 +85,7 @@ class Data {
       data['Systolic'] = this.systolic;
       data['Diastolic'] = this.diastolic;
       data['Weight'] = this.weight;
-      data['BGL'] = this.BGL;
+      data['BGL'] = this.bgl;
     } catch (e) {
       print(e);
     }

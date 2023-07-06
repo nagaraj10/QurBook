@@ -115,9 +115,11 @@ import com.lifesense.plugin.ble.data.scale.LSScaleWeight
 import com.lifesense.plugin.ble.data.tracker.ATDeviceData
 import com.lifesense.plugin.ble.data.tracker.ATPairResultsCode
 import com.lifesense.plugin.ble.data.tracker.ATUserInfo
+import kotlin.collections.ArrayList
 
 class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
+    private var devicesList= listOf<Any>()
     private var deviceType=""
     private var manufacture=""
     private var scanType=""
@@ -543,7 +545,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     }else if (p1 == BluetoothStatus.BLE_ERROR){
 
                         if (::BLEEventChannel.isInitialized) {
-                            MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
+                            MainThreadEventSink(BLEEventChannel).success("connectionfailed| connectionfailed")
 //                            BLEEventChannel.success("connectionfailed| connection failed")
                         }
                     }
@@ -803,7 +805,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                             Log.e("qurhealth","wowgostatus: connectionfailed")
                         }
 
-                        MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
+                        MainThreadEventSink(BLEEventChannel).success("connectionfailed| connectionfailed")
 //                        BLEEventChannel.success("connectionfailed| connection failed")
                     }
                 }
@@ -1204,9 +1206,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
         override fun onStateChanged(p0: String?, p1: LSConnectState?) {
             super.onStateChanged(p0, p1)
-            runOnUiThread {
-//                resultStream.success("\n\nonStateChanged: "+p1.toString());
-            }
+
             var status=p1?.status
             if(status==null){
                 status=0
@@ -1214,39 +1214,38 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             if(status!=null&&status==1){
                 if (::BLEEventChannel.isInitialized) {
                     MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
-//                            BLEEventChannel.success("scanstarted|connection started")
                 }
             }else if(status!=null&&status==2){
                 if (::BLEEventChannel.isInitialized) {
                     MainThreadEventSink(BLEEventChannel).success("macid|" + macIdLsDevice)
                     MainThreadEventSink(BLEEventChannel).success("manufacturer|Transteck")
+                }
+                Log.e("devicesList", "devicesList: "+devicesList.size )
 
-//                                BLEEventChannel.success("macid|" + bleMacId)
+                devicesList.forEachIndexed { index, any ->
+                    Log.e("devicesList", "devicesList: "+(any as HashMap<String,String>).get("deviceType") )
+
+                    if((any as HashMap<String,String>).get("deviceType").equals("Weight") && lsDeviceInfo.deviceName?.contains("GBS-2012-B") == true) {
+                        sendPost("Connected", DEVICE_WEIGHT, 0, 0, 0,weight=0.0)
+                        if (::BLEEventChannel.isInitialized) {
+                            MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "weight")
+                        }
+                        if (::BLEEventChannel.isInitialized) {
+                            MainThreadEventSink(BLEEventChannel).success("connected|" + "weight" + " connected successfully!!!")
+                        }
+                    }else if((any as HashMap<String,String>).get("deviceType").equals("BGL")&&lsDeviceInfo.deviceName?.contains("TeleBGM Gen1 BLE") == true) {
+                        sendPost("Connected", DEVICE_BGL, 0, 0, 0)
+                        if (::BLEEventChannel.isInitialized) {
+                            MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "BGL")
+                        }
+                        if (::BLEEventChannel.isInitialized) {
+                            MainThreadEventSink(BLEEventChannel).success("connected|" + "bgl" + " connected successfully!!!")
+                        }
+                    }
                 }
 
-                if(deviceType.equals("Weight")) {
-                    sendPost("Connected", DEVICE_WEIGHT, 0, 0, 0,weight=0.0)
-                    if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "weight")
-//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
-                    }
-                    if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("connected|" + "weight" + " connected successfully!!!")
-//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
-                    }
-                }else if(deviceType.equals("BGL")){
-                    sendPost("Connected", DEVICE_BGL, 0, 0, 0)
-                    if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "BGL")
-//                            BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
-                    }
-                    if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("connected|" + "bgl" + " connected successfully!!!")
-//                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
-                    }
-                }
                 if(scanType.equals("scanAll")){
-                    if(lsDeviceInfo.deviceName?.contains("BLE-Vivachek") == true || lsDeviceInfo.deviceName?.contains("TeleBGM Gen1 BLE") == true) {
+                    if(lsDeviceInfo.deviceName?.contains("TeleBGM Gen1 BLE") == true) {
                         sendPost("Connected", DEVICE_BGL, 0, 0, 0)
                         if (::BLEEventChannel.isInitialized) {
                             MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "BGL")
@@ -2332,47 +2331,49 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
             if (call.method == "scanSingle") {
                 // bluetoothFlutterResult=result
-                deviceType = call.argument<String>("deviceType").toString()
-                manufacture = call.argument<String>("manufacture").toString()
+                devicesList=call.arguments as ArrayList<*>
+//                deviceType = ((call.arguments as ArrayList<*>).get(0) as HashMap<String,String>).get("deviceType")
+//                    .toString()
+//                manufacture = ((call.arguments as ArrayList<*>).get(0) as HashMap<String,String>).get("manufacture")
+//                    .toString()
                 scanType=call.method.toString()
-                Log.d("BLE VITALS", "StartingPoint")
-                if(manufacture.equals("WOWGo")){
-                    when(deviceType){
-                        "spo2"->{
-                            stopScan()
-                            Handler().postDelayed({
-                                selectedBle = "spo2"
-                                gManager = GoldenBLEDeviceManager(applicationContext, gCallback)
-                                gManager?.scanLeDevice(true)
-                                WOWGoDataUpload = 0
-                            }, 500)
-                        }
-                        "bp"->{
-                            stopScan()
-                            Handler().postDelayed({
-                                selectedBle = "bp"
-                                gManagerBP = com.gsh.bloodpressure.api.GoldenBLEDeviceManager(
-                                    applicationContext,
-                                    gCallBackBP
-                                )
-                                gManagerBP?.scanLeDevice(true)
-                            }, 500)
-                        }
-                        "weight"->{
-                            stopScan()
-                            Handler().postDelayed({
-                                selectedBle = "weight"
-                                gManagerFat = com.gsh.weightscale.api.GoldenBLEDeviceManager(
-                                    applicationContext,
-                                    gCallbackFat
-                                )
-                                gManagerFat?.scanLeDevice(true)
-                            }, 500)
+                devicesList.forEachIndexed { index: Int, any: Any? ->
+                    if((any as HashMap<String,String>).get("manufacture").equals("WOWGo")){
+                        stopScan()
+                        when((any as HashMap<String,String>).get("deviceType")){
+                            "spo2"->{
+                                Handler().postDelayed({
+                                    selectedBle = "spo2"
+                                    gManager = GoldenBLEDeviceManager(applicationContext, gCallback)
+                                    gManager?.scanLeDevice(true)
+                                    WOWGoDataUpload = 0
+                                }, 500)
+                            }
+                            "bp"->{
+                                Handler().postDelayed({
+                                    selectedBle = "bp"
+                                    gManagerBP = com.gsh.bloodpressure.api.GoldenBLEDeviceManager(
+                                        applicationContext,
+                                        gCallBackBP
+                                    )
+                                    gManagerBP?.scanLeDevice(true)
+                                }, 500)
+                            }
+                            "weight"->{
+                                Handler().postDelayed({
+                                    selectedBle = "weight"
+                                    gManagerFat = com.gsh.weightscale.api.GoldenBLEDeviceManager(
+                                        applicationContext,
+                                        gCallbackFat
+                                    )
+                                    gManagerFat?.scanLeDevice(true)
+                                }, 500)
+                            }
                         }
                     }
-                }else if(manufacture.equals("Transteck")){
 
                 }
+
 //                BleManager.getInstance().init(application)
 //                BleManager.getInstance()
 //                    .enableLog(true)
