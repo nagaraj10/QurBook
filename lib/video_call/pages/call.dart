@@ -48,6 +48,7 @@ class CallPage extends StatefulWidget {
   RtcEngine? rtcEngine;
   String? doctorName;
   bool? isWeb;
+  bool? isInSpeaker;
 
   /// Creates a call page with given channel name.
   CallPage(
@@ -57,7 +58,8 @@ class CallPage extends StatefulWidget {
       this.isAppExists,
       this.rtcEngine,
       this.doctorName,
-      this.isWeb});
+      this.isWeb,
+      this.isInSpeaker});
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -902,6 +904,9 @@ class _CallPageState extends State<CallPage> {
                                 await widget.rtcEngine?.enableLocalVideo(true);
                                 await widget.rtcEngine
                                     ?.muteLocalVideoStream(false);
+                                await widget.rtcEngine
+                                    ?.setEnableSpeakerphone(true);
+
                                 Provider.of<HideProvider>(Get.context!,
                                         listen: false)
                                     .swithToVideo();
@@ -961,6 +966,8 @@ class _CallPageState extends State<CallPage> {
                 await widget.rtcEngine?.disableVideo();
                 await widget.rtcEngine?.enableLocalVideo(false);
                 await widget.rtcEngine?.muteLocalVideoStream(true);
+                await widget.rtcEngine?.setEnableSpeakerphone(false);
+
                 Provider.of<HideProvider>(Get.context!, listen: false)
                     .swithToAudio();
                 Provider.of<AudioCallProvider>(Get.context!, listen: false)

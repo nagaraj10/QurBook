@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -87,6 +86,7 @@ class CallMainMakeCall extends StatelessWidget {
   PreferenceUtil prefs = new PreferenceUtil();
   var regController = Get.find<QurhomeRegimenController>();
   bool _isTimerRun = true;
+  bool _speaker = false;
 
   void listenForVideoCallRequest() {
     var rtcProvider =
@@ -325,18 +325,17 @@ class CallMainMakeCall extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: regController.isFromSOS.value
-              ? Colors.white:Color(CommonUtil().getMyPrimaryColor()),
+              ? Colors.white
+              : Color(CommonUtil().getMyPrimaryColor()),
           automaticallyImplyLeading: false,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                regController.isFromSOS.value
-                    ? emergencyServices
-                    : patName!,
+                regController.isFromSOS.value ? emergencyServices : patName!,
                 style: TextStyle(
-                  color: regController.isFromSOS.value
-                      ? Colors.red:Colors.white,
+                  color:
+                      regController.isFromSOS.value ? Colors.red : Colors.white,
                   fontSize: 18.0.sp,
                 ),
               ),
@@ -352,10 +351,11 @@ class CallMainMakeCall extends StatelessWidget {
                 children: [
                   regController.isFromSOS.value
                       ? Icon(
-                    Icons.radio_button_on_outlined,
-                    size: 22.0.sp,
-                    color: Colors.red,
-                  ):SizedBox.shrink(),
+                          Icons.radio_button_on_outlined,
+                          size: 22.0.sp,
+                          color: Colors.red,
+                        )
+                      : SizedBox.shrink(),
                   SizedBox(
                     width: 2.0.w,
                   ),
@@ -366,7 +366,8 @@ class CallMainMakeCall extends StatelessWidget {
                     width: 50.0.w,
                     timerTextStyle: TextStyle(
                       color: regController.isFromSOS.value
-                          ? Colors.black:Colors.white,
+                          ? Colors.black
+                          : Colors.white,
                       fontSize: 15.0.sp,
                     ),
                     isRaised: false,
@@ -475,9 +476,10 @@ class CallMainMakeCall extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Toolbar(role, (isMute, isVideoHide) {
+                            Toolbar(role, (isMute, isVideoHide, speaker) {
                               _isMute = isMute;
                               _isVideoHide = isVideoHide;
+                              _speaker = speaker;
                             },
                                 _isMute,
                                 _isVideoHide,
@@ -492,7 +494,8 @@ class CallMainMakeCall extends StatelessWidget {
                                 call_start_time,
                                 healthOrganizationId,
                                 healthRecords,
-                                isFromAppointment),
+                                isFromAppointment,
+                                audioCallStatus.isAudioCall ? false : true),
                             SizedBox(
                               height: 20.0.h,
                             ),
@@ -587,7 +590,8 @@ class CallMainMakeCall extends StatelessWidget {
                     onPressed: () {
                       prepareMyData();
                       try {
-                        if (!isFromAppointment!) callApiToUpdateNonAppointment();
+                        if (!isFromAppointment!)
+                          callApiToUpdateNonAppointment();
                       } catch (e) {}
                       VideoCallCommonUtils().terminate(
                           appsID: appointmentId,

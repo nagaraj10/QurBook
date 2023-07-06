@@ -6560,7 +6560,10 @@ class VideoCallCommonUtils {
       configuration.bitrate = 200;
       await rtcProvider.rtcEngine?.setVideoEncoderConfiguration(configuration);
       await rtcProvider.rtcEngine?.enableVideo();
+      await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
     } else {
+      await rtcProvider?.rtcEngine?.setEnableSpeakerphone(false);
+
       //* Audio call
       // if audio call means, diable video and put on inEar
       //await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);

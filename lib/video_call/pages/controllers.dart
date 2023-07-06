@@ -42,6 +42,7 @@ class MyControllers extends StatefulWidget {
   RtcEngine? rtcEngine;
   String? channelName;
   bool? isWeb;
+  bool isInSpeaker;
 
   MyControllers(
       this.rtcEngine,
@@ -58,7 +59,8 @@ class MyControllers extends StatefulWidget {
       this.patientName,
       this.patientPicUrl,
       this.channelName,
-      this.isWeb);
+      this.isWeb,
+      this.isInSpeaker);
 
   @override
   _MyControllersState createState() => _MyControllersState();
@@ -264,6 +266,40 @@ class _MyControllersState extends State<MyControllers> {
                 ),
               ),
               Padding(
+                padding: EdgeInsets.all(
+                  8.0.sp,
+                ),
+                child: IconButton(
+                  onPressed: _onToggleSpeaker,
+                  // icon: Icon(
+                  // widget._isHideMyVideo ? Icons.videocam_off : Icons.videocam,
+                  //   color: Colors.white,
+                  //   size: 20.0,
+                  // ),
+                  icon: Consumer<VideoIconProvider>(
+                    builder: (context, status, child) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: widget.isInSpeaker
+                            ? Image.asset(
+                                'assets/icons/volume.png',
+                                height: 30,
+                                width: 30,
+                              )
+                            : Image.asset(
+                                'assets/icons/mute.png',
+                                height: 30,
+                                width: 30,
+                              ),
+                      );
+                    },
+                  ),
+                  iconSize: 24.0.sp,
+                  //color: Colors.white,
+                  //iconSize: 15.0,
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
                   onPressed: _onToggleMute,
@@ -337,14 +373,20 @@ class _MyControllersState extends State<MyControllers> {
     );
   }
 
+  Future<void> _onToggleSpeaker() async {
+    widget.isInSpeaker = !widget.isInSpeaker;
+    await widget.rtcEngine?.setEnableSpeakerphone(widget.isInSpeaker);
+    setState(() {});
+  }
+
   void _onCallEnd(BuildContext context) async {
     try {
       if (Platform.isIOS) {
         // Trigger the call ended event to the native iOS application so we can dismiss the default iPhone call UI
-      responseToCallKitMethodChannel.invokeListMethod(
-        IsCallEnded,
-        {'status': true},
-      );
+        responseToCallKitMethodChannel.invokeListMethod(
+          IsCallEnded,
+          {'status': true},
+        );
 
         if (PreferenceUtil.getCallNotificationReceived()) {
           PreferenceUtil.setCallNotificationRecieved(isCalled: false);
@@ -367,9 +409,8 @@ class _MyControllersState extends State<MyControllers> {
 
       await FirebaseFirestore.instance
           .collection('call_log')
-          .doc(widget.channelName??"")
+          .doc(widget.channelName ?? "")
           .delete();
-
     } catch (e) {
       if (kDebugMode) {
         print(e);
