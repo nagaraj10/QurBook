@@ -121,66 +121,70 @@ class SheelaAIController extends GetxController {
     player!.onPlayerStateChanged.listen(
       (event) {
         if (event == PlayerState.COMPLETED) {
-          if ((currentPlayingConversation!.buttons ?? []).isNotEmpty) {
-            final buttons = currentPlayingConversation!.buttons!;
-            if ((currentPlayingConversation!.currentButtonPlayingIndex ?? 0) <
-                buttons.length) {
-              var index =
-                  currentPlayingConversation!.currentButtonPlayingIndex ?? 0;
-              if ((index < buttons.length - 1) &&
-                  buttons[index + 1].skipTts! &&
-                  !currentPlayingConversation!.isButtonNumber!) {
-                if (currentPlayingConversation!.currentButtonPlayingIndex !=
-                    null) {
-                  index++;
-                  currentPlayingConversation!.currentButtonPlayingIndex = index;
-                }
-              }
-              checkForButtonsAndPlay();
-            }
-          } else {
-            stopTTS();
-            try {
-              if (!conversations.last.endOfConv) {
-                if (CommonUtil.isUSRegion()) {
-                  if (!isMuted.value) {
-                    if (!isDiscardDialogShown.value) {
-                      gettingReposnseFromNative();
-                    }
-                  }
-                } else {
-                  gettingReposnseFromNative();
-                }
-              } else if ((conversations.last.redirectTo ?? "") ==
-                  strRegimen.toLowerCase()) {
-                if (PreferenceUtil.getIfQurhomeisAcive()) {
-                  Get.to(
-                    () => QurHomeRegimenScreen(
-                      addAppBar: true,
-                    ),
-                  );
-                } else {
-                  Get.toNamed(rt_Regimen);
-                }
-              } else if ((conversations.last.redirectTo ?? "") ==
-                  strMyFamilyList.toLowerCase()) {
-                Get.to(UserAccounts(
-                    arguments: UserAccountsArguments(selectedIndex: 1)));
-              } else if ((conversations.last.redirectTo ?? "") ==
-                  strHomeScreen.toLowerCase()) {
-                startTimer();
-              }
-            } catch (e) {
-              //gettingReposnseFromNative();
-              if (kDebugMode)
-                printError(
-                  info: e.toString(),
-                );
-            }
-          }
+          afterCompletedAudioPlayer();
         }
       },
     );
+  }
+
+  afterCompletedAudioPlayer(){
+    if ((currentPlayingConversation!.buttons ?? []).isNotEmpty) {
+      final buttons = currentPlayingConversation!.buttons!;
+      if ((currentPlayingConversation!.currentButtonPlayingIndex ?? 0) <
+          buttons.length) {
+        var index =
+            currentPlayingConversation!.currentButtonPlayingIndex ?? 0;
+        if ((index < buttons.length - 1) &&
+            buttons[index + 1].skipTts! &&
+            !currentPlayingConversation!.isButtonNumber!) {
+          if (currentPlayingConversation!.currentButtonPlayingIndex !=
+              null) {
+            index++;
+            currentPlayingConversation!.currentButtonPlayingIndex = index;
+          }
+        }
+        checkForButtonsAndPlay();
+      }
+    } else {
+      stopTTS();
+      try {
+        if (!conversations.last.endOfConv) {
+          if (CommonUtil.isUSRegion()) {
+            if (!isMuted.value) {
+              if (!isDiscardDialogShown.value) {
+                gettingReposnseFromNative();
+              }
+            }
+          } else {
+            gettingReposnseFromNative();
+          }
+        } else if ((conversations.last.redirectTo ?? "") ==
+            strRegimen.toLowerCase()) {
+          if (PreferenceUtil.getIfQurhomeisAcive()) {
+            Get.to(
+                  () => QurHomeRegimenScreen(
+                addAppBar: true,
+              ),
+            );
+          } else {
+            Get.toNamed(rt_Regimen);
+          }
+        } else if ((conversations.last.redirectTo ?? "") ==
+            strMyFamilyList.toLowerCase()) {
+          Get.to(UserAccounts(
+              arguments: UserAccountsArguments(selectedIndex: 1)));
+        } else if ((conversations.last.redirectTo ?? "") ==
+            strHomeScreen.toLowerCase()) {
+          startTimer();
+        }
+      } catch (e) {
+        //gettingReposnseFromNative();
+        if (kDebugMode)
+          printError(
+            info: e.toString(),
+          );
+      }
+    }
   }
 
   checkForButtonsAndPlay() {
@@ -450,6 +454,7 @@ class SheelaAIController extends GetxController {
   }
 
   playTTS({bool playButtons = false}) async {
+    bool muteButton = false;
     if (!canSpeak) {
       stopTTS();
       return;
@@ -513,7 +518,11 @@ class SheelaAIController extends GetxController {
           }
         } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
             .isNotEmpty) {
-          textForPlaying = currentButton.ttsResponse!.payload!.audioContent;
+          if(currentButton.mute!=sheela_hdn_btn_yes){
+            textForPlaying = currentButton.ttsResponse!.payload!.audioContent;
+          }else{
+            muteButton = true;
+          }
         } else if ((currentButton.title ?? '').isNotEmpty) {
           var result;
           try {
@@ -578,6 +587,10 @@ class SheelaAIController extends GetxController {
           print(e.toString());
           FlutterToast().getToast('failed play the audio', Colors.black54);
           stopTTS();
+        }
+      }else{
+        if(muteButton){
+          afterCompletedAudioPlayer();
         }
       }
     }

@@ -190,6 +190,7 @@ class Buttons {
   String? payload;
   String? title;
   String? hidden;
+  String? mute;
   String? sayText;
   bool? skipTts;
   bool? relationshipIdNotRequired;
@@ -201,6 +202,7 @@ class Buttons {
     this.payload,
     this.title,
     this.hidden,
+    this.mute,
     this.sayText,
     this.skipTts,
     this.relationshipIdNotRequired = false,
@@ -211,6 +213,7 @@ class Buttons {
     payload = json['payload'];
     title = json['title'];
     hidden = (json['hidden'] ?? '');
+    mute = (json['mute'] ?? '');
     sayText = (json['saytext'] ?? '');
     skipTts = (json['skip_tts'] ?? false);
     relationshipIdNotRequired = (json['relationshipIdNotRequired'] ?? false);
@@ -221,6 +224,7 @@ class Buttons {
     data['payload'] = this.payload;
     data['title'] = this.title;
     data['hidden'] = this.hidden;
+    data['mute'] = this.mute;
     data['saytext'] = this.sayText;
     data['skip_tts'] = this.skipTts;
     data['relationshipIdNotRequired'] = this.relationshipIdNotRequired;
