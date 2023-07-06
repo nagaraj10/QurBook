@@ -55,14 +55,19 @@ class _DeleteAccountWebScreenState extends State<DeleteAccountWebScreen> {
                 },
                 initialUrl: CommonUtil.WEB_URL,
                 javascriptMode: JavascriptMode.unrestricted,
-                backgroundColor: Colors.transparent,
+                //backgroundColor: Colors.transparent,
                 onPageFinished: (finish) {
                   setState(() {
                     isLoading = false;
                   });
                 },
               ),
-              isLoading ? CommonCircularIndicator()
+              isLoading
+                  ? Container(
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(child: CommonCircularIndicator()))
                   : Stack(),
             ],
           ),
