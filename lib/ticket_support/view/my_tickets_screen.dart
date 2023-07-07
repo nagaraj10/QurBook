@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/ticket_support/view/ticket_types_screen.dart';
 import 'package:myfhb/ticket_support/view/tickets_list_view.dart';
@@ -30,7 +28,16 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
                 colors: [
                   Color(new CommonUtil().getMyPrimaryColor()),
                   Color(new CommonUtil().getMyGredientColor())
-                ])),
+                ]),
+          boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3),
+          ),
+        ],),
+
         child: FloatingActionButton(
           autofocus: false,
           onPressed: () async {
@@ -39,9 +46,7 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
               MaterialPageRoute(builder: (context) => TicketTypesScreen()),
             ).then((value) {
               print('intent working');
-              setState(() {
-                
-              });
+              setState(() {});
             });
           },
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -60,7 +65,11 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
             onBackPressed(context);
           },
         ),
-        title: Text(strMyTickets),
+        title: Text(strMyTickets,
+            style: TextStyle(
+                fontSize: (CommonUtil().isTablet ?? false)
+                    ? tabFontTitle
+                    : mobileFontTitle)),
       ),
       body: TicketsList(),
     );

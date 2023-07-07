@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,7 +41,11 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             Navigator.pop(context);
           },
         ),
-        title: Text(constants.strMyTickets),
+        title: Text(constants.strMyTickets,
+            style: TextStyle(
+                fontSize: (CommonUtil().isTablet ?? false)
+                    ? constants.tabFontTitle
+                    : constants.mobileFontTitle)),
       ),
       body: Container(
         child: getTicketTypes(),

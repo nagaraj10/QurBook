@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -11,6 +10,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../common/CommonUtil.dart';
 
 class OrdersView extends StatefulWidget {
   @override
@@ -24,7 +24,7 @@ class _OrdersViewState extends State<OrdersView> {
   @override
   void initState() {
     controller.getOrders();
-     mInitialTime = DateTime.now();
+    mInitialTime = DateTime.now();
     super.initState();
   }
 
@@ -53,8 +53,12 @@ class _OrdersViewState extends State<OrdersView> {
             Get.back();
           },
         ),
-        title: const Text(
+        title: Text(
           'My Orders',
+          style: TextStyle(
+              fontSize: (CommonUtil().isTablet ?? false)
+                  ? tabFontTitle
+                  : mobileFontTitle),
         ),
       ),
       body: Obx(
@@ -85,11 +89,12 @@ class _OrdersViewState extends State<OrdersView> {
                   horizontal: 16,
                   vertical: 4,
                 ),
-                child: Text(
-                  "Past Orders",
-                  style: Theme.of(context).textTheme.headline6,
-                  textAlign: TextAlign.start,
-                ),
+                child: Text("Past Orders",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontSize: (CommonUtil().isTablet ?? false)
+                            ? tabHeader1
+                            : mobileHeader1)),
               ),
               Expanded(
                 child: ListView.builder(

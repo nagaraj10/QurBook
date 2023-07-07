@@ -18,7 +18,12 @@ class DevicesScreen extends StatelessWidget {
         flexibleSpace: GradientAppBar(),
         backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
         elevation: 0,
-        title: Text(strDevices),
+        title: Text(
+          strDevices,
+          style: TextStyle(
+              fontSize:
+                  CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle),
+        ),
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
           colors: Colors.white,

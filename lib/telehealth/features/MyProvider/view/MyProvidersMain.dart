@@ -1,8 +1,8 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -17,6 +17,7 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class MyProvidersMain extends StatefulWidget {
   final int? mTabIndex;
@@ -62,9 +63,13 @@ class _TabBarDemoState extends State<MyProvidersMain>
               // not when user swapped
             },
             controller: _controller,
-            tabs: const <Tab>[
-              const Tab(text: 'Doctors'),
-              const Tab(text: 'Hospitals')
+            tabs: <Tab>[
+              Tab(
+                  child: Text(CommonConstants.doctors,
+                      style: CommonUtil().getTitleStyle())),
+              Tab(
+                  child: Text(CommonConstants.hospitals,
+                      style: CommonUtil().getTitleStyle()))
             ],
           ),
           flexibleSpace: GradientAppBar(),
@@ -114,8 +119,10 @@ class _TabBarDemoState extends State<MyProvidersMain>
           child: Text(
             'My Providers',
             style: TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
+                fontWeight: FontWeight.w500,
+                fontSize: CommonUtil().isTablet!
+                    ? Constants.tabFontTitle
+                    : Constants.mobileFontTitle),
           ),
         ),
         new CommonUtil().getNotificationIcon(context),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 import '../../common/CommonUtil.dart';
 import '../../src/utils/colors_utils.dart';
@@ -89,7 +90,7 @@ class AddDeviceView extends GetView<AddDeviceViewController> {
         // }
         controller.saveDevice();
       },
-      child: const Padding(
+      child: Padding(
         padding: EdgeInsets.all(
           8.0,
         ),
@@ -98,6 +99,7 @@ class AddDeviceView extends GetView<AddDeviceViewController> {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w500,
+            fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
           ),
         ),
       ),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -72,7 +71,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   void initState() {
     mInitialTime = DateTime.now();
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    String? categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
+    String? categoryID =
+        PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
 
     super.initState();
   }
@@ -209,7 +209,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
-                        radius: 25,
+                        radius: CommonUtil().isTablet! ? 35 : 25,
                         backgroundColor:
                             const Color(fhbColors.bgColorContainer),
                         child: Image.network(
@@ -281,12 +281,16 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                           //TODO chnage theme
                                           color: Color(new CommonUtil()
                                               .getMyPrimaryColor()),
-                                          size: 20,
+                                          size: CommonUtil().isTablet!
+                                              ? tabHeader2
+                                              : mobileHeader2,
                                         )
                                       : ImageIcon(
                                           AssetImage(variable.icon_record_fav),
                                           color: Colors.black,
-                                          size: 20,
+                                          size: CommonUtil().isTablet!
+                                              ? tabHeader2
+                                              : mobileHeader2,
                                         ),
                                   onPressed: () {
                                     new CommonUtil()
@@ -372,7 +376,10 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                           ? CommonConstants.strOxygenParamsName.toLowerCase()
                           : deviceReadings[i].parameter!.toLowerCase())!
                   : '',
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12.0.sp),
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize:
+                      CommonUtil().isTablet! ? tabHeader2 : mobileHeader2),
               maxLines: 2,
               softWrap: true,
             ),
@@ -383,7 +390,9 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
-                      fontSize: 12.0.sp),
+                      fontSize: CommonUtil().isTablet!
+                          ? tabHeader3
+                          : Constants.mobileHeader3),
                 ),
                 Text(
                     deviceReadings[i].unit.toLowerCase() ==
@@ -391,7 +400,11 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         ? CommonConstants.strOxygenUnitsName
                         : " " + deviceReadings[i].unit,
                     maxLines: 2,
-                    style: TextStyle(color: Colors.black54, fontSize: 10.0.sp))
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: CommonUtil().isTablet!
+                            ? tabHeader3
+                            : mobileHeader3))
               ],
             ),
           ],

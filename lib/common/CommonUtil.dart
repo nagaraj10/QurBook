@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -2442,14 +2444,52 @@ class CommonUtil {
                     print(e);
                   }
                 },
-                child: BadgeIcon(
-                    icon: Icon(
-                      Icons.notifications,
-                      color: color ?? Colors.white,
-                      size: CommonUtil().isTablet! ? 33.0.sp : 30.0.sp,
-                    ),
-                    badgeColor: ColorUtils.countColor,
-                    badgeCount: count),
+                child: count! > 0
+                    ? Badge(
+                        position: BadgePosition.topEnd(
+                          top: -8,
+                          end: -5,
+                        ),
+                        toAnimate: false,
+                        badgeColor: ColorUtils.countColor,
+                        badgeContent: Container(
+                          constraints:
+                              BoxConstraints(minWidth: 6.w, minHeight: 6.h),
+                          alignment: Alignment.center,
+                          child: Center(
+                            child: Text(
+                              (count! > 99) ? '99+' : count.toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: CommonUtil().isTablet! ? 14 : 9,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        ),
+                        child: IconWidget(
+                          icon: Icons.notifications,
+                          colors: isFromQurday
+                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              : Colors.white,
+                          size: CommonUtil().isTablet! ? 33.0.sp : 27.0.sp,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NotificationMain()),
+                            );
+                          },
+                        ),
+                      )
+                    : BadgeIcon(
+                        icon: Icon(
+                          Icons.notifications,
+                          color: isFromQurday
+                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              : Colors.white,
+                          size: 30.0.sp,
+                        ),
+                        badgeColor: ColorUtils.countColor),
               );
             } else {
               return GestureDetector(
@@ -2463,7 +2503,9 @@ class CommonUtil {
                 child: BadgeIcon(
                     icon: Icon(
                       Icons.notifications,
-                      color: color ?? Colors.white,
+                      color: isFromQurday
+                          ? Color(CommonUtil().getQurhomePrimaryColor())
+                          : Colors.white,
                       size: 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor),
@@ -2482,7 +2524,9 @@ class CommonUtil {
         child: BadgeIcon(
             icon: Icon(
               Icons.notifications,
-              color: color ?? Colors.white,
+              color: isFromQurday
+                  ? Color(CommonUtil().getQurhomePrimaryColor())
+                  : Colors.white,
               size: 30.0.sp,
             ),
             badgeColor: ColorUtils.countColor),
@@ -5092,29 +5136,35 @@ class CommonUtil {
             title: Text(
               variable.strConfirm,
               style: TextStyle(
-                fontSize: CommonUtil().isTablet!?22.0.sp:null,
+                  fontSize: CommonUtil().isTablet! ? 22.0.sp : null,
                   color: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
                       : Color(CommonUtil().getMyPrimaryColor())),
             ),
             // To display the title it is optional
-            content: CommonUtil().isTablet!?Container(
-                width: MediaQuery.of(context).size.width*0.60,
-                child: Text('Record ' + name.trim()+'?',style: TextStyle(
-                    fontSize: 20.0.sp),)):Text('Record ' + name.trim()+'?'),
+            content: CommonUtil().isTablet!
+                ? Container(
+                    width: MediaQuery.of(context).size.width * 0.60,
+                    child: Text(
+                      'Record ' + name.trim() + '?',
+                      style: TextStyle(fontSize: 20.0.sp),
+                    ))
+                : Text('Record ' + name.trim() + '?'),
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
               FlatButton(
-                textColor: isQurhome
-                    ? Color(CommonUtil().getQurhomePrimaryColor())
-                    : Color(CommonUtil().getMyPrimaryColor()),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(variable.strNo,style: TextStyle(
-                    fontSize: CommonUtil().isTablet!?22.0.sp:null),)
-              ),
+                  textColor: isQurhome
+                      ? Color(CommonUtil().getQurhomePrimaryColor())
+                      : Color(CommonUtil().getMyPrimaryColor()),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    variable.strNo,
+                    style: TextStyle(
+                        fontSize: CommonUtil().isTablet! ? 22.0.sp : null),
+                  )),
               FlatButton(
                   // FlatButton widget is used to make a text to work like a button
                   textColor: isQurhome
@@ -5122,8 +5172,11 @@ class CommonUtil {
                       : Color(CommonUtil().getMyPrimaryColor()),
                   onPressed: onPressedYes,
                   // function used to perform after pressing the button
-                  child: Text(variable.strYes,style: TextStyle(
-                      fontSize: CommonUtil().isTablet!?22.0.sp:null),)),
+                  child: Text(
+                    variable.strYes,
+                    style: TextStyle(
+                        fontSize: CommonUtil().isTablet! ? 22.0.sp : null),
+                  )),
             ],
           );
         });
@@ -5681,18 +5734,23 @@ class CommonUtil {
   }
 
   Future<MyProfileModel?> acceptCareGiverTransportRequestReminder(
-      BuildContext context,String appointmentId,String patientId,bool isAccept) async {
+      BuildContext context,
+      String appointmentId,
+      String patientId,
+      bool isAccept) async {
     final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
-    MyProfileModel myProfile=MyProfileModel();
-    FetchAppointmentsService fetchAppointmentsService = FetchAppointmentsService();
+    MyProfileModel myProfile = MyProfileModel();
+    FetchAppointmentsService fetchAppointmentsService =
+        FetchAppointmentsService();
     // var dialog=CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
-    var result=await fetchAppointmentsService.acceptOrDeclineAppointment(appointmentId,patientId,isAccept);
+    var result = await fetchAppointmentsService.acceptOrDeclineAppointment(
+        appointmentId, patientId, isAccept);
     //Navigator.pop(context);
 
     if ((appointmentId ?? '').isNotEmpty) {
       AppointmentDetailsController appointmentDetailsController =
-      CommonUtil().onInitAppointmentDetailsController();
+          CommonUtil().onInitAppointmentDetailsController();
       appointmentDetailsController.getAppointmentDetail(appointmentId ?? '');
       Get.to(() => AppointmentDetailScreen());
     }
@@ -6205,6 +6263,13 @@ class CommonUtil {
       },
     );
   }
+
+  getTitleStyle() {
+    return TextStyle(
+      fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
+      fontWeight: FontWeight.w600,
+    );
+  }
 }
 
 extension CapExtension on String {
@@ -6368,8 +6433,6 @@ class VideoCallCommonUtils {
       }
     }
   }
-
-  
 
   String capitalizeFirstofEach(String data) {
     return data

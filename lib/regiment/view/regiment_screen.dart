@@ -27,7 +27,10 @@ class RegimentScreen extends StatelessWidget {
         flexibleSpace: GradientAppBar(),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         elevation: 0,
-        title: Text(strRegimen),
+        title: Text(strRegimen,
+            style: TextStyle(
+                fontSize:
+                    CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle)),
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
           colors: Colors.white,

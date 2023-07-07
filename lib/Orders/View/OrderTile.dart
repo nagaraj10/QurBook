@@ -1,10 +1,10 @@
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/Model/OrderModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 class OrderTile extends StatelessWidget {
   final OrderModel order;
@@ -24,9 +24,11 @@ class OrderTile extends StatelessWidget {
           children: [
             Text(
               'Order id : ${order.orderId}',
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: (CommonUtil().isTablet ?? false)
+                      ? tabHeader1
+                      : mobileHeader1),
             ),
             const SizedBox(
               height: 2,
@@ -34,7 +36,10 @@ class OrderTile extends StatelessWidget {
             order.date != null
                 ? Text(
                     "${DateFormat('MMMM dd, hh:mm a').format(order.date!)}",
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: TextStyle(
+                        fontSize: (CommonUtil().isTablet ?? false)
+                            ? tabHeader2
+                            : mobileHeader2),
                   )
                 : Container(),
             const SizedBox(
@@ -43,7 +48,10 @@ class OrderTile extends StatelessWidget {
             order.patientFirstName!.isNotEmpty
                 ? Text(
                     "Patient name : ${order.patientFirstName} ${order.patientLastName} ",
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: TextStyle(
+                        fontSize: (CommonUtil().isTablet ?? false)
+                            ? tabHeader2
+                            : mobileHeader2),
                   )
                 : Container(),
             const SizedBox(
@@ -65,16 +73,21 @@ class OrderTile extends StatelessWidget {
                         children: [
                           Text(
                             'Paid  ',
-                            style: Theme.of(context).textTheme.subtitle1,
+                            style: TextStyle(
+                                fontSize: (CommonUtil().isTablet ?? false)
+                                    ? tabHeader3
+                                    : mobileHeader3),
                           ),
                           Text(
                             '${CommonUtil.CURRENCY}${double.parse(order.feePaid!)}',
-                            style:
-                                Theme.of(context).textTheme.subtitle1!.copyWith(
-                                      color: Color(
-                                        CommonUtil().getMyPrimaryColor(),
-                                      ),
-                                    ),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(
+                                  CommonUtil().getMyPrimaryColor(),
+                                ),
+                                fontSize: (CommonUtil().isTablet ?? false)
+                                    ? tabHeader3
+                                    : mobileHeader3),
                           ),
                         ],
                       )

@@ -12,7 +12,10 @@ class ReportListScreen extends StatelessWidget {
         flexibleSpace: GradientAppBar(),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         elevation: 0,
-        title: Text(strMyReports),
+        title: Text(strMyReports,
+            style: TextStyle(
+                fontSize:
+                    CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle)),
       ),
       body: MyReportList(),
     );

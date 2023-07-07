@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -188,14 +187,16 @@ class _ClaimListState extends State<ClaimList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(
-                              height: 25,
+                              height: 10,
                             ),
                             Text(
                               "My Claim",
                               style: TextStyle(
+                                  color: Colors.white,
                                   fontFamily: variable.font_poppins,
-                                  fontSize: 20.0.sp,
-                                  color: Colors.white),
+                                  fontSize: (CommonUtil().isTablet ?? false)
+                                      ? tabFontTitle
+                                      : mobileFontTitle),
                             ),
                             (memberShipEndDate != "" &&
                                     memberShipEndDate != null &&
@@ -228,7 +229,8 @@ class _ClaimListState extends State<ClaimList> {
           'Membership Type : ' + memberShipValue,
           style: TextStyle(
               fontFamily: variable.font_poppins,
-              fontSize: 14.0.sp,
+              fontSize:
+                  (CommonUtil().isTablet ?? false) ? tabHeader2 : mobileHeader2,
               color: Colors.white),
         ),
         Text(
@@ -238,7 +240,8 @@ class _ClaimListState extends State<ClaimList> {
           maxLines: 1,
           style: TextStyle(
               fontFamily: variable.font_poppins,
-              fontSize: 14.0.sp,
+              fontSize:
+                  (CommonUtil().isTablet ?? false) ? tabHeader2 : mobileHeader2,
               color: Colors.white),
         ),
       ],
@@ -252,7 +255,8 @@ class _ClaimListState extends State<ClaimList> {
       maxLines: 1,
       style: TextStyle(
           fontFamily: variable.font_poppins,
-          fontSize: 14.0.sp,
+          fontSize:
+              (CommonUtil().isTablet ?? false) ? tabHeader2 : mobileHeader2,
           color: Color(CommonUtil().getMyPrimaryColor())),
     );
   }
@@ -325,8 +329,9 @@ class _ClaimListState extends State<ClaimList> {
     try {
       String? claimAmountTotal;
       if (ClaimAmount!.contains(".")) {
-        claimAmountTotal =
-            ClaimAmount!.contains(".") ? ClaimAmount!.split(".")[0] : ClaimAmount;
+        claimAmountTotal = ClaimAmount!.contains(".")
+            ? ClaimAmount!.split(".")[0]
+            : ClaimAmount;
       } else {
         claimAmountTotal = ClaimAmount;
       }
@@ -341,13 +346,17 @@ class _ClaimListState extends State<ClaimList> {
       isCreditBalnceZero = false;
     }
     String claimAmountValue = (ClaimAmount != null && ClaimAmount != "")
-        ? (CommonUtil.REGION_CODE != "IN"?variable.strDollar+" ":'\u{20B9} ') + ClaimAmount!
+        ? (CommonUtil.REGION_CODE != "IN"
+                ? variable.strDollar + " "
+                : '\u{20B9} ') +
+            ClaimAmount!
         : "";
     return Text(
       "Claim Amount Balance : " + claimAmountValue,
       style: TextStyle(
           fontFamily: variable.font_poppins,
-          fontSize: 16.0.sp,
+          fontSize:
+              (CommonUtil().isTablet ?? false) ? tabHeader1 : mobileHeader1,
           color: Colors.white),
     );
   }
@@ -519,9 +528,7 @@ class _ClaimListState extends State<ClaimList> {
                                   Text("Claim no :",
                                       style: getTextStyleForTags()),
                                   Text(
-                                      " " +
-                                              claimResultList[index]
-                                                  .claimNumber!,
+                                      " " + claimResultList[index].claimNumber!,
                                       style: getTextStyleForValue())
                                 ],
                               ),
@@ -532,8 +539,7 @@ class _ClaimListState extends State<ClaimList> {
                                   Text(
                                       (claimResultList[index].planName !=
                                                   null &&
-                                              claimResultList[index]
-                                                      .planName !=
+                                              claimResultList[index].planName !=
                                                   '')
                                           ? claimResultList[index].planName!
                                           : memberShipType!,
@@ -546,9 +552,9 @@ class _ClaimListState extends State<ClaimList> {
                                       style: getTextStyleForTags()),
                                   Text(
                                       " " +
-                                              claimResultList[index]
-                                                  .documentMetadata![0]
-                                                  .billName,
+                                          claimResultList[index]
+                                              .documentMetadata![0]
+                                              .billName,
                                       style: getTextStyleForValue())
                                 ],
                               ),
@@ -561,7 +567,8 @@ class _ClaimListState extends State<ClaimList> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                   CommonUtil.getDateStringFromDateTime(claimResultList[index]
+                                  CommonUtil.getDateStringFromDateTime(
+                                      claimResultList[index]
                                           .documentMetadata![0]
                                           .billDate),
                                   style: getTextStyleForTags()),
@@ -575,9 +582,7 @@ class _ClaimListState extends State<ClaimList> {
                                       fontWeight: FontWeight.w600,
                                       fontSize: fhbStyles.fnt_day,
                                       color: getColorBasedOnSatus(
-                                          claimResultList[index]
-                                                  .status
-                                                  ?.code ??
+                                          claimResultList[index].status?.code ??
                                               ''))),
                             ],
                           ))),
@@ -622,7 +627,8 @@ class _ClaimListState extends State<ClaimList> {
         DateFormat format = DateFormat("yyyy-MM-dd");
 
         var now = format.parse(billDate);
-        final df = new DateFormat(CommonUtil.REGION_CODE == 'IN'?'dd-MMM-yyyy':'MMM-dd-yyyy');
+        final df = new DateFormat(
+            CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
         return df.format(now);
       } catch (e) {

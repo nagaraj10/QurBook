@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
@@ -174,16 +173,18 @@ class _NotesScreenListState extends State<NotesScreenList> {
             child: Row(
               children: <Widget>[
                 CircleAvatar(
-                  radius: 25,
+                  radius: CommonUtil().isTablet! ? 35 : 25,
                   backgroundColor: const Color(fhbColors.bgColorContainer),
-                  child: mediaMetaInfoObj.metadata!.healthRecordCategory!.logo !=
+                  child: mediaMetaInfoObj
+                              .metadata!.healthRecordCategory!.logo !=
                           null
                       ? Image.network(
                           /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                         :
                           Constants.BASE_URL +*/
-                          mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
+                          mediaMetaInfoObj
+                              .metadata!.healthRecordCategory!.logo!,
                           height: 25.0.h,
                           width: 25.0.h,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -206,7 +207,11 @@ class _NotesScreenListState extends State<NotesScreenList> {
                         mediaMetaInfoObj.metadata!.fileName != null
                             ? mediaMetaInfoObj.metadata!.fileName!
                             : '',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader1
+                                : mobileHeader1),
                         overflow: TextOverflow.fade,
                         softWrap: false,
                       ),
@@ -214,7 +219,10 @@ class _NotesScreenListState extends State<NotesScreenList> {
                         new FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(
-                            color: Colors.grey[400], fontSize: 14.0.sp),
+                            color: Colors.grey[400],
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader2
+                                : mobileHeader2),
                       )
                     ],
                   ),
@@ -231,12 +239,16 @@ class _NotesScreenListState extends State<NotesScreenList> {
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
-                                  size: 20,
+                                  size: CommonUtil().isTablet!
+                                      ? tabHeader2
+                                      : mobileHeader2,
                                 )
                               : ImageIcon(
                                   AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
-                                  size: 20,
+                                  size: CommonUtil().isTablet!
+                                      ? tabHeader2
+                                      : mobileHeader2,
                                 ),
                           onPressed: () {
                             new CommonUtil()

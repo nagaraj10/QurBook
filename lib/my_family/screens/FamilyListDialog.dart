@@ -1,9 +1,9 @@
-
 import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
@@ -43,7 +43,6 @@ class FamilyListDialogState extends State<FamilyListDialog> {
 
   @override
   Widget build(BuildContext context) {
-    
     if (_familyListBloc != null) {
       _familyListBloc = null;
       _familyListBloc = FamilyListBloc();
@@ -58,7 +57,6 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   Widget getFamilyMemberList() {
     return PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
         ? getDialogBoxWithFamilyMember(
-          
             PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER)!) as Widget
         : StreamBuilder<ApiResponse<FamilyMembersList>>(
             stream: _familyListBloc!.familyMemberListStream,
@@ -87,13 +85,13 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                     } as FutureOr Function(Widget?));
                     break;
                 }
-              } 
-             // else {
-                return Container(
-                  width: 100.0.h,
-                  height: 100.0.h,
-                );
-            //  }
+              }
+              // else {
+              return Container(
+                width: 100.0.h,
+                height: 100.0.h,
+              );
+              //  }
             },
           );
   }
@@ -192,7 +190,9 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                         child: Row(
                           children: <Widget>[
                             ClipOval(
-                                child: sharedByMe![index].linkedData!.nickName ==
+                                child: sharedByMe![index]
+                                            .linkedData!
+                                            .nickName ==
                                         variable.Self
                                     ? FHBBasicWidget()
                                         .getProfilePicWidgeUsingUrl(myProfile)
@@ -201,8 +201,12 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                             .profileData!
                                             .profilePicThumbnail!
                                             .data!),
-                                        height: 50.0.h,
-                                        width: 50.0.h,
+                                        height: CommonUtil().isTablet!
+                                            ? imageProfileTabHeader
+                                            : imageProfileMobileHeader,
+                                        width: CommonUtil().isTablet!
+                                            ? imageProfileTabHeader
+                                            : imageProfileMobileHeader,
                                         fit: BoxFit.cover,
                                       )),
                             SizedBox(width: 20.0.w),
@@ -210,7 +214,10 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  sharedByMe[index].profileData!.name!.capitalizeFirstofEach,
+                                  sharedByMe[index]
+                                      .profileData!
+                                      .name!
+                                      .capitalizeFirstofEach,
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(

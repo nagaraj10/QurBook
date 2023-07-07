@@ -223,10 +223,20 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                             mediaMetaInfoObj?.metadata?.doctor?.firstName ?? "",
                             mediaMetaInfoObj?.metadata?.doctor?.lastName ?? "",
                             Color(CommonUtil().getMyPrimaryColor()),
+                            CommonUtil().isTablet!
+                                ? imageTabHeader
+                                : Constants.imageMobileHeader,
+                            CommonUtil().isTablet!
+                                ? tabHeader1
+                                : Constants.mobileHeader1,
                             authtoken: authToken ?? "")
                         : Container(
-                            width: 50,
-                            height: 50,
+                            width: CommonUtil().isTablet!
+                                ? imageTabHeader
+                                : Constants.imageMobileHeader,
+                            height: CommonUtil().isTablet!
+                                ? imageTabHeader
+                                : Constants.imageMobileHeader,
                             color: const Color(fhbColors.bgColorContainer))),
                 SizedBox(width: 20),
                 Expanded(
@@ -253,7 +263,11 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                 mediaMetaInfoObj.metadata!.doctor!.lastName!)!,
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader1
+                                : mobileHeader1),
                       ),
                       Visibility(
                           visible: mediaMetaInfoObj?.metadata?.hospital != null
@@ -271,16 +285,20 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: Colors.grey,
-                                fontWeight: FontWeight.w500),
+                                fontWeight: FontWeight.w500,
+                                fontSize: CommonUtil().isTablet!
+                                    ? tabHeader2
+                                    : mobileHeader2),
                           )),
                       Text(
                         new FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(
-                          color: Colors.grey[400],
-                          fontWeight: FontWeight.w200,
-                          fontSize: 14.0.sp,
-                        ),
+                            color: Colors.grey[400],
+                            fontWeight: FontWeight.w200,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader3
+                                : mobileHeader3),
                       )
                     ],
                   ),
@@ -297,12 +315,16 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
-                                  size: 20.0.sp,
+                                  size: CommonUtil().isTablet!
+                                      ? tabHeader2
+                                      : mobileHeader2,
                                 )
                               : ImageIcon(
                                   AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
-                                  size: 20.0.sp,
+                                  size: CommonUtil().isTablet!
+                                      ? tabHeader2
+                                      : mobileHeader2,
                                 ),
                           onPressed: () {
                             new CommonUtil()
@@ -341,14 +363,14 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
         if (snapshot.hasData) {
           return Image.memory(
             snapshot.data,
-            height: 50,
-            width: 50,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             fit: BoxFit.cover,
           );
         } else {
           return new SizedBox(
-            width: 50.0,
-            height: 50.0,
+            width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+            height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             child: Shimmer.fromColors(
                 baseColor: Colors.grey[200]!,
                 highlightColor: Colors.grey[550]!,
@@ -377,8 +399,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
         ),
       ),
       placeholder: (context, url) => new SizedBox(
-          width: 50.0,
-          height: 50.0,
+          width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
+          height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
           child: Shimmer.fromColors(
               baseColor: Colors.grey[200]!,
               highlightColor: Colors.grey[550]!,
