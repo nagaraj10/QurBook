@@ -65,7 +65,6 @@ class SheelaAIController extends GetxController {
   String? conversationFlag;
   Map<dynamic, dynamic>? additionalInfo = {};
   bool lastMsgIsOfButtons = false;
-  late AudioCache _audioCache;
   Timer? _popTimer;
   Timer? _exitAutoTimer;
   var sheelaIconBadgeCount = 0.obs;
@@ -89,10 +88,7 @@ class SheelaAIController extends GetxController {
         (BASE_URL == demoUSURL)) {
       isProd = true;
     }
-    if (Platform.isIOS) {
-      _audioCache = AudioCache();
-      _audioCache.loadAll(['raw/Negative.mp3', 'raw/Positive.mp3']);
-    }
+
     profile = PreferenceUtil.getProfileData(KEY_PROFILE);
     authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -104,17 +100,6 @@ class SheelaAIController extends GetxController {
     additionalInfo = {};
     player = AudioPlayer();
     listnerForAudioPlayer();
-    if (Platform.isIOS) {
-      tts_platform.setMethodCallHandler((call) {
-        if (call.method == tts_platform_closeMic) {
-          if (isMicListening.isTrue) {
-            isMicListening.value = false;
-            _audioCache.play('raw/Negative.mp3');
-          }
-        }
-        return Future.value("");
-      });
-    }
   }
 
   listnerForAudioPlayer() {
@@ -127,18 +112,16 @@ class SheelaAIController extends GetxController {
     );
   }
 
-  afterCompletedAudioPlayer(){
+  afterCompletedAudioPlayer() {
     if ((currentPlayingConversation!.buttons ?? []).isNotEmpty) {
       final buttons = currentPlayingConversation!.buttons!;
       if ((currentPlayingConversation!.currentButtonPlayingIndex ?? 0) <
           buttons.length) {
-        var index =
-            currentPlayingConversation!.currentButtonPlayingIndex ?? 0;
+        var index = currentPlayingConversation!.currentButtonPlayingIndex ?? 0;
         if ((index < buttons.length - 1) &&
             buttons[index + 1].skipTts! &&
             !currentPlayingConversation!.isButtonNumber!) {
-          if (currentPlayingConversation!.currentButtonPlayingIndex !=
-              null) {
+          if (currentPlayingConversation!.currentButtonPlayingIndex != null) {
             index++;
             currentPlayingConversation!.currentButtonPlayingIndex = index;
           }
@@ -162,7 +145,7 @@ class SheelaAIController extends GetxController {
             strRegimen.toLowerCase()) {
           if (PreferenceUtil.getIfQurhomeisAcive()) {
             Get.to(
-                  () => QurHomeRegimenScreen(
+              () => QurHomeRegimenScreen(
                 addAppBar: true,
               ),
             );
@@ -171,8 +154,8 @@ class SheelaAIController extends GetxController {
           }
         } else if ((conversations.last.redirectTo ?? "") ==
             strMyFamilyList.toLowerCase()) {
-          Get.to(UserAccounts(
-              arguments: UserAccountsArguments(selectedIndex: 1)));
+          Get.to(
+              UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1)));
         } else if ((conversations.last.redirectTo ?? "") ==
             strHomeScreen.toLowerCase()) {
           startTimer();
@@ -381,8 +364,8 @@ class SheelaAIController extends GetxController {
             conversationFlag = currentResponse.conversationFlag;
           }
           //if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
-            additionalInfo = currentResponse.additionalInfo;
-         // }
+          additionalInfo = currentResponse.additionalInfo;
+          // }
           if ((currentResponse.audioURL != null) &&
               (currentResponse.audioURL ?? '').isNotEmpty) {
             isLoading(true);
@@ -518,9 +501,9 @@ class SheelaAIController extends GetxController {
           }
         } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
             .isNotEmpty) {
-          if(currentButton.mute!=sheela_hdn_btn_yes){
+          if (currentButton.mute != sheela_hdn_btn_yes) {
             textForPlaying = currentButton.ttsResponse!.payload!.audioContent;
-          }else{
+          } else {
             muteButton = true;
           }
         } else if ((currentButton.title ?? '').isNotEmpty) {
@@ -588,8 +571,8 @@ class SheelaAIController extends GetxController {
           FlutterToast().getToast('failed play the audio', Colors.black54);
           stopTTS();
         }
-      }else{
-        if(muteButton){
+      } else {
+        if (muteButton) {
           afterCompletedAudioPlayer();
         }
       }
@@ -715,10 +698,7 @@ class SheelaAIController extends GetxController {
       if (micStatus) {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
-          if (Platform.isIOS) {
-            await _audioCache.play('raw/Positive.mp3');
-            await Future.delayed(const Duration(seconds: 1));
-          }
+
           await voice_platform.invokeMethod(
             strspeakAssistant,
             {

@@ -257,10 +257,13 @@ import FirebaseFirestore
                 //                mytapGestureRecog.numberOfTapsRequired = 1
                 //                Loading.sharedInstance.bgBlurView.addGestureRecognizer(mytapGestureRecog)
                 self?.STT_Result = result;
-                do{
-                    try self?.startRecording();
-                }catch(let error){
-                    print("\(Constants.errorIs) \(error.localizedDescription)")
+                AudioServicesPlaySystemSound (1113)
+                AudioServicesPlaySystemSoundWithCompletion(1113) {
+                    do{
+                        try self?.startRecording();
+                    }catch(let error){
+                        print("\(Constants.errorIs) \(error.localizedDescription)")
+                    }
                 }
             }else if call.method == self?.STT_MicavailablityMethod{
                 let audioSession = AVAudioSession.sharedInstance()
@@ -383,10 +386,7 @@ import FirebaseFirestore
         STT_Result?("");
         //        Loading.sharedInstance.hideLoader()
         stopRecording()
-        if let controller = self.navigationController?.children.first as? FlutterViewController{
-            let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
-            notificationChannel.invokeMethod(Constants.closeMicMethod,arguments: nil)
-        }
+        self.playCloseMicTone()
         if let viewControllers = navigationController?.visibleViewController as? SheelaAIVC {
             viewControllers.dismiss(animated: true, completion: nil)
         }
@@ -394,7 +394,10 @@ import FirebaseFirestore
             viewControllers.dismiss(animated: false, completion: nil)
         }
     }
-    
+    func playCloseMicTone(){
+        AudioServicesPlaySystemSound (1114)
+    }
+
     // 2 a)
     // Speech to Text
     func startRecording() throws {
@@ -407,7 +410,7 @@ import FirebaseFirestore
         recognitionTask = SFSpeechRecognitionTask()
         
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.record, mode: .measurement, options: .mixWithOthers)
+        try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .mixWithOthers)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         let inputNode = audioEngine.inputNode
         inputNode.removeTap(onBus: 0)
@@ -430,10 +433,7 @@ import FirebaseFirestore
         print(Constants.recogEntered)
         Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { time in
             if(self.message.count == 0){
-                if let controller = self.navigationController?.children.first as? FlutterViewController{
-                    let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
-                    notificationChannel.invokeMethod(Constants.closeMicMethod,arguments: nil)
-                }
+                self.playCloseMicTone()
                 Loading.sharedInstance.hideLoader()
                 self.stopRecording()
                 self.detectionTimer?.invalidate()
@@ -460,10 +460,7 @@ import FirebaseFirestore
                     timer.invalidate()
                     self.stopRecording()
                     if(self.message.count > 0){
-                        if let controller = self.navigationController?.children.first as? FlutterViewController{
-                            let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
-                            notificationChannel.invokeMethod(Constants.closeMicMethod, arguments: nil)
-                       }
+                        self.playCloseMicTone()
                        self.STT_Result?(self.message)
                     }
                     self.message = "";
@@ -476,10 +473,7 @@ import FirebaseFirestore
                         timer.invalidate()
                         self.stopRecording()
                         if(self.message.count > 0){
-                            if let controller = self.navigationController?.children.first as? FlutterViewController{
-                                let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
-                                notificationChannel.invokeMethod(Constants.closeMicMethod,arguments: nil)
-                            }
+                           self.playCloseMicTone()
                             self.STT_Result?(self.message)
                         }
                         self.message = "";
