@@ -315,7 +315,9 @@ class SheelaBLEController extends GetxController {
           'deviceType': deviceType.toString(),
           'manufacture': deviceManufacturer.toString(),
         };
-        pairedDevices.add(deviceDetails);
+        if(filteredDeviceType.toLowerCase()==deviceType.toLowerCase()){
+          pairedDevices.add(deviceDetails);
+        }
       }
       bleMethodChannel.invokeListMethod('scanSingle', pairedDevices);
     }
