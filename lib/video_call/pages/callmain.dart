@@ -159,8 +159,10 @@ class _CallMainState extends State<CallMain> {
                           isWeb: Platform.isIOS
                               ? widget.arguments!.isWeb
                               : widget.isWeb ?? false,
-                          isInSpeaker:
-                              audioCallStatus.isAudioCall ? false : true),
+                            isInSpeaker: audioCallStatus.isAudioCall
+                                  ? false
+                                  : true,
+                              ),
                       LocalPreview(
                         rtcEngine: rtcEngine,
                       ),
@@ -189,9 +191,10 @@ class _CallMainState extends State<CallMain> {
                                       Platform.isIOS
                                           ? widget.arguments?.doctorId ?? ''
                                           : widget.doctorId ?? '',
-                                      (isMute, isVideoHide) {
+                                      (isMute, isVideoHide, speaker) {
                                     _isMute = isMute;
                                     _isVideoHide = isVideoHide;
+                                    _speaker = speaker;
                                   },
                                       _isMute,
                                       _isVideoHide,
@@ -216,9 +219,7 @@ class _CallMainState extends State<CallMain> {
                                           ? widget.arguments!.channelName
                                           : widget.channelName,
                                       widget.isWeb,
-                                      audioCallStatus.isAudioCall
-                                          ? false
-                                          : true),
+                                       _speaker),
                                   SizedBox(
                                     height: 20.0.h,
                                   ),

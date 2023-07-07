@@ -30,7 +30,7 @@ class MyControllers extends StatefulWidget {
   CallStatus callStatus;
   ClientRole? role;
   bool? isAppExists;
-  Function(bool, bool) controllerState;
+  Function(bool, bool, bool) controllerState;
   bool muted;
   bool _isHideMyVideo;
   String? doctorId;
@@ -265,40 +265,45 @@ class _MyControllersState extends State<MyControllers> {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(
-                  8.0.sp,
-                ),
-                child: IconButton(
-                  onPressed: _onToggleSpeaker,
-                  // icon: Icon(
-                  // widget._isHideMyVideo ? Icons.videocam_off : Icons.videocam,
-                  //   color: Colors.white,
-                  //   size: 20.0,
-                  // ),
-                  icon: Consumer<VideoIconProvider>(
-                    builder: (context, status, child) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: widget.isInSpeaker
-                            ? Image.asset(
-                                'assets/icons/volume.png',
-                                height: 30,
-                                width: 30,
-                              )
-                            : Image.asset(
-                                'assets/icons/mute.png',
-                                height: 30,
-                                width: 30,
-                              ),
-                      );
-                    },
+              Consumer<VideoIconProvider>(builder: (context, status, child) {
+                return Visibility(
+                  visible: !status.isVideoOn,
+                  child: Padding(
+                    padding: EdgeInsets.all(
+                      8.0.sp,
+                    ),
+                    child: IconButton(
+                      onPressed: _onToggleSpeaker,
+                      // icon: Icon(
+                      // widget._isHideMyVideo ? Icons.videocam_off : Icons.videocam,
+                      //   color: Colors.white,
+                      //   size: 20.0,
+                      // ),
+                      icon: Consumer<VideoIconProvider>(
+                        builder: (context, status, child) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: widget.isInSpeaker
+                                ? Image.asset(
+                                    'assets/icons/volume.png',
+                                    height: 30,
+                                    width: 30,
+                                  )
+                                : Image.asset(
+                                    'assets/icons/mute.png',
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                          );
+                        },
+                      ),
+                      iconSize: 24.0.sp,
+                      //color: Colors.white,
+                      //iconSize: 15.0,
+                    ),
                   ),
-                  iconSize: 24.0.sp,
-                  //color: Colors.white,
-                  //iconSize: 15.0,
-                ),
-              ),
+                );
+              }),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
@@ -374,9 +379,15 @@ class _MyControllersState extends State<MyControllers> {
   }
 
   Future<void> _onToggleSpeaker() async {
-    widget.isInSpeaker = !widget.isInSpeaker;
+    setState(() {
+      if (audioCallStatus.isAudioCall) {
+        widget.isInSpeaker = !widget.isInSpeaker;
+      }
+    });
+
     await widget.rtcEngine?.setEnableSpeakerphone(widget.isInSpeaker);
-    setState(() {});
+    widget.controllerState(
+        widget.muted, videoIconStatus.isVideoOn, widget.isInSpeaker);
   }
 
   void _onCallEnd(BuildContext context) async {
@@ -430,7 +441,8 @@ class _MyControllersState extends State<MyControllers> {
         {'status': widget.muted},
       );
     }
-    widget.controllerState(widget.muted, widget._isHideMyVideo);
+    widget.controllerState(
+        widget.muted, widget._isHideMyVideo, widget.isInSpeaker);
     widget.rtcEngine!.muteLocalAudioStream(widget.muted);
   }
 
@@ -450,6 +462,8 @@ class _MyControllersState extends State<MyControllers> {
         await widget.rtcEngine?.enableVideo();
         await widget.rtcEngine?.enableLocalVideo(true);
         await widget.rtcEngine?.muteLocalVideoStream(false);
+        await widget.rtcEngine?.setEnableSpeakerphone(true);
+
         requestingDialog();
         var newStatus = VideoCallStatus();
         newStatus.setDefaultValues();
@@ -464,18 +478,27 @@ class _MyControllersState extends State<MyControllers> {
         await widget.rtcEngine?.disableVideo();
         await widget.rtcEngine?.enableLocalVideo(false);
         await widget.rtcEngine?.muteLocalVideoStream(true);
+        await widget.rtcEngine?.setEnableSpeakerphone(false);
+        setState(() {
+          widget.isInSpeaker = false;
+        });
 
         Provider.of<HideProvider>(context, listen: false).swithToAudio();
         Provider.of<AudioCallProvider>(context, listen: false)
             .enableAudioCall();
         Provider.of<VideoIconProvider>(context, listen: false).turnOffVideo();
       } else {
+        await widget.rtcEngine?.setEnableSpeakerphone(true);
+        setState(() {
+          widget.isInSpeaker = true;
+        });
         widget.rtcEngine!.muteLocalVideoStream(videoIconStatus.isVideoOn);
         Provider.of<RTCEngineProvider>(context, listen: false)
             .changeLocalVideoStatus(videoIconStatus.isVideoOn);
         CommonUtil.isLocalUserOnPause = videoIconStatus.isVideoOn;
         videoIconStatus.swapVideo();
-        widget.controllerState(widget.muted, videoIconStatus.isVideoOn);
+        widget.controllerState(
+            widget.muted, videoIconStatus.isVideoOn, widget.isInSpeaker);
       }
     }
   }
@@ -532,6 +555,9 @@ class _MyControllersState extends State<MyControllers> {
                         await widget.rtcEngine?.disableVideo();
                         await widget.rtcEngine?.enableLocalVideo(false);
                         await widget.rtcEngine?.muteLocalVideoStream(true);
+                        await widget.rtcEngine?.setEnableSpeakerphone(false);
+                        widget.isInSpeaker = false;
+
                         Get.back();
                       }),
                 ],

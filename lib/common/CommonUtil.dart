@@ -6569,7 +6569,6 @@ class VideoCallCommonUtils {
       //await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
 
     }
-    await rtcProvider.rtcEngine?.setEnableSpeakerphone(true);
     await rtcProvider.rtcEngine
         ?.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await rtcProvider.rtcEngine?.setClientRole(ClientRole.Broadcaster);

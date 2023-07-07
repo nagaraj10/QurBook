@@ -205,8 +205,10 @@ class _CallPageState extends State<CallPage> {
           widget.rtcEngine?.enableVideo();
         });
       });
+      await widget.rtcEngine?.setEnableSpeakerphone(true);
+    } else {
+      await widget.rtcEngine?.setEnableSpeakerphone(false);
     }
-    await widget.rtcEngine?.setEnableSpeakerphone(true);
     await widget.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await widget.rtcEngine?.setClientRole(widget.role!);
     await widget.rtcEngine?.muteLocalAudioStream(true);
@@ -926,6 +928,7 @@ class _CallPageState extends State<CallPage> {
                                   ..collection("call_log")
                                       .doc("${widget.channelName}")
                                       .update(newStatus.toMap());
+                                widget.isInSpeaker = true;
                                 Get.back();
                               }
                             },
