@@ -818,6 +818,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         override fun onReceiveSPO2MeasurementData(p0: BluetoothDevice?, spo2: Int, pulseRate: Int) {
             try {
                 runOnUiThread {
+                    Log.e("qurhealth","wowgostatus: measurement in outside")
+                }
+                runOnUiThread {
                     if (spo2 < 101 && pulseRate != 127 && pulseRate != 255 && WOWGoDataUpload == 0) {
                         gManager?.scanLeDevice(false)
                         gManager?.disconnect()
@@ -2337,10 +2340,12 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 //                manufacture = ((call.arguments as ArrayList<*>).get(0) as HashMap<String,String>).get("manufacture")
 //                    .toString()
                 scanType=call.method.toString()
+                stopScan()
                 devicesList.forEachIndexed { index: Int, any: Any? ->
                     if((any as HashMap<String,String>).get("manufacture").equals("WOWGo")){
-                        stopScan()
-                        when((any as HashMap<String,String>).get("deviceType")){
+
+                        Log.e("mainac", "configureFlutterEngine: "+(any as HashMap<String,String>).get("deviceType") )
+                        when((any as HashMap<String,String>).get("deviceType").toString().toLowerCase()){
                             "spo2"->{
                                 Handler().postDelayed({
                                     selectedBle = "spo2"
@@ -2439,23 +2444,23 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             if (call.method == "bleScanCancel") {
                 Log.d("BLE_SCAN_CANCEL", "bleScanCancel")
                 stopScan()
-                when (selectedBle) {
-                    "spo2" -> {
+                //when (selectedBle) {
+                  //  "spo2" -> {
                         gManager?.scanLeDevice(false)
                         gManager?.disconnect()
                         gManager?.destroy()
-                    }
-                    "weight" -> {
+                    //}
+                    //"weight" -> {
                         gManagerFat?.scanLeDevice(false)
                         gManagerFat?.disconnect()
                         gManagerFat?.destroy()
-                    }
-                    "bp" -> {
+                    //}
+                    //"bp" -> {
                         gManagerBP?.scanLeDevice(false)
                         gManagerBP?.disconnect()
                         gManagerBP?.destroy()
-                    }
-                }
+                    //}
+                //}
                 selectedBle = ""
             }
         }
