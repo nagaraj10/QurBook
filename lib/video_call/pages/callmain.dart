@@ -76,6 +76,7 @@ class _CallMainState extends State<CallMain> {
   bool _isFirstTime = true;
 
   bool _isMute = false;
+  bool _speaker = false;
 
   bool _isVideoHide = false;
   bool isPatientSwitched = false;
@@ -149,16 +150,19 @@ class _CallMainState extends State<CallMain> {
                 ? Stack(
                     children: <Widget>[
                       CallPage(
-                        rtcEngine: rtcEngine,
-                        role: widget.role,
-                        channelName: widget.channelName,
-                        arguments: widget.arguments,
-                        isAppExists: widget.isAppExists,
-                        doctorName: widget.doctorName,
-                        isWeb: Platform.isIOS
-                            ? widget.arguments!.isWeb
-                            : widget.isWeb ?? false,
-                      ),
+                          rtcEngine: rtcEngine,
+                          role: widget.role,
+                          channelName: widget.channelName,
+                          arguments: widget.arguments,
+                          isAppExists: widget.isAppExists,
+                          doctorName: widget.doctorName,
+                          isWeb: Platform.isIOS
+                              ? widget.arguments!.isWeb
+                              : widget.isWeb ?? false,
+                            isInSpeaker: audioCallStatus.isAudioCall
+                                  ? false
+                                  : true,
+                              ),
                       LocalPreview(
                         rtcEngine: rtcEngine,
                       ),
@@ -180,39 +184,42 @@ class _CallMainState extends State<CallMain> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   MyControllers(
-                                    rtcEngine,
-                                    callStatus,
-                                    widget.role,
-                                    widget.isAppExists,
-                                    Platform.isIOS
-                                        ? widget.arguments?.doctorId ?? ''
-                                        : widget.doctorId ?? '',
-                                    (isMute, isVideoHide) {
-                                      _isMute = isMute;
-                                      _isVideoHide = isVideoHide;
-                                    },
-                                    _isMute,
-                                    _isVideoHide,
-                                    Platform.isIOS
-                                        ? widget.arguments?.userName ?? ''
-                                        : widget.doctorName ?? '',
-                                    Platform.isIOS
-                                        ? widget.arguments?.doctorPicture ?? ''
-                                        : widget.doctorPic ?? '',
-                                    Platform.isIOS
-                                        ? widget.arguments?.patientId ?? ''
-                                        : widget.patientId ?? '',
-                                    Platform.isIOS
-                                        ? widget.arguments?.patientName ?? ''
-                                        : widget.patientName ?? '',
-                                    Platform.isIOS
-                                        ? widget.arguments?.patientPicture ?? ''
-                                        : widget.patientPicUrl ?? '',
-                                    Platform.isIOS
-                                        ? widget.arguments!.channelName
-                                        : widget.channelName,
-                                    widget.isWeb,
-                                  ),
+                                      rtcEngine,
+                                      callStatus,
+                                      widget.role,
+                                      widget.isAppExists,
+                                      Platform.isIOS
+                                          ? widget.arguments?.doctorId ?? ''
+                                          : widget.doctorId ?? '',
+                                      (isMute, isVideoHide, speaker) {
+                                    _isMute = isMute;
+                                    _isVideoHide = isVideoHide;
+                                    _speaker = speaker;
+                                  },
+                                      _isMute,
+                                      _isVideoHide,
+                                      Platform.isIOS
+                                          ? widget.arguments?.userName ?? ''
+                                          : widget.doctorName ?? '',
+                                      Platform.isIOS
+                                          ? widget.arguments?.doctorPicture ??
+                                              ''
+                                          : widget.doctorPic ?? '',
+                                      Platform.isIOS
+                                          ? widget.arguments?.patientId ?? ''
+                                          : widget.patientId ?? '',
+                                      Platform.isIOS
+                                          ? widget.arguments?.patientName ?? ''
+                                          : widget.patientName ?? '',
+                                      Platform.isIOS
+                                          ? widget.arguments?.patientPicture ??
+                                              ''
+                                          : widget.patientPicUrl ?? '',
+                                      Platform.isIOS
+                                          ? widget.arguments!.channelName
+                                          : widget.channelName,
+                                      widget.isWeb,
+                                       _speaker),
                                   SizedBox(
                                     height: 20.0.h,
                                   ),
