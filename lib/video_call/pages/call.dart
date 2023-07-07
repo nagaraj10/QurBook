@@ -48,6 +48,7 @@ class CallPage extends StatefulWidget {
   RtcEngine? rtcEngine;
   String? doctorName;
   bool? isWeb;
+  bool? isInSpeaker;
 
   /// Creates a call page with given channel name.
   CallPage(
@@ -57,7 +58,8 @@ class CallPage extends StatefulWidget {
       this.isAppExists,
       this.rtcEngine,
       this.doctorName,
-      this.isWeb});
+      this.isWeb,
+      this.isInSpeaker});
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -203,8 +205,10 @@ class _CallPageState extends State<CallPage> {
           widget.rtcEngine?.enableVideo();
         });
       });
+      await widget.rtcEngine?.setEnableSpeakerphone(true);
+    } else {
+      await widget.rtcEngine?.setEnableSpeakerphone(false);
     }
-    await widget.rtcEngine?.setEnableSpeakerphone(true);
     await widget.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await widget.rtcEngine?.setClientRole(widget.role!);
     await widget.rtcEngine?.muteLocalAudioStream(true);
@@ -902,6 +906,9 @@ class _CallPageState extends State<CallPage> {
                                 await widget.rtcEngine?.enableLocalVideo(true);
                                 await widget.rtcEngine
                                     ?.muteLocalVideoStream(false);
+                                await widget.rtcEngine
+                                    ?.setEnableSpeakerphone(true);
+
                                 Provider.of<HideProvider>(Get.context!,
                                         listen: false)
                                     .swithToVideo();
@@ -921,6 +928,7 @@ class _CallPageState extends State<CallPage> {
                                   ..collection("call_log")
                                       .doc("${widget.channelName}")
                                       .update(newStatus.toMap());
+                                widget.isInSpeaker = true;
                                 Get.back();
                               }
                             },
@@ -961,6 +969,8 @@ class _CallPageState extends State<CallPage> {
                 await widget.rtcEngine?.disableVideo();
                 await widget.rtcEngine?.enableLocalVideo(false);
                 await widget.rtcEngine?.muteLocalVideoStream(true);
+                await widget.rtcEngine?.setEnableSpeakerphone(false);
+
                 Provider.of<HideProvider>(Get.context!, listen: false)
                     .swithToAudio();
                 Provider.of<AudioCallProvider>(Get.context!, listen: false)
