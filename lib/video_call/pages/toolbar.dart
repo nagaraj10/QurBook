@@ -144,74 +144,44 @@ class _ToolbarState extends State<Toolbar> {
                   //iconSize: 15.0,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(
-                  8.0.sp,
-                ),
-                child: IconButton(
-                  onPressed: _onToggleSpeaker,
-                  // icon: Icon(
-                  // widget._isHideMyVideo ? Icons.videocam_off : Icons.videocam,
-                  //   color: Colors.white,
-                  //   size: 20.0,
-                  // ),
-                  icon: Consumer<VideoIconProvider>(
-                    builder: (context, status, child) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: widget.isInSpeaker
-                            ? Image.asset(
-                                'assets/images/bottom-bar/volume.png',
-                                height: 30,
-                                width: 30,
-                              )
-                            : Image.asset(
-                                'assets/images/bottom-bar/mute.png',
-                                height: 30,
-                                width: 30,
-                              ),
-                      );
-                    },
-                  ),
-                  iconSize: 24.0.sp,
-                  //color: Colors.white,
-                  //iconSize: 15.0,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(
-                  8.0.sp,
-                ),
-                child: IconButton(
-                  onPressed: _onToggleSpeaker,
-                  // icon: Icon(
-                  // widget._isHideMyVideo ? Icons.videocam_off : Icons.videocam,
-                  //   color: Colors.white,
-                  //   size: 20.0,
-                  // ),
-                  icon: Consumer<VideoIconProvider>(
-                    builder: (context, status, child) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: widget.isInSpeaker
-                            ? Image.asset(
-                                'assets/icons/volume.png',
-                                height: 30,
-                                width: 30,
-                              )
-                            : Image.asset(
-                                'assets/icons/mute.png',
-                                height: 30,
-                                width: 30,
-                              ),
-                      );
-                    },
-                  ),
-                  iconSize: 24.0.sp,
-                  //color: Colors.white,
-                  //iconSize: 15.0,
-                ),
-              ),
+              Consumer<VideoIconProvider>(builder: (context, status, child) {
+                return Visibility(
+                    visible: !status.isVideoOn,
+                    child: Padding(
+                      padding: EdgeInsets.all(
+                        8.0.sp,
+                      ),
+                      child: IconButton(
+                        onPressed: _onToggleSpeaker,
+                        // icon: Icon(
+                        // widget._isHideMyVideo ? Icons.videocam_off : Icons.videocam,
+                        //   color: Colors.white,
+                        //   size: 20.0,
+                        // ),
+                        icon: Consumer<VideoIconProvider>(
+                          builder: (context, status, child) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: widget.isInSpeaker
+                                  ? Image.asset(
+                                      'assets/icons/volume.png',
+                                      height: 30,
+                                      width: 30,
+                                    )
+                                  : Image.asset(
+                                      'assets/icons/mute.png',
+                                      height: 30,
+                                      width: 30,
+                                    ),
+                            );
+                          },
+                        ),
+                        iconSize: 24.0.sp,
+                        //color: Colors.white,
+                        //iconSize: 15.0,
+                      ),
+                    ));
+              }),
               Padding(
                 padding: EdgeInsets.all(
                   8.0.sp,
@@ -321,9 +291,13 @@ class _ToolbarState extends State<Toolbar> {
   }
 
   Future<void> _onToggleSpeaker() async {
-    widget.isInSpeaker = !widget.isInSpeaker;
+    setState(() {
+      widget.isInSpeaker = !widget.isInSpeaker;
+    });
+
     await rtcProvider?.rtcEngine?.setEnableSpeakerphone(widget.isInSpeaker);
-    setState(() {});
+    widget.controllerState(
+        widget.muted, videoIconStatus.isVideoOn, widget.isInSpeaker);
   }
 
   /*_displayPopUpDialog(BuildContext context) {
@@ -397,6 +371,9 @@ class _ToolbarState extends State<Toolbar> {
           await rtcProvider.rtcEngine?.muteLocalVideoStream(false);
           await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
 
+          setState(() {
+            widget.isInSpeaker = true;
+          });
           Provider.of<RTCEngineProvider>(context, listen: false)
               .changeLocalVideoStatus(false);
           requestingDialog();
@@ -415,12 +392,18 @@ class _ToolbarState extends State<Toolbar> {
           await rtcProvider.rtcEngine?.enableLocalVideo(false);
           await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
           await rtcProvider?.rtcEngine?.setEnableSpeakerphone(false);
-
+          setState(() {
+            widget.isInSpeaker = false;
+          });
           Provider.of<HideProvider>(context, listen: false).swithToAudio();
           Provider.of<AudioCallProvider>(context, listen: false)
               .enableAudioCall();
           Provider.of<VideoIconProvider>(context, listen: false).turnOffVideo();
         } else {
+          await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
+          setState(() {
+            widget.isInSpeaker = false;
+          });
           await rtcProvider.rtcEngine
               ?.muteLocalVideoStream(videoIconStatus.isVideoOn);
           Provider.of<RTCEngineProvider>(context, listen: false)
@@ -551,6 +534,7 @@ class _ToolbarState extends State<Toolbar> {
                           await rtcProvider.rtcEngine?.disableVideo();
                           await rtcProvider?.rtcEngine
                               ?.setEnableSpeakerphone(false);
+                          widget.isInSpeaker = false;
 
                           await rtcProvider.rtcEngine?.enableLocalVideo(false);
                           await rtcProvider.rtcEngine

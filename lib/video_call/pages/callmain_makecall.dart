@@ -164,6 +164,10 @@ class CallMainMakeCall extends StatelessWidget {
                                 return;
                               } else {
                                 await rtcProvider.rtcEngine?.enableVideo();
+                                _speaker = true;
+                                await rtcProvider.rtcEngine
+                                    ?.setEnableSpeakerphone(true);
+
                                 await rtcProvider.rtcEngine
                                     ?.enableLocalVideo(true);
                                 await rtcProvider.rtcEngine
@@ -495,7 +499,7 @@ class CallMainMakeCall extends StatelessWidget {
                                 healthOrganizationId,
                                 healthRecords,
                                 isFromAppointment,
-                                audioCallStatus.isAudioCall ? false : true),
+                                _speaker),
                             SizedBox(
                               height: 20.0.h,
                             ),

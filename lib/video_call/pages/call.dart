@@ -903,6 +903,8 @@ class _CallPageState extends State<CallPage> {
                                 return;
                               } else {
                                 await widget.rtcEngine?.enableVideo();
+                                widget.isInSpeaker = true;
+
                                 await widget.rtcEngine?.enableLocalVideo(true);
                                 await widget.rtcEngine
                                     ?.muteLocalVideoStream(false);
@@ -928,7 +930,6 @@ class _CallPageState extends State<CallPage> {
                                   ..collection("call_log")
                                       .doc("${widget.channelName}")
                                       .update(newStatus.toMap());
-                                widget.isInSpeaker = true;
                                 Get.back();
                               }
                             },
