@@ -463,6 +463,9 @@ class _MyControllersState extends State<MyControllers> {
         await widget.rtcEngine?.enableLocalVideo(true);
         await widget.rtcEngine?.muteLocalVideoStream(false);
         await widget.rtcEngine?.setEnableSpeakerphone(true);
+        setState(() {
+          widget.isInSpeaker = true;
+        });
 
         requestingDialog();
         var newStatus = VideoCallStatus();
