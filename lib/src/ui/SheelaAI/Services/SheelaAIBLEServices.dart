@@ -222,12 +222,11 @@ class SheelaBLEController extends GetxController {
             case "update":
               if (SheelaController.isSheelaScreenActive) {
                 addToConversationAndPlay(
-
                   SheelaResponse(
-
                     recipientId: conversationType,
-
-                    text: receivedValues.last,),);
+                    text: receivedValues.last,
+                  ),
+                );
                 return;
               }
               break;
@@ -406,7 +405,7 @@ class SheelaBLEController extends GetxController {
       String strText = CommonUtil().validString(arguments.deviceType);
       if (strText.toLowerCase() == "bgl") {
         msg =
-            "Your Blood Glucose device is connected. Please insert the strip.";
+            "Your Blood Glucose Monitor is connected. Please insert the test strip.";
       } else {
         if (strText.toLowerCase() == "weight") {
           strText = "Weighing scale";
@@ -422,7 +421,7 @@ class SheelaBLEController extends GetxController {
           text: msg,
         ),
       );
-      if(strText.toLowerCase().contains("bgl")){
+      if (strText.toLowerCase().contains("bgl")) {
         playConversations.add(SheelaResponse(
           recipientId: conversationType,
           text: "Please insert strip",
@@ -560,7 +559,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your Glucose level ${model.data!.bgl} mg/dL is successfully recorded. Bye!.",
+                    "Your Blood Glucose value ${model.data!.bgl} mg/dL is recorded successfully.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
