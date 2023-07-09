@@ -147,6 +147,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         );
       }
       CommonUtil().initPortraitMode();
+      controller.updateBLETimer(Enable: false);
       MyFHB.routeObserver.unsubscribe(this);
       controller.clear();
       super.dispose();

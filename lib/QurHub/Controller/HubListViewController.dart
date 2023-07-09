@@ -25,6 +25,7 @@ class HubListViewController extends GetxController {
   late SheelaBLEController _bleController;
   String? bleMacId = "";
   String? bleDeviceType = "";
+  String? manufacturer = "";
   String? eid;
   String? uid;
 

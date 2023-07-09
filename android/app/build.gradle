@@ -28,6 +28,14 @@ apply plugin: 'kotlin-android-extensions'
 
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('./devkey.jks')
+            storePassword 'devkey'
+            keyAlias 'devkey'
+            keyPassword 'devkey'
+        }
+    }
     compileSdkVersion 32
 
     sourceSets {
@@ -60,6 +68,8 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
 //            minifyEnabled true
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -153,6 +163,8 @@ dependencies {
     implementation files('libs/GSH601_Device.jar')
     implementation files('libs/DB62M_Device.jar')
     implementation files('libs/LS202_Device.jar')
+    implementation files('libs/lifesense-device-ble-2.3.0-beta12.jar')
+
 //    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
 

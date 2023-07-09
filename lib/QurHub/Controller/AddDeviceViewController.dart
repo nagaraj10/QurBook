@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -43,7 +42,7 @@ class AddDeviceViewController extends GetxController {
         USER_HUB_ID: listController.hubListResponse!.result!.id,
         USER_ID: selectedId,
         DEVICE_NAME: " ",
-        ADDITION_DETAILS: {}
+        ADDITION_DETAILS: {"manufacturer": listController.manufacturer}
       };
       final res = await _hubApiProvider.saveNewDevice(data);
       loadingData(false);

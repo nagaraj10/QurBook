@@ -5,6 +5,7 @@ import android.app.Application
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import com.google.firebase.firestore.FirebaseFirestore
+import com.lifesense.plugin.ble.LSBluetoothManager
 import io.flutter.view.FlutterMain
 import jp.co.ohq.ble.OHQDeviceManager
 import java.lang.ref.WeakReference
@@ -16,6 +17,10 @@ public class MyApp : Application(), Application.ActivityLifecycleCallbacks {
 //        OHQDeviceManager.init(applicationContext,currentActivity)
         registerActivityLifecycleCallbacks(this)
         FlutterMain.startInitialization(this)
+        LSBluetoothManager.getInstance().initManager(getApplicationContext())
+        LSBluetoothManager.getInstance().registerBluetoothReceiver(getApplicationContext());
+        LSBluetoothManager.getInstance().openDebugMode("LifesenseBluetooth")
+
 
     }
 
