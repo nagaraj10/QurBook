@@ -406,7 +406,8 @@ class _MySettingsState extends State<MySettings> {
         } else {
           Navigator.pop(context, false);
         }
-      } as Future<bool> Function()?,
+        return Future.value(false);
+      },
       child: Scaffold(
         backgroundColor: const Color(fhbColors.bgColorContainer),
         appBar: AppBar(
