@@ -1,7 +1,7 @@
 
 import Foundation
 import CoreBluetooth
-
+import LSBluetoothPlugin
 struct Constants {
     static let googlekey = "AIzaSyCQ26mjgJ8T00uCWigel-zWQKU6fkhsGX4"
     
@@ -36,6 +36,7 @@ struct Constants {
 
     static let callLocalNotificationMethod = "callLocalNotificationMethod";
     static let devicesEventChannel = "QurbookBLE/stream"
+    static let devicesMethodChannel = "QurbookBLE/method"
     static let reminderMethodChannel = "flutter.native/reminder"
     static let addReminderMethod = "addReminder"
     static let iOSMethodChannel = "flutter.native/iOS"
@@ -84,7 +85,11 @@ struct Constants {
     static let WOWGOWT1 = "GSH-202";
     static let WOWGOWT2 = "GSH-231";
     static let WOWGOWT3 = "0202B-0001";
+    static let scanForAllDevices = "scanAll"
+    static let scanForSingleDevices = "scanSingle"
     static let closeSheelaDialog = "closeSheelaDialog"
     static let deviceInformationServiceUUID = CBUUID(string: "180a")
     static let deviceSerialNumberServiceUUID = CBUUID(string: "2A25")
+    static let TransteckBGLDeviceType = LSDeviceType.bloodGlucoseMeter.rawValue
+    static let TransteckWeightDeviceType = LSDeviceType.weightScale.rawValue
 }

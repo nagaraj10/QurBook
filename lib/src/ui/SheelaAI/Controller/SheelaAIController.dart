@@ -706,10 +706,6 @@ class SheelaAIController extends GetxController {
             },
           ).then((response) async {
             isMicListening.value = false;
-            if (Platform.isIOS) {
-              await Future.delayed(const Duration(seconds: 1));
-            }
-
             if ((response ?? '').toString().isNotEmpty) {
               final newConversation = SheelaResponse(text: response);
               if (conversations.isNotEmpty &&
