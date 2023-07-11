@@ -1240,7 +1240,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 devicesList.forEachIndexed { index, any ->
                     Log.e("devicesList", "devicesList: "+(any as HashMap<String,String>).get("deviceType") )
 
-                    if((any as HashMap<String,String>).get("deviceType").equals("Weight",ignoreCase = true) && lsDeviceInfo.deviceType.equals("01")) {
+                    if((any as HashMap<String,String>).get("deviceType").equals("Weight",ignoreCase = true) && (lsDeviceInfo.deviceType.equals("02")|| lsDeviceInfo.deviceType.equals("01"))) {
                         sendPost("Connected", DEVICE_WEIGHT, 0, 0, 0,weight=0.0)
                         if (::BLEEventChannel.isInitialized) {
                             MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "weight")
@@ -1258,8 +1258,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                         }
                     }
                 }
+                Log.e("devicesList", "lsDeviceInfo.deviceType: "+lsDeviceInfo.deviceType )
 
-                if(scanType.equals("scanAll")){
+                if(scanType.equals("scanAll",ignoreCase = true)){
                     if(lsDeviceInfo.deviceType.equals("06")) {
                         sendPost("Connected", DEVICE_BGL, 0, 0, 0)
                         if (::BLEEventChannel.isInitialized) {
@@ -1270,7 +1271,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                             MainThreadEventSink(BLEEventChannel).success("connected|" + "bgl" + " connected successfully!!!")
 //                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
                         }
-                    }else if(lsDeviceInfo.deviceType.equals("01")){
+                    }else if(lsDeviceInfo.deviceType.equals("02")|| lsDeviceInfo.deviceType.equals("01")){
                         sendPost("Connected", DEVICE_WEIGHT, 0, 0, 0,weight=0.0)
                         if (::BLEEventChannel.isInitialized) {
                             MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + "weight")
@@ -1278,6 +1279,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                         }
                         if (::BLEEventChannel.isInitialized) {
                             MainThreadEventSink(BLEEventChannel).success("connected|" + "weight" + " connected successfully!!!")
+                            MainThreadEventSink(BLEEventChannel).success("update|" + "Your device is ready")
+
 //                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
                         }
                     }
@@ -1326,7 +1329,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 handleScaleState(p0!!, (p1 as LSScaleState?)!!)
             }
 
-            if(lsDeviceInfo.deviceName?.contains("BLE-Vivachek") == true || lsDeviceInfo.deviceName?.contains("TeleBGM Gen1 BLE") == true) {
+            if(lsDeviceInfo.deviceType.equals("06")) {
 
 
                 if (p1.toString().contains("InsertStrip")) {
@@ -1336,11 +1339,11 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 }
                 if (p1.toString().contains("Collecting")) {
                     if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("update|" + "Waiting for the blood sample")
+                        MainThreadEventSink(BLEEventChannel).success("update|" + "Insert the blood sample on the strip.")
                     }
                 } else if (p1.toString().contains("Collected")) {
                     if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("update|" + "Blood collected. Please wait.")
+                        MainThreadEventSink(BLEEventChannel).success("update|" + "Calculating your blood glucose value.")
                     }
                 } else if (p1.toString().contains("Result")) {
                     val result = p1.toString().substringAfter("value=").substringBefore(',')
@@ -1366,7 +1369,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                         Log.e("qurhealth", "wowgostatus: connectionfailed")
                     }
 
-                    MainThreadEventSink(BLEEventChannel).success("connectionfailed| connection failed")
+                    MainThreadEventSink(BLEEventChannel).success("disconnected|Disconnected")
 
                 }
                 LSBluetoothManager.getInstance().stopDeviceSync()
@@ -1375,8 +1378,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             }
             if(p1.toString().contains("Disconnect")){
                 //connectToBle()
+                MainThreadEventSink(BLEEventChannel).success("disconnected|Disconnected")
             }
-            Log.e("bluetoothnew", "onNotificationDataUpdate: " )
+            Log.e("bluetoothnew", "onNotificationDataUpdate: "+p0+" "+p1 )
 
         }
 
@@ -1528,13 +1532,13 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 checkSupportRegisterAndConnect()
             }else{
                 devicesList.forEachIndexed { index: Int, any: Any? ->
-                    if((any as HashMap<String,String>).get("manufacture").equals("Transteck")){
+                    if((any as HashMap<String,String>).get("manufacture").equals("Transteck",ignoreCase = true)){
                         if((any as HashMap<String,String>).get("deviceType").equals("bgl",ignoreCase = true) && lsDevice.deviceType.equals("06")){
                             Log.e("bluetoothsearch", "\n\nonSearchResults: "+lsDevice.deviceName+ "connect " )
                             macIdLsDevice=lsDevice.macAddress;
                             lsDeviceInfo=lsDevice
                             checkSupportRegisterAndConnect()
-                        }else if((any as HashMap<String,String>).get("deviceType").equals("weight",ignoreCase = true) && lsDevice.deviceType.equals("01")){
+                        }else if((any as HashMap<String,String>).get("deviceType").equals("weight",ignoreCase = true) && (lsDevice.deviceType.equals("01") || lsDevice.deviceType.equals("02"))){
                             Log.e("bluetoothsearch", "\n\nonSearchResults: "+lsDevice.deviceName+ "connect " )
                             macIdLsDevice=lsDevice.macAddress;
                             lsDeviceInfo=lsDevice
