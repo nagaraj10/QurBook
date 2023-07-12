@@ -899,9 +899,11 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   callImportantsMethod() async {
-    Get.lazyPut(
-      () => PDFViewController(),
-    );
+    if (!Get.isRegistered<PDFViewController>()) {
+      Get.lazyPut(
+        () => PDFViewController(),
+      );
+    }
     await CommonUtil().validateToken();
     await Provider.of<UserPlansViewModel>(context, listen: false)
         .getUserPlanInfoLocal();
