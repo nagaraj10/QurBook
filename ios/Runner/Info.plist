@@ -20,6 +20,10 @@
 	<string>QurHome</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+    <key>BGTaskSchedulerPermittedIdentifiers</key>
+        <array>
+            <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+        </array>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleURLTypes</key>

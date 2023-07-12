@@ -5856,6 +5856,11 @@ class CommonUtil {
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
+      if (!Get.isRegistered<PDFViewController>()) {
+        Get.lazyPut(
+          () => PDFViewController(),
+        );
+      }
     } catch (e) {
       if (kDebugMode) print(e.toString());
     }
