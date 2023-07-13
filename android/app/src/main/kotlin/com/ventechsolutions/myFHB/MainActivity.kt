@@ -1193,7 +1193,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         override fun onScaleWeightDataUpdate(p0: String?, p1: LSScaleWeight?) {
             super.onScaleWeightDataUpdate(p0, p1)
 
-            if(p1?.remainCount?.equals("0") == true){
+            if(p1?.remainCount==0){
                 runOnUiThread {
                     Handler().postDelayed({
                         p1?.weight?.let {
