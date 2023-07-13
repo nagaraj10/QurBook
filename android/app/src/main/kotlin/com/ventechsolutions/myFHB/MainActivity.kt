@@ -1218,7 +1218,6 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
             }
 
-            Log.e("bluetoothnew", "onScaleWeightDataUpdate: "+p1 )
 
         }
 
@@ -1367,9 +1366,6 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
                 if (p1.toString().contains("PowerOff")) {
                     if (::BLEEventChannel.isInitialized) {
-                        runOnUiThread {
-                            Log.e("qurhealth", "wowgostatus: connectionfailed")
-                        }
 
                         MainThreadEventSink(BLEEventChannel).success("disconnected|Disconnected")
 
@@ -1385,7 +1381,6 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             }
 
 
-            Log.e("bluetoothnew", "onNotificationDataUpdate: "+p0+" "+p1 )
 
         }
 
@@ -1395,7 +1390,6 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 //                resultStream.success("\n\nonActivityTrackerDataUpdate: "+p1.toString());
 
             }
-            Log.e("bluetoothnew", "onActivityTrackerDataUpdate: " )
 
         }
 
