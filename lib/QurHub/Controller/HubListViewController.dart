@@ -179,12 +179,13 @@ class HubListViewController extends GetxController {
         (bleMacId ?? '').isNotEmpty &&
         (bleDeviceType ?? '').isNotEmpty) {
       if (_bleController.checkForParedDevice()) {
-        FlutterToast().getToast(
-          DeviceAlreadyMapped,
-          Colors.red,
-        );
+        // FlutterToast().getToast(
+        //   DeviceAlreadyMapped,
+        //   Colors.red,
+        // );
         return;
       }
+      _bleController.stopScanning();
       Get.to(
         () => AddDeviceView(),
         binding: BindingsBuilder(
@@ -195,6 +196,7 @@ class HubListViewController extends GetxController {
       )!
           .then(
         (value) {
+          _bleController.stopScanning();
           getHubList();
           bleMacId = "";
         },

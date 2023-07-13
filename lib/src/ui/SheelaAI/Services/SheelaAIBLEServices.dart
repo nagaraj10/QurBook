@@ -112,22 +112,6 @@ class SheelaBLEController extends GetxController {
       if (devicesList.isEmpty) {
         return;
       }
-
-      // if (isFromVitals || isFromRegiment) {
-      //   if (filteredDeviceType.isNotEmpty) {
-      //     bool filteredDeviceTypeCheck = true;
-      //     for (var device in devicesList) {
-      //       var deviceType =
-      //           getDeviceCode(device.device?.deviceType?.code).toLowerCase();
-      //       if (deviceType == filteredDeviceType) {
-      //         filteredDeviceTypeCheck = false;
-      //       }
-      //     }
-      //     if (filteredDeviceTypeCheck) {
-      //       return;
-      //     }
-      //   }
-      // }
     }
 
     if (timerSubscription != null) {
@@ -174,13 +158,18 @@ class SheelaBLEController extends GetxController {
                 receivedValues.last,
               );
               if (addingDevicesInHublist) {
+                if (checkForParedDevice()) {
+                  return;
+                }
                 hublistController.searchingBleDevice(false);
                 hublistController.navigateToAddDeviceScreen();
-                _disableTimer();
                 return;
               }
               break;
             case "connected":
+              if (addingDevicesInHublist) {
+                return;
+              }
               receivedData = false;
               if (!checkForParedDevice()) {
                 return;
@@ -220,6 +209,9 @@ class SheelaBLEController extends GetxController {
               }
               break;
             case "update":
+              if (addingDevicesInHublist) {
+                return;
+              }
               if (SheelaController.isSheelaScreenActive) {
                 addToConversationAndPlay(
                   SheelaResponse(
@@ -231,6 +223,9 @@ class SheelaBLEController extends GetxController {
               }
               break;
             case "measurement":
+              if (addingDevicesInHublist) {
+                return;
+              }
               if (!checkForParedDevice()) return;
               String deviceType =
                   hublistController.bleDeviceType?.toLowerCase() ?? '';
@@ -276,6 +271,9 @@ class SheelaBLEController extends GetxController {
               );
               break;
             case "bgl":
+              if (addingDevicesInHublist) {
+                return;
+              }
               addBGLMessage(receivedValues.last);
               break;
             case "disconnected":
@@ -314,14 +312,13 @@ class SheelaBLEController extends GetxController {
           'deviceType': deviceType.toString(),
           'manufacture': deviceManufacturer.toString(),
         };
-        if(isFromVitals){
-          if(filteredDeviceType.toLowerCase()==deviceType.toLowerCase()){
+        if (isFromVitals) {
+          if (filteredDeviceType.toLowerCase() == deviceType.toLowerCase()) {
             pairedDevices.add(deviceDetails);
           }
-        }else{
+        } else {
           pairedDevices.add(deviceDetails);
         }
-
       }
       bleMethodChannel.invokeListMethod('scanSingle', pairedDevices);
     }
