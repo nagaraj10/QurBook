@@ -38,6 +38,8 @@ class RegimentDataCard extends StatelessWidget {
   final DateTime? startTime;
   final RegimentDataModel regimentData;
 
+  final Function onLoggedSuccess;
+
   final dynamic uid;
   final dynamic aid;
   final dynamic formId;
@@ -54,6 +56,7 @@ class RegimentDataCard extends StatelessWidget {
     required this.startTime,
     required this.mediaData,
     required this.regimentData,
+    required this.onLoggedSuccess,
     this.uid = '',
     this.aid = '',
     this.formId = '',
@@ -636,6 +639,7 @@ class RegimentDataCard extends StatelessWidget {
       eid: eid,
     );
     if (saveResponse.isSuccess ?? false) {
+      onLoggedSuccess();
       if ((saveResponse.result != null) &&
           (saveResponse.result?.actions != null) &&
           (saveResponse.result?.actions?.returnData != null)) {
@@ -761,6 +765,7 @@ class RegimentDataCard extends StatelessWidget {
           ),
         );
         if (value != null && (value ?? false)) {
+          onLoggedSuccess();
           LoaderClass.showLoadingDialog(
             Get.context!,
             canDismiss: false,
