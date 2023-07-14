@@ -675,7 +675,7 @@ class _MyFHBState extends State<MyFHB> {
             qurhomeDashboardController.estart.value = passedValArr[3];
             qurhomeDashboardController.updateTabIndex(0);
 
-            if (regController.meetingId.value.trim().isEmpty) {
+            if (!CommonUtil.isCallStarted) {
               Get.offNamedUntil(router.rt_Landing, (route) => false);
             } else {
               Get.to(() => QurhomeDashboard());
