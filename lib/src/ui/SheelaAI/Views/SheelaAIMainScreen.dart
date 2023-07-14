@@ -389,7 +389,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 goToBackScreen();
               }
             },
-            child: CommonUtil().isTablet!
+            child: /*CommonUtil().isTablet!
                 ? IconWidget(
                     icon: Icons.arrow_back_ios,
                     colors: Colors.black,
@@ -401,7 +401,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                       Get.back();
                     },
                   )
-                : CommonUtil.isUSRegion()
+                :*/ CommonUtil.isUSRegion()
                     ? Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 8.h,
@@ -415,8 +415,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                       )
                     : Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 8.h,
-                          vertical: 4.h,
+                          horizontal: CommonUtil().isTablet! ? 0 : 8.h,
+                          vertical: CommonUtil().isTablet! ? 0 : 4.h,
                         ),
                         child: AssetImageWidget(
                           icon: icon_qurhome,

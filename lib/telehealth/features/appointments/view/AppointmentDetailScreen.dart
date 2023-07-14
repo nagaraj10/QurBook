@@ -11,6 +11,7 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variableConstant;
 
 class AppointmentDetailScreen extends StatefulWidget {
   @override
@@ -19,7 +20,8 @@ class AppointmentDetailScreen extends StatefulWidget {
 }
 
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
-  final appointmentDetailsController = CommonUtil().onInitAppointmentDetailsController();
+  final appointmentDetailsController =
+      CommonUtil().onInitAppointmentDetailsController();
   double imgContainerSize = 70.0;
   double imgSize = 30.0;
 
@@ -72,45 +74,75 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           }
 
           return appointmentDetailsController.appointmentDetailsModel != null &&
-                  appointmentDetailsController.appointmentDetailsModel!.result !=
+                  appointmentDetailsController
+                          .appointmentDetailsModel!.result !=
                       null
-              ? appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo!=null?checkAcceptOrRejectButton():OkButton()
+              ? appointmentDetailsController.appointmentDetailsModel?.result
+                          ?.additionalInfo?.pickupRequestInfo !=
+                      null
+                  ? checkAcceptOrRejectButton()
+                  : OkButton()
               : Container();
         },
       ),
     );
   }
 
-  Widget checkAcceptOrRejectButton(){
-    appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?.sort((a, b) =>(DateTime.parse(b?.requestTime??'')).compareTo(DateTime.parse(a?.requestTime??'')));
+  Widget checkAcceptOrRejectButton() {
+    appointmentDetailsController
+        .appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo
+        ?.sort((a, b) => (DateTime.parse(b?.requestTime ?? ''))
+            .compareTo(DateTime.parse(a?.requestTime ?? '')));
 
-    if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0]!=null){
+    if (appointmentDetailsController.appointmentDetailsModel?.result
+            ?.additionalInfo?.pickupRequestInfo?[0] !=
+        null) {
       final userId = PreferenceUtil.getStringValue(KEY_USERID);
-      if((appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom??'').contains(userId??'none')){
+      if ((appointmentDetailsController.appointmentDetailsModel?.result
+                  ?.additionalInfo?.pickupRequestInfo?[0].requestFrom ??
+              '')
+          .contains(userId ?? 'none')) {
         return OkButton();
-      }else{
+      } else {
         var temp = DateTime.now();
-        var d1 = DateTime.utc(temp.year,temp.month,temp.day,temp.hour,temp.minute,temp.second);
+        var d1 = DateTime.utc(temp.year, temp.month, temp.day, temp.hour,
+            temp.minute, temp.second);
 
-        if(d1.isAfter(appointmentDetailsController.endTimeForTransportation?.toUtc()??DateTime.now())){
+        if (d1.isAfter(
+            appointmentDetailsController.endTimeForTransportation?.toUtc() ??
+                DateTime.now())) {
           return OkButton();
-        }else{
-          if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted==null){
-            return AcceptReject(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom);
-          }else if(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted??false){
-            return RejectButton(appointmentDetailsController.appointmentDetailsModel?.result?.additionalInfo?.pickupRequestInfo?[0].requestFrom??'');
-          }else{
+        } else {
+          if (appointmentDetailsController.appointmentDetailsModel?.result
+                  ?.additionalInfo?.pickupRequestInfo?[0].isAccepted ==
+              null) {
+            return AcceptReject(appointmentDetailsController
+                .appointmentDetailsModel
+                ?.result
+                ?.additionalInfo
+                ?.pickupRequestInfo?[0]
+                .requestFrom);
+          } else if (appointmentDetailsController.appointmentDetailsModel
+                  ?.result?.additionalInfo?.pickupRequestInfo?[0].isAccepted ??
+              false) {
+            return RejectButton(appointmentDetailsController
+                    .appointmentDetailsModel
+                    ?.result
+                    ?.additionalInfo
+                    ?.pickupRequestInfo?[0]
+                    .requestFrom ??
+                '');
+          } else {
             return OkButton();
           }
         }
       }
-
-    }else{
+    } else {
       return OkButton();
     }
   }
 
-  Widget OkButton(){
+  Widget OkButton() {
     return InkWell(
       onTap: () {
         Get.back();
@@ -143,10 +175,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget AcceptButton(String s){
+  Widget AcceptButton(String s) {
     return InkWell(
       onTap: () {
-        appointmentDetailsController.acceptCareGiverTransportRequestReminder(appointmentDetailsController.appointmentId,s,true);
+        appointmentDetailsController.acceptCareGiverTransportRequestReminder(
+            appointmentDetailsController.appointmentId, s, true);
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -176,10 +209,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget RejectButton(String s){
+  Widget RejectButton(String s) {
     return InkWell(
       onTap: () {
-        appointmentDetailsController.acceptCareGiverTransportRequestReminder(appointmentDetailsController.appointmentId,s,false);
+        appointmentDetailsController.acceptCareGiverTransportRequestReminder(
+            appointmentDetailsController.appointmentId, s, false);
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -209,15 +243,19 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget AcceptReject(String? requestFrom){
-    return Align(alignment:Alignment.bottomCenter,child:Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AcceptButton(requestFrom??''),
-        SizedBox(width: 5,),
-        RejectButton(requestFrom??''),
-      ],
-    ));
+  Widget AcceptReject(String? requestFrom) {
+    return Align(
+        alignment: Alignment.bottomCenter,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AcceptButton(requestFrom ?? ''),
+            SizedBox(
+              width: 5,
+            ),
+            RejectButton(requestFrom ?? ''),
+          ],
+        ));
   }
 
   Widget getAppointmentDetailWidget() {
@@ -287,7 +325,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               null
                           ? CachedNetworkImage(
                               imageUrl: appointmentDetailsController
-                                      .appointmentIconUrl.value,
+                                  .appointmentIconUrl.value,
                               height: imgSize,
                               width: imgSize,
                               fit: BoxFit.fill,
@@ -426,7 +464,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             commonWidgetForTitleValue(parameters.dateAndTime,
                 appointmentDetailsController.scheduleDateTime.value),
             appointmentDetailsController.appointmentType.value.toLowerCase() ==
-                strDoctorAppointment
+                    strDoctorAppointment
                 ? Column(
                     children: [
                       SizedBox(height: 5.h),
@@ -488,6 +526,20 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   }
 
   showWidget() {
+    var isCustomAppointment = appointmentDetailsController.appointmentType.value
+                    .toLowerCase() !=
+                strLabAppointment.toLowerCase() &&
+            appointmentDetailsController.appointmentType.value.toLowerCase() !=
+                strDoctorAppointment.toLowerCase() &&
+            appointmentDetailsController.appointmentType.value.toLowerCase() !=
+                strTransportation.toLowerCase() &&
+            appointmentDetailsController.appointmentType.value.toLowerCase() !=
+                strHomecareService.toLowerCase() &&
+            appointmentDetailsController.appointmentType.value.toLowerCase() !=
+                variableConstant.strOthers.toLowerCase()
+        ? true
+        : false;
+
     switch (appointmentDetailsController.appointmentType.value.toLowerCase()) {
       case strLabAppointment:
         return Column(
@@ -542,12 +594,19 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ],
         );
         break;
+
       default:
-        return Column(
-          children: [
-            Container(),
-          ],
-        );
+        if (isCustomAppointment)
+          return Column(
+            children: [
+              commonWidgetForTitleValue(
+                  strPurpose, appointmentDetailsController.testName.value),
+              SizedBox(height: 5.h),
+              commonWidgetForTitleValue(appointmentAddress,
+                  appointmentDetailsController.providerAddress.value),
+            ],
+          );
+        return Column(children: [Container()]);
         break;
     }
   }
@@ -556,74 +615,74 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       {bool isLocationLink = false}) {
     String strValue = appointmentDetailsController.checkIfEmptyString(value);
     bool isShow = strValue == "--" ? false : true;
-    return isShow?Row(
-      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-            flex: 1,
-            child: Text(
-              header,
-              textAlign: TextAlign.start,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style: TextStyle(
-                fontSize: 12.0.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black.withOpacity(0.5),
-              ),
-            )),
-        Text(
-          " : ",
-          textAlign: TextAlign.start,
-          style: TextStyle(
-            fontSize: 13.0.sp,
-            fontWeight: FontWeight.w600,
-            color: Colors.black.withOpacity(0.7),
-          ),
-        ),
-        isLocationLink
-            ? Expanded(
-                flex: 2,
-                child: InkWell(
-                  onTap: () async {
-                    try {
-                      if (await canLaunch(value)) {
-                        await launch(value);
-                      }
-                    } catch (e) {
-                      print(e);
-                    }
-                  },
+    return isShow
+        ? Row(
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                  flex: 1,
                   child: Text(
-                    strValue,
+                    header,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                     style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue),
-                  ),
-                ))
-            : Expanded(
-                flex: 2,
-                child: Text(
-                  strValue,
-                  textAlign: TextAlign.start,
-                  overflow: TextOverflow.visible,
-                  softWrap: true,
-                  //maxLines: 3,
-                  style: TextStyle(
-                    fontSize: 13.0.sp,
-                    fontWeight: FontWeight.w600,
-                    color: strValue ==
-                            "--"
-                        ? Colors.grey
-                        : Colors.black.withOpacity(0.7),
-                  ),
+                      fontSize: 12.0.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black.withOpacity(0.5),
+                    ),
+                  )),
+              Text(
+                " : ",
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 13.0.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black.withOpacity(0.7),
                 ),
               ),
-      ],
-    ):SizedBox.shrink();
+              isLocationLink
+                  ? Expanded(
+                      flex: 2,
+                      child: InkWell(
+                        onTap: () async {
+                          try {
+                            if (await canLaunch(value)) {
+                              await launch(value);
+                            }
+                          } catch (e) {
+                            print(e);
+                          }
+                        },
+                        child: Text(
+                          strValue,
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue),
+                        ),
+                      ))
+                  : Expanded(
+                      flex: 2,
+                      child: Text(
+                        strValue,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
+                        //maxLines: 3,
+                        style: TextStyle(
+                          fontSize: 13.0.sp,
+                          fontWeight: FontWeight.w600,
+                          color: strValue == "--"
+                              ? Colors.grey
+                              : Colors.black.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+            ],
+          )
+        : SizedBox.shrink();
   }
-
 
   getDescriptionWidget() {
     return (appointmentDetailsController.description.value != null) &&
@@ -641,4 +700,3 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         : SizedBox.shrink();
   }
 }
-
