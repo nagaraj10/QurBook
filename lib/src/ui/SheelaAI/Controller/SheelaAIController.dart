@@ -75,6 +75,8 @@ class SheelaAIController extends GetxController {
   Rx<bool> isMuted = false.obs;
   Rx<bool> isDiscardDialogShown = false.obs;
 
+  Rx<bool> isQueueDialogShowing = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -958,10 +960,13 @@ class SheelaAIController extends GetxController {
             if (value.result != null) {
               sheelaIconBadgeCount.value = value.result?.queueCount ?? 0;
               if (isNeedSheelaDialog) {
-                if ((value.result?.queueCount ?? 0) > 0) {
+                if ((value.result?.queueCount ?? 0) > 0 &&
+                    PreferenceUtil.getIfQurhomeisAcive()) {
+                  isQueueDialogShowing.value = true;
                   CommonUtil().dialogForSheelaQueueStable(
                       Get.context!, value.result?.queueCount ?? 0,
                       onTapSheela: () {
+                    isQueueDialogShowing.value = false;
                     Get.back();
                     Get.toNamed(
                       rt_Sheela,

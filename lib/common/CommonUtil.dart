@@ -5559,36 +5559,43 @@ class CommonUtil {
         barrierLabel: 'Label',
         barrierDismissible: true,
         pageBuilder: (_, __, ___) {
-          return Center(
-            child: Container(
-              width: double.infinity,
-              child: Material(
-                color: Colors.transparent.withOpacity(0.8),
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BadgeIconBig(
-                          badgeCount: count,
-                          badgeColor: ColorUtils.badgeQueue,
-                          icon: GestureDetector(
-                            onTap: () {
-                              onTapSheela!();
-                            },
-                            child: AssetImageWidget(
-                              icon: icon_sheela_queue,
-                              height: 250.h,
-                              width: 250.w,
+          return WillPopScope(
+            onWillPop: () async {
+              sheelaDialogVisibleFalse();
+              return true;
+            },
+            child: Center(
+              child: Container(
+                width: double.infinity,
+                child: Material(
+                  color: Colors.transparent.withOpacity(0.8),
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () {
+                      sheelaDialogVisibleFalse();
+                      Get.back();
+                    },
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          BadgeIconBig(
+                            badgeCount: count,
+                            badgeColor: ColorUtils.badgeQueue,
+                            icon: GestureDetector(
+                              onTap: () {
+                                onTapSheela!();
+                              },
+                              child: AssetImageWidget(
+                                icon: icon_sheela_queue,
+                                height: 250.h,
+                                width: 250.w,
+                              ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -5596,6 +5603,11 @@ class CommonUtil {
             ),
           );
         });
+  }
+
+  void sheelaDialogVisibleFalse(){
+    var sheelaAIController = Get.find<SheelaAIController>();
+    sheelaAIController.isQueueDialogShowing.value = false;
   }
 
   void initPortraitMode() async {

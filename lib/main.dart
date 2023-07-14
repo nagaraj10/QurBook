@@ -447,20 +447,16 @@ class _MyFHBState extends State<MyFHB> {
               ),
             );
           } else {
-            Future.delayed(Duration(milliseconds: 500), () async {
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaFollowup: true,
-                  textSpeechSheela: (passedValArr[2] != null &&
-                          passedValArr[2] != 'null' &&
-                          passedValArr[2] != '')
-                      ? passedValArr[2]
-                      : passedValArr[1],
-                  audioMessage: '',
-                ),
-              );
-            });
+            if (sheelaAIController.isQueueDialogShowing.value) {
+              Get.back();
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr);
+              });
+            } else {
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr);
+              });
+            }
           }
         }
       }
@@ -1093,6 +1089,35 @@ class _MyFHBState extends State<MyFHB> {
       }
     }
   }
+
+  getToSheelaNavigate(var passedValArr){
+    Future.delayed(Duration(milliseconds: 500), () async {
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(
+          isSheelaFollowup: true,
+          textSpeechSheela: (passedValArr[2] != null &&
+              passedValArr[2] != 'null' &&
+              passedValArr[2] != '')
+              ? passedValArr[2]
+              : passedValArr[1],
+          audioMessage: '',
+        ),
+      )!.then((value) {
+        try {
+          sheelaAIController.getSheelaBadgeCount(
+              isNeedSheelaDialog:
+              true);
+        } catch (e) {
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      });
+    });
+  }
+
+
 
   getMyRoute() async {
     final route = await nav_platform.invokeMethod('getMyRoute');
