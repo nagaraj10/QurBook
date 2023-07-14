@@ -6499,6 +6499,8 @@ class VideoCallCommonUtils {
       appointmentId: appointmentId,
     );
 
+    CommonUtil.isCallStarted = true;
+
     Get.off(
       CallMainMakeCall(
         channelName: channelName as String?,

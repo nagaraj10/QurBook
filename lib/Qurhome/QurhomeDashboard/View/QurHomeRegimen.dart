@@ -25,6 +25,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
@@ -92,6 +93,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   var qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
+
+  final sheelBadgeController = Get.put(SheelaAIController());
 
   @override
   void initState() {
@@ -922,7 +925,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         formId: regimen.uformid,
                                         formName: regimen.uformname);
                                   } else {
-                                    callLogApi(regimen);
+                                    callLogApi(regimen).then((value) {
+                                      callQueueCountApi();
+                                    });
                                   }
                                 }
                               },
@@ -1557,6 +1562,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         ))?.then(
           (value) {
             if (value != null && (value ?? false)) {
+              callQueueCountApi();
               FlutterToast().getToast(
                 'Logged Successfully',
                 Colors.green,
@@ -2271,6 +2277,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         ),
       ),
     );
+  }
+
+  callQueueCountApi(){
+    try {
+      if (sheelBadgeController
+          .sheelaIconBadgeCount.value >
+          0) {
+        sheelBadgeController.getSheelaBadgeCount();
+      }
+    } catch (e) {}
   }
 }
 

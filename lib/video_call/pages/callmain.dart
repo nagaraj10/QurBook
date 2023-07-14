@@ -83,6 +83,7 @@ class _CallMainState extends State<CallMain> {
 
   @override
   void initState() {
+    CommonUtil.isCallStarted = true;
     checkPermission();
     Provider.of<RTCEngineProvider>(context, listen: false).isVideoPaused =
         false;
