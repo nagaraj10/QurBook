@@ -1449,116 +1449,119 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   ],
                 )),
         Divider(),
-        Theme(
-          data: theme,
-          child: ExpansionTile(
-            backgroundColor: const Color(fhbColors.bgColorContainer),
-            iconColor: Colors.black,
-            initiallyExpanded: isDisplayPreference,
-            title: Text(variable.strDisplayPreferences,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black)),
-            children: [
-              ListTile(
-                leading: CommonUtil().qurHomeMainIcon(),
-                title: Text(variable.strQurHome),
-                subtitle: Text(
-                  variable.strDefaultUI,
-                  style: TextStyle(fontSize: 12.0.sp),
-                ),
-                trailing: Transform.scale(
-                  scale: 0.8,
-                  child: Switch(
-                    value: PreferenceUtil.getIfQurhomeisDefaultUI(),
-                    activeColor: Color(new CommonUtil().getMyPrimaryColor()),
-                    onChanged: (bool newValue) {
-                      setState(
-                        () {
-                          PreferenceUtil.saveQurhomeAsDefaultUI(
-                            qurhomeStatus: newValue,
-                          );
-                          isSkillIntegration = false;
-                          isCareGiverCommunication = false;
-                          isVitalPreferences = false;
-                          isDisplayPreference = true;
-                        },
-                      );
-                    },
+        if (!CommonUtil.isUSRegion())
+          Theme(
+            data: theme,
+            child: ExpansionTile(
+              backgroundColor: const Color(fhbColors.bgColorContainer),
+              iconColor: Colors.black,
+              initiallyExpanded: isDisplayPreference,
+              title: Text(variable.strDisplayPreferences,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500, color: Colors.black)),
+              children: [
+                ListTile(
+                  leading: CommonUtil().qurHomeMainIcon(),
+                  title: Text(variable.strQurHome),
+                  subtitle: Text(
+                    variable.strDefaultUI,
+                    style: TextStyle(fontSize: 12.0.sp),
+                  ),
+                  trailing: Transform.scale(
+                    scale: 0.8,
+                    child: Switch(
+                      value: PreferenceUtil.getIfQurhomeisDefaultUI(),
+                      activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                      onChanged: (bool newValue) {
+                        setState(
+                          () {
+                            PreferenceUtil.saveQurhomeAsDefaultUI(
+                              qurhomeStatus: newValue,
+                            );
+                            isSkillIntegration = false;
+                            isCareGiverCommunication = false;
+                            isVitalPreferences = false;
+                            isDisplayPreference = true;
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Divider(),
-              Theme(
-                data: theme,
-                child: ExpansionTile(
-                    iconColor: Colors.black,
-                    initiallyExpanded: isColorPallete,
-                    onExpansionChanged: (value) {
-                      isColorPallete = value;
-                      isDisplayPreference = true;
-                    },
-                    title: Text(variable.strColorPalete,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, color: Colors.black)),
-                    children: <Widget>[
-                      ListTile(
-                          title: Container(
-                              height: 60.0.h,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: variable.myThemes.length,
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
-                                  onTap: () {
-                                    PreferenceUtil.saveTheme(
-                                        Constants.keyPriColor,
-                                        variable.myThemes[index]);
-                                    PreferenceUtil.saveTheme(
-                                        Constants.keyGreyColor,
-                                        variable.myGradient[index]);
-                                    selectedPrimaryColor =
-                                        variable.myThemes[index];
+                Divider(),
+                Theme(
+                  data: theme,
+                  child: ExpansionTile(
+                      iconColor: Colors.black,
+                      initiallyExpanded: isColorPallete,
+                      onExpansionChanged: (value) {
+                        isColorPallete = value;
+                        isDisplayPreference = true;
+                      },
+                      title: Text(variable.strColorPalete,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                      children: <Widget>[
+                        ListTile(
+                            title: Container(
+                                height: 60.0.h,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: variable.myThemes.length,
+                                  itemBuilder: (context, index) =>
+                                      GestureDetector(
+                                    onTap: () {
+                                      PreferenceUtil.saveTheme(
+                                          Constants.keyPriColor,
+                                          variable.myThemes[index]);
+                                      PreferenceUtil.saveTheme(
+                                          Constants.keyGreyColor,
+                                          variable.myGradient[index]);
+                                      selectedPrimaryColor =
+                                          variable.myThemes[index];
 
-                                    createAppColorSelection(
-                                        variable.myThemes[index],
-                                        variable.myGradient[index]);
+                                      createAppColorSelection(
+                                          variable.myThemes[index],
+                                          variable.myGradient[index]);
 
-                                    HomeScreen.of(context)?.refresh();
-                                    LandingScreen.of(context)?.refresh();
-                                    if (widget.refresh != null) {
-                                      widget.refresh!(false);
-                                    }
+                                      HomeScreen.of(context)?.refresh();
+                                      LandingScreen.of(context)?.refresh();
+                                      if (widget.refresh != null) {
+                                        widget.refresh!(false);
+                                      }
 
-                                    setState(() {});
-                                  },
-                                  child: Padding(
-                                      padding: EdgeInsets.all(5),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            gradient: LinearGradient(colors: [
-                                              Color(variable.myThemes[index]),
-                                              Color(variable.myGradient[index])
-                                            ])),
-                                        height: 50.0.h,
-                                        width: 50.0.h,
-                                        child: variable.myThemes[index] ==
-                                                selectedPrimaryColor
-                                            ? Icon(
-                                                Icons.check,
-                                                color: Colors.white,
-                                                size: 24.0.sp,
-                                              )
-                                            : SizedBox(),
-                                      )),
-                                ),
-                              ))),
-                    ]),
-              ),
-            ],
+                                      setState(() {});
+                                    },
+                                    child: Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              gradient: LinearGradient(colors: [
+                                                Color(variable.myThemes[index]),
+                                                Color(
+                                                    variable.myGradient[index])
+                                              ])),
+                                          height: 50.0.h,
+                                          width: 50.0.h,
+                                          child: variable.myThemes[index] ==
+                                                  selectedPrimaryColor
+                                              ? Icon(
+                                                  Icons.check,
+                                                  color: Colors.white,
+                                                  size: 24.0.sp,
+                                                )
+                                              : SizedBox(),
+                                        )),
+                                  ),
+                                ))),
+                      ]),
+                ),
+              ],
+            ),
           ),
-        ),
-        Divider(),
+        if (!CommonUtil.isUSRegion()) Divider(),
         (CommonUtil.isUSRegion() &&
                 qurhomeDashboardController.isVitalModuleDisable.value)
             ? Theme(
