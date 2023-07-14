@@ -528,20 +528,19 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
         //        dataLabel = dataLabel + utcStr
         //        print("----------------------------------2----------------------------------")
         //        print(dataLabel)
-        
-        let data : [String:Any] = [
-            "Status" : "Measurement",
-            "deviceType" : "weight",
-            "Data" : [
-                "Weight" : String(format: "%.2f", weight.weight),
+        if( weight.remainCount == 0){
+            let data : [String:Any] = [
+                "Status" : "Measurement",
+                "deviceType" : "weight",
+                "Data" : [
+                    "Weight" : String(format: "%.2f", weight.weight),
+                ]
             ]
-        ]
-        if let serlized = data.jsonStringRepresentation{
-            eventSink?("measurement|"+serlized)
-            eventSink = nil
+            if let serlized = data.jsonStringRepresentation{
+                eventSink?("measurement|"+serlized)
+                eventSink = nil
+            }
         }
-        
-        
     }
     
     func bleDevice(_ device: LSDeviceInfo!, didDataUpdateForBloodPressureMonitor data: LSBloodPressure!)

@@ -1192,30 +1192,32 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
         override fun onScaleWeightDataUpdate(p0: String?, p1: LSScaleWeight?) {
             super.onScaleWeightDataUpdate(p0, p1)
-            runOnUiThread {
 
-                Handler().postDelayed({
-                    p1?.weight?.let {
-                        sendPost(
-                            "Measurement",
-                            DEVICE_WEIGHT,
-                            0,
-                            0,
-                            0,
-                            weight=it
-                        )
-                    }
-                    if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
-                    }
-                }, 2000)
+            if(p1?.remainCount==0){
+                runOnUiThread {
+                    Handler().postDelayed({
+                        p1?.weight?.let {
+                            sendPost(
+                                "Measurement",
+                                DEVICE_WEIGHT,
+                                0,
+                                0,
+                                0,
+                                weight=it
+                            )
+                        }
+                        if (::BLEEventChannel.isInitialized) {
+                            MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
+                        }
+                    }, 500)
 
-                LSBluetoothManager.getInstance().stopDeviceSync()
-                LSBluetoothManager.getInstance().stopDiscovery()
-                LSBluetoothManager.getInstance().stopSearch()
+                    LSBluetoothManager.getInstance().stopDeviceSync()
+                    LSBluetoothManager.getInstance().stopDiscovery()
+                    LSBluetoothManager.getInstance().stopSearch()
+                }
+
             }
 
-            Log.e("bluetoothnew", "onScaleWeightDataUpdate: " )
 
         }
 
@@ -1361,26 +1363,24 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 //                    LSBluetoothManager.getInstance().stopDiscovery()
 //                    LSBluetoothManager.getInstance().stopSearch()
                 }
-            }
 
-            if (p1.toString().contains("PowerOff")) {
-                if (::BLEEventChannel.isInitialized) {
-                    runOnUiThread {
-                        Log.e("qurhealth", "wowgostatus: connectionfailed")
+                if (p1.toString().contains("PowerOff")) {
+                    if (::BLEEventChannel.isInitialized) {
+
+                        MainThreadEventSink(BLEEventChannel).success("disconnected|Disconnected")
+
                     }
-
-                    MainThreadEventSink(BLEEventChannel).success("disconnected|Disconnected")
-
+                    LSBluetoothManager.getInstance().stopDeviceSync()
+                    LSBluetoothManager.getInstance().stopDiscovery()
+                    LSBluetoothManager.getInstance().stopSearch()
                 }
-                LSBluetoothManager.getInstance().stopDeviceSync()
-                LSBluetoothManager.getInstance().stopDiscovery()
-                LSBluetoothManager.getInstance().stopSearch()
+                if(p1.toString().contains("Disconnect")){
+                    //connectToBle()
+                    MainThreadEventSink(BLEEventChannel).success("disconnected|Disconnected")
+                }
             }
-            if(p1.toString().contains("Disconnect")){
-                //connectToBle()
-                MainThreadEventSink(BLEEventChannel).success("disconnected|Disconnected")
-            }
-            Log.e("bluetoothnew", "onNotificationDataUpdate: "+p0+" "+p1 )
+
+
 
         }
 
@@ -1390,7 +1390,6 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 //                resultStream.success("\n\nonActivityTrackerDataUpdate: "+p1.toString());
 
             }
-            Log.e("bluetoothnew", "onActivityTrackerDataUpdate: " )
 
         }
 
