@@ -11,6 +11,7 @@ import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/regiment/view/widgets/filter_widget.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
@@ -58,6 +59,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   var qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
+
+  final sheelBadgeController = Get.put(SheelaAIController());
 
   @override
   void initState() {
@@ -659,6 +662,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                     mediaData: regimentData.otherinfo,
                                     startTime: regimentData.estart,
                                     regimentData: regimentData,
+                                    onLoggedSuccess: () {
+                                      callQueueCountApi();
+                                    },
                                   )
                                 : FHBBasicWidget.customShowCase(
                                     _regimentViewModel.regimentMode ==
@@ -690,6 +696,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                       mediaData: regimentData.otherinfo,
                                       startTime: regimentData.estart,
                                       regimentData: regimentData,
+                                      onLoggedSuccess: () {
+                                        callQueueCountApi();
+                                      },
                                     ),
                                     _regimentViewModel.regimentMode ==
                                             RegimentMode.Schedule
@@ -811,6 +820,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         uid: regimentData.uid,
                         formId: regimentData.uformid,
                         formName: regimentData.uformname1,
+                        onLoggedSuccess: () {
+                          callQueueCountApi();
+                        },
                       );
                     },
                   ),
@@ -843,5 +855,15 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       return colors = Color(CommonUtil().getMyPrimaryColor());
     }
     return colors;
+  }
+
+  callQueueCountApi(){
+    try {
+      if (sheelBadgeController
+          .sheelaIconBadgeCount.value >
+          0) {
+        sheelBadgeController.getSheelaBadgeCount();
+      }
+    } catch (e) {}
   }
 }
