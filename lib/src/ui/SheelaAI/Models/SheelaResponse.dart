@@ -31,6 +31,7 @@ class SheelaResponse {
   String? text;
   String? audioURL;
   bool? endOfConv = true;
+  bool? endOfConvDiscardDialog = false;
   List<Buttons>? buttons;
   var imageURL;
   List<String>? imageURLS;
@@ -101,6 +102,8 @@ class SheelaResponse {
     text = json['text'];
     audioURL = json['audioURL'];
     endOfConv = json['endOfConv'];
+    endOfConvDiscardDialog =
+        json['endOfConv'] != null ? json['endOfConv'] : false;
     if (json['buttons'] != null) {
       buttons = <Buttons>[];
       json['buttons'].forEach((v) {
@@ -138,7 +141,7 @@ class SheelaResponse {
     relationshipId = json['relationshipId'];
     isButtonNumber = (json['IsButtonNumber'] ?? false);
 
-    if(buttons!=null && buttons!.length>0){
+    if (buttons != null && buttons!.length > 0) {
       List<Buttons>? buttonsList = [];
       buttons!.forEach((element) {
         if (element.hidden != sheela_hdn_btn_yes) {
@@ -147,7 +150,6 @@ class SheelaResponse {
       });
       buttons = buttonsList;
     }
-
   }
 
   Map<String, dynamic> toJson() {
@@ -156,6 +158,7 @@ class SheelaResponse {
     data['text'] = this.text;
     data['audioURL'] = this.audioURL;
     data['endOfConv'] = this.endOfConv;
+    data['endOfConv'] = this.endOfConvDiscardDialog;
     if (this.buttons != null) {
       data['buttons'] = this.buttons?.map((v) => v.toJson()).toList();
     }
