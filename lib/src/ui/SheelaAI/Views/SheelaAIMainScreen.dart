@@ -137,7 +137,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 (controller.arguments!.audioMessage ?? '').isNotEmpty) {
               if ((CommonUtil.isUSRegion()) &&
                   ((controller.conversations.length ?? 0) > 0) &&
-                  !(controller.conversations.last?.endOfConv ?? true)) {
+                  !(controller.conversations.last?.endOfConvDiscardDialog ?? true)) {
                 controller.isDiscardDialogShown.value = true;
                 CommonUtil().alertForSheelaDiscardOnConversation(
                     context, PreferenceUtil.getIfQurhomeisAcive(),
@@ -373,7 +373,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             onTap: () {
               if ((CommonUtil.isUSRegion()) &&
                   ((controller.conversations.length ?? 0) > 0) &&
-                  !(controller.conversations.last?.endOfConv ?? true)) {
+                  !(controller.conversations.last?.endOfConvDiscardDialog ?? true)) {
                 controller.isDiscardDialogShown.value = true;
                 controller.updateTimer(enable: false);
                 CommonUtil().alertForSheelaDiscardOnConversation(
