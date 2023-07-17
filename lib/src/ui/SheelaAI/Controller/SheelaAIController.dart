@@ -1003,7 +1003,7 @@ class SheelaAIController extends GetxController {
         _popTimer = null;
       } else if (enable) {
         printInfo(info: "started the timer");
-        _popTimer = Timer(const Duration(minutes: 2), () {
+        _popTimer = Timer(const Duration(seconds: 30), () {
           if (isSheelaScreenActive && bleController == null) {
             printInfo(info: "timeout the timer");
             stopTTS();
