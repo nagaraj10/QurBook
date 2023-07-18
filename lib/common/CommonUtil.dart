@@ -1,100 +1,79 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:badges/badges.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/asset_image.dart';
-import 'package:html_unescape/html_unescape.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
-import '../Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
-import '../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import '../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
-import '../Qurhome/QurhomeDashboard/model/calldata.dart';
-import '../Qurhome/QurhomeDashboard/model/calllogmodel.dart';
-import '../Qurhome/QurhomeDashboard/model/callpushmodel.dart';
-import '../authentication/view/authentication_validator.dart';
-import '../regiment/models/regiment_response_model.dart';
-import '../regiment/service/regiment_service.dart';
-import '../regiment/view_model/regiment_view_model.dart';
-import '../src/model/GetDeviceSelectionModel.dart';
-import '../src/model/Media/media_data_list.dart';
-import '../src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import '../src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
-import '../src/ui/SheelaAI/Services/SheelaQueueServices.dart';
-import '../src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
-import '../src/utils/PageNavigator.dart';
-import '../telehealth/features/chat/view/PDFModel.dart';
-import '../telehealth/features/chat/view/PDFView.dart';
-import '../telehealth/features/chat/view/PDFViewerController.dart';
-import '../telehealth/features/appointments/controller/AppointmentDetailsController.dart';
-import '../telehealth/features/appointments/view/AppointmentDetailScreen.dart';
-import '../video_call/model/UpdatedInfo.dart';
-import '../video_call/model/messagedetails.dart';
-import '../video_call/model/msgcontent.dart';
-import '../video_call/model/payload.dart' as vsPayLoad;
-import '../chat_socket/viewModel/chat_socket_view_model.dart';
-import 'ShowPDFFromFile.dart';
-import '../constants/fhb_query.dart';
-import '../constants/variable_constant.dart';
-import '../record_detail/screens/record_detail_screen.dart';
-import '../regiment/models/field_response_model.dart';
-import '../regiment/models/regiment_data_model.dart';
-import '../src/resources/repository/health/HealthReportListForUserRepository.dart';
-import '../src/utils/language/language_utils.dart';
-import 'common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import '../src/resources/network/api_services.dart';
+import 'package:html_unescape/html_unescape.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
-import '../telehealth/features/Notifications/services/notification_services.dart';
-import '../telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
-import '../video_call/pages/calling_page.dart';
-import '../video_call/pages/callmain.dart';
-import '../video_call/pages/callmain_makecall.dart';
-import '../video_call/utils/audiocall_provider.dart';
-import '../video_call/utils/hideprovider.dart';
-import '../video_call/utils/rtc_engine.dart';
-import '../video_call/utils/settings.dart';
-import '../video_call/utils/videoicon_provider.dart';
-import '../widgets/device_type.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
+import 'package:local_auth/local_auth.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:package_info/package_info.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../authentication/constants/constants.dart';
+import '../../constants/fhb_constants.dart' as constants;
+import '../Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
+import '../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import '../Qurhome/QurhomeDashboard/model/calldata.dart';
+import '../Qurhome/QurhomeDashboard/model/calllogmodel.dart';
+import '../Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../add_providers/bloc/update_providers_bloc.dart';
+import '../authentication/model/device_version.dart';
 import '../authentication/model/logged_in_success.dart';
+import '../authentication/view/authentication_validator.dart';
 import '../authentication/view/login_screen.dart';
 import '../bookmark_record/bloc/bookmarkRecordBloc.dart';
-import 'CommonConstants.dart';
-import 'PreferenceUtil.dart';
-import '../constants/fhb_constants.dart' as Constants;
+import '../chat_socket/constants/const_socket.dart';
+import '../chat_socket/model/TotalCountModel.dart';
+import '../chat_socket/viewModel/chat_socket_view_model.dart';
+import '../chat_socket/viewModel/getx_chat_view_model.dart';
 import '../constants/fhb_constants.dart';
+import '../constants/fhb_constants.dart' as Constants;
 import '../constants/fhb_parameters.dart';
 import '../constants/fhb_parameters.dart' as parameters;
+import '../constants/fhb_query.dart';
 import '../constants/responseModel.dart';
 import '../constants/router_variable.dart' as router;
+import '../constants/variable_constant.dart';
 import '../constants/variable_constant.dart' as variable;
 import '../device_integration/view/screens/Device_Data.dart';
 import '../device_integration/viewModel/deviceDataHelper.dart';
@@ -106,8 +85,15 @@ import '../my_family/models/Sharedbyme.dart';
 import '../my_providers/models/User.dart';
 import '../myfhb_weview/myfhb_webview.dart';
 import '../plan_dashboard/viewModel/subscribeViewModel.dart';
+import '../plan_wizard/view_model/plan_wizard_view_model.dart';
+import '../record_detail/screens/record_detail_screen.dart';
 import '../refer_friend/view/invite_contacts_screen.dart';
 import '../refer_friend/viewmodel/referafriend_vm.dart';
+import '../regiment/models/field_response_model.dart';
+import '../regiment/models/regiment_data_model.dart';
+import '../regiment/models/regiment_response_model.dart';
+import '../regiment/service/regiment_service.dart';
+import '../regiment/view_model/regiment_view_model.dart';
 import '../reminders/QurPlanReminders.dart';
 import '../src/blocs/Authentication/LoginBloc.dart';
 import '../src/blocs/Media/MediaTypeBlock.dart';
@@ -116,6 +102,7 @@ import '../src/blocs/health/HealthReportListForUserBlock.dart';
 import '../src/model/Authentication/DeviceInfoSucess.dart';
 import '../src/model/Category/CategoryData.dart';
 import '../src/model/Category/catergory_result.dart';
+import '../src/model/GetDeviceSelectionModel.dart';
 import '../src/model/Health/CategoryInfo.dart';
 import '../src/model/Health/MediaMasterIds.dart';
 import '../src/model/Health/MediaMetaInfo.dart';
@@ -123,41 +110,55 @@ import '../src/model/Health/MediaTypeInfo.dart';
 import '../src/model/Health/asgard/health_record_collection.dart';
 import '../src/model/Health/asgard/health_record_list.dart';
 import '../src/model/Media/DeviceModel.dart';
+import '../src/model/Media/media_data_list.dart';
 import '../src/model/Media/media_result.dart';
 import '../src/model/sceretLoader.dart';
 import '../src/model/user/MyProfileModel.dart';
 import '../src/model/user/UserAddressCollection.dart';
 import '../src/resources/network/ApiBaseHelper.dart';
+import '../src/resources/network/api_services.dart';
 import '../src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
+import '../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../src/ui/MyRecord.dart';
 import '../src/ui/MyRecordsArguments.dart';
+import '../src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import '../src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
+import '../src/ui/SheelaAI/Services/SheelaQueueServices.dart';
+import '../src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import '../src/utils/FHBUtils.dart';
+import '../src/utils/PageNavigator.dart';
 import '../src/utils/colors_utils.dart';
+import '../src/utils/language/language_utils.dart';
 import '../src/utils/screenutils/size_extensions.dart';
+import '../telehealth/features/Notifications/services/notification_services.dart';
 import '../telehealth/features/Notifications/view/notification_main.dart';
 import '../telehealth/features/Payment/PaymentPage.dart';
+import '../telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import '../telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
+import '../telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import '../telehealth/features/chat/view/BadgeIcon.dart';
-import 'package:package_info/package_info.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:showcaseview/showcaseview.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../plan_wizard/view_model/plan_wizard_view_model.dart';
-import '../../authentication/constants/constants.dart';
+import '../telehealth/features/chat/view/PDFModel.dart';
+import '../telehealth/features/chat/view/PDFView.dart';
+import '../telehealth/features/chat/view/PDFViewerController.dart';
+import '../video_call/model/UpdatedInfo.dart';
+import '../video_call/model/messagedetails.dart';
+import '../video_call/model/msgcontent.dart';
+import '../video_call/model/payload.dart' as vsPayLoad;
+import '../video_call/pages/calling_page.dart';
+import '../video_call/pages/callmain.dart';
+import '../video_call/pages/callmain_makecall.dart';
+import '../video_call/utils/audiocall_provider.dart';
+import '../video_call/utils/hideprovider.dart';
+import '../video_call/utils/rtc_engine.dart';
+import '../video_call/utils/settings.dart';
+import '../video_call/utils/videoicon_provider.dart';
 import '../widgets/checkout_page.dart';
-import '../chat_socket/model/TotalCountModel.dart';
-import '../chat_socket/constants/const_socket.dart';
+import '../widgets/device_type.dart';
+import 'CommonConstants.dart';
+import 'PreferenceUtil.dart';
+import 'ShowPDFFromFile.dart';
+import 'common_circular_indicator.dart';
 import 'keysofmodel.dart' as keysConstant;
-import 'package:agora_rtc_engine/rtc_engine.dart';
-import '../chat_socket/viewModel/getx_chat_view_model.dart';
-import '../../constants/fhb_constants.dart' as constants;
-import 'package:local_auth/error_codes.dart' as auth_error;
-import '../authentication/model/device_version.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -5605,7 +5606,7 @@ class CommonUtil {
         });
   }
 
-  void sheelaDialogVisibleFalse(){
+  void sheelaDialogVisibleFalse() {
     var sheelaAIController = Get.find<SheelaAIController>();
     sheelaAIController.isQueueDialogShowing.value = false;
   }
@@ -6238,6 +6239,23 @@ class CommonUtil {
     return DateTime(date.year, date.month, date.day)
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;
+  }
+
+  static DateTime getDateBasedOnOnceInAPlan(DateTime selectedDate,RegimentDataModel regimen) {
+    try {
+      String startDate = CommonUtil.dateConversionToApiFormat(
+        selectedDate,
+        isIndianTime: true,
+      );
+      String dateTime = regimen.estartNew?.split(" ")[1] ?? "";
+      String completDate = ((startDate ?? " ") + " " + (dateTime ?? " "));
+      DateTime selectedDateTime =
+          DateTime.tryParse(completDate) ?? DateTime.now();
+
+      return selectedDateTime;
+    }catch(e){
+      return DateTime.now();
+    }
   }
 
   Future<void> alertForSheelaDiscardOnConversation(

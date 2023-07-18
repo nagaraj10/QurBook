@@ -1,29 +1,24 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gmiwidgetspackage/widgets/asset_image.dart';
-import 'package:myfhb/constants/fhb_query.dart';
+import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
-import 'package:path/path.dart';
+import 'package:provider/provider.dart';
+
+import '../../../common/CommonUtil.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../src/ui/loader_class.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../models/regiment_data_model.dart';
-import '../../../constants/fhb_constants.dart';
+import '../../models/save_response_model.dart';
+import '../../view_model/regiment_view_model.dart';
 import 'AutoCloseText.dart';
 import 'form_data_dialog.dart';
-import '../../view_model/regiment_view_model.dart';
-import '../../models/save_response_model.dart';
-import '../../models/field_response_model.dart';
-import 'package:provider/provider.dart';
 import 'media_icon_widget.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import '../../../common/CommonUtil.dart';
-import '../../../src/ui/loader_class.dart';
-import 'package:intl/intl.dart';
-import 'package:get/get.dart';
 import 'regiment_webview.dart';
 
 class RegimentDataCard extends StatelessWidget {
@@ -44,6 +39,7 @@ class RegimentDataCard extends StatelessWidget {
   final dynamic aid;
   final dynamic formId;
   final dynamic formName;
+  final DateTime selectedDate;
 
   const RegimentDataCard({
     required this.index,
@@ -57,6 +53,7 @@ class RegimentDataCard extends StatelessWidget {
     required this.mediaData,
     required this.regimentData,
     required this.onLoggedSuccess,
+    required this.selectedDate,
     this.uid = '',
     this.aid = '',
     this.formId = '',
@@ -552,13 +549,31 @@ class RegimentDataCard extends StatelessWidget {
                             context, title, () async {
                           Navigator.pop(context);
                           stopRegimenTTS();
-                          final canEdit =
-                              startTime!.difference(DateTime.now()).inMinutes <=
-                                      15 &&
-                                  Provider.of<RegimentViewModel>(context,
-                                              listen: false)
-                                          .regimentMode ==
-                                      RegimentMode.Schedule;
+                          var canEdit;
+                          if (regimentData.doseMealString == "128" ||
+                              regimentData.doseMealString == "2048") {
+                            DateTime selectedDateTime =
+                                CommonUtil.getDateBasedOnOnceInAPlan(
+                                    selectedDate, regimentData);
+
+                            canEdit = selectedDateTime!
+                                        .difference(DateTime.now())
+                                        .inMinutes <=
+                                    15 &&
+                                Provider.of<RegimentViewModel>(context,
+                                            listen: false)
+                                        .regimentMode ==
+                                    RegimentMode.Schedule;
+                          } else {
+                            canEdit = startTime!
+                                        .difference(DateTime.now())
+                                        .inMinutes <=
+                                    15 &&
+                                Provider.of<RegimentViewModel>(context,
+                                            listen: false)
+                                        .regimentMode ==
+                                    RegimentMode.Schedule;
+                          }
                           if (canEdit || isValidSymptom(context)) {
                             if (regimentData.eid != null &&
                                 regimentData.eid != '') {
@@ -723,9 +738,23 @@ class RegimentDataCard extends StatelessWidget {
           eventId = response.result?.eid.toString();
         }
       }
-      var canEdit = startTime!.difference(DateTime.now()).inMinutes <= 15 &&
-          Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-              RegimentMode.Schedule;
+      var canEdit;
+      if (regimentData.doseMealString == "128" ||
+          regimentData.doseMealString == "2048") {
+        DateTime selectedDateTime =
+            CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimentData);
+
+        canEdit =
+            selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
+                Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Schedule;
+      } else {
+        canEdit = startTime!.difference(DateTime.now()).inMinutes <= 15 &&
+            Provider.of<RegimentViewModel>(context, listen: false)
+                    .regimentMode ==
+                RegimentMode.Schedule;
+      }
       // if (canEdit || isValidSymptom(context)) {
       final fieldsResponseModel =
           await Provider.of<RegimentViewModel>(context, listen: false)
