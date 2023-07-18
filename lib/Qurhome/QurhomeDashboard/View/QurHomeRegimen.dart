@@ -24,6 +24,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
@@ -1428,6 +1429,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             trimmedTitle,
           )) {
         if (checkCanEdit(regimen)) {
+          if (canEditMain || fromView) {
+            openFormDataDialog(
+                context, regimen, canEdit, eventId, fieldsResponseModel,
+                eventIdReturn: eventIdReturn,
+                followEventContext: followEventContext,
+                activityName: activityName,
+                uid: uid,
+                aid: aid,
+                formId: formId,
+                formName: formName,
+                canEditMain: canEditMain,
+                fromView: fromView);
+            return;
+          }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
           CommonUtil().dialogForScanDevices(
@@ -1459,6 +1474,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             trimmedTitle,
           )) {
         if (checkCanEdit(regimen)) {
+          if (canEditMain || fromView) {
+            openFormDataDialog(
+                context, regimen, canEdit, eventId, fieldsResponseModel,
+                eventIdReturn: eventIdReturn,
+                followEventContext: followEventContext,
+                activityName: activityName,
+                uid: uid,
+                aid: aid,
+                formId: formId,
+                formName: formName,
+                canEditMain: canEditMain,
+                fromView: fromView);
+            return;
+          }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
           CommonUtil().dialogForScanDevices(
@@ -1487,6 +1516,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       } else if ((trimmedTitle.isNotEmpty) && (trimmedTitle == "weight")) {
         if (checkCanEdit(regimen)) {
+          if (canEditMain || fromView) {
+            openFormDataDialog(
+                context, regimen, canEdit, eventId, fieldsResponseModel,
+                eventIdReturn: eventIdReturn,
+                followEventContext: followEventContext,
+                activityName: activityName,
+                uid: uid,
+                aid: aid,
+                formId: formId,
+                formName: formName,
+                canEditMain: canEditMain,
+                fromView: fromView);
+            return;
+          }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
           CommonUtil().dialogForScanDevices(
@@ -1529,80 +1572,17 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           onErrorMessage();
         }
       } else {
-        Provider.of<RegimentViewModel>(context, listen: false)
-            .updateRegimentStatus(RegimentStatus.DialogOpened);
-        controller.cancelTimer();
-        Get.to(FormDataDialog(
-          introText: regimen.otherinfo?.introText ?? '',
-          fieldsData: fieldsResponseModel.result!.fields,
-          eid: eventId,
-          color: Color(CommonUtil().getQurhomePrimaryColor()),
-          mediaData: regimen.otherinfo,
-          formTitle: getDialogTitle(context, regimen, activityName),
-          showEditIcon: canEditMain,
-          fromView: fromView,
-          canEdit: regimen?.ack == null
-              ? (canEdit || isValidSymptom(context))
-              : canEditMain,
-          isFromQurHomeSymptom: false,
-          isFromQurHomeRegimen: true,
-          triggerAction: (String? triggerEventId, String? followContext,
-              String? activityName) {
-            Provider.of<RegimentViewModel>(Get.context!, listen: false)
-                .updateRegimentStatus(RegimentStatus.DialogClosed);
-            Get.back();
-            onCardPressed(Get.context, regimen,
-                eventIdReturn: triggerEventId,
-                followEventContext: followContext,
-                activityName: activityName);
-          },
-          followEventContext: followEventContext,
-          uformData: regimen.uformdata,
-          isFollowEvent: eventIdReturn != null,
-        ))?.then(
-          (value) {
-            if (value != null && (value ?? false)) {
-              callQueueCountApi();
-              FlutterToast().getToast(
-                'Logged Successfully',
-                Colors.green,
-              );
-              controller.showCurrLoggedRegimen(regimen);
-            }
-          },
-        );
+        openFormDataDialog(context,regimen,canEdit,eventId,fieldsResponseModel,
+            eventIdReturn: eventIdReturn,
+            followEventContext: followEventContext,
+            activityName: activityName,
+            uid: uid,
+            aid: aid,
+            formId: formId,
+            formName: formName,
+            canEditMain: canEditMain,
+            fromView: fromView);
 
-        /*var value = await showDialog(
-          context: context,
-          builder: (_) => FormDataDialog(
-            introText: regimen.otherinfo?.introText ?? '',
-            fieldsData: fieldsResponseModel.result!.fields,
-            eid: eventId,
-            color: Color(CommonUtil().getQurhomePrimaryColor()),
-            mediaData: regimen.otherinfo,
-            formTitle: getDialogTitle(context, regimen, activityName),
-            canEdit: canEdit || isValidSymptom(context),
-            isFromQurHomeSymptom: false,
-            isFromQurHomeRegimen: true,
-            triggerAction: (String? triggerEventId, String? followContext,
-                String? activityName) {
-              Provider.of<RegimentViewModel>(Get.context!, listen: false)
-                  .updateRegimentStatus(RegimentStatus.DialogClosed);
-              Get.back();
-              onCardPressed(Get.context!, regimen,
-                  eventIdReturn: triggerEventId,
-                  followEventContext: followContext,
-                  activityName: activityName);
-            },
-            followEventContext: followEventContext!,
-            isFollowEvent: eventIdReturn != null,
-          ),
-        );*/
-
-        QurPlanReminders.getTheRemindersFromAPI();
-
-        Provider.of<RegimentViewModel>(context, listen: false)
-            .updateRegimentStatus(RegimentStatus.DialogClosed);
       }
     } else if (!regimen.hasform!) {
       FlutterToast().getToast(
@@ -1633,7 +1613,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   String? getDialogTitle(BuildContext context, RegimentDataModel regimentData,
-      String? activityName) {
+      String? activityName,bool isTimeNeed) {
     String? title = '';
     if (!(regimentData.asNeeded) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
@@ -1642,7 +1622,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         title = activityName.capitalizeFirstofEach;
       } else {
         title =
-            '${regimentData.estart != null ? DateFormat('hh:mm a').format(regimentData.estart!) : ''},${regimentData.title}';
+            isTimeNeed?'${regimentData.estart != null ? DateFormat('hh:mm a').format(regimentData.estart!) : ''},${regimentData.title}':'${regimentData.title}';
       }
     } else {
       if (activityName != null && activityName != '') {
@@ -2288,6 +2268,78 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       }
     } catch (e) {}
   }
+
+
+  openFormDataDialog(BuildContext? context,
+      RegimentDataModel? regimen,
+      dynamic canEdit,
+      dynamic eventId,
+      FieldsResponseModel? fieldsResponseModel,
+      {String? eventIdReturn,
+      String? followEventContext,
+      String? activityName,
+      dynamic uid,
+      dynamic aid,
+      dynamic formId,
+      dynamic formName,
+      bool canEditMain = false,
+      bool fromView = false}) async {
+    try {
+      Provider.of<RegimentViewModel>(context!, listen: false)
+          .updateRegimentStatus(RegimentStatus.DialogOpened);
+      controller.cancelTimer();
+      Get.to(FormDataDialog(
+        introText: regimen?.otherinfo?.introText ?? '',
+        fieldsData: fieldsResponseModel?.result!.fields,
+        eid: eventId,
+        color: Color(CommonUtil().getQurhomePrimaryColor()),
+        mediaData: regimen?.otherinfo,
+        formTitle: getDialogTitle(context, regimen!, activityName,true),
+        showEditIcon: canEditMain,
+        fromView: fromView,
+        canEdit: regimen?.ack == null
+            ? (canEdit || isValidSymptom(context))
+            : canEditMain,
+        isFromQurHomeSymptom: false,
+        isFromQurHomeRegimen: true,
+        triggerAction: (String? triggerEventId, String? followContext,
+            String? activityName) {
+          Provider.of<RegimentViewModel>(Get.context!, listen: false)
+              .updateRegimentStatus(RegimentStatus.DialogClosed);
+          Get.back();
+          onCardPressed(Get.context, regimen,
+              eventIdReturn: triggerEventId,
+              followEventContext: followContext,
+              activityName: activityName);
+        },
+        followEventContext: followEventContext,
+        uformData: regimen.uformdata,
+        isFollowEvent: eventIdReturn != null,
+        appBarTitle: getDialogTitle(context, regimen!, activityName,false),
+      ))?.then(
+        (value) {
+          if (value != null && (value ?? false)) {
+            callQueueCountApi();
+            FlutterToast().getToast(
+              'Logged Successfully',
+              Colors.green,
+            );
+            controller.showCurrLoggedRegimen(regimen);
+          }
+        },
+      );
+
+      QurPlanReminders.getTheRemindersFromAPI();
+
+      Provider.of<RegimentViewModel>(context, listen: false)
+          .updateRegimentStatus(RegimentStatus.DialogClosed);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
 }
 
 class SOSAgentCallWidget extends StatelessWidget {
