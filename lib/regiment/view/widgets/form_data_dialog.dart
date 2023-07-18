@@ -52,6 +52,7 @@ class FormDataDialog extends StatefulWidget {
     this.uformData,
     this.showEditIcon,
     this.fromView = false,
+    this.appBarTitle,
   });
 
   final List<FieldModel>? fieldsData;
@@ -71,6 +72,7 @@ class FormDataDialog extends StatefulWidget {
   final String? providerId;
   final String introText;
   final UformData? uformData;
+  final String? appBarTitle;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
@@ -194,7 +196,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                 centerTitle: false,
                 titleSpacing: 0,
                 title: Text(
-                  widget.formTitle ?? '',
+                  widget.appBarTitle ?? '',
                   style: TextStyle(
                     color: Colors.white,
                   ),
