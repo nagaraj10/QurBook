@@ -139,12 +139,14 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   ((controller.conversations.length ?? 0) > 0) &&
                   !(controller.conversations.last?.endOfConvDiscardDialog ?? true)) {
                 controller.isDiscardDialogShown.value = true;
+                controller.updateTimer(enable: false);
                 CommonUtil().alertForSheelaDiscardOnConversation(
                     context, PreferenceUtil.getIfQurhomeisAcive(),
                     pressYes: () {
                   goToBackScreen();
                   Get.back();
                 }, pressNo: () {
+                  controller.updateTimer(enable: true);
                   Get.back();
                 }).then((value) {
                   controller.isDiscardDialogShown.value = false;
