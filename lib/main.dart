@@ -443,11 +443,11 @@ class _MyFHBState extends State<MyFHB> {
             if (sheelaAIController.isQueueDialogShowing.value) {
               Get.back();
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr,isFromAudio: true);
+                getToSheelaNavigate(passedValArr, isFromAudio: true);
               });
             } else {
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr,isFromAudio: true);
+                getToSheelaNavigate(passedValArr, isFromAudio: true);
               });
             }
           } else {
@@ -1094,42 +1094,40 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getToSheelaNavigate(var passedValArr,{bool isFromAudio=false}){
-    if(isFromAudio){
+  getToSheelaNavigate(var passedValArr, {bool isFromAudio = false}) {
+    if (isFromAudio) {
       Get.toNamed(
         router.rt_Sheela,
         arguments: SheelaArgument(
           audioMessage: passedValArr[3].toString(),
         ),
-      )!.then((value) {
+      )!
+          .then((value) {
         try {
-          sheelaAIController.getSheelaBadgeCount(
-              isNeedSheelaDialog:
-              true);
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
         } catch (e) {
           if (kDebugMode) {
             print(e);
           }
         }
       });
-    }else{
+    } else {
       Future.delayed(Duration(milliseconds: 500), () async {
         Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
             isSheelaFollowup: true,
             textSpeechSheela: (passedValArr[2] != null &&
-                passedValArr[2] != 'null' &&
-                passedValArr[2] != '')
+                    passedValArr[2] != 'null' &&
+                    passedValArr[2] != '')
                 ? passedValArr[2]
                 : passedValArr[1],
             audioMessage: '',
           ),
-        )!.then((value) {
+        )!
+            .then((value) {
           try {
-            sheelaAIController.getSheelaBadgeCount(
-                isNeedSheelaDialog:
-                true);
+            sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
           } catch (e) {
             if (kDebugMode) {
               print(e);
@@ -1138,10 +1136,7 @@ class _MyFHBState extends State<MyFHB> {
         });
       });
     }
-
   }
-
-
 
   getMyRoute() async {
     final route = await nav_platform.invokeMethod('getMyRoute');
