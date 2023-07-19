@@ -132,7 +132,6 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         onPressed: () async {
                           try {
                             Get.back();
-
                             if (Get.isRegistered<QurhomeDashboardController>())
                               Get.find<QurhomeDashboardController>()
                                   .updateBLETimer(Enable: false);
@@ -311,7 +310,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         onPressed: () {
                           try {
                             clearControllerValues();
-
+                            if (Get.isRegistered<QurhomeDashboardController>())
+                              Get.find<QurhomeDashboardController>()
+                                  .updateBLETimer(Enable: false);
                             Get.back();
                             Get.to(() => MoreMenuScreen(refresh: refresh));
                           } catch (e) {
