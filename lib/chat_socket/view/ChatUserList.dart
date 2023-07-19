@@ -125,9 +125,9 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   void initSocket(bool isLoad) {
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+    /*Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket
-        ?.off(message);
+        ?.off(message);*/
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket
