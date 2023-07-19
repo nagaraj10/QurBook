@@ -119,14 +119,6 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
     
     func onCancel(withArguments arguments: Any?) -> FlutterError? {
         eventSink = nil
-        LSBluetoothManager.default()?.stopSearch()
-        LSBluetoothManager.default()?.stopDeviceSync()
-        var devices = LSBluetoothManager.default().getDevices()
-        for currentDevice in devices ?? [] {
-            if let device = currentDevice as? LSDeviceInfo,let broadcastId = device.broadcastId{
-                LSBluetoothManager.default()?.deleteDevice(broadcastId)
-            }
-        }
         selectedDevicesList = []
         if(centralManager != nil){
             centralManager.stopScan()
@@ -147,6 +139,14 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
             LS202DeviceManager.destroy()
             LS202DeviceManager = nil
         }
+        LSBluetoothManager.default()?.stopSearch()
+        LSBluetoothManager.default()?.stopDeviceSync()
+        //        var devices = LSBluetoothManager.default().getDevices()
+        //        for currentDevice in devices ?? [] {
+        //            if let device = currentDevice as? LSDeviceInfo,let broadcastId = device.broadcastId{
+        //                LSBluetoothManager.default()?.deleteDevice(broadcastId)
+        //            }
+        //        }
         return nil
     }
     //    Call this function to start the BLE which filters out the scan level.
@@ -433,14 +433,19 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
                     }else{
                         LSBluetoothManager.default().pairDevice(currentDeviceData!, delegate: self)
                     }
-                    self.deviceSearched = true
+                    //                    self.deviceSearched = true
                 }else if(deviceType == 6){
                     self.eventSink?("macid|"+macId)
                     self.eventSink?("manufacturer|Transteck")
                     self.eventSink?("bleDeviceType|BGL")
-                    LSBluetoothManager.default().addDevice(currentDeviceData!)
-                    LSBluetoothManager.default().startDeviceSync(self)
-                    self.deviceSearched = true
+                    if self.selectedDevicesList.first == SelectedDevices(selectedDevicesFilter: .All){
+                        //during pair, you no need to read data
+                    }else{
+                        LSBluetoothManager.default().addDevice(currentDeviceData!)
+                        LSBluetoothManager.default().startDeviceSync(self)
+                    }
+                    
+                    //                    self.deviceSearched = true
                 }
             }
             
@@ -528,7 +533,8 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
         //        dataLabel = dataLabel + utcStr
         //        print("----------------------------------2----------------------------------")
         //        print(dataLabel)
-        if( weight.remainCount == 0){
+       // eventSink?("remainCount|" + String(describing: weight.remainCount) + "-" + String(format: "%.2f", weight.weight))
+        if(weight.remainCount == 0){
             let data : [String:Any] = [
                 "Status" : "Measurement",
                 "deviceType" : "weight",
