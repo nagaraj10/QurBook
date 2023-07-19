@@ -724,15 +724,15 @@ class SheelaBLEController extends GetxController {
   removeTimeOutTimer() {
     if (timeOutTimer != null) {
       timeOutTimer!.cancel();
-      timeOutTimer = null;
     }
+    timeOutTimer = null;
   }
 
   void _disableTimer() {
     if (timerSubscription != null) {
       timerSubscription!.cancel();
-      timerSubscription = null;
     }
+    timerSubscription = null;
     isFromRegiment = false;
     addingDevicesInHublist = false;
     isFromVitals = false;
