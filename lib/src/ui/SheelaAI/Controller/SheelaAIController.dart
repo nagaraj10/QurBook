@@ -77,6 +77,8 @@ class SheelaAIController extends GetxController {
 
   Rx<bool> isQueueDialogShowing = false.obs;
 
+  bool isCallStartFromSheela = false;
+
   @override
   void onInit() {
     super.onInit();
@@ -90,7 +92,6 @@ class SheelaAIController extends GetxController {
         (BASE_URL == demoUSURL)) {
       isProd = true;
     }
-
     profile = PreferenceUtil.getProfileData(KEY_PROFILE);
     authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -262,6 +263,7 @@ class SheelaAIController extends GetxController {
 
   getAIAPIResponseFor(String? message, Buttons? buttonsList) async {
     try {
+      isCallStartFromSheela = false;
       isLoading.value = true;
       conversations.add(SheelaResponse(loading: true));
       scrollToEnd();
@@ -1040,6 +1042,8 @@ class SheelaAIController extends GetxController {
         regController.getUserDetails();
         await regController.getCareCoordinatorId();
       }
+      isCallStartFromSheela = true;
+      updateTimer(enable: false);
       regController.callSOSEmergencyServices(1);
     }
   }
