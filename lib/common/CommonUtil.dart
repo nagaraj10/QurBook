@@ -6422,10 +6422,6 @@ class VideoCallCommonUtils {
         regController.loadingData.value = false;
         regController.meetingId.value =
             CommonUtil().validString(mID.toString());
-        if(!regController.isFromSOS.value){
-          var sheelaAIController = Get.find<SheelaAIController>();
-          sheelaAIController.updateTimer(enable: false);
-        }
         Navigator.push(
           context!,
           MaterialPageRoute(
@@ -7578,7 +7574,8 @@ class VideoCallCommonUtils {
     try {
       var sheelaAIController = Get.find<SheelaAIController>();
       sheelaAIController.isUnAvailableCC = true;
-      //sheelaAIController.updateTimer(enable: true);
+      sheelaAIController.isCallStartFromSheela = false;
+      sheelaAIController.updateTimer(enable: true);
       sheelaAIController.getAIAPIResponseFor(strCallMyCC, null);
     } catch (e) {
       //print(e);

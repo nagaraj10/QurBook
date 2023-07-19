@@ -48,6 +48,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.startSheelaConversation();
     controller.isSheelaScreenActive = true;
     controller.isDiscardDialogShown.value = false;
+    controller.isCallStartFromSheela = false;
     animationController = AnimationController(
         duration: const Duration(
           milliseconds: 600,
@@ -127,7 +128,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 controller.currentPlayingConversation!.isPlaying.isTrue) {
               controller.updateTimer(enable: false);
             } else {
-              controller.updateTimer(enable: true);
+              if(!controller.isCallStartFromSheela){
+                controller.updateTimer(enable: true);
+              }
             }
           }
         }
