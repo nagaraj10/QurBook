@@ -161,6 +161,7 @@ class SheelaBLEController extends GetxController {
                 if (checkForParedDevice()) {
                   return;
                 }
+                stopScanning();
                 hublistController.searchingBleDevice(false);
                 hublistController.navigateToAddDeviceScreen();
                 return;
@@ -285,6 +286,12 @@ class SheelaBLEController extends GetxController {
                 Colors.red,
               );
               showFailure();
+              break;
+            case "remainCount":
+              FlutterToast().getToast(
+                receivedValues.last ?? 'Please enable the Bluetooth and re-try',
+                Colors.red,
+              );
               break;
             case "connectionfailed":
               _disableTimer();
