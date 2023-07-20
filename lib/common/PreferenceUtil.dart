@@ -177,12 +177,13 @@ class PreferenceUtil {
 
     try {
       if (_prefsInstance == null) {}
-      json
-          .decode(_prefsInstance!.getString(Constants.KEY_CATEGORYLIST)!)
-          .forEach((map) {
-        categoryData.add(CategoryResult.fromJson(map));
-      });
-
+      if (_prefsInstance!.containsKey(Constants.KEY_CATEGORYLIST)) {
+        json
+            .decode(_prefsInstance!.getString(Constants.KEY_CATEGORYLIST)!)
+            .forEach((map) {
+          categoryData.add(CategoryResult.fromJson(map));
+        });
+      }
       return categoryData;
     } catch (e) {}
   }
