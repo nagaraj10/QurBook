@@ -121,8 +121,11 @@ class _VitalsDetailsState extends State<VitalsDetails>
       mInitialTime = DateTime.now();
       super.initState();
       _events.add(180);
+      controllerGetx.deviceName = widget.device_name;
+      controllerGetx.onTapFilterBtn(0);
+      controllerGetx.checkForBleDevices();
       catgoryDataList = PreferenceUtil.getCategoryType()!;
-      if (catgoryDataList == null) {
+      if (catgoryDataList == null || catgoryDataList == []) {
         _categoryListBlock.getCategoryLists().then((value) {
           catgoryDataList = value.result!;
         } as FutureOr Function(CategoryDataList?));
@@ -130,9 +133,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
       });
-      controllerGetx.deviceName = widget.device_name;
-      controllerGetx.onTapFilterBtn(0);
-      controllerGetx.checkForBleDevices();
     } catch (e) {
       print(e);
     }
