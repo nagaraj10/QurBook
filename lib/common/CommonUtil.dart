@@ -6240,19 +6240,56 @@ class CommonUtil {
         .inDays;
   }
 
-  static DateTime getDateBasedOnOnceInAPlan(DateTime selectedDate,RegimentDataModel regimen) {
+  static bool canEditRegimen(
+      DateTime selectedDate, RegimentDataModel regimen, BuildContext context) {
+    var canEdit = false;
+    try {
+      if (regimen?.doseMealString == Constants.doseValueless ||
+          regimen?.doseMealString == Constants.doseValueHigh) {
+        DateTime selectedDateTime = CommonUtil.getDateBasedOnOnceInAPlan(
+            selectedDate, regimen!);
+
+        canEdit =
+            selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
+                Provider
+                    .of<RegimentViewModel>(context!, listen: false)
+                    .regimentMode ==
+                    RegimentMode.Schedule;
+      } else {
+        canEdit = regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
+            Provider
+                .of<RegimentViewModel>(context!, listen: false)
+                .regimentMode ==
+                RegimentMode.Schedule;
+      }
+    }catch(e){
+      canEdit=false;
+    }
+    return canEdit;
+  }
+
+  static DateTime getDateBasedOnOnceInAPlan(
+      DateTime selectedDate, RegimentDataModel regimen) {
     try {
       String startDate = CommonUtil.dateConversionToApiFormat(
         selectedDate,
         isIndianTime: true,
       );
-      String dateTime = regimen.estartNew?.split(" ")[1] ?? "";
-      String completDate = ((startDate ?? " ") + " " + (dateTime ?? " "));
-      DateTime selectedDateTime =
-          DateTime.tryParse(completDate) ?? DateTime.now();
+      if (regimen?.estartNew != null && regimen?.estartNew != "") {
+        if ((regimen?.estartNew ?? "").contains(" ")) {
+          String dateTime = regimen.estartNew?.split(" ")[1] ?? "";
+          String completDate = ((startDate ?? " ") + " " + (dateTime ?? " "));
+          DateTime selectedDateTime =
+              DateTime.tryParse(completDate) ?? DateTime.now();
 
-      return selectedDateTime;
-    }catch(e){
+          return selectedDateTime;
+        } else {
+          return DateTime.now();
+        }
+      } else {
+        return DateTime.now();
+      }
+    } catch (e) {
       return DateTime.now();
     }
   }
@@ -7237,7 +7274,7 @@ class VideoCallCommonUtils {
       regController.meetingId.value = "";
       if (regController.isFromSOS.value) {
         regController.onGoingSOSCall.value = false;
-      }else{
+      } else {
         var sheelaAIController = Get.find<SheelaAIController>();
         sheelaAIController.updateTimer(enable: true);
       }
@@ -7454,7 +7491,7 @@ class VideoCallCommonUtils {
         var callEndRecordLogResponse = await apiResponse.stopRecordSOSCall();
 
         regController.onGoingSOSCall.value = false;
-      }else{
+      } else {
         var sheelaAIController = Get.find<SheelaAIController>();
         sheelaAIController.updateTimer(enable: true);
       }

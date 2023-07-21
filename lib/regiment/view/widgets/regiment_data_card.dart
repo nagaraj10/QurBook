@@ -549,31 +549,10 @@ class RegimentDataCard extends StatelessWidget {
                             context, title, () async {
                           Navigator.pop(context);
                           stopRegimenTTS();
-                          var canEdit;
-                          if (regimentData.doseMealString == "128" ||
-                              regimentData.doseMealString == "2048") {
-                            DateTime selectedDateTime =
-                                CommonUtil.getDateBasedOnOnceInAPlan(
-                                    selectedDate, regimentData);
+                          var canEdit = false;
+                          canEdit = CommonUtil.canEditRegimen(
+                              selectedDate, regimentData, context!);
 
-                            canEdit = selectedDateTime!
-                                        .difference(DateTime.now())
-                                        .inMinutes <=
-                                    15 &&
-                                Provider.of<RegimentViewModel>(context,
-                                            listen: false)
-                                        .regimentMode ==
-                                    RegimentMode.Schedule;
-                          } else {
-                            canEdit = startTime!
-                                        .difference(DateTime.now())
-                                        .inMinutes <=
-                                    15 &&
-                                Provider.of<RegimentViewModel>(context,
-                                            listen: false)
-                                        .regimentMode ==
-                                    RegimentMode.Schedule;
-                          }
                           if (canEdit || isValidSymptom(context)) {
                             if (regimentData.eid != null &&
                                 regimentData.eid != '') {
@@ -738,23 +717,10 @@ class RegimentDataCard extends StatelessWidget {
           eventId = response.result?.eid.toString();
         }
       }
-      var canEdit;
-      if (regimentData.doseMealString == "128" ||
-          regimentData.doseMealString == "2048") {
-        DateTime selectedDateTime =
-            CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimentData);
+      var canEdit = false;
+      canEdit =
+          CommonUtil.canEditRegimen(selectedDate, regimentData!, context!);
 
-        canEdit =
-            selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
-                Provider.of<RegimentViewModel>(context, listen: false)
-                        .regimentMode ==
-                    RegimentMode.Schedule;
-      } else {
-        canEdit = startTime!.difference(DateTime.now()).inMinutes <= 15 &&
-            Provider.of<RegimentViewModel>(context, listen: false)
-                    .regimentMode ==
-                RegimentMode.Schedule;
-      }
       // if (canEdit || isValidSymptom(context)) {
       final fieldsResponseModel =
           await Provider.of<RegimentViewModel>(context, listen: false)

@@ -665,18 +665,11 @@ class _QurHomePatientRegimenListScreenState
   }
 
   bool checkCanEdit(RegimentDataModel regimen) {
-    if (regimen.doseMealString == "128" || regimen.doseMealString == "2048") {
-      DateTime selectedDateTime = CommonUtil.getDateBasedOnOnceInAPlan(
-          controller.selectedDate.value, regimen);
+    var canEdit = false;
+    canEdit = CommonUtil.canEditRegimen(
+        controller.selectedDate.value, regimen!, context!);
 
-      return selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
-          Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-              RegimentMode.Schedule;
-    } else {
-      return regimen.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-          Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-              RegimentMode.Schedule;
-    }
+    return canEdit;
   }
 
   Future<void> _showErrorAlert(String text) async {

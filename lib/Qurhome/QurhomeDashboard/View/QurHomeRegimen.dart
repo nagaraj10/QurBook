@@ -1400,21 +1400,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         eventId = response.result?.eid.toString();
       }
     }
-    var canEdit;
-    if (regimen?.doseMealString == "128" || regimen?.doseMealString == "2048") {
-      DateTime selectedDateTime = CommonUtil.getDateBasedOnOnceInAPlan(
-          controller.selectedDate.value, regimen!);
+    var canEdit = false;
 
-      canEdit = selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
-          Provider.of<RegimentViewModel>(context!, listen: false)
-                  .regimentMode ==
-              RegimentMode.Schedule;
-    } else {
-      canEdit = regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-          Provider.of<RegimentViewModel>(context!, listen: false)
-                  .regimentMode ==
-              RegimentMode.Schedule;
-    }
+    canEdit = CommonUtil.canEditRegimen(
+        controller.selectedDate.value, regimen!, context!);
 
     if (regimen!.ack != null && regimen.ack != "") {
       if (fromView) {
@@ -1687,18 +1676,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   bool checkCanEdit(RegimentDataModel regimen) {
-    if (regimen.doseMealString == "128" || regimen.doseMealString == "2048") {
-      DateTime selectedDateTime = CommonUtil.getDateBasedOnOnceInAPlan(
-          controller.selectedDate.value, regimen);
+    var canEdit = false;
+    canEdit = CommonUtil.canEditRegimen(
+        controller.selectedDate.value, regimen!, context!);
 
-      return selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
-          Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-              RegimentMode.Schedule;
-    } else {
-      return regimen.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-          Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-              RegimentMode.Schedule;
-    }
+    return canEdit;
   }
 
   Future<void> callLogApi(RegimentDataModel regimen) async {
