@@ -10,7 +10,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7238,6 +7237,9 @@ class VideoCallCommonUtils {
       regController.meetingId.value = "";
       if (regController.isFromSOS.value) {
         regController.onGoingSOSCall.value = false;
+      }else{
+        var sheelaAIController = Get.find<SheelaAIController>();
+        sheelaAIController.updateTimer(enable: true);
       }
     } catch (e) {}
   }
@@ -7452,6 +7454,9 @@ class VideoCallCommonUtils {
         var callEndRecordLogResponse = await apiResponse.stopRecordSOSCall();
 
         regController.onGoingSOSCall.value = false;
+      }else{
+        var sheelaAIController = Get.find<SheelaAIController>();
+        sheelaAIController.updateTimer(enable: true);
       }
       /*else {
         UpdatedInfo updateInfo = UpdatedInfo(
@@ -7586,6 +7591,8 @@ class VideoCallCommonUtils {
     try {
       var sheelaAIController = Get.find<SheelaAIController>();
       sheelaAIController.isUnAvailableCC = true;
+      sheelaAIController.isCallStartFromSheela = false;
+      sheelaAIController.updateTimer(enable: true);
       sheelaAIController.getAIAPIResponseFor(strCallMyCC, null);
     } catch (e) {
       //print(e);

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
@@ -48,6 +47,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.startSheelaConversation();
     controller.isSheelaScreenActive = true;
     controller.isDiscardDialogShown.value = false;
+    controller.isCallStartFromSheela = false;
     animationController = AnimationController(
         duration: const Duration(
           milliseconds: 600,
@@ -127,7 +127,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 controller.currentPlayingConversation!.isPlaying.isTrue) {
               controller.updateTimer(enable: false);
             } else {
-              controller.updateTimer(enable: true);
+              if (!controller.isCallStartFromSheela) {
+                controller.updateTimer(enable: true);
+              }
             }
           }
         }
@@ -137,14 +139,17 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 (controller.arguments!.audioMessage ?? '').isNotEmpty) {
               if ((CommonUtil.isUSRegion()) &&
                   ((controller.conversations.length ?? 0) > 0) &&
-                  !(controller.conversations.last?.endOfConvDiscardDialog ?? true)) {
+                  !(controller.conversations.last?.endOfConvDiscardDialog ??
+                      true)) {
                 controller.isDiscardDialogShown.value = true;
+                controller.updateTimer(enable: false);
                 CommonUtil().alertForSheelaDiscardOnConversation(
                     context, PreferenceUtil.getIfQurhomeisAcive(),
                     pressYes: () {
                   goToBackScreen();
                   Get.back();
                 }, pressNo: () {
+                  controller.updateTimer(enable: true);
                   Get.back();
                 }).then((value) {
                   controller.isDiscardDialogShown.value = false;
@@ -373,7 +378,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             onTap: () {
               if ((CommonUtil.isUSRegion()) &&
                   ((controller.conversations.length ?? 0) > 0) &&
-                  !(controller.conversations.last?.endOfConvDiscardDialog ?? true)) {
+                  !(controller.conversations.last?.endOfConvDiscardDialog ??
+                      true)) {
                 controller.isDiscardDialogShown.value = true;
                 controller.updateTimer(enable: false);
                 CommonUtil().alertForSheelaDiscardOnConversation(
@@ -391,7 +397,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 goToBackScreen();
               }
             },
-            child: /*CommonUtil().isTablet!
+            child:
+                /*CommonUtil().isTablet!
                 ? IconWidget(
                     icon: Icons.arrow_back_ios,
                     colors: Colors.black,
@@ -403,7 +410,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                       Get.back();
                     },
                   )
-                :*/ CommonUtil.isUSRegion()
+                :*/
+                CommonUtil.isUSRegion()
                     ? Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 8.h,

@@ -591,6 +591,11 @@ class ChatState extends State<ChatDetail> {
   @override
   void dispose() {
     //socket.disconnect();
+    //socket.disconnect();
+    Provider
+        .of<ChatSocketViewModel>(Get.context!, listen: false)
+        .socket
+        ?.off(message);
     super.dispose();
   }
 
@@ -604,7 +609,7 @@ class ChatState extends State<ChatDetail> {
         var data = {
           "id": groupId,
           'idFrom': userId,
-          'idTo': isFromCareCoordinator! ? carecoordinatorId : chatPeerId,
+          'idTo': /*isFromCareCoordinator! ? carecoordinatorId : */chatPeerId,
           "type": type,
           "isread": false,
           'content': content,

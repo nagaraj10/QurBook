@@ -5,16 +5,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
-import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
 import 'package:myfhb/device_integration/model/BPValues.dart';
 import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
@@ -121,8 +117,11 @@ class _VitalsDetailsState extends State<VitalsDetails>
       mInitialTime = DateTime.now();
       super.initState();
       _events.add(180);
+      controllerGetx.deviceName = widget.device_name;
+      controllerGetx.onTapFilterBtn(0);
+      controllerGetx.checkForBleDevices();
       catgoryDataList = PreferenceUtil.getCategoryType()!;
-      if (catgoryDataList == null) {
+      if (catgoryDataList == null || catgoryDataList == []) {
         _categoryListBlock.getCategoryLists().then((value) {
           catgoryDataList = value.result!;
         } as FutureOr Function(CategoryDataList?));
@@ -130,9 +129,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
       });
-      controllerGetx.deviceName = widget.device_name;
-      controllerGetx.onTapFilterBtn(0);
-      controllerGetx.checkForBleDevices();
     } catch (e) {
       print(e);
     }

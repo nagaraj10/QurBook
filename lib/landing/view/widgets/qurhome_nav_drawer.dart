@@ -2,18 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
-import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
-import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 
 import 'package:myfhb/claim/screen/ClaimList.dart';
-import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
 import 'package:myfhb/my_reports/view/my_report_screen.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -132,7 +127,6 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         onPressed: () async {
                           try {
                             Get.back();
-
                             if (Get.isRegistered<QurhomeDashboardController>())
                               Get.find<QurhomeDashboardController>()
                                   .updateBLETimer(Enable: false);
@@ -311,7 +305,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         onPressed: () {
                           try {
                             clearControllerValues();
-
+                            if (Get.isRegistered<QurhomeDashboardController>())
+                              Get.find<QurhomeDashboardController>()
+                                  .updateBLETimer(Enable: false);
                             Get.back();
                             Get.to(() => MoreMenuScreen(refresh: refresh));
                           } catch (e) {
