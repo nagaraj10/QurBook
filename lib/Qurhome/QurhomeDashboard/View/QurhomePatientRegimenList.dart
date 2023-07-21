@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
@@ -18,25 +19,23 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
-import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../constants/variable_constant.dart' as variable;
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 
 class QurHomePatientRegimenListScreen extends StatefulWidget {
   bool addAppBar;
   CareGiverPatientListResult? careGiverPatientListResult;
 
-  QurHomePatientRegimenListScreen({
-    this.addAppBar = false,
-    this.careGiverPatientListResult
-  });
+  QurHomePatientRegimenListScreen(
+      {this.addAppBar = false, this.careGiverPatientListResult});
 
   @override
   _QurHomePatientRegimenListScreenState createState() =>
@@ -179,10 +178,18 @@ class _QurHomePatientRegimenListScreenState
                                 child: InkWell(
                                     onTap: () {
                                       controller.cancelTimer();
-                                      Get.to(CalendarMonth(patientId:widget.careGiverPatientListResult!.childId))!.then((value) {
+                                      Get.to(CalendarMonth(
+                                              patientId: widget
+                                                  .careGiverPatientListResult!
+                                                  .childId))!
+                                          .then((value) {
                                         controller.restartTimer();
                                         controller.getRegimenList(
-                                            isLoading: true, date: value,  patientId: widget.careGiverPatientListResult!.childId);
+                                            isLoading: true,
+                                            date: value,
+                                            patientId: widget
+                                                .careGiverPatientListResult!
+                                                .childId);
                                       });
                                     },
                                     child: Padding(
@@ -658,9 +665,11 @@ class _QurHomePatientRegimenListScreenState
   }
 
   bool checkCanEdit(RegimentDataModel regimen) {
-    return regimen.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-            RegimentMode.Schedule;
+    var canEdit = false;
+    canEdit = CommonUtil.canEditRegimen(
+        controller.selectedDate.value, regimen!, context!);
+
+    return canEdit;
   }
 
   Future<void> _showErrorAlert(String text) async {
