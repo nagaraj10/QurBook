@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert' as convert;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
@@ -24,26 +26,25 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
-import 'package:myfhb/reminders/ReminderModel.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../constants/variable_constant.dart' as variable;
-import 'dart:convert' as convert;
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
@@ -1403,9 +1404,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         eventId = response.result?.eid.toString();
       }
     }
-    var canEdit = regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-        Provider.of<RegimentViewModel>(context!, listen: false).regimentMode ==
-            RegimentMode.Schedule;
+    var canEdit = false;
+
+    canEdit = CommonUtil.canEditRegimen(
+        controller.selectedDate.value, regimen!, context!);
 
     if (regimen!.ack != null && regimen.ack != "") {
       if (fromView) {
@@ -1576,7 +1578,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           onErrorMessage();
         }
       } else {
-        openFormDataDialog(context,regimen,canEdit,eventId,fieldsResponseModel,
+        openFormDataDialog(
+            context, regimen, canEdit, eventId, fieldsResponseModel,
             eventIdReturn: eventIdReturn,
             followEventContext: followEventContext,
             activityName: activityName,
@@ -1586,7 +1589,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             formName: formName,
             canEditMain: canEditMain,
             fromView: fromView);
-
       }
     } else if (!regimen.hasform!) {
       FlutterToast().getToast(
@@ -1617,7 +1619,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   String? getDialogTitle(BuildContext context, RegimentDataModel regimentData,
-      String? activityName,bool isTimeNeed) {
+      String? activityName, bool isTimeNeed) {
     String? title = '';
     if (!(regimentData.asNeeded) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
@@ -1625,8 +1627,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (activityName != null && activityName != '') {
         title = activityName.capitalizeFirstofEach;
       } else {
-        title =
-            isTimeNeed?'${regimentData.estart != null ? DateFormat('hh:mm a').format(regimentData.estart!) : ''},${regimentData.title}':'${regimentData.title}';
+        title = isTimeNeed
+            ? '${regimentData.estart != null ? DateFormat('hh:mm a').format(regimentData.estart!) : ''},${regimentData.title}'
+            : '${regimentData.title}';
       }
     } else {
       if (activityName != null && activityName != '') {
@@ -1677,9 +1680,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   bool checkCanEdit(RegimentDataModel regimen) {
-    return regimen.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-            RegimentMode.Schedule;
+    var canEdit = false;
+    canEdit = CommonUtil.canEditRegimen(
+        controller.selectedDate.value, regimen!, context!);
+
+    return canEdit;
   }
 
   Future<void> callLogApi(RegimentDataModel regimen) async {
@@ -2263,18 +2268,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     );
   }
 
-  callQueueCountApi(){
+  callQueueCountApi() {
     try {
-      if (sheelBadgeController
-          .sheelaIconBadgeCount.value >
-          0) {
+      if (sheelBadgeController.sheelaIconBadgeCount.value > 0) {
         sheelBadgeController.getSheelaBadgeCount();
       }
     } catch (e) {}
   }
 
-
-  openFormDataDialog(BuildContext? context,
+  openFormDataDialog(
+      BuildContext? context,
       RegimentDataModel? regimen,
       dynamic canEdit,
       dynamic eventId,
@@ -2298,7 +2301,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         eid: eventId,
         color: Color(CommonUtil().getQurhomePrimaryColor()),
         mediaData: regimen?.otherinfo,
-        formTitle: getDialogTitle(context, regimen!, activityName,true),
+        formTitle: getDialogTitle(context, regimen!, activityName, true),
         showEditIcon: canEditMain,
         fromView: fromView,
         canEdit: regimen?.ack == null
@@ -2319,7 +2322,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         followEventContext: followEventContext,
         uformData: regimen.uformdata,
         isFollowEvent: eventIdReturn != null,
-        appBarTitle: getDialogTitle(context, regimen!, activityName,false),
+        appBarTitle: getDialogTitle(context, regimen!, activityName, false),
       ))?.then(
         (value) {
           if (value != null && (value ?? false)) {
@@ -2343,7 +2346,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       }
     }
   }
-
 }
 
 class SOSAgentCallWidget extends StatelessWidget {

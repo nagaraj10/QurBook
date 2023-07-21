@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:provider/provider.dart';
+
 import '../../common/CommonUtil.dart';
 import '../../common/SwitchProfile.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
-import '../models/regiment_arguments.dart';
 import '../../landing/view/landing_arguments.dart';
-import 'regiment_tab.dart';
-import '../view_model/regiment_view_model.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
+import '../models/regiment_arguments.dart';
+import '../view_model/regiment_view_model.dart';
+import 'regiment_tab.dart';
 
 class RegimentScreen extends StatelessWidget {
   final RegimentArguments? aruguments;
@@ -68,6 +69,8 @@ class RegimentScreen extends StatelessWidget {
 
   onBackPressed(BuildContext context) {
     if (Navigator.canPop(context)) {
+      Provider.of<RegimentViewModel>(context, listen: false)
+          .switchFromSymptomToSchedule();
       Get.back();
     } else {
       Get.offAllNamed(

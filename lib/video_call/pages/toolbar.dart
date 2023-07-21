@@ -3,22 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/video_call/model/videocallStatus.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
-import 'package:intl/intl.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/video_call/utils/videoicon_provider.dart';
 import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:provider/provider.dart';
+
 import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 // ignore: must_be_immutable
 class Toolbar extends StatefulWidget {
@@ -391,7 +392,7 @@ class _ToolbarState extends State<Toolbar> {
           await rtcProvider.rtcEngine?.disableVideo();
           await rtcProvider.rtcEngine?.enableLocalVideo(false);
           await rtcProvider.rtcEngine?.muteLocalVideoStream(true);
-          await rtcProvider?.rtcEngine?.setEnableSpeakerphone(false);
+          await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
           setState(() {
             widget.isInSpeaker = false;
           });
@@ -402,7 +403,7 @@ class _ToolbarState extends State<Toolbar> {
         } else {
           await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
           setState(() {
-            widget.isInSpeaker = false;
+            widget.isInSpeaker = true;
           });
           await rtcProvider.rtcEngine
               ?.muteLocalVideoStream(videoIconStatus.isVideoOn);

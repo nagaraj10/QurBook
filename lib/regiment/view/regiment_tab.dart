@@ -5,29 +5,28 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/regiment/view/widgets/filter_widget.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:provider/provider.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:showcaseview/showcaseview.dart';
+
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/variable_constant.dart' as variable;
-import '../models/profile_response_model.dart';
-import '../models/regiment_data_model.dart';
-import 'widgets/event_list_widget.dart';
-import '../view_model/regiment_view_model.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:provider/provider.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:showcaseview/showcaseview.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-
+import '../models/profile_response_model.dart';
+import '../models/regiment_data_model.dart';
+import '../view_model/regiment_view_model.dart';
+import 'widgets/event_list_widget.dart';
 import 'widgets/regiment_data_card.dart';
 
 class RegimentTab extends StatefulWidget {
@@ -642,6 +641,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             controller: scrollController,
                             child: index != 0
                                 ? RegimentDataCard(
+                                    selectedDate:
+                                        _regimentViewModel.selectedRegimenDate,
                                     index: index,
                                     title: regimentData.title,
                                     time: regimentData.estart != null
@@ -676,6 +677,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                         ? CardTap
                                         : symptomCardTap,
                                     RegimentDataCard(
+                                      selectedDate: _regimentViewModel
+                                          .selectedRegimenDate,
                                       index: index,
                                       title: regimentData.title,
                                       time: regimentData.estart != null
@@ -801,6 +804,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           ? regimentsList[index]
                           : RegimentDataModel();
                       return RegimentDataCard(
+                        selectedDate: _regimentViewModel.selectedRegimenDate,
                         index: index,
                         title: regimentData.title,
                         time: regimentData.estart != null
@@ -857,11 +861,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     return colors;
   }
 
-  callQueueCountApi(){
+  callQueueCountApi() {
     try {
-      if (sheelBadgeController
-          .sheelaIconBadgeCount.value >
-          0) {
+      if (sheelBadgeController.sheelaIconBadgeCount.value > 0) {
         sheelBadgeController.getSheelaBadgeCount();
       }
     } catch (e) {}

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/Status.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
+
 import '../../../constants/fhb_constants.dart' as Constants;
 
 class RegimentDataModel {
@@ -21,7 +22,7 @@ class RegimentDataModel {
       this.uformid,
       this.uformname,
       this.uformname1,
-      this.estart,
+      this.estart,this.estartNew,
       this.eend,
       this.html,
       this.otherinfo,
@@ -65,7 +66,8 @@ class RegimentDataModel {
       this.isEndTimeOptional,
       this.code,
       this.dayrepeat,
-      this.additionalInfo});
+      this.additionalInfo,
+      this.doseMealString});
 
   final dynamic eid;
   final dynamic id;
@@ -81,6 +83,7 @@ class RegimentDataModel {
   final Uformname? uformname;
   final String? uformname1;
   final DateTime? estart;
+  final String? estartNew;
   final DateTime? eend;
   final dynamic html;
   final Otherinfo? otherinfo;
@@ -126,8 +129,10 @@ class RegimentDataModel {
   final ServiceCategory? modeOfService;
   final dynamic dayrepeat;
   AdditionalInfo? additionalInfo;
+  String? doseMealString;
 
-  factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
+  factory RegimentDataModel.fromJson(Map<String, dynamic> json,
+          {String? date}) =>
       RegimentDataModel(
         eid: json['eid'],
         id: json['id'],
@@ -149,6 +154,7 @@ class RegimentDataModel {
         uformname: uformnameValues.map[json['uformname']],
         uformname1: json['uformname'],
         estart: DateTime.tryParse(json['estart'] ?? ''),
+          estartNew:json['estart'] ?? '',
         eend: DateTime.tryParse(json['eend'] ?? ''),
         html: json['html'] != null ? json['html'] : '',
         otherinfo: json['otherinfo'] != null
@@ -182,6 +188,7 @@ class RegimentDataModel {
         providername: json['providername'],
         hasform: (json['hasform'] ?? 0) == 1,
         saytext: json['saytext'],
+        doseMealString: json['dosemeal'] ?? "",
         doseMeal: (((json['dosemeal'] ?? 0).toString() == '64') ||
                 ((json['dosemeal'] ?? 0).toString() == '128')) &&
             (activitynameValues.map[json['activityname']] ==
@@ -274,7 +281,8 @@ class RegimentDataModel {
         'serviceCategory': serviceCategory!.toJson(),
         'modeOfService': modeOfService!.toJson(),
         'hour_repeat': dayrepeat,
-        'additionalInfo': additionalInfo?.toJson()??new Map<String, dynamic>(),
+        'additionalInfo':
+            additionalInfo?.toJson() ?? new Map<String, dynamic>(),
       };
 }
 
@@ -401,7 +409,7 @@ class VitalsData {
       };
 }
 
-enum Activityname { DIET, VITALS, MEDICATION, SCREENING, SYMPTOM,APPOINTMENT }
+enum Activityname { DIET, VITALS, MEDICATION, SCREENING, SYMPTOM, APPOINTMENT }
 
 final activitynameValues = EnumValues({
   'diet': Activityname.DIET,
@@ -409,7 +417,7 @@ final activitynameValues = EnumValues({
   'screening': Activityname.SCREENING,
   'vitals': Activityname.VITALS,
   'symptom': Activityname.SYMPTOM,
-  'appointment':Activityname.APPOINTMENT
+  'appointment': Activityname.APPOINTMENT
 });
 
 enum FieldType { NUMBER, CHECKBOX, TEXT, LOOKUP, RADIO }
