@@ -1,4 +1,3 @@
-
 // To parse this JSON data, do
 //
 //     final regimentModel = regimentModelFromJson(jsonString);
@@ -24,11 +23,12 @@ class RegimentResponseModel {
   final List<RegimentDataModel>? regimentsList;
   final String? message;
 
-  factory RegimentResponseModel.fromJson(Map<String, dynamic> json) =>
+  factory RegimentResponseModel.fromJson(Map<String, dynamic> json,
+          {String? date}) =>
       RegimentResponseModel(
         isSuccess: json['isSuccess'],
-        regimentsList: List<RegimentDataModel>.from(
-            json['result'].map((x) => RegimentDataModel.fromJson(x))),
+        regimentsList: List<RegimentDataModel>.from(json['result']
+            .map((x) => RegimentDataModel.fromJson(x, date: date ?? ''))),
       );
 
   Map<String, dynamic> toJson() => {

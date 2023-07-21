@@ -1,8 +1,9 @@
 library fhb_constants;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import '../common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
+import '../common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
@@ -876,6 +877,9 @@ double imageCloseMobile = 30.0.sp;
 
 double dialogIconTab = 35.0.sp;
 double dialogIconMobile = 35.0.sp;
+
+String doseValueless = "128";
+String doseValueHigh = "2048";
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
