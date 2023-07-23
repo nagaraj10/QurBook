@@ -579,4 +579,32 @@ class QurHomeApiProvider {
       return false;
     }
   }
+
+  getSOSButtonStatus() async {
+    var regController = CommonUtil().onInitQurhomeRegimenController();
+    http.Response responseJson;
+    await PreferenceUtil.init();
+    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    try {
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      responseJson = (await ApiServices.get(
+        '${Constants.BASE_URL}$get_sos_setting_status$userId',
+        headers: header,
+      ))!;
+      if (responseJson.statusCode == 200) {
+        var _response = SuccessModel.fromJson(convert.json.decode(responseJson.body));
+        regController.isShowSOSButton.value = (_response.isSuccess ?? false);
+        return responseJson;
+      } else {
+        regController.isShowSOSButton.value = false;
+        return null;
+      }
+    } on SocketException {
+      regController.isShowSOSButton.value = false;
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      regController.isShowSOSButton.value = false;
+      return null;
+    }
+  }
 }
