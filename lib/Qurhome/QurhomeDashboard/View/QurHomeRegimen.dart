@@ -152,6 +152,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       await Future.delayed(Duration(milliseconds: 5));
       qurhomeDashboardController.enableModuleAccess();
       qurhomeDashboardController.getModuleAccess();
+      controller.getSOSButtonStatus();
       await Future.delayed(Duration(milliseconds: 100));
 
       if (CommonUtil.isUSRegion()) {
@@ -365,56 +366,59 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             : Container(),
                       )),
                       if (!widget.addAppBar)
-                        GestureDetector(
-                          onTap: () {
-                            try {
-                              FHBUtils().check().then((intenet) async {
-                                if (intenet != null && intenet) {
-                                  if (CommonUtil().isTablet! &&
-                                      controller.careCoordinatorId.value
-                                          .trim()
-                                          .isEmpty) {
-                                    await controller.getCareCoordinatorId();
+                        Obx(() => controller.isShowSOSButton.value
+                            ? GestureDetector(
+                                onTap: () {
+                                  try {
+                                    FHBUtils().check().then((intenet) async {
+                                      if (intenet != null && intenet) {
+                                        if (CommonUtil().isTablet! &&
+                                            controller.careCoordinatorId.value
+                                                .trim()
+                                                .isEmpty) {
+                                          await controller
+                                              .getCareCoordinatorId();
+                                        }
+                                        initSOSCall();
+                                      } else {
+                                        FlutterToast().getToast(
+                                          STR_NO_CONNECTIVITY,
+                                          Colors.red,
+                                        );
+                                      }
+                                    });
+                                  } catch (e) {
+                                    print(e);
                                   }
-                                  initSOSCall();
-                                } else {
-                                  FlutterToast().getToast(
-                                    STR_NO_CONNECTIVITY,
-                                    Colors.red,
-                                  );
-                                }
-                              });
-                            } catch (e) {
-                              print(e);
-                            }
-                          },
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: Container(
-                                height: 40.h,
-                                width: 80.h,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFFFB5422),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(100),
-                                    bottomRight: Radius.circular(100),
+                                },
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 16.0),
+                                    child: Container(
+                                      height: 40.h,
+                                      width: 80.h,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFFFB5422),
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(100),
+                                          bottomRight: Radius.circular(100),
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'SOS',
+                                          style: TextStyle(
+                                              fontSize: 14.0.h,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    'SOS',
-                                    style: TextStyle(
-                                        fontSize: 14.0.h,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                              )
+                            : SizedBox.shrink()),
                     ],
                   ),
                 ),

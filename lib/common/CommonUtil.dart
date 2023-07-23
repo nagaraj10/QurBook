@@ -6473,6 +6473,7 @@ class VideoCallCommonUtils {
         var qurhomeDashboardController =
             CommonUtil().onInitQurhomeDashboardController();
         qurhomeDashboardController.getModuleAccess();
+        regController.getSOSButtonStatus();
         regController.loadingData.value = false;
         regController.meetingId.value =
             CommonUtil().validString(mID.toString());

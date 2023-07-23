@@ -101,6 +101,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
         controller.enableModuleAccess();
         controller.getModuleAccess();
+        qurHomeRegimenController.getSOSButtonStatus();
 
         await CommonUtil().getUserProfileData();
       }
@@ -803,6 +804,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       if (userChanged) {
         //profileData = getMyProfile();
         controller.getModuleAccess();
+        qurHomeRegimenController.getSOSButtonStatus();
       }
       //setState(() {});
     } catch (e) {
