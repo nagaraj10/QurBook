@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -12,28 +13,25 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/utils/alert.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/checkoutpage_genric_widget.dart';
 import 'package:myfhb/widgets/dotted_line.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
-import 'package:myfhb/widgets/payment_gatway.dart';
 import 'package:myfhb/widgets/result_page_new.dart';
 import 'package:provider/provider.dart';
-import 'package:get/get.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import 'CartIconWithBadge.dart';
 
@@ -195,11 +193,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               ),
                               Text(
                                 'Your cart is empty',
-                                style: TextStyle(fontSize: 15),
+                                style: TextStyle(
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader2
+                                        : mobileHeader2),
                               ),
                               Text(
                                 'Looks like you haven\'t added any plan to the cart yet.',
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader3
+                                        : mobileHeader3),
                               ),
                               FlatButton(
                                 onPressed: () {
@@ -220,7 +224,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 child: Text(
                                   'Choose Plan',
                                   style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader2
+                                        : mobileHeader2,
                                     color: Color(
                                       CommonUtil().getMyPrimaryColor(),
                                     ),
@@ -261,7 +267,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 17),
+                                                  fontSize:
+                                                      CommonUtil().isTablet!
+                                                          ? tabHeader1
+                                                          : mobileHeader1),
                                             ),
                                             Spacer(),
                                             FlatButton(
@@ -313,7 +322,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                               Center(
                                                                                 child: Text(
                                                                                   CLEAR_CART_MSG,
-                                                                                  style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
+                                                                                  style: TextStyle(fontSize: CommonUtil().isTablet! ? tabHeader3 : mobileHeader3, fontWeight: FontWeight.w500),
                                                                                   textAlign: TextAlign.center,
                                                                                 ),
                                                                               ),
@@ -483,16 +492,29 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 17),
+                                              fontSize: CommonUtil().isTablet!
+                                                  ? tabHeader2
+                                                  : mobileHeader2),
                                         ),
                                         Divider(),
                                         Row(
                                           children: [
                                             Text(
-                                                'Price \(${value.fetchingCartItemsModel?.result!.productsCount ?? 0} items\)'),
+                                                'Price \(${value.fetchingCartItemsModel?.result!.productsCount ?? 0} items\)',
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        CommonUtil().isTablet!
+                                                            ? tabHeader3
+                                                            : mobileHeader3)),
                                             Spacer(),
                                             Text(
-                                                '${CommonUtil.CURRENCY}${value.totalProductCount}'),
+                                              '${CommonUtil.CURRENCY}${value.totalProductCount}',
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      CommonUtil().isTablet!
+                                                          ? tabHeader3
+                                                          : mobileHeader3),
+                                            ),
                                           ],
                                         ),
                                         DottedLine(
@@ -515,7 +537,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             Text(
                                               '${CommonUtil.CURRENCY}${value.totalProductCount}',
                                               style: TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize:
+                                                      CommonUtil().isTablet!
+                                                          ? tabHeader3
+                                                          : mobileHeader3,
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           ],
@@ -560,7 +585,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                            fontSize: CommonUtil().isTablet!
+                                                ? tabHeader2
+                                                : mobileHeader2),
                                       ),
                                     ],
                                   ),
@@ -845,7 +872,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           style: TextStyle(
                               color: Colors.black54,
                               // fontWeight: FontWeight.bold,
-                              fontSize: 13),
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2),
                         ),
                         item.additionalInfo!.isRenewal!
                             ? Text(
@@ -853,7 +882,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 style: TextStyle(
                                     color: Colors.black54,
                                     // fontWeight: FontWeight.bold,
-                                    fontSize: 13),
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader2
+                                        : mobileHeader2),
                               )
                             : Container()
                       ],
@@ -865,14 +896,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       style: TextStyle(
                           color: Colors.black38,
                           // fontWeight: FontWeight.bold,
-                          fontSize: 9),
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader4
+                              : mobileHeader4),
                     ),
                     Text(
                       'Offered By: ${item.productDetail?.healthOrganizationName}',
                       style: TextStyle(
                           color: Colors.black54,
                           // fontWeight: FontWeight.bold,
-                          fontSize: 11),
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader3
+                              : mobileHeader3),
                     ),
                   ],
                 ),
@@ -1123,7 +1158,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
-                          fontSize: 13),
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader2
+                              : mobileHeader2),
                     ),
                   ],
                 ),

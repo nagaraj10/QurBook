@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -16,49 +15,48 @@ import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../claim/screen/ClaimRecordDisplay.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_parameters.dart';
+import '../../../../constants/fhb_parameters.dart' as parameters;
+import '../../../../constants/router_variable.dart' as routervariable;
+import '../../../../constants/router_variable.dart' as router;
 import '../../../../landing/view/landing_arguments.dart';
 import '../../../../myPlan/view/myPlanDetail.dart';
 import '../../../../regiment/models/regiment_arguments.dart';
 import '../../../../regiment/view_model/regiment_view_model.dart';
+import '../../../../src/model/home_screen_arguments.dart';
+import '../../../../src/model/user/user_accounts_arguments.dart';
+import '../../../../src/ui/MyRecord.dart';
+import '../../../../src/utils/PageNavigator.dart';
 import '../../../../src/utils/language/language_utils.dart';
-import '../constants/notification_constants.dart' as constants;
 import '../../../../src/utils/screenutils/size_extensions.dart';
-import '../../../../constants/fhb_parameters.dart' as parameters;
-import '../model/notificationResult.dart';
-import '../model/notification_ontap_req.dart';
-import '../model/payload.dart';
-import '../services/notification_services.dart';
-import '../model/messageContent.dart';
-import '../viewModel/fetchNotificationViewModel.dart';
+import '../../../../widgets/GradientAppBar.dart';
+import '../../../../widgets/checkout_page.dart';
+import '../../MyProvider/view/TelehealthProviders.dart';
 import '../../appointments/model/cancelAppointments/cancelModel.dart';
 import '../../appointments/model/fetchAppointments/city.dart';
 import '../../appointments/model/fetchAppointments/doctor.dart' as doctorObj;
 import '../../appointments/model/fetchAppointments/past.dart';
 import '../../appointments/view/resheduleMain.dart';
 import '../../appointments/viewModel/cancelAppointmentViewModel.dart';
-import '../../../../widgets/GradientAppBar.dart';
-import '../../../../widgets/checkout_page.dart';
-import 'package:provider/provider.dart';
-import 'package:get/get.dart';
-import '../../MyProvider/view/TelehealthProviders.dart';
-import '../../../../src/model/home_screen_arguments.dart';
-import '../../../../constants/router_variable.dart' as router;
-import '../../../../src/utils/PageNavigator.dart';
-import '../../../../src/model/user/user_accounts_arguments.dart';
-import '../../../../src/ui/MyRecord.dart';
-import '../../../../constants/router_variable.dart' as routervariable;
-import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
+import '../constants/notification_constants.dart' as constants;
+import '../model/messageContent.dart';
+import '../model/notificationResult.dart';
+import '../model/notification_ontap_req.dart';
+import '../model/payload.dart';
+import '../services/notification_services.dart';
+import '../viewModel/fetchNotificationViewModel.dart';
 
 class NotificationScreen extends StatefulWidget {
   bool isFromQurday;
@@ -248,24 +246,35 @@ class _NotificationScreen extends State<NotificationScreen> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Alert'),
+          title: Text(
+            'Alert',
+            style: TextStyle(
+                fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1),
+          ),
           content: SingleChildScrollView(
             child: ListBody(
-              children: const <Widget>[
-                Text('Would you like to clear the notifications?'),
+              children: <Widget>[
+                Text('Would you like to clear the notifications?',
+                    style: CommonUtil().getDefaultStyle()),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Ok'),
+              child: Text('Ok',
+                  style: TextStyle(
+                      fontSize:
+                          CommonUtil().isTablet! ? tabHeader3 : mobileHeader3)),
               onPressed: () {
                 callClearAllApi();
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Cancel'),
+              child: Text('Cancel',
+                  style: TextStyle(
+                      fontSize:
+                          CommonUtil().isTablet! ? tabHeader3 : mobileHeader3)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -559,15 +568,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                           //     notification?.result[index]?.messageDetails?.content
                           //         ?.templateName);
                         }
-                      : (){
-                if (payload?.redirectTo ==
-                    strAppointmentDetail) {
-                  notificationOnTapActions(
-                    notification,
-                    payload?.redirectTo,
-                  );
-                }
-              },
+                      : () {
+                          if (payload?.redirectTo == strAppointmentDetail) {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          }
+                        },
               child: Container(
                 color: notification.deleteSelected ? Colors.grey : Colors.white,
                 child: Column(
@@ -1983,7 +1991,12 @@ class _NotificationScreen extends State<NotificationScreen> {
 
         break;
       case parameters.careGiverTransportRequestReminder:
-        return (notification.messageDetails?.isAccepted==null)?(isAppointmentExpired(notification.messageDetails?.payload?.appointmentDate??'')?getAppointmentAcceptAndReject(notification):Container()):Container();
+        return (notification.messageDetails?.isAccepted == null)
+            ? (isAppointmentExpired(
+                    notification.messageDetails?.payload?.appointmentDate ?? '')
+                ? getAppointmentAcceptAndReject(notification)
+                : Container())
+            : Container();
 
         break;
       default:
@@ -1992,23 +2005,23 @@ class _NotificationScreen extends State<NotificationScreen> {
     }
   }
 
-  Widget getAppointmentAcceptAndReject(NotificationResult notification){
+  Widget getAppointmentAcceptAndReject(NotificationResult notification) {
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Row(
         children: [
           OutlineButton(
             onPressed: () async {
-
-              new CommonUtil().acceptCareGiverTransportRequestReminder(
-                  context,
-                  notification.messageDetails?.payload?.appointmentId??'',
-                  notification.messageDetails?.payload?.patientId??'',
-                  true).then((value){
+              new CommonUtil()
+                  .acceptCareGiverTransportRequestReminder(
+                      context,
+                      notification.messageDetails?.payload?.appointmentId ?? '',
+                      notification.messageDetails?.payload?.patientId ?? '',
+                      true)
+                  .then((value) {
                 readUnreadAction(notification, isRead: true);
                 notification.messageDetails?.setAccepted(true);
               });
-
             },
             borderSide: !notification.isActionDone!
                 ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -2028,12 +2041,13 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
           OutlineButton(
             onPressed: () async {
-
-              new CommonUtil().acceptCareGiverTransportRequestReminder(
-                  context,
-                  notification.messageDetails?.payload?.appointmentId??'',
-                  notification.messageDetails?.payload?.patientId??'',
-                  false).then((value){
+              new CommonUtil()
+                  .acceptCareGiverTransportRequestReminder(
+                      context,
+                      notification.messageDetails?.payload?.appointmentId ?? '',
+                      notification.messageDetails?.payload?.patientId ?? '',
+                      false)
+                  .then((value) {
                 readUnreadAction(notification, isRead: true);
                 notification.messageDetails?.setAccepted(true);
               });
@@ -2056,23 +2070,23 @@ class _NotificationScreen extends State<NotificationScreen> {
     );
   }
 
-  bool isAppointmentExpired(String date){
-    if(date.isNotEmpty){
-      try{
-        var time=DateTime.parse(date);
+  bool isAppointmentExpired(String date) {
+    if (date.isNotEmpty) {
+      try {
+        var time = DateTime.parse(date);
         var temp = DateTime.now();
-        var d1 = DateTime.utc(temp.year,temp.month,temp.day,temp.hour,temp.minute,temp.second);
+        var d1 = DateTime.utc(temp.year, temp.month, temp.day, temp.hour,
+            temp.minute, temp.second);
 
-        if(d1.isAfter(time.toUtc())){
+        if (d1.isAfter(time.toUtc())) {
           return false;
-        }else{
+        } else {
           return true;
         }
-
-        }catch(e){
+      } catch (e) {
         return false;
       }
-    }else{
+    } else {
       return false;
     }
   }

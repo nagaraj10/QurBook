@@ -890,7 +890,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 : Center(
                                     child: Container(
                                       child:
-                                          Text('No attachments available !!'),
+                                          Text('No attachments available !!',style: CommonUtil().getDefaultStyle(),),
+
                                     ),
                                   )),
                       ),
