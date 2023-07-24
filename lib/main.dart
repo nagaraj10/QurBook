@@ -173,6 +173,8 @@ Future<void> main() async {
         CategoryListBlock().getCategoryLists();
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         print(e.toString());
       }
@@ -349,6 +351,7 @@ class _MyFHBState extends State<MyFHB> {
     try {
       isFirstTime = PreferenceUtil.isKeyValid(Constants.KeyShowIntroScreens);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       isFirstTime = false;
     }
   }
@@ -615,6 +618,7 @@ class _MyFHBState extends State<MyFHB> {
               Get.to(SuperMaya());
             }
           } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
             Get.to(SuperMaya());
           }
         } else if (passedValArr[1] == 'profile_page' ||
@@ -867,6 +871,7 @@ class _MyFHBState extends State<MyFHB> {
                 Get.to(() => AppointmentDetailScreen());
               }
             } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
               AppointmentDetailsController appointmentDetailsController =
                   CommonUtil().onInitAppointmentDetailsController();
               appointmentDetailsController
@@ -1051,14 +1056,18 @@ class _MyFHBState extends State<MyFHB> {
             if (doctorPic.isNotEmpty) {
               try {
                 doctorPic = json.decode(doctorPic);
-              } catch (e) {}
+              } catch (e) {
+                CommonUtil().appLogs(message: e.toString());
+              }
             } else {
               doctorPic = '';
             }
             if (patientPic.isNotEmpty) {
               try {
                 patientPic = json.decode(patientPic);
-              } catch (e) {}
+              } catch (e) {
+                CommonUtil().appLogs(message: e.toString());
+              }
             } else {
               patientPic = '';
             }
@@ -1088,7 +1097,9 @@ class _MyFHBState extends State<MyFHB> {
               isAppExists: true,
               isWeb: isWeb,
             ));
-          } catch (e) {}
+          } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+          }
         }
       }
     }
@@ -1106,6 +1117,7 @@ class _MyFHBState extends State<MyFHB> {
         try {
           sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
         } catch (e) {
+          CommonUtil().appLogs(message: e.toString());
           if (kDebugMode) {
             print(e);
           }
@@ -1129,6 +1141,7 @@ class _MyFHBState extends State<MyFHB> {
           try {
             sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
           } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
             if (kDebugMode) {
               print(e);
             }
@@ -1150,7 +1163,9 @@ class _MyFHBState extends State<MyFHB> {
   void getProfileData() async {
     try {
       await CommonUtil().getUserProfileData();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   @override
@@ -1561,7 +1576,9 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen();
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
   }
 

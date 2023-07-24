@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import '../../../constants/fhb_query.dart' as variable;
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -29,6 +30,8 @@ class CustomImageNetwork extends StatelessWidget {
                 },
               );
       } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
         return defaultWidget ?? SizedBox.shrink();
       }
     }

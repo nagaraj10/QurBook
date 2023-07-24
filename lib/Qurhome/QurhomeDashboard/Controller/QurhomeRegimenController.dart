@@ -173,6 +173,8 @@ class QurhomeRegimenController extends GetxController {
                           {'data': jsonEncode(apiReminder.toJson())});
                     }
                   } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
                     if (kDebugMode) {
                       print(e);
                     }
@@ -193,6 +195,8 @@ class QurhomeRegimenController extends GetxController {
         getCareCoordinatorId();
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -233,6 +237,8 @@ class QurhomeRegimenController extends GetxController {
       timer?.cancel();
       super.onClose();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -276,6 +282,8 @@ class QurhomeRegimenController extends GetxController {
         });
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -310,6 +318,8 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -348,6 +358,8 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -408,6 +420,8 @@ class QurhomeRegimenController extends GetxController {
             'Could not start call due to permission issue', Colors.red);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -433,6 +447,8 @@ class QurhomeRegimenController extends GetxController {
               .validString(prof.result!.userContactCollection3![0]!.phoneNumber)
           : '';
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -462,6 +478,8 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -512,7 +530,8 @@ class QurhomeRegimenController extends GetxController {
                 //past
                 isTodaySelected.value = false;
                 statusText.value = strViewPastDateRegimen;
-              } else if (CommonUtil().calculateDifference(selectedDate.value) > 0) {
+              } else if (CommonUtil().calculateDifference(selectedDate.value) >
+                  0) {
                 //future
                 isTodaySelected.value = false;
                 statusText.value = strViewFutureDateRegimen;
@@ -524,6 +543,8 @@ class QurhomeRegimenController extends GetxController {
         },
       );
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -542,6 +563,8 @@ class QurhomeRegimenController extends GetxController {
 
       startTimer();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -598,6 +621,8 @@ class QurhomeRegimenController extends GetxController {
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         print(e);
       }

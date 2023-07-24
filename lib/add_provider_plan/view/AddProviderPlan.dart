@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -48,9 +47,11 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       mInitialTime = DateTime.now();
       providerOrganizationResult =
           Provider.of<PlanProviderViewModel>(context, listen: false)
-              .getCarePlanList(widget.selectedTag!) as Future<ProviderOrganisationResponse>?;
+                  .getCarePlanList(widget.selectedTag!)
+              as Future<ProviderOrganisationResponse>?;
       //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -67,6 +68,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
             '${DateTime.now().difference(mInitialTime).inSeconds} secs'
       });
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -118,6 +120,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         try {
           _addBtnTapped(providerList);
         } catch (e) {
+          CommonUtil().appLogs(message: e.toString());
           print(e);
         }
       },
@@ -213,6 +216,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       }
       setState(() {});
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -362,7 +366,9 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       if (planList.specialty != null && planList.specialty!.length > 0) {
         specialityName = planList.specialty![0].name;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     return InkWell(
       onLongPress: () {},
       onTap: () {},
@@ -415,7 +421,6 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                   RoundedCheckBox(
                     isSelected: planList.isBookmarked,
                     onTap: () async {
-
                       planList.isBookmarked = !planList.isBookmarked!;
                       setState(() {});
                     },
@@ -446,6 +451,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         toast.getToast("Please select a provider", Colors.red);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -461,6 +467,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         }
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -471,6 +478,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         mediaResultObj.isBookmarked = !isSelectedALL;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }

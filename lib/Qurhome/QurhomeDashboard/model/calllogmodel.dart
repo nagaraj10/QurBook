@@ -1,5 +1,5 @@
-
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class CallLogModel {
   String? callerUser;
@@ -35,6 +35,8 @@ class CallLogModel {
           ? new AdditionalInfo.fromJson(json["additionalInfo"])
           : null;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -53,6 +55,8 @@ class CallLogModel {
         data["additionalInfo"] = this.additionalInfo!.toJson();
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
 
@@ -97,6 +101,8 @@ class CallEndModel {
           : null;
       id = json['id'];
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -116,6 +122,8 @@ class CallEndModel {
       }
       data['id'] = this.id;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
 
@@ -134,6 +142,8 @@ class AdditionalInfo {
           ? new Location.fromJson(json["location"])
           : null;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -145,6 +155,8 @@ class AdditionalInfo {
         data["location"] = this.location!.toJson();
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
     return data;
@@ -156,8 +168,7 @@ class CallLogResponseModel {
   String? message;
   String? result;
 
-  CallLogResponseModel(
-      {this.isSuccess, this.message, this.result});
+  CallLogResponseModel({this.isSuccess, this.message, this.result});
 
   CallLogResponseModel.fromJson(Map<String, dynamic> json) {
     try {
@@ -165,6 +176,8 @@ class CallLogResponseModel {
       message = json['message'];
       result = json['result'];
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -176,6 +189,8 @@ class CallLogResponseModel {
       data['message'] = this.message;
       data['result'] = this.result;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
 
@@ -193,11 +208,12 @@ class CallRecordModel {
     try {
       isSuccess = json['isSuccess'];
       result =
-      json['result'] != null ? new Result.fromJson(json['result']) : null;
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
-
   }
 
   Map<String, dynamic> toJson() {
@@ -208,14 +224,14 @@ class CallRecordModel {
         data['result'] = this.result!.toJson();
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
 
     return data;
   }
 }
-
-
 
 class Result {
   String? resourceId;

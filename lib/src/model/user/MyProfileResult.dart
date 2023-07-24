@@ -245,7 +245,10 @@ class AdditionalInfo {
         heightObj =
             json['height'] != null ? HeightObj.fromJson(json['height']) : null;
       }
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
     weight = json['weight'];
     try {
       height = json['height'];
@@ -253,7 +256,10 @@ class AdditionalInfo {
       if (json.containsKey('language') && json['language'] != null) {
         language = json['language'].cast<String>();
       }
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
 
     if (json.containsKey('mrdNumber') && json['mrdNumber'] != null)
       mrdNumber = json['mrdNumber'];

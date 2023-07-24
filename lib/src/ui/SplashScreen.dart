@@ -179,6 +179,8 @@ class _SplashScreenState extends State<SplashScreen> {
         });
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) print(e.toString());
     }
   }
@@ -796,6 +798,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                 context, router.rt_Landing);
                           }
                         } catch (e) {
+                                      CommonUtil().appLogs(message: e.toString());
+
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing);
                         }
@@ -911,6 +915,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                     context, router.rt_Landing));
                           }
                         } catch (e) {
+                                      CommonUtil().appLogs(message: e.toString());
+
                           AppointmentDetailsController
                               appointmentDetailsController =
                               CommonUtil().onInitAppointmentDetailsController();
@@ -1000,6 +1006,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void getProfileData() async {
     try {
       await new CommonUtil().getUserProfileData();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 }

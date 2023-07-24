@@ -87,6 +87,7 @@ class _ToolbarState extends State<Toolbar> {
       prepareMyData();
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -96,6 +97,7 @@ class _ToolbarState extends State<Toolbar> {
       super.dispose();
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -227,6 +229,7 @@ class _ToolbarState extends State<Toolbar> {
                                         isForGetUserId: true)));
                           } catch (e) {
                             //print(e);
+                                                    CommonUtil().appLogs(message: e.toString());
                           }
                         },
                         icon: Image.asset('assets/icons/ic_chat.png'),
@@ -327,7 +330,9 @@ class _ToolbarState extends State<Toolbar> {
       if (!widget.isFromAppointment!) {
         callApiToUpdateNonAppointment();
       }
-    } catch (e) {}
+    } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
+    }
     VideoCallCommonUtils().terminate(
         appsID: widget.appointmentId,
         bookId: widget.bookId,
@@ -348,6 +353,7 @@ class _ToolbarState extends State<Toolbar> {
           ?.muteLocalAudioStream(widget.muted);
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -416,6 +422,7 @@ class _ToolbarState extends State<Toolbar> {
       }
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -457,6 +464,7 @@ class _ToolbarState extends State<Toolbar> {
       });
     } catch (e) {
       //print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -552,6 +560,7 @@ class _ToolbarState extends State<Toolbar> {
                           Get.back();
                         } catch (e) {
                           print(e);
+                                                  CommonUtil().appLogs(message: e.toString());
                         }
                       }),
                 ],
@@ -561,6 +570,8 @@ class _ToolbarState extends State<Toolbar> {
         ),
         barrierDismissible: false,
       );
-    } catch (e) {}
+    } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
+    }
   }
 }

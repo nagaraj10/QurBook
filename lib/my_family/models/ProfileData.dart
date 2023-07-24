@@ -1,3 +1,4 @@
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../my_providers/models/ProfilePicThumbnail.dart';
@@ -65,7 +66,9 @@ class ProfileData {
       profilePicThumbnail = json['profilePicThumbnail'] != null
           ? ProfilePicThumbnail.fromJson(json['profilePicThumbnail'])
           : null;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     /*qualifiedFullName = json[parameters.strqualifiedFullName] != null
         ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
         : null;*/
@@ -93,8 +96,7 @@ class ProfileData {
     data[parameters.strisVirtualUser] = isVirtualUser;
     data[parameters.strCreatedBy] = createdBy;
     if (profilePicThumbnail != null) {
-      data[parameters.strprofilePicThumbnail] =
-          profilePicThumbnail!.toJson();
+      data[parameters.strprofilePicThumbnail] = profilePicThumbnail!.toJson();
     }
     data[parameters.strbloodGroup] = bloodGroup;
     data[parameters.strdateOfBirth] = dateOfBirth;

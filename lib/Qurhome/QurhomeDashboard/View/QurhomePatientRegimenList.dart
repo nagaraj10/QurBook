@@ -33,10 +33,8 @@ class QurHomePatientRegimenListScreen extends StatefulWidget {
   bool addAppBar;
   CareGiverPatientListResult? careGiverPatientListResult;
 
-  QurHomePatientRegimenListScreen({
-    this.addAppBar = false,
-    this.careGiverPatientListResult
-  });
+  QurHomePatientRegimenListScreen(
+      {this.addAppBar = false, this.careGiverPatientListResult});
 
   @override
   _QurHomePatientRegimenListScreenState createState() =>
@@ -99,6 +97,8 @@ class _QurHomePatientRegimenListScreenState
       controller.startTimer();
       super.initState();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         print(e);
       }
@@ -111,6 +111,8 @@ class _QurHomePatientRegimenListScreenState
           isLoading: true,
           patientId: widget.careGiverPatientListResult!.childId);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -179,10 +181,18 @@ class _QurHomePatientRegimenListScreenState
                                 child: InkWell(
                                     onTap: () {
                                       controller.cancelTimer();
-                                      Get.to(CalendarMonth(patientId:widget.careGiverPatientListResult!.childId))!.then((value) {
+                                      Get.to(CalendarMonth(
+                                              patientId: widget
+                                                  .careGiverPatientListResult!
+                                                  .childId))!
+                                          .then((value) {
                                         controller.restartTimer();
                                         controller.getRegimenList(
-                                            isLoading: true, date: value,  patientId: widget.careGiverPatientListResult!.childId);
+                                            isLoading: true,
+                                            date: value,
+                                            patientId: widget
+                                                .careGiverPatientListResult!
+                                                .childId);
                                       });
                                     },
                                     child: Padding(
@@ -397,6 +407,8 @@ class _QurHomePatientRegimenListScreenState
         }
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         print(e);
       }
@@ -547,6 +559,8 @@ class _QurHomePatientRegimenListScreenState
             activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return getDefaultIcon(
           activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
     }
@@ -612,9 +626,13 @@ class _QurHomePatientRegimenListScreenState
         first = title.substring(start, length);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       try {
         first = title.split("|").first;
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         first = title;
       }
     }
@@ -624,7 +642,9 @@ class _QurHomePatientRegimenListScreenState
       if (startSecond != null) {
         second = title.substring(startSecond, lengthSecond);
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     return first + second;
   }
@@ -697,6 +717,8 @@ class _QurHomePatientRegimenListScreenState
         controller.updateisShowTimerDialog(false);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -765,6 +787,8 @@ class _QurHomePatientRegimenListScreenState
         try {
           //callNowSOS();
         } catch (e) {
+          CommonUtil().appLogs(message: e.toString());
+
           print(e);
         }
       },
@@ -804,6 +828,8 @@ class _QurHomePatientRegimenListScreenState
         try {
           closeDialog();
         } catch (e) {
+          CommonUtil().appLogs(message: e.toString());
+
           print(e);
         }
       },
@@ -848,6 +874,8 @@ class _QurHomePatientRegimenListScreenState
       WidgetsBinding.instance!.removeObserver(this);
       super.dispose();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -938,6 +966,8 @@ class SOSAgentCallWidget extends StatelessWidget {
                       regController.updateSOSAgentCallDialogStatus(false);
                       Get.back();
                     } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
                       print(e);
                     }
                   },
@@ -973,6 +1003,8 @@ class SOSAgentCallWidget extends StatelessWidget {
                         await launch('tel:$SOSAgentNumber');
                       }
                     } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
                       print(e);
                     }
                   },

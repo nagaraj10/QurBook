@@ -1,9 +1,9 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
@@ -26,7 +26,9 @@ class VitalListController extends GetxController {
       final response = lastMeasureSyncFromJson(res);
       final result = response.result;
       return result;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelection(

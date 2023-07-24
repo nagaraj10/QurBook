@@ -350,7 +350,9 @@ class _ChatUserListState extends State<ChatUserList> {
       if (data.lastName != null && data.lastName != '') {
         fulName = fulName! + ' ' + data.lastName!;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     if (data.isCarecoordinator!) {
       try {
@@ -362,7 +364,9 @@ class _ChatUserListState extends State<ChatUserList> {
             data.carecoordinatorLastName != '') {
           ccName = ccName! + ' ' + data.carecoordinatorLastName!;
         }
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
 
     return Card(
@@ -402,6 +406,7 @@ class _ChatUserListState extends State<ChatUserList> {
                 }
               });
             } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
               print(e);
             }
           },
@@ -611,7 +616,9 @@ class _ChatUserListState extends State<ChatUserList> {
         if (userChatList.lastName != null && userChatList.lastName != '') {
           ccName = ccName! + ' ' + userChatList.lastName!;
         }
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
     return Column(
       children: <Widget>[
@@ -872,7 +879,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 )
                               : Text('')),
                       if (CommonUtil.isUSRegion() &&
-                              userChatList.isPrimaryCareCoordinator!)
+                          userChatList.isPrimaryCareCoordinator!)
                         Container(
                           child: Text(primary_chat,
                               style: TextStyle(
@@ -941,8 +948,8 @@ class _ChatUserListState extends State<ChatUserList> {
           if (userChatList.familyUserLastName != null &&
               userChatList.familyUserLastName != '') {
             name = userChatList.familyUserFirstName! +
-                    ' ' +
-                    userChatList.familyUserLastName!;
+                ' ' +
+                userChatList.familyUserLastName!;
           } else {
             name = (userChatList.familyUserFirstName ?? '').toString();
           }
@@ -953,8 +960,7 @@ class _ChatUserListState extends State<ChatUserList> {
         if (userChatList != null) {
           if (userChatList.firstName != null && userChatList.firstName != '') {
             if (userChatList.lastName != null && userChatList.lastName != '') {
-              name =
-                  userChatList.firstName! + ' ' + userChatList.lastName!;
+              name = userChatList.firstName! + ' ' + userChatList.lastName!;
             } else {
               name = (userChatList.firstName ?? '').toString();
             }

@@ -1,3 +1,4 @@
+import 'package:myfhb/common/CommonUtil.dart';
 
 class Payload {
   String? type;
@@ -45,6 +46,8 @@ class Payload {
       isWeb = json['isWeb'];
       patientPhoneNumber = json['patientPhoneNumber'];
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -67,6 +70,7 @@ class Payload {
       data['patientPhoneNumber'] = this.patientPhoneNumber;
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
     return data;
   }

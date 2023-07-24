@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/services/cancel_appointment_service.dart';
 
@@ -16,6 +17,8 @@ class CancelAppointmentViewModel extends ChangeNotifier {
       cancelAppointmentModel = cancelAppointment;
       return cancelAppointmentModel;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }

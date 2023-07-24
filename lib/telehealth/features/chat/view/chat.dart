@@ -336,6 +336,8 @@ class ChatScreenState extends State<ChatScreen> {
         }
       });
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       setState(() {
         isChatDisable = false;
       });
@@ -495,6 +497,8 @@ class ChatScreenState extends State<ChatScreen> {
       //   });
       // });
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       setState(() {
         isLoading = false;
       });
@@ -653,7 +657,10 @@ class ChatScreenState extends State<ChatScreen> {
           groupChatId,
           doctorDeviceToken);
       textValue = '';
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   openDownloadAlert(
@@ -796,7 +803,10 @@ class ChatScreenState extends State<ChatScreen> {
             ),
           ));
         }
-      } catch (e) {}
+      } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
+      }
     }
   }
 
@@ -2339,6 +2349,8 @@ class ChatScreenState extends State<ChatScreen> {
                           }
                         }
                       } catch (e) {
+                                    CommonUtil().appLogs(message: e.toString());
+
                         print(e);
                       }
                     }

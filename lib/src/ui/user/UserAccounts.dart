@@ -308,6 +308,8 @@ class _UserAccountsState extends State<UserAccounts>
           new CommonUtil().commonMethodToSetPreference();
         }
       } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
         new CommonUtil().commonMethodToSetPreference();
       }
     } else {

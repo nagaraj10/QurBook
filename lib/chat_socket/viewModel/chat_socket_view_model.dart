@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
@@ -8,6 +7,7 @@ import 'package:myfhb/chat_socket/model/InitChatModel.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/model/UserChatListModel.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -22,7 +22,7 @@ class ChatSocketViewModel extends ChangeNotifier {
   List<ChatHistoryResult?>? chatHistoryList = [];
   List<PayloadChat> chatHistoryCount = [];
 
- IO.Socket? socket;
+  IO.Socket? socket;
 
   int chatTotalCount = 0;
 
@@ -107,7 +107,8 @@ class ChatSocketViewModel extends ChangeNotifier {
         if (totalCountModel.payload!.isNotEmpty) {
           if (totalCountModel.payload![0].count != null &&
               totalCountModel.payload![0].count != '') {
-            chatTotalCount = int.parse(totalCountModel.payload![0].count ?? 0 as String);
+            chatTotalCount =
+                int.parse(totalCountModel.payload![0].count ?? 0 as String);
           }
         }
       }
@@ -148,14 +149,15 @@ class ChatSocketViewModel extends ChangeNotifier {
 
       ChatHistoryModel? chatHistoryModel = await chocketService!.getChatHistory(
           userId,
-          peerId??'',
-          familyUserId??'',
-          isCareCoordinator??false,
-          careCoordiantorId??'',
-          isFromFamilyList??false);
+          peerId ?? '',
+          familyUserId ?? '',
+          isCareCoordinator ?? false,
+          careCoordiantorId ?? '',
+          isFromFamilyList ?? false);
 
       return chatHistoryModel;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -168,7 +170,9 @@ class ChatSocketViewModel extends ChangeNotifier {
           await chocketService!.initNewChat(userId, peerId);
 
       return chatHistoryModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<InitChatFamilyModel?> initNewFamilyChat(String peerId,
@@ -176,12 +180,14 @@ class ChatSocketViewModel extends ChangeNotifier {
     try {
       var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN)!;
 
-      InitChatFamilyModel chatHistoryModel =
-          await chocketService!.initNewFamilyChat(
+      InitChatFamilyModel chatHistoryModel = await chocketService!
+          .initNewFamilyChat(
               userId, peerId, familyName, isCareCoordinator, careCooId);
 
       return chatHistoryModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   initRRTNotificaiton({String? peerId, String? selectedDate}) {
@@ -193,6 +199,7 @@ class ChatSocketViewModel extends ChangeNotifier {
         selectedDate: selectedDate!,
       );
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       if (kDebugMode) print(e.toString());
     }
   }
@@ -203,6 +210,8 @@ class ChatSocketViewModel extends ChangeNotifier {
           await chocketService!.getUserIdFromDocId(docId!);
 
       return getUserIdModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 }

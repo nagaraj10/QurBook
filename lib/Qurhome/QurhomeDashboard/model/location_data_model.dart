@@ -1,3 +1,4 @@
+import 'package:myfhb/common/CommonUtil.dart';
 
 class LocationDataModel {
   String? status;
@@ -48,6 +49,8 @@ class LocationDataModel {
       as = json['as'];
       query = json['query'];
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -71,6 +74,7 @@ class LocationDataModel {
       data['query'] = this.query;
     } catch (e) {
       print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
     return data;
   }
@@ -123,6 +127,7 @@ class Location {
       subThoroughfare = json['subThoroughfare'];
     } catch (e) {
       print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -144,6 +149,7 @@ class Location {
       data['subThoroughfare'] = this.subThoroughfare;
     } catch (e) {
       print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
     return data;
   }

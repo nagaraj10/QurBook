@@ -76,6 +76,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
       onInit();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -126,6 +128,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -153,6 +157,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       controller.clear();
       super.dispose();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -806,6 +812,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
       //setState(() {});
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -828,6 +836,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
           isNeedSheelaDialog:
               controller.estart.value.trim().isEmpty ? true : false);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         print(e);
       }

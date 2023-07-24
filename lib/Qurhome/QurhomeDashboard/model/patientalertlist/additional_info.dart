@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'dynamicfieldmodel.dart';
 
 class AdditionalInfo {
@@ -78,6 +80,7 @@ class AdditionalInfo {
       if (json['uformdata'] != null) getDynamicFieldList(json['uformdata']);
     } catch (e) {
       print(e);
+      CommonUtil().appLogs(message: e.toString());
 
       dynamicFieldModel = [];
     }
@@ -86,6 +89,8 @@ class AdditionalInfo {
       if (json['uform'] != null)
         getDynamicFieldListFromUfrom(jsonDecode(json['uform']));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
 
       dynamicFieldModelfromUForm = [];
@@ -171,7 +176,9 @@ class AdditionalInfo {
             : DynamicFieldModel()));
     try {
       dynamicFieldModelfromUForm?.sort((a, b) => a?.seq.compareTo(b?.seq));
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   getDynamicFieldList(dynamic json) {
@@ -213,6 +220,8 @@ class AdditionalInfo {
     try {
       dynamicFieldModel?.sort((a, b) => a?.seq.compareTo(b?.seq));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       //print(e);
     }
   }

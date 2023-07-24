@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../src/ui/MyRecord.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -33,6 +32,7 @@ class CallDialWidget extends StatelessWidget {
               await launch('tel:$phoneNumber');
             }
           } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
             print(e);
           }
         },

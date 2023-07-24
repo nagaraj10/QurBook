@@ -124,6 +124,8 @@ class _LandingScreenState extends State<LandingScreen> {
         }
       } as Future<String?> Function(String?)?);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       //print(e);
     }
   }
@@ -168,6 +170,8 @@ class _LandingScreenState extends State<LandingScreen> {
       CommonUtil().initSocket();
       sheelBadgeController.getSheelaBadgeCount();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -246,6 +250,8 @@ class _LandingScreenState extends State<LandingScreen> {
         }
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       //print(e.toString());
       await PreferenceUtil.removeNotificationData();
     }
@@ -777,7 +783,9 @@ class _LandingScreenState extends State<LandingScreen> {
     }
     try {
       await getDeviceSelectionValues().then((value) => {});
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     if (userId != null && userId.isNotEmpty) {
       try {
         MyProfileModel value =
@@ -814,6 +822,8 @@ class _LandingScreenState extends State<LandingScreen> {
           new CommonUtil().commonMethodToSetPreference();
         }
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         new CommonUtil().commonMethodToSetPreference();
       }
     } else {
@@ -845,6 +855,8 @@ class _LandingScreenState extends State<LandingScreen> {
       }
       setState(() {});
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -889,7 +901,9 @@ class _LandingScreenState extends State<LandingScreen> {
     if (widget.landingArguments?.needFreshLoad ?? true) {
       try {
         commonUtil.versionCheck(context);
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
   }
 
@@ -910,35 +924,49 @@ class _LandingScreenState extends State<LandingScreen> {
 
     try {
       getFamilyRelationAndMediaType();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     try {
       getProfileData();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     try {
       await CommonUtil().getMedicalPreference();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     try {
       try {
         CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
         _categoryListBlock.getCategoryLists().then((value) {});
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
 
       getFamilyRelationAndMediaType();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     try {
       final addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
       await addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
     if (url.isNotEmpty) {
       try {
         Uri deepLink = Uri.parse(jsonDecode(url));
         DynamicLinks.processDynamicLink(deepLink);
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
     checkCpUser();
   }
@@ -1040,17 +1068,23 @@ class _LandingScreenState extends State<LandingScreen> {
   void getFamilyRelationAndMediaType() async {
     try {
       await CommonUtil().getAllCustomRoles();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     try {
       await CommonUtil().getMediaTypes();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   void getProfileData() async {
     try {
       await CommonUtil().getUserProfileData();
       profileData = getMyProfile();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   void checkIfUserIdSame() async {

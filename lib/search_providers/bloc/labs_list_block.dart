@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/search_providers/models/CityListModel.dart';
 
 import '../../constants/variable_constant.dart' as variable;
@@ -55,6 +56,8 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
           await _labsListRepository.getLabsFromSearch(param);
       labListSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       labListSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -66,6 +69,8 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
           await _labsListRepository.getLabsFromSearchNew(param,isFromCreateTicket);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       labListNewSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -77,6 +82,8 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
       labsListResponse = await _labsListRepository.getLabsFromId(labId);
       labListSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       labListSink.add(ApiResponse.error(e.toString()));
     }
     return labsListResponse;
@@ -89,6 +96,8 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
           await _labsListRepository.getExistingLabsFromSearchNew(param,isFromCreateTicket);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       labListNewSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -99,6 +108,8 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
       var labsListResponse = await _labsListRepository.getCityList(param);
       cityListNewSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       cityListNewSink.add(ApiResponse.error(e.toString()));
     }
   }

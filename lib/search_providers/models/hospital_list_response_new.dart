@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
 
 class HospitalsSearchListResponse {
@@ -77,7 +78,10 @@ class HospitalsListResult {
     healthOrganizationName = json['healthOrganizationName'];
     try {
       name = json['name'];
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
     addressLine1 = json['addressLine1'];
     addressLine2 = json['addressLine2'];
     cityName = json['cityName'];

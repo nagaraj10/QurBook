@@ -230,6 +230,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       loadingData.value = false;
       bpList.value = [];
     }
@@ -295,6 +297,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       gulList.value = [];
       loadingData.value = false;
     }
@@ -366,6 +370,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       oxyList.value = [];
       loadingData.value = false;
     }
@@ -426,6 +432,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       tempList.value = [];
       loadingData.value = false;
     }
@@ -488,6 +496,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       weightList.value = [];
       loadingData.value = false;
     }
@@ -498,6 +508,8 @@ class VitalDetailController extends GetxController {
       timerProgress.value = value;
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 }

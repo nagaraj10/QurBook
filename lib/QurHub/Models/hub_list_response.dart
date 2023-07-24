@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 class HubListResponse {
   bool? isSuccess;
   Result? result;
@@ -88,6 +90,8 @@ class AdditionalDetails {
       isVirtualHub = json['isVirtualHub'];
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -97,6 +101,8 @@ class AdditionalDetails {
       data['isVirtualHub'] = this.isVirtualHub;
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }

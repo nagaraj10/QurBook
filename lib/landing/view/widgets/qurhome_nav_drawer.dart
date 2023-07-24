@@ -141,6 +141,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                   UserAccountsArguments(selectedIndex: 0),
                             ));
                           } catch (e) {
+                            CommonUtil().appLogs(message: e.toString());
+
                             //print(e);
                           }
                         },
@@ -154,6 +156,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             Get.back();
                             Get.to(AppointmentsMain(isFromQurday: true));
                           } catch (e) {
+                            CommonUtil().appLogs(message: e.toString());
+
                             //print(e);
                           }
                         },
@@ -173,6 +177,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                               argument: MyRecordsArgument(),
                             ));
                           } catch (e) {
+                            CommonUtil().appLogs(message: e.toString());
+
                             //print(e);
                           }
                         },
@@ -296,6 +302,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
 
                               Get.to(() => OrdersView());
                             } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
+
                               //print(e);
                             }
                           },
@@ -316,6 +324,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             Get.back();
                             Get.to(() => MoreMenuScreen(refresh: refresh));
                           } catch (e) {
+                            CommonUtil().appLogs(message: e.toString());
+
                             //print(e);
                           }
                         },
@@ -335,6 +345,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             Get.back();
                             Get.to(() => HelpSupport());
                           } catch (e) {
+                            CommonUtil().appLogs(message: e.toString());
+
                             //print(e);
                           }
                         },
@@ -401,6 +413,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
 
                               Get.to(() => ReportListScreen());
                             } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
+
                               //print(e);
                             }
                           },
@@ -427,6 +441,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
 
                                 Get.to(() => ClaimList());
                               } catch (e) {
+                                CommonUtil().appLogs(message: e.toString());
+
                                 //print(e);
                               }
                             },
@@ -479,6 +495,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
           ? myProfile.result!.userContactCollection3![0]!.phoneNumber!
           : '';
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       //print(e);
     }
 

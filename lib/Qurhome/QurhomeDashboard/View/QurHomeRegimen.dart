@@ -132,6 +132,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       controller.startTimer();
       super.initState();
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -186,6 +188,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -384,6 +388,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 }
                               });
                             } catch (e) {
+                                    CommonUtil().appLogs(message: e.toString());
+
                               print(e);
                             }
                           },
@@ -574,6 +580,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         print(e);
       }
@@ -724,6 +732,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       return getDefaultIcon(
           activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
     }
@@ -789,9 +799,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         first = title.substring(start, length);
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       try {
         first = title.split("|").first;
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         first = title;
       }
     }
@@ -801,7 +815,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (startSecond != null) {
         second = title.substring(startSecond, lengthSecond);
       }
-    } catch (e) {}
+    } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
+    }
 
     return first + second;
   }
@@ -835,6 +852,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                   try {
                                     Navigator.pop(context);
                                   } catch (e) {
+                                          CommonUtil().appLogs(message: e.toString());
+
                                     print(e);
                                   }
                                 })
@@ -1046,7 +1065,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             final jsonString = convert.jsonEncode(snoozedBody);
                             try {
                               QurHomeApiProvider.snoozeEvent(jsonString);
-                            } catch (e) {}
+                            } catch (e) {
+                                    CommonUtil().appLogs(message: e.toString());
+
+                            }
                             QurPlanReminders.updateReminderswithLocal(data);
                             Navigator.pop(context);
                           },
@@ -1124,6 +1146,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                   try {
                                     Navigator.pop(context);
                                   } catch (e) {
+                                          CommonUtil().appLogs(message: e.toString());
+
                                     print(e);
                                   }
                                 })
@@ -1667,6 +1691,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       cardColor = Color(CommonUtil().getMyPrimaryColor());
     }
     return cardColor;
@@ -1759,6 +1785,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       }*/
       initSOSTimer();
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -1807,6 +1835,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         showSOSTimerDialog(context);
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -1827,6 +1857,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       });
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -1838,6 +1870,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       }
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -1876,6 +1910,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       });
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -1888,6 +1924,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       }
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -1957,6 +1995,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               : animationController!.value);
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
 
     return showDialog<void>(
@@ -2072,6 +2112,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           callNowSOS();
         } catch (e) {
           print(e);
+                CommonUtil().appLogs(message: e.toString());
+
         }
       },
       child: Container(
@@ -2111,6 +2153,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           closeDialog();
         } catch (e) {
           print(e);
+                CommonUtil().appLogs(message: e.toString());
+
         }
       },
       child: Container(

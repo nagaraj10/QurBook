@@ -154,7 +154,10 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 : ShowCaseWidget.of(_myContext)!
                     .startShowCase([_DailyKey, _cardKey, _SymptomsKey]));
       });
-    } catch (e) {}
+    } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   getProfile() async {
@@ -244,6 +247,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         }
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       cardColor = Color(CommonUtil().getMyPrimaryColor());
     }
     return cardColor;
@@ -278,6 +283,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         return getDefaultIcon(activityname, uformName, iconSize);
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       return getDefaultIcon(activityname, uformName, iconSize);
     }
   }
@@ -852,6 +859,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         colors = Color(CommonUtil().getMyPrimaryColor());
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       return colors = Color(CommonUtil().getMyPrimaryColor());
     }
     return colors;
@@ -864,6 +873,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
           0) {
         sheelBadgeController.getSheelaBadgeCount();
       }
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 }

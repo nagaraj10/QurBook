@@ -414,6 +414,8 @@ class RegimentDataCard extends StatelessWidget {
                       double.tryParse(vitalData.amin)!)
               : true;
         } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
           //print(e);
         }
       }
@@ -786,6 +788,8 @@ class RegimentDataCard extends StatelessWidget {
         );
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       LoaderClass.hideLoadingDialog(Get.context!);
     }
   }

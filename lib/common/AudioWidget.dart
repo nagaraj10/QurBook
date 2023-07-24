@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:typed_data' show Uint8List;
 import 'package:flutter/material.dart';
@@ -71,16 +70,15 @@ class AudioWidgetState extends State<AudioWidget> {
     initializeDateFormatting();
     _pathOfFile = widget.audioFile;
     audioUrl = widget.audioUrl;
-    if(!widget.isPlayAudioUrl){
+    if (!widget.isPlayAudioUrl) {
       if (widget.isFromSheela) {
         _sheelaAIController = Get.find();
         Future.delayed(const Duration(milliseconds: 5))
             .then((value) => onStartPlayerPressed());
       }
-    }else{
+    } else {
       _sheelaAIController = Get.find();
     }
-
   }
 
   set_up_audios() async {
@@ -202,94 +200,96 @@ class AudioWidgetState extends State<AudioWidget> {
   }
 
   Widget getAudioWidgetWithPlayer() => Container(
-      width: widget.isFromChat ? 1.sw / 1.7 : 1.sw,
-      color: Colors.grey[200],
-      padding: EdgeInsets.all(5),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            height: 30,
-            width: 30,
-            child: IconButton(
-              onPressed: () {
-                isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
-              },
-              padding: EdgeInsets.all(2),
-              icon: !isPlaying
-                  ? Icon(
-                      Icons.play_arrow,
-                      size: 30,
-                    )
-                  : Icon(
-                      Icons.pause,
-                      size: 30,
-                    ),
-            ),
-          ),
-          Expanded(
-            flex: 7,
-            child: Container(
-              height: 30.0.h,
-              child: Slider(
-                activeColor: Color(CommonUtil().getMyPrimaryColor()),
-                inactiveColor: Colors.grey,
-                value: sliderCurrentPosition,
-                min: 0,
-                max: maxDuration,
-                onChanged: (value) async {
-                  await flutterSound!.seekToPlayer(
-                    Duration(
-                      seconds: value.round(),
-                    ),
-                  );
+        width: widget.isFromChat ? 1.sw / 1.7 : 1.sw,
+        color: Colors.grey[200],
+        padding: EdgeInsets.all(5),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              height: 30,
+              width: 30,
+              child: IconButton(
+                onPressed: () {
+                  isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
                 },
-                divisions: maxDuration.toInt()>0?maxDuration.toInt():null,
+                padding: EdgeInsets.all(2),
+                icon: !isPlaying
+                    ? Icon(
+                        Icons.play_arrow,
+                        size: 30,
+                      )
+                    : Icon(
+                        Icons.pause,
+                        size: 30,
+                      ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Text(
-                _playerTxt,
-                style: TextStyle(
-                  fontSize: 14.0.sp,
-                  color: Colors.black,
+            Expanded(
+              flex: 7,
+              child: Container(
+                height: 30.0.h,
+                child: Slider(
+                  activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                  inactiveColor: Colors.grey,
+                  value: sliderCurrentPosition,
+                  min: 0,
+                  max: maxDuration,
+                  onChanged: (value) async {
+                    await flutterSound!.seekToPlayer(
+                      Duration(
+                        seconds: value.round(),
+                      ),
+                    );
+                  },
+                  divisions:
+                      maxDuration.toInt() > 0 ? maxDuration.toInt() : null,
                 ),
               ),
             ),
-          ),
-          if (!widget.isFromChat)
             Expanded(
-              child: IconButton(
-                icon: Icon(Icons.delete, size: 20.0.sp, color: Colors.red[600]),
-                padding: EdgeInsets.only(right: 2),
-                onPressed: () {
-                  widget.audioFile = '';
-
-                  if (flutterSound!.playerState == PlayerState.isPlaying ||
-                      flutterSound!.playerState == PlayerState.isPaused) {
-                    flutterSound!.stopPlayer();
-                    setState(
-                      () {
-                        widget.deleteAudioFile!(false, widget.audioFile);
-                      },
-                    );
-                  } else {
-                    setState(
-                      () {
-                        widget.deleteAudioFile!(false, widget.audioFile);
-                      },
-                    );
-                  }
-                },
+              flex: 2,
+              child: Center(
+                child: Text(
+                  _playerTxt,
+                  style: TextStyle(
+                    fontSize: 14.0.sp,
+                    color: Colors.black,
+                  ),
+                ),
               ),
-            )
-        ],
-        mainAxisAlignment: MainAxisAlignment.center,
-      ),
-    );
+            ),
+            if (!widget.isFromChat)
+              Expanded(
+                child: IconButton(
+                  icon:
+                      Icon(Icons.delete, size: 20.0.sp, color: Colors.red[600]),
+                  padding: EdgeInsets.only(right: 2),
+                  onPressed: () {
+                    widget.audioFile = '';
+
+                    if (flutterSound!.playerState == PlayerState.isPlaying ||
+                        flutterSound!.playerState == PlayerState.isPaused) {
+                      flutterSound!.stopPlayer();
+                      setState(
+                        () {
+                          widget.deleteAudioFile!(false, widget.audioFile);
+                        },
+                      );
+                    } else {
+                      setState(
+                        () {
+                          widget.deleteAudioFile!(false, widget.audioFile);
+                        },
+                      );
+                    }
+                  },
+                ),
+              )
+          ],
+          mainAxisAlignment: MainAxisAlignment.center,
+        ),
+      );
 
   onStartPlayerPressed() {
     return flutterSound!.playerState == PlayerState.isPaused
@@ -413,6 +413,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
       return contents;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       return null;
     }
   }

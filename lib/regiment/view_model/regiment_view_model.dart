@@ -278,6 +278,8 @@ class RegimentViewModel extends ChangeNotifier {
           }
         });
       } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
         print(e);
       }
       setViewRegimentsData(
@@ -597,6 +599,8 @@ class RegimentViewModel extends ChangeNotifier {
           }
         });
       } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
         print(e);
       }
       setViewActivitiesData(

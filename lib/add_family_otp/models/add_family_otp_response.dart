@@ -1,4 +1,3 @@
-
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 
@@ -461,12 +460,16 @@ class AdditionalInfos {
             ? HeightObjNew.fromJson(json['height'])
             : null;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     weight = json['weight'];
     try {
       height = json['height'];
       weight = json['weight'];
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

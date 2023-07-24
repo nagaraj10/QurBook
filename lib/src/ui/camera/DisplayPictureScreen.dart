@@ -221,7 +221,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     try {
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
       setFileName();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
 
     if (categoryName != Constants.STR_DEVICES) {
       switch (categoryName) {

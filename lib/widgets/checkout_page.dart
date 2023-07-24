@@ -336,6 +336,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                           Navigator.pop(context);
                                                                                         } catch (e) {
                                                                                           //print(e);
+                                                                                          CommonUtil().appLogs(message: e.toString());
                                                                                         }
                                                                                       },
                                                                                       child: TextWidget(
@@ -360,6 +361,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                           }
                                                                                         } catch (e) {
                                                                                           //print(e);
+                                                                                          CommonUtil().appLogs(message: e.toString());
                                                                                         }
                                                                                       },
                                                                                       child: TextWidget(
@@ -1021,6 +1023,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                       context);
                                                                 } catch (e) {
                                                                   //print(e);
+                                                                  CommonUtil().appLogs(
+                                                                      message: e
+                                                                          .toString());
                                                                 }
                                                               },
                                                               child: TextWidget(
@@ -1088,6 +1093,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                       context);
                                                                 } catch (e) {
                                                                   //print(e);
+                                                                  CommonUtil().appLogs(
+                                                                      message: e
+                                                                          .toString());
                                                                 }
                                                               },
                                                               child: TextWidget(

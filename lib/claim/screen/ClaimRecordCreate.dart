@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
@@ -128,7 +127,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             ? claimAmountTotal!.split(".")[0]
             : claimAmountTotal;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     memberShipStartDate = new CommonUtil().getMemberSipStartDate();
     memberShipEndDate = new CommonUtil().getMemberSipEndDate();
@@ -139,7 +140,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     setAuthToken();
     initializeData();
 
-    if (length == 1 && new CommonUtil().checkIfFileIsPdf(widget.imagePath![0]!)) {
+    if (length == 1 &&
+        new CommonUtil().checkIfFileIsPdf(widget.imagePath![0]!)) {
       ispdfPresent = true;
       pdfFile = File(widget.imagePath![0]!);
       final fileNoun = pdfFile.path.split('/').last;
@@ -166,13 +168,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       key: scaffold_state,
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        title: 
-        Text(  //FU2.5
-        //AutoSizeText( FU2.5
+        title: Text(
+          //FU2.5
+          //AutoSizeText( FU2.5
           "My Claim",
           maxLines: 1,
           //maxFontSize: 16, FU2.5
-        ),  
+        ),
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -572,7 +574,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
               ' ' +
               myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     if (sharedByMeList == null) {
       sharedByMeList = [];
@@ -658,7 +662,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           categoryDataObj.toJson();
       var _mediaTypeBlock = MediaTypeBlock();
 
-      var mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
+      var mediaTypesResponse =
+          await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
 
       final metaDataFromSharedPrefernce = mediaTypesResponse.result!;
       mediaDataObj = CommonUtil().getMediaTypeInfoForParticularLabel(
@@ -870,9 +875,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                               user.child == null
                                   ? 'Self'
                                   : ((user.child?.firstName ?? '') +
-                                              ' ' +
-                                              (user.child?.lastName ?? ''))
-                                          .capitalizeFirstofEach,
+                                          ' ' +
+                                          (user.child?.lastName ?? ''))
+                                      .capitalizeFirstofEach,
                               style: fhbBasicWidget.getTextStyleForValue()),
                           padding: EdgeInsets.only(
                               left: 20,
@@ -917,7 +922,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             onPressed: () async {
               await OpenFilex.open(
                 pdfFile.path,
-              );//FU2.5
+              ); //FU2.5
             },
           )
         ],

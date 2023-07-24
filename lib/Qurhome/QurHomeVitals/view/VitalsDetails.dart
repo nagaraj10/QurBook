@@ -134,18 +134,24 @@ class _VitalsDetailsState extends State<VitalsDetails>
       controllerGetx.onTapFilterBtn(0);
       controllerGetx.checkForBleDevices();
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
 
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       weightUnit = "kg";
     }
 
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       tempUnit = "F";
     }
   }
@@ -166,6 +172,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
         }
       });
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -191,6 +199,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
         // }
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -205,6 +215,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
       _events.close();
       Navigator.pop(Get.context!);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -245,6 +257,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
           from:
               animationController.value == 0 ? 1.0 : animationController.value);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
 
@@ -289,6 +303,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                           _events.close();
                                           Navigator.pop(context);
                                         } catch (e) {
+                                                CommonUtil().appLogs(message: e.toString());
+
                                           print(e);
                                         }
                                       })
@@ -353,6 +369,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
             '${DateTime.now().difference(mInitialTime).inSeconds} secs'
       });
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -569,6 +587,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
             catgoryDataList = value.result!;
@@ -1068,6 +1088,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       tempUnit = "F";
     }
     return Container(
@@ -1343,6 +1365,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       weightUnit = "kg";
     }
     return Container(

@@ -31,6 +31,8 @@ class SheelAIAPIService {
       // print(response.body);
       return response!;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       throw Exception('$e was thrown');
     }
   }
@@ -53,6 +55,8 @@ class SheelAIAPIService {
       // print(response.body);
       return response!;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       throw Exception('$e was thrown');
     }
   }

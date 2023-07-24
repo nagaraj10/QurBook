@@ -186,6 +186,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       }
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -208,6 +210,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
       setBooleanValues();
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         print(e);
       }
@@ -228,6 +232,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       super.dispose();
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -323,6 +329,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       }
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -331,7 +339,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       var textEditingController = new TextEditingController();
       textEditingControllers.putIfAbsent(
           CommonUtil().getFieldName(field.name), () => textEditingController);
-    } catch (e) {}
+    } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   @override
@@ -776,6 +786,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                           setState: setState);
                                     } catch (e) {
                                       //print(e);
+                                            CommonUtil().appLogs(message: e.toString());
                                     }
                                   },
                                   child: getIconButton()),
@@ -863,7 +874,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                     moveToSearchScreen(
                                         context, CommonConstants.keyCity, field,
                                         setState: setState);
-                                  } catch (e) {}
+                                  } catch (e) {
+                                          CommonUtil().appLogs(message: e.toString());
+                                  }
                                 },
                                 child: getIconButton()),
                           ),
@@ -879,6 +892,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         }
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
       //print(e.toString());
     }
     // widgetForColumn.add(getWidgetForLab());
@@ -944,6 +958,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       });
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -1053,6 +1068,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               });
             } catch (e) {
               //print(e);
+                    CommonUtil().appLogs(message: e.toString());
             }
           },
           child: Container(
@@ -1525,6 +1541,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       preferredTimeController.text = preferredTimeStr;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -1543,6 +1560,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       }
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
     }
     return SizedBoxWithChild(
       height: 50,
@@ -1591,7 +1609,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.selPrefLabId.value =
                     CommonUtil().validString(currLab.id);
                 setState(() {});
-              } catch (e) {}
+              } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+              }
             },
           ),
         ),
@@ -1612,6 +1632,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       }
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
     }
     return SizedBoxWithChild(
       height: 50,
@@ -1660,7 +1681,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.selPrefDoctorId.value =
                     CommonUtil().validString(currDoc.id);
                 setState(() {});
-              } catch (e) {}
+              } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+              }
             },
           ),
         ),
@@ -2466,6 +2489,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             }
           } catch (e) {
             //print(e);
+                  CommonUtil().appLogs(message: e.toString());
           }
         }
       }).catchError((error) {
@@ -2474,6 +2498,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       });
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -2952,6 +2977,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         });
       } catch (e) {
         //print('$e exception thrown');
+              CommonUtil().appLogs(message: e.toString());
       }
     }
     if (filePathist.length == imagesPathMain.length) {
@@ -3004,6 +3030,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       controller.strStateName.value = "";
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -3083,7 +3110,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             field.selValueDD!.name!;
       });
       onRefreshWidget();
-    } catch (e) {}
+    } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   onRefreshWidget() {
@@ -3091,6 +3120,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       setState(() {});
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -3102,7 +3132,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           ? displayName
           : CommonUtil().getFieldName(field.name)!;
       return displayName;
-    } catch (e) {}
+    } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+    }
     return displayName;
   }
 
@@ -3112,7 +3144,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       strText = CommonUtil().validString(
           textEditingControllers[CommonUtil().getFieldName(field.name)]!.text);
       return strText;
-    } catch (e) {}
+    } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+    }
     return strText;
   }
 }
