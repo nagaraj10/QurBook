@@ -11,7 +11,6 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/video_call/model/videocallStatus.dart';
@@ -482,7 +481,7 @@ class _MyControllersState extends State<MyControllers> {
         await widget.rtcEngine?.disableVideo();
         await widget.rtcEngine?.enableLocalVideo(false);
         await widget.rtcEngine?.muteLocalVideoStream(true);
-        await widget.rtcEngine?.setEnableSpeakerphone(false);
+        await widget.rtcEngine?.setEnableSpeakerphone(true);
         setState(() {
           widget.isInSpeaker = false;
         });

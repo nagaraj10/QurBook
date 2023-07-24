@@ -1,21 +1,18 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
-import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
+
 import '../../common/CommonUtil.dart';
+import '../../src/ui/loader_class.dart';
 import '../models/field_response_model.dart';
 import '../models/profile_response_model.dart';
 import '../models/regiment_data_model.dart';
 import '../models/regiment_response_model.dart';
 import '../models/save_response_model.dart';
 import '../service/regiment_service.dart';
-import '../../src/ui/loader_class.dart';
-import 'package:provider/provider.dart';
-import '../../../constants/fhb_constants.dart' as Constants;
 
 enum RegimentMode { Schedule, Symptoms }
 
@@ -133,7 +130,15 @@ class RegimentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> switchRegimentMode() async{
+  Future<void> switchFromSymptomToSchedule() async {
+    regimentMode = RegimentMode.Schedule;
+    if (regimentMode == RegimentMode.Symptoms) {
+      regimentFilter = RegimentFilter.Scheduled;
+      updateInitialShowIndex(index: 0);
+    }
+  }
+
+  Future<void> switchRegimentMode() async {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
@@ -358,9 +363,8 @@ class RegimentViewModel extends ChangeNotifier {
               CommonUtil().validString(item.seq) != "0" &&
               CommonUtil().validString(item.seq).trim().isNotEmpty)
           .toList();
-      seqRegimentsList.sort((b, a) =>
-          int.parse(CommonUtil().validString(a.seq))
-              .compareTo(int.parse(CommonUtil().validString(b.seq))));
+      seqRegimentsList.sort((b, a) => int.parse(CommonUtil().validString(a.seq))
+          .compareTo(int.parse(CommonUtil().validString(b.seq))));
       otherRegimentsList = tempRegimentsList
           .where((item) =>
               CommonUtil().validString(item.seq) == "0" ||
@@ -412,8 +416,7 @@ class RegimentViewModel extends ChangeNotifier {
     } else if (isNext) {
       selectedRegimenDate = selectedRegimenDate.add(Duration(days: 1));
     }
-    regimentDate =
-        '${CommonUtil().regimentDateFormat(selectedRegimenDate)}';
+    regimentDate = '${CommonUtil().regimentDateFormat(selectedRegimenDate)}';
     if (!isInitial) {
       resetRegimenTab();
       fetchRegimentData(isInitial: true);
@@ -544,8 +547,7 @@ class RegimentViewModel extends ChangeNotifier {
     } else if (isNext) {
       selectedActivityDate = selectedActivityDate.add(Duration(days: 1));
     }
-    activitiesDate =
-        '${CommonUtil().regimentDateFormat(selectedActivityDate)}';
+    activitiesDate = '${CommonUtil().regimentDateFormat(selectedActivityDate)}';
     if (!isInitial) {
       fetchScheduledActivities(isInitial: true);
       notifyListeners();

@@ -76,7 +76,8 @@ class RegimentService {
       }
 
       if (response != null && response.statusCode == 200) {
-        return RegimentResponseModel.fromJson(json.decode(response.body));
+        return RegimentResponseModel.fromJson(json.decode(response.body),
+            date: dateSelected);
       } else {
         return RegimentResponseModel(
           regimentsList: [],
@@ -197,8 +198,6 @@ class RegimentService {
         followEventParams =
             '&followevent=1&context=${followEventContext ?? ''}';
       }
-      print(
-          "Parvathi Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK");
       var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,

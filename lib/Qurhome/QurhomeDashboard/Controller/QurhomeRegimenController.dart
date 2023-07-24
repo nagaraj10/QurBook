@@ -84,6 +84,8 @@ class QurhomeRegimenController extends GetxController {
 
   var isFirstTime = true.obs;
 
+  var isShowSOSButton = false.obs;
+
   getRegimenList(
       {bool isLoading = true, String? date, String? patientId}) async {
     try {
@@ -464,6 +466,7 @@ class QurhomeRegimenController extends GetxController {
       http.Response response = await _apiProvider.getSOSAgentNumber();
       if (isLoading) {
         await qurhomeDashboardController.getModuleAccess();
+        await getSOSButtonStatus();
         loadingData.value = false;
       }
       if (response == null) {
@@ -511,6 +514,7 @@ class QurhomeRegimenController extends GetxController {
               getRegimenList(isLoading: false);
             }
             qurhomeDashboardController.getModuleAccess();
+            getSOSButtonStatus();
             if (CommonUtil.isUSRegion()) {
               duration = Duration(minutes: 2);
             } else {
@@ -618,11 +622,22 @@ class QurhomeRegimenController extends GetxController {
   onStopLoadingCircle() async {
     try {
       await qurhomeDashboardController.getModuleAccess();
+      await getSOSButtonStatus();
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
 
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  getSOSButtonStatus() async {
+    try {
+      await _apiProvider.getSOSButtonStatus();
+    } catch (e) {
       if (kDebugMode) {
         print(e);
       }

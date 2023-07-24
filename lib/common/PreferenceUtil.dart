@@ -3,17 +3,16 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:flutter/widgets.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'CommonConstants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../constants/fhb_constants.dart' as Constants;
 import '../language/model/Language.dart';
 import '../my_family/models/FamilyData.dart';
 import '../my_family/models/FamilyMembersRes.dart';
-import '../my_family/models/RelationShip.dart';
 import '../my_family/models/relationship_response_list.dart';
 import '../my_family/models/relationships.dart';
 import '../src/model/Authentication/UserModel.dart';
@@ -24,9 +23,8 @@ import '../src/model/user/DoctorIds.dart';
 import '../src/model/user/HospitalIds.dart';
 import '../src/model/user/LaboratoryIds.dart';
 import '../src/model/user/MyProfileModel.dart';
-import '../telehealth/features/Notifications/constants/notification_constants.dart';
 import '../video_call/model/NotificationModel.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'CommonConstants.dart';
 
 class PreferenceUtil {
   static Future<SharedPreferences>? _prefs = SharedPreferences.getInstance();
@@ -178,13 +176,15 @@ class PreferenceUtil {
     final categoryData = <CategoryResult>[];
 
     try {
-      if (_prefsInstance == null) {}
-      json
-          .decode(_prefsInstance!.getString(Constants.KEY_CATEGORYLIST)!)
-          .forEach((map) {
-        categoryData.add(CategoryResult.fromJson(map));
-      });
-
+      if (_prefsInstance != null) {
+        if (_prefsInstance!.containsKey(Constants.KEY_CATEGORYLIST)) {
+          json
+              .decode(_prefsInstance!.getString(Constants.KEY_CATEGORYLIST)!)
+              .forEach((map) {
+            categoryData.add(CategoryResult.fromJson(map));
+          });
+        }
+      }
       return categoryData;
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());

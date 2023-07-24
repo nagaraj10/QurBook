@@ -16,33 +16,24 @@ import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/landing/model/qur_plan_dashboard_model.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/telehealth/features/chat/constants/const.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:socket_io_client/socket_io_client.dart';
 
-import '../model/UserChatListModel.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 import '../../colors/fhb_colors.dart' as fhbColors;
-
+import '../model/UserChatListModel.dart';
 import 'ChatDetail.dart';
 
 class ChatUserList extends StatefulWidget {
