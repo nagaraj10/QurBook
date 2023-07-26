@@ -513,15 +513,16 @@ class SheelaBLEController extends GetxController {
                 ? STR_VAL_WEIGHT_IND
                 : STR_VAL_WEIGHT_US;
           }
-          if (weightUnit == STR_VAL_WEIGHT_US) {
-            double convertedWeight = 1;
-            try {
-              convertedWeight = double.parse(model.data!.weight!);
-            } catch (e) {
-              convertedWeight = 1;
-            }
-            model.data!.weight = (convertedWeight * 2.205).toStringAsFixed(2);
+          double convertedWeight = 1.000;
+          try {
+            convertedWeight = double.parse(model.data!.weight!);
+          } catch (e) {
+            convertedWeight = 1.000;
           }
+          if (weightUnit == STR_VAL_WEIGHT_US) {
+            convertedWeight = (convertedWeight * 2.205);
+          }
+          model.data!.weight = convertedWeight.toStringAsFixed(2);
         }
         // model.hubId = hublistController.virtualHubId;
         model.deviceId = hublistController.bleMacId;
