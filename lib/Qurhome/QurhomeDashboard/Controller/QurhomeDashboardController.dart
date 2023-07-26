@@ -110,7 +110,7 @@ class QurhomeDashboardController extends GetxController {
   getHubDetails() async {
     hubController = Get.find<HubListViewController>();
     await hubController.getHubList();
-    _sheelaBLEController.setupListenerForReadings();
+    // _sheelaBLEController.setupListenerForReadings();
   }
 
   void updateTabIndex(int newIndex) {

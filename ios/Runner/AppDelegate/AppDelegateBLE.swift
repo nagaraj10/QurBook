@@ -528,23 +528,31 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
         //        for (key, value) in weight.toString() {
         //            let dataStr:String=String.init(format: "%@=%@", key as CVarArg,value as! CVarArg);
         //            dataLabel = dataLabel + dataStr
-        //        }
+        //        }1690262063 --1690262052
+        
         //        let utcStr:String = String.init(format: "utc=%d", weight.utc);
         //        dataLabel = dataLabel + utcStr
         //        print("----------------------------------2----------------------------------")
-        //        print(dataLabel)
-       // eventSink?("remainCount|" + String(describing: weight.remainCount) + "-" + String(format: "%.2f", weight.weight))
+        //        print(dataLabel) -- 10.35 --10:39 -- 1690261762 --1690260757
+        // eventSink?("remainCount|" + String(describing: weight.remainCount) + "-" + String(format: "%.2f", weight.weight))
+        let current = Date().adding(minutes: -2)
+        let currentTime =  (current.timeIntervalSince1970).toInt() ?? 0
+//        print(current)
+//        print(currentTime)
+//        print(weight.utc)
         if(weight.remainCount == 0){
-            let data : [String:Any] = [
-                "Status" : "Measurement",
-                "deviceType" : "weight",
-                "Data" : [
-                    "Weight" : String(format: "%.2f", weight.weight),
+            if(weight.utc > currentTime){
+                let data : [String:Any] = [
+                    "Status" : "Measurement",
+                    "deviceType" : "weight",
+                    "Data" : [
+                        "Weight" : String(format: "%.2f", weight.weight),
+                    ]
                 ]
-            ]
-            if let serlized = data.jsonStringRepresentation{
-                eventSink?("measurement|"+serlized)
-                eventSink = nil
+                if let serlized = data.jsonStringRepresentation{
+                    eventSink?("measurement|"+serlized)
+                    eventSink = nil
+                }
             }
         }
     }
@@ -582,3 +590,4 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
     
     
 }
+
