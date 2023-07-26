@@ -1,0 +1,214 @@
+{
+  "project_info": {
+    "project_number": "69764989858",
+    "project_id": "myfhbfitness-us",
+    "storage_bucket": "myfhbfitness-us.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69764989858:android:bb85205db5412f868c28fb",
+        "android_client_info": {
+          "package_name": "com.qurhealth.patient.qurdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKisP0Herhn3V6nzrfqivrBSsAmP9gGhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "69764989858-b2p2t37rgbprjajtk6m6pibehk7qg1rj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qurhealth.qurbook.us"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69764989858:android:e26bb062cd69152a8c28fb",
+        "android_client_info": {
+          "package_name": "com.qurhealth.qurbook.us"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69764989858-5feposged43g1knfh3bg4kon4gld2vq7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurbook.us",
+            "certificate_hash": "c7f27710afa65295bb30064511ba46f8c51042f8"
+          }
+        },
+        {
+          "client_id": "69764989858-5ldnv2a4r9fen1iu2lsj3vcg5nn9a7mt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurbook.us",
+            "certificate_hash": "40946d50f1cf43abcd8bcd6f5505741110b11a76"
+          }
+        },
+        {
+          "client_id": "69764989858-76715e3luqiqq0rsuv7lgu36m3772kg3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurbook.us",
+            "certificate_hash": "8bb397cb79c0b6a635111d263df4e5a315aba1e2"
+          }
+        },
+        {
+          "client_id": "69764989858-8no9q0qcojpqc91qadopbrbrvvt4lons.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurbook.us",
+            "certificate_hash": "cb23d717ec91870a52e0ed46c1bdd4b97de9d05e"
+          }
+        },
+        {
+          "client_id": "69764989858-c7d01ulpbl1kddrnf7qjeouos84e77ft.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurbook.us",
+            "certificate_hash": "711508af854c2384f5ca0449b5423ea7981b816f"
+          }
+        },
+        {
+          "client_id": "69764989858-e34ehbmlb643j3krq0c7qnt5pb18srh4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurbook.us",
+            "certificate_hash": "02bcdcbfc88d952b8d5ad9d3e2e5205180796c32"
+          }
+        },
+        {
+          "client_id": "69764989858-g85f2hlms817pnrvlaknppeqfknqjg6k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurbook.us",
+            "certificate_hash": "347d53b3eefe60f15ece110122865268d05bddc3"
+          }
+        },
+        {
+          "client_id": "69764989858-i71qb59nia3tj2p4jk7uk3krjgq02bid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurbook.us",
+            "certificate_hash": "361babfe70c16d9a228902e541b7960455c00b26"
+          }
+        },
+        {
+          "client_id": "69764989858-umi1bt3krrhr8pcks06mbpg9p97btd8e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurbook.us",
+            "certificate_hash": "93b2426a89498900e8d4fad8f961294cae406718"
+          }
+        },
+        {
+          "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKisP0Herhn3V6nzrfqivrBSsAmP9gGhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "69764989858-b2p2t37rgbprjajtk6m6pibehk7qg1rj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qurhealth.qurbook.us"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69764989858:android:8dc62b2b2ac6f5b08c28fb",
+        "android_client_info": {
+          "package_name": "com.qurhealth.qurpro.us"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69764989858-9tvd11f99igaeu8asq7h4mb8r8vs6n56.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurpro.us",
+            "certificate_hash": "93b2426a89498900e8d4fad8f961294cae406718"
+          }
+        },
+        {
+          "client_id": "69764989858-qlkjhnn0b7eg0cmv47lo5d7l049bnclk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurpro.us",
+            "certificate_hash": "c7f27710afa65295bb30064511ba46f8c51042f8"
+          }
+        },
+        {
+          "client_id": "69764989858-t49varj5hv5b2b1li3irh78s7hhhm5ro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurhealth.qurpro.us",
+            "certificate_hash": "347d53b3eefe60f15ece110122865268d05bddc3"
+          }
+        },
+        {
+          "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKisP0Herhn3V6nzrfqivrBSsAmP9gGhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "69764989858-b2p2t37rgbprjajtk6m6pibehk7qg1rj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qurhealth.qurbook.us"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
