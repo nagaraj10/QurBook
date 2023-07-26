@@ -23,6 +23,9 @@ extension Date {
         return Date(timeInterval: seconds, since: self)
     }
     
+    func adding(minutes: Int) -> Date {
+        return Calendar.current.date(byAdding: .minute, value: minutes, to: self)!
+    }
 }
 extension Data{
     var hexadecimal: String {
@@ -84,3 +87,14 @@ extension String {
         return result
     }
 }
+
+extension Double {
+    func toInt() -> Int? {
+        if self >= Double(Int.min) && self < Double(Int.max) {
+            return Int(self)
+        } else {
+            return nil
+        }
+    }
+}
+

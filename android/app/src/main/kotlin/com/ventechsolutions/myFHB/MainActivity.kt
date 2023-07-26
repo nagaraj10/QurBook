@@ -115,10 +115,13 @@ import com.lifesense.plugin.ble.data.scale.LSScaleWeight
 import com.lifesense.plugin.ble.data.tracker.ATDeviceData
 import com.lifesense.plugin.ble.data.tracker.ATPairResultsCode
 import com.lifesense.plugin.ble.data.tracker.ATUserInfo
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import kotlin.collections.ArrayList
 
 class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
+    private var currentConnectedTime: Long=0
     private var devicesList= listOf<Any>()
     private var deviceType=""
     private var manufacture=""
@@ -1194,7 +1197,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         override fun onScaleWeightDataUpdate(p0: String?, p1: LSScaleWeight?) {
             super.onScaleWeightDataUpdate(p0, p1)
 
-            if(p1?.remainCount==0){
+            if(p1?.remainCount==0 && (p1?.utc<currentConnectedTime)){
                 runOnUiThread {
                     Handler().postDelayed({
                         p1?.weight?.let {
@@ -1531,6 +1534,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 lsDeviceInfo=lsDevice
                 checkSupportRegisterAndConnect()
             }else{
+                val cal =Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                cal.add(Calendar.MINUTE,-2)
+                currentConnectedTime=cal.timeInMillis
                 devicesList.forEachIndexed { index: Int, any: Any? ->
                     if((any as HashMap<String,String>).get("manufacture").equals("Transteck",ignoreCase = true)){
                         if((any as HashMap<String,String>).get("deviceType").equals("bgl",ignoreCase = true) && lsDevice.deviceType.equals("06")){
