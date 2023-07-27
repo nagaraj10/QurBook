@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class SaveResponseModel {
   SaveResponseModel({
     this.isSuccess,
@@ -163,14 +165,18 @@ class Input {
     this.providerId});
 
   Input.fromJson(Map<String, dynamic> json) {
-    action = json['Action'];
-    ackLocal = json['ack_local'];
-    eid = json['eid'];
-    patientId = json['patientId'];
-    pfPainfulUrination = json['pf_Painful_Urination'];
-    source = json['source'];
-    uid = json['uid'];
-    providerId = json['providerId'] ;
+    try {
+      action = json['Action'];
+      ackLocal = json['ack_local'];
+      eid = json['eid'];
+      patientId = json['patientId'];
+      pfPainfulUrination = json['pf_Painful_Urination'];
+      source = json['source'];
+      uid = json['uid'];
+      providerId = json['providerId'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

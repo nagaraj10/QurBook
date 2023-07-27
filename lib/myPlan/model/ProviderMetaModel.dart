@@ -1,11 +1,17 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ProviderMetaModel {
   String? icon;
 
   ProviderMetaModel({this.icon});
 
   ProviderMetaModel.fromJson(Map<String, dynamic> json) {
-    icon = json['icon'];
+    try {
+      icon = json['icon'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

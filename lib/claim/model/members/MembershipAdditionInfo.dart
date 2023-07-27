@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class MemberShipAdditionalInfo {
   String? remarks;
   String? planTags;
@@ -26,17 +28,21 @@ class MemberShipAdditionalInfo {
         this.planPackageCategoryName});
 
   MemberShipAdditionalInfo.fromJson(Map<String, dynamic> json) {
-    remarks = json['remarks'];
-    planTags = json['planTags'];
-    isRenewal = json['isRenewal'];
-    paymentId = json['paymentId'];
-    planEndDate = json['planEndDate'];
-    isTerminated = json['isTerminated'];
-    planStartDate = json['planStartDate'];
-    packageDuration = json['packageDuration'];
-    terminationDate = json['terminationDate'];
-    prescribedDoctor = json['prescribedDoctor'];
-    planPackageCategoryName = json['planPackageCategoryName'];
+    try {
+      remarks = json['remarks'];
+      planTags = json['planTags'];
+      isRenewal = json['isRenewal'];
+      paymentId = json['paymentId'];
+      planEndDate = json['planEndDate'];
+      isTerminated = json['isTerminated'];
+      planStartDate = json['planStartDate'];
+      packageDuration = json['packageDuration'];
+      terminationDate = json['terminationDate'];
+      prescribedDoctor = json['prescribedDoctor'];
+      planPackageCategoryName = json['planPackageCategoryName'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

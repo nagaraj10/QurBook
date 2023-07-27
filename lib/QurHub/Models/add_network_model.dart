@@ -27,7 +27,6 @@ class AddNetworkModel {
     } catch (e) {
             CommonUtil().appLogs(message: e.toString());
 
-      print(e);
     }
   }
 
@@ -42,7 +41,6 @@ class AddNetworkModel {
         data['diagnostics'] = this.diagnostics!.toJson();
       }
     } catch (e) {
-      print(e);
             CommonUtil().appLogs(message: e.toString());
 
     }

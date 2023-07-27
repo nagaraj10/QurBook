@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'add_more_data.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 class AddHospitalsProvidersId {
@@ -11,12 +13,16 @@ class AddHospitalsProvidersId {
       {this.status, this.success, this.message, this.response});
 
   AddHospitalsProvidersId.fromJson(Map<String, dynamic> json) {
-    status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+    try {
+      status = json[parameters.strStatus];
+      success = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+      response = json[parameters.strResponse] != null
+              ? Response.fromJson(json[parameters.strResponse])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 }
 
@@ -27,13 +33,17 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json[parameters.strCount];
+    try {
+      count = json[parameters.strCount];
 
-    Map<String, dynamic>? dic;
-    if (json[parameters.strData] != null) {
-      dic = json[parameters.strData];
-      data = AddMoreData.fromJson(dic!);
-    } 
+      Map<String, dynamic>? dic;
+      if (json[parameters.strData] != null) {
+            dic = json[parameters.strData];
+            data = AddMoreData.fromJson(dic!);
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 }
 

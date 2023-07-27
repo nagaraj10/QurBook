@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class CityListModel {
   int? status;
   bool? success;
@@ -8,12 +10,16 @@ class CityListModel {
   CityListModel({this.status, this.success, this.message, this.response});
 
   CityListModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
-    response = json['response'] != null
-        ? Response.fromJson(json['response'])
-        : null;
+    try {
+      status = json['status'];
+      success = json['success'];
+      message = json['message'];
+      response = json['response'] != null
+              ? Response.fromJson(json['response'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -35,12 +41,16 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    if (json['data'] != null) {
-      data = <CityData>[];
-      json['data'].forEach((v) {
-        data!.add(CityData.fromJson(v));
-      });
+    try {
+      count = json['count'];
+      if (json['data'] != null) {
+            data = <CityData>[];
+            json['data'].forEach((v) {
+              data!.add(CityData.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -61,8 +71,12 @@ class CityData {
   CityData({this.id, this.name});
 
   CityData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
+    try {
+      id = json['id'];
+      name = json['name'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

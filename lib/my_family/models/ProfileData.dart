@@ -50,35 +50,39 @@ class ProfileData {
       this.profilePicThumbnailURL});
 
   ProfileData.fromJson(Map<String, dynamic> json) {
-    userId = json[parameters.struserId];
-    id = json[parameters.strId];
-    phoneNumber = json[parameters.strPhoneNumber];
-    email = json[parameters.strEmail];
-    createdOn = json[parameters.strCreatedOn];
-    isActive = json[parameters.strIsActive];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    name = json[parameters.strName];
-    gender = json[parameters.strGender];
-    isTempUser = json[parameters.strIstemper];
-    isVirtualUser = json[parameters.strisVirtualUser];
-    createdBy = json[parameters.strCreatedBy];
     try {
-      profilePicThumbnail = json['profilePicThumbnail'] != null
-          ? ProfilePicThumbnail.fromJson(json['profilePicThumbnail'])
-          : null;
+      userId = json[parameters.struserId];
+      id = json[parameters.strId];
+      phoneNumber = json[parameters.strPhoneNumber];
+      email = json[parameters.strEmail];
+      createdOn = json[parameters.strCreatedOn];
+      isActive = json[parameters.strIsActive];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      name = json[parameters.strName];
+      gender = json[parameters.strGender];
+      isTempUser = json[parameters.strIstemper];
+      isVirtualUser = json[parameters.strisVirtualUser];
+      createdBy = json[parameters.strCreatedBy];
+      try {
+            profilePicThumbnail = json['profilePicThumbnail'] != null
+                ? ProfilePicThumbnail.fromJson(json['profilePicThumbnail'])
+                : null;
+          } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+          }
+      /*qualifiedFullName = json[parameters.strqualifiedFullName] != null
+              ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
+              : null;*/
+      bloodGroup = json[parameters.strbloodGroup];
+      dateOfBirth = json[parameters.strdateOfBirth];
+      isTokenRefresh = json[parameters.strisTokenRefresh];
+      countryCode = json[parameters.strCountryCode];
+      isEmailVerified = json[parameters.strisEmailVerified];
+      status = json[parameters.strStatus];
+      profilePicThumbnailURL = json[parameters.strprofilePicThumbnailURL];
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
     }
-    /*qualifiedFullName = json[parameters.strqualifiedFullName] != null
-        ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
-        : null;*/
-    bloodGroup = json[parameters.strbloodGroup];
-    dateOfBirth = json[parameters.strdateOfBirth];
-    isTokenRefresh = json[parameters.strisTokenRefresh];
-    countryCode = json[parameters.strCountryCode];
-    isEmailVerified = json[parameters.strisEmailVerified];
-    status = json[parameters.strStatus];
-    profilePicThumbnailURL = json[parameters.strprofilePicThumbnailURL];
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'DoctorLanguageCollection.dart';
 import 'User.dart';
 import 'UserProfessionalCollection.dart';
@@ -39,36 +41,40 @@ class Doctors {
       this.isPatientAssociatedRequest});
 
   Doctors.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    specialization = json['specialization'];
-    isTelehealthEnabled = json['isTelehealthEnabled'];
-    isMciVerified = json['isMciVerified'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
-    if (json['doctorProfessionalDetailCollection'] != null) {
-      doctorProfessionalDetailCollection =
-          <DoctorProfessionalDetailCollection>[];
-      json['doctorProfessionalDetailCollection'].forEach((v) {
-        doctorProfessionalDetailCollection!
-            .add(DoctorProfessionalDetailCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      specialization = json['specialization'];
+      isTelehealthEnabled = json['isTelehealthEnabled'];
+      isMciVerified = json['isMciVerified'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      user = json['user'] != null ? User.fromJson(json['user']) : null;
+      if (json['doctorProfessionalDetailCollection'] != null) {
+            doctorProfessionalDetailCollection =
+                <DoctorProfessionalDetailCollection>[];
+            json['doctorProfessionalDetailCollection'].forEach((v) {
+              doctorProfessionalDetailCollection!
+                  .add(DoctorProfessionalDetailCollection.fromJson(v));
+            });
+          }
+      if (json['doctorLanguageCollection'] != null) {
+            doctorLanguageCollection = <DoctorLanguageCollection>[];
+            json['doctorLanguageCollection'].forEach((v) {
+              doctorLanguageCollection!.add(DoctorLanguageCollection.fromJson(v));
+            });
+          }
+      isDefault = json['isDefault'];
+      providerPatientMappingId = json['providerPatientMappingId'];
+      if (json.containsKey('sharedCategories') &&
+              json['sharedCategories'] != null) {
+            sharedCategories = json['sharedCategories'].cast<String>();
+          }
+      isResident = json['isResident'] ?? false;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    if (json['doctorLanguageCollection'] != null) {
-      doctorLanguageCollection = <DoctorLanguageCollection>[];
-      json['doctorLanguageCollection'].forEach((v) {
-        doctorLanguageCollection!.add(DoctorLanguageCollection.fromJson(v));
-      });
-    }
-    isDefault = json['isDefault'];
-    providerPatientMappingId = json['providerPatientMappingId'];
-    if (json.containsKey('sharedCategories') &&
-        json['sharedCategories'] != null) {
-      sharedCategories = json['sharedCategories'].cast<String>();
-    }
-    isResident = json['isResident'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

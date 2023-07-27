@@ -10,17 +10,21 @@ class HospitalsSearchListResponse {
   HospitalsSearchListResponse({this.isSuccess, this.result,this.diagnostics});
 
   HospitalsSearchListResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <HospitalsListResult>[];
-      json['result'].forEach((v) {
-        result!.add(HospitalsListResult.fromJson(v));
-      });
-    }
-    if (json.containsKey('diagnostics')) {
-      diagnostics = json['diagnostics'] != null
-          ? Diagnostics.fromJson(json['diagnostics'])
-          : null;
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <HospitalsListResult>[];
+            json['result'].forEach((v) {
+              result!.add(HospitalsListResult.fromJson(v));
+            });
+          }
+      if (json.containsKey('diagnostics')) {
+            diagnostics = json['diagnostics'] != null
+                ? Diagnostics.fromJson(json['diagnostics'])
+                : null;
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
 
   }
@@ -74,26 +78,30 @@ class HospitalsListResult {
   });
 
   HospitalsListResult.fromJson(Map<String, dynamic> json) {
-    healthOrganizationReferenceId = json['healthOrganizationReferenceId'];
-    healthOrganizationName = json['healthOrganizationName'];
     try {
-      name = json['name'];
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+      healthOrganizationReferenceId = json['healthOrganizationReferenceId'];
+      healthOrganizationName = json['healthOrganizationName'];
+      try {
+            name = json['name'];
+          } catch (e) {
+                        CommonUtil().appLogs(message: e.toString());
 
+          }
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      cityName = json['cityName'];
+      stateName = json['stateName'];
+      pincode = json['pincode'];
+      healthOrganizationId = json['healthOrganizationId'];
+      healthOrganizationTypeId = json['healthOrganizationTypeId'];
+      healthOrganizationTypeName = json['healthOrganizationTypeName'];
+      phoneNumber = json['phoneNumber'];
+      phoneNumberTypeId = json['phoneNumberTypeId'];
+      phoneNumberTypeName = json['phoneNumberTypeName'];
+      specialization = json['specialization'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    cityName = json['cityName'];
-    stateName = json['stateName'];
-    pincode = json['pincode'];
-    healthOrganizationId = json['healthOrganizationId'];
-    healthOrganizationTypeId = json['healthOrganizationTypeId'];
-    healthOrganizationTypeName = json['healthOrganizationTypeName'];
-    phoneNumber = json['phoneNumber'];
-    phoneNumberTypeId = json['phoneNumberTypeId'];
-    phoneNumberTypeName = json['phoneNumberTypeName'];
-    specialization = json['specialization'];
   }
 
   Map<String, dynamic> toJson() {

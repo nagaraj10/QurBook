@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'CategoryData.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 
@@ -12,12 +14,16 @@ class CategoryResponseList {
       {this.status, this.success, this.message, this.response});
 
   CategoryResponseList.fromJson(Map<String, dynamic> json) {
-     status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+     try {
+       status = json[parameters.strStatus];
+       success = json[parameters.strSuccess];
+       message = json[parameters.strMessage];
+       response = json[parameters.strResponse] != null
+               ? Response.fromJson(json[parameters.strResponse])
+               : null;
+     } catch (e) {
+       CommonUtil().appLogs(message: e.toString());
+     }
   }
 
   Map<String, dynamic> toJson() {
@@ -39,12 +45,16 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json[parameters.strCount];
-    if (json[parameters.strData] != null) {
-      data = <CategoryData>[];
-      json[parameters.strData].forEach((v) {
-        data!.add(CategoryData.fromJson(v));
-      });
+    try {
+      count = json[parameters.strCount];
+      if (json[parameters.strData] != null) {
+            data = <CategoryData>[];
+            json[parameters.strData].forEach((v) {
+              data!.add(CategoryData.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

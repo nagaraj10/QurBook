@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class BookmarkRequest {
@@ -8,8 +10,12 @@ class BookmarkRequest {
   BookmarkRequest({this.mediaMetaIds, this.isBookmarked});
 
   BookmarkRequest.fromJson(Map<String, dynamic> json) {
-    mediaMetaIds = json[parameters.strMediaMetaIds].cast<String>();
-    isBookmarked = json[parameters.strIsBookmarked];
+    try {
+      mediaMetaIds = json[parameters.strMediaMetaIds].cast<String>();
+      isBookmarked = json[parameters.strIsBookmarked];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

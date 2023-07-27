@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../src/model/Health/MediaMasterIds.dart';
 import '../../src/model/Health/MetaInfo.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
@@ -32,24 +34,28 @@ class Data {
       this.mediaMasterIds});
 
   Data.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    metaTypeId = json[parameters.strmetaTypeId];
-    userId = json[parameters.struserId];
-    metaInfo = json[parameters.strmetaInfo] != null
-        ? MetaInfo.fromJson(json[parameters.strmetaInfo])
-        : null;
-    isActive = json[parameters.strIsActive];
-    createdBy = json[parameters.strCreatedBy];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    isBookmarked = json[parameters.strIsBookmarked];
-    isDraft = json[parameters.strisDraft];
-    createdByUser = json[parameters.strcreatedByUser];
-    if (json[parameters.strmediaMasterId] != null) {
-      mediaMasterIds = <MediaMasterIds>[];
-      json[parameters.strmediaMasterId].forEach((v) {
-        mediaMasterIds!.add(MediaMasterIds.fromJson(v));
-      });
+    try {
+      id = json[parameters.strId];
+      metaTypeId = json[parameters.strmetaTypeId];
+      userId = json[parameters.struserId];
+      metaInfo = json[parameters.strmetaInfo] != null
+              ? MetaInfo.fromJson(json[parameters.strmetaInfo])
+              : null;
+      isActive = json[parameters.strIsActive];
+      createdBy = json[parameters.strCreatedBy];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      isBookmarked = json[parameters.strIsBookmarked];
+      isDraft = json[parameters.strisDraft];
+      createdByUser = json[parameters.strcreatedByUser];
+      if (json[parameters.strmediaMasterId] != null) {
+            mediaMasterIds = <MediaMasterIds>[];
+            json[parameters.strmediaMasterId].forEach((v) {
+              mediaMasterIds!.add(MediaMasterIds.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

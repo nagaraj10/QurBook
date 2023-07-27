@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UpdateAddFamilyInfo {
   bool? isSuccess;
   String? message;
@@ -7,10 +9,14 @@ class UpdateAddFamilyInfo {
   UpdateAddFamilyInfo({this.isSuccess, this.message, this.result});
 
   UpdateAddFamilyInfo.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result =
-        json['result'] != null ? Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result =
+              json['result'] != null ? Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -30,7 +36,11 @@ class Result {
   Result({this.id});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    try {
+      id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

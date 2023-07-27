@@ -51,7 +51,6 @@ class LocationDataModel {
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
 
-      print(e);
     }
   }
 
@@ -73,7 +72,6 @@ class LocationDataModel {
       data['as'] = this.as;
       data['query'] = this.query;
     } catch (e) {
-      print(e);
       CommonUtil().appLogs(message: e.toString());
     }
     return data;
@@ -126,7 +124,6 @@ class Location {
       thoroughfare = json['thoroughfare'];
       subThoroughfare = json['subThoroughfare'];
     } catch (e) {
-      print(e);
       CommonUtil().appLogs(message: e.toString());
     }
   }
@@ -148,7 +145,6 @@ class Location {
       data['thoroughfare'] = this.thoroughfare;
       data['subThoroughfare'] = this.subThoroughfare;
     } catch (e) {
-      print(e);
       CommonUtil().appLogs(message: e.toString());
     }
     return data;

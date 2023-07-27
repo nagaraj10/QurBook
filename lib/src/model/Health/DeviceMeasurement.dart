@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'DeviceMesurementsData.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 
@@ -9,11 +11,15 @@ class DeviceMeasurements {
   DeviceMeasurements({this.data});
 
   DeviceMeasurements.fromJson(Map<String, dynamic>? json) {
-    if (json != null) {
-      data = <DeviceMeasurementsData>[];
-      json[parameters.strData].forEach((v) {
-        data!.add(DeviceMeasurementsData.fromJson(v));
-      });
+    try {
+      if (json != null) {
+            data = <DeviceMeasurementsData>[];
+            json[parameters.strData].forEach((v) {
+              data!.add(DeviceMeasurementsData.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 }

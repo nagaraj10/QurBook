@@ -1,6 +1,8 @@
 
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'MetaDataForHospitalLogo.dart';
 import 'MetaDataForURL.dart';
 
@@ -11,12 +13,16 @@ class PlanListModel {
   PlanListModel({this.isSuccess, this.result});
 
   PlanListModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <PlanListResult>[];
-      json['result'].forEach((v) {
-        result!.add(PlanListResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <PlanListResult>[];
+            json['result'].forEach((v) {
+              result!.add(PlanListResult.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

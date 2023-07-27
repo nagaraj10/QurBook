@@ -25,8 +25,6 @@ class BleDataModel {
       data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-
-      print(e);
     }
   }
 
@@ -79,8 +77,6 @@ class Data {
       bgl = json['BGL'].toString();
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-
-      print(e);
     }
   }
 
@@ -95,8 +91,6 @@ class Data {
       data['BGL'] = this.bgl;
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-
-      print(e);
     }
     return data;
   }
@@ -116,8 +110,6 @@ class BleDataResponseModel {
           : null;
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-
-      print(e);
     }
   }
 
@@ -130,8 +122,6 @@ class BleDataResponseModel {
       }
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-
-      print(e);
     }
 
     return data;
@@ -166,8 +156,6 @@ class BleDataResult {
       deviceName = json['deviceName'];
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-
-      print(e);
     }
   }
 
@@ -184,8 +172,6 @@ class BleDataResult {
       data['deviceName'] = this.deviceName;
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-
-      print(e);
     }
 
     return data;
@@ -204,8 +190,6 @@ class BleDataResponseData {
       sPO2 = json['SPO2'];
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-
-      print(e);
     }
   }
 
@@ -216,8 +200,6 @@ class BleDataResponseData {
       data['SPO2'] = this.sPO2;
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-
-      print(e);
     }
     return data;
   }

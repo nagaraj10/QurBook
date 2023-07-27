@@ -332,7 +332,7 @@ class CommonUtil {
     });
   }
 
-  Future<void> appLogs({String message = ''}) async {
+  appLogs({String message = ''}) async {
     try {
       final apiResponse = QurHomeApiProvider();
       var callEndRecordLogResponse = await apiResponse.saveAppLogs();
@@ -2585,6 +2585,7 @@ class CommonUtil {
   }
 
   versionCheck(context) async {
+    return;
     //Get Current installed version of app
     final info = await PackageInfo.fromPlatform();
     var currentVersion = double.parse(info.version.trim().replaceAll('.', ''));

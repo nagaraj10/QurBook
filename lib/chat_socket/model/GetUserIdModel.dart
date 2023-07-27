@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class GetUserIdModel {
   bool? isSuccess;
   String? message;
@@ -7,10 +9,14 @@ class GetUserIdModel {
   GetUserIdModel({this.isSuccess, this.message, this.result});
 
   GetUserIdModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result =
-        json['result'] != null ? new UserIdResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result =
+              json['result'] != null ? new UserIdResult.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -51,17 +57,21 @@ class UserIdResult {
       this.user});
 
   UserIdResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    specialization = json['specialization'];
-    isTelehealthEnabled = json['isTelehealthEnabled'];
-    isMciVerified = json['isMciVerified'];
-    isActive = json['isActive'];
-    isWelcomeMailSent = json['isWelcomeMailSent'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isResident = json['isResident'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    try {
+      id = json['id'];
+      specialization = json['specialization'];
+      isTelehealthEnabled = json['isTelehealthEnabled'];
+      isMciVerified = json['isMciVerified'];
+      isActive = json['isActive'];
+      isWelcomeMailSent = json['isWelcomeMailSent'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isResident = json['isResident'];
+      user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -93,10 +103,14 @@ class Documents {
       {this.code, this.documentId, this.documentName, this.documentTypeId});
 
   Documents.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    documentId = json['documentId'];
-    documentName = json['documentName'];
-    documentTypeId = json['documentTypeId'];
+    try {
+      code = json['code'];
+      documentId = json['documentId'];
+      documentName = json['documentName'];
+      documentTypeId = json['documentTypeId'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -116,8 +130,12 @@ class Specialty {
   Specialty({this.id, this.name});
 
   Specialty.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
+    try {
+      id = json['id'];
+      name = json['name'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -135,7 +153,11 @@ class User {
       {this.id});
 
   User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    try {
+      id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

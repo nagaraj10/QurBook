@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class DigitRecogResponse {
   bool? isSuccess;
   String? message;
@@ -7,10 +9,14 @@ class DigitRecogResponse {
   DigitRecogResponse({this.isSuccess, this.message, this.result});
 
   DigitRecogResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result =
-    json['result'] != null ? Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result =
+          json['result'] != null ? Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -35,11 +41,15 @@ class Result {
         this.healthRecordMetaId});
 
   Result.fromJson(Map<String, dynamic> json) {
-    deviceMeasurementsHead = json['deviceMeasurements'] != null
-        ? DeviceMeasurementsHead.fromJson(json['deviceMeasurements'])
-        : null;
-    healthRecordDocumentId = json['healthRecordDocumentId'];
-    healthRecordMetaId = json['healthRecordMetaId'];
+    try {
+      deviceMeasurementsHead = json['deviceMeasurements'] != null
+              ? DeviceMeasurementsHead.fromJson(json['deviceMeasurements'])
+              : null;
+      healthRecordDocumentId = json['healthRecordDocumentId'];
+      healthRecordMetaId = json['healthRecordMetaId'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -60,12 +70,16 @@ class DeviceMeasurementsHead {
   DeviceMeasurementsHead({this.deviceClass, this.deviceMeasurements});
 
   DeviceMeasurementsHead.fromJson(Map<String, dynamic> json) {
-    deviceClass = json['deviceClass'];
-    if (json['deviceMeasurements'] != null) {
-      deviceMeasurements = <DeviceMeasurements>[];
-      json['deviceMeasurements'].forEach((v) {
-        deviceMeasurements!.add(DeviceMeasurements.fromJson(v));
-      });
+    try {
+      deviceClass = json['deviceClass'];
+      if (json['deviceMeasurements'] != null) {
+            deviceMeasurements = <DeviceMeasurements>[];
+            json['deviceMeasurements'].forEach((v) {
+              deviceMeasurements!.add(DeviceMeasurements.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -90,12 +104,16 @@ class DeviceMeasurements {
       {this.coordinates, this.parameter, this.unit, this.values});
 
   DeviceMeasurements.fromJson(Map<String, dynamic> json) {
-    coordinates = json['coordinates'] != null
-        ? Coordinates.fromJson(json['coordinates'])
-        : null;
-    parameter = json['parameter'];
-    unit = json['unit'];
-    values = json['values'];
+    try {
+      coordinates = json['coordinates'] != null
+              ? Coordinates.fromJson(json['coordinates'])
+              : null;
+      parameter = json['parameter'];
+      unit = json['unit'];
+      values = json['values'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -119,10 +137,14 @@ class Coordinates {
   Coordinates({this.height, this.width, this.x, this.y});
 
   Coordinates.fromJson(Map<String, dynamic> json) {
-    height = json['height'];
-    width = json['width'];
-    x = json['x'];
-    y = json['y'];
+    try {
+      height = json['height'];
+      width = json['width'];
+      x = json['x'];
+      y = json['y'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

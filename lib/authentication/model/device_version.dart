@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class DeviceVersion {
   bool? isSuccess;
   Result? result;
@@ -7,9 +9,13 @@ class DeviceVersion {
   DeviceVersion({this.isSuccess, this.result});
 
   DeviceVersion.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+              json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -37,13 +43,17 @@ class Result {
       this.createdOn});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    versionName = json['versionName'];
-    additionalInfo = json['additionalInfo'] != null
-        ? new DeviceAdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
+    try {
+      id = json['id'];
+      versionName = json['versionName'];
+      additionalInfo = json['additionalInfo'] != null
+              ? new DeviceAdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -65,13 +75,17 @@ class DeviceAdditionalInfo {
   DeviceAdditionalInfo({this.qurbook});
 
   DeviceAdditionalInfo.fromJson(Map<String, dynamic> json) {
-    qurbook = Platform.isIOS
-        ? json['qurbookios'] != null
-            ? new Qurbook.fromJson(json['qurbookios'])
-            : null
-        : json['qurbookandroid'] != null
-            ? new Qurbook.fromJson(json['qurbookandroid'])
-            : null;
+    try {
+      qurbook = Platform.isIOS
+              ? json['qurbookios'] != null
+                  ? new Qurbook.fromJson(json['qurbookios'])
+                  : null
+              : json['qurbookandroid'] != null
+                  ? new Qurbook.fromJson(json['qurbookandroid'])
+                  : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -91,7 +105,11 @@ class Qurbook {
   Qurbook({this.isForceUpdate});
 
   Qurbook.fromJson(Map<String, dynamic> json) {
-    isForceUpdate = json['is_force_update'];
+    try {
+      isForceUpdate = json['is_force_update'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
