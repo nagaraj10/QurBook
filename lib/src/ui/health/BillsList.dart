@@ -8,13 +8,12 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BillsList extends StatefulWidget {
   final HealthRecordList? completeData;
@@ -111,7 +110,11 @@ class _BillsListState extends State<BillsList> {
                   child: Text(
                     Constants.NO_DATA_BILLS,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: variable.font_poppins),
+                    style: TextStyle(
+                        fontFamily: variable.font_poppins,
+                        fontSize: CommonUtil().isTablet!
+                            ? Constants.tabHeader2
+                            : Constants.mobileHeader2),
                   ),
                 ),
               ),

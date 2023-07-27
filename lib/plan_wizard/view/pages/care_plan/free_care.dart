@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -13,8 +14,6 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
 
 class FreeCarePlans extends StatefulWidget {
   @override
@@ -22,7 +21,7 @@ class FreeCarePlans extends StatefulWidget {
 }
 
 class _FreeCarePlans extends State<FreeCarePlans> {
-   late Future<PlanListModel?> planListModel; // FUcrash
+  late Future<PlanListModel?> planListModel; // FUcrash
 
   PlanListModel? myPlanListModel;
 
@@ -121,7 +120,8 @@ class _FreeCarePlans extends State<FreeCarePlans> {
   }
 
   Widget getCarePlanList() {
-    return new FutureBuilder<PlanListModel?>( // FUcrash
+    return new FutureBuilder<PlanListModel?>(
+      // FUcrash
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -147,7 +147,7 @@ class _FreeCarePlans extends State<FreeCarePlans> {
                 ? planSearchList.length
                 : snapshot.data?.result?.length ?? 0;
             if (((Provider.of<PlanWizardViewModel>(context, listen: false)
-                    .isDynamicLink))) {
+                .isDynamicLink))) {
               Future.delayed(Duration(), () {
                 var searchText =
                     Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -170,7 +170,11 @@ class _FreeCarePlans extends State<FreeCarePlans> {
                 child: Container(
                     child: Center(
                   child: Text(variable.strNoPlans,
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader2
+                              : mobileHeader2)),
                 )),
               ),
             );
@@ -202,7 +206,11 @@ class _FreeCarePlans extends State<FreeCarePlans> {
               child: Container(
                   child: Center(
                 child: Text(variable.strNoPlans,
-                    style: TextStyle(color: Colors.grey)),
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: CommonUtil().isTablet!
+                            ? tabHeader2
+                            : mobileHeader2)),
               )),
             ),
           );
@@ -210,27 +218,27 @@ class _FreeCarePlans extends State<FreeCarePlans> {
 
   Future<bool> _alertForUncheckPlan() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text(
-                'You’ve not chosen any care plan. Are you sure you want to continue'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .changeCurrentPage(2);
-                },
-                child: Text('Yes'),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text(
+            'You’ve not chosen any care plan. Are you sure you want to continue'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('No'),
           ),
-        ).then((value) => value as bool);
+          FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Provider.of<PlanWizardViewModel>(context, listen: false)
+                  .changeCurrentPage(2);
+            },
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   /* Widget popMenuItem() {

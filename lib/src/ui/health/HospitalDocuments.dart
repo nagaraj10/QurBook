@@ -112,7 +112,9 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: variable.font_poppins,
-                      fontSize: 16.0.sp,
+                      fontSize: CommonUtil().isTablet!
+                          ? Constants.tabHeader2
+                          : Constants.mobileHeader2,
                     ),
                   ),
                 ),

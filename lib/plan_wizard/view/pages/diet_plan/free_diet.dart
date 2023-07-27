@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
@@ -70,9 +69,10 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                           isSearch = false;
                         });
                       }
-                    },onClosePress: (){
-                    FocusManager.instance.primaryFocus!.unfocus();
-                  },
+                    },
+                    onClosePress: () {
+                      FocusManager.instance.primaryFocus!.unfocus();
+                    },
                     hintText: strPlanHospitalDiet,
                     padding: 10.0.sp,
                   ),
@@ -117,7 +117,8 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                     .isEmpty) {
               _alertForUncheckPlan();
             } else {
-              Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
+              Get.to(CheckoutPage())!.then(
+                  (value) => FocusManager.instance.primaryFocus!.unfocus());
             }
           },
         ));
@@ -169,7 +170,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                 ? planSearchList.length
                 : snapshot.data?.result?.length ?? 0;
             if (((Provider.of<PlanWizardViewModel>(context, listen: false)
-                    .isDynamicLink))) {
+                .isDynamicLink))) {
               Future.delayed(Duration(), () {
                 var searchText =
                     Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -192,7 +193,11 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                 child: Container(
                     child: Center(
                   child: Text(variable.strNoPlans,
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader2
+                              : mobileHeader2,
+                          color: Colors.grey)),
                 )),
               ),
             );
@@ -224,7 +229,10 @@ class _FreeDietPlans extends State<FreeDietPlans> {
               child: Container(
                   child: Center(
                 child: Text(variable.strNoPlans,
-                    style: TextStyle(color: Colors.grey)),
+                    style: TextStyle(
+                        fontSize:
+                            CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
+                        color: Colors.grey)),
               )),
             ),
           );
@@ -232,26 +240,27 @@ class _FreeDietPlans extends State<FreeDietPlans> {
 
   Future<bool> _alertForUncheckPlan() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text(
-                'You’ve not chosen any diet plan. Are you sure you want to continue'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
-                },
-                child: Text('Yes'),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text(
+            'You’ve not chosen any diet plan. Are you sure you want to continue'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('No'),
           ),
-        ).then((value) => value as bool);
+          FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Get.to(CheckoutPage())!.then(
+                  (value) => FocusManager.instance.primaryFocus!.unfocus());
+            },
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   Widget popMenuItemNew() {
@@ -327,8 +336,8 @@ class _FreeDietPlans extends State<FreeDietPlans> {
     } else {
       setState(() {
         isSwitched = false;
-        planListModel =
-            planListProvider!.getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel?>;
+        planListModel = planListProvider!
+            .getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel?>;
       });
     }
   }
