@@ -1213,11 +1213,12 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                         if (::BLEEventChannel.isInitialized) {
                             MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
                         }
+                               
                     }, 500)
 
-                    LSBluetoothManager.getInstance().stopDeviceSync()
-                    LSBluetoothManager.getInstance().stopDiscovery()
-                    LSBluetoothManager.getInstance().stopSearch()
+//                    LSBluetoothManager.getInstance().stopDeviceSync()
+//                    LSBluetoothManager.getInstance().stopDiscovery()
+//                    LSBluetoothManager.getInstance().stopSearch()
                 }
 
             }
@@ -1232,11 +1233,11 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             if(status==null){
                 status=0
             }
-            if(status!=null&&status==1){
+            if(status!=null&&status==1&&measurementNotTaken){
                 if (::BLEEventChannel.isInitialized) {
                     MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
                 }
-            }else if(status!=null&&status==2){
+            }else if(status!=null&&status==2&&measurementNotTaken){
                 if (::BLEEventChannel.isInitialized) {
                     MainThreadEventSink(BLEEventChannel).success("macid|" + macIdLsDevice)
                     MainThreadEventSink(BLEEventChannel).success("manufacturer|Transteck")
