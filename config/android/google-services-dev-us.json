@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "69764989858",
+    "project_id": "myfhbfitness-us",
+    "storage_bucket": "myfhbfitness-us.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69764989858:android:e26bb062cd69152a8c28fb",
+        "android_client_info": {
+          "package_name": "com.qurhealth.qurbook.us"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKisP0Herhn3V6nzrfqivrBSsAmP9gGhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
