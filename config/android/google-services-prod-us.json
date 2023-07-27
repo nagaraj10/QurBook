@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "454683506723",
+    "project_id": "fhb-us",
+    "storage_bucket": "fhb-us.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454683506723:android:19c19d664776b24b0e9996",
+        "android_client_info": {
+          "package_name": "com.qurhealth.qurbook.us"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454683506723-ji8j00tkso72f9d6er78mhfb2hvilro2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDy8VwZJwamrouELlZWAwn5bhy4F9CIWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454683506723-ji8j00tkso72f9d6er78mhfb2hvilro2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "454683506723-d9ho399v4vqq6amkqlemq34jdgmggoee.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qurhealth.qurbook.us"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454683506723:android:aaea760dd3a457240e9996",
+        "android_client_info": {
+          "package_name": "com.qurhealth.qurpro.us"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454683506723-ji8j00tkso72f9d6er78mhfb2hvilro2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDy8VwZJwamrouELlZWAwn5bhy4F9CIWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454683506723-ji8j00tkso72f9d6er78mhfb2hvilro2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "454683506723-d9ho399v4vqq6amkqlemq34jdgmggoee.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qurhealth.qurbook.us"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

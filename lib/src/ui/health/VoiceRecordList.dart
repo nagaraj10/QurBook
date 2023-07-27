@@ -101,7 +101,9 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                   child: Text(
                     Constants.NO_VOICE_RECRODS,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: variable.font_poppins),
+                    style: TextStyle(fontFamily: variable.font_poppins,fontSize: CommonUtil().isTablet!
+                        ? Constants.tabHeader2
+                        : Constants.mobileHeader2),
                   ),
                 ),
               ),

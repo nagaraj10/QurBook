@@ -1,26 +1,21 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
-import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
 import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/care_plan_card.dart';
 import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 
 class ProviderCarePlans extends StatefulWidget {
   @override
@@ -28,7 +23,7 @@ class ProviderCarePlans extends StatefulWidget {
 }
 
 class _ProviderCarePlans extends State<ProviderCarePlans> {
-  late Future<PlanListModel?> planListModel;// FUcrash
+  late Future<PlanListModel?> planListModel; // FUcrash
 
   PlanListModel? myPlanListModel;
 
@@ -61,9 +56,9 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
     conditionChosen =
         Provider.of<PlanWizardViewModel>(context, listen: false).selectedTag;
 
-
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList(strProviderCare,conditionChosen: conditionChosen) as Future<PlanListModel?>;// FUcrash
+            .getCarePlanList(strProviderCare, conditionChosen: conditionChosen)
+        as Future<PlanListModel?>; // FUcrash
   }
 
   @override
@@ -86,9 +81,10 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                           isSearch = false;
                         });
                       }
-                    },onClosePress: (){
-                    FocusManager.instance.primaryFocus!.unfocus();
-                  },
+                    },
+                    onClosePress: () {
+                      FocusManager.instance.primaryFocus!.unfocus();
+                    },
                     hintText: strPlanHospitalDiet,
                     padding: 10.0.sp,
                   ),
@@ -139,7 +135,8 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
   }
 
   Widget getCarePlanList() {
-    return new FutureBuilder<PlanListModel?>( // FUcrash
+    return new FutureBuilder<PlanListModel?>(
+      // FUcrash
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -165,7 +162,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                 ? planSearchList.length
                 : snapshot.data!.result!.length;
             if (((Provider.of<PlanWizardViewModel>(context, listen: false)
-                    .isDynamicLink))) {
+                .isDynamicLink))) {
               Future.delayed(Duration(), () {
                 var searchText =
                     Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -183,18 +180,15 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
             Future.delayed(Duration(milliseconds: 100), () {
               try {
                 bool needReload =
-                    Provider
-                        .of<PlanWizardViewModel>(context, listen: false)
-                        .isListEmpty !=
+                    Provider.of<PlanWizardViewModel>(context, listen: false)
+                            .isListEmpty !=
                         (snapshot.data!.result!.length > 0 ? true : false);
 
                 Provider.of<PlanWizardViewModel>(context, listen: false)
                     .updateBottonLayoutEmptyList(
-                    snapshot.data!.result!.length > 0 ? true : false,
-                    needReload: needReload);
-              }catch(e){
-
-              }
+                        snapshot.data!.result!.length > 0 ? true : false,
+                        needReload: needReload);
+              } catch (e) {}
             });
 
             return carePlanList(
@@ -242,12 +236,17 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
           );
   }
 
+  TextStyle defaultStyle() {
+    return TextStyle(
+        color: Colors.grey,
+        fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1);
+  }
+
   Widget clickTextAllEmpty() {
+    int planWizardProviderLength =
+        Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
+            .planWizardProviderCount;
 
-    int planWizardProviderLength =  Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
-        .planWizardProviderCount;
-
-    TextStyle defaultStyle = TextStyle(color: Colors.grey);
     TextStyle linkStyle = TextStyle(
         color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
 
@@ -258,7 +257,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          style: defaultStyle,
+          style: defaultStyle(),
           children: <TextSpan>[
             TextSpan(text: strNoPlansCheckFree),
           ],
@@ -268,22 +267,24 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          style: defaultStyle,
+          style: defaultStyle(),
           children: <TextSpan>[
             TextSpan(text: strNoPlansCheckFree),
           ],
         ),
       );
-    } else if (planWizardProviderLength != 0 && Provider.of<PlanWizardViewModel>(context, listen: false)
-        .providerHosCount!=0) {
+    } else if (planWizardProviderLength != 0 &&
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+                .providerHosCount !=
+            0) {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          style: defaultStyle,
+          style: defaultStyle(),
           children: <TextSpan>[
             TextSpan(
                 text: 'Your providers do not offer care plans yet for ' +
-                        planListProvider!.healthTitle),
+                    planListProvider!.healthTitle),
             TextSpan(
                 text: '. Tap here',
                 style: linkStyle,
@@ -296,12 +297,13 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         ),
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
-            .providerHosCount ==
-        0 && planWizardProviderLength != 0) {
+                .providerHosCount ==
+            0 &&
+        planWizardProviderLength != 0) {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          style: defaultStyle,
+          style: defaultStyle(),
           children: <TextSpan>[
             TextSpan(text: 'You\'ve no providers added to your list.'),
             TextSpan(
@@ -320,7 +322,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          style: defaultStyle,
+          style: defaultStyle(),
           children: <TextSpan>[
             TextSpan(text: strNoPlansCheckFree),
           ],
@@ -334,7 +336,9 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         .then((value) => setState(() {
               planListModel =
                   Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .getCarePlanList(strProviderCare,conditionChosen: conditionChosen) as Future<PlanListModel?>; // FUcrash
+                          .getCarePlanList(strProviderCare,
+                              conditionChosen: conditionChosen)
+                      as Future<PlanListModel?>; // FUcrash
             }));
     /*Navigator.pushNamed(
       Get.context,
@@ -350,27 +354,27 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
   Future<bool> _alertForUncheckPlan() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text(
-                'You’ve not chosen any care plan. Are you sure you want to continue'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .changeCurrentPage(2);
-                },
-                child: Text('Yes'),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text(
+            'You’ve not chosen any care plan. Are you sure you want to continue'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('No'),
           ),
-        ).then((value) => value as bool);
+          FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Provider.of<PlanWizardViewModel>(context, listen: false)
+                  .changeCurrentPage(2);
+            },
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   /* Widget popMenuItem() {
