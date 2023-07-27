@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import '../../constants/fhb_query.dart' as query;
 import '../../constants/webservice_call.dart';
 import '../models/FamilyMembersResponse.dart';
@@ -28,6 +28,8 @@ class MyFamilyViewModel with ChangeNotifier {
       familyMembersList = FamilyMembersList.fromJson(response);
       notifyListeners();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
     }
   }
@@ -36,11 +38,12 @@ class MyFamilyViewModel with ChangeNotifier {
   // Get Roles
   Future<RelationShipResponseList?> getCustomRoles() async {
     try {
-      var response =
-          await _helper.getCustomRoles(query.qr_customRole);
+      var response = await _helper.getCustomRoles(query.qr_customRole);
       relationShipResponseList = RelationShipResponseList.fromJson(response);
       notifyListeners();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
     }
   }

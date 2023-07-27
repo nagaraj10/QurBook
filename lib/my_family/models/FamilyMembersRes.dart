@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'relationships.dart';
 import '../../src/model/user/AddressTypeModel.dart';
 import '../../src/model/user/UserAddressCollection.dart';
@@ -53,7 +55,9 @@ class FamilyMemberResult {
       virtualUserParent = json['virtualUserParent'] != null
           ? VirtualUserParent.fromJson(json['virtualUserParent'])
           : null;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -395,13 +399,17 @@ class AdditionalInfo {
         heightObj =
             json['height'] != null ? HeightObj.fromJson(json['height']) : null;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     if (json.containsKey('weightUnitCode')) {
       weightUnitCode = json['weightUnitCode'];
     }
     try {
       weight = json['weight'];
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

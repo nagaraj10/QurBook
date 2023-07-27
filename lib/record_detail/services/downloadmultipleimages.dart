@@ -48,6 +48,8 @@ class DownloadMultipleImages {
           filePathist.add(file.path);
         });
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         //print('$e exception thrown');
       }
     }

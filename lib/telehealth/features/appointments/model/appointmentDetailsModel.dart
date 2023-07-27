@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class AppointmentDetailsModel {
   bool? isSuccess;
@@ -63,6 +64,8 @@ class Result {
           json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
 
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -196,6 +199,8 @@ class AdditionalInfo {
 
 
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }

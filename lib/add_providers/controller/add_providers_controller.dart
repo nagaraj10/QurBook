@@ -1,4 +1,3 @@
-
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -15,6 +14,8 @@ class AddProvidersController extends GetxController {
     try {
       super.onClose();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -24,6 +25,8 @@ class AddProvidersController extends GetxController {
     try {
       super.onInit();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -51,6 +54,7 @@ class AddProvidersController extends GetxController {
         isLoadingProgress.value = false;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       labTicketTypesResult = null;
       isLoadingProgress.value = false;
     }

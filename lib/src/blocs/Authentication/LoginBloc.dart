@@ -1,6 +1,8 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../model/Authentication/SignIn.dart';
 import '../../model/Authentication/SignOutResponse.dart';
 import '../../model/Authentication/SignUp.dart';
@@ -63,6 +65,8 @@ class LoginBloc with Validators implements BaseBloc {
     try {
       signIn = await _authenticationRepository.signInUser(jsonString);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       signInSink.add(ApiResponse.error(e.toString()));
     }
     return signIn;
@@ -96,6 +100,8 @@ class LoginBloc with Validators implements BaseBloc {
           middleName,
           lastName);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       signUpSink.add(ApiResponse.error(e.toString()));
     }
     return signUp;
@@ -107,6 +113,8 @@ class LoginBloc with Validators implements BaseBloc {
     try {
       signOutResponse = await _authenticationRepository.signOutUser();
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       signInSink.add(ApiResponse.error(e.toString()));
     }
 

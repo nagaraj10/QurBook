@@ -138,6 +138,7 @@ class CallMainMakeCall extends StatelessWidget {
                                     .update(newStatus.toMap());
                             } catch (e) {
                               print(e);
+                                                      CommonUtil().appLogs(message: e.toString());
                             }
                           },
                         ),
@@ -195,6 +196,7 @@ class CallMainMakeCall extends StatelessWidget {
                               }
                             } catch (e) {
                               print(e);
+                                                      CommonUtil().appLogs(message: e.toString());
                             }
                           },
                         ),
@@ -293,6 +295,7 @@ class CallMainMakeCall extends StatelessWidget {
         },
       );
     } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
       printError(
         info: e.toString(),
       );
@@ -469,6 +472,8 @@ class CallMainMakeCall extends StatelessWidget {
                       hideStatus.isAudioSwitchToVideo = -1;
                     }
                   } catch (e) {
+                                            CommonUtil().appLogs(message: e.toString());
+
                     print(e);
                   }
 
@@ -548,7 +553,9 @@ class CallMainMakeCall extends StatelessWidget {
       userIdForNotify =
           await PreferenceUtil.getStringValue(constants.KEY_USERID);
       //userIdForNotify = json.decode(userIdForNotify);
-    } catch (e) {}
+    } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future userAlert() {
@@ -596,7 +603,9 @@ class CallMainMakeCall extends StatelessWidget {
                       try {
                         if (!isFromAppointment!)
                           callApiToUpdateNonAppointment();
-                      } catch (e) {}
+                      } catch (e) {
+                                                CommonUtil().appLogs(message: e.toString());
+                      }
                       VideoCallCommonUtils().terminate(
                           appsID: appointmentId,
                           bookId: bookId,
@@ -645,6 +654,7 @@ class CallMainMakeCall extends StatelessWidget {
       });
     } catch (e) {
       //print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 }

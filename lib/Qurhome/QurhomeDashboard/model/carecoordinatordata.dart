@@ -1,6 +1,6 @@
-
 import 'dart:core';
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 
 class CareCoordinatorData {
@@ -19,6 +19,8 @@ class CareCoordinatorData {
         });
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -32,6 +34,7 @@ class CareCoordinatorData {
       }
     } catch (e) {
       print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
 
     return data;
@@ -44,7 +47,7 @@ class Result {
   String? userType;
   String? name;
 
-  Result({this.patientId, this.userId, this.userType,this.name});
+  Result({this.patientId, this.userId, this.userType, this.name});
 
   Result.fromJson(Map<String, dynamic> json) {
     try {
@@ -53,6 +56,8 @@ class Result {
       userType = json['userType'];
       name = json['name'];
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -65,6 +70,8 @@ class Result {
       data['userType'] = this.userType;
       data['name'] = this.name;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
     return data;
@@ -141,4 +148,3 @@ class ErrorData {
     return data;
   }
 }
-

@@ -89,6 +89,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
     }
     // _getHistoryData(widget.ticketUid);
   }
@@ -268,6 +269,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                           displayName, CommonUtil().validString(strText)));
                     } catch (e) {
                       //print(e);
+                            CommonUtil().appLogs(message: e.toString());
                     }
                     break;
                   } else {
@@ -283,6 +285,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         }
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
       if(kDebugMode){
         print(e);
       }
@@ -1163,6 +1166,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         return null;
       });
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
       print('Comment ticket exception : ${e.toString()}');
       return null;
     }
@@ -1188,6 +1192,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       });
     } catch (e) {
       print('Attachment ticket exception : ${e.toString()}');
+            CommonUtil().appLogs(message: e.toString());
       return null;
     }
   }

@@ -1,5 +1,6 @@
 
 import 'package:flutter/foundation.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart'as fhbParameters;
 
 import '../../constants/fhb_constants.dart' as constants;
@@ -209,6 +210,7 @@ class Ticket {
       if (kDebugMode) {
         print(e.toString());
       }
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -636,6 +638,7 @@ class Type {
           : null;
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -653,6 +656,8 @@ class Type {
       }
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }
@@ -755,6 +760,8 @@ class AdditionalInfoType {
       healthOrgTypeId = json['healthOrgTypeId'];
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -767,6 +774,8 @@ class AdditionalInfoType {
       data['healthOrgTypeId'] = this.healthOrgTypeId;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }
@@ -824,6 +833,8 @@ class Field {
       isVisible = json['is_visible'];
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -846,6 +857,8 @@ class Field {
       data['is_visible'] = this.isVisible;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
 
     return data;
@@ -866,6 +879,8 @@ class FieldData {
       fieldName = null;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -876,6 +891,8 @@ class FieldData {
       data['name'] = this.name;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }

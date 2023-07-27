@@ -1,5 +1,7 @@
 
 import 'dart:async';
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../Authentication/LoginBloc.dart';
 import '../../model/user/MyProfileModel.dart';
 import '../../model/user/ProfileCompletedata.dart';
@@ -43,6 +45,8 @@ class MyProfileBloc implements BaseBloc {
       profileResponse = await _myProfileRepository.getMyProfileInfo(profileKey);
       myProfileInfoSink.add(ApiResponse.completed(profileResponse));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       myProfileInfoSink.add(ApiResponse.error(e.toString()));
     }
     return profileResponse;
@@ -57,6 +61,8 @@ class MyProfileBloc implements BaseBloc {
           await _myProfileRepository.getCompleteMyProfileInfo(profileKey);
       myCompleteProfileInfoSink.add(ApiResponse.completed(profileCompleteData));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       myCompleteProfileInfoSink.add(ApiResponse.error(e.toString()));
       
     }

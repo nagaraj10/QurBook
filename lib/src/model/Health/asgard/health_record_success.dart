@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'health_record_collection.dart';
 
 class HealthRecordSuccess {
@@ -147,7 +149,10 @@ class Metadata {
       hospital = json['hospital'] != null
           ? Hospital.fromJson(json['hospital'])
           : null;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Map<String, dynamic> toJson() {

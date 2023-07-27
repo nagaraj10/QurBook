@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../Device_Integration/services/fetchHealthKitData.dart';
 import '../../src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
 import '../../constants/fhb_query.dart' as query;
@@ -17,6 +19,8 @@ class SyncHealthKitData {
     try {
       await _hkHelper!.activateHealthKit();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       rethrow;
     }
   }
@@ -84,6 +88,8 @@ class SyncHealthKitData {
       // }
       return true;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       throw 'Failed to sync Apple Health Data please try again later';
     }
 
@@ -96,6 +102,8 @@ class SyncHealthKitData {
       final response = await _deviceHealthRecord!.postDeviceData(params);
       return response;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       rethrow;
     }
   }
@@ -111,6 +119,8 @@ class SyncHealthKitData {
 
       if (!lastSync.isSuccess!) return null;
       if (lastSync.result != null) return lastSync.result!.lastSyncDateTime;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 }

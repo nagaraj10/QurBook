@@ -96,7 +96,10 @@ class AppointmentDetailsController extends GetxController {
         try {
           endTimeForTransportation = DateTime.parse(
               appointmentDetailsModel?.result?.plannedStartDateTime ?? "");
-        } catch (e) {}
+        } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
+        }
         if (appointmentType.value.toLowerCase() != strTransportation) {
           if (showEndTime) {
             scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
@@ -275,6 +278,8 @@ class AppointmentDetailsController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: "error in try: " + e.toString());
       }
@@ -302,6 +307,8 @@ class AppointmentDetailsController extends GetxController {
       city = "";
       state = "";
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -315,6 +322,8 @@ class AppointmentDetailsController extends GetxController {
       description.value =
           appointmentDetailsModel!.result?.additionalInfo!.description ?? "";
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -339,6 +348,8 @@ class AppointmentDetailsController extends GetxController {
       locationUrl =
           appointmentDetailsModel!.result?.additionalInfo?.locationUrl ?? "";
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -377,6 +388,8 @@ class AppointmentDetailsController extends GetxController {
       else
         return strText.trim();
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }

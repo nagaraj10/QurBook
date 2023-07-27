@@ -192,6 +192,8 @@ class Metadata {
             : null;
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }

@@ -1,5 +1,5 @@
-
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../model/myPlanDetailModel.dart';
 import '../model/myPlanListModel.dart';
@@ -20,7 +20,9 @@ class MyPlanViewModel extends ChangeNotifier {
           myPLanListResult = myPlanListModel.result;
         }
         return myPlanListModel;
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
   }
 
@@ -28,7 +30,9 @@ class MyPlanViewModel extends ChangeNotifier {
     try {
       var myPlanDetailModel = await myPlanService.getMyPlanDetails(packageId);
       return myPlanDetailModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   List<MyPlanListResult> getProviderName(
@@ -65,7 +69,9 @@ class MyPlanViewModel extends ChangeNotifier {
         var myPlanListModel =
             await myPlanService.getPlanDetailById(userid, packageId!);
         return myPlanListModel;
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
   }
 }

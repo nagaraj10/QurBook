@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class City {
@@ -35,6 +36,8 @@ class City {
             json['healthOrganizationAddressCollection'].forEach((v) { healthOrganizationAddressCollection!.add(new HealthOrganizationAddressCollection.fromJson(v)); });
           }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       //print(e);
     }
   }
@@ -52,6 +55,8 @@ class City {
             data['healthOrganizationAddressCollection'] = this.healthOrganizationAddressCollection!.map((v) => v.toJson()).toList();
           }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       //print(e);
     }
     return data;
@@ -90,6 +95,8 @@ class HealthOrganizationAddressCollection {
           json['city'] != null ? new CityDetails.fromJson(json['city']) : null;
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -112,6 +119,8 @@ class HealthOrganizationAddressCollection {
       }
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }
@@ -138,6 +147,8 @@ class StateDetails {
       lastModifiedOn = json['lastModifiedOn'];
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -152,6 +163,8 @@ class StateDetails {
       data['lastModifiedOn'] = this.lastModifiedOn;
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }
@@ -175,6 +188,8 @@ class CityDetails {
       lastModifiedOn = json['lastModifiedOn'];
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -188,6 +203,8 @@ class CityDetails {
       data['lastModifiedOn'] = this.lastModifiedOn;
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }

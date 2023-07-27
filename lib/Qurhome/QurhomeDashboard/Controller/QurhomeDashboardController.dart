@@ -122,7 +122,9 @@ class QurhomeDashboardController extends GetxController {
       firstName = myProfile.result != null
           ? myProfile.result!.firstName!.capitalizeFirstofEach
           : '';
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     switch (currentSelectedIndex.value) {
       case 0:
@@ -185,7 +187,9 @@ class QurhomeDashboardController extends GetxController {
                 KIOSK_say_text: data[sayText_sheela] ?? ''.toString(),
               };
               CommonUtil().callQueueNotificationPostApi(reqJson);
-            } catch (e) {}
+            } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+            }
           } else if (PreferenceUtil.getIfQurhomeisAcive()) {
             redirectToSheelaScheduleAppointment();
           }
@@ -238,7 +242,9 @@ class QurhomeDashboardController extends GetxController {
           }
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   getModuleAccess() async {
@@ -281,6 +287,8 @@ class QurhomeDashboardController extends GetxController {
 
         update(["newUpdate"]);
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         return;
       }
     } else {
@@ -314,6 +322,8 @@ class QurhomeDashboardController extends GetxController {
       loadingPatientData.value = false;
       return responseBool;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return false;
     }
   }
@@ -327,6 +337,8 @@ class QurhomeDashboardController extends GetxController {
       loadingPatientData.value = false;
       return responseBool;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return false;
     }
   }

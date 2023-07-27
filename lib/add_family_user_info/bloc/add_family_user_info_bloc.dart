@@ -179,6 +179,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           await addFamilyUserInfoRepository.getCustomRoles();
       relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       relationShipListSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -192,6 +193,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           await addFamilyUserInfoRepository.getMyProfileInfoNew(userId!);
       myprofileObject = myProfile;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       myProfileSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -224,6 +226,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
               fromFamily);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       userProfileSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -240,6 +243,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           .updateRelationShip(relationshipJsonString);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       updateRelationshipSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -290,6 +294,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
       await updateDeviceSelectionModel(preferredLanguage: preferred_language);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       userProfileSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -304,6 +309,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       verifyEmailResponse = await addFamilyUserInfoRepository.verifyEmail();
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       verifyEmailSink.add(ApiResponse.error(e.toString()));
     }
 

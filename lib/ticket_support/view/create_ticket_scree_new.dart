@@ -162,6 +162,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               .getHealthConditions() as Future<Map<String?, List<MenuItem>>>?;
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
 
     setBooleanValues();
@@ -411,6 +413,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       }
     } catch (e) {
       print(e.toString());
+            CommonUtil().appLogs(message: e.toString());
+
     }
     return Column(children: widgetForColumn);
   }
@@ -433,7 +437,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           doctorsData = json.decode(results[tckConstants.keyDoctor]);
           try {
             setValueToDoctorDropdown(doctorsData, setState);
-          } catch (e) {}
+          } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+          }
         } else if (results.containsKey(tckConstants.keyHospital)) {
           hospitalData = json.decode(results[tckConstants.keyHospital]);
         } else if (results.containsKey(tckConstants.keyLab)) {
@@ -846,6 +853,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       }
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
     return SizedBoxWithChild(
       height: 50,
@@ -894,7 +903,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                 controller.selPrefLabId.value =
                     CommonUtil().validString(currLab.id);
                 setState(() {});
-              } catch (e) {}
+              } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
+              }
             },
           ),
         ),
@@ -915,6 +927,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       }
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
     return SizedBoxWithChild(
       height: 50,
@@ -963,7 +977,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                 controller.selPrefDoctorId.value =
                     CommonUtil().validString(currDoc.id);
                 setState(() {});
-              } catch (e) {}
+              } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
+              }
             },
           ),
         ),
@@ -2041,6 +2058,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           filePathist.add(file.path);
         });
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         //print('$e exception thrown');
       }
     }
