@@ -6443,6 +6443,11 @@ class CommonUtil {
       fontWeight: FontWeight.w600,
     );
   }
+
+  TextStyle getDefaultStyle(){
+    return TextStyle(
+        fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2);
+  }
 }
 
 extension CapExtension on String {
@@ -7767,4 +7772,6 @@ class VideoCallCommonUtils {
       //print(e);
     }
   }
+
+
 }

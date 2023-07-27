@@ -173,7 +173,7 @@ class UserDeviceCollection {
     pairHash = json['pairHash'];
     // additionalDetails = json['additionalDetails'];
     var addDetails = json['additionalDetails'];
-    manufacturer = addDetails['manufacturer'];
+    manufacturer = addDetails != null ? addDetails['manufacturer'] : null;
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];

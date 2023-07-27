@@ -3,8 +3,13 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
+
+import '../../authentication/constants/constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
@@ -13,17 +18,13 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart' as variable;
-import '../model/myPlanListModel.dart';
-import 'myPlanDetail.dart';
-import '../viewModel/myPlanViewModel.dart';
 import '../../regiment/view_model/regiment_view_model.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import '../../authentication/constants/constants.dart';
+import '../model/myPlanListModel.dart';
+import '../viewModel/myPlanViewModel.dart';
+import 'myPlanDetail.dart';
 
 class MyPlanList extends StatefulWidget {
   MyPlanList({
@@ -263,7 +264,13 @@ class _MyPlanState extends State<MyPlanList> {
               child: Container(
                   child: Center(
                 child: CommonUtil.REGION_CODE == 'IN'
-                    ? Text(variable.strNoPlans)
+                    ? Text(
+                        variable.strNoPlans,
+                        style: TextStyle(
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader2
+                                : mobileHeader2),
+                      )
                     : Text(variable.strNoPlansUS,
                         textAlign: TextAlign.center,
                         style:
@@ -304,7 +311,11 @@ class _MyPlanState extends State<MyPlanList> {
                 child: Container(
                     child: Center(
                   child: CommonUtil.REGION_CODE == 'IN'
-                      ? Text(variable.strNoPlans)
+                      ? Text(variable.strNoPlans,
+                          style: TextStyle(
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2))
                       : Text(variable.strNoPlansUS,
                           textAlign: TextAlign.center,
                           style: TextStyle(

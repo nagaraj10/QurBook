@@ -1,12 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/PlansDietListView.dart';
 import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
@@ -16,7 +15,6 @@ import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 
 class DietPlanPage extends StatefulWidget {
   @override
@@ -49,12 +47,14 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   @override
   void initState() {
-     mInitialTime = DateTime.now();
+    mInitialTime = DateTime.now();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageIdDiet = '';
 
-    planListModel = planWizardViewModel.getDietPlanList() as Future<DietPlanModel>?;
+    planListModel =
+        planWizardViewModel.getDietPlanList() as Future<DietPlanModel>?;
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -147,10 +147,10 @@ class _DietPlanPageState extends State<DietPlanPage> {
       planSearchList =
           await planWizardViewModel.filterDietSorting(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
-      *//*if (title != null) {
+      */ /*if (title != null) {
         planSearchList =
             await planWizardViewModel.filterPlanNameProviderDiet(title);
-      }*//*
+      }*/ /*
     }*/
     setState(() {});
   }
@@ -179,7 +179,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
           totalListCount = (snapshot.data!.result!.length) > 0
               ? snapshot.data!.result!.length
               : 0;
-          if (totalListCount > 0 ) {
+          if (totalListCount > 0) {
             totalListCount = 0;
             snapshot.data!.result!.forEach((element) {
               totalListCount += element.length;
@@ -221,7 +221,11 @@ class _DietPlanPageState extends State<DietPlanPage> {
               height: 1.sh / 1.3,
               child: Container(
                   child: Center(
-                child: Text(variable.strNoPlans),
+                child: Text(variable.strNoPlans,
+                    style: TextStyle(
+                        fontSize: CommonUtil().isTablet!
+                            ? tabHeader2
+                            : mobileHeader2)),
               )),
             ),
           );
@@ -241,26 +245,26 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   Future<bool> _alertForUncheckPlan() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text(
-                'You’ve not chosen any diet plan. Are you sure you want to continue'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Get.to(CheckoutPage());
-                },
-                child: Text('Yes'),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text(
+            'You’ve not chosen any diet plan. Are you sure you want to continue'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('No'),
           ),
-        ).then((value) => value as bool);
+          FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Get.to(CheckoutPage());
+            },
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   /* Widget popMenuItem() {
@@ -381,12 +385,14 @@ class _DietPlanPageState extends State<DietPlanPage> {
     if (isSwitched == false) {
       setState(() {
         isSwitched = true;
-        planListModel = planWizardViewModel.getDietPlanList(isVeg: true) as Future<DietPlanModel>?;
+        planListModel = planWizardViewModel.getDietPlanList(isVeg: true)
+            as Future<DietPlanModel>?;
       });
     } else {
       setState(() {
         isSwitched = false;
-        planListModel = planWizardViewModel.getDietPlanList() as Future<DietPlanModel>?;
+        planListModel =
+            planWizardViewModel.getDietPlanList() as Future<DietPlanModel>?;
       });
     }
   }

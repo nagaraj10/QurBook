@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -15,7 +15,6 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 
 class CarePlanPage extends StatefulWidget {
   @override
@@ -42,14 +41,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageProviderCareId =
-        '';
+    Provider.of<PlanWizardViewModel>(context, listen: false)
+        .currentPackageProviderCareId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getCarePlanList('') as Future<PlanListModel>?;
-
-
-
   }
 
   @override
@@ -101,14 +97,13 @@ class _CarePlanPageState extends State<CarePlanPage> {
         ),
         floatingActionButton: NextButton(
           onPressed: () {
-            var firebase=FirebaseAnalyticsService();
-            firebase.trackEvent("on_next_button_clicked_to_checkoutpage",
-                {
-                  "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-                }
-            );
+            var firebase = FirebaseAnalyticsService();
+            firebase.trackEvent("on_next_button_clicked_to_checkoutpage", {
+              "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+            });
             if (carePlanListLength > 0 &&
-                (planListProvider?.currentPackageProviderCareId ?? '').isEmpty) {
+                (planListProvider?.currentPackageProviderCareId ?? '')
+                    .isEmpty) {
               _alertForUncheckPlan();
             } else {
               planListProvider!.changeCurrentPage(2);
@@ -120,11 +115,14 @@ class _CarePlanPageState extends State<CarePlanPage> {
   onSearched(String? title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
-      planSearchList = await planListProvider!.filterSortingForProvider(popUpChoicePrice);
+      planSearchList =
+          await planListProvider!.filterSortingForProvider(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
-      planSearchList = await planListProvider!.filterSortingForProvider(popUpChoiceDura);
+      planSearchList =
+          await planListProvider!.filterSortingForProvider(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList = await planListProvider!.filterSortingForProvider(popUpChoiceDefault);
+      planSearchList =
+          await planListProvider!.filterSortingForProvider(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
         planSearchList = await planListProvider!.filterPlanNameProvider(title);
@@ -195,7 +193,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
               height: 1.sh / 1.3,
               child: Container(
                   child: Center(
-                child: Text(variable.strNoPlans),
+                child: Text(variable.strNoPlans,
+                    style: TextStyle(
+                        fontSize: CommonUtil().isTablet!
+                            ? tabHeader2
+                            : mobileHeader2)),
               )),
             ),
           );
@@ -203,27 +205,27 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   Future<bool> _alertForUncheckPlan() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text(
-                'You’ve not chosen any care plan. Are you sure you want to continue'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .changeCurrentPage(2);
-                },
-                child: Text('Yes'),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text(
+            'You’ve not chosen any care plan. Are you sure you want to continue'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('No'),
           ),
-        ).then((value) => value as bool);
+          FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Provider.of<PlanWizardViewModel>(context, listen: false)
+                  .changeCurrentPage(2);
+            },
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   /* Widget popMenuItem() {

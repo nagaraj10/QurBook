@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/my_reports/model/report_model.dart';
 import 'package:myfhb/my_reports/view_model/report_view_model.dart';
+
 import '../../common/errors_widget.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -79,6 +80,7 @@ class _MyReportList extends State<MyReportList> {
                       child: Text(
                         variable.strNoReports,
                         textAlign: TextAlign.center,
+                        style: CommonUtil().getDefaultStyle(),
                       ),
                     )),
               ),
@@ -106,7 +108,10 @@ class _MyReportList extends State<MyReportList> {
               height: 1.sh / 1.3,
               child: Container(
                   child: Center(
-                child: Text(variable.strNoReports),
+                child: Text(
+                  variable.strNoReports,
+                  style: CommonUtil().getDefaultStyle(),
+                ),
               )),
             ),
           );

@@ -865,6 +865,9 @@ const double mobileHeader2 = 13.0;
 const double tabHeader3 = 18.0;
 const double mobileHeader3 = 12.0;
 
+const double tabHeader4 = 16.0;
+const double mobileHeader4= 11.0;
+
 const double imageTabHeader = 70.0;
 const double imageMobileHeader = 40.0;
 

@@ -1,12 +1,13 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+
 import '../../common/CommonUtil.dart';
 import '../../src/model/Media/media_result.dart';
 
 class DropdownWithCategories extends StatefulWidget {
-  const DropdownWithCategories({Key? key, this.title, this.mediaData, this.onChecked})
+  const DropdownWithCategories(
+      {Key? key, this.title, this.mediaData, this.onChecked})
       : super(key: key);
   final String? title;
   final List<MediaResult>? mediaData;
@@ -38,8 +39,8 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
                 Wrap(
                   spacing: 6,
                   children: widget.mediaData!
-                      .map(
-                          (e) => e.isChecked! ? _buildChip(e.name!) : Container())
+                      .map((e) =>
+                          e.isChecked! ? _buildChip(e.name!) : Container())
                       .toList(),
                 ),
                 SizedBox(
@@ -69,6 +70,8 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
               title: Text(e.name!,
                   style: TextStyle(
                     color: Color(CommonUtil().getMyPrimaryColor()),
+                    fontSize:
+                        CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
                   )),
               onChanged: (val) {
                 print(val);
