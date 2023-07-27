@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>69764989858-bidf0or0cv8n3nf3rjtr34o2qt4r4oo8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.69764989858-bidf0or0cv8n3nf3rjtr34o2qt4r4oo8</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>69764989858-5feposged43g1knfh3bg4kon4gld2vq7.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAyolVw2RexIINGU5VrXfGSL_JEh2k2kAQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>69764989858</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.qurhealth.patient.qurdemo</string>
+	<key>PROJECT_ID</key>
+	<string>myfhbfitness-us</string>
+	<key>STORAGE_BUCKET</key>
+	<string>myfhbfitness-us.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:69764989858:ios:4b9adee5b3c096848c28fb</string>
+</dict>
+</plist>
