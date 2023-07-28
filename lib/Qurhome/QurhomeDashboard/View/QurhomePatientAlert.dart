@@ -337,6 +337,100 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
     return '';
   }
 
+  void showEscalateNotes(
+      PatientAlertData patientAlertData, String activityName) {
+    TextEditingController controller=TextEditingController();
+    showDialog(
+        context: context,
+        builder: (__) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.all(8),
+            content: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text("Notes"),
+                      Spacer(),
+                      IconButton(
+                          padding: EdgeInsets.all(8.0),
+                          icon: Icon(
+                            Icons.close,
+                            size: CommonUtil().isTablet!
+                                ? imageCloseTab
+                                : imageCloseMobile,
+                          ),
+                          onPressed: () {
+                            try {
+                              Navigator.pop(context);
+                            } catch (e) {
+                              print(e);
+                            }
+                          })
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: controller,
+                      decoration: InputDecoration(
+                        hintText: 'Please enter Notes (optional)',
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color:
+                                  Color(CommonUtil().getQurhomePrimaryColor())),
+                        ),
+                        border: OutlineInputBorder(
+                            // borderSide: new BorderSide(color: Colors.teal)
+                            ),
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      minLines: 5, //Normal textInputField will be displayed
+                      maxLines:
+                          6, // when user presses enter it will adapt to it
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary:
+                              Color(CommonUtil().getQurhomePrimaryColor())),
+                      onPressed: () {
+                        callEscalateApi(patientAlertData,activityName,controller.text);
+                      },
+                      child: Text(
+                        "Submit",
+                        style: TextStyle(color: Colors.white),
+                      ))
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future<void> callEscalateApi(PatientAlertData patientAlertData, String activityName,String notes) async {
+    CommonUtil().showSingleLoadingDialog(context);
+    bool response = await controller.caregiverEscalateAction(
+      patientAlertData,
+      activityName,
+      notes: notes
+    );
+    if (response) {
+      Navigator.pop(context);
+      CommonUtil().hideLoadingDialog(context);
+      FlutterToast().getToast(strEscalateAlertMsg, Colors.green);
+    } else {
+      CommonUtil().hideLoadingDialog(context);
+
+      FlutterToast().getToast(NOT_FILE_IMAGE, Colors.red);
+    }
+  }
+
   void showRegimenDialog(PatientAlertData patientAlertData, int itemIndex) {
     String activityName = " ";
     try {
@@ -572,23 +666,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               )),
                           InkWell(
                             onTap: () async {
-                              CommonUtil().showSingleLoadingDialog(context);
-                              bool response =
-                                  await controller.caregiverEscalateAction(
-                                patientAlertData,
-                                activityName,
-                              );
-                              if (response) {
-                                Navigator.pop(context);
-                                CommonUtil().hideLoadingDialog(context);
-                                FlutterToast().getToast(
-                                    strEscalateAlertMsg, Colors.green);
-                              } else {
-                                CommonUtil().hideLoadingDialog(context);
-
-                                FlutterToast()
-                                    .getToast(NOT_FILE_IMAGE, Colors.red);
-                              }
+                              Navigator.pop(context);
+                              showEscalateNotes(patientAlertData, activityName);
                             },
                             child: Column(
                               children: [
