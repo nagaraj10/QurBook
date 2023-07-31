@@ -259,7 +259,7 @@ class IosNotificationHandler {
           ),
         );
       } else if ((model.rawBody ?? '').isNotEmpty) {
-        if (sheelaAIController.isSheelaScreenActive) {
+        /*if (sheelaAIController.isSheelaScreenActive) {
           if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
             var reqJsonAudio = {
               KIOSK_task: KIOSK_audio,
@@ -273,14 +273,14 @@ class IosNotificationHandler {
             };
             CommonUtil().callQueueNotificationPostApi(reqJson);
           }
-        } else {
+        } else {*/
           await Get.toNamed(
             rt_Sheela,
             arguments: SheelaArgument(
               textSpeechSheela: model.rawBody,
             ),
           );
-        }
+        //}
       } else if ((model.message ?? '').isNotEmpty) {
         await Get.toNamed(
           rt_Sheela,
@@ -290,7 +290,7 @@ class IosNotificationHandler {
           ),
         );
       } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
-        if (sheelaAIController.isSheelaScreenActive) {
+        /*if (sheelaAIController.isSheelaScreenActive) {
           if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
             var reqJsonAudio = {
               KIOSK_task: KIOSK_audio,
@@ -298,7 +298,7 @@ class IosNotificationHandler {
             };
             CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
           }
-        } else {
+        } else {*/
           await Future.delayed(const Duration(seconds: 5));
           await Get.toNamed(
             router.rt_Sheela,
@@ -306,7 +306,7 @@ class IosNotificationHandler {
               audioMessage: model.sheelaAudioMsgUrl,
             ),
           );
-        }
+        //}
       }
     } else if (CommonUtil.isUSRegion() &&
         model.templateName == strPatientReferralAcceptToPatient) {
