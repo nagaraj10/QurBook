@@ -25,7 +25,7 @@ class QurhomePatientALert extends StatefulWidget {
 
 class _QurhomePatientALertState extends State<QurhomePatientALert> {
   final controller = Get.put(QurhomeDashboardController());
-  final qurhomeRegimenController = Get.put(QurhomeRegimenController());
+  final qurhomeRegimenController = CommonUtil().onInitQurhomeRegimenController();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   @override

@@ -640,21 +640,12 @@ class QurHomeApiProvider {
     }
   }
 
-  saveAppLogs({String message = '', String userName = ""}) async {
+  saveAppLogs({String message = '', String userName = '',String version = '',String oSVersion = ''}) async {
     try {
       String userId = '';
-      String version = '';
-      String oSVersion = '';
       String deviceName = '';
       userId = CommonUtil().validString(userName ?? "");
-      await PackageInfo.fromPlatform().then((packageInfo) {
-        version = (packageInfo.version + " + " + packageInfo.buildNumber);
-      });
-      if (Platform.isIOS) {
-        oSVersion = "IOS ${Platform.operatingSystemVersion}";
-      } else {
-        oSVersion = "ANDROID ${Platform.operatingSystemVersion}";
-      }
+
       deviceName = "${Platform.localHostname}";
 
       if (userId.trim().isEmpty) {
