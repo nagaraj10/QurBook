@@ -386,6 +386,7 @@ class AudioWidgetState extends State<AudioWidget> {
       //TODO: Check for audio
     } catch (err) {
       print(err.toString());
+      CommonUtil().appLogs(message: err.toString());
     }
 
     setState(
@@ -446,7 +447,9 @@ class AudioWidgetState extends State<AudioWidget> {
 
         isPlaying = false;
       }
-    } catch (err) {}
+    } catch (err) {
+      CommonUtil().appLogs(message: err.toString());
+    }
 
     setState(() {});
   }
@@ -473,7 +476,7 @@ class AudioWidgetState extends State<AudioWidget> {
       _playerTxt = '00:00';
       isPlaying = false;
     } catch (err) {
-      print('Failed to stop');
+      CommonUtil().appLogs(message: err.toString());
     }
     setState(() {});
   }

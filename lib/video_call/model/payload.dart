@@ -69,7 +69,6 @@ class Payload {
       data['isWeb'] = this.isWeb;
       data['patientPhoneNumber'] = this.patientPhoneNumber;
     } catch (e) {
-      print(e);
                               CommonUtil().appLogs(message: e.toString());
     }
     return data;

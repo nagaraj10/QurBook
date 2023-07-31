@@ -15,10 +15,14 @@ class TicketDetailResponseModel {
   TicketDetailResponseModel({this.isSuccess, this.message, this.result});
 
   TicketDetailResponseModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result =
+              json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -39,9 +43,13 @@ class Result {
   Result({this.success, this.ticket});
 
   Result.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    ticket =
-        json['ticket'] != null ? new Ticket.fromJson(json['ticket']) : null;
+    try {
+      success = json['success'];
+      ticket =
+              json['ticket'] != null ? new Ticket.fromJson(json['ticket']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -285,13 +293,17 @@ class Attachments {
       this.fileKey});
 
   Attachments.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    owner = json['owner'];
-    name = json['name'];
-    path = json['path'];
-    type = json['type'];
-    date = json['date'];
-    fileKey = json['fileKey'];
+    try {
+      sId = json['_id'];
+      owner = json['owner'];
+      name = json['name'];
+      path = json['path'];
+      type = json['type'];
+      date = json['date'];
+      fileKey = json['fileKey'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -315,7 +327,11 @@ class Tags {
   }
 
   Tags.fromJson(dynamic json) {
-    _id = json['id'];
+    try {
+      _id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   String? _id;
@@ -337,7 +353,11 @@ class Notes {
   }
 
   Notes.fromJson(dynamic json) {
-    _id = json['id'];
+    try {
+      _id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   String? _id;
@@ -361,11 +381,15 @@ class Comments {
   Comments({this.deleted, this.sId, this.owner, this.date, this.comment});
 
   Comments.fromJson(Map<String, dynamic> json) {
-    deleted = json['deleted'];
-    sId = json['_id'];
-    owner = json['owner'] != null ? new Owner.fromJson(json['owner']) : null;
-    date = json['date'];
-    comment = json['comment'];
+    try {
+      deleted = json['deleted'];
+      sId = json['_id'];
+      owner = json['owner'] != null ? new Owner.fromJson(json['owner']) : null;
+      date = json['date'];
+      comment = json['comment'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -398,12 +422,16 @@ class Owner {
       this.title});
 
   Owner.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    username = json['username'];
-    fullname = json['fullname'];
-    email = json['email'];
-    role = json['role'] != null ? new Role.fromJson(json['role']) : null;
-    title = json['title'];
+    try {
+      sId = json['_id'];
+      username = json['username'];
+      fullname = json['fullname'];
+      email = json['email'];
+      role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+      title = json['title'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -437,12 +465,16 @@ class Subscribers {
       this.role});
 
   Subscribers.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    username = json['username'];
-    email = json['email'];
-    fullname = json['fullname'];
-    title = json['title'];
-    role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+    try {
+      sId = json['_id'];
+      username = json['username'];
+      email = json['email'];
+      fullname = json['fullname'];
+      title = json['title'];
+      role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -478,13 +510,17 @@ class Role {
       this.id});
 
   Role.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    description = json['description'];
-    normalized = json['normalized'];
-    isAdmin = json['isAdmin'];
-    isAgent = json['isAgent'];
-    id = json['id'];
+    try {
+      sId = json['_id'];
+      name = json['name'];
+      description = json['description'];
+      normalized = json['normalized'];
+      isAdmin = json['isAdmin'];
+      isAgent = json['isAgent'];
+      id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -517,19 +553,23 @@ class Group {
       this.iV});
 
   Group.fromJson(Map<String, dynamic> json) {
-    if (json['members'] != null) {
-      members = <Members>[];
-      json['members'].forEach((v) {
-        members!.add(new Members.fromJson(v));
-      });
+    try {
+      if (json['members'] != null) {
+            members = <Members>[];
+            json['members'].forEach((v) {
+              members!.add(new Members.fromJson(v));
+            });
+          }
+      if (json['sendMailTo'] != null) {
+            sendMailTo = json['sendMailTo'].cast<String>();
+          }
+      public = json['public'];
+      sId = json['_id'];
+      name = json['name'];
+      iV = json['__v'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    if (json['sendMailTo'] != null) {
-      sendMailTo = json['sendMailTo'].cast<String>();
-    }
-    public = json['public'];
-    sId = json['_id'];
-    name = json['name'];
-    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
@@ -556,7 +596,11 @@ class SendMailTo {
   }
 
   SendMailTo.fromJson(dynamic json) {
-    _id = json['id'];
+    try {
+      _id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   String? _id;
@@ -589,13 +633,17 @@ class Members {
       this.title});
 
   Members.fromJson(Map<String, dynamic> json) {
-    deleted = json['deleted'];
-    sId = json['_id'];
-    username = json['username'];
-    fullname = json['fullname'];
-    email = json['email'];
-    role = json['role'] != null ? new Role.fromJson(json['role']) : null;
-    title = json['title'];
+    try {
+      deleted = json['deleted'];
+      sId = json['_id'];
+      username = json['username'];
+      fullname = json['fullname'];
+      email = json['email'];
+      role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+      title = json['title'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -637,7 +685,6 @@ class Type {
           ? new AdditionalInfoType.fromJson(json['additionalInfo'])
           : null;
     } catch (e) {
-      //print(e);
                   CommonUtil().appLogs(message: e.toString());
     }
   }
@@ -686,15 +733,19 @@ class Priorities {
       this.id});
 
   Priorities.fromJson(Map<String, dynamic> json) {
-    overdueIn = json['overdueIn'];
-    htmlColor = json['htmlColor'];
-    sId = json['_id'];
-    name = json['name'];
-    migrationNum = json['migrationNum'];
-    defaultBool = json['defaultBool'];
-    iV = json['__v'];
-    durationFormatted = json['durationFormatted'];
-    id = json['id'];
+    try {
+      overdueIn = json['overdueIn'];
+      htmlColor = json['htmlColor'];
+      sId = json['_id'];
+      name = json['name'];
+      migrationNum = json['migrationNum'];
+      defaultBool = json['defaultBool'];
+      iV = json['__v'];
+      durationFormatted = json['durationFormatted'];
+      id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -722,12 +773,16 @@ class History {
   History({this.sId, this.action, this.description, this.owner, this.date});
 
   History.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    action = json['action'];
-    description = json['description'];
-    owner =
-        json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
-    date = json['date'];
+    try {
+      sId = json['_id'];
+      action = json['action'];
+      description = json['description'];
+      owner =
+              json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
+      date = json['date'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -759,7 +814,7 @@ class AdditionalInfoType {
       }
       healthOrgTypeId = json['healthOrgTypeId'];
     } catch (e) {
-      //print(e);
+
             CommonUtil().appLogs(message: e.toString());
 
     }
@@ -773,7 +828,7 @@ class AdditionalInfoType {
       }
       data['healthOrgTypeId'] = this.healthOrgTypeId;
     } catch (e) {
-      //print(e);
+
             CommonUtil().appLogs(message: e.toString());
 
     }

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'City.dart';
 import 'State.dart';
 
@@ -35,20 +37,24 @@ class UserAddressCollection3 {
       this.addressID});
 
   UserAddressCollection3.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    pincode = json['pincode'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    createdBy = json['createdBy'];
-    addressType = json['addressType'] != null
-        ? AddressType.fromJson(json['addressType'])
-        : null;
-    city = json['city'] != null ? City.fromJson(json['city']) : null;
-    state = json['state'] != null ? State.fromJson(json['state']) : null;
+    try {
+      id = json['id'];
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      pincode = json['pincode'];
+      isPrimary = json['isPrimary'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      createdBy = json['createdBy'];
+      addressType = json['addressType'] != null
+              ? AddressType.fromJson(json['addressType'])
+              : null;
+      city = json['city'] != null ? City.fromJson(json['city']) : null;
+      state = json['state'] != null ? State.fromJson(json['state']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

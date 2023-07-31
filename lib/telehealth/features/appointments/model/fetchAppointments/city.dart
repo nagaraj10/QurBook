@@ -38,7 +38,6 @@ class City {
     } catch (e) {
                   CommonUtil().appLogs(message: e.toString());
 
-      //print(e);
     }
   }
 
@@ -57,7 +56,6 @@ class City {
     } catch (e) {
                   CommonUtil().appLogs(message: e.toString());
 
-      //print(e);
     }
     return data;
   }
@@ -94,7 +92,7 @@ class HealthOrganizationAddressCollection {
       city =
           json['city'] != null ? new CityDetails.fromJson(json['city']) : null;
     } catch (e) {
-      //print(e);
+
                   CommonUtil().appLogs(message: e.toString());
 
     }
@@ -146,7 +144,6 @@ class StateDetails {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
     } catch (e) {
-      //print(e);
                   CommonUtil().appLogs(message: e.toString());
 
     }
@@ -187,7 +184,6 @@ class CityDetails {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
     } catch (e) {
-      //print(e);
                   CommonUtil().appLogs(message: e.toString());
 
     }
@@ -202,7 +198,7 @@ class CityDetails {
       data['createdOn'] = this.createdOn;
       data['lastModifiedOn'] = this.lastModifiedOn;
     } catch (e) {
-      //print(e);
+
                   CommonUtil().appLogs(message: e.toString());
 
     }

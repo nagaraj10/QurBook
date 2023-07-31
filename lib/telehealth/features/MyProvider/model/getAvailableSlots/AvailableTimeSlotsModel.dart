@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 
@@ -10,11 +11,15 @@ class AvailableTimeSlotsModel {
   AvailableTimeSlotsModel({this.isSuccess, this.result,this.message});
 
   AvailableTimeSlotsModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[strIsSuccess];
-    message = json [strMessage];
-    result = json[strResult] != null
-        ? new SlotsResultModel.fromJson(json[strResult])
-        : null;
+    try {
+      isSuccess = json[strIsSuccess];
+      message = json [strMessage];
+      result = json[strResult] != null
+              ? new SlotsResultModel.fromJson(json[strResult])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -40,7 +40,9 @@ class PatientSignUp {
       result =
               json[strResult] != null ? Result.fromJson(json[strResult]) : null;
     } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(
+          message: e.toString(),
+          userName: (json[strfirstName] ?? "" + json[strlastName] ?? ""));
     }
   }
 
@@ -100,7 +102,9 @@ class Result {
       userId = json[strUserId];
       userName = json[struserName];
     } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(
+          message: e.toString(),
+          userName: json[struserName] != null ? json[struserName] : "");
     }
   }
 

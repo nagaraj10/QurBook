@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ErrorModelResponse {
   int? status;
   bool? success;
@@ -7,13 +9,17 @@ class ErrorModelResponse {
   ErrorModelResponse({this.status, this.success, this.message});
 
   ErrorModelResponse.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('isSuccess')) {
-      success = json['isSuccess'];
-    } else {
-      success = json['success'];
+    try {
+      if (json.containsKey('isSuccess')) {
+            success = json['isSuccess'];
+          } else {
+            success = json['success'];
+          }
+      status = json['status'];
+      message = json['message'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    status = json['status'];
-    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {

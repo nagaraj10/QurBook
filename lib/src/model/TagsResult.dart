@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
 class TagsResult {
@@ -8,12 +9,16 @@ class TagsResult {
   TagsResult({this.isSuccess, this.result});
 
   TagsResult.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <Tags>[];
-      json['result'].forEach((v) {
-        result!.add(new Tags.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <Tags>[];
+            json['result'].forEach((v) {
+              result!.add(new Tags.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

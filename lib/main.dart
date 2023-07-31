@@ -1589,6 +1589,7 @@ class _MyFHBState extends State<MyFHB> {
       res = result;
     } on PlatformException catch (e) {
       res = TranslationConstants.failedToInvoke.t() + "'${e.message}'.";
+      CommonUtil().appLogs(message: e.toString());
     }
 
     setState(() {
@@ -1600,7 +1601,9 @@ class _MyFHBState extends State<MyFHB> {
   Future<void> showSecurityWall() async {
     try {
       final RESULTCODE = await secure_platform.invokeMethod(variable.strSecure);
-    } on PlatformException catch (e, s) {}
+    } on PlatformException catch (e, s) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<void> initConnectivity() async {
@@ -1609,7 +1612,7 @@ class _MyFHBState extends State<MyFHB> {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      //print(e.toString());
+      CommonUtil().appLogs(message: e.toString());
     }
 
     // If the widget was removed from the tree while the asynchronous platform

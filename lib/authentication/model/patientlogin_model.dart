@@ -30,7 +30,8 @@ class PatientLogIn {
               ? DiagnosticsLogin.fromJson(json['diagnostics'])
               : null;
     } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+      CommonUtil()
+          .appLogs(message: e.toString(), userName: (json[struserName] ?? ""));
     }
   }
 

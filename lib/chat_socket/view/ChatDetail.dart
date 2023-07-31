@@ -631,7 +631,7 @@ class ChatState extends State<ChatDetail> {
             }
           });
         } catch (e) {
-          //print('execption$e');
+          CommonUtil().appLogs(message: e.toString());
         }
 
         textValue = '';
@@ -1953,7 +1953,7 @@ class ChatState extends State<ChatDetail> {
                                 }
                               }
                             } catch (e) {
-                              //print(e);
+                              CommonUtil().appLogs(message: e.toString());
                             }
                           }
                         });

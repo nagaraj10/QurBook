@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class HealthRecord {
@@ -19,21 +20,25 @@ class HealthRecord {
   List<dynamic>? prescription;
 
   HealthRecord.fromJson(Map<String, dynamic> json) {
-    notes = json[parameters.strnotes];
-    voice = json[parameters.strVoice];
-    associatedRecords = json[parameters.strAssociatedRecords] == null
-        ? null
-        : List<dynamic>.from(
-            json[parameters.strAssociatedRecords].map((x) => x));
-    bills = (json[parameters.strBills] == null
-        ?  null
-        : List<String>.from(json[parameters.strBills].map((x) => x??'')));
-    others = json[parameters.strothers] == null
-        ? null
-        : List<String>.from(json[parameters.strothers].map((x) => x));
-    prescription = json[parameters.strPrescription] == null
-        ? null
-        : List<dynamic>.from(json[parameters.strPrescription].map((x) => x));
+    try {
+      notes = json[parameters.strnotes];
+      voice = json[parameters.strVoice];
+      associatedRecords = json[parameters.strAssociatedRecords] == null
+              ? null
+              : List<dynamic>.from(
+                  json[parameters.strAssociatedRecords].map((x) => x));
+      bills = (json[parameters.strBills] == null
+              ?  null
+              : List<String>.from(json[parameters.strBills].map((x) => x??'')));
+      others = json[parameters.strothers] == null
+              ? null
+              : List<String>.from(json[parameters.strothers].map((x) => x));
+      prescription = json[parameters.strPrescription] == null
+              ? null
+              : List<dynamic>.from(json[parameters.strPrescription].map((x) => x));
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

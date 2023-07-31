@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'owner.dart';
 
 class History {
@@ -17,11 +19,15 @@ class History {
   }
 
   History.fromJson(dynamic json) {
-    _id = json['_id'];
-    _action = json['action'];
-    _description = json['description'];
-    _owner = json['owner'] != null ? Owner.fromJson(json['owner']) : null;
-    _date = json['date'];
+    try {
+      _id = json['_id'];
+      _action = json['action'];
+      _description = json['description'];
+      _owner = json['owner'] != null ? Owner.fromJson(json['owner']) : null;
+      _date = json['date'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   String? _id;
   String? _action;

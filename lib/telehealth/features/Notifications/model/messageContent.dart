@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class MessageContent {
   String? messageBody;
   String? messageTitle;
@@ -6,8 +8,12 @@ class MessageContent {
   MessageContent({this.messageBody, this.messageTitle});
 
   MessageContent.fromJson(Map<String, dynamic> json) {
-    messageBody = json['messageBody'];
-    messageTitle = json['messageTitle'];
+    try {
+      messageBody = json['messageBody'];
+      messageTitle = json['messageTitle'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

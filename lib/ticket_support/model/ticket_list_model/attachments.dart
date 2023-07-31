@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class Attachments {
   Attachments({
     String? id,
@@ -7,7 +9,11 @@ class Attachments {
   }
 
   Attachments.fromJson(dynamic json) {
-    _id = json['id'];
+    try {
+      _id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   String? _id;
 

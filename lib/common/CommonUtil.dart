@@ -332,10 +332,21 @@ class CommonUtil {
     });
   }
 
-  appLogs({String message = ''}) async {
+  appLogs({String message = '', String userName = ""}) async {
     try {
-      final apiResponse = QurHomeApiProvider();
-      var callEndRecordLogResponse = await apiResponse.saveAppLogs();
+      bool isProd = false;
+      if ((BASE_URL == prodINURL) ||
+          (BASE_URL == prodUSURL) ||
+          (BASE_URL == demoINURL) ||
+          (BASE_URL == demoUSURL)) {
+        isProd = true;
+      }
+      if (isProd) {
+        final apiResponse = QurHomeApiProvider();
+        await apiResponse.saveAppLogs(message: message, userName: userName);
+      } else {
+        FlutterToast().getToast(validString(message ?? ""), Colors.red);
+      }
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
     }
@@ -2585,7 +2596,6 @@ class CommonUtil {
   }
 
   versionCheck(context) async {
-    return;
     //Get Current installed version of app
     final info = await PackageInfo.fromPlatform();
     var currentVersion = double.parse(info.version.trim().replaceAll('.', ''));
@@ -7770,7 +7780,6 @@ class VideoCallCommonUtils {
       sheelaAIController.getAIAPIResponseFor(strCallMyCC, null);
     } catch (e) {
       CommonUtil().appLogs(message: e.toString());
-      //print(e);
     }
   }
 

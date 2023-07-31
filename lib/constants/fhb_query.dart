@@ -436,3 +436,13 @@ const String user_activity_status_date = '&date=';
 const String get_city_list = 'city/search/';
 
 const String get_sos_setting_status = 'patient-provider-mapping/sos-setting-status/';
+
+
+//app error log
+const String strAppVersion = 'appVersion';
+const String strOSVersion = 'osVersion';
+const String strDeviceName = 'deviceName';
+const String strException = 'exception';
+const String post_event_logapp_logs = 'event-log/app-logs';
+
+

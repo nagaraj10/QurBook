@@ -30,6 +30,7 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/video_call/model/UpdatedInfo.dart';
+import 'package:package_info/package_info.dart';
 import '../../../constants/variable_constant.dart' as variable;
 
 class QurHomeApiProvider {
@@ -610,34 +611,6 @@ class QurHomeApiProvider {
     }
   }
 
-  Future<dynamic> saveAppLogs() async {
-    // try {
-    //   var regController = Get.find<QurhomeRegimenController>();
-    //   var header = await HeaderRequest().getRequestHeadersTimeSlot();
-    //   var data = {
-    //     qr_meetingId: CommonUtil().validString(regController.meetingId.value),
-    //     qr_UID: CommonUtil().validString(regController.UID.value),
-    //     qr_resourceId: CommonUtil().validString(regController.resourceId.value),
-    //     qr_sid: CommonUtil().validString(regController.sid.value),
-    //     qr_callLogId: CommonUtil().validString(regController.resultId.value),
-    //   };
-    //   http.Response res = (await ApiServices.post(
-    //     Constants.BASE_URL + qr_stopRecordCallLog,
-    //     headers: header,
-    //     body: json.encode(data),
-    //   ))!;
-    //   if (res.statusCode == 200) {
-    //     CallLogResponseModel _response =
-    //         CallLogResponseModel.fromJson(convert.json.decode(res.body));
-    //     return _response.isSuccess;
-    //   } else {
-    //     CallLogErrorResponseModel error =
-    //         CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
-    //     return error.isSuccess;
-    //   }
-    // } catch (e) {}
-  }
-
   getSOSButtonStatus() async {
     var regController = CommonUtil().onInitQurhomeRegimenController();
     http.Response responseJson;
@@ -662,7 +635,55 @@ class QurHomeApiProvider {
       throw FetchDataException(strNoInternet);
     } catch (e) {
       regController.isShowSOSButton.value = false;
+      CommonUtil().appLogs(message: e.toString());
       return null;
+    }
+  }
+
+  saveAppLogs({String message = '', String userName = ""}) async {
+    try {
+      String userId = '';
+      String version = '';
+      String oSVersion = '';
+      String deviceName = '';
+      userId = CommonUtil().validString(userName ?? "");
+      await PackageInfo.fromPlatform().then((packageInfo) {
+        version = (packageInfo.version + " + " + packageInfo.buildNumber);
+      });
+      if (Platform.isIOS) {
+        oSVersion = "IOS ${Platform.operatingSystemVersion}";
+      } else {
+        oSVersion = "ANDROID ${Platform.operatingSystemVersion}";
+      }
+      deviceName = "${Platform.localHostname}";
+
+      if (userId.trim().isEmpty) {
+        userId = PreferenceUtil.getStringValue(KEY_USERID) ?? "";
+      }
+
+      var data = {
+        qr_userid: userId,
+        strAppVersion: version != null ? ('v' + version) : '',
+        strOSVersion: CommonUtil().validString(oSVersion ?? ""),
+        strDeviceName: CommonUtil().validString(deviceName ?? ""),
+        strException: CommonUtil().validString(message ?? ""),
+      };
+      http.Response res = (await ApiServices.post(
+        Constants.BASE_URL + post_event_logapp_logs,
+        headers: <String, String>{c_content_type_key: c_content_type_val},
+        body: json.encode(data),
+      ))!;
+      if (res.statusCode == 200) {
+        CallLogResponseModel _response =
+            CallLogResponseModel.fromJson(convert.json.decode(res.body));
+        return _response.isSuccess;
+      } else {
+        CallLogErrorResponseModel error =
+            CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
+        return error.isSuccess;
+      }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 }

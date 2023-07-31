@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleAppointmentInfo.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/reshedulePaymentInfo.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
@@ -11,12 +12,16 @@ class ResheduleResult {
   ResheduleResult({this.appointmentInfo, this.paymentInfo});
 
   ResheduleResult.fromJson(Map<String, dynamic> json) {
-    appointmentInfo = json['appointmentInfo'] != null
-        ? new ResheduleAppointmentInfo.fromJson(json['appointmentInfo'])
-        : null;
-    paymentInfo = json['paymentInfo'] != null
-        ?  (json['paymentInfo'])
-        : null;
+    try {
+      appointmentInfo = json['appointmentInfo'] != null
+              ? new ResheduleAppointmentInfo.fromJson(json['appointmentInfo'])
+              : null;
+      paymentInfo = json['paymentInfo'] != null
+              ?  (json['paymentInfo'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

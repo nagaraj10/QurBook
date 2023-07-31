@@ -38,7 +38,6 @@ class CreateTicketModel {
     } catch (e) {
                   CommonUtil().appLogs(message: e.toString());
 
-      //print(e);
     }
   }
 

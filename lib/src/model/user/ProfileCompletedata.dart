@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'DoctorIds.dart';
 import 'HospitalIds.dart';
@@ -14,12 +16,16 @@ class ProfileCompleteData {
   ProfileCompleteData({this.status, this.success, this.message, this.response});
 
   ProfileCompleteData.fromJson(Map<String, dynamic> json) {
-     status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+     try {
+       status = json[parameters.strStatus];
+       success = json[parameters.strSuccess];
+       message = json[parameters.strMessage];
+       response = json[parameters.strResponse] != null
+               ? Response.fromJson(json[parameters.strResponse])
+               : null;
+     } catch (e) {
+       CommonUtil().appLogs(message: e.toString());
+     }
   }
 
   Map<String, dynamic> toJson() {
@@ -41,9 +47,13 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json[parameters.strCount];
-    data =
-        json[parameters.strData] != null ? MyProfileData.fromJson(json[parameters.strData]) : null;
+    try {
+      count = json[parameters.strCount];
+      data =
+              json[parameters.strData] != null ? MyProfileData.fromJson(json[parameters.strData]) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -100,29 +110,33 @@ class MyProfileData {
       this.countryCode,/*this.qualifiedFullName*/});
 
   MyProfileData.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strData];
-    name = json[parameters.strName];
-    phoneNumber = json[parameters.strPhoneNumber];
-    email = json[parameters.strEmail];
-    gender = json[parameters.strGender];
-    //communicationPreferences = json['communicationPreferences'];
-    medicalPreferences = json[parameters.strmedicalPreferences] != null
-        ? MedicalPreferences.fromJson(json[parameters.strmedicalPreferences])
-        : null;
-    isActive = json[parameters.strIsActive];
-    isTempUser = json[parameters.strIstemper];
-    isVirtualUser = json[parameters.strisVirtualUser];
-    createdOn = json[parameters.strCreatedOn];
-    createdBy = json[parameters.strCreatedBy];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    dateOfBirth = json[parameters.strdateOfBirth];
-    isEmailVerified = json[parameters.strisEmailVerified];
-    bloodGroup = json[parameters.strbloodGroup];
-    profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
-        ? ProfilePicThumbnailMain.fromJson(json[parameters.strprofilePicThumbnail])
-        : null;
-    oid = json[parameters.stroid];
-    countryCode = json[parameters.strCountryCode];
+    try {
+      id = json[parameters.strData];
+      name = json[parameters.strName];
+      phoneNumber = json[parameters.strPhoneNumber];
+      email = json[parameters.strEmail];
+      gender = json[parameters.strGender];
+      //communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json[parameters.strmedicalPreferences] != null
+              ? MedicalPreferences.fromJson(json[parameters.strmedicalPreferences])
+              : null;
+      isActive = json[parameters.strIsActive];
+      isTempUser = json[parameters.strIstemper];
+      isVirtualUser = json[parameters.strisVirtualUser];
+      createdOn = json[parameters.strCreatedOn];
+      createdBy = json[parameters.strCreatedBy];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      dateOfBirth = json[parameters.strdateOfBirth];
+      isEmailVerified = json[parameters.strisEmailVerified];
+      bloodGroup = json[parameters.strbloodGroup];
+      profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
+              ? ProfilePicThumbnailMain.fromJson(json[parameters.strprofilePicThumbnail])
+              : null;
+      oid = json[parameters.stroid];
+      countryCode = json[parameters.strCountryCode];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     /*qualifiedFullName = json[parameters.strqualifiedFullName] != null
         ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
         : null;*/
@@ -166,9 +180,13 @@ class MedicalPreferences {
   MedicalPreferences({this.preferences});
 
   MedicalPreferences.fromJson(Map<String, dynamic> json) {
-    preferences = json[parameters.strpreferences] != null
-        ? Preferences.fromJson(json[parameters.strpreferences])
-        : null;
+    try {
+      preferences = json[parameters.strpreferences] != null
+              ? Preferences.fromJson(json[parameters.strpreferences])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -188,23 +206,27 @@ class Preferences {
   Preferences({this.doctorIds, this.hospitalIds, this.laboratoryIds});
 
   Preferences.fromJson(Map<String, dynamic> json) {
-    if (json[parameters.strdoctorIds] != null) {
-      doctorIds = <DoctorIds>[];
-      json[parameters.strdoctorIds].forEach((v) {
-        doctorIds!.add(DoctorIds.fromJson(v));
-      });
-    }
-    if (json[parameters.strhospitalIds] != null) {
-      hospitalIds = <HospitalIds>[];
-      json[parameters.strhospitalIds].forEach((v) {
-        hospitalIds!.add(HospitalIds.fromJson(v));
-      });
-    }
-    if (json[parameters.strlaboratoryIds] != null) {
-      laboratoryIds = <LaboratoryIds>[];
-      json[parameters.strlaboratoryIds].forEach((v) {
-        laboratoryIds!.add(LaboratoryIds.fromJson(v));
-      });
+    try {
+      if (json[parameters.strdoctorIds] != null) {
+            doctorIds = <DoctorIds>[];
+            json[parameters.strdoctorIds].forEach((v) {
+              doctorIds!.add(DoctorIds.fromJson(v));
+            });
+          }
+      if (json[parameters.strhospitalIds] != null) {
+            hospitalIds = <HospitalIds>[];
+            json[parameters.strhospitalIds].forEach((v) {
+              hospitalIds!.add(HospitalIds.fromJson(v));
+            });
+          }
+      if (json[parameters.strlaboratoryIds] != null) {
+            laboratoryIds = <LaboratoryIds>[];
+            json[parameters.strlaboratoryIds].forEach((v) {
+              laboratoryIds!.add(LaboratoryIds.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

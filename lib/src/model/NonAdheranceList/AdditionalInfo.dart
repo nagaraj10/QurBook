@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class AdditionalInfo {
   AdditionalInfo({
       int? age, 
@@ -22,15 +24,19 @@ class AdditionalInfo {
 }
 
   AdditionalInfo.fromJson(dynamic json) {
-    _age = json['age'];
-    _height = json['height'];
-    _offset = json['offset'];
-    _weight = json['weight'];
+    try {
+      _age = json['age'];
+      _height = json['height'];
+      _offset = json['offset'];
+      _weight = json['weight'];
 
-    _mrdNumber = json['mrdNumber'];
-    _uhidNumber = json['uhidNumber'];
-    _visitReason = json['visitReason'];
-    _patientHistory = json['patientHistory'];
+      _mrdNumber = json['mrdNumber'];
+      _uhidNumber = json['uhidNumber'];
+      _visitReason = json['visitReason'];
+      _patientHistory = json['patientHistory'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   int? _age;
   String? _height;
