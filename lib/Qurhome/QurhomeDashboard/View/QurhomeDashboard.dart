@@ -20,6 +20,7 @@ import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:provider/provider.dart';
@@ -207,6 +208,14 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
                 elevation: 0,
                 centerTitle: true,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 16,
+                    ),
+                    child: MyBlinkingBLEIcon(),
+                  )
+                ],
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: (CommonUtil.isUSRegion())

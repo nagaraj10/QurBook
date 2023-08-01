@@ -50,8 +50,10 @@ class SheelaResponse {
   var eid;
   bool? directCall;
   String? recipient;
-  String timeStamp =
-      FHBUtils().getFormattedDateString(DateTime.now().toString());
+  String timeStamp = FHBUtils().getFormattedDateString(
+    DateTime.now().toString(),
+    newFormate: true,
+  );
   GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
   int? currentButtonPlayingIndex;
