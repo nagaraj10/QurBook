@@ -28,10 +28,8 @@ import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/video_call/model/UpdatedInfo.dart';
-import 'package:package_info/package_info.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import 'package:myfhb/authentication/constants/constants.dart'as constants;
 
 class QurHomeApiProvider {
   //DateTime selectedRegimenDate = DateTime.now();
@@ -654,6 +652,7 @@ class QurHomeApiProvider {
 
       var data = {
         qr_userid: userId,
+        appName: constants.strSource,
         strAppVersion: version != null ? ('v' + version) : '',
         strOSVersion: CommonUtil().validString(oSVersion ?? ""),
         strDeviceName: CommonUtil().validString(deviceName ?? ""),

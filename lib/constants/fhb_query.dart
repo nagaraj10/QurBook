@@ -444,5 +444,6 @@ const String strOSVersion = 'osVersion';
 const String strDeviceName = 'deviceName';
 const String strException = 'exception';
 const String post_event_logapp_logs = 'event-log/app-logs';
+const String appName = 'appName';
 
 
