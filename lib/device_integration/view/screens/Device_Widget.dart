@@ -620,6 +620,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           averageForDia = '';
         }
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         averageForSys = '';
         averageForDia = '';
         pulseBp = '';
@@ -681,6 +683,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .toString()
             : '';
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         averageForFasting = '';
         averageForPP = '';
       }
@@ -766,6 +770,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           .toString()
                       : '';
             } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
               averageForPul = '';
               averageForPRBpm = '';
               prbPMOxi = '';
@@ -780,6 +786,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           prbPMOxi = '';
         }
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         averageForPulForBp = '';
         averageForPul = '';
         averageForPRBpm = '';
@@ -795,6 +803,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .toString()
             : '';
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         averageForSPO2 = '';
       }
     } else {
@@ -832,6 +842,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .toString()
             : '';
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         averageForTemp = '';
       }
       try {
@@ -841,6 +853,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                     .bodyTemperature!.entities![0].temperatureUnit!.code
                 : '';
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         unitForTemp = '';
       }
     } else {
@@ -878,6 +892,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .toString()
             : '';
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         averageForWeigh = '';
       }
 
@@ -887,6 +903,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
                 : '';
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         unitForWeight = '';
       }
     } else {

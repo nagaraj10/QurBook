@@ -1,3 +1,4 @@
+import 'package:myfhb/common/CommonUtil.dart';
 
 class BleDataModel {
   String? status;
@@ -23,7 +24,7 @@ class BleDataModel {
       ackLocal = json['ackLocal'];
       data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -41,6 +42,8 @@ class BleDataModel {
         data['Data'] = this.data!.toJson();
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
     return data;
@@ -73,7 +76,7 @@ class Data {
       weight = json['Weight'].toString();
       bgl = json['BGL'].toString();
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -87,7 +90,7 @@ class Data {
       data['Weight'] = this.weight;
       data['BGL'] = this.bgl;
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
     return data;
   }
@@ -106,7 +109,7 @@ class BleDataResponseModel {
           ? new BleDataResult.fromJson(json['result'])
           : null;
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -118,7 +121,7 @@ class BleDataResponseModel {
         data['result'] = this.result!.toJson();
       }
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
 
     return data;
@@ -152,7 +155,7 @@ class BleDataResult {
       status = json['Status'];
       deviceName = json['deviceName'];
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -168,7 +171,7 @@ class BleDataResult {
       data['Status'] = this.status;
       data['deviceName'] = this.deviceName;
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
 
     return data;
@@ -186,7 +189,7 @@ class BleDataResponseData {
       pulse = json['Pulse'];
       sPO2 = json['SPO2'];
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -196,7 +199,7 @@ class BleDataResponseData {
       data['Pulse'] = this.pulse;
       data['SPO2'] = this.sPO2;
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
     return data;
   }

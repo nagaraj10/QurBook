@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ReminderFor {
   ReminderFor({
       String? id, 
@@ -22,15 +24,19 @@ class ReminderFor {
 }
 
   ReminderFor.fromJson(dynamic json) {
-    _id = json['id'];
-    _code = json['code'];
-    _name = json['name'];
-    _description = json['description'];
-    _sortOrder = json['sortOrder'];
-    _isActive = json['isActive'];
-    _createdBy = json['createdBy'];
-    _createdOn = json['createdOn'];
-    _lastModifiedOn = json['lastModifiedOn'];
+    try {
+      _id = json['id'];
+      _code = json['code'];
+      _name = json['name'];
+      _description = json['description'];
+      _sortOrder = json['sortOrder'];
+      _isActive = json['isActive'];
+      _createdBy = json['createdBy'];
+      _createdOn = json['createdOn'];
+      _lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   String? _id;
   String? _code;

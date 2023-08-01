@@ -28,9 +28,8 @@ import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/video_call/model/UpdatedInfo.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import 'package:myfhb/authentication/constants/constants.dart'as constants;
 
 class QurHomeApiProvider {
   //DateTime selectedRegimenDate = DateTime.now();
@@ -74,6 +73,8 @@ class QurHomeApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }
@@ -113,6 +114,8 @@ class QurHomeApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }
@@ -138,6 +141,8 @@ class QurHomeApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }
@@ -165,6 +170,8 @@ class QurHomeApiProvider {
           CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(e.toString());
       return null;
@@ -232,7 +239,9 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<dynamic> callLogEndData({required CallEndModel request}) async {
@@ -253,7 +262,9 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<dynamic> callMissedCallNsAlertAPI(
@@ -285,7 +296,9 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<dynamic> updateCallStatus(String? appointmentId) async {
@@ -307,6 +320,8 @@ class QurHomeApiProvider {
         return authService.createErrorJsonString(response);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       //print(e);
     }
   }
@@ -336,6 +351,8 @@ class QurHomeApiProvider {
         return responseJson;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       //print(e);
     }
     return responseJson;
@@ -392,7 +409,9 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<dynamic> stopRecordSOSCall() async {
@@ -420,7 +439,9 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   getSOSAgentNumber() async {
@@ -448,6 +469,8 @@ class QurHomeApiProvider {
           CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       regController.SOSAgentNumberEmptyMsg.value =
           CommonUtil().validString(e.toString());
       return null;
@@ -503,6 +526,8 @@ class QurHomeApiProvider {
           CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(e.toString());
       return PatientAlertListModel();
@@ -529,6 +554,8 @@ class QurHomeApiProvider {
         return false;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return false;
     }
   }
@@ -576,6 +603,8 @@ class QurHomeApiProvider {
         return false;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return false;
     }
   }
@@ -604,7 +633,47 @@ class QurHomeApiProvider {
       throw FetchDataException(strNoInternet);
     } catch (e) {
       regController.isShowSOSButton.value = false;
+      CommonUtil().appLogs(message: e.toString());
       return null;
+    }
+  }
+
+  saveAppLogs({String message = '', String userName = '',String version = '',String oSVersion = ''}) async {
+    try {
+      String userId = '';
+      String deviceName = '';
+      userId = CommonUtil().validString(userName ?? "");
+
+      deviceName = "${Platform.localHostname}";
+
+      if (userId.trim().isEmpty) {
+        userId = PreferenceUtil.getStringValue(KEY_USERID) ?? "";
+      }
+
+      var data = {
+        qr_userid: userId,
+        appName: constants.strSource,
+        strAppVersion: version != null ? ('v' + version) : '',
+        strOSVersion: CommonUtil().validString(oSVersion ?? ""),
+        strDeviceName: CommonUtil().validString(deviceName ?? ""),
+        strException: CommonUtil().validString(message ?? ""),
+      };
+      http.Response res = (await ApiServices.post(
+        Constants.BASE_URL + post_event_logapp_logs,
+        headers: <String, String>{c_content_type_key: c_content_type_val},
+        body: json.encode(data),
+      ))!;
+      if (res.statusCode == 200) {
+        CallLogResponseModel _response =
+            CallLogResponseModel.fromJson(convert.json.decode(res.body));
+        return _response.isSuccess;
+      } else {
+        CallLogErrorResponseModel error =
+            CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
+        return error.isSuccess;
+      }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 }

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'Result.dart';
 
 class NonAdheranceResponseModel {
@@ -12,13 +14,17 @@ class NonAdheranceResponseModel {
 }
 
   NonAdheranceResponseModel.fromJson(dynamic json) {
-    _isSuccess = json['isSuccess'];
-    _message = json['message'];
-    if (json['result'] != null) {
-      _result = [];
-      json['result'].forEach((v) {
-        _result!.add(Result.fromJson(v));
-      });
+    try {
+      _isSuccess = json['isSuccess'];
+      _message = json['message'];
+      if (json['result'] != null) {
+            _result = [];
+            json['result'].forEach((v) {
+              _result!.add(Result.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
   bool? _isSuccess;

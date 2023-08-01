@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ReferAFriendResponse {
   bool? isSuccess;
   List<Result>? result;
@@ -6,12 +8,16 @@ class ReferAFriendResponse {
   ReferAFriendResponse({this.isSuccess, this.result});
 
   ReferAFriendResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <Result>[];
-      json['result'].forEach((v) {
-        result!.add(Result.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <Result>[];
+            json['result'].forEach((v) {
+              result!.add(Result.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -34,10 +40,14 @@ class Result {
   Result({this.phoneNumber, this.name, this.isExistingUser, this.message});
 
   Result.fromJson(Map<String, dynamic> json) {
-    phoneNumber = json['phoneNumber'];
-    name = json['name'];
-    isExistingUser = json['isExistingUser'];
-    message = json['message'];
+    try {
+      phoneNumber = json['phoneNumber'];
+      name = json['name'];
+      isExistingUser = json['isExistingUser'];
+      message = json['message'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

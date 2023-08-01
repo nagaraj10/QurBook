@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'ProfilePicThumbnail.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 
@@ -43,26 +45,30 @@ class FamilyMemberData {
       this.status});
 
   FamilyMemberData.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    phoneNumber = json[parameters.strPhoneNumber];
-    email = json[parameters.strEmail];
-    createdOn = json[parameters.strCreatedOn];
-    isActive = json[parameters.strIsActive];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    name = json[parameters.strName];
-    gender = json[parameters.strGender];
-    isTempUser = json[parameters.strIstemper];
-    isVirtualUser = json[parameters.strisVirtualUser];
-    createdBy = json[parameters.strCreatedBy];
-    profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
-        ? ProfilePicThumbnail.fromJson(json[parameters.strprofilePicThumbnail])
-        : null;
-    bloodGroup = json[parameters.strbloodGroup];
-    dateOfBirth = json[parameters.strdateOfBirth];
-    isTokenRefresh = json[parameters.strisTokenRefresh];
-    countryCode = json[parameters.strCountryCode];
-    isEmailVerified = json[parameters.strisEmailVerified];
-    status = json[parameters.strStatus];
+    try {
+      id = json[parameters.strId];
+      phoneNumber = json[parameters.strPhoneNumber];
+      email = json[parameters.strEmail];
+      createdOn = json[parameters.strCreatedOn];
+      isActive = json[parameters.strIsActive];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      name = json[parameters.strName];
+      gender = json[parameters.strGender];
+      isTempUser = json[parameters.strIstemper];
+      isVirtualUser = json[parameters.strisVirtualUser];
+      createdBy = json[parameters.strCreatedBy];
+      profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
+              ? ProfilePicThumbnail.fromJson(json[parameters.strprofilePicThumbnail])
+              : null;
+      bloodGroup = json[parameters.strbloodGroup];
+      dateOfBirth = json[parameters.strdateOfBirth];
+      isTokenRefresh = json[parameters.strisTokenRefresh];
+      countryCode = json[parameters.strCountryCode];
+      isEmailVerified = json[parameters.strisEmailVerified];
+      status = json[parameters.strStatus];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

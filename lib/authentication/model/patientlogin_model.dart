@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../constants/constants.dart';
 
 class PatientLogIn {
@@ -18,14 +20,19 @@ class PatientLogIn {
       this.diagnostics});
 
   PatientLogIn.fromJson(Map<String, dynamic> json) {
-    userName = json[struserName];
-    password = json[strpassword];
-    source = json[strsource];
-    message = json[strmessage];
-    isSuccess = json[strIsSuccess];
-    diagnostics = json['diagnostics'] != null
-        ? DiagnosticsLogin.fromJson(json['diagnostics'])
-        : null;
+    try {
+      userName = json[struserName];
+      password = json[strpassword];
+      source = json[strsource];
+      message = json[strmessage];
+      isSuccess = json[strIsSuccess];
+      diagnostics = json['diagnostics'] != null
+              ? DiagnosticsLogin.fromJson(json['diagnostics'])
+              : null;
+    } catch (e) {
+      CommonUtil()
+          .appLogs(message: e.toString(), userName: (json[struserName] ?? ""));
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -49,10 +56,14 @@ class DiagnosticsLogin {
   DiagnosticsLogin({this.errorData, this.includeErrorDataInResponse});
 
   DiagnosticsLogin.fromJson(Map<String, dynamic> json) {
-    errorData = json['errorData'] != null
-        ? ErrorDataLogin.fromJson(json['errorData'])
-        : null;
-    includeErrorDataInResponse = json['includeErrorDataInResponse'];
+    try {
+      errorData = json['errorData'] != null
+              ? ErrorDataLogin.fromJson(json['errorData'])
+              : null;
+      includeErrorDataInResponse = json['includeErrorDataInResponse'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -73,9 +84,13 @@ class ErrorDataLogin {
   ErrorDataLogin({this.userId, this.userName, this.source});
 
   ErrorDataLogin.fromJson(Map<String, dynamic> json) {
-    userId = json['userId'];
-    userName = json['userName'];
-    source = json['source'];
+    try {
+      userId = json['userId'];
+      userName = json['userName'];
+      source = json['source'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

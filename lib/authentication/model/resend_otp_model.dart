@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../constants/constants.dart';
 
 class ResendOtpModel {
@@ -10,11 +12,15 @@ class ResendOtpModel {
   ResendOtpModel({this.userName, this.source, this.userId, this.message, this.isSuccess});
 
   ResendOtpModel.fromJson(Map<String, dynamic> json) {
-    userName = json[struserName];
-    source = json[strsource];
-    userId = json[strUserId];
-    message = json[strmessage];
-    isSuccess = json[strIsSuccess];
+    try {
+      userName = json[struserName];
+      source = json[strsource];
+      userId = json[strUserId];
+      message = json[strmessage];
+      isSuccess = json[strIsSuccess];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

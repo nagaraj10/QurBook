@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Languages {
@@ -8,8 +9,12 @@ class Languages {
   Languages({this.languageId, this.name});
 
   Languages.fromJson(Map<String, dynamic> json) {
-    languageId = json[parameters.strlanguageId];
-    name = json[parameters.strName];
+    try {
+      languageId = json[parameters.strlanguageId];
+      name = json[parameters.strName];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

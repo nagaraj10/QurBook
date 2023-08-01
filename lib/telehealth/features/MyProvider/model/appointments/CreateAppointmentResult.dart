@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentInfoModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/PayloadModel.dart';
@@ -10,12 +11,16 @@ class CreateAppointmentResult {
   CreateAppointmentResult({this.appointmentInfo, this.paymentInfo});
 
   CreateAppointmentResult.fromJson(Map<String, dynamic> json) {
-    appointmentInfo = json[strAppointmentInfo] != null
-        ? new AppointmentInfoModel.fromJson(json[strAppointmentInfo])
-        : null;
-    paymentInfo = json[strPaymentInfo] != null
-        ? new PaymentInfo.fromJson(json[strPaymentInfo])
-        : null;
+    try {
+      appointmentInfo = json[strAppointmentInfo] != null
+              ? new AppointmentInfoModel.fromJson(json[strAppointmentInfo])
+              : null;
+      paymentInfo = json[strPaymentInfo] != null
+              ? new PaymentInfo.fromJson(json[strPaymentInfo])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -37,9 +42,13 @@ class PaymentInfo {
   PaymentInfo({this.isSuccess, this.payload});
 
   PaymentInfo.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    payload =
-    json['payload'] != null ? new PayloadModel.fromJson(json['payload']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      payload =
+          json['payload'] != null ? new PayloadModel.fromJson(json['payload']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class NotificationResponseText {
   String? code;
   String? message;
@@ -6,8 +8,12 @@ class NotificationResponseText {
   NotificationResponseText({this.code, this.message});
 
   NotificationResponseText.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    message = json['message'];
+    try {
+      code = json['code'];
+      message = json['message'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

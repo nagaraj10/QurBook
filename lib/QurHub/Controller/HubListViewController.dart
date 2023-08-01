@@ -53,6 +53,8 @@ class HubListViewController extends GetxController {
       hubListResponse = HubListResponse.fromJson(json.decode(response.body));
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       hubListResponse = null;
       print(e.toString());
       loadingData.value = false;
@@ -85,6 +87,8 @@ class HubListViewController extends GetxController {
         return false;
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       FlutterToast().getToast(
         CommonUtil().validString(
           e.toString(),
@@ -153,6 +157,8 @@ class HubListViewController extends GetxController {
         },
       );
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       printError(info: e.toString());
       searchingBleDevice.value = false;
     }
@@ -169,6 +175,8 @@ class HubListViewController extends GetxController {
       await Future.delayed(Duration(microseconds: 10));
       getHubList();
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       printError(info: e.toString());
       loadingData.value = false;
     }

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class MedicalCouncilInfo {
@@ -9,9 +10,13 @@ class MedicalCouncilInfo {
   MedicalCouncilInfo({this.name, this.isActive, this.description});
 
   MedicalCouncilInfo.fromJson(Map<String, dynamic> json) {
-    name = json[parameters.strName];
-    isActive = json[parameters.strIsActive];
-    description = json[parameters.strDescription];
+    try {
+      name = json[parameters.strName];
+      isActive = json[parameters.strIsActive];
+      description = json[parameters.strDescription];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

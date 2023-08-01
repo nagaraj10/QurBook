@@ -1,5 +1,6 @@
-
 import 'dart:async';
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../model/bookmarkRequest.dart';
 import '../model/bookmarkResponse.dart';
 import '../services/bookmark_repository.dart';
@@ -41,6 +42,7 @@ class BookmarkRecordBloc with Validators implements BaseBloc {
       bookmarkResponse =
           await _bookmarkRepository.bookmarkRecordForIds(jsonString);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       bookmarkSink.add(ApiResponse.error(e.toString()));
     }
     return bookmarkResponse;

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/referenceData.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
@@ -27,18 +28,22 @@ class RefundStatus {
       this.referenceData});
 
   RefundStatus.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    code = json[parameters.strCode];
-    name = json[parameters.strName];
-    description = json[parameters.strDescription];
-    sortOrder = json[parameters.strSortOrder];
-    isActive = json[parameters.strIsActive];
-    createdBy = json[parameters.strCreatedBy];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    referenceData = json[parameters.strReferenceData] != null
-        ? new ReferenceData.fromJson(json[parameters.strReferenceData])
-        : null;
+    try {
+      id = json[parameters.strId];
+      code = json[parameters.strCode];
+      name = json[parameters.strName];
+      description = json[parameters.strDescription];
+      sortOrder = json[parameters.strSortOrder];
+      isActive = json[parameters.strIsActive];
+      createdBy = json[parameters.strCreatedBy];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      referenceData = json[parameters.strReferenceData] != null
+              ? new ReferenceData.fromJson(json[parameters.strReferenceData])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

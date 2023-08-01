@@ -1,3 +1,4 @@
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../constants/fhb_parameters.dart';
 
@@ -75,7 +76,8 @@ class GoogleFitData {
   Future<String?> getWeightSummary(String startTime, String endTime) async {
     try {
       var jsonBody = getDataSourceBody(startTime, endTime, gfWeight);
-      final String response = await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
+      final String response =
+          await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
 
       var responseHandler = ResponseFromJson(response);
       final healthRecord = Map<String, dynamic>();
@@ -128,7 +130,8 @@ class GoogleFitData {
   Future<String?> getBPSummary(String startTime, String endTime) async {
     try {
       final jsonBody = getDataSourceBody(startTime, endTime, gfBloodPressure);
-      final String response = await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
+      final String response =
+          await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
 
       var responseHandler = ResponseFromJson(response);
       final Map<String, dynamic> healthRecord = {};
@@ -173,6 +176,7 @@ class GoogleFitData {
         return params;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       return strDataTypeBP;
     }
   }
@@ -181,7 +185,8 @@ class GoogleFitData {
       String startTime, String endTime) async {
     try {
       final jsonBody = getDataSourceBody(startTime, endTime, gfBloodGlucose);
-      final String response = await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
+      final String response =
+          await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
 
       var responseHandler = ResponseFromJson(response);
       final Map<String, dynamic> healthRecord = {};
@@ -208,7 +213,8 @@ class GoogleFitData {
         for (var dataset in bucket.dataset!) {
           for (final point in dataset.point!) {
             final rawData = Map<String, dynamic>();
-            var timestampString = getFormatedDateFromNano(point.startTimeNanos!);
+            var timestampString =
+                getFormatedDateFromNano(point.startTimeNanos!);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
             rawData[strStartTimeStampNano] = point.startTimeNanos;
@@ -228,6 +234,8 @@ class GoogleFitData {
         return params;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return strGlusoceLevel;
     }
   }
@@ -235,7 +243,8 @@ class GoogleFitData {
   Future<String?> getBodyTempSummary(String startTime, String endTime) async {
     try {
       var jsonBody = getDataSourceBody(startTime, endTime, gfBodyTemperature);
-      final String response = await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
+      final String response =
+          await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
 
       var responseHandler = ResponseFromJson(response);
       final Map<String, dynamic> healthRecord = {};
@@ -262,7 +271,8 @@ class GoogleFitData {
         for (var dataset in bucket.dataset!) {
           for (var point in dataset.point!) {
             var rawData = Map<String, dynamic>();
-            var timestampString = getFormatedDateFromNano(point.startTimeNanos!);
+            var timestampString =
+                getFormatedDateFromNano(point.startTimeNanos!);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
             rawData[strStartTimeStampNano] = point.startTimeNanos;
@@ -280,6 +290,8 @@ class GoogleFitData {
         return params;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return strTemperature;
     }
   }
@@ -288,7 +300,8 @@ class GoogleFitData {
       String startTime, String endTime) async {
     try {
       var jsonBody = getDataSourceBody(startTime, endTime, gfOxygenSaturation);
-      final String response = await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
+      final String response =
+          await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
 
       var responseHandler = ResponseFromJson(response);
       final healthRecord = Map<String, dynamic>();
@@ -334,6 +347,8 @@ class GoogleFitData {
         return params;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return strOxgenSaturation;
     }
   }
@@ -341,7 +356,8 @@ class GoogleFitData {
   Future<String?> getHeartRateSummary(String startTime, String endTime) async {
     try {
       final jsonBody = getDataSourceBody(startTime, endTime, gfHeartRate);
-      final String response = await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
+      final String response =
+          await (_signInHelper.getDataAggregate(jsonBody) as FutureOr<String>);
 
       var responseHandler = ResponseFromJson(response);
       final Map<String, dynamic> healthRecord = {};
@@ -386,6 +402,8 @@ class GoogleFitData {
         return params;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return strHeartRate;
     }
   }

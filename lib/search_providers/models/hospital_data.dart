@@ -56,31 +56,35 @@ class HospitalData {
       this.lastModifiedOn});
 
   HospitalData.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    createdBy = json[parameters.strCreatedBy];
-    name = json[parameters.strName];
-    phoneNumber1 = json[parameters.strPhoneNumber1];
-    phoneNumber2 = json[parameters.strPhoneNumber2];
-    phoneNumber3 = json[parameters.strPhoneNumber3];
-    phoneNumber4 = json[parameters.strPhoneNumber4];
-    addressLine1 = json[parameters.strAddressLine1];
-    addressLine2 = json[parameters.strAddressLine2];
-    city = json[parameters.strCity];
-    state = json[parameters.strState];
-    latitude = json[parameters.strLatitude];
-    longitude = json[parameters.strLongitute];
-    logo = json[parameters.strLogo];
-    logoThumbnail = json[parameters.strLogothumbnail];
-    zipCode = json[parameters.strZipcode];
-    website = json[parameters.strWebsite];
-    email = json[parameters.strEmail];
-    googleMapUrl = json[parameters.strGoogleMapUrl];
-    branch = json[parameters.strBranch];
-    isUserDefined = json[parameters.strIsUserDefined];
-    description = json[parameters.strDescription];
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
+    try {
+      id = json[parameters.strId];
+      createdBy = json[parameters.strCreatedBy];
+      name = json[parameters.strName];
+      phoneNumber1 = json[parameters.strPhoneNumber1];
+      phoneNumber2 = json[parameters.strPhoneNumber2];
+      phoneNumber3 = json[parameters.strPhoneNumber3];
+      phoneNumber4 = json[parameters.strPhoneNumber4];
+      addressLine1 = json[parameters.strAddressLine1];
+      addressLine2 = json[parameters.strAddressLine2];
+      city = json[parameters.strCity];
+      state = json[parameters.strState];
+      latitude = json[parameters.strLatitude];
+      longitude = json[parameters.strLongitute];
+      logo = json[parameters.strLogo];
+      logoThumbnail = json[parameters.strLogothumbnail];
+      zipCode = json[parameters.strZipcode];
+      website = json[parameters.strWebsite];
+      email = json[parameters.strEmail];
+      googleMapUrl = json[parameters.strGoogleMapUrl];
+      branch = json[parameters.strBranch];
+      isUserDefined = json[parameters.strIsUserDefined];
+      description = json[parameters.strDescription];
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

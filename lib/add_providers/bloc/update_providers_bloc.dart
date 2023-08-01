@@ -1,5 +1,6 @@
-
 import 'dart:async';
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../models/update_providers_id.dart';
 import '../services/update_providers_repository.dart';
@@ -21,27 +22,33 @@ class UpdateProvidersBloc implements BaseBloc {
   late StreamController doctorsProvidersController;
 
   StreamSink<ApiResponse<UpdateProvidersId>> get doctorsSink =>
-      doctorsProvidersController.sink as StreamSink<ApiResponse<UpdateProvidersId>>;
+      doctorsProvidersController.sink
+          as StreamSink<ApiResponse<UpdateProvidersId>>;
   Stream<ApiResponse<UpdateProvidersId>> get doctorsStream =>
-      doctorsProvidersController.stream as Stream<ApiResponse<UpdateProvidersId>>;
+      doctorsProvidersController.stream
+          as Stream<ApiResponse<UpdateProvidersId>>;
 
   // 2
   // Hospitals
   late StreamController hospitalsProvidersController;
 
   StreamSink<ApiResponse<UpdateProvidersId>> get hospitalsSink =>
-      hospitalsProvidersController.sink as StreamSink<ApiResponse<UpdateProvidersId>>;
+      hospitalsProvidersController.sink
+          as StreamSink<ApiResponse<UpdateProvidersId>>;
   Stream<ApiResponse<UpdateProvidersId>> get hospitalsStream =>
-      hospitalsProvidersController.stream as Stream<ApiResponse<UpdateProvidersId>>;
+      hospitalsProvidersController.stream
+          as Stream<ApiResponse<UpdateProvidersId>>;
 
   // 3
   // Labs
   StreamController? labsProvidersController;
 
   StreamSink<ApiResponse<UpdateProvidersId>> get labsSink =>
-      hospitalsProvidersController.sink as StreamSink<ApiResponse<UpdateProvidersId>>;
+      hospitalsProvidersController.sink
+          as StreamSink<ApiResponse<UpdateProvidersId>>;
   Stream<ApiResponse<UpdateProvidersId>> get labsStream =>
-      hospitalsProvidersController.stream as Stream<ApiResponse<UpdateProvidersId>>;
+      hospitalsProvidersController.stream
+          as Stream<ApiResponse<UpdateProvidersId>>;
 
   UpdateProvidersBloc() {
     updateProvidersRepository = UpdateProvidersRepository();
@@ -103,7 +110,8 @@ class UpdateProvidersBloc implements BaseBloc {
 
   // 1
   // Doctors
-  Future<UpdateProvidersId?> updateDoctorsIdWithUserDetails({bool? isPAR}) async {
+  Future<UpdateProvidersId?> updateDoctorsIdWithUserDetails(
+      {bool? isPAR}) async {
     doctorsSink.add(ApiResponse.loading(variable.strUpdatingDoctor));
     UpdateProvidersId? updateProvidersId;
     try {
@@ -117,6 +125,7 @@ class UpdateProvidersBloc implements BaseBloc {
               isPAR: isPAR);
 //      doctorsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       doctorsSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -138,6 +147,7 @@ class UpdateProvidersBloc implements BaseBloc {
               selectedCategories);
       hospitalsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       hospitalsSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -159,6 +169,7 @@ class UpdateProvidersBloc implements BaseBloc {
               selectedCategories);
       labsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       labsSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -174,6 +185,7 @@ class UpdateProvidersBloc implements BaseBloc {
           .updateHospitalsIdWithUserDetails(providerId, false, '', userId, []);
 //      doctorsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       doctorsSink.add(ApiResponse.error(e.toString()));
     }
 

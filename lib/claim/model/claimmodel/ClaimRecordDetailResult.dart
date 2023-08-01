@@ -1,5 +1,6 @@
 
 import 'package:myfhb/claim/model/claimmodel/DocumentMetadata.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class ClaimRecordDetailsResult {
   dynamic claimId;
@@ -47,35 +48,39 @@ class ClaimRecordDetailsResult {
         this.remark,this.planName,this.planDescription,this.approvedAmount});
 
   ClaimRecordDetailsResult.fromJson(Map<dynamic, dynamic> json) {
-    claimId = json['claimId'];
-    claimNumber = json['claimNumber'];
-    submitDate = json['submitDate'];
-    if (json['documentMetadata'] != null) {
-      documentMetadata = <DocumentMetadata>[];
-      json['documentMetadata'].forEach((v) {
-        documentMetadata!.add(new DocumentMetadata.fromJson(v));
-      });
-    }
-    submittedBy = json['submittedBy'];
-    submittedByFirstName = json['submittedByFirstName'];
-    submittedByMiddleName = json['submittedByMiddleName'];
-    submittedByLastName = json['submittedByLastName'];
-    submittedFor = json['submittedFor'];
-    submittedForFirstName = json['submittedForFirstName'];
-    submittedForMiddleName = json['submittedForMiddleName'];
-    submittedForLastName = json['submittedForLastName'];
-    isSignedIn = json['isSignedIn'];
-    healthOrganizationId = json['healthOrganizationId'];
-    phoneNumber = json['phoneNumber'];
-    status = json['status'];
-    statusCode = json['statusCode'];
-    healthOrganizationName = json['healthOrganizationName'];
-    remark = json['remark'];
-    planName = json['planName'];
-    planDescription = json['planDescription'];
-    if(json.containsKey('approvedAmount')){
-      approvedAmount = json['approvedAmount'];
+    try {
+      claimId = json['claimId'];
+      claimNumber = json['claimNumber'];
+      submitDate = json['submitDate'];
+      if (json['documentMetadata'] != null) {
+            documentMetadata = <DocumentMetadata>[];
+            json['documentMetadata'].forEach((v) {
+              documentMetadata!.add(new DocumentMetadata.fromJson(v));
+            });
+          }
+      submittedBy = json['submittedBy'];
+      submittedByFirstName = json['submittedByFirstName'];
+      submittedByMiddleName = json['submittedByMiddleName'];
+      submittedByLastName = json['submittedByLastName'];
+      submittedFor = json['submittedFor'];
+      submittedForFirstName = json['submittedForFirstName'];
+      submittedForMiddleName = json['submittedForMiddleName'];
+      submittedForLastName = json['submittedForLastName'];
+      isSignedIn = json['isSignedIn'];
+      healthOrganizationId = json['healthOrganizationId'];
+      phoneNumber = json['phoneNumber'];
+      status = json['status'];
+      statusCode = json['statusCode'];
+      healthOrganizationName = json['healthOrganizationName'];
+      remark = json['remark'];
+      planName = json['planName'];
+      planDescription = json['planDescription'];
+      if(json.containsKey('approvedAmount')){
+            approvedAmount = json['approvedAmount'];
 
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

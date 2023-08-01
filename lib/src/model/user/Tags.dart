@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class Tags {
   String? id;
   String? name;
@@ -8,11 +10,15 @@ class Tags {
   Tags({this.id, this.name,this.isChecked});
 
   Tags.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    if(json.containsKey('code')){
-      code = json['code'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      if(json.containsKey('code')){
+            code = json['code'];
 
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class DoctorImageResponse {
   int? status;
   bool? success;
@@ -7,9 +9,13 @@ class DoctorImageResponse {
   DoctorImageResponse({this.status, this.success, this.response});
 
   DoctorImageResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    response = json['response'];
+    try {
+      status = json['status'];
+      success = json['success'];
+      response = json['response'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

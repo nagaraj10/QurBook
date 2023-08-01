@@ -642,6 +642,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             });*/
 
         } catch (e) {
+                CommonUtil().appLogs(message: e.toString());
           print('$e exception thrown');
         }
       }
@@ -1615,6 +1616,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       });
       return isAudioDownload;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       return isAudioDownload;
     }
@@ -1683,6 +1686,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         var value = toBeginningOfSentenceCase(spilit[1])! + '_' + spilit[0];
         return value;
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         return pdfFileName = pdfFileName.replaceAll('.pdf', '');
       }
     }

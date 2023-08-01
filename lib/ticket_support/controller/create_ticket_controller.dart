@@ -50,6 +50,8 @@ class CreateTicketController extends GetxController {
       super.onClose();
     } catch (e) {
       print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -59,6 +61,8 @@ class CreateTicketController extends GetxController {
       super.onInit();
     } catch (e) {
       print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -94,6 +98,8 @@ class CreateTicketController extends GetxController {
       labsList!.insert(0, new Hospitals(name: 'Select'));
       isCTLoading.value = false;
       isPreferredLabDisable.value = true;
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -131,6 +137,8 @@ class CreateTicketController extends GetxController {
       doctorsList!.insert(0, new Doctors(user: User(name: 'Select')));
       isCTLoading.value = false;
       isPreferredDoctorDisable.value = true;
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -162,6 +170,8 @@ class CreateTicketController extends GetxController {
 
       isCTLoading.value = false;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         print(e.toString());
       }

@@ -342,6 +342,7 @@ class _ClaimListState extends State<ClaimList> {
         isCreditBalnceZero = false;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       ClaimAmount = "";
       isCreditBalnceZero = false;
     }
@@ -425,6 +426,7 @@ class _ClaimListState extends State<ClaimList> {
         setCategoryId(categoryDataList);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       _categoryListBlock = new CategoryListBlock();
       _categoryListBlock.getCategoryLists();
 
@@ -614,6 +616,7 @@ class _ClaimListState extends State<ClaimList> {
 
         return df.format(now);
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
         return "";
       }
     } else {
@@ -632,6 +635,7 @@ class _ClaimListState extends State<ClaimList> {
 
         return df.format(now);
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
         return "";
       }
     } else {

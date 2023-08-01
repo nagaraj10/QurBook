@@ -1,5 +1,6 @@
-
 import 'dart:async';
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import 'fetchGoogleFitData.dart';
 import '../../src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
@@ -44,7 +45,8 @@ class SyncGoogleFitData {
       throw 'GoogleFit is deactivated. Please activate and sync again';
     }
 
-    final DateTime? lastSynctime = await (getLastSynctime() as FutureOr<DateTime?>);
+    final DateTime? lastSynctime =
+        await (getLastSynctime() as FutureOr<DateTime?>);
 
     endTime = DateTime.now().millisecondsSinceEpoch.toString();
     final currentdate = DateTime.now();
@@ -134,6 +136,8 @@ class SyncGoogleFitData {
 
       return response;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       rethrow;
     }
   }
@@ -150,6 +154,8 @@ class SyncGoogleFitData {
         return null;
       }
       return lastSync.result!.lastSyncDateTime;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 }

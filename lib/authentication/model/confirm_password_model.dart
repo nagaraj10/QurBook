@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../constants/constants.dart';
 
 class PatientConfirmPasswordModel {
@@ -18,12 +20,16 @@ class PatientConfirmPasswordModel {
       this.isSuccess});
 
   PatientConfirmPasswordModel.fromJson(Map<String, dynamic> json) {
-    verificationCode = json[strverificationCode];
-    userName = json[struserName];
-    password = json[strpassword];
-    source = json[strsource];
-    message = json[strmessage];
-    isSuccess = json[strIsSuccess];
+    try {
+      verificationCode = json[strverificationCode];
+      userName = json[struserName];
+      password = json[strpassword];
+      source = json[strsource];
+      message = json[strmessage];
+      isSuccess = json[strIsSuccess];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

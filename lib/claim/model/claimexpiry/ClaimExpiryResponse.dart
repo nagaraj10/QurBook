@@ -1,5 +1,6 @@
 
 import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryResult.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class ClaimExpiryResponse {
   bool? isSuccess;
@@ -9,17 +10,21 @@ class ClaimExpiryResponse {
   ClaimExpiryResponse({this.isSuccess, this.result});
 
   ClaimExpiryResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json.containsKey('message')) {
-      message = json['message'];
-    }
-    if (json.containsKey('result')) {
-      if (json['result'] != null) {
-        result = <ClaimExpiryResult>[];
-        json['result'].forEach((v) {
-          result!.add(new ClaimExpiryResult.fromJson(v));
-        });
-      }
+    try {
+      isSuccess = json['isSuccess'];
+      if (json.containsKey('message')) {
+            message = json['message'];
+          }
+      if (json.containsKey('result')) {
+            if (json['result'] != null) {
+              result = <ClaimExpiryResult>[];
+              json['result'].forEach((v) {
+                result!.add(new ClaimExpiryResult.fromJson(v));
+              });
+            }
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

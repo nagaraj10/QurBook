@@ -1,4 +1,4 @@
-
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/feedback/Model/FeedbackCategoriesTypeModel.dart';
 import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import 'package:myfhb/feedback/Provider/FeedbackApiProvider.dart';
@@ -19,7 +19,7 @@ class FeedbackController extends GetxController {
       loadingData.value = true;
       // Response responseCat = await (_apiProvider.getFeedbackCat() );
       // Response response = await (_apiProvider.getFeedbacktypes() );
-       http.Response responseCat = await _apiProvider.getFeedbackCat();
+      http.Response responseCat = await _apiProvider.getFeedbackCat();
       http.Response response = await _apiProvider.getFeedbacktypes();
       if (response == null || responseCat == null) {
         // failed to get the data, we are showing the error on UI
@@ -29,6 +29,8 @@ class FeedbackController extends GetxController {
       }
       loadingData.value = false;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       loadingData.value = false;
     }

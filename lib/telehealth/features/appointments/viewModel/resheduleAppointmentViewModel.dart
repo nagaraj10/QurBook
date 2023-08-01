@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/appointments/services/reshedule_appointment_service.dart';
 
@@ -15,6 +16,9 @@ class ResheduleAppointmentViewModel extends ChangeNotifier {
           bookingId as List<String>, slotNumber, resheduleDate, doctorSessionId);
       resheduleAppointmentModel = resheduleAp;
       return resheduleAppointmentModel;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 }

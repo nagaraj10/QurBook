@@ -45,33 +45,37 @@ class AddMoreData {
       this.lastModifiedOn});
 
   AddMoreData.fromJson(Map<String, dynamic> json) {
-    final commonUtil = CommonUtil();
-    id = json[parameters.strId];
-    name = json[parameters.strName];
-    addressLine1 =
-        commonUtil.checkIfStringIsEmpty(json[parameters.strAddressLine1]);
-    addressLine2 =
-        commonUtil.checkIfStringIsEmpty(json[parameters.strAddressLine2]);
-    website = commonUtil.checkIfStringIsEmpty(json[parameters.strWebsite]);
-    googleMapUrl =
-        commonUtil.checkIfStringIsEmpty(json[parameters.strGoogleMapUrl]);
-    phoneNumber1 =
-        commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber1]);
-    phoneNumber2 =
-        commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber2]);
-    phoneNumber3 =
-        commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber3]);
-    phoneNumber4 =
-        commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber4]);
-    email = json[parameters.strEmail];
-    state = json[parameters.strState];
-    city = json[parameters.strCity];
-    isActive = json[parameters.strIsActive];
-    specialization = json[parameters.strSpecilization];
-    isUserDefined = json[parameters.strIsUserDefined];
-    description = json[parameters.strDescription];
-    createdBy = json[parameters.strCreatedBy];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
+    try {
+      final commonUtil = CommonUtil();
+      id = json[parameters.strId];
+      name = json[parameters.strName];
+      addressLine1 =
+              commonUtil.checkIfStringIsEmpty(json[parameters.strAddressLine1]);
+      addressLine2 =
+              commonUtil.checkIfStringIsEmpty(json[parameters.strAddressLine2]);
+      website = commonUtil.checkIfStringIsEmpty(json[parameters.strWebsite]);
+      googleMapUrl =
+              commonUtil.checkIfStringIsEmpty(json[parameters.strGoogleMapUrl]);
+      phoneNumber1 =
+              commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber1]);
+      phoneNumber2 =
+              commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber2]);
+      phoneNumber3 =
+              commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber3]);
+      phoneNumber4 =
+              commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber4]);
+      email = json[parameters.strEmail];
+      state = json[parameters.strState];
+      city = json[parameters.strCity];
+      isActive = json[parameters.strIsActive];
+      specialization = json[parameters.strSpecilization];
+      isUserDefined = json[parameters.strIsUserDefined];
+      description = json[parameters.strDescription];
+      createdBy = json[parameters.strCreatedBy];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

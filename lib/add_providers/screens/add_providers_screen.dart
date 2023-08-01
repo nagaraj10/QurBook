@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:typed_data';
@@ -181,8 +180,7 @@ class AddProvidersState extends State<AddProviders> {
         selectedCategories = widget.arguments?.doctorsModel?.sharedCategories;
       }
       if (widget.arguments!.searchKeyWord == CommonConstants.hospitals) {
-        selectedCategories =
-            widget.arguments?.hospitalsModel?.sharedCategories;
+        selectedCategories = widget.arguments?.hospitalsModel?.sharedCategories;
       }
       if (widget.arguments!.searchKeyWord == CommonConstants.labs) {
         selectedCategories = widget.arguments?.labsModel?.sharedCategories;
@@ -194,6 +192,7 @@ class AddProvidersState extends State<AddProviders> {
 
       buildUI();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -455,7 +454,8 @@ class AddProvidersState extends State<AddProviders> {
       }
     } else {
       if (widget.arguments!.searchKeyWord == CommonConstants.doctors) {
-        doctorController.text = (widget.arguments!.doctorsModel!.user!.name != null
+        doctorController.text = (widget.arguments!.doctorsModel!.user!.name !=
+                null
             ? widget.arguments?.doctorsModel?.user?.name
                 ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.doctorsModel.user.name)
             : '')!;
@@ -509,7 +509,9 @@ class AddProvidersState extends State<AddProviders> {
               CameraPosition(target: center, zoom: 12, bearing: 45, tilt: 45)));
         }
       });
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   getCurrentLocation() async {
@@ -581,7 +583,9 @@ class AddProvidersState extends State<AddProviders> {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       primaryUserProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     return InkWell(
         onTap: () {
           CommonUtil.showLoadingDialog(
@@ -634,7 +638,8 @@ class AddProvidersState extends State<AddProviders> {
                               child: Text(
                                 (selectedFamilyMemberName == null
                                     ? myProfile!.result?.lastName!.toUpperCase()
-                                    : selectedFamilyMemberName![0].toUpperCase())!,
+                                    : selectedFamilyMemberName![0]
+                                        .toUpperCase())!,
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
                                     color: Color(
@@ -826,6 +831,7 @@ class AddProvidersState extends State<AddProviders> {
         try {
           labBookAppointmentBtnTapped();
         } catch (e) {
+          CommonUtil().appLogs(message: e.toString());
           print(e);
         }
       },
@@ -889,6 +895,7 @@ class AddProvidersState extends State<AddProviders> {
             Colors.red);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -900,13 +907,11 @@ class AddProvidersState extends State<AddProviders> {
           if (!snapshot.hasData) return Container();
 
           // if (snapshot.data.status == Status.COMPLETED) {
-                      if (snapshot.connectionState  == ConnectionState.done) {
-
+          if (snapshot.connectionState == ConnectionState.done) {
             updateProvidersBloc.isPreferred = isPreferred;
-            var streamData =  snapshot.data! as AddDoctorsProvidersId;
-            updateProvidersBloc.providerId =
-               streamData.response!.data!.id;
-              
+            var streamData = snapshot.data! as AddDoctorsProvidersId;
+            updateProvidersBloc.providerId = streamData.response!.data!.id;
+
             updateDoctorsIdWithUserDetails();
 
             CommonUtil().getMedicalPreference();
@@ -924,12 +929,11 @@ class AddProvidersState extends State<AddProviders> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Container();
 
-        //  if (snapshot.data.status == Status.COMPLETED) {
-               if (snapshot.connectionState  == ConnectionState.done) {
+          //  if (snapshot.data.status == Status.COMPLETED) {
+          if (snapshot.connectionState == ConnectionState.done) {
             updateProvidersBloc.isPreferred = isPreferred;
-               var streamData =  snapshot.data! as AddHospitalsProvidersId;
-            updateProvidersBloc.providerId =
-                 streamData.response!.data!.id; 
+            var streamData = snapshot.data! as AddHospitalsProvidersId;
+            updateProvidersBloc.providerId = streamData.response!.data!.id;
             updateHospitalsIdWithUserDetails();
 
             CommonUtil().getMedicalPreference();
@@ -947,12 +951,11 @@ class AddProvidersState extends State<AddProviders> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Container();
 
-         // if (snapshot.data.status == Status.COMPLETED) {
-           if (snapshot.connectionState  == ConnectionState.done) {
+          // if (snapshot.data.status == Status.COMPLETED) {
+          if (snapshot.connectionState == ConnectionState.done) {
             updateProvidersBloc.isPreferred = isPreferred;
-             var streamData =  snapshot.data! as AddLabsProvidersId;
-            updateProvidersBloc.providerId =
-                streamData.response!.data!.id;
+            var streamData = snapshot.data! as AddLabsProvidersId;
+            updateProvidersBloc.providerId = streamData.response!.data!.id;
             updateLabsIdWithUserDetails();
 
             CommonUtil().getMedicalPreference();
@@ -1004,7 +1007,7 @@ class AddProvidersState extends State<AddProviders> {
 
       if (CommonUtil.isUSRegion()) {
         closeScreenWhileSaveorAdd(3);
-      }else{
+      } else {
         Navigator.popUntil(context, (route) {
           var shouldPop = false;
           if (route.settings.name == routeClassName) {
@@ -1013,7 +1016,6 @@ class AddProvidersState extends State<AddProviders> {
           return shouldPop;
         });
       }
-
     });
   }
 
@@ -1030,7 +1032,7 @@ class AddProvidersState extends State<AddProviders> {
 
       if (CommonUtil.isUSRegion()) {
         closeScreenWhileSaveorAdd(3);
-      }else {
+      } else {
         Navigator.popUntil(context, (route) {
           var shouldPop = false;
           if (route.settings.name == routeClassName) {
@@ -1042,7 +1044,7 @@ class AddProvidersState extends State<AddProviders> {
     });
   }
 
-  closeScreenWhileSaveorAdd(int times){
+  closeScreenWhileSaveorAdd(int times) {
     Get.close(times);
   }
 
@@ -1075,8 +1077,8 @@ class AddProvidersState extends State<AddProviders> {
             updateProvidersBloc.providerReferenceId =
                 widget.arguments.data.doctorReferenceId;*/
             providerViewModel
-                .bookMarkDoctor(widget.arguments!.doctorsModel!, isPreferred, '',
-                    selectedCategories)
+                .bookMarkDoctor(widget.arguments!.doctorsModel!, isPreferred,
+                    '', selectedCategories)
                 .then((status) {
               if (status!) {
                 navigateToRefresh();
@@ -1097,8 +1099,8 @@ class AddProvidersState extends State<AddProviders> {
                widget.arguments.hospitalData.healthOrganizationReferenceId;*/
 
             providerViewModel
-                .bookMarkHealthOrg(widget.arguments!.hospitalsModel!, isPreferred,
-                    '', selectedCategories)
+                .bookMarkHealthOrg(widget.arguments!.hospitalsModel!,
+                    isPreferred, '', selectedCategories)
                 .then((status) {
               if (status!) {
                 navigateToRefresh();
@@ -1111,8 +1113,8 @@ class AddProvidersState extends State<AddProviders> {
             /*updateProvidersBloc.providerId = widget.arguments.labsModel.id;*/
 
             providerViewModel
-                .bookMarkHealthOrg(widget.arguments!.labsModel!, isPreferred, '',
-                    selectedCategories)
+                .bookMarkHealthOrg(widget.arguments!.labsModel!, isPreferred,
+                    '', selectedCategories)
                 .then((status) {
               if (status!) {
                 navigateToRefresh();
@@ -1136,7 +1138,8 @@ class AddProvidersState extends State<AddProviders> {
                     widget.arguments!.doctorsModel!.id;
                 updateProvidersBloc.providerReferenceId = null;
               } else {
-                updateProvidersBloc.providerId = widget.arguments!.data!.doctorId;
+                updateProvidersBloc.providerId =
+                    widget.arguments!.data!.doctorId;
                 updateProvidersBloc.providerReferenceId =
                     widget.arguments!.data!.doctorReferenceId;
               }
@@ -1350,9 +1353,10 @@ class AddProvidersState extends State<AddProviders> {
               widget.arguments!.placeDetail!.lat ?? 0.0;
           signInData[variable.strLongitute] =
               widget.arguments!.placeDetail!.lng ?? 0.0;
-          signInData[variable.strwebsite] = widget.arguments!.placeDetail == null
-              ? ''
-              : widget.arguments!.placeDetail!.website;
+          signInData[variable.strwebsite] =
+              widget.arguments!.placeDetail == null
+                  ? ''
+                  : widget.arguments!.placeDetail!.website;
 
           final jsonString = convert.jsonEncode(signInData);
           addProvidersBloc!.labsJsonString = jsonString;
@@ -1444,7 +1448,7 @@ class AddProvidersState extends State<AddProviders> {
   navigateToRefresh() {
     if (CommonUtil.isUSRegion()) {
       closeScreenWhileSaveorAdd(2);
-    }else{
+    } else {
       Navigator.popUntil(context, (route) {
         var shouldPop = false;
         var routeClassName = '';
@@ -1486,7 +1490,7 @@ class AddProvidersState extends State<AddProviders> {
           }
 
           var FutureDate = snapshot.data as MediaDataList;
-          final  MediaDataList mediaType = FutureDate ;
+          final MediaDataList mediaType = FutureDate;
           mediaType.result!
               .insert(0, MediaResult(name: 'ALL', isChecked: false, id: '1'));
           mediaType.result!.insert(

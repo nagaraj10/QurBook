@@ -1491,7 +1491,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void setValuesInEditText() async {
     try {
       languageModelList = await languageBlock.getLanguage();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     //* set the user data from input
     _addressList = await doctorPersonalViewModel.getAddressTypeList();
     if (widget.arguments!.fromClass == CommonConstants.user_update) {
@@ -1510,6 +1512,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 '';
           }
         } catch (e) {
+          CommonUtil().appLogs(message: e.toString());
           mobileNoController.text = '';
           emailController.text = '';
         }
@@ -1526,6 +1529,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   '';
             }
           } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
             mobileNoController.text = '';
             emailController.text = '';
           }
@@ -1558,6 +1562,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               }
             }
           } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
             if (widget.arguments!.myProfileResult!.userContactCollection3 !=
                     null &&
                 widget.arguments!.myProfileResult!.userContactCollection3!
@@ -1632,7 +1637,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               _addressResult = _addressList[0];
             });
             print('after try');
-          } catch (e) {}
+          } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+          }
         }
 
         if (widget.arguments!.myProfileResult!.firstName != null) {
@@ -1726,6 +1733,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 }
               }
             } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
               setMobileAndEmail();
             }
 
@@ -1740,7 +1748,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
                 if (preferredMesurement != null) {}
               }
-            } catch (e) {}
+            } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+            }
           } else {
             //! this must be loook
             if (widget.arguments!.sharedbyme!.child!.userContactCollection3!
@@ -1757,6 +1767,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             }
           }
         } catch (e) {
+          CommonUtil().appLogs(message: e.toString());
           mobileNoController.text = '';
           emailController.text = '';
         }
@@ -1869,7 +1880,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             setState(() {
               _addressResult = _addressList[0];
             });
-          } catch (e) {}
+          } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+          }
         }
 
         if (widget.arguments!.sharedbyme!.child!.dateOfBirth != null) {
@@ -1903,6 +1916,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             emailController.text =
                 myProf.result!.userContactCollection3![0]!.email ?? '';
           } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
             setMobileAndEmail();
           }
         } else {
@@ -1963,7 +1977,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           setState(() {
             _addressResult = _addressList[0];
           });
-        } catch (e) {}
+        } catch (e) {
+          CommonUtil().appLogs(message: e.toString());
+        }
         if (commonUtil.checkIfStringisNull(value.result!.bloodGroup)) {
           currentselectedBloodGroup = value.result!.bloodGroup!.split(' ')[0];
           currentselectedBloodGroupRange =
@@ -2242,7 +2258,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       /*profileResult.userProfileSettingCollection3 =
           userProfileSettingCollectionClone;*/
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     /*  }*/
 
     addFamilyUserInfoBloc!.tagsList = selectedTags;
@@ -3084,6 +3102,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         }
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
         var profileModel =
             await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
         if (profileModel!.result!.userProfileSettingCollection3 != null &&
@@ -3104,6 +3123,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             weightUnit = preferredMeasurment.weight?.unitCode;
             setHeightAndWeightUnit();
           } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
             setUnitBasedOnRegion();
           }
         }
@@ -3352,6 +3372,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             await profileSetting?.preferredMeasurement?.weight?.unitCode ?? '';
         setHeightAndWeightUnit();
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
         setUnitBasedOnRegion();
       }
     } else {

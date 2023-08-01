@@ -83,6 +83,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
       });
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -96,6 +97,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
           _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -108,7 +110,9 @@ class _MakeCallPageState extends State<MakeCallPage> {
         specialityName = /*await prefs.getString("speciality")*/ "";
         userIdForNotify =
             await PreferenceUtil.getStringValue(constants.KEY_USERID);
-      } catch (e) {}
+      } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
+      }
       switch (result) {
         case ConnectivityResult.wifi:
           setState(() {
@@ -163,6 +167,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
       }
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'Result.dart';
 
 class RemainderForModel {
@@ -10,12 +12,16 @@ class RemainderForModel {
 }
 
   RemainderForModel.fromJson(dynamic json) {
-    _isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      _result = [];
-      json['result'].forEach((v) {
-        _result!.add(Result.fromJson(v));
-      });
+    try {
+      _isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            _result = [];
+            json['result'].forEach((v) {
+              _result!.add(Result.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
   bool? _isSuccess;

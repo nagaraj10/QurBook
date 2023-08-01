@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as param;
 
 class BloodPressure {
@@ -77,16 +79,20 @@ class DeviceHealthRecord {
   DeviceHealthRecord({this.sourceType,this.heartRateCollection,this.createdOn});
 
   DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
-    sourceType = json['sourceType'] != null
-        ? SourceType.fromJson(json['sourceType'])
-        : null;
-    if (json['heartRateCollection'] != null) {
-      heartRateCollection = <HeartRateCollection>[];
-      json['heartRateCollection'].forEach((v) {
-        heartRateCollection!.add(HeartRateCollection.fromJson(v));
-      });
+    try {
+      sourceType = json['sourceType'] != null
+              ? SourceType.fromJson(json['sourceType'])
+              : null;
+      if (json['heartRateCollection'] != null) {
+            heartRateCollection = <HeartRateCollection>[];
+            json['heartRateCollection'].forEach((v) {
+              heartRateCollection!.add(HeartRateCollection.fromJson(v));
+            });
+          }
+      createdOn = DateTime.parse(json[param.strCreatedOn]);
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    createdOn = DateTime.parse(json[param.strCreatedOn]);
 
   }
 
@@ -121,13 +127,17 @@ class HeartRateCollection {
         this.averageAsOfNow});
 
   HeartRateCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    startDateTime = json['startDateTime'];
-    endDateTime = json['endDateTime'];
-    bpm = json['bpm'];
-    averageAsOfNow = json['averageAsOfNow'] != null
-        ? AverageAsOfNowPulse.fromJson(json['averageAsOfNow'])
-        : null;
+    try {
+      id = json['id'];
+      startDateTime = json['startDateTime'];
+      endDateTime = json['endDateTime'];
+      bpm = json['bpm'];
+      averageAsOfNow = json['averageAsOfNow'] != null
+              ? AverageAsOfNowPulse.fromJson(json['averageAsOfNow'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -149,7 +159,11 @@ class AverageAsOfNowPulse {
   AverageAsOfNowPulse({this.pulseAverage});
 
   AverageAsOfNowPulse.fromJson(Map<String, dynamic> json) {
-    pulseAverage = json['pulseAverage'];
+    try {
+      pulseAverage = json['pulseAverage'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -166,8 +180,12 @@ class AverageAsOfNow {
   AverageAsOfNow({this.systolicAverage, this.diastolicAverage});
 
   AverageAsOfNow.fromJson(Map<String, dynamic> json) {
-    systolicAverage = json['systolicAverage'];
-    diastolicAverage = json['diastolicAverage'];
+    try {
+      systolicAverage = json['systolicAverage'];
+      diastolicAverage = json['diastolicAverage'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -184,7 +202,11 @@ class SourceType {
   SourceType({this.code});
 
   SourceType.fromJson(Map<String, dynamic> json) {
-    code = json['name'];
+    try {
+      code = json['name'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

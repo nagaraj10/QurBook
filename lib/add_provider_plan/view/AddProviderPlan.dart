@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,10 +6,8 @@ import 'package:myfhb/add_provider_plan/model/AddProviderPlanResponse.dart';
 import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
 import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/widgets/Rounded_CheckBox.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
@@ -48,9 +45,11 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       mInitialTime = DateTime.now();
       providerOrganizationResult =
           Provider.of<PlanProviderViewModel>(context, listen: false)
-              .getCarePlanList(widget.selectedTag!) as Future<ProviderOrganisationResponse>?;
+                  .getCarePlanList(widget.selectedTag!)
+              as Future<ProviderOrganisationResponse>?;
       //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -67,6 +66,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
             '${DateTime.now().difference(mInitialTime).inSeconds} secs'
       });
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -118,6 +118,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         try {
           _addBtnTapped(providerList);
         } catch (e) {
+          CommonUtil().appLogs(message: e.toString());
           print(e);
         }
       },
@@ -213,6 +214,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       }
       setState(() {});
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -362,7 +364,9 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       if (planList.specialty != null && planList.specialty!.length > 0) {
         specialityName = planList.specialty![0].name;
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     return InkWell(
       onLongPress: () {},
       onTap: () {},
@@ -415,7 +419,6 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                   RoundedCheckBox(
                     isSelected: planList.isBookmarked,
                     onTap: () async {
-
                       planList.isBookmarked = !planList.isBookmarked!;
                       setState(() {});
                     },
@@ -446,6 +449,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         toast.getToast("Please select a provider", Colors.red);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -461,6 +465,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         }
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }
@@ -471,6 +476,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         mediaResultObj.isBookmarked = !isSelectedALL;
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       print(e);
     }
   }

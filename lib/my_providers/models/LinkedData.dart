@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class LinkedData {
@@ -11,10 +13,14 @@ class LinkedData {
       {this.nickName, this.customRoleId, this.roleName, this.modeOfShare});
 
   LinkedData.fromJson(Map<String, dynamic> json) {
-    nickName = json[parameters.strnickName];
-    customRoleId = json[parameters.strcustomRoleId];
-    roleName = json[parameters.strroleName];
-    modeOfShare = json[parameters.strmodeOfShare];
+    try {
+      nickName = json[parameters.strnickName];
+      customRoleId = json[parameters.strcustomRoleId];
+      roleName = json[parameters.strroleName];
+      modeOfShare = json[parameters.strmodeOfShare];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

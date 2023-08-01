@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/UserAddressCollection.dart';
 
 class DoctorListFromHospitalModel {
@@ -8,12 +9,16 @@ class DoctorListFromHospitalModel {
   DoctorListFromHospitalModel({this.isSuccess, this.result});
 
   DoctorListFromHospitalModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <ResultFromHospital>[];
-      json['result'].forEach((v) {
-        result!.add(new ResultFromHospital.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <ResultFromHospital>[];
+            json['result'].forEach((v) {
+              result!.add(new ResultFromHospital.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -53,24 +58,28 @@ class ResultFromHospital {
   });
 
   ResultFromHospital.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    startDate = json['startDate'];
-    endDate = json['endDate'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    doctor = json['doctor'] != null
-        ? new DoctorFromHos.fromJson(json['doctor'])
-        : null;
-    if (json['doctorFeeCollection'] != null) {
-      doctorFeeCollection = <DoctorFeeCollection>[];
-      json['doctorFeeCollection'].forEach((v) {
-        doctorFeeCollection!.add(new DoctorFeeCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      startDate = json['startDate'];
+      endDate = json['endDate'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      doctor = json['doctor'] != null
+              ? new DoctorFromHos.fromJson(json['doctor'])
+              : null;
+      if (json['doctorFeeCollection'] != null) {
+            doctorFeeCollection = <DoctorFeeCollection>[];
+            json['doctorFeeCollection'].forEach((v) {
+              doctorFeeCollection!.add(new DoctorFeeCollection.fromJson(v));
+            });
+          }
+      healthOrganization = json['healthOrganization'] != null
+              ? new HealthOrganization.fromJson(json['healthOrganization'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    healthOrganization = json['healthOrganization'] != null
-        ? new HealthOrganization.fromJson(json['healthOrganization'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -127,32 +136,36 @@ class DoctorFromHos {
   });
 
   DoctorFromHos.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    specialization = json['specialization'];
-    isTelehealthEnabled = json['isTelehealthEnabled'];
-    isMciVerified = json['isMciVerified'];
-    isActive = json['isActive'];
-    isWelcomeMailSent = json['isWelcomeMailSent'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    user =
-        json['user'] != null ? new UserResponse.fromJson(json['user']) : null;
-    if (json['doctorLanguageCollection'] != null) {
-      doctorLanguageCollection = <DoctorLanguageCollection>[];
-      json['doctorLanguageCollection'].forEach((v) {
-        doctorLanguageCollection!.add(new DoctorLanguageCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      specialization = json['specialization'];
+      isTelehealthEnabled = json['isTelehealthEnabled'];
+      isMciVerified = json['isMciVerified'];
+      isActive = json['isActive'];
+      isWelcomeMailSent = json['isWelcomeMailSent'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      user =
+              json['user'] != null ? new UserResponse.fromJson(json['user']) : null;
+      if (json['doctorLanguageCollection'] != null) {
+            doctorLanguageCollection = <DoctorLanguageCollection>[];
+            json['doctorLanguageCollection'].forEach((v) {
+              doctorLanguageCollection!.add(new DoctorLanguageCollection.fromJson(v));
+            });
+          }
+      if (json['doctorProfessionalDetailCollection'] != null) {
+            doctorProfessionalDetailCollection =
+                <DoctorProfessionalDetailCollection>[];
+            json['doctorProfessionalDetailCollection'].forEach((v) {
+              doctorProfessionalDetailCollection!
+                  .add(new DoctorProfessionalDetailCollection.fromJson(v));
+            });
+          }
+      isResident = json['isResident'] ?? false;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    if (json['doctorProfessionalDetailCollection'] != null) {
-      doctorProfessionalDetailCollection =
-          <DoctorProfessionalDetailCollection>[];
-      json['doctorProfessionalDetailCollection'].forEach((v) {
-        doctorProfessionalDetailCollection!
-            .add(new DoctorProfessionalDetailCollection.fromJson(v));
-      });
-    }
-    isResident = json['isResident'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -247,45 +260,49 @@ class UserResponse {
       this.userContactCollection3});
 
   UserResponse.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    userName = json['userName'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    dateOfBirth = json['dateOfBirth'];
-    bloodGroup = json['bloodGroup'];
-    countryCode = json['countryCode'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTempUser = json['isTempUser'];
-    isVirtualUser = json['isVirtualUser'];
-    isMigrated = json['isMigrated'];
-    isClaimed = json['isClaimed'];
-    isIeUser = json['isIeUser'];
-    isEmailVerified = json['isEmailVerified'];
-    isCpUser = json['isCpUser'];
-    communicationPreferences = json['communicationPreferences'];
-    medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    providerId = json['providerId'];
-    if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = <UserAddressCollectionForHospital>[];
-      json['userAddressCollection3'].forEach((v) {
-        userAddressCollection3!
-            .add(new UserAddressCollectionForHospital.fromJson(v));
-      });
-    }
-    if (json['userContactCollection3'] != null) {
-      userContactCollection3 = <UserContactCollection3>[];
-      json['userContactCollection3'].forEach((v) {
-        userContactCollection3!.add(new UserContactCollection3.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      name = json['name'];
+      userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      countryCode = json['countryCode'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTempUser = json['isTempUser'];
+      isVirtualUser = json['isVirtualUser'];
+      isMigrated = json['isMigrated'];
+      isClaimed = json['isClaimed'];
+      isIeUser = json['isIeUser'];
+      isEmailVerified = json['isEmailVerified'];
+      isCpUser = json['isCpUser'];
+      communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json['medicalPreferences'];
+      isSignedIn = json['isSignedIn'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      providerId = json['providerId'];
+      if (json['userAddressCollection3'] != null) {
+            userAddressCollection3 = <UserAddressCollectionForHospital>[];
+            json['userAddressCollection3'].forEach((v) {
+              userAddressCollection3!
+                  .add(new UserAddressCollectionForHospital.fromJson(v));
+            });
+          }
+      if (json['userContactCollection3'] != null) {
+            userContactCollection3 = <UserContactCollection3>[];
+            json['userContactCollection3'].forEach((v) {
+              userContactCollection3!.add(new UserContactCollection3.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -349,13 +366,17 @@ class UserContactCollection3 {
       this.email});
 
   UserContactCollection3.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    phoneNumber = json['phoneNumber'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    email = json['email'];
+    try {
+      id = json['id'];
+      phoneNumber = json['phoneNumber'];
+      isPrimary = json['isPrimary'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      email = json['email'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -386,13 +407,17 @@ class DoctorLanguageCollection {
       this.language});
 
   DoctorLanguageCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    language = json['language'] != null
-        ? new Language.fromJson(json['language'])
-        : null;
+    try {
+      id = json['id'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      language = json['language'] != null
+              ? new Language.fromJson(json['language'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -431,15 +456,19 @@ class Language {
       this.lastModifiedOn});
 
   Language.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -483,26 +512,30 @@ class DoctorProfessionalDetailCollection {
       this.lastModifiedOn});
 
   DoctorProfessionalDetailCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    qualificationInfo = json['qualificationInfo'] != null
-        ? new QualificationInfo.fromJson(json['qualificationInfo'])
-        : null;
+    try {
+      id = json['id'];
+      qualificationInfo = json['qualificationInfo'] != null
+              ? new QualificationInfo.fromJson(json['qualificationInfo'])
+              : null;
 /* medicalCouncilInfo = json['medicalCouncilInfo'] != null
         ? new MedicalCouncilInfo.fromJson(json['medicalCouncilInfo'])
         : null;*/
-    specialty = json['specialty'] != null
-        ? new Degree.fromJson(json['specialty'])
-        : null;
+      specialty = json['specialty'] != null
+              ? new Degree.fromJson(json['specialty'])
+              : null;
 /*if (json['clinicName'] != null) {
       clinicName = new List<ClinicName>();
       json['clinicName'].forEach((v) {
         clinicName.add(new ClinicName.fromJson(v));
       });
     }*/
-    aboutMe = json['aboutMe'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+      aboutMe = json['aboutMe'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -535,17 +568,21 @@ class QualificationInfo {
   QualificationInfo({this.degree, this.university});
 
   QualificationInfo.fromJson(Map<String, dynamic> json) {
-    if (json['degree'] != null) {
-      degree = <Degree>[];
-      json['degree'].forEach((v) {
-        degree!.add(new Degree.fromJson(v));
-      });
-    }
-    if (json['university'] != null) {
-      university = <Degree>[];
-      json['university'].forEach((v) {
-        university!.add(new Degree.fromJson(v));
-      });
+    try {
+      if (json['degree'] != null) {
+            degree = <Degree>[];
+            json['degree'].forEach((v) {
+              degree!.add(new Degree.fromJson(v));
+            });
+          }
+      if (json['university'] != null) {
+            university = <Degree>[];
+            json['university'].forEach((v) {
+              university!.add(new Degree.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -568,8 +605,12 @@ class Degree {
   Degree({this.id, this.name});
 
   Degree.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
+    try {
+      id = json['id'];
+      name = json['name'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -587,8 +628,12 @@ class MedicalCouncilInfo {
   MedicalCouncilInfo({this.id, this.mciNumber});
 
   MedicalCouncilInfo.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    mciNumber = json['mciNumber'];
+    try {
+      id = json['id'];
+      mciNumber = json['mciNumber'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -606,8 +651,12 @@ class ClinicName {
   ClinicName({this.id, this.name});
 
   ClinicName.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
+    try {
+      id = json['id'];
+      name = json['name'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -643,17 +692,21 @@ class DoctorFeeCollection {
       this.feeType});
 
   DoctorFeeCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    fee = json['fee'];
-    //followupValue = json['followupValue'];
-    //followupIn = json['followupIn'];
-    effectiveFromDate = json['effectiveFromDate'];
-    effectiveToDate = json['effectiveToDate'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    feeType =
-        json['feeType'] != null ? new FeeType.fromJson(json['feeType']) : null;
+    try {
+      id = json['id'];
+      fee = json['fee'];
+      //followupValue = json['followupValue'];
+      //followupIn = json['followupIn'];
+      effectiveFromDate = json['effectiveFromDate'];
+      effectiveToDate = json['effectiveToDate'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      feeType =
+              json['feeType'] != null ? new FeeType.fromJson(json['feeType']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -697,15 +750,19 @@ class FeeType {
       this.lastModifiedOn});
 
   FeeType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -740,12 +797,16 @@ class HealthOrganization {
       this.domainUrl});
 
   HealthOrganization.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    domainUrl = json['domainUrl'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      domainUrl = json['domainUrl'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -785,16 +846,20 @@ class UserAddressCollectionForHospital {
       this.state});
 
   UserAddressCollectionForHospital.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    pincode = json['pincode'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    city = json['city'] != null ? new City.fromJson(json['city']) : null;
-    state = json['state'] != null ? new State.fromJson(json['state']) : null;
+    try {
+      id = json['id'];
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      pincode = json['pincode'];
+      isPrimary = json['isPrimary'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      city = json['city'] != null ? new City.fromJson(json['city']) : null;
+      state = json['state'] != null ? new State.fromJson(json['state']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

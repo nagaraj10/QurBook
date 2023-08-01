@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/paymentMode.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/refundStatus.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
@@ -36,24 +37,28 @@ class Refund {
         this.id});
 
   Refund.fromJson(Map<String, dynamic> json) {
-    createdOn = json[parameters.strCreatedOn];
-    isActive = json[parameters.strIsActive];
-    paymentMode = json[parameters.strPaymentMode] != null
-        ? new PaymentMode.fromJson(json[parameters.strPaymentMode])
-        : null;
-    refundAmount = json[parameters.strRefundAmount];
-    refundStatus = json[parameters.strRefundStatus] != null
-        ? new RefundStatus.fromJson(json[parameters.strRefundStatus])
-        : null;
-    totalAmount = json[parameters.strTotalAmount];
-    transactionDateTime = json[parameters.strTransactionDateTime];
-    paymentReference = json[parameters.strPaymentReference];
-    refundReason = json[parameters.strRefundReason];
-    refundReference = json[parameters.strRefundReference];
-    refundedDate = json[parameters.strRefundedDate];
-    receiptUrl = json[parameters.strReceiptUrl];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    id = json[parameters.strId];
+    try {
+      createdOn = json[parameters.strCreatedOn];
+      isActive = json[parameters.strIsActive];
+      paymentMode = json[parameters.strPaymentMode] != null
+              ? new PaymentMode.fromJson(json[parameters.strPaymentMode])
+              : null;
+      refundAmount = json[parameters.strRefundAmount];
+      refundStatus = json[parameters.strRefundStatus] != null
+              ? new RefundStatus.fromJson(json[parameters.strRefundStatus])
+              : null;
+      totalAmount = json[parameters.strTotalAmount];
+      transactionDateTime = json[parameters.strTransactionDateTime];
+      paymentReference = json[parameters.strPaymentReference];
+      refundReason = json[parameters.strRefundReason];
+      refundReference = json[parameters.strRefundReference];
+      refundedDate = json[parameters.strRefundedDate];
+      receiptUrl = json[parameters.strReceiptUrl];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      id = json[parameters.strId];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

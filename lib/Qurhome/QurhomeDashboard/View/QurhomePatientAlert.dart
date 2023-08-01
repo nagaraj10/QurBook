@@ -25,7 +25,7 @@ class QurhomePatientALert extends StatefulWidget {
 
 class _QurhomePatientALertState extends State<QurhomePatientALert> {
   final controller = Get.put(QurhomeDashboardController());
-  final qurhomeRegimenController = Get.put(QurhomeRegimenController());
+  final qurhomeRegimenController = CommonUtil().onInitQurhomeRegimenController();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   @override
@@ -348,7 +348,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
         12,
         forDetails: false,
       ));
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     showDialog(
         context: context,
         builder: (__) {
@@ -375,6 +377,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 Navigator.pop(context);
                               } catch (e) {
                                 print(e);
+                                CommonUtil().appLogs(message: e.toString());
                               }
                             })
                       ],
@@ -671,6 +674,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
         }
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       return vitalValue;
     }
 

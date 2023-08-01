@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class SheelaQueueModel {
   bool? isSuccess;
   String? message;
@@ -7,10 +9,14 @@ class SheelaQueueModel {
   SheelaQueueModel({this.isSuccess, this.message, this.result});
 
   SheelaQueueModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result =
-    json['result'] != null ? new SheelaInsertResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result =
+          json['result'] != null ? new SheelaInsertResult.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -31,8 +37,12 @@ class SheelaInsertResult {
   SheelaInsertResult({this.sheelaQueueId, this.queueCount});
 
   SheelaInsertResult.fromJson(Map<String, dynamic> json) {
-    sheelaQueueId = json['sheelaQueueId'];
-    queueCount = json['queueCount'];
+    try {
+      sheelaQueueId = json['sheelaQueueId'];
+      queueCount = json['queueCount'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

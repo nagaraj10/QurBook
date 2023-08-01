@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 
 class GetRecordIdsFilter {
@@ -8,12 +9,16 @@ class GetRecordIdsFilter {
   GetRecordIdsFilter({this.isSuccess, this.result});
 
   GetRecordIdsFilter.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <Result>[];
-      json['result'].forEach((v) {
-        result!.add(new Result.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <Result>[];
+            json['result'].forEach((v) {
+              result!.add(new Result.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -58,25 +63,29 @@ class Result {
         this.healthRecordCollection});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    healthRecordTypeId = json['healthRecordTypeId'];
-    healthRecordTypeName = json['healthRecordTypeName'];
-    metadata = json['metadata'] != null
-        ? new Metadata.fromJson(json['metadata'])
-        : null;
-    userId = json['userId'];
-    isBookmarked = json['isBookmarked'];
-    isDraft = json['isDraft'];
-    isVisible = json['isVisible'];
-    isActive = json['isActive'];
-    isCompleted = json['isCompleted'];
-    doctorId = json['doctorId'];
-    createdOn = json['createdOn'];
-    if (json['healthRecordCollection'] != null) {
-      healthRecordCollection = <HealthRecordCollection>[];
-      json['healthRecordCollection'].forEach((v) {
-        healthRecordCollection!.add(new HealthRecordCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      healthRecordTypeId = json['healthRecordTypeId'];
+      healthRecordTypeName = json['healthRecordTypeName'];
+      metadata = json['metadata'] != null
+              ? new Metadata.fromJson(json['metadata'])
+              : null;
+      userId = json['userId'];
+      isBookmarked = json['isBookmarked'];
+      isDraft = json['isDraft'];
+      isVisible = json['isVisible'];
+      isActive = json['isActive'];
+      isCompleted = json['isCompleted'];
+      doctorId = json['doctorId'];
+      createdOn = json['createdOn'];
+      if (json['healthRecordCollection'] != null) {
+            healthRecordCollection = <HealthRecordCollection>[];
+            json['healthRecordCollection'].forEach((v) {
+              healthRecordCollection!.add(new HealthRecordCollection.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -129,20 +138,24 @@ class Metadata {
         this.fileName});
 
   Metadata.fromJson(Map<String, dynamic> json) {
-    healthRecordCategory = json['healthRecordCategory'] != null
-        ? new HealthRecordCategory.fromJson(json['healthRecordCategory'])
-        : null;
-    healthRecordType = json['healthRecordType'] != null
-        ? new HealthRecordType.fromJson(json['healthRecordType'])
-        : null;
-    memoText = json['memoText'];
-    hasVoiceNotes = json['hasVoiceNotes'];
-    dateOfVisit = json['dateOfVisit'];
-    isDraft = json['isDraft'];
-    sourceName = json['sourceName'];
-    memoTextRaw = json['memoTextRaw'];
-    idType = json['idType'];
-    fileName = json['fileName'];
+    try {
+      healthRecordCategory = json['healthRecordCategory'] != null
+              ? new HealthRecordCategory.fromJson(json['healthRecordCategory'])
+              : null;
+      healthRecordType = json['healthRecordType'] != null
+              ? new HealthRecordType.fromJson(json['healthRecordType'])
+              : null;
+      memoText = json['memoText'];
+      hasVoiceNotes = json['hasVoiceNotes'];
+      dateOfVisit = json['dateOfVisit'];
+      isDraft = json['isDraft'];
+      sourceName = json['sourceName'];
+      memoTextRaw = json['memoTextRaw'];
+      idType = json['idType'];
+      fileName = json['fileName'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -194,18 +207,22 @@ class HealthRecordCategory {
         this.isDelete});
 
   HealthRecordCategory.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    categoryName = json['categoryName'];
-    categoryDescription = json['categoryDescription'];
-    logo = json['logo'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isDisplay = json['isDisplay'];
-    isCreate = json['isCreate'];
-    isRead = json['isRead'];
-    isEdit = json['isEdit'];
-    isDelete = json['isDelete'];
+    try {
+      id = json['id'];
+      categoryName = json['categoryName'];
+      categoryDescription = json['categoryDescription'];
+      logo = json['logo'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isDisplay = json['isDisplay'];
+      isCreate = json['isCreate'];
+      isRead = json['isRead'];
+      isEdit = json['isEdit'];
+      isDelete = json['isDelete'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -261,21 +278,25 @@ class HealthRecordType {
         this.isAITranscription});
 
   HealthRecordType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    description = json['description'];
-    logo = json['logo'];
-    categoryId = json['categoryId'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isDisplay = json['isDisplay'];
-    isCreate = json['isCreate'];
-    isRead = json['isRead'];
-    isEdit = json['isEdit'];
-    isDelete = json['isDelete'];
-    isManualTranscription = json['isManualTranscription'];
-    isAITranscription = json['isAITranscription'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      description = json['description'];
+      logo = json['logo'];
+      categoryId = json['categoryId'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isDisplay = json['isDisplay'];
+      isCreate = json['isCreate'];
+      isRead = json['isRead'];
+      isEdit = json['isEdit'];
+      isDelete = json['isDelete'];
+      isManualTranscription = json['isManualTranscription'];
+      isAITranscription = json['isAITranscription'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

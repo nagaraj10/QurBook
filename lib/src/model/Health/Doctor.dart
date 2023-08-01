@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class Doctor {
@@ -24,15 +26,19 @@ class Doctor {
       this.state});
 
   Doctor.fromJson(Map<String, dynamic> json) {
-    localDoctorId = json[parameters.strLocal_Doctor_Id] ?? 0;
-    city = json[parameters.strCity];
-    description = json[parameters.strDescription];
-    email = json[parameters.strEmail] ?? '';
-    id = json[parameters.strId];
-    isUserDefined = json[parameters.strIsUserDefined] ?? false;
-    name = json[parameters.strName];
-    specialization = json[parameters.strSpecilization];
-    state = json[parameters.strState];
+    try {
+      localDoctorId = json[parameters.strLocal_Doctor_Id] ?? 0;
+      city = json[parameters.strCity];
+      description = json[parameters.strDescription];
+      email = json[parameters.strEmail] ?? '';
+      id = json[parameters.strId];
+      isUserDefined = json[parameters.strIsUserDefined] ?? false;
+      name = json[parameters.strName];
+      specialization = json[parameters.strSpecilization];
+      state = json[parameters.strState];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
