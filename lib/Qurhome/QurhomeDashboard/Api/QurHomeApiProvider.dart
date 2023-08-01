@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
@@ -536,7 +537,9 @@ class QurHomeApiProvider {
   Future<bool> careGiverEscalateAction(
       PatientAlertData? patientAlertData,
       CareGiverPatientListResult? careGiverPatientListResult,
-      String activityName) async {
+      String? activityName,
+      String? healthOrganizationId,
+      {String? notes}) async {
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
       var userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -568,6 +571,37 @@ class QurHomeApiProvider {
         Constants.BASE_URL + qr_caregiver_escalate,
         headers: header,
         body: params,
+      ))!;
+
+      var commentsData = Map<String, dynamic>();
+      commentsData['patientId'] = careGiverPatientListResult?.childId;
+      commentsData['screen']="QurHomeAlert";
+      commentsData['time']= "00:00:00";
+      commentsData['healthOrganizationId']=healthOrganizationId;
+      commentsData['additionalInfo']={
+        "incidentAlertId":patientAlertData?.id,
+        "eid":patientAlertData?.additionalInfo?.eid,
+        "title":patientAlertData?.additionalInfo?.uformname,
+        "activityTime":DateFormat('HH:mm a').format(DateTime.parse(patientAlertData?.additionalInfo?.startDateTime)).toString(),
+        "uform":patientAlertData?.additionalInfo?.uform,
+        "uformdata":patientAlertData?.additionalInfo?.uformdata,
+        "startDateTime":patientAlertData?.additionalInfo?.startDateTime,
+        "endDateTime":patientAlertData?.additionalInfo?.endDateTime,
+        "issymptom":patientAlertData?.additionalInfo?.issymptom,
+        "dosemeal":patientAlertData?.additionalInfo?.dosemeal,
+        "action":{
+          "id": null,
+          "name": null,
+          "code": null,
+          "comment": notes
+        }
+      };
+      final commentsParams = json.encode(commentsData);
+
+      http.Response reso = (await ApiServices.post(
+        Constants.BASE_URL + escalate_add_comments,
+        headers: header,
+        body: commentsParams,
       ))!;
       if (res.statusCode == 200) {
         var _response = SuccessModel.fromJson(convert.json.decode(res.body));

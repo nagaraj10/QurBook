@@ -62,6 +62,8 @@ const String qr_caregiverid = 'id';
 const String qr_caregiver_ok = 'incident-alert/caregiver-action?action=seen';
 const String qr_caregiver_escalate =
     'incident-alert/caregiver-action?action=escalate';
+const String escalate_add_comments =
+    'track-user-activities/regimen-screen-activity';
 
 //modified by parvathi
 const String qr_doctorslot = 'doctorSlots/';
