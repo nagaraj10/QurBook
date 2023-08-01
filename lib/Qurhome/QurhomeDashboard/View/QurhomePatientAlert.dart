@@ -352,7 +352,10 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text("Notes"),
+                      Padding(
+                        padding: const EdgeInsets.only(left:8.0),
+                        child: Text("Comments",style: TextStyle(fontWeight: FontWeight.bold),),
+                      ),
                       Spacer(),
                       IconButton(
                           padding: EdgeInsets.all(8.0),
@@ -376,7 +379,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                     child: TextField(
                       controller: controller,
                       decoration: InputDecoration(
-                        hintText: 'Please enter Notes (optional)',
+                        hintText: 'Reason for escalation',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color:
@@ -400,7 +403,11 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           primary:
                               Color(CommonUtil().getQurhomePrimaryColor())),
                       onPressed: () {
-                        callEscalateApi(patientAlertData,activityName,controller.text);
+                        if(controller.text.isNotEmpty){
+                          callEscalateApi(patientAlertData,activityName,controller.text);
+                        }else{
+                          FlutterToast().getToast(PLEASE_ADD_COMMENTS, Colors.red);
+                        }
                       },
                       child: Text(
                         "Submit",
@@ -750,7 +757,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
         }
       }
     } catch (e) {
-      return vitalValue;
+      return "NA";
     }
 
     return vitalValue;

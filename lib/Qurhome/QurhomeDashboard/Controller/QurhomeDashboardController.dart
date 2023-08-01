@@ -323,7 +323,7 @@ class QurhomeDashboardController extends GetxController {
     try {
       loadingPatientData.value = true;
       var responseBool = await _apiProvider.careGiverEscalateAction(
-          patientAlertData, careGiverPatientListResult, activityName,notes: notes);
+          patientAlertData, careGiverPatientListResult, activityName,patientAlert?.result?.healthOrganizationId??'',notes: notes);
       loadingPatientData.value = false;
       return responseBool;
     } catch (e) {

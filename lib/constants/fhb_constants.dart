@@ -419,6 +419,7 @@ const String CHAT = "Chats";
 const String CAREPROVIDERS = "Care Coordinator";
 const String strEscalateAlertMsg = "Alert escalated successfully";
 const String strDiscardMsg = 'Alert discarded successfully';
+const String PLEASE_ADD_COMMENTS = 'Please add comments';
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
