@@ -610,7 +610,6 @@ class QurHomeApiProvider {
         return false;
       }
     } catch (e) {
-      print(e.toString());
       return false;
     }
   }

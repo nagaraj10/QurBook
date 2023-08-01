@@ -354,7 +354,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(left:8.0),
-                        child: Text("Comments",style: TextStyle(fontWeight: FontWeight.bold),),
+                        child: Text(COMMENTS,style: TextStyle(fontWeight: FontWeight.bold),),
                       ),
                       Spacer(),
                       IconButton(
@@ -379,7 +379,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                     child: TextField(
                       controller: controller,
                       decoration: InputDecoration(
-                        hintText: 'Reason for escalation',
+                        hintText: REASON_FOR_ESCALATION,
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color:
@@ -410,7 +410,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                         }
                       },
                       child: Text(
-                        "Submit",
+                        SUBMIT,
                         style: TextStyle(color: Colors.white),
                       ))
                 ],
