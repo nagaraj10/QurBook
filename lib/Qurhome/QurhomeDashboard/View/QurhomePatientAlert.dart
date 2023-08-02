@@ -1,21 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/dynamicfieldmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class QurhomePatientALert extends StatefulWidget {
