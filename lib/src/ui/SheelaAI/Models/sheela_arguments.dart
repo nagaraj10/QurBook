@@ -7,6 +7,7 @@ class SheelaArgument {
   bool takeActiveDeviceReadings = false;
   bool isFromBpReading = false;
   bool scheduleAppointment = false;
+  bool sheelReminder = false;
   String? eId;
   bool showUnreadMessage;
   bool isJumperDevice = false;
@@ -22,6 +23,8 @@ class SheelaArgument {
   String? eventType;
   String? rawTitle;
   String? others;
+  String? chatMessageIdSocket;
+  String? eventIdViaSheela;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -31,6 +34,7 @@ class SheelaArgument {
     this.takeActiveDeviceReadings = false,
     this.isFromBpReading = false,
     this.scheduleAppointment = false,
+    this.sheelReminder = false,
     this.eId,
     this.showUnreadMessage = false,
     this.isJumperDevice = false,
@@ -46,5 +50,7 @@ class SheelaArgument {
     this.eventType,
     this.rawTitle,
     this.others,
+    this.chatMessageIdSocket,
+    this.eventIdViaSheela,
   });
 }

@@ -1,4 +1,7 @@
 import 'dart:convert' as convert;
+import 'package:myfhb/chat_socket/model/UnreadChatCountWithMsgId.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+
 import '../model/CaregiverPatientChatModel.dart';
 import '../model/ChatHistoryModel.dart';
 import '../model/GetUnreadCountFamily.dart';
@@ -105,5 +108,15 @@ class ChatSocketService {
     final response =
         await _helper.getChatHistory(qr_unread_family_chat, jsonString);
     return GetUnreadCountFamily.fromJson(response);
+  }
+
+  Future<UnreadChatCountWithMsgId> getUnreadChatWithMsgId(String chatMsgId) async {
+    var body = {
+      strId: "${chatMsgId}",
+    };
+    var jsonString = convert.jsonEncode(body);
+    final response =
+    await _helper.getChatHistory(qr_unread_chat_count_msg_id, jsonString);
+    return UnreadChatCountWithMsgId.fromJson(response);
   }
 }

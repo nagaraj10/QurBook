@@ -31,6 +31,9 @@ import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
+import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
+import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 import 'package:open_filex/open_filex.dart';
@@ -2585,7 +2588,7 @@ class CommonUtil {
       //     .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
 
       if (newVersion > currentVersion) {
-        _showVersionDialog(context, isForceUpdate);
+        _showVersionDialog(context, false);
       }
     } on FirebaseException catch (exception) {
       // Fetch throttled.
@@ -5963,6 +5966,10 @@ class CommonUtil {
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket!
+        .off(getReminderSheelaRedirect);
+
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+        .socket!
         .emitWithAck(getChatTotalCountEmit, {
       'userId': userId,
     }, ack: (countResponseEmit) {
@@ -5985,6 +5992,27 @@ class CommonUtil {
         if (totalCountModelOn != null) {
           Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
               .updateChatTotalCount(totalCountModelOn);
+        }
+      }
+    });
+
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+        .socket!
+        .on(getReminderSheelaRedirect, (chatListresponse) {
+      if (PreferenceUtil.getIfQurhomeisAcive()) {
+        if (chatListresponse != null) {
+          SheelaReminderResponse chatList =
+          SheelaReminderResponse.fromJson(chatListresponse);
+          if (chatList != null) {
+            var chatMessageId = chatList.chatMessageId ?? '';
+            if (chatMessageId != null && chatMessageId != '') {
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                    sheelReminder: true, chatMessageIdSocket: chatMessageId),
+              );
+            }
+          }
         }
       }
     });
@@ -6246,24 +6274,22 @@ class CommonUtil {
     try {
       if (regimen?.doseMealString == Constants.doseValueless ||
           regimen?.doseMealString == Constants.doseValueHigh) {
-        DateTime selectedDateTime = CommonUtil.getDateBasedOnOnceInAPlan(
-            selectedDate, regimen!);
+        DateTime selectedDateTime =
+            CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
 
         canEdit =
             selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
-                Provider
-                    .of<RegimentViewModel>(context!, listen: false)
-                    .regimentMode ==
+                Provider.of<RegimentViewModel>(context!, listen: false)
+                        .regimentMode ==
                     RegimentMode.Schedule;
       } else {
         canEdit = regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-            Provider
-                .of<RegimentViewModel>(context!, listen: false)
-                .regimentMode ==
+            Provider.of<RegimentViewModel>(context!, listen: false)
+                    .regimentMode ==
                 RegimentMode.Schedule;
       }
-    }catch(e){
-      canEdit=false;
+    } catch (e) {
+      canEdit = false;
     }
     return canEdit;
   }
@@ -6342,7 +6368,7 @@ class CommonUtil {
     );
   }
 
-  TextStyle getDefaultStyle(){
+  TextStyle getDefaultStyle() {
     return TextStyle(
         fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2);
   }
@@ -7641,6 +7667,4 @@ class VideoCallCommonUtils {
       //print(e);
     }
   }
-
-
 }
