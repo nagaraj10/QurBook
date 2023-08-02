@@ -115,8 +115,7 @@ class ChatSocketService {
       strId: "${chatMsgId}",
     };
     var jsonString = convert.jsonEncode(body);
-    final response =
-    await _helper.getChatHistory(qr_unread_chat_count_msg_id, jsonString);
+    final response = await _helper.getChatHistory(qr_unread_chat_count_msg_id, jsonString);
     return UnreadChatCountWithMsgId.fromJson(response);
   }
 }
