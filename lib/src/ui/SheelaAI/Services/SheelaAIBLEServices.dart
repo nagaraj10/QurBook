@@ -86,7 +86,7 @@ class SheelaBLEController extends GetxController {
         _enableTimer();
       }
     } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(message: e.toString());
 
       print(e.toString());
     }
@@ -180,39 +180,43 @@ class SheelaBLEController extends GetxController {
               if (!checkForParedDevice()) {
                 return;
               }
-              String deviceType =
-                  hublistController.bleDeviceType!.toLowerCase();
-              if (deviceType.isNotEmpty &&
-                  (deviceType == "spo2" ||
-                      deviceType == "bp" ||
-                      deviceType == "weight" ||
-                      deviceType == "bgl")) {
-                SheelaController.isBLEStatus.value = BLEStatus.Connected;
-                if (isFromVitals || isFromRegiment) {
-                  Get.back();
-                }
-                if (SheelaController.isSheelaScreenActive) return;
-                Get.to(
-                  SheelaAIMainScreen(
-                    arguments: SheelaArgument(
-                      deviceType: hublistController.bleDeviceType,
-                      takeActiveDeviceReadings: true,
+              if ((hublistController.bleMacId ?? '').isNotEmpty &&
+                  (hublistController.bleDeviceType ?? '').isNotEmpty &&
+                  (hublistController.manufacturer ?? '').isNotEmpty) {
+                String deviceType =
+                    hublistController.bleDeviceType!.toLowerCase();
+                if (deviceType == "spo2" ||
+                    deviceType == "bp" ||
+                    deviceType == "weight" ||
+                    deviceType == "bgl") {
+                  SheelaController.isBLEStatus.value = BLEStatus.Connected;
+                  if (isFromVitals || isFromRegiment) {
+                    Get.back();
+                  }
+                  if (SheelaController.isSheelaScreenActive) return;
+                  Get.to(
+                    SheelaAIMainScreen(
+                      arguments: SheelaArgument(
+                        deviceType: hublistController.bleDeviceType,
+                        takeActiveDeviceReadings: true,
+                      ),
                     ),
-                  ),
-                )?.then((_) {
-                  Future.delayed(const Duration(seconds: 1)).then((_) {
-                    if (Get.isRegistered<VitalDetailController>())
-                      Get.find<VitalDetailController>().getData();
-                  });
+                  )?.then((_) {
+                    Future.delayed(const Duration(seconds: 1)).then((_) {
+                      if (Get.isRegistered<VitalDetailController>())
+                        Get.find<VitalDetailController>().getData();
+                    });
 
-                  Future.delayed(const Duration(seconds: 1)).then((_) {
-                    if (Get.isRegistered<QurhomeRegimenController>()) {
-                      Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController.eid ?? '';
-                      Get.find<QurhomeRegimenController>().getRegimenList();
-                    }
+                    Future.delayed(const Duration(seconds: 1)).then((_) {
+                      if (Get.isRegistered<QurhomeRegimenController>()) {
+                        Get.find<QurhomeRegimenController>()
+                            .currLoggedEID
+                            .value = hublistController.eid ?? '';
+                        Get.find<QurhomeRegimenController>().getRegimenList();
+                      }
+                    });
                   });
-                });
+                }
               }
               break;
             case "update":
@@ -234,48 +238,15 @@ class SheelaBLEController extends GetxController {
                 return;
               }
               if (!checkForParedDevice()) return;
-              String deviceType =
-                  hublistController.bleDeviceType?.toLowerCase() ?? '';
-              receivedData = true;
-              if (deviceType == "bp" ||
-                  deviceType == "spo2" ||
-                  deviceType == "weight" ||
-                  deviceType == "bgl") {
-                if (SheelaController.isSheelaScreenActive) {
-                  updateUserData(
-                    data: receivedValues.last,
-                  );
-                  return;
-                }
-                if (isFromVitals || isFromRegiment) {
-                  Get.back();
-                }
-                Get.to(
-                  SheelaAIMainScreen(
-                    arguments: SheelaArgument(
-                      takeActiveDeviceReadings: true,
-                    ),
-                  ),
-                )?.then((_) {
-                  if (Get.isRegistered<VitalDetailController>())
-                    Future.delayed(const Duration(seconds: 1)).then((value) {
-                      if (Get.isRegistered<VitalDetailController>())
-                        Get.find<VitalDetailController>().getData();
-                    });
-
-                  Future.delayed(const Duration(seconds: 1)).then((value) {
-                    if (Get.isRegistered<QurhomeRegimenController>()) {
-                      Get.find<QurhomeRegimenController>().currLoggedEID.value =
-                          hublistController.eid ?? '';
-                      Get.find<QurhomeRegimenController>().getRegimenList();
-                    }
-                  });
-                });
-                await Future.delayed(const Duration(seconds: 4));
+              if ((hublistController.bleMacId ?? '').isNotEmpty &&
+                  (hublistController.bleDeviceType ?? '').isNotEmpty &&
+                  (hublistController.manufacturer ?? '').isNotEmpty) {
+                receivedData = true;
+                updateUserData(
+                  data: receivedValues.last,
+                );
               }
-              updateUserData(
-                data: receivedValues.last,
-              );
+
               break;
             case "bgl":
               if (addingDevicesInHublist) {
@@ -378,7 +349,7 @@ class SheelaBLEController extends GetxController {
       }
       return (index >= 0 && filteredDeviceTypeCheck);
     } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(message: e.toString());
 
       printError(info: e.toString());
       return false;
@@ -406,7 +377,7 @@ class SheelaBLEController extends GetxController {
         return true;
       }
     } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(message: e.toString());
 
       printError(info: e.toString());
       return false;
@@ -512,8 +483,7 @@ class SheelaBLEController extends GetxController {
           try {
             weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT)!;
           } catch (e) {
-                        CommonUtil().appLogs(message: e.toString());
-
+            CommonUtil().appLogs(message: e.toString());
           }
           if ((weightUnit).isEmpty) {
             weightUnit = CommonUtil.REGION_CODE == "IN"
@@ -618,7 +588,7 @@ class SheelaBLEController extends GetxController {
         }
         isCompleted = true;
       } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+        CommonUtil().appLogs(message: e.toString());
 
         receivedData = false;
         showFailure();
@@ -655,7 +625,7 @@ class SheelaBLEController extends GetxController {
           }
         }
       } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+        CommonUtil().appLogs(message: e.toString());
 
         stopTTS();
       }
@@ -692,7 +662,7 @@ class SheelaBLEController extends GetxController {
                 isLocal: true);
           }
         } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+          CommonUtil().appLogs(message: e.toString());
 
           //failed play the audio
           print(e.toString());
@@ -750,6 +720,9 @@ class SheelaBLEController extends GetxController {
     addingDevicesInHublist = false;
     isFromVitals = false;
     filteredDeviceType = '';
+    hublistController.bleMacId = null;
+    hublistController.bleDeviceType = null;
+    hublistController.manufacturer = null;
     removeTimeOutTimer();
     SheelaController.isBLEStatus.value = BLEStatus.Disabled;
   }
