@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 class CityListModel {
   bool? isSuccess;
   List<CityListData>? result;
@@ -14,7 +16,8 @@ class CityListModel {
             });
           }
     } catch (e) {
-      
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -26,7 +29,7 @@ class CityListModel {
             data['result'] = this.result!.map((v) => v.toJson()).toList();
           }
     } catch (e) {
-      
+                  CommonUtil().appLogs(message: e.toString());
     }
     return data;
   }
@@ -57,7 +60,8 @@ class CityListData {
       lastModifiedOn = json['lastModifiedOn'];
       state = json['state'] != null ? new State.fromJson(json['state']) : null;
     } catch (e) {
-      
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -73,7 +77,8 @@ class CityListData {
             data['state'] = this.state!.toJson();
           }
     } catch (e) {
-      
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }
@@ -104,7 +109,8 @@ class State {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
     } catch (e) {
-      
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -118,6 +124,7 @@ class State {
       data['createdOn'] = this.createdOn;
       data['lastModifiedOn'] = this.lastModifiedOn;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
     }
     return data;
   }

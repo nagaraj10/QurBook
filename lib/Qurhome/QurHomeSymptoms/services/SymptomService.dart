@@ -64,6 +64,8 @@ class SymptomService {
         );
       }*/
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }

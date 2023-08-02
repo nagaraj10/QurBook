@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class SpeechModel {
@@ -18,12 +20,16 @@ class SpeechModel {
       this.authToken});
 
   SpeechModel.fromJson(Map<String, dynamic> json) {
-    sender = json[parameters.strSender];
-    name = json[parameters.strSenderName];
-    message = json[parameters.strMessage];
-    source = json[parameters.strSource];
-    sessionId = json[parameters.strSessionId];
-    authToken = json[parameters.strAuthToken];
+    try {
+      sender = json[parameters.strSender];
+      name = json[parameters.strSenderName];
+      message = json[parameters.strMessage];
+      source = json[parameters.strSource];
+      sessionId = json[parameters.strSessionId];
+      authToken = json[parameters.strAuthToken];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

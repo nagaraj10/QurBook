@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class CategoryInfo {
@@ -30,18 +32,22 @@ class CategoryInfo {
       this.isActive});
 
   CategoryInfo.fromJson(Map<String, dynamic> json) {
-    categoryDescription = json[parameters.strCategoryDesc] ?? '';
-    categoryName = json[parameters.strCategoryName] ?? '';
-    id = json[parameters.strId] ?? '';
-    isCreate = json[parameters.strIsCreate]!=null?json[parameters.strurl]:false;
-    isDelete = json[parameters.strIsDelete]!=null?json[parameters.strurl]:false;
-    isDisplay = json[parameters.strIsDisplay]!=null?json[parameters.strurl]:false;
-    isEdit = json[parameters.strIsEdit]!=null?json[parameters.strurl]:false;
-    isRead = json[parameters.strIsRead]!=null?json[parameters.strurl]:false;
-    logo = json[parameters.strLogo] ?? '';
-    url = json[parameters.strurl] ?? '';
-    localid = json[parameters.strlocalid] ?? 0;
-    isActive = json[parameters.strIsActive]!=null?json[parameters.strurl]:false;
+    try {
+      categoryDescription = json[parameters.strCategoryDesc] ?? '';
+      categoryName = json[parameters.strCategoryName] ?? '';
+      id = json[parameters.strId] ?? '';
+      isCreate = json[parameters.strIsCreate]!=null?json[parameters.strurl]:false;
+      isDelete = json[parameters.strIsDelete]!=null?json[parameters.strurl]:false;
+      isDisplay = json[parameters.strIsDisplay]!=null?json[parameters.strurl]:false;
+      isEdit = json[parameters.strIsEdit]!=null?json[parameters.strurl]:false;
+      isRead = json[parameters.strIsRead]!=null?json[parameters.strurl]:false;
+      logo = json[parameters.strLogo] ?? '';
+      url = json[parameters.strurl] ?? '';
+      localid = json[parameters.strlocalid] ?? 0;
+      isActive = json[parameters.strIsActive]!=null?json[parameters.strurl]:false;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

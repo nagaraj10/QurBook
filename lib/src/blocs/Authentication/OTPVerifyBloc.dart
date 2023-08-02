@@ -1,5 +1,6 @@
-
 import 'dart:async';
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../model/Authentication/OTPEmailResponse.dart';
 import '../../model/Authentication/OTPResponse.dart';
 import '../../resources/network/ApiResponse.dart';
@@ -11,7 +12,6 @@ import '../../../common/CommonConstants.dart';
 
 import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/variable_constant.dart' as variable;
-
 
 class OTPVerifyBloc with Validators implements BaseBloc {
   late AuthenticationRepository _authenticationRepository;
@@ -25,12 +25,15 @@ class OTPVerifyBloc with Validators implements BaseBloc {
       _mobileNumberController.stream.transform(mobileNumberValidator);
   Stream<bool> get submitCheck => mobileNumber.map((m) => true);
 
-  StreamSink<ApiResponse<OTPResponse>> get otpSink => _otpVerifyController!.sink as StreamSink<ApiResponse<OTPResponse>>;
-  Stream<ApiResponse<OTPResponse>> get otpStream => _otpVerifyController!.stream as Stream<ApiResponse<OTPResponse>>;
+  StreamSink<ApiResponse<OTPResponse>> get otpSink =>
+      _otpVerifyController!.sink as StreamSink<ApiResponse<OTPResponse>>;
+  Stream<ApiResponse<OTPResponse>> get otpStream =>
+      _otpVerifyController!.stream as Stream<ApiResponse<OTPResponse>>;
 
   StreamController? _otpFromEmailController;
   StreamSink<ApiResponse<OTPEmailResponse>> get otpFromEmailSink =>
-      _otpFromEmailController!.sink as StreamSink<ApiResponse<OTPEmailResponse>>;
+      _otpFromEmailController!.sink
+          as StreamSink<ApiResponse<OTPEmailResponse>>;
   Stream<ApiResponse<OTPEmailResponse>> get otpFromEmailStream =>
       _otpFromEmailController!.stream as Stream<ApiResponse<OTPEmailResponse>>;
 
@@ -53,8 +56,8 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     verifyOTP[parameters.strCountryCode] = '+' + selectedCountryCode;
     verifyOTP[parameters.strPhoneNumber] = enteredMobNumber;
     verifyOTP[parameters.strotp] = otp;
-      verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
-    verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
+    verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
+    verifyOTP[parameters.strEntityId] = parameters.strEntityIdVal;
     verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
     if (isFromSignIn) {
       verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignIN;
@@ -69,6 +72,8 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     try {
       otpResponse = await _authenticationRepository.verifyOTP(jsonString);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       otpSink.add(ApiResponse.error(e.toString()));
     }
     return otpResponse;
@@ -80,8 +85,8 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     //verifyOTP['sourceName'] = CommonConstants.strTrident;
     verifyOTP[parameters.strCountryCode] = '+' + selectedCountryCode;
     verifyOTP[parameters.strPhoneNumber] = enteredMobNumber;
-     verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
-    verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
+    verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
+    verifyOTP[parameters.strEntityId] = parameters.strEntityIdVal;
     verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
     if (isFromSignIn) {
       verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignIN;
@@ -96,7 +101,10 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     try {
       otpResponse = await _authenticationRepository.generateOTP(jsonString);
     } catch (e) {
-      otpSink.add(ApiResponse.error(e.toString()));    }
+      CommonUtil().appLogs(message: e.toString());
+
+      otpSink.add(ApiResponse.error(e.toString()));
+    }
     return otpResponse;
   }
 
@@ -112,6 +120,8 @@ class OTPVerifyBloc with Validators implements BaseBloc {
       otpEmailResponse =
           await _authenticationRepository.verifyOTPFromEmail(jsonString);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       otpFromEmailSink.add(ApiResponse.error(e.toString()));
     }
     return otpEmailResponse;

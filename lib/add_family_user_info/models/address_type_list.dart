@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'address_result.dart';
 import '../../common/CommonConstants.dart';
 
@@ -9,12 +11,16 @@ class AddressTypeResult {
   AddressTypeResult({this.isSuccess, this.result});
 
   AddressTypeResult.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[CommonConstants.strSuccess];
-    if (json[CommonConstants.strResult] != null) {
-      result = <AddressResult>[];
-      json[CommonConstants.strResult].forEach((v) {
-        result!.add(AddressResult.fromJson(v));
-      });
+    try {
+      isSuccess = json[CommonConstants.strSuccess];
+      if (json[CommonConstants.strResult] != null) {
+            result = <AddressResult>[];
+            json[CommonConstants.strResult].forEach((v) {
+              result!.add(AddressResult.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

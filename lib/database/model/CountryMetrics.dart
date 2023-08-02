@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class CountryMetrics {
@@ -26,17 +28,21 @@ class CountryMetrics {
       this.weightUnit);
 
   CountryMetrics.fromJson(Map<String, dynamic> obj) {
-    countryCode = obj[parameters.strCountryCode];
-    name = obj[parameters.strName];
-    bpSPUnit = obj[parameters.strbpSPUnit];
-    bpDPUnit = obj[parameters.strbpDPUnit];
-    bpPulseUnit = obj[parameters.strbpPulseUnit];
-    glucometerUnit = obj[parameters.strglucometerUnit];
-    poOxySatUnit = obj[parameters.strpoOxySatUnit];
-    poPulseUnit = obj[parameters.strpoPulseUnit];
-    tempUnit = obj[parameters.strtempUnit];
+    try {
+      countryCode = obj[parameters.strCountryCode];
+      name = obj[parameters.strName];
+      bpSPUnit = obj[parameters.strbpSPUnit];
+      bpDPUnit = obj[parameters.strbpDPUnit];
+      bpPulseUnit = obj[parameters.strbpPulseUnit];
+      glucometerUnit = obj[parameters.strglucometerUnit];
+      poOxySatUnit = obj[parameters.strpoOxySatUnit];
+      poPulseUnit = obj[parameters.strpoPulseUnit];
+      tempUnit = obj[parameters.strtempUnit];
 
-    weightUnit = obj[parameters.strweightUnit];
+      weightUnit = obj[parameters.strweightUnit];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   CountryMetrics.map(obj) {
     countryCode = obj[parameters.strCountryCode];

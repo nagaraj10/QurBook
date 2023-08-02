@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class State {
@@ -20,13 +22,17 @@ class State {
       this.lastModifiedBy});
 
   State.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    name = json[parameters.strName];
-    countryCode = json[parameters.strCountryCode];
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    lastModifiedBy = json[parameters.strlastModifiedBy];
+    try {
+      id = json[parameters.strId];
+      name = json[parameters.strName];
+      countryCode = json[parameters.strCountryCode];
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      lastModifiedBy = json[parameters.strlastModifiedBy];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

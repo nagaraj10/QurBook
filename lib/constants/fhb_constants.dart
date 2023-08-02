@@ -16,6 +16,7 @@ const String ENTER_MOB_NUM = 'Enter your mobile number';
 const String SignInOtpText = 'We will send you an one time password';
 const String OtpScreenText = 'Please enter the verification code sent to';
 const String SUBMIT = 'Submit';
+const String REASON_FOR_ESCALATION = 'Reason for escalation';
 const String MOB_NUM_EMPTY = 'Mobile number empty';
 const String LOGIN_SUCCESS = 'Login Success';
 const String MYFamily = 'My Family';
@@ -419,6 +420,8 @@ const String CHAT = "Chats";
 const String CAREPROVIDERS = "Care Coordinator";
 const String strEscalateAlertMsg = "Alert escalated successfully";
 const String strDiscardMsg = 'Alert discarded successfully';
+const String PLEASE_ADD_COMMENTS = 'Please add comments';
+const String COMMENTS = 'Comments';
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
@@ -895,5 +898,6 @@ Future<void> fbaLog({String? eveName, eveParams}) async {
             });
   } catch (e) {
     print(e);
+    CommonUtil().appLogs(message: e.toString());
   }
 }

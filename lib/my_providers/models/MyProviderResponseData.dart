@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/ProviderRequestCollection3.dart';
 
 import 'Doctors.dart';
@@ -72,64 +73,68 @@ class MyProvidersResponseData {
   });
 
   MyProvidersResponseData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    userName = json['userName'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    dateOfBirth = json['dateOfBirth'];
-    bloodGroup = json['bloodGroup'];
-    countryCode = json['countryCode'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTempUser = json['isTempUser'];
-    isVirtualUser = json['isVirtualUser'];
-    isMigrated = json['isMigrated'];
-    isClaimed = json['isClaimed'];
-    isIeUser = json['isIeUser'];
-    isEmailVerified = json['isEmailVerified'];
-    isCpUser = json['isCpUser'];
-    communicationPreferences = json['communicationPreferences'];
-    medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    if (json['doctors'] != null) {
-      doctors = <Doctors?>[];
-      json['doctors'].forEach((v) {
-        doctors!.add(Doctors.fromJson(v));
-      });
-    }
-    if (json['hospitals'] != null) {
-      hospitals = <Hospitals>[];
-      json['hospitals'].forEach((v) {
-        hospitals!.add(Hospitals.fromJson(v));
-      });
-    }
-    if (json['labs'] != null) {
-      labs = <Hospitals>[];
-      json['labs'].forEach((v) {
-        labs!.add(Hospitals.fromJson(v));
-      });
-    }
-    if (json['clinics'] != null) {
-      clinics = <Hospitals>[];
-      json['clinics'].forEach((v) {
-        clinics!.add(Hospitals.fromJson(v));
-      });
-    }
-    if (json.containsKey('providerRequestCollection3')) {
-      if (json['providerRequestCollection3'] != null) {
-        providerRequestCollection3 = <ProviderRequestCollection3>[];
-        json['providerRequestCollection3'].forEach((v) {
-          providerRequestCollection3!
-              .add(new ProviderRequestCollection3.fromJson(v));
-        });
-      }
+    try {
+      id = json['id'];
+      name = json['name'];
+      userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      countryCode = json['countryCode'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTempUser = json['isTempUser'];
+      isVirtualUser = json['isVirtualUser'];
+      isMigrated = json['isMigrated'];
+      isClaimed = json['isClaimed'];
+      isIeUser = json['isIeUser'];
+      isEmailVerified = json['isEmailVerified'];
+      isCpUser = json['isCpUser'];
+      communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json['medicalPreferences'];
+      isSignedIn = json['isSignedIn'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      if (json['doctors'] != null) {
+            doctors = <Doctors?>[];
+            json['doctors'].forEach((v) {
+              doctors!.add(Doctors.fromJson(v));
+            });
+          }
+      if (json['hospitals'] != null) {
+            hospitals = <Hospitals>[];
+            json['hospitals'].forEach((v) {
+              hospitals!.add(Hospitals.fromJson(v));
+            });
+          }
+      if (json['labs'] != null) {
+            labs = <Hospitals>[];
+            json['labs'].forEach((v) {
+              labs!.add(Hospitals.fromJson(v));
+            });
+          }
+      if (json['clinics'] != null) {
+            clinics = <Hospitals>[];
+            json['clinics'].forEach((v) {
+              clinics!.add(Hospitals.fromJson(v));
+            });
+          }
+      if (json.containsKey('providerRequestCollection3')) {
+            if (json['providerRequestCollection3'] != null) {
+              providerRequestCollection3 = <ProviderRequestCollection3>[];
+              json['providerRequestCollection3'].forEach((v) {
+                providerRequestCollection3!
+                    .add(new ProviderRequestCollection3.fromJson(v));
+              });
+            }
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

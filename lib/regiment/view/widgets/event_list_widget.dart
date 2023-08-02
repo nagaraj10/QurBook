@@ -218,7 +218,10 @@ class EventListWidget extends StatelessWidget {
           ],
         ),
       );
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
 
     return dialogItems;
   }

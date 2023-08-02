@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class HidePlanResponseModel {
   HidePlanResponseModel({
       bool? isSuccess,
@@ -8,8 +10,12 @@ class HidePlanResponseModel {
 }
 
   HidePlanResponseModel.fromJson(dynamic json) {
-    _isSuccess = json['isSuccess'];
-    _result = json['result'] != null ? Result.fromJson(json['result']) : null;
+    try {
+      _isSuccess = json['isSuccess'];
+      _result = json['result'] != null ? Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   bool? _isSuccess;
   Result? _result;
@@ -35,7 +41,11 @@ class Result {
 }
 
   Result.fromJson(dynamic json) {
-    _qurBook = json['qurBook'] != null ? QurBook.fromJson(json['qurBook']) : null;
+    try {
+      _qurBook = json['qurBook'] != null ? QurBook.fromJson(json['qurBook']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   QurBook? _qurBook;
 
@@ -62,9 +72,13 @@ class QurBook {
 }
 
   QurBook.fromJson(dynamic json) {
-    _addPlanBtn = json['addPlanBtn'];
-    _cart = json['cart'];
-    _unSubscribeBtn = json['unSubscribeBtn'];
+    try {
+      _addPlanBtn = json['addPlanBtn'];
+      _cart = json['cart'];
+      _unSubscribeBtn = json['unSubscribeBtn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   bool? _addPlanBtn;
   bool? _cart;

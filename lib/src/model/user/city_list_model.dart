@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'City.dart';
 import 'State.dart';
 
@@ -9,12 +11,16 @@ class CityModel {
   CityModel({this.isSuccess, this.result});
 
   CityModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <City>[];
-      json['result'].forEach((v) {
-        result!.add(City.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <City>[];
+            json['result'].forEach((v) {
+              result!.add(City.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -45,12 +51,16 @@ class CityResult {
       this.state});
 
   CityResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    state = json['state'] != null ? State.fromJson(json['state']) : null;
+    try {
+      id = json['id'];
+      name = json['name'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      state = json['state'] != null ? State.fromJson(json['state']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

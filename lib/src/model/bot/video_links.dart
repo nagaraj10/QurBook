@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class VideoLinks {
   String? title;
   String? thumbnail;
@@ -7,9 +9,13 @@ class VideoLinks {
   VideoLinks({this.title, this.thumbnail, this.url});
 
   VideoLinks.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    thumbnail = json['thumbnail'];
-    url = json['url'];
+    try {
+      title = json['title'];
+      thumbnail = json['thumbnail'];
+      url = json['url'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

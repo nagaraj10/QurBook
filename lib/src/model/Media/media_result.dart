@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import '../Category/catergory_result.dart';
 
@@ -28,20 +30,24 @@ class MediaResult {
       this.isChecked});
 
   MediaResult.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    name = json[parameters.strName];
-    description = json[parameters.strDescription];
-    logo = json[parameters.strLogo];
-    isDisplay = json[parameters.strIsDisplay];
-    isAiTranscription = json[parameters.strIsAiTranscription];
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    if (json.containsKey(parameters.strHealthRecordCategory)) {
-      healthRecordCategory = json[parameters.strHealthRecordCategory] != null
-          ? CategoryResult.fromJson(
-              json[parameters.strHealthRecordCategory])
-          : null;
+    try {
+      id = json[parameters.strId];
+      name = json[parameters.strName];
+      description = json[parameters.strDescription];
+      logo = json[parameters.strLogo];
+      isDisplay = json[parameters.strIsDisplay];
+      isAiTranscription = json[parameters.strIsAiTranscription];
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      if (json.containsKey(parameters.strHealthRecordCategory)) {
+            healthRecordCategory = json[parameters.strHealthRecordCategory] != null
+                ? CategoryResult.fromJson(
+                    json[parameters.strHealthRecordCategory])
+                : null;
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

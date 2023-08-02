@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class AppointmentStatus {
   String? code;
   String? name;
@@ -7,9 +9,13 @@ class AppointmentStatus {
   AppointmentStatus({this.code, this.name, this.description});
 
   AppointmentStatus.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
+    try {
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

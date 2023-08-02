@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'dynamicfieldmodel.dart';
 
 class AdditionalInfo {
@@ -67,63 +69,70 @@ class AdditionalInfo {
       this.escalatedComment});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
-    ack = json.containsKey('ack') ? json['ack'] : '';
-    eid = json.containsKey('eid') ? json['eid'] : '';
-    uform = json.containsKey('uform') ? json['uform'] : '';
-    cptCode = json.containsKey('cpt_code') ? json['cpt_code'] : '';
-    dosemeal = json.containsKey('dosemeal') ? json['dosemeal'] : '';
-    ackLocal = json.containsKey('ack_local') ? json['ack_local'] : '';
-    issymptom = json.containsKey('issymptom') ? json['issymptom'] : false;
     try {
-      if (json['uformdata'] != null) getDynamicFieldList(json['uformdata']);
+      ack = json.containsKey('ack') ? json['ack'] : '';
+      eid = json.containsKey('eid') ? json['eid'] : '';
+      uform = json.containsKey('uform') ? json['uform'] : '';
+      cptCode = json.containsKey('cpt_code') ? json['cpt_code'] : '';
+      dosemeal = json.containsKey('dosemeal') ? json['dosemeal'] : '';
+      ackLocal = json.containsKey('ack_local') ? json['ack_local'] : '';
+      issymptom = json.containsKey('issymptom') ? json['issymptom'] : false;
+      try {
+            if (json['uformdata'] != null) getDynamicFieldList(json['uformdata']);
+          } catch (e) {
+            print(e);
+            CommonUtil().appLogs(message: e.toString());
+
+            dynamicFieldModel = [];
+          }
+
+      try {
+            if (json['uform'] != null)
+              getDynamicFieldListFromUfrom(jsonDecode(json['uform']));
+          } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
+            print(e);
+
+            dynamicFieldModelfromUForm = [];
+          }
+      uformname = json.containsKey('uformname') ? json['uformname'] : '';
+      endDateTime =
+              json.containsKey('end_date_time') ? json['end_date_time'] : '';
+      startDateTime =
+              json.containsKey('start_date_time') ? json['start_date_time'] : '';
+      cptCodeDetails =
+              json.containsKey('cpt_code_details') ? json['cpt_code_details'] : '';
+      uid = json.containsKey('uid') ? json['uid'] : '';
+      title = json.containsKey('title') ? json['title'] : '';
+      linkid = json.containsKey('linkid') ? json['linkid'] : '';
+      activityname = json.containsKey('activityname') ? json['activityname'] : '';
+      activityType =
+              json.containsKey('activity_type') ? json['activity_type'] : '';
+      comment = json.containsKey('comment') ? json['comment'] : '';
+      category = json.containsKey('category') ? json['category'] : '';
+      actionId = json.containsKey('action_id') ? json['action_id'] : '';
+      escalatedTime =
+              json.containsKey('escalated_time') ? json['escalated_time'] : '';
+      escalatedById =
+              json.containsKey('escalated_by_id') ? json['escalated_by_id'] : '';
+      escalatedToId =
+              json.containsKey('escalated_to_id') ? json['escalated_to_id'] : '';
+      resolveComment =
+              json.containsKey('resolve_comment') ? json['resolve_comment'] : '';
+      escalatedByName =
+              json.containsKey('escalated_by_name') ? json['escalated_by_name'] : '';
+      escalatedToName =
+              json.containsKey('escalated_to_name') ? json['escalated_to_name'] : '';
+      escalationReceived = json.containsKey('escalation_received')
+              ? json['escalation_received']
+              : '';
+      risklevel = json.containsKey('risklevel') ? json['risklevel'] : 0;
+      escalatedComment =
+              json.containsKey('escalated_comment') ? json['escalated_comment'] : '';
     } catch (e) {
-      print(e);
-
-      dynamicFieldModel = [];
+      CommonUtil().appLogs(message: e.toString());
     }
-
-    try {
-      if (json['uform'] != null)
-        getDynamicFieldListFromUfrom(jsonDecode(json['uform']));
-    } catch (e) {
-      print(e);
-
-      dynamicFieldModelfromUForm = [];
-    }
-    uformname = json.containsKey('uformname') ? json['uformname'] : '';
-    endDateTime =
-        json.containsKey('end_date_time') ? json['end_date_time'] : '';
-    startDateTime =
-        json.containsKey('start_date_time') ? json['start_date_time'] : '';
-    cptCodeDetails =
-        json.containsKey('cpt_code_details') ? json['cpt_code_details'] : '';
-    uid = json.containsKey('uid') ? json['uid'] : '';
-    title = json.containsKey('title') ? json['title'] : '';
-    linkid = json.containsKey('linkid') ? json['linkid'] : '';
-    activityname = json.containsKey('activityname') ? json['activityname'] : '';
-    activityType =
-        json.containsKey('activity_type') ? json['activity_type'] : '';
-    comment = json.containsKey('comment') ? json['comment'] : '';
-    category = json.containsKey('category') ? json['category'] : '';
-    actionId = json.containsKey('action_id') ? json['action_id'] : '';
-    escalatedTime =
-        json.containsKey('escalated_time') ? json['escalated_time'] : '';
-    escalatedById =
-        json.containsKey('escalated_by_id') ? json['escalated_by_id'] : '';
-    escalatedToId =
-        json.containsKey('escalated_to_id') ? json['escalated_to_id'] : '';
-    resolveComment =
-        json.containsKey('resolve_comment') ? json['resolve_comment'] : '';
-    escalatedByName =
-        json.containsKey('escalated_by_name') ? json['escalated_by_name'] : '';
-    escalatedToName =
-        json.containsKey('escalated_to_name') ? json['escalated_to_name'] : '';
-    escalationReceived = json.containsKey('escalation_received')
-        ? json['escalation_received']
-        : '';
-    risklevel = json.containsKey('risklevel') ? json['risklevel'] : 0;
-    escalatedComment =
-        json.containsKey('escalated_comment') ? json['escalated_comment'] : '';
   }
 
   Map<String, dynamic> toJson() {
@@ -171,7 +180,9 @@ class AdditionalInfo {
             : DynamicFieldModel()));
     try {
       dynamicFieldModelfromUForm?.sort((a, b) => a?.seq.compareTo(b?.seq));
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   getDynamicFieldList(dynamic json) {
@@ -213,7 +224,7 @@ class AdditionalInfo {
     try {
       dynamicFieldModel?.sort((a, b) => a?.seq.compareTo(b?.seq));
     } catch (e) {
-      //print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 }

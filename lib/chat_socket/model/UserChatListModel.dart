@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UserChatListModel {
   bool? isSuccess;
   List<PayloadChat>? payload;
@@ -6,12 +8,16 @@ class UserChatListModel {
   UserChatListModel({this.isSuccess, this.payload});
 
   UserChatListModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['payload'] != null) {
-      payload = <PayloadChat>[];
-      json['payload'].forEach((v) {
-        payload!.add(new PayloadChat.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['payload'] != null) {
+            payload = <PayloadChat>[];
+            json['payload'].forEach((v) {
+              payload!.add(new PayloadChat.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -69,31 +75,35 @@ class PayloadChat {
   });
 
   PayloadChat.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    peerId = json['peerId'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    profilePicThumbnailURL = json['profilePicThumbnailURL'];
-    deliveredDateTime = json['deliveredDateTime'];
-    messageId = json['messageId'];
-    isRead = json['isRead'];
-    messageType = json['messageType'];
-    messages = json['messages'] != null
-        ? new Messages.fromJson(json['messages'])
-        : null;
-    documentId = json['documentId'];
-    unReadCount = json['unReadCount'];
-    isDisable = json['isDisable'] != null ? json['isDisable'] : false;
-    deliveredTimeStamp = json['deliveredTimeStamp'];
-    familyUserId = json['familyUserId'];
-    familyUserFirstName = json['familyUserFirstName'];
-    familyUserLastName = json['familyUserLastName'];
-    isFamilyUserCareCoordinator = json['isFamilyUserCareCoordinator'] != null
-        ? json['isFamilyUserCareCoordinator']
-        : false;
-    isPrimaryCareCoordinator = json['isPrimaryCareCoordinator'] != null
-        ? json['isPrimaryCareCoordinator']
-        : false;
+    try {
+      id = json['id'];
+      peerId = json['peerId'];
+      firstName = json['firstName'];
+      lastName = json['lastName'];
+      profilePicThumbnailURL = json['profilePicThumbnailURL'];
+      deliveredDateTime = json['deliveredDateTime'];
+      messageId = json['messageId'];
+      isRead = json['isRead'];
+      messageType = json['messageType'];
+      messages = json['messages'] != null
+              ? new Messages.fromJson(json['messages'])
+              : null;
+      documentId = json['documentId'];
+      unReadCount = json['unReadCount'];
+      isDisable = json['isDisable'] != null ? json['isDisable'] : false;
+      deliveredTimeStamp = json['deliveredTimeStamp'];
+      familyUserId = json['familyUserId'];
+      familyUserFirstName = json['familyUserFirstName'];
+      familyUserLastName = json['familyUserLastName'];
+      isFamilyUserCareCoordinator = json['isFamilyUserCareCoordinator'] != null
+              ? json['isFamilyUserCareCoordinator']
+              : false;
+      isPrimaryCareCoordinator = json['isPrimaryCareCoordinator'] != null
+              ? json['isPrimaryCareCoordinator']
+              : false;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -142,15 +152,19 @@ class Messages {
       this.timestamp});
 
   Messages.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    idTo = json['idTo'];
-    type = json['type'];
-    idFrom = json['idFrom'];
-    isread = json['isread'];
-    content = json['content'];
-    timestamp = json['timestamp'] != null
-        ? new Timestamp.fromJson(json['timestamp'])
-        : null;
+    try {
+      id = json['id'];
+      idTo = json['idTo'];
+      type = json['type'];
+      idFrom = json['idFrom'];
+      isread = json['isread'];
+      content = json['content'];
+      timestamp = json['timestamp'] != null
+              ? new Timestamp.fromJson(json['timestamp'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -175,8 +189,12 @@ class Timestamp {
   Timestamp({this.sSeconds, this.sNanoseconds});
 
   Timestamp.fromJson(Map<String, dynamic> json) {
-    sSeconds = json['_seconds'];
-    sNanoseconds = json['_nanoseconds'];
+    try {
+      sSeconds = json['_seconds'];
+      sNanoseconds = json['_nanoseconds'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/variables.dart';
 
 class Content {
@@ -8,10 +9,14 @@ class Content {
   Content({this.variables, this.templateName});
 
   Content.fromJson(Map<String, dynamic> json) {
-    variables = json['variables'] != null
-        ? new Variables.fromJson(json['variables'])
-        : null;
-    templateName = json['templateName'] != null ? json['templateName'] : null;
+    try {
+      variables = json['variables'] != null
+              ? new Variables.fromJson(json['variables'])
+              : null;
+      templateName = json['templateName'] != null ? json['templateName'] : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

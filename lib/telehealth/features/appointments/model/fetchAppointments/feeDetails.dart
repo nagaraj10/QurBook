@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
 as parameters;
 
@@ -12,10 +13,14 @@ class FeeDetails {
       {this.paidAmount, this.doctorCancellationCharge, this.finalRefundAmount,this.paymentMode});
 
   FeeDetails.fromJson(Map<String, dynamic> json) {
-    paidAmount = json[parameters.strPaidAmount];
-    doctorCancellationCharge = json[parameters.strDoctorCancellationCharges];
-    finalRefundAmount = json[parameters.strFinalRefundAmount];
-    paymentMode = json[parameters.strPaymentMode];
+    try {
+      paidAmount = json[parameters.strPaidAmount];
+      doctorCancellationCharge = json[parameters.strDoctorCancellationCharges];
+      finalRefundAmount = json[parameters.strFinalRefundAmount];
+      paymentMode = json[parameters.strPaymentMode];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

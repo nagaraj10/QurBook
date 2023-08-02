@@ -60,6 +60,8 @@ class QurPlanReminders {
 
       await updateReminderswithLocal(reminders);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
     }
   }
@@ -89,6 +91,8 @@ class QurPlanReminders {
       await file.writeAsString(dataToJson);
       return true;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       return false;
     }
@@ -312,6 +316,8 @@ class QurPlanReminders {
       }
       return notifications;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       return [];
     }

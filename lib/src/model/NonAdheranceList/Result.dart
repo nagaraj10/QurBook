@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'RecipientReceiver.dart';
 import 'Patient.dart';
 import 'ReminderFor.dart';
@@ -27,15 +29,19 @@ class Result {
 }
 
   Result.fromJson(dynamic json) {
-    _id = json['id'];
-    _remindAfterMins = json['remindAfterMins'];
-    _isActive = json['isActive'];
-    _createdOn = json['createdOn'];
-    _lastModifiedOn = json['lastModifiedOn'];
-    _recipientReceiver = json['recipientReceiver'] != null ? RecipientReceiver.fromJson(json['recipientReceiver']) : null;
-    _patient = json['patient'] != null ? Patient.fromJson(json['patient']) : null;
-    _reminderFor = json['reminderFor'] != null ? ReminderFor.fromJson(json['reminderFor']) : null;
-    _reminderSettingLevel = json['reminderSettingLevel'] != null ? ReminderSettingLevel.fromJson(json['reminderSettingLevel']) : null;
+    try {
+      _id = json['id'];
+      _remindAfterMins = json['remindAfterMins'];
+      _isActive = json['isActive'];
+      _createdOn = json['createdOn'];
+      _lastModifiedOn = json['lastModifiedOn'];
+      _recipientReceiver = json['recipientReceiver'] != null ? RecipientReceiver.fromJson(json['recipientReceiver']) : null;
+      _patient = json['patient'] != null ? Patient.fromJson(json['patient']) : null;
+      _reminderFor = json['reminderFor'] != null ? ReminderFor.fromJson(json['reminderFor']) : null;
+      _reminderSettingLevel = json['reminderSettingLevel'] != null ? ReminderSettingLevel.fromJson(json['reminderSettingLevel']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   String? _id;
   int? _remindAfterMins;

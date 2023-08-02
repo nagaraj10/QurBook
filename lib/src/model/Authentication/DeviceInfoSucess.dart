@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class DeviceInfoSucess {
   bool? isSuccess;
   String? message;
@@ -7,16 +9,20 @@ class DeviceInfoSucess {
   DeviceInfoSucess({this.isSuccess, this.message, this.result});
 
   DeviceInfoSucess.fromJson(Map<String, dynamic>? json) {
-    if (json != null) {
-      isSuccess = json['isSuccess'] ?? false;
-      if (json.containsKey('message')) message = json['message'];
-      if (json.containsKey('result')) {
-        result = json['result'] ?? null;
-      }
-    } else {
-      isSuccess = false;
-      message = '';
-      result = null;
+    try {
+      if (json != null) {
+            isSuccess = json['isSuccess'] ?? false;
+            if (json.containsKey('message')) message = json['message'];
+            if (json.containsKey('result')) {
+              result = json['result'] ?? null;
+            }
+          } else {
+            isSuccess = false;
+            message = '';
+            result = null;
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

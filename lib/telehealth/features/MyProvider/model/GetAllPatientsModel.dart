@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
 class GetAllPatientsModel {
   String? status;
@@ -7,12 +8,16 @@ class GetAllPatientsModel {
   GetAllPatientsModel({this.status, this.data});
 
   GetAllPatientsModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    if (json['data'] != null) {
-      data = <Data>[];
-      json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
-      });
+    try {
+      status = json['status'];
+      if (json['data'] != null) {
+            data = <Data>[];
+            json['data'].forEach((v) {
+              data!.add(new Data.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class SavedMetaDataResponse {
@@ -11,12 +13,16 @@ class SavedMetaDataResponse {
       {this.status, this.success, this.message, this.response});
 
   SavedMetaDataResponse.fromJson(Map<String, dynamic> json) {
-    status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+    try {
+      status = json[parameters.strStatus];
+      success = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+      response = json[parameters.strResponse] != null
+              ? Response.fromJson(json[parameters.strResponse])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -38,9 +44,13 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json[parameters.strCount];
-    data =
-        json[parameters.strData] != null ? SavedMediaData.fromJson(json[parameters.strData]) : null;
+    try {
+      count = json[parameters.strCount];
+      data =
+              json[parameters.strData] != null ? SavedMediaData.fromJson(json[parameters.strData]) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -59,7 +69,11 @@ class SavedMediaData {
   SavedMediaData({this.mediaMetaID});
 
   SavedMediaData.fromJson(Map<String, dynamic> json) {
-    mediaMetaID = json[parameters.strmediaMetaID];
+    try {
+      mediaMetaID = json[parameters.strmediaMetaID];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

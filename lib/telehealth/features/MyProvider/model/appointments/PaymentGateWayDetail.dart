@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/PaymentRequestModel.dart';
 
 class PaymentGatewayDetail {
@@ -21,16 +22,20 @@ class PaymentGatewayDetail {
     this.id});
 
   PaymentGatewayDetail.fromJson(Map<String, dynamic> json) {
-    sourceId = json['sourceId'];
-    sourceCode = json['sourceCode'];
-    responseInfo = json['responseInfo'] != null
-        ? new ResponseInfo.fromJson(json['responseInfo'])
-        : null;
-    createdOn = json['createdOn'];
-    isActive = json['isActive'];
-    paymentGatewayRequestId = json['paymentGatewayRequestId'];
-    lastModifiedOn = json['lastModifiedOn'];
-    id = json['id'];
+    try {
+      sourceId = json['sourceId'];
+      sourceCode = json['sourceCode'];
+      responseInfo = json['responseInfo'] != null
+              ? new ResponseInfo.fromJson(json['responseInfo'])
+              : null;
+      createdOn = json['createdOn'];
+      isActive = json['isActive'];
+      paymentGatewayRequestId = json['paymentGatewayRequestId'];
+      lastModifiedOn = json['lastModifiedOn'];
+      id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -95,27 +100,31 @@ class ResponseInfo {
     this.paymentGateWay});
 
   ResponseInfo.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    phone = json['phone'];
-    email = json['email'];
-    buyerName = json['buyer_name'];
-    amount = json['amount'];
-    purpose = json['purpose'];
-    expiresAt = json['expires_at'];
-    status = json['status'];
-    sendSms = json['send_sms'];
-    sendEmail = json['send_email'];
-    smsStatus = json['sms_status'];
-    emailStatus = json['email_status'];
-    shorturl = json['short_url'];
-    longurl = json['longurl'];
-    redirectUrl = json['redirect_url'];
-    webhook = json['webhook'];
-    allowRepeatedPayments = json['allow_repeated_payments'];
-    customerId = json['customer_id'];
-    createdAt = json['created_at'];
-    modifiedAt = json['modified_at'];
-    paymentGateWay = json['payment_gateway'];
+    try {
+      id = json['id'];
+      phone = json['phone'];
+      email = json['email'];
+      buyerName = json['buyer_name'];
+      amount = json['amount'];
+      purpose = json['purpose'];
+      expiresAt = json['expires_at'];
+      status = json['status'];
+      sendSms = json['send_sms'];
+      sendEmail = json['send_email'];
+      smsStatus = json['sms_status'];
+      emailStatus = json['email_status'];
+      shorturl = json['short_url'];
+      longurl = json['longurl'];
+      redirectUrl = json['redirect_url'];
+      webhook = json['webhook'];
+      allowRepeatedPayments = json['allow_repeated_payments'];
+      customerId = json['customer_id'];
+      createdAt = json['created_at'];
+      modifiedAt = json['modified_at'];
+      paymentGateWay = json['payment_gateway'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -152,10 +161,14 @@ class PaymentRequestResult {
   PaymentRequestResult({this.success, this.paymentRequest});
 
   PaymentRequestResult.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    paymentRequest = json['payment_request'] != null
-        ? new PaymentRequestModel.fromJson(json['payment_request'])
-        : null;
+    try {
+      success = json['success'];
+      paymentRequest = json['payment_request'] != null
+              ? new PaymentRequestModel.fromJson(json['payment_request'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

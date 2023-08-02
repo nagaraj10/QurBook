@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'catergory_result.dart';
 
@@ -9,12 +11,16 @@ class CategoryDataList {
   CategoryDataList({this.isSuccess, this.result});
 
   CategoryDataList.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[parameters.strIsSuccess];
-    if (json[parameters.strResult] != null) {
-      result = <CategoryResult>[];
-      json[parameters.strResult].forEach((v) {
-        result!.add(CategoryResult.fromJson(v));
-      });
+    try {
+      isSuccess = json[parameters.strIsSuccess];
+      if (json[parameters.strResult] != null) {
+            result = <CategoryResult>[];
+            json[parameters.strResult].forEach((v) {
+              result!.add(CategoryResult.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

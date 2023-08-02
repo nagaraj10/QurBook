@@ -368,6 +368,8 @@ class TakePictureScreenForDevicesState
 
                                             setState(() {});
                                           } catch (e) {
+                                                        CommonUtil().appLogs(message: e.toString());
+
                                             // If an error occurs, log the error to the console.
                                           }
                                         }
@@ -466,6 +468,8 @@ class TakePictureScreenForDevicesState
                                               callDisplayPictureScreen(context);
                                             }
                                           } catch (e) {
+                                                        CommonUtil().appLogs(message: e.toString());
+
                                             (await getTemporaryDirectory())
                                                 .delete(recursive: true);
                                             toast.getToast(

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class CommonResponse {
   bool? isSuccess;
   String? message;
@@ -7,12 +9,12 @@ class CommonResponse {
   CommonResponse({this.isSuccess, this.message, this.result});
 
   CommonResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
     try{
+      isSuccess = json['isSuccess'];
       message = json['message'];
       result = json['result'];
     }catch(e){
-
+      CommonUtil().appLogs(message: e.toString());
     }
 
   }

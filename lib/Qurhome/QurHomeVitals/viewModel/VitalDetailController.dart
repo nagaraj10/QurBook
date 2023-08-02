@@ -2,22 +2,16 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/model/BPValues.dart';
 import 'package:myfhb/device_integration/model/DeviceIntervalData.dart';
 import 'package:myfhb/device_integration/model/GulcoseValues.dart';
-import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
 import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
 import 'package:myfhb/device_integration/viewModel/getGFDataFromFHBRepo.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_query.dart' as query;
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 
@@ -230,6 +224,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       loadingData.value = false;
       bpList.value = [];
     }
@@ -295,6 +291,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       gulList.value = [];
       loadingData.value = false;
     }
@@ -366,6 +364,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       oxyList.value = [];
       loadingData.value = false;
     }
@@ -426,6 +426,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       tempList.value = [];
       loadingData.value = false;
     }
@@ -488,6 +490,8 @@ class VitalDetailController extends GetxController {
 
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       weightList.value = [];
       loadingData.value = false;
     }
@@ -498,6 +502,8 @@ class VitalDetailController extends GetxController {
       timerProgress.value = value;
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 }

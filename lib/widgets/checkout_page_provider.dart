@@ -6,6 +6,7 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/claim/model/credit/CreditBalance.dart';
 import 'package:myfhb/claim/model/credit/CreditBalanceResult.dart';
 import 'package:myfhb/claim/service/ClaimListRepository.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
@@ -152,7 +153,9 @@ class CheckoutPageProvider extends ChangeNotifier {
             productList?.additionalInfo?.planType == "DIET") {
           updateDietPlanCount(false);
         }
-      } catch (e) {}
+      } catch (e) {
+                                CommonUtil().appLogs(message: e.toString());
+      }
       if (needToast) {
         FlutterToast().getToast(value.message!, Colors.green);
         await fetchCartItems(isNeedRelod: isNeedRelod);

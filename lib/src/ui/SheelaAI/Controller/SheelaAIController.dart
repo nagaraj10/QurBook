@@ -171,6 +171,8 @@ class SheelaAIController extends GetxController {
           printError(
             info: e.toString(),
           );
+                      CommonUtil().appLogs(message: e.toString());
+
       }
     }
   }
@@ -421,6 +423,8 @@ class SheelaAIController extends GetxController {
       isLoading.value = false;
     } catch (e) {
       //need to handle errors
+                  CommonUtil().appLogs(message: e.toString());
+
       isLoading.value = false;
       conversations.removeLast();
       if (kDebugMode) print(e.toString());
@@ -444,6 +448,8 @@ class SheelaAIController extends GetxController {
       return true;
     } catch (e) {
       //failed to play in the local tts
+                  CommonUtil().appLogs(message: e.toString());
+
       return false;
     }
   }
@@ -490,11 +496,15 @@ class SheelaAIController extends GetxController {
               }
             } catch (e) {
               //gettingReposnseFromNative();
+                          CommonUtil().appLogs(message: e.toString());
+
             }
           }
         }
       } catch (e) {
         //failed to play in local tts
+                    CommonUtil().appLogs(message: e.toString());
+
       }
     } else {
       String? textForPlaying;
@@ -527,6 +537,8 @@ class SheelaAIController extends GetxController {
               result = await getGoogleTTSForText(currentButton.title);
             }
           } catch (e) {
+                        CommonUtil().appLogs(message: e.toString());
+
             result = await getGoogleTTSForText(currentButton.title);
           }
           if ((result.payload?.audioContent ?? '').isNotEmpty) {
@@ -578,6 +590,8 @@ class SheelaAIController extends GetxController {
             }
           }
         } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
           //failed play the audio
           print(e.toString());
           FlutterToast().getToast('failed play the audio', Colors.black54);
@@ -636,6 +650,8 @@ class SheelaAIController extends GetxController {
       final result = await Future.wait(apis);
       return conversation;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       //Failed to get tts in conversation
       FlutterToast()
           .getToast('Failed to get tts in conversation', Colors.black54);
@@ -649,6 +665,8 @@ class SheelaAIController extends GetxController {
       conversation.ttsResponse = result;
       return true;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       return false;
     }
   }
@@ -665,6 +683,8 @@ class SheelaAIController extends GetxController {
       button.ttsResponse = result;
       return true;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       return false;
     }
   }
@@ -694,7 +714,9 @@ class SheelaAIController extends GetxController {
             Colors.black54);
       }
     } catch (e) {
-      print(e.toString());
+ 
+             CommonUtil().appLogs(message: e.toString());
+     print(e.toString());
       //need to handle failure in the api call for tts
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
@@ -791,6 +813,8 @@ class SheelaAIController extends GetxController {
                     getAIAPIResponseFor(response, button);
                   }
                 } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
+
                   lastMsgIsOfButtons = false;
                   conversations.add(newConversation);
                   getAIAPIResponseFor(response, null);
@@ -817,6 +841,8 @@ class SheelaAIController extends GetxController {
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
@@ -837,6 +863,8 @@ class SheelaAIController extends GetxController {
       }
       return currentLang;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       return 'undef';
     }
   }
@@ -846,6 +874,8 @@ class SheelaAIController extends GetxController {
       final data = await HealthReportListForUserBlock().getHelthReportLists();
       await PreferenceUtil.saveCompleteData(KEY_COMPLETE_DATA, data);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
     }
   }
@@ -906,6 +936,8 @@ class SheelaAIController extends GetxController {
               currentDeviceStatus.allowSymptomsNotification);
       return data;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
     }
   }
@@ -1001,6 +1033,8 @@ class SheelaAIController extends GetxController {
         }
       });
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       sheelaIconBadgeCount.value = 0;
     }
   }
@@ -1025,6 +1059,8 @@ class SheelaAIController extends GetxController {
         });
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       printError(info: e.toString());
     }
   }
