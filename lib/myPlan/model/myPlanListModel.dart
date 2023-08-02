@@ -1,6 +1,8 @@
 
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../plan_dashboard/model/MetaDataForURL.dart';
 
 import 'ProviderMetaModel.dart';
@@ -12,12 +14,16 @@ class MyPlanListModel {
   MyPlanListModel({this.isSuccess, this.result});
 
   MyPlanListModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <MyPlanListResult>[];
-      json['result'].forEach((v) {
-        result!.add(MyPlanListResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <MyPlanListResult>[];
+            json['result'].forEach((v) {
+              result!.add(MyPlanListResult.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

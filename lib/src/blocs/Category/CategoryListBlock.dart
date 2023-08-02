@@ -1,6 +1,8 @@
 
 import 'dart:async';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_parameters.dart';
 import '../Authentication/LoginBloc.dart';
@@ -50,6 +52,8 @@ class CategoryListBlock implements BaseBloc {
           await _categoryResponseListRepository.getCategoryList();
       categoryListSink.add(ApiResponse.completed(categoryResponseList));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       categoryListSink.add(ApiResponse.error(e.toString()));
     }
     return categoryResponseList;
@@ -67,6 +71,8 @@ class CategoryListBlock implements BaseBloc {
 
       categoryListSinks.add(ApiResponse.completed(categoryDataList));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       categoryListSinks.add(ApiResponse.error(e.toString()));
     }
     return categoryDataList;

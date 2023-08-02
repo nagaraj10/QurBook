@@ -130,6 +130,8 @@ class _VitalsListState extends State<VitalsList> {
       //onInit();
       super.initState();
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -138,6 +140,8 @@ class _VitalsListState extends State<VitalsList> {
     try {
       qurhomeDashboardController.getModuleAccess();
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -157,6 +161,8 @@ class _VitalsListState extends State<VitalsList> {
       });
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -441,6 +447,8 @@ class _VitalsListState extends State<VitalsList> {
           averageForDia = '';
         }
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         averageForSys = '';
         averageForDia = '';
         pulseBp = '';
@@ -501,6 +509,8 @@ class _VitalsListState extends State<VitalsList> {
                     .toString()
                 : '';
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         averageForFasting = '';
         averageForPP = '';
       }
@@ -576,6 +586,8 @@ class _VitalsListState extends State<VitalsList> {
                           .toString()
                       : '';
             } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
               averageForPul = '';
               averageForPRBpm = '';
               prbPMOxi = '';
@@ -590,6 +602,8 @@ class _VitalsListState extends State<VitalsList> {
           prbPMOxi = '';
         }
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         averageForPulForBp = '';
         averageForPul = '';
         averageForPRBpm = '';
@@ -605,6 +619,8 @@ class _VitalsListState extends State<VitalsList> {
                 .toString()
             : '';
       } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
         averageForSPO2 = '';
       }
     } else {
@@ -641,6 +657,8 @@ class _VitalsListState extends State<VitalsList> {
                 .toString()
             : '';
       } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
         averageForTemp = '';
       }
       try {
@@ -649,6 +667,8 @@ class _VitalsListState extends State<VitalsList> {
                 ? deviceValues!.bodyTemperature!.entities![0].temperatureUnit!.code
                 : '';
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         unitForTemp = '';
       }
     } else {
@@ -685,6 +705,8 @@ class _VitalsListState extends State<VitalsList> {
                 .toString()
             : '';
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         averageForWeigh = '';
       }
       try {
@@ -692,6 +714,8 @@ class _VitalsListState extends State<VitalsList> {
             ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
             : '';
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         unitForWeight = '';
       }
     } else {

@@ -235,6 +235,8 @@ class _NotificationScreen extends State<NotificationScreen> {
         );
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       //print(e);
     }
     return true;
@@ -1362,7 +1364,10 @@ class _NotificationScreen extends State<NotificationScreen> {
   void getProfileData() async {
     try {
       await new CommonUtil().getUserProfileData();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Widget createNSActionButton(

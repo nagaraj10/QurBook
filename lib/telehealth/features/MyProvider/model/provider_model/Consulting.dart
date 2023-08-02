@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Consulting {
@@ -7,7 +8,11 @@ class Consulting {
   Consulting({this.fee});
 
   Consulting.fromJson(Map<String, dynamic> json) {
-    fee = json[parameters.strfee];
+    try {
+      fee = json[parameters.strfee];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class Hospital {
@@ -36,33 +38,37 @@ class Hospital {
       this.zipcode});
 
   Hospital.fromJson(Map<String, dynamic> json) {
-    localHospitalId = json[parameters.strLocal_Hospital_Id] ?? 0;
-    addressLine1 = json[parameters.strAddressLine1];
-    addressLine2 = json[parameters.strAddressLine2];
-    branch = json[parameters.strBranch] ?? '';
-    city = json[parameters.strCity];
-    description = json[parameters.strDescription];
-    email = json[parameters.strEmail] ?? '';
-    id = json[parameters.strId];
-    isUserDefined = json[parameters.strIsUserDefined] ?? false;
-    if (json[parameters.strLatitude] is String) {
-      latitude = json[parameters.strLatitude];
-    } else {
-      latitude = json[parameters.strLatitude].toString();
-    }
-    if (json[parameters.strLongitute] is String) {
-      longitude = json[parameters.strLongitute];
-    } else {
-      longitude = json[parameters.strLongitute].toString();
-    }
+    try {
+      localHospitalId = json[parameters.strLocal_Hospital_Id] ?? 0;
+      addressLine1 = json[parameters.strAddressLine1];
+      addressLine2 = json[parameters.strAddressLine2];
+      branch = json[parameters.strBranch] ?? '';
+      city = json[parameters.strCity];
+      description = json[parameters.strDescription];
+      email = json[parameters.strEmail] ?? '';
+      id = json[parameters.strId];
+      isUserDefined = json[parameters.strIsUserDefined] ?? false;
+      if (json[parameters.strLatitude] is String) {
+            latitude = json[parameters.strLatitude];
+          } else {
+            latitude = json[parameters.strLatitude].toString();
+          }
+      if (json[parameters.strLongitute] is String) {
+            longitude = json[parameters.strLongitute];
+          } else {
+            longitude = json[parameters.strLongitute].toString();
+          }
 
-    logoThumbnail = json[parameters.strLogothumbnail] ?? '';
-    name = json[parameters.strName];
-    website = json[parameters.strWebsite];
-    if (zipcode is String) {
-      zipcode = json[parameters.strZipcode];
-    } else {
-      zipcode = json[parameters.strZipcode].toString();
+      logoThumbnail = json[parameters.strLogothumbnail] ?? '';
+      name = json[parameters.strName];
+      website = json[parameters.strWebsite];
+      if (zipcode is String) {
+            zipcode = json[parameters.strZipcode];
+          } else {
+            zipcode = json[parameters.strZipcode].toString();
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

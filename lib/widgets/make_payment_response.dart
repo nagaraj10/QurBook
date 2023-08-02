@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class MakePaymentResponse {
   bool? isSuccess;
   Result? result;
@@ -7,13 +9,17 @@ class MakePaymentResponse {
   MakePaymentResponse({this.isSuccess, this.result, this.message});
 
   MakePaymentResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json.containsKey('result')) {
-      result =
-          json['result'] != null ? new Result.fromJson(json['result']) : null;
-    }
-    if (json.containsKey('message')) {
-      message = json['message'];
+    try {
+      isSuccess = json['isSuccess'];
+      if (json.containsKey('result')) {
+            result =
+                json['result'] != null ? new Result.fromJson(json['result']) : null;
+          }
+      if (json.containsKey('message')) {
+            message = json['message'];
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -41,18 +47,22 @@ class Result {
       this.paymentGatewayDetail});
 
   Result.fromJson(Map<String, dynamic> json) {
-    orderId = json['orderId'];
-    if (json['subscribeResponse'] != null) {
-      subscribeResponse = <SubscribeResponse>[];
-      json['subscribeResponse'].forEach((v) {
-        subscribeResponse!.add(new SubscribeResponse.fromJson(v));
-      });
+    try {
+      orderId = json['orderId'];
+      if (json['subscribeResponse'] != null) {
+            subscribeResponse = <SubscribeResponse>[];
+            json['subscribeResponse'].forEach((v) {
+              subscribeResponse!.add(new SubscribeResponse.fromJson(v));
+            });
+          }
+      payment =
+              json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
+      paymentGatewayDetail = json['paymentGatewayDetail'] != null
+              ? new PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    payment =
-        json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
-    paymentGatewayDetail = json['paymentGatewayDetail'] != null
-        ? new PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -89,12 +99,16 @@ class SubscribeResponse {
       this.docid});
 
   SubscribeResponse.fromJson(Map<String, dynamic> json) {
-    result = json['Result'];
-    planStartDate = json['PlanStartDate'];
-    message = json['Message'];
-    packageid = json['packageid'];
-    price = json['price'];
-    docid = json['docid'];
+    try {
+      result = json['Result'];
+      planStartDate = json['PlanStartDate'];
+      message = json['Message'];
+      packageid = json['packageid'];
+      price = json['price'];
+      docid = json['docid'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -152,31 +166,35 @@ class Payment {
       this.discountDetails});
 
   Payment.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    paymentStatus = json['paymentStatus'] != null
-        ? new PaymentStatus.fromJson(json['paymentStatus'])
-        : null;
-    paymentGateway = json['paymentGateway'] != null
-        ? new PaymentStatus.fromJson(json['paymentGateway'])
-        : null;
-    paidTo = json['paidTo'];
-    paidBy = json['paidBy'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    isActive = json['isActive'];
-    purpose = json['purpose'];
-    paidAmount = json['paidAmount'];
-    transactionDateTime = json['transactionDateTime'];
-    metadata = json['metadata'] != null
-        ? new Metadata.fromJson(json['metadata'])
-        : null;
-    cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
-    paymentReference = json['paymentReference'];
-    paidDate = json['paidDate'];
-    receiptUrl = json['receiptUrl'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isDiscount = json['isDiscount'];
-    discountDetails = json['discountDetails'];
+    try {
+      id = json['id'];
+      paymentStatus = json['paymentStatus'] != null
+              ? new PaymentStatus.fromJson(json['paymentStatus'])
+              : null;
+      paymentGateway = json['paymentGateway'] != null
+              ? new PaymentStatus.fromJson(json['paymentGateway'])
+              : null;
+      paidTo = json['paidTo'];
+      paidBy = json['paidBy'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      isActive = json['isActive'];
+      purpose = json['purpose'];
+      paidAmount = json['paidAmount'];
+      transactionDateTime = json['transactionDateTime'];
+      metadata = json['metadata'] != null
+              ? new Metadata.fromJson(json['metadata'])
+              : null;
+      cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
+      paymentReference = json['paymentReference'];
+      paidDate = json['paidDate'];
+      receiptUrl = json['receiptUrl'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isDiscount = json['isDiscount'];
+      discountDetails = json['discountDetails'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -237,18 +255,22 @@ class PaymentStatus {
       this.referenceData});
 
   PaymentStatus.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    referenceData = json['referenceData'] != null
-        ? new ReferenceData.fromJson(json['referenceData'])
-        : null;
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      referenceData = json['referenceData'] != null
+              ? new ReferenceData.fromJson(json['referenceData'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -290,14 +312,18 @@ class ReferenceData {
       this.lastModifiedOn});
 
   ReferenceData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -320,7 +346,11 @@ class Metadata {
   Metadata({this.paymentGateway});
 
   Metadata.fromJson(Map<String, dynamic> json) {
-    paymentGateway = json['paymentGateway'];
+    try {
+      paymentGateway = json['paymentGateway'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -336,7 +366,11 @@ class Cart {
   Cart({this.id});
 
   Cart.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    try {
+      id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -369,17 +403,21 @@ class PaymentGatewayDetail {
       this.id});
 
   PaymentGatewayDetail.fromJson(Map<String, dynamic> json) {
-    sourceId = json['sourceId'];
-    sourceCode = json['sourceCode'];
-    responseInfo = json['responseInfo'] != null
-        ? new ResponseInfo.fromJson(json['responseInfo'])
-        : null;
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    isActive = json['isActive'];
-    paymentGatewayRequestId = json['paymentGatewayRequestId'];
-    lastModifiedOn = json['lastModifiedOn'];
-    id = json['id'];
+    try {
+      sourceId = json['sourceId'];
+      sourceCode = json['sourceCode'];
+      responseInfo = json['responseInfo'] != null
+              ? new ResponseInfo.fromJson(json['responseInfo'])
+              : null;
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      isActive = json['isActive'];
+      paymentGatewayRequestId = json['paymentGatewayRequestId'];
+      lastModifiedOn = json['lastModifiedOn'];
+      id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -446,27 +484,31 @@ class ResponseInfo {
       this.paymentGateWay});
 
   ResponseInfo.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    phone = json['phone'];
-    email = json['email'];
-    buyerName = json['buyer_name'];
-    amount = json['amount'];
-    purpose = json['purpose'];
-    expiresAt = json['expires_at'];
-    status = json['status'];
-    sendSms = json['send_sms'];
-    sendEmail = json['send_email'];
-    smsStatus = json['sms_status'];
-    emailStatus = json['email_status'];
-    shorturl = json['short_url'];
-    longurl = json['longurl'];
-    redirectUrl = json['redirect_url'];
-    webhook = json['webhook'];
-    allowRepeatedPayments = json['allow_repeated_payments'];
-    customerId = json['customer_id'];
-    createdAt = json['created_at'];
-    modifiedAt = json['modified_at'];
-    paymentGateWay = json['payment_gateway'];
+    try {
+      id = json['id'];
+      phone = json['phone'];
+      email = json['email'];
+      buyerName = json['buyer_name'];
+      amount = json['amount'];
+      purpose = json['purpose'];
+      expiresAt = json['expires_at'];
+      status = json['status'];
+      sendSms = json['send_sms'];
+      sendEmail = json['send_email'];
+      smsStatus = json['sms_status'];
+      emailStatus = json['email_status'];
+      shorturl = json['short_url'];
+      longurl = json['longurl'];
+      redirectUrl = json['redirect_url'];
+      webhook = json['webhook'];
+      allowRepeatedPayments = json['allow_repeated_payments'];
+      customerId = json['customer_id'];
+      createdAt = json['created_at'];
+      modifiedAt = json['modified_at'];
+      paymentGateWay = json['payment_gateway'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

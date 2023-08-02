@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/keysofmodel.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 
@@ -15,12 +16,16 @@ class CallPushNSModel {
       this.saveMessage});
 
   CallPushNSModel.fromJson(Map<String, dynamic> json) {
-    recipients = json[c_recipients].cast<String>();
-    messageDetails = json[c_messageDetails] != null
-        ? new MessageDetails.fromJson(json[c_messageDetails])
-        : null;
-    transportMedium = json[c_transportMedium].cast<String>();
-    saveMessage = json[c_saveMessage];
+    try {
+      recipients = json[c_recipients].cast<String>();
+      messageDetails = json[c_messageDetails] != null
+              ? new MessageDetails.fromJson(json[c_messageDetails])
+              : null;
+      transportMedium = json[c_transportMedium].cast<String>();
+      saveMessage = json[c_saveMessage];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
@@ -179,6 +180,8 @@ class ChatViewModel extends ChangeNotifier {
       }
     } catch (e) {
       print(e.toString());
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -207,7 +210,10 @@ class ChatViewModel extends ChangeNotifier {
           .getAppointmentDetail(doctorId, patientId, careCoorId,isNormalChatUserList);
       appointments = appointmentModel.result;
       return appointments;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Future<void> upateUserNickname(String? patientId, String patientName) async {

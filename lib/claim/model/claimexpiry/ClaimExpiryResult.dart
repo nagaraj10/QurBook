@@ -1,5 +1,6 @@
 
 import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryAdditionalInfo.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class ClaimExpiryResult {
   String? userId;
@@ -38,24 +39,28 @@ class ClaimExpiryResult {
         this.membershipStatus});
 
   ClaimExpiryResult.fromJson(Map<String, dynamic> json) {
-    userId = json['userId'];
-    balanceAmount = json['balanceAmount'];
-    balanceDoctorAppointments = json['balanceDoctorAppointments'];
-    balanceDieticianAppointments = json['balanceDieticianAppointments'];
-    balanceCarePlans = json['balanceCarePlans'];
-    balanceDietPlans = json['balanceDietPlans'];
-    isMembershipUser = json['isMembershipUser'];
-    membershipId = json['membershipId'];
-    healthOrganizationId = json['healthOrganizationId'];
-    healthOrganizationName = json['healthOrganizationName'];
-    planName = json['planName'];
-    planStartDate = json['planStartDate'];
-    planEndDate = json['planEndDate'];
-    planSubscriptionInfoId = json['planSubscriptionInfoId'];
-    additionalInfo = json['additionalInfo'] != null ?
-    new ClaimExpiryAdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
-    membershipStatus = json['membershipStatus'];
+    try {
+      userId = json['userId'];
+      balanceAmount = json['balanceAmount'];
+      balanceDoctorAppointments = json['balanceDoctorAppointments'];
+      balanceDieticianAppointments = json['balanceDieticianAppointments'];
+      balanceCarePlans = json['balanceCarePlans'];
+      balanceDietPlans = json['balanceDietPlans'];
+      isMembershipUser = json['isMembershipUser'];
+      membershipId = json['membershipId'];
+      healthOrganizationId = json['healthOrganizationId'];
+      healthOrganizationName = json['healthOrganizationName'];
+      planName = json['planName'];
+      planStartDate = json['planStartDate'];
+      planEndDate = json['planEndDate'];
+      planSubscriptionInfoId = json['planSubscriptionInfoId'];
+      additionalInfo = json['additionalInfo'] != null ?
+          new ClaimExpiryAdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
+      membershipStatus = json['membershipStatus'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

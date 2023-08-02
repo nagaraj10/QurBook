@@ -1,6 +1,7 @@
 
 import 'package:myfhb/claim/model/claimmodel/ClaimRecordDetailResult.dart';
 import 'package:myfhb/claim/model/claimmodel/DocumentMetadata.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class ClaimRecordDetails {
   bool? isSuccess;
@@ -9,9 +10,13 @@ class ClaimRecordDetails {
   ClaimRecordDetails({this.isSuccess, this.result});
 
   ClaimRecordDetails.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new ClaimRecordDetailsResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? new ClaimRecordDetailsResult.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

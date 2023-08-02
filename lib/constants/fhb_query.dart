@@ -62,6 +62,8 @@ const String qr_caregiverid = 'id';
 const String qr_caregiver_ok = 'incident-alert/caregiver-action?action=seen';
 const String qr_caregiver_escalate =
     'incident-alert/caregiver-action?action=escalate';
+const String escalate_add_comments =
+    'track-user-activities/regimen-screen-activity';
 
 //modified by parvathi
 const String qr_doctorslot = 'doctorSlots/';
@@ -439,3 +441,14 @@ const String user_activity_status_date = '&date=';
 const String get_city_list = 'city/search/';
 
 const String get_sos_setting_status = 'patient-provider-mapping/sos-setting-status/';
+
+
+//app error log
+const String strAppVersion = 'appVersion';
+const String strOSVersion = 'osVersion';
+const String strDeviceName = 'deviceName';
+const String strException = 'exception';
+const String post_event_logapp_logs = 'event-log/app-logs';
+const String appName = 'appName';
+
+

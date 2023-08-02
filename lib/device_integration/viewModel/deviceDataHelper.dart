@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../Device_Integration/services/syncHealthKitData.dart';
 import '../services/syncGoogleFitData.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -38,6 +40,8 @@ class DeviceDataHelper {
             backgroundColor: Colors.green);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       await Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
     }
   }
@@ -46,6 +50,8 @@ class DeviceDataHelper {
     try {
       await _syncHealthKitData.activateHealthKit();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       await Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
     }
   }
@@ -63,6 +69,8 @@ class DeviceDataHelper {
             backgroundColor: Colors.green);
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       await Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
     }
   }

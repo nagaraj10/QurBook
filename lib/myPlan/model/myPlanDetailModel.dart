@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class MyPlanDetailModel {
   bool? isSuccess;
   List<MyPlanDetailResult>? result;
@@ -6,12 +8,16 @@ class MyPlanDetailModel {
   MyPlanDetailModel({this.isSuccess,this.result});
 
   MyPlanDetailModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <MyPlanDetailResult>[];
-      json['result'].forEach((v) {
-        result!.add(MyPlanDetailResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <MyPlanDetailResult>[];
+            json['result'].forEach((v) {
+              result!.add(MyPlanDetailResult.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -110,46 +116,50 @@ class MyPlanDetailResult {
         this.repeattext});
 
   MyPlanDetailResult.fromJson(Map<String, dynamic> json) {
-    planid = json['planid'];
-    packageid = json['packageid'];
-    packagetitle = json['packagetitle'];
-    tplanid = json['tplanid'];
-    startdate = json['startdate'];
-    planstemplateTitle = json['planstemplate_title'];
-    planstemplateDescription = json['planstemplate_description'];
-    specid = json['specid'];
-    specialityTitle = json['speciality_title'];
-    plancatid = json['plancatid'];
-    plancategoriesTitle = json['plancategories_title'];
-    deptid = json['deptid'];
-    departmentsTitle = json['departments_title'];
-    cid = json['cid'];
-    conditionsTitle = json['conditions_title'];
-    sid = json['sid'];
-    stepsTitle = json['steps_title'];
-    plansDuration = json['plans_duration'];
-    teidUser = json['teid_user'];
-    teid = json['teid'];
-    title = json['title'];
-    description = json['description'];
-    duration = json['duration'];
-    aid = json['aid'];
-    pformid = json['pformid'];
-    pformdata = json['pformdata'];
-    uformid = json['uformid'];
-    doserepeat = json['doserepeat'];
-    mealtype = json['mealtype'];
-    befafttime = json['befafttime'];
-    daystart = json['daystart'];
-    dayrepeat = json['dayrepeat'];
-    weekrepeat = json['weekrepeat'];
-    remindin = json['remindin'];
-    remindinType = json['remindin_type'];
-    evDuration = json['ev_duration'];
-    providerid = json['providerid'];
-    providername = json['providername'];
-    titletext = json['titletext'];
-    repeattext = json['repeattext'];
+    try {
+      planid = json['planid'];
+      packageid = json['packageid'];
+      packagetitle = json['packagetitle'];
+      tplanid = json['tplanid'];
+      startdate = json['startdate'];
+      planstemplateTitle = json['planstemplate_title'];
+      planstemplateDescription = json['planstemplate_description'];
+      specid = json['specid'];
+      specialityTitle = json['speciality_title'];
+      plancatid = json['plancatid'];
+      plancategoriesTitle = json['plancategories_title'];
+      deptid = json['deptid'];
+      departmentsTitle = json['departments_title'];
+      cid = json['cid'];
+      conditionsTitle = json['conditions_title'];
+      sid = json['sid'];
+      stepsTitle = json['steps_title'];
+      plansDuration = json['plans_duration'];
+      teidUser = json['teid_user'];
+      teid = json['teid'];
+      title = json['title'];
+      description = json['description'];
+      duration = json['duration'];
+      aid = json['aid'];
+      pformid = json['pformid'];
+      pformdata = json['pformdata'];
+      uformid = json['uformid'];
+      doserepeat = json['doserepeat'];
+      mealtype = json['mealtype'];
+      befafttime = json['befafttime'];
+      daystart = json['daystart'];
+      dayrepeat = json['dayrepeat'];
+      weekrepeat = json['weekrepeat'];
+      remindin = json['remindin'];
+      remindinType = json['remindin_type'];
+      evDuration = json['ev_duration'];
+      providerid = json['providerid'];
+      providername = json['providername'];
+      titletext = json['titletext'];
+      repeattext = json['repeattext'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

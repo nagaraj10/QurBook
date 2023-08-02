@@ -1,5 +1,6 @@
 import 'dart:convert' as convert;
 import 'dart:io';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
@@ -31,6 +32,8 @@ class FeedbackApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       return null;
     }
@@ -52,6 +55,8 @@ class FeedbackApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       return null;
     }

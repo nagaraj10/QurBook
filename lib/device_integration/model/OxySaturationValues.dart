@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart';
 
 class OxySaturationValues {
@@ -8,12 +10,16 @@ class OxySaturationValues {
   OxySaturationValues({this.isSuccess, this.result});
 
   OxySaturationValues.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[is_Success];
-    if (json[dataResult] != null) {
-      result = <OxyResult>[];
-      json[dataResult].forEach((oxygenvalue) {
-        result!.add(OxyResult.fromJson(oxygenvalue));
-      });
+    try {
+      isSuccess = json[is_Success];
+      if (json[dataResult] != null) {
+            result = <OxyResult>[];
+            json[dataResult].forEach((oxygenvalue) {
+              result!.add(OxyResult.fromJson(oxygenvalue));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
   Map<String, dynamic> toJson() {
@@ -45,10 +51,14 @@ class OxyResult {
       this.bpm});
 
   OxyResult.fromJson(Map<String, dynamic> json) {
-    sourceType = json[strsourcetype];
-    startDateTime = json[strStartTimeStamp];
-    endDateTime = json[strEndTimeStamp];
-    oxygenSaturation = json[strParamOxygen];
+    try {
+      sourceType = json[strsourcetype];
+      startDateTime = json[strStartTimeStamp];
+      endDateTime = json[strEndTimeStamp];
+      oxygenSaturation = json[strParamOxygen];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

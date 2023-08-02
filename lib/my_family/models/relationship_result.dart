@@ -1,5 +1,7 @@
 
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'FamilyMembersRes.dart';
 import 'relationships.dart';
 
@@ -26,19 +28,23 @@ class Result {
       this.referenceValueCollection});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    if (json['referenceValueCollection'] != null) {
-      referenceValueCollection = <RelationsShipModel>[];
-      json['referenceValueCollection'].forEach((v) {
-        referenceValueCollection!.add(RelationsShipModel.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      if (json['referenceValueCollection'] != null) {
+            referenceValueCollection = <RelationsShipModel>[];
+            json['referenceValueCollection'].forEach((v) {
+              referenceValueCollection!.add(RelationsShipModel.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

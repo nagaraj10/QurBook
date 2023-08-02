@@ -88,6 +88,8 @@ class SymptomListController extends GetxController {
       }
       loadingData.value = false;
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       loadingData.value = false;
     }
   }
@@ -176,6 +178,8 @@ class SymptomListController extends GetxController {
       }
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
       throw Exception('$e was thrown');
     }
   }

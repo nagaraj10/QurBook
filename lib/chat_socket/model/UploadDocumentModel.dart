@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UploadDocumentModel {
   bool? isSuccess;
   Result? result;
@@ -6,9 +8,13 @@ class UploadDocumentModel {
   UploadDocumentModel({this.isSuccess, this.result});
 
   UploadDocumentModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -28,8 +34,12 @@ class Result {
   Result({this.chatMessageId, this.fileUrl});
 
   Result.fromJson(Map<String, dynamic> json) {
-    chatMessageId = json['chatMessageId'];
-    fileUrl = json['fileUrl'];
+    try {
+      chatMessageId = json['chatMessageId'];
+      fileUrl = json['fileUrl'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

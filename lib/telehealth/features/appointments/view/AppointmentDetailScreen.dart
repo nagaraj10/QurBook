@@ -653,6 +653,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             }
                           } catch (e) {
                             print(e);
+                                        CommonUtil().appLogs(message: e.toString());
+
                           }
                         },
                         child: Text(

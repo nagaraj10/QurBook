@@ -1,4 +1,5 @@
 
+import '../CommonUtil.dart';
 import 'ConfigurationData.dart';
 
 class Result {
@@ -20,13 +21,17 @@ class Result {
 }
 
   Result.fromJson(dynamic json) {
-    _id = json['id'];
-    _code = json['code'];
-    _name = json['name'];
-    _configurationData = json['configurationData'] != null ? ConfigurationData.fromJson(json['configurationData']) : null;
-    _isActive = json['isActive'];
-    _createdOn = json['createdOn'];
-    _lastModifiedOn = json['lastModifiedOn'];
+    try {
+      _id = json['id'];
+      _code = json['code'];
+      _name = json['name'];
+      _configurationData = json['configurationData'] != null ? ConfigurationData.fromJson(json['configurationData']) : null;
+      _isActive = json['isActive'];
+      _createdOn = json['createdOn'];
+      _lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
   String? _id;
   String? _code;

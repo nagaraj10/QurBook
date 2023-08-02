@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class PrescriptionMedicines {
   String? medicineName;
   String? beforeOrAfterFood;
@@ -56,11 +58,15 @@ class PrescriptionMedicinesList {
   late List<PrescriptionMedicines> medicines;
 
   PrescriptionMedicinesList.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
-      medicines = <PrescriptionMedicines>[];
-      json['data'].forEach((v) {
-        medicines.add(new PrescriptionMedicines.fromJson(v));
-      });
+    try {
+      if (json['data'] != null) {
+            medicines = <PrescriptionMedicines>[];
+            json['data'].forEach((v) {
+              medicines.add(new PrescriptionMedicines.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 }

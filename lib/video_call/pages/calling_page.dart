@@ -59,6 +59,8 @@ class _CallingPageState extends State<CallingPage> {
       }
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -76,6 +78,8 @@ class _CallingPageState extends State<CallingPage> {
       });
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -86,6 +90,8 @@ class _CallingPageState extends State<CallingPage> {
       await audioPlayer!.release();
     } catch (e) {
       //print(e);
+                              CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -94,7 +100,9 @@ class _CallingPageState extends State<CallingPage> {
 //SharedPrefUtils sharedPref = new SharedPrefUtils();
       try {
         isDoctor = false; //await sharedPref.getBool('isDoctor');
-      } catch (e) {}
+      } catch (e) {
+                                CommonUtil().appLogs(message: e.toString());
+      }
       audioPlayer = await _audioCache.play('raw/dailer_tone.mp3');
       audioPlayer!.setVolume(0.1);
       audioPlayer!.playingRouteState = PlayingRoute.EARPIECE;
@@ -112,6 +120,7 @@ class _CallingPageState extends State<CallingPage> {
           isDoctor: isDoctor);
     } catch (e) {
       print(e);
+                              CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -207,6 +216,7 @@ class _CallingPageState extends State<CallingPage> {
                             VideoCallCommonUtils().callEnd(context, widget.id);
                           } catch (e) {
                             print(e);
+                                                    CommonUtil().appLogs(message: e.toString());
                           }
                         },
                       ),

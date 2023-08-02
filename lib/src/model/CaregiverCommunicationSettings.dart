@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class CaregiverCommunicationSetting {
   bool? vitals;
   bool? symptoms;
@@ -8,9 +10,13 @@ class CaregiverCommunicationSetting {
       {this.vitals, this.symptoms, this.appointments});
 
   CaregiverCommunicationSetting.fromJson(Map<String, dynamic> json) {
-    vitals = json['vitals'];
-    symptoms = json['symptoms'];
-    appointments = json['appointments'];
+    try {
+      vitals = json['vitals'];
+      symptoms = json['symptoms'];
+      appointments = json['appointments'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

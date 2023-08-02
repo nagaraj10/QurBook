@@ -1,5 +1,6 @@
 
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
@@ -66,37 +67,41 @@ class Booked {
   List<UserAddressCollection3>? userAddressCollection3;
 
   Booked.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    name = json[parameters.strName];
-    userName = json[parameters.strUserName];
-    firstName = json[parameters.strFirstName];
-    middleName = json[parameters.strmiddleName];
-    lastName = json[parameters.strLastName];
-    gender = json[parameters.strGender];
-    dateOfBirth = json[parameters.strdateOfBirth];
-    bloodGroup = json[parameters.strbloodGroup];
-    countryCode = json[parameters.strCountryCode];
+    try {
+      id = json[parameters.strId];
+      name = json[parameters.strName];
+      userName = json[parameters.strUserName];
+      firstName = json[parameters.strFirstName];
+      middleName = json[parameters.strmiddleName];
+      lastName = json[parameters.strLastName];
+      gender = json[parameters.strGender];
+      dateOfBirth = json[parameters.strdateOfBirth];
+      bloodGroup = json[parameters.strbloodGroup];
+      countryCode = json[parameters.strCountryCode];
 //    profilePicUrl = json[parameters.strProfilePicUrl];
-    profilePicThumbnailUrl = json[parameters.strProfilePicThumbnailUrl];
-    isTempUser = json[parameters.strIstemper];
-    isVirtualUser = json[parameters.strisVirtualUser];
-    isMigrated = json[parameters.strIsMigrated];
-    isClaimed = json[parameters.strIsClaimed];
-    isIeUser = json[parameters.strIsIeUser];
-    isEmailVerified = json[parameters.strIsEmailVerified];
-    isCpUser = json[parameters.strIsCpUser];
-    communicationPreferences = json[parameters.strCommunicationPreferences];
-    medicalPreferences = json[parameters.strmedicalPreferences];
-    isSignedIn = json[parameters.strIsSignedIn];
-    isActive = json[parameters.strIsActive];
-    createdBy = json[parameters.strCreatedBy];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedBy = json[parameters.strlastModifiedBy];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    userAddressCollection3 = json[parameters.strUserAddressCollection3] == null
-        ? null
-        : List<UserAddressCollection3>.from(json[parameters.strUserAddressCollection3]
-            .map((x) => UserAddressCollection3.fromJson(x)));
+      profilePicThumbnailUrl = json[parameters.strProfilePicThumbnailUrl];
+      isTempUser = json[parameters.strIstemper];
+      isVirtualUser = json[parameters.strisVirtualUser];
+      isMigrated = json[parameters.strIsMigrated];
+      isClaimed = json[parameters.strIsClaimed];
+      isIeUser = json[parameters.strIsIeUser];
+      isEmailVerified = json[parameters.strIsEmailVerified];
+      isCpUser = json[parameters.strIsCpUser];
+      communicationPreferences = json[parameters.strCommunicationPreferences];
+      medicalPreferences = json[parameters.strmedicalPreferences];
+      isSignedIn = json[parameters.strIsSignedIn];
+      isActive = json[parameters.strIsActive];
+      createdBy = json[parameters.strCreatedBy];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedBy = json[parameters.strlastModifiedBy];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      userAddressCollection3 = json[parameters.strUserAddressCollection3] == null
+              ? null
+              : List<UserAddressCollection3>.from(json[parameters.strUserAddressCollection3]
+                  .map((x) => UserAddressCollection3.fromJson(x)));
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

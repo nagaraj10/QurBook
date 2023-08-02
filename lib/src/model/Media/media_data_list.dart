@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'media_result.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 
@@ -9,12 +11,16 @@ class MediaDataList {
   MediaDataList({this.isSuccess, this.result});
 
   MediaDataList.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[parameters.strIsSuccess];
-    if (json[parameters.strResult] != null) {
-      result = <MediaResult>[];
-      json[parameters.strResult].forEach((v) {
-        result!.add(MediaResult.fromJson(v));
-      });
+    try {
+      isSuccess = json[parameters.strIsSuccess];
+      if (json[parameters.strResult] != null) {
+            result = <MediaResult>[];
+            json[parameters.strResult].forEach((v) {
+              result!.add(MediaResult.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

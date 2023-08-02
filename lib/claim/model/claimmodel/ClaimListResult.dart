@@ -1,6 +1,7 @@
 
 import 'package:myfhb/claim/model/claimmodel/DocumentMetadata.dart';
 import 'package:myfhb/claim/model/claimmodel/Status.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 
 class ClaimListResult {
@@ -36,31 +37,35 @@ class ClaimListResult {
         this.submittedFor,});
 
   ClaimListResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    if(json.containsKey('planName'))
-      planName = json['planName'];
-    claimNumber = json['claimNumber'];
-    claimAmountTotal = json['claimAmountTotal'];
-    if (json['documentMetadata'] != null) {
-      documentMetadata = <DocumentMetadata>[];
-      json['documentMetadata'].forEach((v) {
-        documentMetadata!.add(new DocumentMetadata.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      if(json.containsKey('planName'))
+            planName = json['planName'];
+      claimNumber = json['claimNumber'];
+      claimAmountTotal = json['claimAmountTotal'];
+      if (json['documentMetadata'] != null) {
+            documentMetadata = <DocumentMetadata>[];
+            json['documentMetadata'].forEach((v) {
+              documentMetadata!.add(new DocumentMetadata.fromJson(v));
+            });
+          }
+      remark = json['remark'];
+      approvedAmount = json['approvedAmount'];
+      settlementReference = json['settlementReference'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      status =
+          json['status'] != null ? new Status.fromJson(json['status']) : null;
+      submittedBy = json['submittedBy'] != null
+              ? new MyProfileResult.fromJson(json['submittedBy'])
+              : null;
+      submittedFor = json['submittedFor'] != null
+              ? new MyProfileResult.fromJson(json['submittedFor'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    remark = json['remark'];
-    approvedAmount = json['approvedAmount'];
-    settlementReference = json['settlementReference'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    status =
-    json['status'] != null ? new Status.fromJson(json['status']) : null;
-    submittedBy = json['submittedBy'] != null
-        ? new MyProfileResult.fromJson(json['submittedBy'])
-        : null;
-    submittedFor = json['submittedFor'] != null
-        ? new MyProfileResult.fromJson(json['submittedFor'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {

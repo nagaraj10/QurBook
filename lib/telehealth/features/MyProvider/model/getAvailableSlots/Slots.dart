@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class Slots {
   String? startTime;
   String? endTime;
@@ -8,10 +10,14 @@ class Slots {
   Slots({this.startTime, this.endTime, this.isAvailable, this.slotNumber});
 
   Slots.fromJson(Map<String, dynamic> json) {
-    startTime = json['startTime'];
-    endTime = json['endTime'];
-    isAvailable = json['isAvailable'];
-    slotNumber = json['slotNumber'];
+    try {
+      startTime = json['startTime'];
+      endTime = json['endTime'];
+      isAvailable = json['isAvailable'];
+      slotNumber = json['slotNumber'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

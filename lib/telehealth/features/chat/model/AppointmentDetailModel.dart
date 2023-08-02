@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class AppointmentDetailModel {
   bool? isSuccess;
   AppointmentResult? result;
@@ -6,10 +8,14 @@ class AppointmentDetailModel {
   AppointmentDetailModel({this.isSuccess, this.result});
 
   AppointmentDetailModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result = json['result'] != null
-        ? new AppointmentResult.fromJson(json['result'])
-        : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result = json['result'] != null
+              ? new AppointmentResult.fromJson(json['result'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -39,22 +45,26 @@ class AppointmentResult {
       this.chatList});
 
   AppointmentResult.fromJson(Map<String, dynamic> json) {
-    upcoming = json['upcoming'] != null
-        ? new Upcoming.fromJson(json['upcoming'])
-        : null;
-    past = json['past'] != null ? new Past.fromJson(json['past']) : null;
-    deviceToken = json['deviceToken'] != null
-        ? new DeviceToken.fromJson(json['deviceToken'])
-        : null;
-    isCaregiver = json['isCaregiver'];
-    isPatient = json['isPatient'];
-    chatList = json['chatList'] != null
-        ? new ChatList.fromJson(json['chatList'])
-        : null;
-    doctorOrCarecoordinatorInfo = json['doctorOrCarecoordinatorInfo'] != null
-        ? new DoctorOrCarecoordinatorInfo.fromJson(
-            json['doctorOrCarecoordinatorInfo'])
-        : null;
+    try {
+      upcoming = json['upcoming'] != null
+              ? new Upcoming.fromJson(json['upcoming'])
+              : null;
+      past = json['past'] != null ? new Past.fromJson(json['past']) : null;
+      deviceToken = json['deviceToken'] != null
+              ? new DeviceToken.fromJson(json['deviceToken'])
+              : null;
+      isCaregiver = json['isCaregiver'];
+      isPatient = json['isPatient'];
+      chatList = json['chatList'] != null
+              ? new ChatList.fromJson(json['chatList'])
+              : null;
+      doctorOrCarecoordinatorInfo = json['doctorOrCarecoordinatorInfo'] != null
+              ? new DoctorOrCarecoordinatorInfo.fromJson(
+                  json['doctorOrCarecoordinatorInfo'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -120,22 +130,26 @@ class Upcoming {
       });
 
   Upcoming.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    bookingId = json['bookingId'];
-    doctorSessionId = json['doctorSessionId'];
-    plannedStartDateTime = json['plannedStartDateTime'];
-    plannedEndDateTime = json['plannedEndDateTime'];
-    actualStartDateTime = json['actualStartDateTime'];
-    actualEndDateTime = json['actualEndDateTime'];
-    slotNumber = json['slotNumber'];
-    isHealthRecordShared = json['isHealthRecordShared'];
-    plannedFollowupDate = json['plannedFollowupDate'];
-    isRefunded = json['isRefunded'];
-    isFollowupFee = json['isFollowupFee'];
-    isFollowup = json['isFollowup'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      bookingId = json['bookingId'];
+      doctorSessionId = json['doctorSessionId'];
+      plannedStartDateTime = json['plannedStartDateTime'];
+      plannedEndDateTime = json['plannedEndDateTime'];
+      actualStartDateTime = json['actualStartDateTime'];
+      actualEndDateTime = json['actualEndDateTime'];
+      slotNumber = json['slotNumber'];
+      isHealthRecordShared = json['isHealthRecordShared'];
+      plannedFollowupDate = json['plannedFollowupDate'];
+      isRefunded = json['isRefunded'];
+      isFollowupFee = json['isFollowupFee'];
+      isFollowup = json['isFollowup'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     //sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'];
   }
 
@@ -203,22 +217,26 @@ class Past {
       });
 
   Past.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    bookingId = json['bookingId'];
-    doctorSessionId = json['doctorSessionId'];
-    plannedStartDateTime = json['plannedStartDateTime'];
-    plannedEndDateTime = json['plannedEndDateTime'];
-    actualStartDateTime = json['actualStartDateTime'];
-    actualEndDateTime = json['actualEndDateTime'];
-    slotNumber = json['slotNumber'];
-    isHealthRecordShared = json['isHealthRecordShared'];
-    plannedFollowupDate = json['plannedFollowupDate'];
-    isRefunded = json['isRefunded'];
-    isFollowupFee = json['isFollowupFee'];
-    isFollowup = json['isFollowup'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      bookingId = json['bookingId'];
+      doctorSessionId = json['doctorSessionId'];
+      plannedStartDateTime = json['plannedStartDateTime'];
+      plannedEndDateTime = json['plannedEndDateTime'];
+      actualStartDateTime = json['actualStartDateTime'];
+      actualEndDateTime = json['actualEndDateTime'];
+      slotNumber = json['slotNumber'];
+      isHealthRecordShared = json['isHealthRecordShared'];
+      plannedFollowupDate = json['plannedFollowupDate'];
+      isRefunded = json['isRefunded'];
+      isFollowupFee = json['isFollowupFee'];
+      isFollowup = json['isFollowup'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     /*sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'] != null
         ? new SharedHealthRecordMetadata.fromJson(
         json['sharedHealthRecordMetadata'])
@@ -278,19 +296,23 @@ class SharedHealthRecordMetadata {
       this.lastModifiedOn});
 
   SharedHealthRecordMetadata.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    metadata = json['metadata'] != null
-        ? new Metadata.fromJson(json['metadata'])
-        : null;
-    isBookmarked = json['isBookmarked'];
-    isCompleted = json['isCompleted'];
-    isDraft = json['isDraft'];
-    isVisible = json['isVisible'];
-    isClaimed = json['isClaimed'];
-    isClaimRecord = json['isClaimRecord'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      metadata = json['metadata'] != null
+              ? new Metadata.fromJson(json['metadata'])
+              : null;
+      isBookmarked = json['isBookmarked'];
+      isCompleted = json['isCompleted'];
+      isDraft = json['isDraft'];
+      isVisible = json['isVisible'];
+      isClaimed = json['isClaimed'];
+      isClaimRecord = json['isClaimRecord'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -321,13 +343,17 @@ class Metadata {
       {this.mediaTypeInfo, this.categoryInfo, this.healthRecordsReference});
 
   Metadata.fromJson(Map<String, dynamic> json) {
-    mediaTypeInfo = json['mediaTypeInfo'] != null
-        ? new MediaTypeInfo.fromJson(json['mediaTypeInfo'])
-        : null;
-    categoryInfo = json['categoryInfo'] != null
-        ? new CategoryInfo.fromJson(json['categoryInfo'])
-        : null;
-    healthRecordsReference = json['healthRecordsReference'].cast<String>();
+    try {
+      mediaTypeInfo = json['mediaTypeInfo'] != null
+              ? new MediaTypeInfo.fromJson(json['mediaTypeInfo'])
+              : null;
+      categoryInfo = json['categoryInfo'] != null
+              ? new CategoryInfo.fromJson(json['categoryInfo'])
+              : null;
+      healthRecordsReference = json['healthRecordsReference'].cast<String>();
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -366,15 +392,19 @@ class MediaTypeInfo {
       this.lastModifiedOn});
 
   MediaTypeInfo.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    description = json['description'];
-    logo = json['logo'];
-    isDisplay = json['isDisplay'];
-    isAiTranscription = json['isAiTranscription'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      description = json['description'];
+      logo = json['logo'];
+      isDisplay = json['isDisplay'];
+      isAiTranscription = json['isAiTranscription'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -413,14 +443,18 @@ class CategoryInfo {
       this.lastModifiedOn});
 
   CategoryInfo.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    categoryName = json['categoryName'];
-    categoryDescription = json['categoryDescription'];
-    logo = json['logo'];
-    isDisplay = json['isDisplay'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      categoryName = json['categoryName'];
+      categoryDescription = json['categoryDescription'];
+      logo = json['logo'];
+      isDisplay = json['isDisplay'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -445,13 +479,17 @@ class DeviceToken {
   DeviceToken({this.doctor, this.patient});
 
   DeviceToken.fromJson(Map<String, dynamic> json) {
-    doctor =
-        json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
-    patient =
-        json['patient'] != null ? new Doctor.fromJson(json['patient']) : null;
-    parentMember = json['parentMember'] != null
-        ? new Doctor.fromJson(json['parentMember'])
-        : null;
+    try {
+      doctor =
+              json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+      patient =
+              json['patient'] != null ? new Doctor.fromJson(json['patient']) : null;
+      parentMember = json['parentMember'] != null
+              ? new Doctor.fromJson(json['parentMember'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -476,12 +514,16 @@ class Doctor {
   Doctor({this.isSuccess, this.payload});
 
   Doctor.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['payload'] != null) {
-      payload = <Payload>[];
-      json['payload'].forEach((v) {
-        payload!.add(new Payload.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['payload'] != null) {
+            payload = <Payload>[];
+            json['payload'].forEach((v) {
+              payload!.add(new Payload.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -512,12 +554,16 @@ class Payload {
       this.lastModifiedOn});
 
   Payload.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    deviceTokenId = json['deviceTokenId'];
-    platformTypeCode = json['platformTypeCode'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      deviceTokenId = json['deviceTokenId'];
+      platformTypeCode = json['platformTypeCode'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -583,8 +629,12 @@ class ChatList {
 
     actualUserId = json['actualUserId'];*/
 
-    isDisable = json['isDisable'] != null ? json['isDisable'] : false;
-    deliveredOn = json['deliveredOn'];
+    try {
+      isDisable = json['isDisable'] != null ? json['isDisable'] : false;
+      deliveredOn = json['deliveredOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     //isMuted = json['isMuted'];
   }
@@ -628,13 +678,17 @@ class DoctorOrCarecoordinatorInfo {
       this.isCareCoordinator});
 
   DoctorOrCarecoordinatorInfo.fromJson(Map<String, dynamic> json) {
-    carecoordinatorfirstName = json['carecoordinatorfirstName'];
-    carecoordinatorMiddleName = json['carecoordinatorMiddleName'];
-    carecoordinatorLastName = json['carecoordinatorLastName'];
-    carecoordinatorProfilePicThumbnailUrl =
-        json['carecoordinatorProfilePicThumbnailUrl'];
-    isCareCoordinator =
-        json['isCareCoordinator'] != null ? json['isCareCoordinator'] : false;
+    try {
+      carecoordinatorfirstName = json['carecoordinatorfirstName'];
+      carecoordinatorMiddleName = json['carecoordinatorMiddleName'];
+      carecoordinatorLastName = json['carecoordinatorLastName'];
+      carecoordinatorProfilePicThumbnailUrl =
+              json['carecoordinatorProfilePicThumbnailUrl'];
+      isCareCoordinator =
+              json['isCareCoordinator'] != null ? json['isCareCoordinator'] : false;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

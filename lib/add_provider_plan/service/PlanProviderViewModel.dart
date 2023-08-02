@@ -1,8 +1,8 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:myfhb/add_provider_plan/model/AddProviderPlanResponse.dart';
 import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
 import 'package:myfhb/add_provider_plan/service/AddProviderService.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:provider/provider.dart';
@@ -35,7 +35,9 @@ class PlanProviderViewModel extends ChangeNotifier {
         providerPlanResult = [];
       }
       return myPlanListModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<AddProviderPlanResponse> addproviderPlan(

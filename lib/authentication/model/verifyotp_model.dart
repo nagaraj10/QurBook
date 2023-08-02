@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class VerifyOTPModel {
   String? verificationCode;
   String? phoneNumber;
@@ -6,8 +8,12 @@ class VerifyOTPModel {
   VerifyOTPModel({this.verificationCode, this.phoneNumber});
 
   VerifyOTPModel.fromJson(Map<String, dynamic> json) {
-    verificationCode = json['verificationCode'];
-    phoneNumber = json['phoneNumber'];
+    try {
+      verificationCode = json['verificationCode'];
+      phoneNumber = json['phoneNumber'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

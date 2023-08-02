@@ -1,6 +1,8 @@
 
 
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../common/CommonConstants.dart';
 
 class AddressResult {
@@ -11,9 +13,13 @@ class AddressResult {
   AddressResult({this.id, this.code, this.name});
 
   AddressResult.fromJson(Map<String, dynamic> json) {
-    id = json[CommonConstants.strId];
-    code = json[CommonConstants.strCode];
-    name = json[CommonConstants.strName];
+    try {
+      id = json[CommonConstants.strId];
+      code = json[CommonConstants.strCode];
+      name = json[CommonConstants.strName];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

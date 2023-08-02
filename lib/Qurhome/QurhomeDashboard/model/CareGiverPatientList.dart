@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 class CareGiverPatientList {
   bool? isSuccess;
   List<CareGiverPatientListResult?>? result;
@@ -5,12 +7,16 @@ class CareGiverPatientList {
   CareGiverPatientList({this.isSuccess, this.result});
 
   CareGiverPatientList.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <CareGiverPatientListResult>[];
-      json['result'].forEach((v) {
-        result!.add(CareGiverPatientListResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <CareGiverPatientListResult>[];
+            json['result'].forEach((v) {
+              result!.add(CareGiverPatientListResult.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -38,11 +44,15 @@ class CareGiverPatientListResult {
       this.relationship});
 
   CareGiverPatientListResult.fromJson(Map<String, dynamic> json) {
-    childId = json['childId'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    relationship = json['relationship'];
+    try {
+      childId = json['childId'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      relationship = json['relationship'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'SystemConfiguration.dart';
 
 class Result {
@@ -14,14 +16,18 @@ class Result {
 }
 
   Result.fromJson(dynamic json) {
-    _name = json['name'];
-    _isPaired = json['isPaired'];
-    _externalSourceId = json['externalSourceId'];
-    if (json['systemConfiguration'] != null) {
-      _systemConfiguration = [];
-      json['systemConfiguration'].forEach((v) {
-        _systemConfiguration!.add(SystemConfiguration.fromJson(v));
-      });
+    try {
+      _name = json['name'];
+      _isPaired = json['isPaired'];
+      _externalSourceId = json['externalSourceId'];
+      if (json['systemConfiguration'] != null) {
+            _systemConfiguration = [];
+            json['systemConfiguration'].forEach((v) {
+              _systemConfiguration!.add(SystemConfiguration.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
   String? _name;

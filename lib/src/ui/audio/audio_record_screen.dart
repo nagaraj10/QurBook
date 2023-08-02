@@ -198,6 +198,8 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
 
       return contents;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }

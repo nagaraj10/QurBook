@@ -1,5 +1,5 @@
-
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../myPlan/model/myPlanDetailModel.dart';
 import '../../myPlan/model/myPlanListModel.dart';
@@ -25,7 +25,9 @@ class PlanViewModel extends ChangeNotifier {
         myPLanListResult = myPlanListModel.result;
       }
       return myPlanListModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   List<PlanListResult> getSearchForCategory(
@@ -81,7 +83,9 @@ class PlanViewModel extends ChangeNotifier {
     try {
       var searchListModel = await searchListService.getSearchList(title);
       return searchListModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<SearchListModel?> getUserSearchListInit() async {
@@ -89,7 +93,9 @@ class PlanViewModel extends ChangeNotifier {
       final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
       var searchListModel = await searchListService.getUserProviderList(userid);
       return searchListModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   List<PlanListResult> getFilterForProvider(
@@ -117,9 +123,11 @@ class PlanViewModel extends ChangeNotifier {
     if (userid != null) {
       try {
         var planListModel =
-        await myPlanService.getPlanDetailById(userid, packageId!);
+            await myPlanService.getPlanDetailById(userid, packageId!);
         return planListModel;
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
   }
 }

@@ -1,6 +1,8 @@
 
 import 'dart:async';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../common/PreferenceUtil.dart';
 import '../Authentication/LoginBloc.dart';
 import '../../model/Media/MediaTypeResponse.dart';
@@ -49,6 +51,8 @@ class MediaTypeBlock implements BaseBloc {
       //PreferenceUtil.saveMediaType(Constants.KEY_METADATA, mediaTypesResponse.response.data);
       mediaTypeSink.add(ApiResponse.completed(mediaTypesResponse));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       mediaTypeSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -64,6 +68,8 @@ class MediaTypeBlock implements BaseBloc {
           Constants.KEY_METADATA, mediaTypesResponse.result);
       mediaTypeSinks.add(ApiResponse.completed(mediaTypesResponse));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       mediaTypeSinks.add(ApiResponse.error(e.toString()));
     }
 

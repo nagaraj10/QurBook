@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notificationResult.dart';
 
 class NotificationModel {
@@ -8,12 +9,16 @@ class NotificationModel {
   NotificationModel({this.isSuccess, this.result});
 
   NotificationModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <NotificationResult>[];
-      json['result'].forEach((v) {
-        result!.add(new NotificationResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <NotificationResult>[];
+            json['result'].forEach((v) {
+              result!.add(new NotificationResult.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

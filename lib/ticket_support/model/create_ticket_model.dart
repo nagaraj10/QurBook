@@ -5,6 +5,8 @@
 
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 CreateTicketModel createTicketModelFromJson(String str) =>
     CreateTicketModel.fromJson(json.decode(str));
 
@@ -34,7 +36,8 @@ class CreateTicketModel {
       message = json['message'];
       result = json['result'] != null ? new Result.fromJson(json['result']) : null;
     } catch (e) {
-      //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 

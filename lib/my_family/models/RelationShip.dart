@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class RelationShip {
@@ -18,12 +20,16 @@ class RelationShip {
       this.lastModifiedOn});
 
   RelationShip.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    roleName = json[parameters.strRoleName];
-    roleDescription = json[parameters.strRoleDescription];
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
+    try {
+      id = json[parameters.strId];
+      roleName = json[parameters.strRoleName];
+      roleDescription = json[parameters.strRoleDescription];
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

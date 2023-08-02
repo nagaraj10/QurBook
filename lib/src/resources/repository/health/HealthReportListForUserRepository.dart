@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:myfhb/claim/model/claimmodel/ClaimSuccess.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
@@ -76,6 +77,8 @@ class HealthReportListForUserRepository {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
@@ -192,6 +195,8 @@ class HealthReportListForUserRepository {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
@@ -214,6 +219,8 @@ class HealthReportListForUserRepository {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
@@ -235,6 +242,8 @@ class HealthReportListForUserRepository {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
@@ -256,6 +265,8 @@ class HealthReportListForUserRepository {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
     var jsonString = healthResult.metadata!.toJson();

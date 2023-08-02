@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/UserProfessionalCollection.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
     as parameters;
@@ -29,24 +30,28 @@ class Doctor {
   List<DoctorProfessionalDetailCollection>? doctorProfessionalDetailCollection;
 
   Doctor.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    specialization = json[parameters.strSpecilization];
-    isTelehealthEnabled = json[parameters.strisTelehealthEnabled];
-    isMciVerified = json[parameters.strIsMciVerified];
-    isActive = json[parameters.strIsActive];
-    createdOn = DateTime.parse(json[parameters.strCreatedOn]);
-    lastModifiedBy = json[parameters.strlastModifiedBy];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    user = json[parameters.strUser] == null
-        ? null
-        : Booked.fromJson(json[parameters.strUser]);
-    if (json['doctorProfessionalDetailCollection'] != null) {
-      doctorProfessionalDetailCollection =
-          <DoctorProfessionalDetailCollection>[];
-      json['doctorProfessionalDetailCollection'].forEach((v) {
-        doctorProfessionalDetailCollection!
-            .add(new DoctorProfessionalDetailCollection.fromJson(v));
-      });
+    try {
+      id = json[parameters.strId];
+      specialization = json[parameters.strSpecilization];
+      isTelehealthEnabled = json[parameters.strisTelehealthEnabled];
+      isMciVerified = json[parameters.strIsMciVerified];
+      isActive = json[parameters.strIsActive];
+      createdOn = DateTime.parse(json[parameters.strCreatedOn]);
+      lastModifiedBy = json[parameters.strlastModifiedBy];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      user = json[parameters.strUser] == null
+              ? null
+              : Booked.fromJson(json[parameters.strUser]);
+      if (json['doctorProfessionalDetailCollection'] != null) {
+            doctorProfessionalDetailCollection =
+                <DoctorProfessionalDetailCollection>[];
+            json['doctorProfessionalDetailCollection'].forEach((v) {
+              doctorProfessionalDetailCollection!
+                  .add(new DoctorProfessionalDetailCollection.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
