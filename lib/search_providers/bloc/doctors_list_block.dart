@@ -1,6 +1,8 @@
 
 import 'dart:async';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/variable_constant.dart' as variable;
 import '../models/doctor_list_response_new.dart';
 import '../../src/blocs/Authentication/LoginBloc.dart';
@@ -49,6 +51,8 @@ class DoctorsListBlock implements BaseBloc {
           await _doctorsListRepository.getDoctorsListFromSearch(param);
       doctorsListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       doctorsListSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -62,6 +66,8 @@ class DoctorsListBlock implements BaseBloc {
           .getDoctorsListFromSearchNew(param, isSkipUnknown);
       doctorsListNewSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       doctorsListNewSink.add(ApiResponse.error(e.toString()));
     }
     return userHealthResponseList;
@@ -75,6 +81,8 @@ class DoctorsListBlock implements BaseBloc {
           await _doctorsListRepository.getDoctorUsingId(doctorsId);
       doctorsListSink.add(ApiResponse.completed(doctorsListResponse));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       doctorsListSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -90,6 +98,8 @@ class DoctorsListBlock implements BaseBloc {
           .getExistingDoctorsListFromSearchNew(limit);
       doctorsListNewSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       doctorsListNewSink.add(ApiResponse.error(e.toString()));
     }
     return userHealthResponseList;

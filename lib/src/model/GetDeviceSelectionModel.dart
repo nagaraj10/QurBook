@@ -1,3 +1,4 @@
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/model/CaregiverCommunicationSettings.dart';
 
@@ -8,12 +9,16 @@ class GetDeviceSelectionModel {
   GetDeviceSelectionModel({this.isSuccess, this.result});
 
   GetDeviceSelectionModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <SelectionResult>[];
-      json['result'].forEach((v) {
-        result!.add(SelectionResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+        result = <SelectionResult>[];
+        json['result'].forEach((v) {
+          result!.add(SelectionResult.fromJson(v));
+        });
+      }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -48,23 +53,27 @@ class SelectionResult {
       this.primaryProvider});
 
   SelectionResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['userId'];
-    profileSetting = json['profileSetting'] != null
-        ? ProfileSetting.fromJson(json['profileSetting'])
-        : null;
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    if (json['tags'] != null) {
-      tags = <Tags>[];
-      json['tags'].forEach((v) {
-        tags!.add(new Tags.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      userId = json['userId'];
+      profileSetting = json['profileSetting'] != null
+          ? ProfileSetting.fromJson(json['profileSetting'])
+          : null;
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      if (json['tags'] != null) {
+        tags = <Tags>[];
+        json['tags'].forEach((v) {
+          tags!.add(new Tags.fromJson(v));
+        });
+      }
+      primaryProvider = json['primaryProvider'] != null
+          ? new PrimaryProvider.fromJson(json['primaryProvider'])
+          : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    primaryProvider = json['primaryProvider'] != null
-        ? new PrimaryProvider.fromJson(json['primaryProvider'])
-        : null;
   }
 
   Map<String, dynamic> toProfileSettingJson() {
@@ -134,35 +143,39 @@ class ProfileSetting {
       this.preferredMeasurement});
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
-    bpMonitor = json['bpMonitor'];
-    googleFit = json['googleFit'];
-    healthFit = json['healthFit'];
-    allowDigit = json['allowDigit'];
-    glucoMeter = json['glucoMeter'];
-    weighScale = json['weighScale'];
-    allowDevice = json['allowDevice'];
-    thermoMeter = json['thermoMeter'];
-    pulseOximeter = json['pulseOximeter'];
-    qurhomeDefaultUI = (json['qurhome_ui'] ?? false);
-    preColor = json['priColor'];
-    greColor = json['greColor'];
-    preferred_language = json['preferred_language'];
-    qa_subscription = json['qa-subscription'];
-    preferredMeasurement = json['preferred_measurement'] != null
-        ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
-        : null;
-    if (json.containsKey('caregiverCommunicationSetting')) {
-      caregiverCommunicationSetting =
-          json['caregiverCommunicationSetting'] != null
-              ? new CaregiverCommunicationSetting.fromJson(
-                  json['caregiverCommunicationSetting'])
-              : null;
-    }
-
-    if (json.containsKey('preferred_measurement')) {
+    try {
+      bpMonitor = json['bpMonitor'];
+      googleFit = json['googleFit'];
+      healthFit = json['healthFit'];
+      allowDigit = json['allowDigit'];
+      glucoMeter = json['glucoMeter'];
+      weighScale = json['weighScale'];
+      allowDevice = json['allowDevice'];
+      thermoMeter = json['thermoMeter'];
+      pulseOximeter = json['pulseOximeter'];
+      qurhomeDefaultUI = (json['qurhome_ui'] ?? false);
+      preColor = json['priColor'];
+      greColor = json['greColor'];
+      preferred_language = json['preferred_language'];
+      qa_subscription = json['qa-subscription'];
       preferredMeasurement = json['preferred_measurement'] != null
           ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
           : null;
+      if (json.containsKey('caregiverCommunicationSetting')) {
+        caregiverCommunicationSetting =
+            json['caregiverCommunicationSetting'] != null
+                ? new CaregiverCommunicationSetting.fromJson(
+                    json['caregiverCommunicationSetting'])
+                : null;
+      }
+
+      if (json.containsKey('preferred_measurement')) {
+        preferredMeasurement = json['preferred_measurement'] != null
+            ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
+            : null;
+      }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -203,13 +216,17 @@ class PreferredMeasurement {
   PreferredMeasurement({this.height, this.weight, this.temperature});
 
   PreferredMeasurement.fromJson(Map<String, dynamic> json) {
-    height =
-        json['height'] != null ? new Height.fromJson(json['height']) : null;
-    weight =
-        json['weight'] != null ? new Height.fromJson(json['weight']) : null;
-    temperature = json['temperature'] != null
-        ? new Height.fromJson(json['temperature'])
-        : null;
+    try {
+      height =
+          json['height'] != null ? new Height.fromJson(json['height']) : null;
+      weight =
+          json['weight'] != null ? new Height.fromJson(json['weight']) : null;
+      temperature = json['temperature'] != null
+          ? new Height.fromJson(json['temperature'])
+          : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -234,8 +251,12 @@ class Height {
   Height({this.unitCode, this.unitName});
 
   Height.fromJson(Map<String, dynamic> json) {
-    unitCode = json['unitCode'];
-    unitName = json['unitName'];
+    try {
+      unitCode = json['unitCode'];
+      unitName = json['unitName'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -253,10 +274,14 @@ class PrimaryProvider {
   PrimaryProvider({this.healthorganizationid, this.additionalInfo});
 
   PrimaryProvider.fromJson(Map<String, dynamic> json) {
-    healthorganizationid = json['healthorganizationid'];
-    additionalInfo = json['additionalInfo'] != null
-        ? new AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
-        : null;
+    try {
+      healthorganizationid = json['healthorganizationid'];
+      additionalInfo = json['additionalInfo'] != null
+          ? new AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
+          : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -275,18 +300,23 @@ class AdditionalInfoModuleAccess {
   AdditionalInfoModuleAccess({this.moduleAccess});
 
   AdditionalInfoModuleAccess.fromJson(Map<String, dynamic> json) {
-    if (json['module-access'] != null) {
-      moduleAccess = <ModuleAccess>[];
-      json['module-access'].forEach((v) {
-        moduleAccess?.add(new ModuleAccess.fromJson(v));
-      });
+    try {
+      if (json['module-access'] != null) {
+        moduleAccess = <ModuleAccess>[];
+        json['module-access'].forEach((v) {
+          moduleAccess?.add(new ModuleAccess.fromJson(v));
+        });
+      }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.moduleAccess != null) {
-      data['module-access'] = this.moduleAccess?.map((v) => v.toJson()).toList();
+      data['module-access'] =
+          this.moduleAccess?.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -300,9 +330,13 @@ class ModuleAccess {
   ModuleAccess({this.id, this.name, this.access});
 
   ModuleAccess.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    access = json['access'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      access = json['access'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

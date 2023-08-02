@@ -124,6 +124,8 @@ class FHBUtils {
       formattedDate =
           DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate).toLocal());
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       formattedDate = strDate;
     }
 
@@ -174,6 +176,8 @@ class FHBUtils {
             DateFormat('yyyy').format(DateTime.parse(strDate!).toLocal());
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       formattedDate = strDate;
     }
     return formattedDate;
@@ -193,6 +197,8 @@ class FHBUtils {
             DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate).toLocal());
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       formattedDate = strDate;
     }
     return formattedDate;
@@ -335,6 +341,8 @@ class FHBUtils {
       print(path);
       return path;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       debugPrint(e.toString());
       return "";
     }

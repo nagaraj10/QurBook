@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'Doctor.dart';
 import 'Hospital.dart';
@@ -15,12 +17,16 @@ class UpdateMediaResponse {
   UpdateMediaResponse({this.status, this.success, this.message, this.response});
 
   UpdateMediaResponse.fromJson(Map<String, dynamic> json) {
-    status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+    try {
+      status = json[parameters.strStatus];
+      success = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+      response = json[parameters.strResponse] != null
+              ? Response.fromJson(json[parameters.strResponse])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -42,10 +48,14 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json[parameters.strCount];
-    data = json[parameters.strData] != null
-        ? UpdateMediaResponseData.fromJson(json[parameters.strData])
-        : null;
+    try {
+      count = json[parameters.strCount];
+      data = json[parameters.strData] != null
+              ? UpdateMediaResponseData.fromJson(json[parameters.strData])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -85,26 +95,30 @@ class MetaInfo {
       this.fileName});
 
   MetaInfo.fromJson(Map<String, dynamic> json) {
-    categoryInfo = json[parameters.strcategoryInfo] != null
-        ? CategoryInfo.fromJson(json[parameters.strcategoryInfo])
-        : null;
-    dateOfVisit = json[parameters.strdateOfVisit];
+    try {
+      categoryInfo = json[parameters.strcategoryInfo] != null
+              ? CategoryInfo.fromJson(json[parameters.strcategoryInfo])
+              : null;
+      dateOfVisit = json[parameters.strdateOfVisit];
 
-    doctor = json[parameters.strdoctor] != null
-        ? Doctor.fromJson(json[parameters.strdoctor])
-        : null;
-    fileName = json[parameters.strfileName];
-    isDraft = json[parameters.strisDraft] ?? false;
-    mediaTypeInfo = json[parameters.strmediaTypeInfo] != null
-        ? MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
-        : null;
-    memoText = json[parameters.strmemoText];
-    memoTextRaw = json[parameters.strmemoTextRaw];
-    sourceName = json[parameters.strsourceName];
+      doctor = json[parameters.strdoctor] != null
+              ? Doctor.fromJson(json[parameters.strdoctor])
+              : null;
+      fileName = json[parameters.strfileName];
+      isDraft = json[parameters.strisDraft] ?? false;
+      mediaTypeInfo = json[parameters.strmediaTypeInfo] != null
+              ? MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
+              : null;
+      memoText = json[parameters.strmemoText];
+      memoTextRaw = json[parameters.strmemoTextRaw];
+      sourceName = json[parameters.strsourceName];
 
-    hospital = json[parameters.strhospital] != null
-        ? Hospital.fromJson(json[parameters.strhospital])
-        : null;
+      hospital = json[parameters.strhospital] != null
+              ? Hospital.fromJson(json[parameters.strhospital])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

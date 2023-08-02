@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 class SendMailTo {
   SendMailTo({
     dynamic id,
@@ -9,7 +11,7 @@ class SendMailTo {
     try{
     _id = json['id'];
     }catch(e){
-      
+      CommonUtil().appLogs(message: e.toString());
     }
   }
   dynamic _id;

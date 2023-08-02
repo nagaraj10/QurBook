@@ -172,7 +172,9 @@ class CommonDialogBox {
           metaInfoId = mediaMetaInfo.id;
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     dateOfVisit.text = dateOfVisitClone.text;
     if (modeOfSave!) {
@@ -441,7 +443,9 @@ class CommonDialogBox {
           metaInfoId = mediaMetaInfo.id;
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     dateOfVisit.text = dateOfVisitClone.text;
 
     if (modeOfSaveClone) {
@@ -1271,6 +1275,7 @@ class CommonDialogBox {
       deviceName = healthResult.metadata!.healthRecordType!.name;
       categoryID = healthResult.metadata!.healthRecordCategory!.id;
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
       categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
@@ -1843,7 +1848,9 @@ class CommonDialogBox {
           doctorsData = json.decode(results[Constants.keyDoctor]);
           try {
             setValueToDoctorDropdown(doctorsData, setState);
-          } catch (e) {}
+          } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+          }
 
           print(doctorsData[parameters.strFirstName]);
           if (doctorsData[parameters.strName] != '' &&
@@ -2572,6 +2579,7 @@ class CommonDialogBox {
         }
       });
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       doctor.text = doctorsText;
     }
 
@@ -2604,6 +2612,7 @@ class CommonDialogBox {
         }
       });
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       hospital.text = hospitalText;
     }
 
@@ -2636,6 +2645,8 @@ class CommonDialogBox {
         }
       });
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       lab.text = labtext;
     }
   }

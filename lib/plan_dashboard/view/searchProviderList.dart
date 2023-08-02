@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -73,9 +72,12 @@ class _SearchProviderList extends State<SearchProviderList> {
             Duration(milliseconds: 1000),
             () => isFirst
                 ? null
-                : ShowCaseWidget.of(_myContext)!.startShowCase([_subscribeKey]));
+                : ShowCaseWidget.of(_myContext)!
+                    .startShowCase([_subscribeKey]));
       });
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   @override
@@ -248,10 +250,8 @@ class _SearchProviderList extends State<SearchProviderList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => CategoryList(
-                  planList[i].providerid,
-                  planList[i].metadata?.icon,
-                  planList[i].metadata?.diseases)),
+              builder: (context) => CategoryList(planList[i].providerid,
+                  planList[i].metadata?.icon, planList[i].metadata?.diseases)),
         ).then((value) {
           setState(() {});
         });

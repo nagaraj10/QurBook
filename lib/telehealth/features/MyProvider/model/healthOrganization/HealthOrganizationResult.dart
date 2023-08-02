@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class HealthOrganizationResult {
   String? id;
   String? startDate;
@@ -20,20 +22,24 @@ class HealthOrganizationResult {
         this.doctorFeeCollection});
 
   HealthOrganizationResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    startDate = json['startDate'];
-    endDate = json['endDate'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    healthOrganization = json['healthOrganization'] != null
-        ? new HealthOrganization.fromJson(json['healthOrganization'])
-        : null;
-    if (json['doctorFeeCollection'] != null) {
-      doctorFeeCollection = <DoctorFeeCollection>[];
-      json['doctorFeeCollection'].forEach((v) {
-        doctorFeeCollection!.add(new DoctorFeeCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      startDate = json['startDate'];
+      endDate = json['endDate'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      healthOrganization = json['healthOrganization'] != null
+              ? new HealthOrganization.fromJson(json['healthOrganization'])
+              : null;
+      if (json['doctorFeeCollection'] != null) {
+            doctorFeeCollection = <DoctorFeeCollection>[];
+            json['doctorFeeCollection'].forEach((v) {
+              doctorFeeCollection!.add(new DoctorFeeCollection.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -75,26 +81,30 @@ class HealthOrganization {
         this.healthOrganizationContactCollection});
 
   HealthOrganization.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    if (json['healthOrganizationAddressCollection'] != null) {
-      healthOrganizationAddressCollection =
-      <HealthOrganizationAddressCollection>[];
-      json['healthOrganizationAddressCollection'].forEach((v) {
-        healthOrganizationAddressCollection!
-            .add(new HealthOrganizationAddressCollection.fromJson(v));
-      });
-    }
-    if (json['healthOrganizationContactCollection'] != null) {
-      healthOrganizationContactCollection =
-      <HealthOrganizationContactCollection>[];
-      json['healthOrganizationContactCollection'].forEach((v) {
-        healthOrganizationContactCollection!
-            .add(new HealthOrganizationContactCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      name = json['name'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      if (json['healthOrganizationAddressCollection'] != null) {
+            healthOrganizationAddressCollection =
+            <HealthOrganizationAddressCollection>[];
+            json['healthOrganizationAddressCollection'].forEach((v) {
+              healthOrganizationAddressCollection!
+                  .add(new HealthOrganizationAddressCollection.fromJson(v));
+            });
+          }
+      if (json['healthOrganizationContactCollection'] != null) {
+            healthOrganizationContactCollection =
+            <HealthOrganizationContactCollection>[];
+            json['healthOrganizationContactCollection'].forEach((v) {
+              healthOrganizationContactCollection!
+                  .add(new HealthOrganizationContactCollection.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -148,19 +158,23 @@ class HealthOrganizationAddressCollection {
         this.state});
 
   HealthOrganizationAddressCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    pincode = json['pincode'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    addressType = json['addressType'] != null
-        ? new AddressTypeNew.fromJson(json['addressType'])
-        : null;
-    city = json['city'] != null ? new CityNew.fromJson(json['city']) : null;
-    state = json['state'] != null ? new StateNew.fromJson(json['state']) : null;
+    try {
+      id = json['id'];
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      pincode = json['pincode'];
+      isPrimary = json['isPrimary'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      addressType = json['addressType'] != null
+              ? new AddressTypeNew.fromJson(json['addressType'])
+              : null;
+      city = json['city'] != null ? new CityNew.fromJson(json['city']) : null;
+      state = json['state'] != null ? new StateNew.fromJson(json['state']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -209,15 +223,19 @@ class AddressTypeNew {
         this.lastModifiedOn});
 
   AddressTypeNew.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -246,11 +264,15 @@ class CityNew {
       {this.id, this.name, this.isActive, this.createdOn, this.lastModifiedOn});
 
   CityNew.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -281,12 +303,16 @@ class StateNew {
         this.lastModifiedOn});
 
   StateNew.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    countryCode = json['countryCode'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      countryCode = json['countryCode'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -319,12 +345,16 @@ class HealthOrganizationContactCollection {
         this.lastModifiedOn});
 
   HealthOrganizationContactCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    phoneNumber = json['phoneNumber'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      phoneNumber = json['phoneNumber'];
+      isPrimary = json['isPrimary'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -366,22 +396,26 @@ class DoctorFeeCollection {
         this.followupType});
 
   DoctorFeeCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    fee = json['fee'];
-    followupValue = json['followupValue'];
-    followupIn = json['followupIn'] != null
-        ? new FollowupIn.fromJson(json['followupIn'])
-        : null;
-    effectiveFromDate = json['effectiveFromDate'];
-    effectiveToDate = json['effectiveToDate'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    feeType =
-    json['feeType'] != null ? new FeeType.fromJson(json['feeType']) : null;
-    followupType = json['followupType'] != null
-        ? new FeeType.fromJson(json['followupType'])
-        : null;
+    try {
+      id = json['id'];
+      fee = json['fee'];
+      followupValue = json['followupValue'];
+      followupIn = json['followupIn'] != null
+              ? new FollowupIn.fromJson(json['followupIn'])
+              : null;
+      effectiveFromDate = json['effectiveFromDate'];
+      effectiveToDate = json['effectiveToDate'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      feeType =
+          json['feeType'] != null ? new FeeType.fromJson(json['feeType']) : null;
+      followupType = json['followupType'] != null
+              ? new FeeType.fromJson(json['followupType'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -413,10 +447,14 @@ class FollowupIn {
   FollowupIn({this.days});
 
   FollowupIn.fromJson(Map<String, dynamic> json) {
-    if(json.containsKey('days'))
-      if (json['days'] != null) {
-        days = json['days'].cast<int>();
-      }
+    try {
+      if(json.containsKey('days'))
+            if (json['days'] != null) {
+              days = json['days'].cast<int>();
+            }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -449,15 +487,19 @@ class FeeType {
         this.lastModifiedOn});
 
   FeeType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

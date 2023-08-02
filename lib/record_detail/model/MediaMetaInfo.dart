@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'UpdateMediaResponse.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/fhb_parameters.dart' as parameters;
@@ -33,20 +35,24 @@ class MediaMetaInfo {
       this.lastModifiedBy});
 
   MediaMetaInfo.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    metaTypeId = json[parameters.strmetaTypeId];
-    userId = json[parameters.struserId];
-    metaInfo = json[parameters.strmetaInfo] != null
-        ? MetaInfo.fromJson(json[parameters.strmetaInfo])
-        : null;
-    isActive = json[parameters.strIsActive];
-    isVisible = json[parameters.strisVisible];
-    createdBy = json[parameters.strCreatedBy];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    isBookmarked = json[parameters.strIsBookmarked];
-    isDraft = json[parameters.strisDraft];
-    lastModifiedBy = json[parameters.strlastModifiedBy];
+    try {
+      id = json[parameters.strId];
+      metaTypeId = json[parameters.strmetaTypeId];
+      userId = json[parameters.struserId];
+      metaInfo = json[parameters.strmetaInfo] != null
+              ? MetaInfo.fromJson(json[parameters.strmetaInfo])
+              : null;
+      isActive = json[parameters.strIsActive];
+      isVisible = json[parameters.strisVisible];
+      createdBy = json[parameters.strCreatedBy];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      isBookmarked = json[parameters.strIsBookmarked];
+      isDraft = json[parameters.strisDraft];
+      lastModifiedBy = json[parameters.strlastModifiedBy];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

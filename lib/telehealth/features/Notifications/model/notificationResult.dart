@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/messageDetails.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notificationResponseText.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/recipientUser.dart';
@@ -34,24 +35,28 @@ class NotificationResult {
   });
 
   NotificationResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    messageDetails = json['messageDetails'] != null
-        ? new MessageDetails.fromJson(json['messageDetails'])
-        : null;
-    transportMedium = json['transportMedium'];
-    responseText = json['responseText'] != null ? (json['responseText']) : null;
-    deliveredDateTime = json['deliveredDateTime'];
-    createdOn = json['createdOn'];
-    recipientUserDetails = json['recipientUserDetails'];
-    recipientUser = json['recipientUser'] != null
-        ? new RecipientUser.fromJson(json['recipientUser'])
-        : null;
-    scheduler = json['scheduler'];
-    senderUser = json['senderUser'] != null
-        ? RecipientUser.fromJson(json['senderUser'])
-        : null;
-    isActionDone = json['isActionDone'];
-    isUnread = json['isUnread'];
+    try {
+      id = json['id'];
+      messageDetails = json['messageDetails'] != null
+              ? new MessageDetails.fromJson(json['messageDetails'])
+              : null;
+      transportMedium = json['transportMedium'];
+      responseText = json['responseText'] != null ? (json['responseText']) : null;
+      deliveredDateTime = json['deliveredDateTime'];
+      createdOn = json['createdOn'];
+      recipientUserDetails = json['recipientUserDetails'];
+      recipientUser = json['recipientUser'] != null
+              ? new RecipientUser.fromJson(json['recipientUser'])
+              : null;
+      scheduler = json['scheduler'];
+      senderUser = json['senderUser'] != null
+              ? RecipientUser.fromJson(json['senderUser'])
+              : null;
+      isActionDone = json['isActionDone'];
+      isUnread = json['isUnread'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

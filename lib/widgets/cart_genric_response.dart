@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class CartGenricResponse {
   bool? isSuccess;
   String? message;
@@ -6,8 +8,12 @@ class CartGenricResponse {
   CartGenricResponse({this.isSuccess, this.message});
 
   CartGenricResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,5 +1,6 @@
 
 import 'package:flutter/foundation.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'button_model.dart';
 import 'video_links.dart';
@@ -43,30 +44,34 @@ class Conversation {
   });
 
   Conversation.fromJson(Map<String, dynamic> json) {
-    isMayaSaid = json[parameters.strIsMayaSaid];
-    text = json[parameters.strText];
-    imageUrl = json[parameters.strImageUrl];
-    name = json[parameters.strName];
-    timeStamp = json[parameters.strTimeStamp];
-    langCode = json[parameters.strLanguage];
-    provider_msg = json[parameters.strProviderMsg];
-    if (json[parameters.strButtons] != null) {
-      buttons = <Buttons>[];
-      json[parameters.strButtons].forEach((v) {
-        buttons!.add(Buttons.fromJson(v));
-      });
+    try {
+      isMayaSaid = json[parameters.strIsMayaSaid];
+      text = json[parameters.strText];
+      imageUrl = json[parameters.strImageUrl];
+      name = json[parameters.strName];
+      timeStamp = json[parameters.strTimeStamp];
+      langCode = json[parameters.strLanguage];
+      provider_msg = json[parameters.strProviderMsg];
+      if (json[parameters.strButtons] != null) {
+            buttons = <Buttons>[];
+            json[parameters.strButtons].forEach((v) {
+              buttons!.add(Buttons.fromJson(v));
+            });
+          }
+      searchURL = json[parameters.strSearchUrl];
+      if (json[parameters.strVideoLinks] != null) {
+            videoLinks = <VideoLinks>[];
+            json[parameters.strVideoLinks].forEach((v) {
+              videoLinks!.add(VideoLinks.fromJson(v));
+            });
+          }
+      screen = json[parameters.strScreen];
+      redirect = json[parameters.strRedirect];
+      isSpeaking = false;
+      loadingDots = true;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    searchURL = json[parameters.strSearchUrl];
-    if (json[parameters.strVideoLinks] != null) {
-      videoLinks = <VideoLinks>[];
-      json[parameters.strVideoLinks].forEach((v) {
-        videoLinks!.add(VideoLinks.fromJson(v));
-      });
-    }
-    screen = json[parameters.strScreen];
-    redirect = json[parameters.strRedirect];
-    isSpeaking = false;
-    loadingDots = true;
   }
 
   Map<String, dynamic> toJson() {

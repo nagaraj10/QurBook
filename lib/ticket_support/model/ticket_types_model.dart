@@ -5,6 +5,8 @@
 
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 TicketTypesModel ticketTypesModelFromJson(String str) =>
     TicketTypesModel.fromJson(json.decode(str));
 
@@ -142,6 +144,8 @@ class AdditionalInfo {
       healthOrgTypeId = json['healthOrgTypeId'];
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -154,6 +158,8 @@ class AdditionalInfo {
       data['healthOrgTypeId'] = this.healthOrgTypeId;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }
@@ -222,6 +228,8 @@ class Field {
       isDisable = json['isDisable']!=null?json['isDisable']:false;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -247,6 +255,8 @@ class Field {
       data['isDisable'] = this.isDisable;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
 
     return data;
@@ -267,6 +277,8 @@ class FieldData {
       fieldName = null;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -277,6 +289,8 @@ class FieldData {
       data['name'] = this.name;
     } catch (e) {
       //print(e);
+            CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }

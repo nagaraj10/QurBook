@@ -1,4 +1,5 @@
 
+import '../CommonUtil.dart';
 import 'ConfigData.dart';
 
 class ConfigurationData {
@@ -8,11 +9,15 @@ class ConfigurationData {
 }
 
   ConfigurationData.fromJson(dynamic json) {
-    if (json['configData'] != null) {
-      _configData = [];
-      json['configData'].forEach((v) {
-        _configData!.add(ConfigData.fromJson(v));
-      });
+    try {
+      if (json['configData'] != null) {
+            _configData = [];
+            json['configData'].forEach((v) {
+              _configData!.add(ConfigData.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
   List<ConfigData>? _configData;

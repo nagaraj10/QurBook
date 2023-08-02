@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'DeviceReadings.dart';
 import 'Hospital.dart';
@@ -35,30 +37,34 @@ class MetaInfo {
       this.fileName});
 
   MetaInfo.fromJson(Map<String, dynamic> json) {
-    categoryInfo = json[parameters.strcategoryInfo] != null
-        ? CategoryInfo.fromJson(json[parameters.strcategoryInfo])
-        : null;
-    dateOfVisit = json[parameters.strdateOfVisit];
-    if (json[parameters.strdeviceReadings] != null) {
-      deviceReadings = <DeviceReadings>[];
-      json[parameters.strdeviceReadings].forEach((v) {
-        deviceReadings!.add(DeviceReadings.fromJson(v));
-      });
+    try {
+      categoryInfo = json[parameters.strcategoryInfo] != null
+              ? CategoryInfo.fromJson(json[parameters.strcategoryInfo])
+              : null;
+      dateOfVisit = json[parameters.strdateOfVisit];
+      if (json[parameters.strdeviceReadings] != null) {
+            deviceReadings = <DeviceReadings>[];
+            json[parameters.strdeviceReadings].forEach((v) {
+              deviceReadings!.add(DeviceReadings.fromJson(v));
+            });
+          }
+      doctor =
+              json[parameters.strdoctor] != null ? Doctor.fromJson(json[parameters.strdoctor]) : null;
+      fileName = json[parameters.strfileName];
+      isDraft = json[parameters.strisDraft] ?? false;
+      mediaTypeInfo = json[parameters.strmediaTypeInfo] != null
+              ? MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
+              : null;
+      memoText = json[parameters.strmemoText];
+      memoTextRaw = json[parameters.strmemoTextRaw];
+      sourceName = json[parameters.strsourceName];
+
+      hospital = json[parameters.strhospital] != null
+              ? Hospital.fromJson(json[parameters.strhospital])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    doctor =
-        json[parameters.strdoctor] != null ? Doctor.fromJson(json[parameters.strdoctor]) : null;
-    fileName = json[parameters.strfileName];
-    isDraft = json[parameters.strisDraft] ?? false;
-    mediaTypeInfo = json[parameters.strmediaTypeInfo] != null
-        ? MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
-        : null;
-    memoText = json[parameters.strmemoText];
-    memoTextRaw = json[parameters.strmemoTextRaw];
-    sourceName = json[parameters.strsourceName];
-    
-    hospital = json[parameters.strhospital] != null
-        ? Hospital.fromJson(json[parameters.strhospital])
-        : null;
   }
 
   Map<String, dynamic> toJson() {

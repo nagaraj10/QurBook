@@ -117,10 +117,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (userid != null) {
           languageModelList = await languageBlock.getLanguage();
         }
-      } catch (e) {}
+      } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+      }
 
       return setValueLanguages(myProfile);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       String currentLanguage = '';
       final lan = CommonUtil.getCurrentLanCode();
       if (lan != "undef") {
@@ -338,7 +342,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (profileImageFile != null) {
           profileImage = File(profileImageFile);
         }
-      } catch (e) {}
+      } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
+      }
       return Container(
           color: Colors.white,
           padding: EdgeInsets.all(20),
@@ -765,6 +772,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
             ),
           ));
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       return Container(
         child: Center(
           child: Text(errorMsg != null ? errorMsg : 'Something Went Wrong!'),
@@ -861,6 +870,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
             isKg = false;
           }
         } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
           if (CommonUtil.REGION_CODE == 'IND') {
             isFeetOrInches = true;
             isKg = true;

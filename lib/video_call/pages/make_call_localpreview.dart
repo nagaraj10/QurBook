@@ -2,6 +2,7 @@
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
@@ -33,6 +34,7 @@ class _MakeCallLocalPreviewState extends State<MakeCallLocalPreview> {
               }
             } catch (e) {
               print(e);
+                                      CommonUtil().appLogs(message: e.toString());
             }
           },
           child: Container(),
@@ -85,6 +87,7 @@ class _MakeCallLocalPreviewState extends State<MakeCallLocalPreview> {
                                     ?.switchCamera();
                               } catch (e) {
                                 print(e);
+                                                        CommonUtil().appLogs(message: e.toString());
                               }
                             }),
                       )

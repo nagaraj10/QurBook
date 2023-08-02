@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'MediaMetaInfo.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 
@@ -8,9 +10,13 @@ class UpdateMediaResponseData {
   UpdateMediaResponseData({this.mediaMetaInfo});
 
   UpdateMediaResponseData.fromJson(Map<String, dynamic> json) {
-    mediaMetaInfo = json[parameters.strmediaMetaInfo] != null
-        ? MediaMetaInfo.fromJson(json[parameters.strmediaMetaInfo])
-        : null;
+    try {
+      mediaMetaInfo = json[parameters.strmediaMetaInfo] != null
+              ? MediaMetaInfo.fromJson(json[parameters.strmediaMetaInfo])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

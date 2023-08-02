@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/variable_constant.dart';
 
@@ -41,18 +43,22 @@ class SheelaRequestModel {
   });
 
   SheelaRequestModel.fromJson(Map<String, dynamic> json) {
-    sender = json['sender'];
-    name = json['Name'];
-    message = json['message'];
-    sessionId = json['sessionId'];
-    //authToken = json['authToken'];
-    timezone = json['timezone'];
-    lang = json['lang'];
-    deviceType = json['device_type'];
-    kioskData = json['kiosk_data'];
-    ProviderMsg = json['provider_msg'];
-    directCall = json['directCall'];
-    additionalInfo = json['additionalInfo'];
+    try {
+      sender = json['sender'];
+      name = json['Name'];
+      message = json['message'];
+      sessionId = json['sessionId'];
+      //authToken = json['authToken'];
+      timezone = json['timezone'];
+      lang = json['lang'];
+      deviceType = json['device_type'];
+      kioskData = json['kiosk_data'];
+      ProviderMsg = json['provider_msg'];
+      directCall = json['directCall'];
+      additionalInfo = json['additionalInfo'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class UpdateAddFamilyRelationInfo {
@@ -9,9 +11,13 @@ class UpdateAddFamilyRelationInfo {
   UpdateAddFamilyRelationInfo({this.status, this.success, this.message});
 
   UpdateAddFamilyRelationInfo.fromJson(Map<String, dynamic> json) {
-    status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
+    try {
+      status = json[parameters.strStatus];
+      success = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

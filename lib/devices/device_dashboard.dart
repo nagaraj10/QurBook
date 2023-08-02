@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:get/get.dart';
@@ -79,8 +78,8 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     catgoryDataList = PreferenceUtil.getCategoryType()!;
     if (catgoryDataList == null) {
       _categoryListBlock.getCategoryLists().then((value) {
-        catgoryDataList = value.result!;
-      } as FutureOr Function(CategoryDataList?));
+            catgoryDataList = value.result!;
+          } as FutureOr Function(CategoryDataList?));
     }
     _mediaTypeBlock.getMediTypesList().then((value) {
       mediaTypesResponse = value;
@@ -212,8 +211,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         ));
   }
 
-  Future<bool> _onBackPressed() async{
-    
+  Future<bool> _onBackPressed() async {
     onOkClicked = false;
     Navigator.of(context).pop(true);
     return true;
@@ -433,14 +431,16 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         postMediaData[parameters.strhealthRecordCategory] =
             categoryDataObj.toJson();
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
-            catgoryDataList = value.result!;
-            categoryDataObj = CommonUtil()
-                .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-            postMediaData[parameters.strhealthRecordCategory] =
-                categoryDataObj.toJson();
-          } as FutureOr Function(CategoryDataList?));
+                catgoryDataList = value.result!;
+                categoryDataObj = CommonUtil().getCategoryObjForSelectedLabel(
+                    categoryID, catgoryDataList);
+                postMediaData[parameters.strhealthRecordCategory] =
+                    categoryDataObj.toJson();
+              } as FutureOr Function(CategoryDataList?));
         }
       }
 

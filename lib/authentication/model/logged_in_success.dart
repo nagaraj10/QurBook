@@ -1,11 +1,17 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class LoginDetails {
   Result? result;
 
   LoginDetails({this.result});
 
   LoginDetails.fromJson(Map<String, dynamic> json) {
-    result = json['result'] != null ? Result.fromJson(json['result']) : null;
+    try {
+      result = json['result'] != null ? Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -50,20 +56,24 @@ class Result {
       this.firstLoggedIn});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    lastLoggedIn = json['lastLoggedIn'];
-    status = json['status'];
-    verificationCode = json['verificationCode'];
-    codeExpirationDatetime = json['codeExpirationDatetime'];
-    isLocked = json['isLocked'];
-    failedVerificationCount = json['failedVerificationCount'];
-    accountLockedDatetime = json['accountLockedDatetime'];
-    resetPasswordExpiryDatetime = json['resetPasswordExpiryDatetime'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    passwordChangedOn = json['passwordChangedOn'];
-    firstLoggedIn = json['firstLoggedIn'];
+    try {
+      id = json['id'];
+      lastLoggedIn = json['lastLoggedIn'];
+      status = json['status'];
+      verificationCode = json['verificationCode'];
+      codeExpirationDatetime = json['codeExpirationDatetime'];
+      isLocked = json['isLocked'];
+      failedVerificationCount = json['failedVerificationCount'];
+      accountLockedDatetime = json['accountLockedDatetime'];
+      resetPasswordExpiryDatetime = json['resetPasswordExpiryDatetime'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      passwordChangedOn = json['passwordChangedOn'];
+      firstLoggedIn = json['firstLoggedIn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -39,6 +39,8 @@ class AppointmentsListViewModel extends ChangeNotifier {
       notifyListeners();
       return _appointmentsModel;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       this.loadingStatus = LoadingStatus.empty;
       notifyListeners();
     }
@@ -63,7 +65,10 @@ class AppointmentsListViewModel extends ChangeNotifier {
           if (name.toLowerCase().trim().contains(query.toLowerCase().trim())) {
             dummySearchListUpcoming.add(element);
           }
-        } catch (e) {}
+        } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
+        }
       }
     }
 
@@ -76,7 +81,10 @@ class AppointmentsListViewModel extends ChangeNotifier {
           if (name.toLowerCase().trim().contains(query.toLowerCase().trim())) {
             dummySearchListHistory.add(element);
           }
-        } catch (e) {}
+        } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
+        }
       }
     }
 

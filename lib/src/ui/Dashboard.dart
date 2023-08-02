@@ -233,42 +233,69 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void callImportantsMethod() async {
     try {
       getFamilyRelationAndMediaType();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
     try {
       getProfileData();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
     try {
       syncDevices();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
 
     try {
       await new CommonUtil().getMedicalPreference();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
 
     try {
       new CommonDialogBox().getCategoryList();
       getFamilyRelationAndMediaType();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
 
     try {
       AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
       addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   void getFamilyRelationAndMediaType() async {
     try {
       await new CommonUtil().getAllCustomRoles();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
     try {
       await new CommonUtil().getMediaTypes();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   void getProfileData() async {
     try {
       await new CommonUtil().getUserProfileData();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   void syncDevices() async {

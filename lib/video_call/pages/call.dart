@@ -1029,6 +1029,8 @@ class _CallPageState extends State<CallPage> {
           },
         );
     } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
+
       printError(info: e.toString());
     }
   }

@@ -1,5 +1,6 @@
-
 import 'dart:async';
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../models/add_doctors_providers_id.dart';
 import '../models/add_hospitals_providers_id.dart';
@@ -17,10 +18,12 @@ class AddProvidersBloc implements BaseBloc {
   late StreamController doctorsProvidersController;
 
   StreamSink<ApiResponse<AddDoctorsProvidersId>> get doctorsSink =>
-      doctorsProvidersController.sink as StreamSink<ApiResponse<AddDoctorsProvidersId>>;
+      doctorsProvidersController.sink
+          as StreamSink<ApiResponse<AddDoctorsProvidersId>>;
 
   Stream<ApiResponse<AddDoctorsProvidersId>> get doctorsStream =>
-      doctorsProvidersController.stream as Stream<ApiResponse<AddDoctorsProvidersId>>;
+      doctorsProvidersController.stream
+          as Stream<ApiResponse<AddDoctorsProvidersId>>;
 
   late String doctorsJsonString;
 
@@ -29,10 +32,12 @@ class AddProvidersBloc implements BaseBloc {
   late StreamController hospitalsProvidersController;
 
   StreamSink<ApiResponse<AddHospitalsProvidersId>> get hospitalsSink =>
-      hospitalsProvidersController.sink as StreamSink<ApiResponse<AddHospitalsProvidersId>>;
+      hospitalsProvidersController.sink
+          as StreamSink<ApiResponse<AddHospitalsProvidersId>>;
 
   Stream<ApiResponse<AddHospitalsProvidersId>> get hospitalsStream =>
-      hospitalsProvidersController.stream as Stream<ApiResponse<AddHospitalsProvidersId>>;
+      hospitalsProvidersController.stream
+          as Stream<ApiResponse<AddHospitalsProvidersId>>;
 
   late String hospitalsJsonString;
 
@@ -41,7 +46,8 @@ class AddProvidersBloc implements BaseBloc {
   late StreamController labsProvidersController;
 
   StreamSink<ApiResponse<AddLabsProvidersId>> get labsSink =>
-      labsProvidersController.sink as StreamSink<ApiResponse<AddLabsProvidersId>>;
+      labsProvidersController.sink
+          as StreamSink<ApiResponse<AddLabsProvidersId>>;
 
   Stream<ApiResponse<AddLabsProvidersId>> get labsStream =>
       labsProvidersController.stream as Stream<ApiResponse<AddLabsProvidersId>>;
@@ -68,6 +74,7 @@ class AddProvidersBloc implements BaseBloc {
           await addProvidersRepository.addDoctors(doctorsJsonString);
       doctorsSink.add(ApiResponse.completed(addDoctorsProvidersId));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       doctorsSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -81,6 +88,7 @@ class AddProvidersBloc implements BaseBloc {
           await addProvidersRepository.addHospitals(hospitalsJsonString);
       hospitalsSink.add(ApiResponse.completed(addHospitalsProvidersId));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       hospitalsSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -94,6 +102,7 @@ class AddProvidersBloc implements BaseBloc {
           await addProvidersRepository.addLabs(labsJsonString);
       labsSink.add(ApiResponse.completed(addLabProvidersId));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
       labsSink.add(ApiResponse.error(e.toString()));
     }
   }

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Degree {
@@ -9,9 +10,13 @@ class Degree {
   Degree({this.id, this.name, this.isActive});
 
   Degree.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    name = json[parameters.strName];
-    isActive = json[parameters.strIsActive];
+    try {
+      id = json[parameters.strId];
+      name = json[parameters.strName];
+      isActive = json[parameters.strIsActive];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

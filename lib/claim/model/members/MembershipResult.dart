@@ -1,5 +1,6 @@
 
 import 'package:myfhb/claim/model/members/MembershipAdditionInfo.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class MemberShipResult {
   String? id;
@@ -22,16 +23,20 @@ class MemberShipResult {
         this.planSubscriptionInfoId});
 
   MemberShipResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    healthOrganizationName = json['healthOrganizationName'];
-    healthOrganizationId = json['healthOrganizationId'];
-    planName = json['planName'];
-    additionalInfo = json['additionalInfo'] != null
-        ? new MemberShipAdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
-    planStartDate = json['planStartDate'];
-    planEndDate = json['planEndDate'];
-    planSubscriptionInfoId = json['planSubscriptionInfoId'];
+    try {
+      id = json['id'];
+      healthOrganizationName = json['healthOrganizationName'];
+      healthOrganizationId = json['healthOrganizationId'];
+      planName = json['planName'];
+      additionalInfo = json['additionalInfo'] != null
+              ? new MemberShipAdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
+      planStartDate = json['planStartDate'];
+      planEndDate = json['planEndDate'];
+      planSubscriptionInfoId = json['planSubscriptionInfoId'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

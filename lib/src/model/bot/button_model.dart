@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class Buttons {
   String? payload;
   String? title;
@@ -17,12 +19,16 @@ class Buttons {
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
-    payload = json['payload'];
-    title = json['title'];
-    skipTTS = json['skip_tts'] ?? false;
-    isPlaying = false;
-    isSelected = false;
-    redirectTo = json['redirectTo'];
+    try {
+      payload = json['payload'];
+      title = json['title'];
+      skipTTS = json['skip_tts'] ?? false;
+      isPlaying = false;
+      isSelected = false;
+      redirectTo = json['redirectTo'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

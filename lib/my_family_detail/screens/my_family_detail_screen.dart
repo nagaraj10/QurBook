@@ -343,6 +343,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               }
             }
           } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
             if (sharedbyme.child!.isVirtualUser!) {
               mobileNoController.text =
                   myProfile!.result!.userContactCollection3![0]!.phoneNumber!;
@@ -363,6 +365,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           }
         }
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         if (sharedbyme.child!.isVirtualUser!) {
           mobileNoController.text =
               myProfile!.result!.userContactCollection3![0]!.phoneNumber!;
@@ -424,6 +428,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             isKg = false;
           }
         } catch (e) {
+
+      CommonUtil().appLogs(message: e.toString());
           if (CommonUtil.REGION_CODE == 'IN') {
             isFeetOrInches = true;
             isKg = true;
@@ -735,6 +741,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           }
         }
       } catch (e) {
+              CommonUtil().appLogs(message: e.toString());
+
         selectedBloodGroup = null;
         selectedBloodRange = null;
       }

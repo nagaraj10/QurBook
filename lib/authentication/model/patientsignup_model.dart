@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../constants/constants.dart';
 
 class PatientSignUp {
@@ -22,20 +24,26 @@ class PatientSignUp {
       this.result});
 
   PatientSignUp.fromJson(Map<String, dynamic> json) {
-    firstName = json[strfirstName];
-    lastName = json[strlastName];
-    source = json[strsource];
-    password = json[strpassword];
-    message = json[strmessage];
-    isSuccess = json[strIsSuccess];
-    if (json[struserContactCollection3] != null) {
-      userContactCollection3 = <UserContactCollection3>[];
-      json[struserContactCollection3].forEach((v) {
-        userContactCollection3!.add(UserContactCollection3.fromJson(v));
-      });
+    try {
+      firstName = json[strfirstName];
+      lastName = json[strlastName];
+      source = json[strsource];
+      password = json[strpassword];
+      message = json[strmessage];
+      isSuccess = json[strIsSuccess];
+      if (json[struserContactCollection3] != null) {
+            userContactCollection3 = <UserContactCollection3>[];
+            json[struserContactCollection3].forEach((v) {
+              userContactCollection3!.add(UserContactCollection3.fromJson(v));
+            });
+          }
+      result =
+              json[strResult] != null ? Result.fromJson(json[strResult]) : null;
+    } catch (e) {
+      CommonUtil().appLogs(
+          message: e.toString(),
+          userName: (json[strfirstName] ?? "" + json[strlastName] ?? ""));
     }
-    result =
-        json[strResult] != null ? Result.fromJson(json[strResult]) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -65,9 +73,13 @@ class UserContactCollection3 {
   UserContactCollection3({this.phoneNumber, this.email, this.isPrimary});
 
   UserContactCollection3.fromJson(Map<String, dynamic> json) {
-    phoneNumber = json[strphoneNumber];
-    email = json[stremail];
-    isPrimary = json[strisPrimary];
+    try {
+      phoneNumber = json[strphoneNumber];
+      email = json[stremail];
+      isPrimary = json[strisPrimary];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -86,8 +98,14 @@ class Result {
   Result({this.userId, this.userName});
 
   Result.fromJson(Map<String, dynamic> json) {
-    userId = json[strUserId];
-    userName = json[struserName];
+    try {
+      userId = json[strUserId];
+      userName = json[struserName];
+    } catch (e) {
+      CommonUtil().appLogs(
+          message: e.toString(),
+          userName: json[struserName] != null ? json[struserName] : "");
+    }
   }
 
   Map<String, dynamic> toJson() {

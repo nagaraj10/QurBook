@@ -68,6 +68,8 @@ class _AppointmentsState extends State<Appointments> {
       super.initState();
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -82,7 +84,10 @@ class _AppointmentsState extends State<Appointments> {
     });
     try {
       getCategoryList();
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   @override
@@ -184,6 +189,8 @@ class _AppointmentsState extends State<Appointments> {
                         }
                       } catch (e) {
                         //print(e);
+                                    CommonUtil().appLogs(message: e.toString());
+
                       }
                     },
                   ),

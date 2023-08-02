@@ -1,4 +1,5 @@
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class PatientAlertListResult {
   int? totalRecord;
@@ -11,15 +12,19 @@ class PatientAlertListResult {
       {this.totalRecord, this.currentPage, this.totalPage,this.healthOrganizationId, this.data});
 
   PatientAlertListResult.fromJson(Map<String, dynamic> json) {
-    totalRecord = json['totalRecord'];
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    healthOrganizationId = json['healthOrganizationId'];
-    if (json['data'] != null) {
-      data = <PatientAlertData>[];
-      json['data'].forEach((v) {
-        data!.add(new PatientAlertData.fromJson(v));
-      });
+    try {
+      totalRecord = json['totalRecord'];
+      currentPage = json['currentPage'];
+      totalPage = json['totalPage'];
+      healthOrganizationId = json['healthOrganizationId'];
+      if (json['data'] != null) {
+            data = <PatientAlertData>[];
+            json['data'].forEach((v) {
+              data!.add(new PatientAlertData.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

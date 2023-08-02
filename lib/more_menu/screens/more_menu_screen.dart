@@ -1595,7 +1595,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           },
                         ),
                       );
-                    } catch (e) {}
+                    } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+                    }
                   },
                   title: Text(variable.strConnectedDevices,
                       style: TextStyle(

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class FetchingCartItemsModel {
   bool? isSuccess;
   String? message;
@@ -9,18 +11,22 @@ class FetchingCartItemsModel {
       {this.isSuccess, this.message, this.result, this.diagnostics});
 
   FetchingCartItemsModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json.containsKey('message')) {
-      message = json['message'];
-    }
-    if (json.containsKey('result')) {
-      result =
-          json['result'] != null ? new Result.fromJson(json['result']) : null;
-    }
-    if (json.containsKey('diagnostics')) {
-      diagnostics = json['diagnostics'] != null
-          ? new Diagnostics.fromJson(json['diagnostics'])
-          : null;
+    try {
+      isSuccess = json['isSuccess'];
+      if (json.containsKey('message')) {
+            message = json['message'];
+          }
+      if (json.containsKey('result')) {
+            result =
+                json['result'] != null ? new Result.fromJson(json['result']) : null;
+          }
+      if (json.containsKey('diagnostics')) {
+            diagnostics = json['diagnostics'] != null
+                ? new Diagnostics.fromJson(json['diagnostics'])
+                : null;
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -46,9 +52,13 @@ class Result {
   Result({this.productsCount, this.cart, this.totalCartAmount});
 
   Result.fromJson(Map<String, dynamic> json) {
-    productsCount = json['productsCount'];
-    totalCartAmount = json['totalCartAmount'];
-    cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
+    try {
+      productsCount = json['productsCount'];
+      totalCartAmount = json['totalCartAmount'];
+      cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -71,14 +81,18 @@ class Cart {
   Cart({this.id, this.createdOn, this.lastModifiedOn, this.productList});
 
   Cart.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    if (json['productList'] != null) {
-      productList = <ProductList>[];
-      json['productList'].forEach((v) {
-        productList!.add(new ProductList.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      if (json['productList'] != null) {
+            productList = <ProductList>[];
+            json['productList'].forEach((v) {
+              productList!.add(new ProductList.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -111,17 +125,21 @@ class ProductList {
       this.paidAmount});
 
   ProductList.fromJson(Map<String, dynamic> json) {
-    productDetail = json['productDetail'] != null
-        ? new ProductDetail.fromJson(json['productDetail'])
-        : null;
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    additionalInfo = json['additionalInfo'] != null
-        ? new AdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
-    if (json.containsKey("paidAmount")) {
-      paidAmount = json["paidAmount"];
+    try {
+      productDetail = json['productDetail'] != null
+              ? new ProductDetail.fromJson(json['productDetail'])
+              : null;
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      additionalInfo = json['additionalInfo'] != null
+              ? new AdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
+      if (json.containsKey("paidAmount")) {
+            paidAmount = json["paidAmount"];
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -156,11 +174,15 @@ class ProductDetail {
       this.healthOrganizationName});
 
   ProductDetail.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    planName = json['planName'];
-    planSubscriptionFee = json['planSubscriptionFee'];
-    packageDuration = json['packageDuration'];
-    healthOrganizationName = json['healthOrganizationName'];
+    try {
+      id = json['id'];
+      planName = json['planName'];
+      planSubscriptionFee = json['planSubscriptionFee'];
+      packageDuration = json['packageDuration'];
+      healthOrganizationName = json['healthOrganizationName'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -182,11 +204,15 @@ class Diagnostics {
   Diagnostics({this.message, this.errorData, this.includeErrorDataInResponse});
 
   Diagnostics.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    errorData = json['errorData'] != null
-        ? new ErrorData.fromJson(json['errorData'])
-        : null;
-    includeErrorDataInResponse = json['includeErrorDataInResponse'];
+    try {
+      message = json['message'];
+      errorData = json['errorData'] != null
+              ? new ErrorData.fromJson(json['errorData'])
+              : null;
+      includeErrorDataInResponse = json['includeErrorDataInResponse'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -206,7 +232,11 @@ class ErrorData {
   ErrorData({this.productsCount});
 
   ErrorData.fromJson(Map<String, dynamic> json) {
-    productsCount = json['productsCount'];
+    try {
+      productsCount = json['productsCount'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -229,27 +259,31 @@ class AdditionalInfo {
   AdditionalInfo({this.isRenewal, this.tag});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey("tag")) tag = json['tag'];
-    if (json.containsKey("duration")) duration = json['duration'];
+    try {
+      if (json.containsKey("tag")) tag = json['tag'];
+      if (json.containsKey("duration")) duration = json['duration'];
 
-    if (json.containsKey("newFee")) {
-      if (json['newFee'].runtimeType == String) {
-        newFee = json['newFee'];
-      }
-      newFee = json['newFee'].toString();
-    }
-    if (json.containsKey("actualFee")) {
-      if (json['actualFee'].runtimeType == String) {
-        actualFee = json['actualFee'];
-      }
-      actualFee = json['actualFee'].toString();
-    }
+      if (json.containsKey("newFee")) {
+            if (json['newFee'].runtimeType == String) {
+              newFee = json['newFee'];
+            }
+            newFee = json['newFee'].toString();
+          }
+      if (json.containsKey("actualFee")) {
+            if (json['actualFee'].runtimeType == String) {
+              actualFee = json['actualFee'];
+            }
+            actualFee = json['actualFee'].toString();
+          }
 
-    if (json.containsKey("isRenewal")) isRenewal = json['isRenewal'];
-    if (json.containsKey("remarks")) remarks = json['remarks'];
-    if (json.containsKey("PlanType")) planType = json['PlanType'];
-    if (json.containsKey("isMembershipAvail"))
-      isMembershipAvail = json['isMembershipAvail'];
+      if (json.containsKey("isRenewal")) isRenewal = json['isRenewal'];
+      if (json.containsKey("remarks")) remarks = json['remarks'];
+      if (json.containsKey("PlanType")) planType = json['PlanType'];
+      if (json.containsKey("isMembershipAvail"))
+            isMembershipAvail = json['isMembershipAvail'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

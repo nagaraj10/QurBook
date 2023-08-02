@@ -1,5 +1,6 @@
-
 import 'dart:async';
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../common/PreferenceUtil.dart';
 import '../model/Language.dart';
@@ -40,6 +41,8 @@ class LanguageBlock implements BaseBloc {
 
       categoryListSinks.add(ApiResponse.completed(languageModelList));
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       categoryListSinks.add(ApiResponse.error(e.toString()));
     }
     return languageModelList;

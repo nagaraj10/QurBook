@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/services/slotsAvailabilityService.dart';
@@ -15,6 +16,8 @@ class SlotsAvailabilityViewModel{
       await slotsAvailabilityService.getTelehealthSlotsList(date, doctorId,healthOrgId);
       //sessionList = doctorTimeSlotsModel;
       return doctorTimeSlotsModel;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+    }
   }
 }

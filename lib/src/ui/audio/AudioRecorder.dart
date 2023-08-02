@@ -123,6 +123,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
       );
     } catch (e) {
       _isRecording = false;
+                  CommonUtil().appLogs(message: e.toString());
+
       setState(
         () {},
       );
@@ -178,6 +180,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
       }
     } catch (e) {
       print("Failed to stop recorder");
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     _isRecording = false;
     if (_recorderSubscription != null) {

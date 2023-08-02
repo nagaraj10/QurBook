@@ -86,6 +86,8 @@ class SheelaBLEController extends GetxController {
         _enableTimer();
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
     }
   }
@@ -377,6 +379,8 @@ class SheelaBLEController extends GetxController {
       }
       return (index >= 0 && filteredDeviceTypeCheck);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       printError(info: e.toString());
       return false;
     }
@@ -403,6 +407,8 @@ class SheelaBLEController extends GetxController {
         return true;
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       printError(info: e.toString());
       return false;
     }
@@ -507,7 +513,10 @@ class SheelaBLEController extends GetxController {
           model.deviceType = model.deviceType?.toUpperCase();
           try {
             weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT)!;
-          } catch (e) {}
+          } catch (e) {
+                        CommonUtil().appLogs(message: e.toString());
+
+          }
           if ((weightUnit).isEmpty) {
             weightUnit = CommonUtil.REGION_CODE == "IN"
                 ? STR_VAL_WEIGHT_IND
@@ -518,6 +527,7 @@ class SheelaBLEController extends GetxController {
             convertedWeight = double.parse(model.data!.weight!);
           } catch (e) {
             convertedWeight = 1.000;
+            CommonUtil().appLogs(message: e.toString());
           }
           if (weightUnit == STR_VAL_WEIGHT_US) {
             convertedWeight = (convertedWeight * 2.205);
@@ -613,6 +623,8 @@ class SheelaBLEController extends GetxController {
         }
         isCompleted = true;
       } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
         receivedData = false;
         showFailure();
       }
@@ -648,6 +660,8 @@ class SheelaBLEController extends GetxController {
           }
         }
       } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
         stopTTS();
       }
     } else {
@@ -682,6 +696,8 @@ class SheelaBLEController extends GetxController {
                 isLocal: true);
           }
         } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
           //failed play the audio
           print(e.toString());
           stopTTS();

@@ -1,6 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../common/PreferenceUtil.dart';
@@ -25,7 +25,9 @@ class SubscribeViewModel extends ChangeNotifier {
       await Provider.of<UserPlansViewModel>(Get.context!, listen: false)
           .getUserPlanInfo();
       return myPlanListModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<SubscribeModel?> UnsubScribePlan(String packageId) async {
@@ -36,7 +38,9 @@ class SubscribeViewModel extends ChangeNotifier {
       await Provider.of<UserPlansViewModel>(Get.context!, listen: false)
           .getUserPlanInfo();
       return myPlanListModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<CreateSubscribeModel?> createSubscribePayment(String packageId) async {
@@ -45,6 +49,8 @@ class SubscribeViewModel extends ChangeNotifier {
       var createSubscribeModel =
           await myPlanService.createSubscribe(packageId, userid);
       return createSubscribeModel;
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 }

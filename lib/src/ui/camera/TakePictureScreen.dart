@@ -239,6 +239,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                         }
                                         callDisplayPictureScreen(context);
                                       } catch (e) {
+                                                    CommonUtil().appLogs(message: e.toString());
+
                                         // If an error occurs, log the error to the console.
                                       }
                                     }
@@ -279,6 +281,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     imagePaths.add(xpath.path);
                                     setState(() {});
                                   } catch (e) {
+                                                CommonUtil().appLogs(message: e.toString());
+
                                     // If an error occurs, log the error to the console.
                                   }
                                 },
@@ -351,6 +355,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           imagePaths.add(filePath);
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
+                                                      CommonUtil().appLogs(message: e.toString());
+
                                           // If an error occurs, log the error to the console.
                                         }
                                       }
@@ -388,6 +394,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                                   .add(image!.files[0].path);
                                             callDisplayPictureScreen(context);
                                           } catch (e) {
+                                                        CommonUtil().appLogs(message: e.toString());
+
                                             // If an error occurs, log the error to the console.
                                           }
                                         }
@@ -439,6 +447,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     }
                                   } catch (e) {
                                     // If an error occurs, log the error to the console.
+                                                CommonUtil().appLogs(message: e.toString());
+
                                   }
                                 },
                               ),

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 
 class SlotsResultModel {
@@ -13,16 +14,20 @@ class SlotsResultModel {
       {this.healthOrganizationId,this.doctorId, this.date, this.day, this.sessionCounts, this.sessions});
 
   SlotsResultModel.fromJson(Map<String, dynamic> json) {
-    healthOrganizationId = json['healthOrganizationId'];
-    doctorId = json['doctorId'];
-    date = json['date'];
-    day = json['day'];
-    sessionCounts = json['sessionCounts'];
-    if (json['sessions'] != null) {
-      sessions = <SlotSessionsModel>[];
-      json['sessions'].forEach((v) {
-        sessions!.add(new SlotSessionsModel.fromJson(v));
-      });
+    try {
+      healthOrganizationId = json['healthOrganizationId'];
+      doctorId = json['doctorId'];
+      date = json['date'];
+      day = json['day'];
+      sessionCounts = json['sessionCounts'];
+      if (json['sessions'] != null) {
+            sessions = <SlotSessionsModel>[];
+            json['sessions'].forEach((v) {
+              sessions!.add(new SlotSessionsModel.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

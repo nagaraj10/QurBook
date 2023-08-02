@@ -202,7 +202,10 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                       } else {
                         Navigator.pop(context);
                       }
-                    } catch (e) {}
+                    } catch (e) {
+                                  CommonUtil().appLogs(message: e.toString());
+
+                    }
                   },
                   // color: Color(CommonUtil().getMyPrimaryColor()),
                  // textColor: Colors.white,

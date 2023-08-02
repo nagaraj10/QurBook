@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
@@ -59,36 +60,40 @@ class History {
   String? refundMediaMetaId;
 
   History.fromJson(Map<String, dynamic> json) {
-    appointmentId = json[parameters.strAppointmentId];
-    createdOn = json[parameters.strCreatedOn];
-    createdBy = json[parameters.strCreatedBy];
-    lastModifiedBy = json[parameters.strlastModifiedBy];
-    healthRecord = json[parameters.strHealthRecord] == null
-        ? null
-        : HealthRecord.fromJson(json[parameters.strHealthRecord]);
-    plannedStartDateTime = json[parameters.strPlannedStartDateTime];
-    plannedEndDateTime = json[parameters.strPlannedEndDateTime];
-    slotNumber = json[parameters.strSlotNumber];
-    isRefunded = json[parameters.strIsRefunded];
-    bookingId = json[parameters.strBookingID];
-    sharedMedicalRecordsId = json[parameters.strSharedMedicalRecordsId] == null
-        ? null
-        : json[parameters.strSharedMedicalRecordsId];
-    isMedicalRecordsShared = json[parameters.strIsMedicalRecordsShared];
-    specialization = json[parameters.strSpecilization];
-    location = json[parameters.strlocation];
-    doctorPic = json[parameters.strDoctorPic];
-    doctorName = json[parameters.strDoctorName];
-    doctorId = json[parameters.strDoctorId];
-    doctorSessionId = json[parameters.strDoctorSessionId];
-    patientId = json[parameters.strPatientId];
-    actualStartDateTime = json[parameters.strActualStartDateTime];
-    actualEndDateTime = json[parameters.strActualEndDateTime];
-    followupDate = json[parameters.strFollowupDate];
-    followupFee = json[parameters.strFollowupFee];
-    status = json[parameters.strStatus];
-    paymentMediaMetaId = json[parameters.strPaymentMediaMetaId];
-    refundMediaMetaId = json[parameters.strRefundMediaMetaId];
+    try {
+      appointmentId = json[parameters.strAppointmentId];
+      createdOn = json[parameters.strCreatedOn];
+      createdBy = json[parameters.strCreatedBy];
+      lastModifiedBy = json[parameters.strlastModifiedBy];
+      healthRecord = json[parameters.strHealthRecord] == null
+              ? null
+              : HealthRecord.fromJson(json[parameters.strHealthRecord]);
+      plannedStartDateTime = json[parameters.strPlannedStartDateTime];
+      plannedEndDateTime = json[parameters.strPlannedEndDateTime];
+      slotNumber = json[parameters.strSlotNumber];
+      isRefunded = json[parameters.strIsRefunded];
+      bookingId = json[parameters.strBookingID];
+      sharedMedicalRecordsId = json[parameters.strSharedMedicalRecordsId] == null
+              ? null
+              : json[parameters.strSharedMedicalRecordsId];
+      isMedicalRecordsShared = json[parameters.strIsMedicalRecordsShared];
+      specialization = json[parameters.strSpecilization];
+      location = json[parameters.strlocation];
+      doctorPic = json[parameters.strDoctorPic];
+      doctorName = json[parameters.strDoctorName];
+      doctorId = json[parameters.strDoctorId];
+      doctorSessionId = json[parameters.strDoctorSessionId];
+      patientId = json[parameters.strPatientId];
+      actualStartDateTime = json[parameters.strActualStartDateTime];
+      actualEndDateTime = json[parameters.strActualEndDateTime];
+      followupDate = json[parameters.strFollowupDate];
+      followupFee = json[parameters.strFollowupFee];
+      status = json[parameters.strStatus];
+      paymentMediaMetaId = json[parameters.strPaymentMediaMetaId];
+      refundMediaMetaId = json[parameters.strRefundMediaMetaId];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

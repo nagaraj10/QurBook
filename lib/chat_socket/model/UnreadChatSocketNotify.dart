@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UnreadChatSocketNotify {
   String? idFrom;
   String? idTo;
@@ -7,10 +9,14 @@ class UnreadChatSocketNotify {
   UnreadChatSocketNotify({this.idFrom, this.idTo, this.result});
 
   UnreadChatSocketNotify.fromJson(Map<String, dynamic> json) {
-    idFrom = json['idFrom'];
-    idTo = json['idTo'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      idFrom = json['idFrom'];
+      idTo = json['idTo'];
+      result =
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -31,12 +37,16 @@ class Result {
   Result({this.isSuccess, this.payload});
 
   Result.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['payload'] != null) {
-      payload = <Payload>[];
-      json['payload'].forEach((v) {
-        payload!.add(new Payload.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['payload'] != null) {
+            payload = <Payload>[];
+            json['payload'].forEach((v) {
+              payload!.add(new Payload.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -56,7 +66,11 @@ class Payload {
   Payload({this.count});
 
   Payload.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
+    try {
+      count = json['count'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
