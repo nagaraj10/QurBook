@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notificationResult.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
@@ -88,6 +89,8 @@ class FetchNotificationViewModel extends ChangeNotifier {
       final status = await _fetchNotificationService.clearNotifications(body);
       fetchNotifications();
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       fetchNotifications();
     }

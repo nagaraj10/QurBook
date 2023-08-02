@@ -207,7 +207,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ? getFeesFromHospital(
                   widget.resultFromHospitalList![widget.doctorListIndex!], false)
               : getFees(widget.healthOrganizationResult![widget.i!], false));
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   @override
@@ -337,6 +340,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 : "";
       } catch (e) {
         patientName = "";
+                    CommonUtil().appLogs(message: e.toString());
+
       }
 
       doctorName = appointmentNotificationPayment.result?.doctor?.user != null
@@ -420,7 +425,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ' ' +
               myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
 
     if (sharedByMeList == null) {
       sharedByMeList = [];
@@ -708,6 +716,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               .toString();
         } catch (e) {
           widget = SizedBox.shrink();
+                      CommonUtil().appLogs(message: e.toString());
+
         }
         widget = Container(
           child: Center(
@@ -1031,6 +1041,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     } catch (e) {
       pr.hide();
       toast.getToast(someWentWrong, Colors.red);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -1662,6 +1674,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               )
               .toString();
         } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
           return;
         }
         if (originalFees!.contains(',')) {
@@ -1963,6 +1977,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 .toStringAsFixed(2)
                 .toString();
       } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
         return price.toString();
       }
     }

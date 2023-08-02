@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'Members.dart';
 import 'SendMailTo.dart';
 import 'attachments.dart';
@@ -25,18 +27,22 @@ class TicketsListResponse {
       this.nextPage});
 
   TicketsListResponse.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    if (json['tickets'] != null) {
-      tickets = <Tickets>[];
-      json['tickets'].forEach((v) {
-        tickets!.add(new Tickets.fromJson(v));
-      });
+    try {
+      success = json['success'];
+      if (json['tickets'] != null) {
+            tickets = <Tickets>[];
+            json['tickets'].forEach((v) {
+              tickets!.add(new Tickets.fromJson(v));
+            });
+          }
+      count = json['count'];
+      totalCount = json['totalCount'];
+      page = json['page'];
+      prevPage = json['prevPage'];
+      nextPage = json['nextPage'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    count = json['count'];
-    totalCount = json['totalCount'];
-    page = json['page'];
-    prevPage = json['prevPage'];
-    nextPage = json['nextPage'];
   }
 
   Map<String, dynamic> toJson() {
@@ -102,66 +108,70 @@ class Tickets {
       this.additionalInfo});
 
   Tickets.fromJson(Map<String, dynamic> json) {
-    deleted = json['deleted'];
-    status = json['status'];
-    if (json['tags'] != null) {
-      tags = <Tags>[];
-      json['tags'].forEach((v) {
-        tags!.add(new Tags.fromJson(v));
-      });
-    }
-    if (json['subscribers'] != null) {
-      subscribers = <Subscribers>[];
-      json['subscribers'].forEach((v) {
-        subscribers!.add(new Subscribers.fromJson(v));
-      });
-    }
-    sId = json['_id'];
-    owner =
-        json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
-    subject = json['subject'];
-    group = json['group'] != null ? new Group.fromJson(json['group']) : null;
-    type = json['type'] != null ? new Type.fromJson(json['type']) : null;
-    priority = json['priority'] != null
-        ? new Priority.fromJson(json['priority'])
-        : null;
-    issue = json['issue'];
-    assignee = json['assignee'] != null
-        ? new Subscribers.fromJson(json['assignee'])
-        : null;
-    date = json['date'];
-    preferredDate = json['preferredDate'];
-    if (json['comments'] != null) {
-      comments = <Comments>[];
-      json['comments'].forEach((v) {
-        comments!.add(new Comments.fromJson(v));
-      });
-    }
-    if (json['notes'] != null) {
-      notes = <Notes>[];
-      json['notes'].forEach((v) {
-        notes!.add(new Notes.fromJson(v));
-      });
-    }
-    if (json['attachments'] != null) {
-      attachments = <Attachments>[];
-      json['attachments'].forEach((v) {
-        attachments!.add(new Attachments.fromJson(v));
-      });
-    }
+    try {
+      deleted = json['deleted'];
+      status = json['status'];
+      if (json['tags'] != null) {
+            tags = <Tags>[];
+            json['tags'].forEach((v) {
+              tags!.add(new Tags.fromJson(v));
+            });
+          }
+      if (json['subscribers'] != null) {
+            subscribers = <Subscribers>[];
+            json['subscribers'].forEach((v) {
+              subscribers!.add(new Subscribers.fromJson(v));
+            });
+          }
+      sId = json['_id'];
+      owner =
+              json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
+      subject = json['subject'];
+      group = json['group'] != null ? new Group.fromJson(json['group']) : null;
+      type = json['type'] != null ? new Type.fromJson(json['type']) : null;
+      priority = json['priority'] != null
+              ? new Priority.fromJson(json['priority'])
+              : null;
+      issue = json['issue'];
+      assignee = json['assignee'] != null
+              ? new Subscribers.fromJson(json['assignee'])
+              : null;
+      date = json['date'];
+      preferredDate = json['preferredDate'];
+      if (json['comments'] != null) {
+            comments = <Comments>[];
+            json['comments'].forEach((v) {
+              comments!.add(new Comments.fromJson(v));
+            });
+          }
+      if (json['notes'] != null) {
+            notes = <Notes>[];
+            json['notes'].forEach((v) {
+              notes!.add(new Notes.fromJson(v));
+            });
+          }
+      if (json['attachments'] != null) {
+            attachments = <Attachments>[];
+            json['attachments'].forEach((v) {
+              attachments!.add(new Attachments.fromJson(v));
+            });
+          }
 
-    additionalInfo = json['additionalInfo'] != null
-        ? new AdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
+      additionalInfo = json['additionalInfo'] != null
+              ? new AdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
 
-    if (json['history'] != null) {
-      history = <History>[];
-      json['history'].forEach((v) {
-        history!.add(new History.fromJson(v));
-      });
+      if (json['history'] != null) {
+            history = <History>[];
+            json['history'].forEach((v) {
+              history!.add(new History.fromJson(v));
+            });
+          }
+      uid = json['uid'];
+      iV = json['__v'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    uid = json['uid'];
-    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
@@ -221,7 +231,11 @@ class Tags {
   Tags({this.id});
 
   Tags.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    try {
+      id = json['id'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -248,12 +262,16 @@ class Subscribers {
       this.title});
 
   Subscribers.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    username = json['username'];
-    fullname = json['fullname'];
-    email = json['email'];
-    role = json['role'] != null ? new Role.fromJson(json['role']) : null;
-    title = json['title'];
+    try {
+      sId = json['_id'];
+      username = json['username'];
+      fullname = json['fullname'];
+      email = json['email'];
+      role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+      title = json['title'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -287,12 +305,16 @@ class Role {
       this.isAgent});
 
   Role.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    description = json['description'];
-    normalized = json['normalized'];
-    isAdmin = json['isAdmin'];
-    isAgent = json['isAgent'];
+    try {
+      sId = json['_id'];
+      name = json['name'];
+      description = json['description'];
+      normalized = json['normalized'];
+      isAdmin = json['isAdmin'];
+      isAgent = json['isAgent'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -317,16 +339,20 @@ class Group {
   Group({this.members, this.sendMailTo, this.public, this.sId, this.name});
 
   Group.fromJson(Map<String, dynamic> json) {
-    if (json['members'] != null) {
-      members = <Members>[];
-      json['members'].forEach((v) {
-        members!.add(new Members.fromJson(v));
-      });
+    try {
+      if (json['members'] != null) {
+            members = <Members>[];
+            json['members'].forEach((v) {
+              members!.add(new Members.fromJson(v));
+            });
+          }
+      sendMailTo = json['sendMailTo'].cast<String>();
+      public = json['public'];
+      sId = json['_id'];
+      name = json['name'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    sendMailTo = json['sendMailTo'].cast<String>();
-    public = json['public'];
-    sId = json['_id'];
-    name = json['name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -353,15 +379,19 @@ class Type {
   Type({this.priorities, this.sId, this.name, this.iV});
 
   Type.fromJson(Map<String, dynamic> json) {
-    if (json['priorities'] != null) {
-      priorities = <Priorities>[];
-      json['priorities'].forEach((v) {
-        priorities!.add(new Priorities.fromJson(v));
-      });
+    try {
+      if (json['priorities'] != null) {
+            priorities = <Priorities>[];
+            json['priorities'].forEach((v) {
+              priorities!.add(new Priorities.fromJson(v));
+            });
+          }
+      sId = json['_id'];
+      name = json['name'];
+      iV = json['__v'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    sId = json['_id'];
-    name = json['name'];
-    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
@@ -395,13 +425,17 @@ class Priorities {
       this.durationFormatted});
 
   Priorities.fromJson(Map<String, dynamic> json) {
-    overdueIn = json['overdueIn'];
-    htmlColor = json['htmlColor'];
-    sId = json['_id'];
-    name = json['name'];
-    migrationNum = json['migrationNum'];
-    defaultBool = json['defaultBool'];
-    durationFormatted = json['durationFormatted'];
+    try {
+      overdueIn = json['overdueIn'];
+      htmlColor = json['htmlColor'];
+      sId = json['_id'];
+      name = json['name'];
+      migrationNum = json['migrationNum'];
+      defaultBool = json['defaultBool'];
+      durationFormatted = json['durationFormatted'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -438,14 +472,18 @@ class Priority {
       this.durationFormatted});
 
   Priority.fromJson(Map<String, dynamic> json) {
-    overdueIn = json['overdueIn'];
-    htmlColor = json['htmlColor'];
-    sId = json['_id'];
-    name = json['name'];
-    migrationNum = json['migrationNum'];
-    defaultBool = json['defaultBool'];
-    iV = json['__v'];
-    durationFormatted = json['durationFormatted'];
+    try {
+      overdueIn = json['overdueIn'];
+      htmlColor = json['htmlColor'];
+      sId = json['_id'];
+      name = json['name'];
+      migrationNum = json['migrationNum'];
+      defaultBool = json['defaultBool'];
+      iV = json['__v'];
+      durationFormatted = json['durationFormatted'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -472,12 +510,16 @@ class History {
   History({this.sId, this.action, this.description, this.owner, this.date});
 
   History.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    action = json['action'];
-    description = json['description'];
-    owner =
-        json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
-    date = json['date'];
+    try {
+      sId = json['_id'];
+      action = json['action'];
+      description = json['description'];
+      owner =
+              json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
+      date = json['date'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

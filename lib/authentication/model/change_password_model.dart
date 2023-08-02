@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../constants/constants.dart';
 
 class ChangePasswordModel {
@@ -16,11 +18,15 @@ class ChangePasswordModel {
       this.isSuccess});
 
   ChangePasswordModel.fromJson(Map<String, dynamic> json) {
-    newPassword = json[strNewPassword];
-    oldPassword = json[strOldPassword];
-    source = json[strsource];
-    message = json[strmessage];
-    isSuccess = json[strIsSuccess];
+    try {
+      newPassword = json[strNewPassword];
+      oldPassword = json[strOldPassword];
+      source = json[strsource];
+      message = json[strmessage];
+      isSuccess = json[strIsSuccess];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

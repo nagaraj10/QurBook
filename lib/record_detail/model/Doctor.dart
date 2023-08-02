@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class Doctor {
@@ -44,25 +46,29 @@ class Doctor {
       this.lastModifiedOn});
 
   Doctor.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    name = json[parameters.strName];
-    addressLine1 = json[parameters.strAddressLine1];
-    addressLine2 = json[parameters.strAddressLine2];
-    website = json[parameters.strWebsite];
-    googleMapUrl = json[parameters.strGoogleMapUrl];
-    phoneNumber1 = json[parameters.strPhoneNumber1];
-    phoneNumber2 = json[parameters.strPhoneNumber2];
-    phoneNumber3 = json[parameters.strPhoneNumber3];
-    phoneNumber4 = json[parameters.strPhoneNumber4];
-    email = json[parameters.strEmail];
-    state = json[parameters.strState];
-    city = json[parameters.strCity];
-    isActive = json[parameters.strIsActive];
-    specialization = json[parameters.strSpecilization];
-    isUserDefined = json[parameters.strIsUserDefined];
-    description = json[parameters.strDescription];
-    createdBy = json[parameters.strCreatedBy];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
+    try {
+      id = json[parameters.strId];
+      name = json[parameters.strName];
+      addressLine1 = json[parameters.strAddressLine1];
+      addressLine2 = json[parameters.strAddressLine2];
+      website = json[parameters.strWebsite];
+      googleMapUrl = json[parameters.strGoogleMapUrl];
+      phoneNumber1 = json[parameters.strPhoneNumber1];
+      phoneNumber2 = json[parameters.strPhoneNumber2];
+      phoneNumber3 = json[parameters.strPhoneNumber3];
+      phoneNumber4 = json[parameters.strPhoneNumber4];
+      email = json[parameters.strEmail];
+      state = json[parameters.strState];
+      city = json[parameters.strCity];
+      isActive = json[parameters.strIsActive];
+      specialization = json[parameters.strSpecilization];
+      isUserDefined = json[parameters.strIsUserDefined];
+      description = json[parameters.strDescription];
+      createdBy = json[parameters.strCreatedBy];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

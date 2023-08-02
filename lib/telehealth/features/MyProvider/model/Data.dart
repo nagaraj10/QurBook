@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class Data {
   String? userid;
   String? username;
@@ -37,23 +39,27 @@ class Data {
       this.specialist});
 
   Data.fromJson(Map<String, dynamic> json) {
-    userid = json['userid'];
-    username = json['username'];
-    fullname = json['fullname'];
-    age = json['age'];
-    history = json['history'];
-    profileimage = json['profileimage'];
-    address = json['address'];
-    countryCode = json['countryCode'];
-    phoneNumber = json['phoneNumber'];
-    status = json['status'];
-    conditions = json['conditions'];
-    isBookmarked = json['isBookMarked'];
-    isAvailable = json['isAvailable'];
-    consultationFee = json['consultation_fee'];
+    try {
+      userid = json['userid'];
+      username = json['username'];
+      fullname = json['fullname'];
+      age = json['age'];
+      history = json['history'];
+      profileimage = json['profileimage'];
+      address = json['address'];
+      countryCode = json['countryCode'];
+      phoneNumber = json['phoneNumber'];
+      status = json['status'];
+      conditions = json['conditions'];
+      isBookmarked = json['isBookMarked'];
+      isAvailable = json['isAvailable'];
+      consultationFee = json['consultation_fee'];
 
-    specialist = json['specialist'];
-    city = json['city'];
+      specialist = json['specialist'];
+      city = json['city'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -860,6 +860,8 @@ class SymptomItemCard extends StatelessWidget {
                       double.tryParse(vitalData.amin)!)
               : true;
         } catch (e) {
+                CommonUtil().appLogs(message: e.toString());
+
           //print(e);
         }
       }

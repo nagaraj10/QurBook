@@ -846,3 +846,6 @@ const String strCopyVitalsMsg =
 const String strglucose = 'SPO2';
 const String strBloodSugar = 'BloodSugar';
 const String strAppointmentDetail = 'appointmentDetail';
+const String strAppVersion = 'App Version';
+const String strOSVersion = 'OS Version';
+const String strErrorLog = 'Error Log';

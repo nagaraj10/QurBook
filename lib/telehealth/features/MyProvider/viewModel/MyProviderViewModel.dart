@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
@@ -38,7 +39,10 @@ class MyProviderViewModel extends ChangeNotifier {
       doctorIdsList = myProvidersResponseList
           .response!.data!.medicalPreferences!.preferences!.doctorIds;
       return doctorIdsList;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Future<bool?> bookMarkDoctor(
@@ -90,7 +94,10 @@ class MyProviderViewModel extends ChangeNotifier {
               doctorId, userId, healthRecords);
       associateRecordResponse = bookAppointmentModel;
       return associateRecordResponse;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Future<AssociateUpdateSuccessResponse?> associateUpdateRecords(
@@ -101,7 +108,9 @@ class MyProviderViewModel extends ChangeNotifier {
               bookingID, healthResult);
       associateUpdateRecordResponse = bookAppointmentModel;
       return associateUpdateRecordResponse;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<HealthOrganizationModel?> getHealthOrgFromDoctor(
@@ -113,7 +122,9 @@ class MyProviderViewModel extends ChangeNotifier {
 
       //healthOrganizationResult = healthOrganizationModel.result;
       return healthOrganizationModel;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<List<ResultFromHospital>?> getDoctorsFromHospital(
@@ -124,7 +135,9 @@ class MyProviderViewModel extends ChangeNotifier {
 
       doctorsFromHospital = doctorListFromHospitalModel.result;
       return doctorsFromHospital;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   List<Hospitals> getHospitalName(

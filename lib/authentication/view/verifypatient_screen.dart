@@ -1,4 +1,3 @@
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -199,6 +198,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                                     Get.back();
                                   }
                                 } catch (e) {
+                                  CommonUtil().appLogs(message: e.toString());
                                   print(e);
                                 }
                               },
@@ -378,8 +378,10 @@ class _VerifyPatientState extends State<VerifyPatient>
     if (from == strFromVerifyFamilyMember) {
       return strOtpTextForFamilyMember + widget.fName! + mobileNumber;
     } else {
-      var num = widget.PhoneNumber!.replaceRange(0,
-          widget.PhoneNumber!.length - 4, 'x' * (widget.PhoneNumber!.length - 4));
+      var num = widget.PhoneNumber!.replaceRange(
+          0,
+          widget.PhoneNumber!.length - 4,
+          'x' * (widget.PhoneNumber!.length - 4));
       return (widget.isVirtualNumber ?? false)
           ? strOtpText + num + strOtpTextVirtual
           : strOtpText + num;
@@ -673,7 +675,9 @@ class _VerifyPatientState extends State<VerifyPatient>
     try {
       var apiBaseHelper = ApiBaseHelper();
       final res = apiBaseHelper.updateLastVisited();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     if (widget.from == strFromSignUp) {
       if (widget.userConfirm!) {
         userId = widget.userId;
@@ -715,7 +719,8 @@ class _VerifyPatientState extends State<VerifyPatient>
         }
       });
     } else {
-      final String userId = parseJwtPayLoad(decodesstring!)[strToken][strUserId];
+      final String userId =
+          parseJwtPayLoad(decodesstring!)[strToken][strUserId];
       saveuser.userId = userId;
       id_token_string = parseJwtPayLoad(decodesstring!)[strToken]
           [strProviderPayLoad][strIdToken];
@@ -734,8 +739,7 @@ class _VerifyPatientState extends State<VerifyPatient>
       print(idTokens[stremail]);
       await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no!)
           .then((onValue) {});
-      await PreferenceUtil.saveString(
-              Constants.KEY_EMAIL, saveuser.email ?? '')
+      await PreferenceUtil.saveString(Constants.KEY_EMAIL, saveuser.email ?? '')
           .then((onValue) {});
       await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring!)
           .then((onValue) {});
@@ -750,7 +754,9 @@ class _VerifyPatientState extends State<VerifyPatient>
       var token = '';
       try {
         token = (await _firebaseMessaging.getToken())!;
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
       CommonUtil().OnInitAction();
       await CommonUtil()
           .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)

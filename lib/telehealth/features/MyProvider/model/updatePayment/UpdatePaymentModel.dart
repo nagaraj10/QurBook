@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentResult.dart';
 
 class UpdatePaymentModel {
@@ -8,9 +9,13 @@ class UpdatePaymentModel {
   UpdatePaymentModel({this.isSuccess, this.result});
 
   UpdatePaymentModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new UpdatePaymentResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? new UpdatePaymentResult.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

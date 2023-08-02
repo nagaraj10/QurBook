@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:path_provider/path_provider.dart';
 import '../Controller/SheelaAIController.dart';
 
@@ -25,6 +26,8 @@ class SheelaAICommonTTSService {
         final status = await controller.playUsingLocalTTSEngineFor(msg);
         completedPlaying();
       } catch (e) {
+                    CommonUtil().appLogs(message: e.toString());
+
         //failed to play in local tts
         completedPlaying();
       }
@@ -54,6 +57,8 @@ class SheelaAICommonTTSService {
             );
           }
         } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
           //failed play the audio
           print(e.toString());
           completedPlaying();

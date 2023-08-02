@@ -1,4 +1,5 @@
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/additional_info.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class PatientAlertData {
   String? id;
@@ -25,19 +26,23 @@ class PatientAlertData {
       this.lastModifiedOn});
 
   PatientAlertData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    additionalInfo = json['additionalInfo'] != null
-        ? new AdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
-    statusId = json['statusId'];
-    statusName = json['statusName'];
-    typeId = json['typeId'];
-    typeName = json['typeName'];
-    typeCode = json['typeCode'];
+    try {
+      id = json['id'];
+      additionalInfo = json['additionalInfo'] != null
+              ? new AdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
+      statusId = json['statusId'];
+      statusName = json['statusName'];
+      typeId = json['typeId'];
+      typeName = json['typeName'];
+      typeCode = json['typeCode'];
 
-    createdOn = DateTime.tryParse(json['createdOn'] ?? '');
-    isEscalated = json['isEscalated'];
-    lastModifiedOn = json['lastModifiedOn'];
+      createdOn = DateTime.tryParse(json['createdOn'] ?? '');
+      isEscalated = json['isEscalated'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

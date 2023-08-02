@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart';
 
 class HeartRateValues {
@@ -8,12 +10,16 @@ class HeartRateValues {
   HeartRateValues({this.isSuccess, this.result});
 
   HeartRateValues.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[is_Success];
-    if (json[dataResult] != null) {
-      result = <HRResult>[];
-      json[dataResult].forEach((hrtvalue) {
-        result!.add(HRResult.fromJson(hrtvalue));
-      });
+    try {
+      isSuccess = json[is_Success];
+      if (json[dataResult] != null) {
+            result = <HRResult>[];
+            json[dataResult].forEach((hrtvalue) {
+              result!.add(HRResult.fromJson(hrtvalue));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -37,10 +43,14 @@ class HRResult {
   HRResult({this.sourceType, this.startDateTime, this.endDateTime, this.bpm});
 
   HRResult.fromJson(Map<String, dynamic> json) {
-    sourceType = json[strsourcetype];
-    startDateTime = json[strStartTimeStamp];
-    endDateTime = json[strEndTimeStamp];
-    bpm = json[strParamHeartRate];
+    try {
+      sourceType = json[strsourcetype];
+      startDateTime = json[strStartTimeStamp];
+      endDateTime = json[strEndTimeStamp];
+      bpm = json[strParamHeartRate];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

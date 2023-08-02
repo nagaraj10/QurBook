@@ -1,6 +1,6 @@
-
 import 'dart:core';
 
+import 'package:myfhb/common/CommonUtil.dart';
 
 class SOSCallAgentNumberData {
   bool? isSuccess;
@@ -12,9 +12,9 @@ class SOSCallAgentNumberData {
     try {
       isSuccess = json['isSuccess'];
       result =
-      json['result'] != null ? new Result.fromJson(json['result']) : null;
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -27,6 +27,7 @@ class SOSCallAgentNumberData {
       }
     } catch (e) {
       print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
 
     return data;
@@ -44,7 +45,7 @@ class Result {
       exoPhoneNumber = json['exoPhoneNumber'];
       verificationPin = json['verificationPin'];
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -54,11 +55,8 @@ class Result {
       data['exoPhoneNumber'] = this.exoPhoneNumber;
       data['verificationPin'] = this.verificationPin;
     } catch (e) {
-      print(e);
+      CommonUtil().appLogs(message: e.toString());
     }
     return data;
   }
 }
-
-
-

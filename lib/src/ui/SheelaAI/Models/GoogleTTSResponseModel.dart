@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class GoogleTTSResponseModel {
   bool? isSuccess;
   Payload? payload;
@@ -6,9 +8,13 @@ class GoogleTTSResponseModel {
   GoogleTTSResponseModel({this.isSuccess, this.payload});
 
   GoogleTTSResponseModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    payload =
-        json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      payload =
+              json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -27,7 +33,11 @@ class Payload {
   Payload({this.audioContent});
 
   Payload.fromJson(Map<String, dynamic> json) {
-    audioContent = json['audioContent'];
+    try {
+      audioContent = json['audioContent'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

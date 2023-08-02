@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class DeviceMeasurementsData {
@@ -22,7 +24,7 @@ class DeviceMeasurementsData {
     }
     unit = json[parameters.strunit];
     }catch(e){
-      
+       CommonUtil().appLogs(message: e.toString());
     }
   }
 }

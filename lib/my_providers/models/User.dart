@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'UserAddressCollection.dart';
 import 'UserContactCollection.dart';
 import 'UserRoleCollection.dart';
@@ -68,50 +70,54 @@ class User {
       this.userAddressCollection3});
 
   User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    userName = json['userName'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    dateOfBirth = json['dateOfBirth'];
-    bloodGroup = json['bloodGroup'];
-    countryCode = json['countryCode'];
-    profilePicUrl = json['profilePicUrl'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTempUser = json['isTempUser'];
-    isVirtualUser = json['isVirtualUser'];
-    isMigrated = json['isMigrated'];
-    isClaimed = json['isClaimed'];
-    isIeUser = json['isIeUser'];
-    isEmailVerified = json['isEmailVerified'];
-    isCpUser = json['isCpUser'];
-    communicationPreferences = json['communicationPreferences'];
-    medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    if (json['userContactCollection3'] != null) {
-      userContactCollection3 = <UserContactCollection3>[];
-      json['userContactCollection3'].forEach((v) {
-        userContactCollection3!.add(UserContactCollection3.fromJson(v));
-      });
-    }
-    if (json['userRoleCollection3'] != null) {
-      userRoleCollection3 = <UserRoleCollection3>[];
-      json['userRoleCollection3'].forEach((v) {
-        userRoleCollection3!.add(UserRoleCollection3.fromJson(v));
-      });
-    }
-    if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = <UserAddressCollection3>[];
-      json['userAddressCollection3'].forEach((v) {
-        userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      name = json['name'];
+      userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      countryCode = json['countryCode'];
+      profilePicUrl = json['profilePicUrl'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTempUser = json['isTempUser'];
+      isVirtualUser = json['isVirtualUser'];
+      isMigrated = json['isMigrated'];
+      isClaimed = json['isClaimed'];
+      isIeUser = json['isIeUser'];
+      isEmailVerified = json['isEmailVerified'];
+      isCpUser = json['isCpUser'];
+      communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json['medicalPreferences'];
+      isSignedIn = json['isSignedIn'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      if (json['userContactCollection3'] != null) {
+            userContactCollection3 = <UserContactCollection3>[];
+            json['userContactCollection3'].forEach((v) {
+              userContactCollection3!.add(UserContactCollection3.fromJson(v));
+            });
+          }
+      if (json['userRoleCollection3'] != null) {
+            userRoleCollection3 = <UserRoleCollection3>[];
+            json['userRoleCollection3'].forEach((v) {
+              userRoleCollection3!.add(UserRoleCollection3.fromJson(v));
+            });
+          }
+      if (json['userAddressCollection3'] != null) {
+            userAddressCollection3 = <UserAddressCollection3>[];
+            json['userAddressCollection3'].forEach((v) {
+              userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

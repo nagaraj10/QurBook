@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ClaimSuccess {
   dynamic isSuccess;
   dynamic message;
@@ -8,13 +10,17 @@ class ClaimSuccess {
   ClaimSuccess({this.isSuccess, this.message, this.result});
 
   ClaimSuccess.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json.containsKey('message')) message = json['message'];
-    if (json.containsKey('result')) result = json['result'];
-    if (json.containsKey('diagnostics')) {
-      diagnostics = json['diagnostics'] != null
-          ? Diagnostics.fromJson(json['diagnostics'])
-          : null;
+    try {
+      isSuccess = json['isSuccess'];
+      if (json.containsKey('message')) message = json['message'];
+      if (json.containsKey('result')) result = json['result'];
+      if (json.containsKey('diagnostics')) {
+            diagnostics = json['diagnostics'] != null
+                ? Diagnostics.fromJson(json['diagnostics'])
+                : null;
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -40,7 +46,11 @@ class Diagnostics {
   Diagnostics({this.message});
 
   Diagnostics.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
+    try {
+      message = json['message'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

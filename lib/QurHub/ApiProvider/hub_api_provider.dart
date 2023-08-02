@@ -32,6 +32,8 @@ class HubApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }
@@ -53,6 +55,8 @@ class HubApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }
@@ -90,6 +94,8 @@ class HubApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }
@@ -133,6 +139,8 @@ class HubApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }
@@ -155,6 +163,8 @@ class HubApiProvider {
         return responseJson;
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       return null;
     }
   }

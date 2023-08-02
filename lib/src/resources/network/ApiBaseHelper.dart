@@ -179,6 +179,8 @@ class ApiBaseHelper {
         return false;
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       return false;
     }
@@ -216,6 +218,8 @@ class ApiBaseHelper {
       }
     } catch (e) {
       print(e.toString());
+                  CommonUtil().appLogs(message: e.toString());
+
       return false;
     }
   }
@@ -557,6 +561,8 @@ class ApiBaseHelper {
       responseJson = _returnResponse(response);
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     return responseJson;
   }
@@ -640,6 +646,8 @@ class ApiBaseHelper {
             return responseJson;
           }
         } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
           final responseJson = convert.jsonDecode(response.body.toString());
           return responseJson;
         }
@@ -1537,6 +1545,8 @@ class ApiBaseHelper {
       print(e);
       return false;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e);
       return false;
     }
@@ -1929,6 +1939,8 @@ class ApiBaseHelper {
       );
       responseJson = _returnResponse(response);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw FetchDataException(variable.strNoInternet);
     }
@@ -2110,7 +2122,10 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Future<FetchingCartItemsModel?> fetchCartItems(
@@ -2151,6 +2166,8 @@ class ApiBaseHelper {
         return responseJson;
       }
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print("**********************" + e.toString());
     }
   }
@@ -2180,7 +2197,10 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Future<CartGenricResponse?> removeCartItems(dynamic body) async {
@@ -2208,7 +2228,10 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Future<MakePaymentResponse?> makePayment(dynamic body) async {
@@ -2233,6 +2256,8 @@ class ApiBaseHelper {
       }
       return responseJson;
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
     }
   }
@@ -2257,7 +2282,10 @@ class ApiBaseHelper {
         throw FetchDataException(variable.strNoInternet);
       }
       return responseJson;
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Future<dynamic> addNewPlan(String jsonData) async {
@@ -2310,7 +2338,10 @@ class ApiBaseHelper {
       }
       return responseJson;
       //}
-    } catch (e) {}
+    } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
+    }
   }
 
   Future<dynamic> getProviderPlan(String url) async {
@@ -2509,6 +2540,8 @@ class ApiBaseHelper {
       );
       responseJson = _returnResponse(response);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw FetchDataException(variable.strNoInternet);
     }
@@ -2526,6 +2559,8 @@ class ApiBaseHelper {
       );
       responseJson = _returnResponse(response);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw FetchDataException(variable.strNoInternet);
     }
@@ -2556,6 +2591,8 @@ class ApiBaseHelper {
       );
       responseJson = _returnResponse(response);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw FetchDataException(variable.strNoInternet);
     }
@@ -2573,6 +2610,8 @@ class ApiBaseHelper {
       );
       responseJson = _returnResponse(response);
     } catch (e) {
+                  CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw FetchDataException(variable.strNoInternet);
     }

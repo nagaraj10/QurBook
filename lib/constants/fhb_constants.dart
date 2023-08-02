@@ -898,5 +898,6 @@ Future<void> fbaLog({String? eveName, eveParams}) async {
             });
   } catch (e) {
     print(e);
+    CommonUtil().appLogs(message: e.toString());
   }
 }

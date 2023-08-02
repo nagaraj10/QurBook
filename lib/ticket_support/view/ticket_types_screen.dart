@@ -191,6 +191,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                     : null;
               } catch (e) {
                 //print(e);
+                      CommonUtil().appLogs(message: e.toString());
               }
             },
             child: Container(

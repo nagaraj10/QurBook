@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
@@ -15,13 +14,9 @@ import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
-import '../../chat_socket/constants/const_socket.dart';
-import '../../chat_socket/model/TotalCountModel.dart';
-import '../../chat_socket/model/UserChatListModel.dart';
 import '../../chat_socket/view/ChatUserList.dart';
 import '../../chat_socket/viewModel/chat_socket_view_model.dart';
 import '../../common/common_circular_indicator.dart';
@@ -39,7 +34,6 @@ import '../../add_family_user_info/services/add_family_user_info_repository.dart
 import '../../authentication/view/login_screen.dart';
 import '../../colors/fhb_colors.dart';
 import '../../common/CommonConstants.dart';
-import '../../common/CommonDialogBox.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/SwitchProfile.dart';
@@ -58,7 +52,6 @@ import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/appointments/view/appointmentsMain.dart';
 import '../../telehealth/features/chat/view/BadgeIcon.dart';
-import '../../telehealth/features/chat/view/home.dart';
 import '../view_model/landing_view_model.dart';
 import 'landing_arguments.dart';
 import 'widgets/home_widget.dart';
@@ -124,6 +117,8 @@ class _LandingScreenState extends State<LandingScreen> {
         }
       } as Future<String?> Function(String?)?);
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       //print(e);
     }
   }
@@ -168,6 +163,8 @@ class _LandingScreenState extends State<LandingScreen> {
       CommonUtil().initSocket();
       sheelBadgeController.getSheelaBadgeCount();
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -246,6 +243,8 @@ class _LandingScreenState extends State<LandingScreen> {
         }
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       //print(e.toString());
       await PreferenceUtil.removeNotificationData();
     }
@@ -777,7 +776,9 @@ class _LandingScreenState extends State<LandingScreen> {
     }
     try {
       await getDeviceSelectionValues().then((value) => {});
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     if (userId != null && userId.isNotEmpty) {
       try {
         MyProfileModel value =
@@ -814,6 +815,8 @@ class _LandingScreenState extends State<LandingScreen> {
           new CommonUtil().commonMethodToSetPreference();
         }
       } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+
         new CommonUtil().commonMethodToSetPreference();
       }
     } else {
@@ -845,6 +848,8 @@ class _LandingScreenState extends State<LandingScreen> {
       }
       setState(() {});
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
     }
   }
@@ -889,7 +894,9 @@ class _LandingScreenState extends State<LandingScreen> {
     if (widget.landingArguments?.needFreshLoad ?? true) {
       try {
         commonUtil.versionCheck(context);
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
   }
 
@@ -910,35 +917,49 @@ class _LandingScreenState extends State<LandingScreen> {
 
     try {
       getFamilyRelationAndMediaType();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     try {
       getProfileData();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     try {
       await CommonUtil().getMedicalPreference();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     try {
       try {
         CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
         _categoryListBlock.getCategoryLists().then((value) {});
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
 
       getFamilyRelationAndMediaType();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
 
     try {
       final addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
       await addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
     if (url.isNotEmpty) {
       try {
         Uri deepLink = Uri.parse(jsonDecode(url));
         DynamicLinks.processDynamicLink(deepLink);
-      } catch (e) {}
+      } catch (e) {
+        CommonUtil().appLogs(message: e.toString());
+      }
     }
     checkCpUser();
   }
@@ -1040,17 +1061,23 @@ class _LandingScreenState extends State<LandingScreen> {
   void getFamilyRelationAndMediaType() async {
     try {
       await CommonUtil().getAllCustomRoles();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
     try {
       await CommonUtil().getMediaTypes();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   void getProfileData() async {
     try {
       await CommonUtil().getUserProfileData();
       profileData = getMyProfile();
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   void checkIfUserIdSame() async {

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/User.dart';
 
 class AppointmentNotificationPayment {
@@ -8,9 +9,13 @@ class AppointmentNotificationPayment {
   AppointmentNotificationPayment({this.isSuccess, this.result});
 
   AppointmentNotificationPayment.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+              json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -31,15 +36,19 @@ class Result {
   Result({this.appointment, this.doctor});
 
   Result.fromJson(Map<String, dynamic> json) {
-    appointment = json['appointment'] != null
-        ? new Appointment.fromJson(json['appointment'])
-        : null;
-    doctor =
-        json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
-    if (json.containsKey('payment')) {
-      payment = json['payment'] != null
-          ? new Payment.fromJson(json['payment'])
-          : null;
+    try {
+      appointment = json['appointment'] != null
+              ? new Appointment.fromJson(json['appointment'])
+              : null;
+      doctor =
+              json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+      if (json.containsKey('payment')) {
+            payment = json['payment'] != null
+                ? new Payment.fromJson(json['payment'])
+                : null;
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -103,30 +112,34 @@ class Appointment {
       this.bookedFor});
 
   Appointment.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    bookingId = json['bookingId'];
-    doctorSessionId = json['doctorSessionId'];
-    plannedStartDateTime = json['plannedStartDateTime'];
-    plannedEndDateTime = json['plannedEndDateTime'];
-    actualStartDateTime = json['actualStartDateTime'];
-    actualEndDateTime = json['actualEndDateTime'];
-    slotNumber = json['slotNumber'];
-    isHealthRecordShared = json['isHealthRecordShared'];
-    plannedFollowupDate = json['plannedFollowupDate'];
-    isRefunded = json['isRefunded'];
-    isFollowupFee = json['isFollowupFee'];
-    isFollowup = json['isFollowup'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isBookedByProvider = json['isBookedByProvider'];
-    isCallDenied = json['isCallDenied'];
-    status = json['status'] != null
-        ? new AppointmentStatus.fromJson(json['status'])
-        : null;
-    bookedFor = json['bookedFor'] != null
-        ? new BookedFor.fromJson(json['bookedFor'])
-        : null;
+    try {
+      id = json['id'];
+      bookingId = json['bookingId'];
+      doctorSessionId = json['doctorSessionId'];
+      plannedStartDateTime = json['plannedStartDateTime'];
+      plannedEndDateTime = json['plannedEndDateTime'];
+      actualStartDateTime = json['actualStartDateTime'];
+      actualEndDateTime = json['actualEndDateTime'];
+      slotNumber = json['slotNumber'];
+      isHealthRecordShared = json['isHealthRecordShared'];
+      plannedFollowupDate = json['plannedFollowupDate'];
+      isRefunded = json['isRefunded'];
+      isFollowupFee = json['isFollowupFee'];
+      isFollowup = json['isFollowup'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isBookedByProvider = json['isBookedByProvider'];
+      isCallDenied = json['isCallDenied'];
+      status = json['status'] != null
+              ? new AppointmentStatus.fromJson(json['status'])
+              : null;
+      bookedFor = json['bookedFor'] != null
+              ? new BookedFor.fromJson(json['bookedFor'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -182,15 +195,19 @@ class AppointmentStatus {
       this.lastModifiedOn});
 
   AppointmentStatus.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -271,37 +288,41 @@ class BookedFor {
       this.additionalInfo});
 
   BookedFor.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    userName = json['userName'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    dateOfBirth = json['dateOfBirth'];
-    bloodGroup = json['bloodGroup'];
-    countryCode = json['countryCode'];
-    profilePicUrl = json['profilePicUrl'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTempUser = json['isTempUser'];
-    isVirtualUser = json['isVirtualUser'];
-    isMigrated = json['isMigrated'];
-    isClaimed = json['isClaimed'];
-    isIeUser = json['isIeUser'];
-    isEmailVerified = json['isEmailVerified'];
-    isCpUser = json['isCpUser'];
-    communicationPreferences = json['communicationPreferences'];
-    medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    providerId = json['providerId'];
-    additionalInfo = json['additionalInfo'] != null
-        ? new AdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
+    try {
+      id = json['id'];
+      name = json['name'];
+      userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      countryCode = json['countryCode'];
+      profilePicUrl = json['profilePicUrl'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTempUser = json['isTempUser'];
+      isVirtualUser = json['isVirtualUser'];
+      isMigrated = json['isMigrated'];
+      isClaimed = json['isClaimed'];
+      isIeUser = json['isIeUser'];
+      isEmailVerified = json['isEmailVerified'];
+      isCpUser = json['isCpUser'];
+      communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json['medicalPreferences'];
+      isSignedIn = json['isSignedIn'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      providerId = json['providerId'];
+      additionalInfo = json['additionalInfo'] != null
+              ? new AdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -364,15 +385,19 @@ class AdditionalInfo {
       this.patientHistory});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
-    age = json['age'];
-    height = json['height'].toString();
-    offset = json['offset'];
-    weight = json['weight'].toString();
-    language = json['language'];
-    mrdNumber = json['mrdNumber'];
-    uhidNumber = json['uhidNumber'];
-    visitReason = json['visitReason'];
-    patientHistory = json['patientHistory'];
+    try {
+      age = json['age'];
+      height = json['height'].toString();
+      offset = json['offset'];
+      weight = json['weight'].toString();
+      language = json['language'];
+      mrdNumber = json['mrdNumber'];
+      uhidNumber = json['uhidNumber'];
+      visitReason = json['visitReason'];
+      patientHistory = json['patientHistory'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -422,20 +447,24 @@ class Doctor {
       this.user});
 
   Doctor.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    specialization = json['specialization'];
-    isTelehealthEnabled = json['isTelehealthEnabled'];
-    isMciVerified = json['isMciVerified'];
-    isActive = json['isActive'];
-    isWelcomeMailSent = json['isWelcomeMailSent'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isResident = json['isResident'];
-    businessDetail = json['businessDetail'] != null
-        ? new BusinessDetail.fromJson(json['businessDetail'])
-        : null;
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    try {
+      id = json['id'];
+      specialization = json['specialization'];
+      isTelehealthEnabled = json['isTelehealthEnabled'];
+      isMciVerified = json['isMciVerified'];
+      isActive = json['isActive'];
+      isWelcomeMailSent = json['isWelcomeMailSent'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isResident = json['isResident'];
+      businessDetail = json['businessDetail'] != null
+              ? new BusinessDetail.fromJson(json['businessDetail'])
+              : null;
+      user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -466,7 +495,11 @@ class BusinessDetail {
   BusinessDetail({this.experience});
 
   BusinessDetail.fromJson(Map<String, dynamic> json) {
-    experience = json['experience'];
+    try {
+      experience = json['experience'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -484,9 +517,13 @@ class Payment {
   Payment({this.id, this.longUrl, this.amount});
 
   Payment.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    longUrl = json['longUrl'];
-    amount = json['amount'];
+    try {
+      id = json['id'];
+      longUrl = json['longUrl'];
+      amount = json['amount'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

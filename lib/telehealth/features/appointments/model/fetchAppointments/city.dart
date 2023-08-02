@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class City {
@@ -35,7 +36,8 @@ class City {
             json['healthOrganizationAddressCollection'].forEach((v) { healthOrganizationAddressCollection!.add(new HealthOrganizationAddressCollection.fromJson(v)); });
           }
     } catch (e) {
-      //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -52,7 +54,8 @@ class City {
             data['healthOrganizationAddressCollection'] = this.healthOrganizationAddressCollection!.map((v) => v.toJson()).toList();
           }
     } catch (e) {
-      //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }
@@ -89,7 +92,9 @@ class HealthOrganizationAddressCollection {
       city =
           json['city'] != null ? new CityDetails.fromJson(json['city']) : null;
     } catch (e) {
-      //print(e);
+
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -112,6 +117,8 @@ class HealthOrganizationAddressCollection {
       }
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }
@@ -137,7 +144,8 @@ class StateDetails {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
     } catch (e) {
-      //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -152,6 +160,8 @@ class StateDetails {
       data['lastModifiedOn'] = this.lastModifiedOn;
     } catch (e) {
       //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }
@@ -174,7 +184,8 @@ class CityDetails {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
     } catch (e) {
-      //print(e);
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -187,7 +198,9 @@ class CityDetails {
       data['createdOn'] = this.createdOn;
       data['lastModifiedOn'] = this.lastModifiedOn;
     } catch (e) {
-      //print(e);
+
+                  CommonUtil().appLogs(message: e.toString());
+
     }
     return data;
   }

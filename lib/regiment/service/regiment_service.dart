@@ -84,6 +84,8 @@ class RegimentService {
         );
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
 
       return RegimentResponseModel(
@@ -128,6 +130,8 @@ class RegimentService {
         );
       }
     } catch (e) {
+
+      CommonUtil().appLogs(message: e.toString());
       print(e.toString());
 
       return RegimentResponseModel(
@@ -154,6 +158,8 @@ class RegimentService {
         return ExternalLinksResponseModel();
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e.toString());
       return ExternalLinksResponseModel();
     }
@@ -215,6 +221,8 @@ class RegimentService {
         );
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
       LoaderClass.hideLoadingDialog(Get.context!);
       return SaveResponseModel(
@@ -279,6 +287,8 @@ class RegimentService {
         );
       }
     } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -311,6 +321,8 @@ class RegimentService {
         );
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -342,6 +354,8 @@ class RegimentService {
         );
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -372,6 +386,8 @@ class RegimentService {
         );
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -403,6 +419,8 @@ class RegimentService {
         );
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -437,6 +455,8 @@ class RegimentService {
         );
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -478,6 +498,8 @@ class RegimentService {
       }
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
       throw Exception('$e was thrown');
     }
   }
@@ -507,6 +529,8 @@ class RegimentService {
       }
     } catch (e) {
       print(e);
+            CommonUtil().appLogs(message: e.toString());
+
       throw Exception('$e was thrown');
     }
   }
@@ -529,6 +553,8 @@ class RegimentService {
         return ActivityStatusModel();
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       throw Exception('$e was thrown');
     }
   }

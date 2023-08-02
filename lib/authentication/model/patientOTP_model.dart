@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../constants/constants.dart';
 
 class PatientOtpModel {
@@ -10,8 +12,12 @@ class PatientOtpModel {
       this.source});
 
   PatientOtpModel.fromJson(Map<String, dynamic> json) {
-    verificationCode = json[strverificationCode];
-    source = json[strsource];
+    try {
+      verificationCode = json[strverificationCode];
+      source = json[strsource];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,10 +1,16 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 class SuccessModel {
   bool? isSuccess;
 
   SuccessModel({this.isSuccess});
 
   SuccessModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
+    try {
+      isSuccess = json['isSuccess'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

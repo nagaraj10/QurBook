@@ -51,6 +51,8 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     try {
       qurhomeDashboardController.getModuleAccess();
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -344,6 +346,8 @@ class _SymptomListScreen extends State<SymptomListScreen> {
         }
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       cardColor = Color(CommonUtil().getQurhomePrimaryColor());
     }
     return cardColor;
@@ -377,6 +381,8 @@ class _SymptomListScreen extends State<SymptomListScreen> {
         return getDefaultIcon(activityname, uformName, iconSize, orientation);
       }
     } catch (e) {
+            CommonUtil().appLogs(message: e.toString());
+
       return getDefaultIcon(activityname, uformName, iconSize, orientation);
     }
   }

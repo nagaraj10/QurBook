@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class Status {
   dynamic id;
   dynamic code;
@@ -22,15 +24,19 @@ class Status {
         this.lastModifiedOn});
 
   Status.fromJson(Map<String, dynamic> json) {
-    id = json['id']!=null?json['id']:"";
-    code = json['code']!=null?json['code']:"";
-    name = json['name']!=null?json['name']:"";
-    description = json['description']!=null?json['description']:"";
-    sortOrder = json['sortOrder']!=null?json['sortOrder']:"" as int?;
-    isActive = json['isActive']!=null?json['isActive']:"" as bool?;
-    createdBy = json['createdBy']!=null?json['createdBy']:"";
-    createdOn = json['createdOn']!=null?json['createdOn']:"";
-    lastModifiedOn = json['lastModifiedOn']!=null?json['lastModifiedOn']:"";
+    try {
+      id = json['id']!=null?json['id']:"";
+      code = json['code']!=null?json['code']:"";
+      name = json['name']!=null?json['name']:"";
+      description = json['description']!=null?json['description']:"";
+      sortOrder = json['sortOrder']!=null?json['sortOrder']:"" as int?;
+      isActive = json['isActive']!=null?json['isActive']:"" as bool?;
+      createdBy = json['createdBy']!=null?json['createdBy']:"";
+      createdOn = json['createdOn']!=null?json['createdOn']:"";
+      lastModifiedOn = json['lastModifiedOn']!=null?json['lastModifiedOn']:"";
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

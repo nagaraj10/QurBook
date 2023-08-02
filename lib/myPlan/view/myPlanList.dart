@@ -76,7 +76,9 @@ class _MyPlanState extends State<MyPlanList> {
                 ? null
                 : ShowCaseWidget.of(_myContext)!.startShowCase([_PlanCardKey]));
       });
-    } catch (e) {}
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Future<void> getConfiguration() async {

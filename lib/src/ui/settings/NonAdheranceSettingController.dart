@@ -1,6 +1,7 @@
 
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
@@ -49,6 +50,8 @@ class NonAdheranceSettingController extends GetxController {
     } catch (e) {
     print(e.toString());
     loadingData.value = false;
+                CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -62,6 +65,8 @@ class NonAdheranceSettingController extends GetxController {
     } catch (e) {
       print(e.toString());
       loadingData.value = false;
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 
@@ -75,6 +80,8 @@ class NonAdheranceSettingController extends GetxController {
     } catch (e) {
       print(e.toString());
       loadingData.value = false;
+                  CommonUtil().appLogs(message: e.toString());
+
     }
   }
 

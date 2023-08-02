@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'LinkedData.dart';
 import 'ProfileData.dart';
@@ -10,12 +12,16 @@ class Sharedbyme {
   Sharedbyme({this.profileData, this.linkedData});
 
   Sharedbyme.fromJson(Map<String, dynamic> json) {
-    profileData = json[parameters.strprofileData] != null
-        ? ProfileData.fromJson(json[parameters.strprofileData])
-        : null;
-    linkedData = json[parameters.strlinkedData] != null
-        ? LinkedData.fromJson(json[parameters.strlinkedData])
-        : null;
+    try {
+      profileData = json[parameters.strprofileData] != null
+              ? ProfileData.fromJson(json[parameters.strprofileData])
+              : null;
+      linkedData = json[parameters.strlinkedData] != null
+              ? LinkedData.fromJson(json[parameters.strlinkedData])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

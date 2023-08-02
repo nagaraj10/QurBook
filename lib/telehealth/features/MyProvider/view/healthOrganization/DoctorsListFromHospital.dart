@@ -495,6 +495,8 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
               .doubleWithoutDecimalToInt(double.parse(fees))
               .toString();
         } catch (e) {
+                      CommonUtil().appLogs(message: e.toString());
+
           widget = SizedBox.shrink();
         }
         widget = Container(

@@ -1,5 +1,6 @@
 
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/bot/video_links.dart';
 
@@ -12,9 +13,13 @@ class SpeechModelResponse {
   SpeechModelResponse({this.isSuccess, this.result});
 
   SpeechModelResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -76,37 +81,41 @@ class Result {
       });
 
   Result.fromJson(Map<String, dynamic> json) {
-    recipientId = json['recipient_id'];
-    text = json['text'];
-    endOfConv = json['endOfConv'];
-    if (json[strButtons] != null) {
-      buttons = <Buttons>[];
-      json[strButtons].forEach((v) {
-        buttons!.add(Buttons.fromJson(v));
-      });
+    try {
+      recipientId = json['recipient_id'];
+      text = json['text'];
+      endOfConv = json['endOfConv'];
+      if (json[strButtons] != null) {
+            buttons = <Buttons>[];
+            json[strButtons].forEach((v) {
+              buttons!.add(Buttons.fromJson(v));
+            });
+          }
+      imageURL = json['imageURL'];
+      searchURL = json['searchURL'];
+      lang = json['lang'];
+      postId = json['postId'];
+      matchedQuestion = json['matchedQuestion'];
+      if (json[strVideoLinks] != null) {
+            videoLinks = <VideoLinks>[];
+            json[strVideoLinks].forEach((v) {
+              videoLinks!.add(VideoLinks.fromJson(v));
+            });
+          }
+      translatedUserText = json['translated_user_text'];
+      redirect = json['redirect'];
+      enableMic = json['enable_mic'];
+      providerMsg = json['provider_msg'];
+      redirectTo = json['redirectTo'];
+      singleuse = json['singleuse'];
+      isActionDone = json['isActionDone'];
+      eid = json['eid'];
+      conversationFlag = json['conversationFlag'];
+      sessionId = json['sessionId'];
+      relationshipId = json['relationshipId'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
-    imageURL = json['imageURL'];
-    searchURL = json['searchURL'];
-    lang = json['lang'];
-    postId = json['postId'];
-    matchedQuestion = json['matchedQuestion'];
-    if (json[strVideoLinks] != null) {
-      videoLinks = <VideoLinks>[];
-      json[strVideoLinks].forEach((v) {
-        videoLinks!.add(VideoLinks.fromJson(v));
-      });
-    }
-    translatedUserText = json['translated_user_text'];
-    redirect = json['redirect'];
-    enableMic = json['enable_mic'];
-    providerMsg = json['provider_msg'];
-    redirectTo = json['redirectTo'];
-    singleuse = json['singleuse'];
-    isActionDone = json['isActionDone'];
-    eid = json['eid'];
-    conversationFlag = json['conversationFlag'];
-    sessionId = json['sessionId'];
-    relationshipId = json['relationshipId'];
   }
 
   Map<String, dynamic> toJson() {

@@ -1,6 +1,8 @@
 
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'MetaDataForHospitalLogo.dart';
 
 class SearchListModel {
@@ -10,12 +12,16 @@ class SearchListModel {
   SearchListModel({this.isSuccess, this.result});
 
   SearchListModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <SearchListResult>[];
-      json['result'].forEach((v) {
-        result!.add(SearchListResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <SearchListResult>[];
+            json['result'].forEach((v) {
+              result!.add(SearchListResult.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 

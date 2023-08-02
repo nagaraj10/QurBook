@@ -422,6 +422,7 @@ class _MyControllersState extends State<MyControllers> {
           .doc(widget.channelName ?? "")
           .delete();
     } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
       if (kDebugMode) {
         print(e);
       }
@@ -569,6 +570,8 @@ class _MyControllersState extends State<MyControllers> {
         ),
         barrierDismissible: false,
       );
-    } catch (e) {}
+    } catch (e) {
+                              CommonUtil().appLogs(message: e.toString());
+    }
   }
 }

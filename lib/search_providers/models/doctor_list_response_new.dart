@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class DoctorsSearchListResponse {
   bool? isSuccess;
   String? message;
@@ -9,20 +11,24 @@ class DoctorsSearchListResponse {
       {this.isSuccess, this.message, this.result, this.diagnostics});
 
   DoctorsSearchListResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    if (json.containsKey('result')) {
-      if (json['result'] != null) {
-        result = <DoctorsListResult>[];
-        json['result'].forEach((v) {
-          result!.add(DoctorsListResult.fromJson(v));
-        });
-      }
-    }
-    if (json.containsKey('diagnostics')) {
-      diagnostics = json['diagnostics'] != null
-          ? Diagnostics.fromJson(json['diagnostics'])
-          : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      if (json.containsKey('result')) {
+            if (json['result'] != null) {
+              result = <DoctorsListResult>[];
+              json['result'].forEach((v) {
+                result!.add(DoctorsListResult.fromJson(v));
+              });
+            }
+          }
+      if (json.containsKey('diagnostics')) {
+            diagnostics = json['diagnostics'] != null
+                ? Diagnostics.fromJson(json['diagnostics'])
+                : null;
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
@@ -78,22 +84,26 @@ class DoctorsListResult {
       this.patientAssociationRequest});
 
   DoctorsListResult.fromJson(Map<String, dynamic> json) {
-    doctorId = json['doctorId'];
-    userId = json['userId'];
-    name = json['name'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    specialization = json['specialization'];
-    city = json['city'];
-    state = json['state'];
-    doctorReferenceId = json['doctorReferenceId'];
-    addressLine1 = json['addressLine1'];
-    specialty = json['specialty'];
-    addressLine2 = json['addressLine2'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTelehealthEnabled = json['isTelehealthEnabled'];
-    isMciVerified = json['isMciVerified'];
-    patientAssociationRequest = json['patientAssociationRequest'];
+    try {
+      doctorId = json['doctorId'];
+      userId = json['userId'];
+      name = json['name'];
+      firstName = json['firstName'];
+      lastName = json['lastName'];
+      specialization = json['specialization'];
+      city = json['city'];
+      state = json['state'];
+      doctorReferenceId = json['doctorReferenceId'];
+      addressLine1 = json['addressLine1'];
+      specialty = json['specialty'];
+      addressLine2 = json['addressLine2'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTelehealthEnabled = json['isTelehealthEnabled'];
+      isMciVerified = json['isMciVerified'];
+      patientAssociationRequest = json['patientAssociationRequest'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -125,10 +135,14 @@ class Diagnostics {
   Diagnostics({this.errorData, this.includeErrorDataInResponse});
 
   Diagnostics.fromJson(Map<String, dynamic> json) {
-    errorData = json['errorData'] != null
-        ? DoctorsListResult.fromJson(json['errorData'])
-        : null;
-    includeErrorDataInResponse = json['includeErrorDataInResponse'];
+    try {
+      errorData = json['errorData'] != null
+              ? DoctorsListResult.fromJson(json['errorData'])
+              : null;
+      includeErrorDataInResponse = json['includeErrorDataInResponse'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

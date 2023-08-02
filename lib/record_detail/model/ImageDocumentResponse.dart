@@ -1,5 +1,7 @@
 
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ImageDocumentResponse {
   int? status;
   bool? success;
@@ -10,12 +12,16 @@ class ImageDocumentResponse {
       {this.status, this.success, this.message, this.response});
 
   ImageDocumentResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
-    response = json['response'] != null
-        ? Response.fromJson(json['response'])
-        : null;
+    try {
+      status = json['status'];
+      success = json['success'];
+      message = json['message'];
+      response = json['response'] != null
+              ? Response.fromJson(json['response'])
+              : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -37,8 +43,12 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    try {
+      count = json['count'];
+      data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -58,8 +68,12 @@ class Data {
   Data({this.fileContent, this.fileType});
 
   Data.fromJson(Map<String, dynamic> json) {
-    fileContent = json['fileContent'];
-    fileType = json['fileType'];
+    try {
+      fileContent = json['fileContent'];
+      fileType = json['fileType'];
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
+    }
   }
 
   Map<String, dynamic> toJson() {

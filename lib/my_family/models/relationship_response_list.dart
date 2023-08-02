@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'relationship_result.dart';
 
 class RelationShipResponseList {
@@ -8,12 +10,16 @@ class RelationShipResponseList {
   RelationShipResponseList({this.isSuccess, this.result});
 
   RelationShipResponseList.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <Result>[];
-      json['result'].forEach((v) {
-        result!.add(Result.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <Result>[];
+            json['result'].forEach((v) {
+              result!.add(Result.fromJson(v));
+            });
+          }
+    } catch (e) {
+      CommonUtil().appLogs(message: e.toString());
     }
   }
 
