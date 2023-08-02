@@ -6444,49 +6444,57 @@ class CommonUtil {
 
   appLogs({String message = '', String userName = ""}) async {
     try {
-      var regController = CommonUtil().onInitQurhomeRegimenController();
-      String version = '';
-      String oSVersion = '';
-      bool isProd = false;
-      if ((BASE_URL == prodINURL) ||
-          (BASE_URL == prodUSURL) ||
-          (BASE_URL == demoINURL) ||
-          (BASE_URL == demoUSURL)) {
-        isProd = true;
+      String userId = '';
+      userId = CommonUtil().validString(userName ?? "");
+      if (userId.trim().isEmpty) {
+        userId = PreferenceUtil.getStringValue(KEY_USERID) ?? "";
       }
+      if ((validString(userId ?? "").trim().isNotEmpty)) {
+        var regController = CommonUtil().onInitQurhomeRegimenController();
+        String version = '';
+        String oSVersion = '';
+        bool isProd = false;
+        if ((BASE_URL == prodINURL) ||
+            (BASE_URL == prodUSURL) ||
+            (BASE_URL == demoINURL) ||
+            (BASE_URL == demoUSURL)) {
+          isProd = true;
+        }
 
-      await PackageInfo.fromPlatform().then((packageInfo) {
-        version = (packageInfo.version + " + " + packageInfo.buildNumber);
-      });
+        await PackageInfo.fromPlatform().then((packageInfo) {
+          version = (packageInfo.version + " + " + packageInfo.buildNumber);
+        });
 
-      if (Platform.isIOS) {
-        oSVersion = "IOS ${Platform.operatingSystemVersion}";
-      } else {
-        oSVersion = "ANDROID ${Platform.operatingSystemVersion}";
-      }
+        if (Platform.isIOS) {
+          oSVersion = "IOS ${Platform.operatingSystemVersion}";
+        } else {
+          oSVersion = "ANDROID ${Platform.operatingSystemVersion}";
+        }
 
-      if (isProd) {
-        final apiResponse = QurHomeApiProvider();
-        await apiResponse.saveAppLogs(
-            message: message,
-            userName: userName,
-            version: version,
-            oSVersion: oSVersion);
-      } else {
+        if (isProd) {
+          final apiResponse = QurHomeApiProvider();
+          await apiResponse.saveAppLogs(
+              userId: userId,
+              message: message,
+              userName: userName,
+              version: version,
+              oSVersion: oSVersion);
+        } else {
+          String strRandomId = getMyMeetingID().toString();
+          ErrorAppLogDataModel errorAppLogDataModel = ErrorAppLogDataModel(
+              itemId: strRandomId,
+              message: message,
+              appVersion: version,
+              osVersion: oSVersion);
+          regController.errorAppLogList?.add(errorAppLogDataModel);
 
-        String strRandomId = getMyMeetingID().toString();
-        ErrorAppLogDataModel errorAppLogDataModel = ErrorAppLogDataModel(
-            itemId: strRandomId,
-            message: message,
-            appVersion: version,
-            osVersion: oSVersion);
-        regController.errorAppLogList?.add(errorAppLogDataModel);
-
-        showErrorAppLogDialog(0);
-
+          showErrorAppLogDialog(0);
+        }
       }
     } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -6537,7 +6545,9 @@ class CommonUtil {
                         showErrorAppLogDialog(1);
                       }
                     } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+                      if (kDebugMode) {
+                        printError(info: e.toString());
+                      }
                     }
                   },
                 )
@@ -6643,10 +6653,11 @@ class CommonUtil {
         showErrorLogPopUp(regController.errorAppLogList![0]);
       }
     } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
-
 }
 
 extension CapExtension on String {
