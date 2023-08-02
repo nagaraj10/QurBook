@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -672,17 +673,16 @@ class QurHomeApiProvider {
     }
   }
 
-  saveAppLogs({String message = '', String userName = '',String version = '',String oSVersion = ''}) async {
+  saveAppLogs(
+      {String userId = '',
+        String message = '',
+        String userName = '',
+        String version = '',
+        String oSVersion = ''}) async {
     try {
-      String userId = '';
       String deviceName = '';
-      userId = CommonUtil().validString(userName ?? "");
 
       deviceName = "${Platform.localHostname}";
-
-      if (userId.trim().isEmpty) {
-        userId = PreferenceUtil.getStringValue(KEY_USERID) ?? "";
-      }
 
       var data = {
         qr_userid: userId,
@@ -698,16 +698,14 @@ class QurHomeApiProvider {
         body: json.encode(data),
       ))!;
       if (res.statusCode == 200) {
-        CallLogResponseModel _response =
-            CallLogResponseModel.fromJson(convert.json.decode(res.body));
-        return _response.isSuccess;
+        //Success
       } else {
-        CallLogErrorResponseModel error =
-            CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
-        return error.isSuccess;
+        //Failure
       }
     } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 }
