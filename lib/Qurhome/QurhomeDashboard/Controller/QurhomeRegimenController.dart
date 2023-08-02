@@ -204,7 +204,7 @@ class QurhomeRegimenController extends GetxController {
       CommonUtil().appLogs(message: e.toString());
 
       if (kDebugMode) {
-        printError(info: e.toString());
+        printError(info: "Regimentlist: "+e.toString());
       }
       onStopLoadingCircle();
     }
