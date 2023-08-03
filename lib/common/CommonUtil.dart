@@ -2577,7 +2577,6 @@ class CommonUtil {
   }
 
   versionCheck(context) async {
-    return;
     //Get Current installed version of app
     final info = await PackageInfo.fromPlatform();
     var currentVersion = double.parse(info.version.trim().replaceAll('.', ''));
