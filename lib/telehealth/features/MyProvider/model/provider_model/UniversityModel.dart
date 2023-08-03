@@ -12,8 +12,8 @@ class University {
     try {
       id = json[parameters.strId];
       name = json[parameters.strName];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

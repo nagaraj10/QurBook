@@ -19,8 +19,8 @@ class AppointmentsModel {
       result = json[parameters.dataResult] == null
               ? null
               : AppointmentsData.fromJson(json[parameters.dataResult]);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

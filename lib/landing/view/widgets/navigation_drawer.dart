@@ -134,8 +134,8 @@ class NavigationDrawer extends StatelessWidget {
                             if (refresh != null) {
                               refresh(true);
                             }
-                          } catch (e) {
-                            CommonUtil().appLogs(message: e.toString());
+                          } catch (e,stackTrace) {
+                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                             //print(e);
                           }
@@ -169,8 +169,8 @@ class NavigationDrawer extends StatelessWidget {
                             if (refresh != null) {
                               refresh(true);
                             }
-                          } catch (e) {
-                            CommonUtil().appLogs(message: e.toString());
+                          } catch (e,stackTrace) {
+                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                             //print(e);
                           }
@@ -196,8 +196,8 @@ class NavigationDrawer extends StatelessWidget {
                             if (refresh != null) {
                               refresh(true);
                             }
-                          } catch (e) {
-                            CommonUtil().appLogs(message: e.toString());
+                          } catch (e,stackTrace) {
+                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                             //print(e);
                           }
@@ -239,8 +239,8 @@ class NavigationDrawer extends StatelessWidget {
                                 },
                               ),
                             );
-                          } catch (e) {
-                            CommonUtil().appLogs(message: e.toString());
+                          } catch (e,stackTrace) {
+                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                             //print(e);
                           }
@@ -260,8 +260,8 @@ class NavigationDrawer extends StatelessWidget {
                             try {
                               Get.back();
                               Get.to(() => OrdersView());
-                            } catch (e) {
-                              CommonUtil().appLogs(message: e.toString());
+                            } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                               //print(e);
                             }
@@ -278,8 +278,8 @@ class NavigationDrawer extends StatelessWidget {
                           try {
                             Get.back();
                             Get.to(() => MoreMenuScreen(refresh: refresh));
-                          } catch (e) {
-                            CommonUtil().appLogs(message: e.toString());
+                          } catch (e,stackTrace) {
+                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                             //print(e);
                           }
@@ -297,8 +297,8 @@ class NavigationDrawer extends StatelessWidget {
                           try {
                             Get.back();
                             Get.to(() => HelpSupport());
-                          } catch (e) {
-                            CommonUtil().appLogs(message: e.toString());
+                          } catch (e,stackTrace) {
+                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                             //print(e);
                           }
@@ -319,7 +319,7 @@ class NavigationDrawer extends StatelessWidget {
                           // try {
                           //   Get.back();
                           //   CommonUtil().accessContactsDialog();
-                          // } catch (e) {
+                          // } catch (e,stackTrace) {
                           //   //print(e);
                           // }
                         },
@@ -341,8 +341,8 @@ class NavigationDrawer extends StatelessWidget {
                             try {
                               Get.back();
                               Get.to(() => ReportListScreen());
-                            } catch (e) {
-                              CommonUtil().appLogs(message: e.toString());
+                            } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                               //print(e);
                             }
@@ -364,8 +364,8 @@ class NavigationDrawer extends StatelessWidget {
                               try {
                                 Get.back();
                                 Get.to(() => ClaimList());
-                              } catch (e) {
-                                CommonUtil().appLogs(message: e.toString());
+                              } catch (e,stackTrace) {
+                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                                 //print(e);
                               }
@@ -415,8 +415,8 @@ class NavigationDrawer extends StatelessWidget {
       phoneNumber = (myProfile.result?.userContactCollection3?.length ?? 0) > 0
           ? myProfile.result?.userContactCollection3![0]!.phoneNumber
           : '';
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       //print(e);
     }

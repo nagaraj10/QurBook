@@ -13,8 +13,8 @@ class VideoLinks {
       title = json['title'];
       thumbnail = json['thumbnail'];
       url = json['url'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

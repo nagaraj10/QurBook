@@ -100,8 +100,8 @@ class DevicesViewModel with ChangeNotifier {
 
       //notifyListeners();
       return result;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -157,8 +157,8 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -211,8 +211,8 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -270,8 +270,8 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -317,8 +317,8 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -368,8 +368,8 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
     }
@@ -404,8 +404,8 @@ class DevicesViewModel with ChangeNotifier {
         });
       });
       return ret;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

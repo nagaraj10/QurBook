@@ -18,8 +18,8 @@ class FeeDetails {
       doctorCancellationCharge = json[parameters.strDoctorCancellationCharges];
       finalRefundAmount = json[parameters.strFinalRefundAmount];
       paymentMode = json[parameters.strPaymentMode];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

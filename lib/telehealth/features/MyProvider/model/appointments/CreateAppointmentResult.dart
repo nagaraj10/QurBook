@@ -18,8 +18,8 @@ class CreateAppointmentResult {
       paymentInfo = json[strPaymentInfo] != null
               ? new PaymentInfo.fromJson(json[strPaymentInfo])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -46,8 +46,8 @@ class PaymentInfo {
       isSuccess = json['isSuccess'];
       payload =
           json['payload'] != null ? new PayloadModel.fromJson(json['payload']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

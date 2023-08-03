@@ -27,8 +27,8 @@ class SpeechModel {
       source = json[parameters.strSource];
       sessionId = json[parameters.strSessionId];
       authToken = json[parameters.strAuthToken];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

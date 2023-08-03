@@ -96,8 +96,8 @@ class Patient {
       _lastModifiedOn = json['lastModifiedOn'];
       _providerId = json['providerId'];
       _additionalInfo = json['additionalInfo'] != null ? AdditionalInfo.fromJson(json['additionalInfo']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   String? _id;

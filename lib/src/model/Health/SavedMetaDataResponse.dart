@@ -20,8 +20,8 @@ class SavedMetaDataResponse {
       response = json[parameters.strResponse] != null
               ? Response.fromJson(json[parameters.strResponse])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -48,8 +48,8 @@ class Response {
       count = json[parameters.strCount];
       data =
               json[parameters.strData] != null ? SavedMediaData.fromJson(json[parameters.strData]) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -71,8 +71,8 @@ class SavedMediaData {
   SavedMediaData.fromJson(Map<String, dynamic> json) {
     try {
       mediaMetaID = json[parameters.strmediaMetaID];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -24,8 +24,8 @@ class Fees {
       cancellation = json[parameters.strcancellation] != null
               ? new Consulting.fromJson(json[parameters.strcancellation])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

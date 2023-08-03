@@ -64,8 +64,8 @@ class LoginBloc with Validators implements BaseBloc {
     SignIn? signIn;
     try {
       signIn = await _authenticationRepository.signInUser(jsonString);
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       signInSink.add(ApiResponse.error(e.toString()));
     }
@@ -99,8 +99,8 @@ class LoginBloc with Validators implements BaseBloc {
           file,
           middleName,
           lastName);
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       signUpSink.add(ApiResponse.error(e.toString()));
     }
@@ -112,8 +112,8 @@ class LoginBloc with Validators implements BaseBloc {
     SignOutResponse? signOutResponse;
     try {
       signOutResponse = await _authenticationRepository.signOutUser();
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       signInSink.add(ApiResponse.error(e.toString()));
     }

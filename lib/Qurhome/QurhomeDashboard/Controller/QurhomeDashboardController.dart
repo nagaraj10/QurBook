@@ -122,8 +122,8 @@ class QurhomeDashboardController extends GetxController {
       firstName = myProfile.result != null
           ? myProfile.result!.firstName!.capitalizeFirstofEach
           : '';
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     switch (currentSelectedIndex.value) {
@@ -187,8 +187,8 @@ class QurhomeDashboardController extends GetxController {
                 KIOSK_say_text: data[sayText_sheela] ?? ''.toString(),
               };
               CommonUtil().callQueueNotificationPostApi(reqJson);
-            } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+            } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             }
           } else if (PreferenceUtil.getIfQurhomeisAcive()) {
             redirectToSheelaScheduleAppointment();
@@ -242,8 +242,8 @@ class QurhomeDashboardController extends GetxController {
           }
         }
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -286,8 +286,8 @@ class QurhomeDashboardController extends GetxController {
             (b?.createdOn?.compareTo(a?.createdOn ?? DateTime.now()) ?? 0));
 
         update(["newUpdate"]);
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         return;
       }
@@ -321,8 +321,8 @@ class QurhomeDashboardController extends GetxController {
           careGiverPatientListResult, patientAlertData);
       loadingPatientData.value = false;
       return responseBool;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }
@@ -336,8 +336,8 @@ class QurhomeDashboardController extends GetxController {
           patientAlertData, careGiverPatientListResult, activityName,patientAlert?.result?.healthOrganizationId??'',notes: notes);
       loadingPatientData.value = false;
       return responseBool;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }

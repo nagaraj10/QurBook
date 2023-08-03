@@ -43,8 +43,8 @@ class ClaimExpiryAdditionalInfo {
       terminationDate = json['terminationDate'];
       prescribedDoctor = json['prescribedDoctor'];
       planPackageCategoryName = json['planPackageCategoryName'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

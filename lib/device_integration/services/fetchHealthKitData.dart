@@ -25,8 +25,8 @@ class FetchHealthKitData {
     try {
       var ret = await Health.requestAuthorization(types);
       return ret;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       throw 'HealthKit activation failed with error $e';
     }
@@ -180,8 +180,8 @@ class FetchHealthKitData {
           print(params);
           return params;
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         throw 'Unable to fetch Blood pressure from HealthKit $e';
       }

@@ -23,8 +23,8 @@ class DeviceMeasurementsData {
       values = json[parameters.strValues];
     }
     unit = json[parameters.strunit];
-    }catch(e){
-       CommonUtil().appLogs(message: e.toString());
+    }catch(e,stackTrace){
+       CommonUtil().appLogs(message: e.toString(),stackTrace:stackTrace.toString());
     }
   }
 }

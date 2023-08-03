@@ -13,8 +13,8 @@ class CreditBalance {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? new CreditBalanceResult.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

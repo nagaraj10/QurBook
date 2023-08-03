@@ -19,8 +19,8 @@ class VerifyEmailResponse {
       response = json[parameters.strResponse] != null
               ? Response.fromJson(json[parameters.strResponse])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -46,8 +46,8 @@ class Response {
     try {
       creationTime = json[parameters.strCreationTime];
       expirationTime = json[parameters.strExpirationTime];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

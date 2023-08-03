@@ -228,7 +228,7 @@
 //       CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
 //       _categoryListBlock.getCategoryLists().then((value) {});
-//     } catch (e) {}
+//     } catch (e,stackTrace) {}
 
 //     Map appsFlyerOptions;
 //     if (Platform.isIOS) {
@@ -490,7 +490,7 @@
 //   CheckForShowingTheIntroScreens() async {
 //     try {
 //       isFirstTime = PreferenceUtil.isKeyValid(Constants.KeyShowIntroScreens);
-//     } catch (e) {
+//     } catch (e,stackTrace) {
 //       isFirstTime = false;
 //     }
 //   }
@@ -749,7 +749,7 @@
 //             } else {
 //               Get.to(SuperMaya());
 //             }
-//           } catch (e) {
+//           } catch (e,stackTrace) {
 //             Get.to(SuperMaya());
 //           }
 //         } else if (passedValArr[1] == 'profile_page' ||
@@ -1138,14 +1138,14 @@
 //             if (doctorPic.isNotEmpty) {
 //               try {
 //                 doctorPic = json.decode(doctorPic);
-//               } catch (e) {}
+//               } catch (e,stackTrace) {}
 //             } else {
 //               doctorPic = '';
 //             }
 //             if (patientPic.isNotEmpty) {
 //               try {
 //                 patientPic = json.decode(patientPic);
-//               } catch (e) {}
+//               } catch (e,stackTrace) {}
 //             } else {
 //               patientPic = '';
 //             }
@@ -1175,7 +1175,7 @@
 //               isAppExists: true,
 //               isWeb: isWeb,
 //             ));
-//           } catch (e) {}
+//           } catch (e,stackTrace) {}
 //         }
 //       }
 //     }
@@ -1193,7 +1193,7 @@
 //   void getProfileData() async {
 //     try {
 //       await CommonUtil().getUserProfileData();
-//     } catch (e) {}
+//     } catch (e,stackTrace) {}
 //   }
 
 //   @override
@@ -1588,7 +1588,7 @@
 //         } else {
 //           return StartTheCall();
 //         }
-//       } catch (e) {}
+//       } catch (e,stackTrace) {}
 //     }
 //   }
 
@@ -1597,7 +1597,7 @@
 //     try {
 //       final result = await platform.invokeMethod(variable.strGetAppVersion);
 //       res = result;
-//     } on PlatformException catch (e) {
+//     } on PlatformException catch (e,stackTrace) {
 //       res = TranslationConstants.failedToInvoke.t() + "'${e.message}'.";
 //     }
 
@@ -1618,7 +1618,7 @@
 //     // Platform messages may fail, so we use a try/catch PlatformException.
 //     try {
 //       result = await _connectivity.checkConnectivity();
-//     } on PlatformException catch (e) {
+//     } on PlatformException catch (e,stackTrace) {
 //       //print(e.toString());
 //     }
 
@@ -1682,18 +1682,18 @@
 //       if (docPic.isNotEmpty) {
 //         try {
 //           docPic = json.decode(navRoute.split('&')[3]);
-//         } catch (e) {}
+//         } catch (e,stackTrace) {}
 //       } else {
 //         docPic = '';
 //       }
 //       if (patPic.isNotEmpty) {
 //         try {
 //           patPic = json.decode(navRoute.split('&')[7]);
-//         } catch (e) {}
+//         } catch (e,stackTrace) {}
 //       } else {
 //         patPic = '';
 //       }
-//     } catch (e) {}
+//     } catch (e,stackTrace) {}
 //     fbaLog(eveParams: {
 //       'eventTime': '${DateTime.now()}',
 //       'ns_type': 'call',

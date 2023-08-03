@@ -19,8 +19,8 @@ class Sharedbyme {
       linkedData = json[parameters.strlinkedData] != null
               ? LinkedData.fromJson(json[parameters.strlinkedData])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -84,8 +84,8 @@ class DeviceHealthRecord {
                         });
                     }
             createdOn = DateTime.parse(json[param.strCreatedOn]);
-        } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         }
 
     }
@@ -128,8 +128,8 @@ class HeartRateCollection {
             averageAsOfNow = json['averageAsOfNow'] != null
                         ? AverageAsOfNowPulse.fromJson(json['averageAsOfNow'])
                         : null;
-        } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         }
     }
 
@@ -154,8 +154,8 @@ class AverageAsOfNowPulse {
     AverageAsOfNowPulse.fromJson(Map<String, dynamic> json) {
         try {
             pulseAverage = json['pulseAverage'];
-        } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         }
     }
 
@@ -174,8 +174,8 @@ class AverageAsOfNow {
     AverageAsOfNow.fromJson(Map<String, dynamic> json) {
         try {
             oxygenLevelAverage = json['oxygenLevelAverage'];
-        } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         }
     }
 
@@ -194,8 +194,8 @@ class SourceType {
     SourceType.fromJson(Map<String, dynamic> json) {
         try {
             code = json['name'];
-        } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         }
     }
 

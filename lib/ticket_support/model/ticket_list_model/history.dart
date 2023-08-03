@@ -25,8 +25,8 @@ class History {
       _description = json['description'];
       _owner = json['owner'] != null ? Owner.fromJson(json['owner']) : null;
       _date = json['date'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   String? _id;

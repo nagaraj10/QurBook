@@ -16,8 +16,8 @@ class MessageDetails {
               json[c_content] != null ? new Content.fromJson(json[c_content]) : null;
       payload =
               json[c_payload] != null ? new Payload.fromJson(json[c_payload]) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

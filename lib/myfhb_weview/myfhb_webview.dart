@@ -89,8 +89,8 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
               mimeType: variable.strtexthtml,
               encoding: Encoding.getByName(variable.strUtf))
           .toString());
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
       if (selectedUrl.isNotEmpty) {

@@ -34,8 +34,8 @@ class CallLogModel {
       additionalInfo = json["additionalInfo"] != null
           ? new AdditionalInfo.fromJson(json["additionalInfo"])
           : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -52,8 +52,8 @@ class CallLogModel {
       if (this.additionalInfo != null) {
         data["additionalInfo"] = this.additionalInfo!.toJson();
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return data;
@@ -96,8 +96,8 @@ class CallEndModel {
           ? new AdditionalInfo.fromJson(json["additionalInfo"])
           : null;
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -115,8 +115,8 @@ class CallEndModel {
         data["additionalInfo"] = this.additionalInfo!.toJson();
       }
       data['id'] = this.id;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return data;
@@ -133,8 +133,8 @@ class AdditionalInfo {
       location = json["location"] != null
           ? new Location.fromJson(json["location"])
           : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -145,8 +145,8 @@ class AdditionalInfo {
       if (this.location != null) {
         data["location"] = this.location!.toJson();
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return data;
   }
@@ -164,8 +164,8 @@ class CallLogResponseModel {
       isSuccess = json['isSuccess'];
       message = json['message'];
       result = json['result'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -176,8 +176,8 @@ class CallLogResponseModel {
       data['isSuccess'] = this.isSuccess;
       data['message'] = this.message;
       data['result'] = this.result;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
 
@@ -196,8 +196,8 @@ class CallRecordModel {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -209,8 +209,8 @@ class CallRecordModel {
       if (this.result != null) {
         data['result'] = this.result!.toJson();
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
 
@@ -228,8 +228,8 @@ class Result {
     try {
       resourceId = json['resourceId'];
       sid = json['sid'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -258,8 +258,8 @@ class CallLogErrorResponseModel {
       response = json['response'] != null
               ? new ResponseData.fromJson(json['response'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -285,8 +285,8 @@ class ResponseData {
     try {
       count = json['count'];
       data = json['data'] != null ? new DataModel.fromJson(json['data']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -308,8 +308,8 @@ class DataModel {
   DataModel.fromJson(Map<String, dynamic> json) {
     try {
       msg = json['msg'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

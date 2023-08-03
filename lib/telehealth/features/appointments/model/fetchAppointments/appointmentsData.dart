@@ -22,8 +22,8 @@ class AppointmentsData {
               ? null
               : List<Past>.from(
                   json[parameters.strPast].map((x) => Past.fromJson(x)));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

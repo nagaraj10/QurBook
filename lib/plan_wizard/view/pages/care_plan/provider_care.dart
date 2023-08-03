@@ -188,7 +188,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                     .updateBottonLayoutEmptyList(
                         snapshot.data!.result!.length > 0 ? true : false,
                         needReload: needReload);
-              } catch (e) {}
+              } catch (e,stackTrace) {}
             });
 
             return carePlanList(

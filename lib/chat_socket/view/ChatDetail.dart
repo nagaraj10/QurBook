@@ -630,8 +630,8 @@ class ChatState extends State<ChatDetail> {
               }
             }
           });
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         }
 
         textValue = '';
@@ -1952,8 +1952,8 @@ class ChatState extends State<ChatDetail> {
                                       true);
                                 }
                               }
-                            } catch (e) {
-                              CommonUtil().appLogs(message: e.toString());
+                            } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                             }
                           }
                         });
@@ -2050,8 +2050,8 @@ class ChatState extends State<ChatDetail> {
       }
 
       return value;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       return value;
     }
   }
@@ -2063,8 +2063,8 @@ class ChatState extends State<ChatDetail> {
       int end = content.indexOf(")", start);
       value = content.substring(start, end);
       return value;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       return value;
     }
   }
@@ -2371,8 +2371,8 @@ class ChatState extends State<ChatDetail> {
             _scaffoldKey.currentState!.showSnackBar(snackBar);
           }
         });
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
     }
   }
@@ -2401,8 +2401,8 @@ class ChatState extends State<ChatDetail> {
           FlutterToast().getToast(upload_failed, Colors.red);
         }
       });
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       setState(() {
         isLoading = false;
       });

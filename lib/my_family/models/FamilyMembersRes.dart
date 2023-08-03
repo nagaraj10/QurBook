@@ -17,8 +17,8 @@ class FamilyMembers {
       result = json['result'] != null
               ? FamilyMemberResult.fromJson(json['result'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -59,11 +59,11 @@ class FamilyMemberResult {
             virtualUserParent = json['virtualUserParent'] != null
                 ? VirtualUserParent.fromJson(json['virtualUserParent'])
                 : null;
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -136,8 +136,8 @@ class SharedByUsers {
       chatListItem = json['chatListItem'] != null
               ? new ChatListItem.fromJson(json['chatListItem'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -327,8 +327,8 @@ class Child {
       additionalInfo = json['additionalInfo'] != null
               ? AdditionalInfo.fromJson(json['additionalInfo'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -389,8 +389,8 @@ class HeightObj {
     try {
       valueFeet = json['valueFeet'];
       valueInches = json['valueInches'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -418,16 +418,16 @@ class AdditionalInfo {
         heightObj =
             json['height'] != null ? HeightObj.fromJson(json['height']) : null;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     if (json.containsKey('weightUnitCode')) {
       weightUnitCode = json['weightUnitCode'];
     }
     try {
       weight = json['weight'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -531,8 +531,8 @@ class UserContactCollectionFamily {
       createdOn = json['createdOn'] ?? "";
       lastModifiedOn = json['lastModifiedOn'] ?? "";
       email = json['email'] ?? "";
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -582,8 +582,8 @@ class PhoneNumberType {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -617,8 +617,8 @@ class UserRoleCollection3 {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -665,8 +665,8 @@ class Role {
       description = json['description'];
       isSystemRole = json['isSystemRole'];
       isEnabled = json['isEnabled'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -730,8 +730,8 @@ class SharedToUsers {
               ? RelationsShipModel.fromJson(json['relationship'])
               : null;
       parent = json['parent'] != null ? Parent.fromJson(json['parent']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -840,8 +840,8 @@ class Parent {
       createdOn = json['createdOn'];
       lastModifiedBy = json['lastModifiedBy'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -890,8 +890,8 @@ class VirtualUserParent {
       countryCode = json['countryCode'];
       email = json['email'];
       phoneNumber = json['phoneNumber'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -937,8 +937,8 @@ class ChatListItem {
       isMuted = json['isMuted'];
       unReadNotificationCount = json['unReadNotificationCount'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

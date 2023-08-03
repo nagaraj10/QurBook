@@ -45,8 +45,8 @@ class Payload {
       callType = json['callType'];
       isWeb = json['isWeb'];
       patientPhoneNumber = json['patientPhoneNumber'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -68,8 +68,8 @@ class Payload {
       data['callType'] = this.callType;
       data['isWeb'] = this.isWeb;
       data['patientPhoneNumber'] = this.patientPhoneNumber;
-    } catch (e) {
-                              CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return data;
   }

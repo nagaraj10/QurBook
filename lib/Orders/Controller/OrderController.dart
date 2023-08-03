@@ -23,8 +23,8 @@ class OrderController extends GetxController {
         if (usersOrders.isSuccess!) {
           orders.value = usersOrders.result!;
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         FlutterToast().getToast('Failed to get the past orders', Colors.red);
       }
@@ -46,8 +46,8 @@ class OrderController extends GetxController {
         FlutterToast().getToast('Failed to get the past orders', Colors.red);
         return null;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       FlutterToast().getToast('Failed to get the past orders', Colors.red);
       return null;

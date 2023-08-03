@@ -23,8 +23,8 @@ class ProfileCompleteData {
        response = json[parameters.strResponse] != null
                ? Response.fromJson(json[parameters.strResponse])
                : null;
-     } catch (e) {
-       CommonUtil().appLogs(message: e.toString());
+     } catch (e,stackTrace) {
+       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
      }
   }
 
@@ -51,8 +51,8 @@ class Response {
       count = json[parameters.strCount];
       data =
               json[parameters.strData] != null ? MyProfileData.fromJson(json[parameters.strData]) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -134,8 +134,8 @@ class MyProfileData {
               : null;
       oid = json[parameters.stroid];
       countryCode = json[parameters.strCountryCode];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     /*qualifiedFullName = json[parameters.strqualifiedFullName] != null
         ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
@@ -184,8 +184,8 @@ class MedicalPreferences {
       preferences = json[parameters.strpreferences] != null
               ? Preferences.fromJson(json[parameters.strpreferences])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -225,8 +225,8 @@ class Preferences {
               laboratoryIds!.add(LaboratoryIds.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

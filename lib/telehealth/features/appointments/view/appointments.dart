@@ -66,9 +66,9 @@ class _AppointmentsState extends State<Appointments> {
       Provider.of<AppointmentsListViewModel>(context, listen: false)
           .fetchAppointments();
       super.initState();
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -84,8 +84,8 @@ class _AppointmentsState extends State<Appointments> {
     });
     try {
       getCategoryList();
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -187,9 +187,9 @@ class _AppointmentsState extends State<Appointments> {
                             historyInfo!.clear();
                           });
                         }
-                      } catch (e) {
+                      } catch (e,stackTrace) {
                         //print(e);
-                                    CommonUtil().appLogs(message: e.toString());
+                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                       }
                     },

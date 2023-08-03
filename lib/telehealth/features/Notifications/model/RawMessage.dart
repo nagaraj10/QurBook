@@ -11,8 +11,8 @@ class RawMessage {
     try {
       messageTitle = json['messageTitle'];
       messageBody = json['messageBody'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -13,8 +13,8 @@ class DeviceVersion {
       isSuccess = json['isSuccess'];
       result =
               json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -51,8 +51,8 @@ class Result {
               : null;
       isActive = json['isActive'];
       createdOn = json['createdOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -83,8 +83,8 @@ class DeviceAdditionalInfo {
               : json['qurbookandroid'] != null
                   ? new Qurbook.fromJson(json['qurbookandroid'])
                   : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -107,8 +107,8 @@ class Qurbook {
   Qurbook.fromJson(Map<String, dynamic> json) {
     try {
       isForceUpdate = json['is_force_update'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

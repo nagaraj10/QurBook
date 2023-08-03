@@ -19,8 +19,8 @@ class WeightValues {
               result!.add(WVResult.fromJson(wgtvalue));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -59,8 +59,8 @@ class WVResult {
       endDateTime = json[strEndTimeStamp];
       weight = json[strParamWeight];
       weightUnit = json[strParamWeightUnit];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

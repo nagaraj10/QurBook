@@ -72,8 +72,8 @@ class Doctors {
             sharedCategories = json['sharedCategories'].cast<String>();
           }
       isResident = json['isResident'] ?? false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

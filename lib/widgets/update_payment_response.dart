@@ -12,8 +12,8 @@ class UpdatePaymentResponse {
       isSuccess = json['isSuccess'];
       result =
               json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -56,8 +56,8 @@ class Result {
       paymentStatus = json['paymentStatus'];
       cartId = json['cartId'];
       cartUserId = json['cartUserId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -91,8 +91,8 @@ class SubscribeResponse {
               payload!.add(new Payload.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -130,8 +130,8 @@ class Payload {
       packageid = json['packageid'];
       price = json['price'];
       docid = json['docid'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -48,8 +48,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                   .getCarePlanList(widget.selectedTag!)
               as Future<ProviderOrganisationResponse>?;
       //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
   }
@@ -65,8 +65,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         'screenSessionTime':
             '${DateTime.now().difference(mInitialTime).inSeconds} secs'
       });
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
   }
@@ -117,8 +117,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       onTap: () {
         try {
           _addBtnTapped(providerList);
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           print(e);
         }
       },
@@ -213,8 +213,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         providerMainList = planListProvider.getProviderSearch(providerName);
       }
       setState(() {});
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
   }
@@ -364,8 +364,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       if (planList.specialty != null && planList.specialty!.length > 0) {
         specialityName = planList.specialty![0].name;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return InkWell(
       onLongPress: () {},
@@ -448,8 +448,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       } else {
         toast.getToast("Please select a provider", Colors.red);
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
   }
@@ -464,8 +464,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
           selectedCategories.add(mediaResultObj.id);
         }
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
   }
@@ -475,8 +475,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       for (final mediaResultObj in providerList) {
         mediaResultObj.isBookmarked = !isSelectedALL;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
   }

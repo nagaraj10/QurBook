@@ -16,8 +16,8 @@ class AssociateSuccessResponse {
               result!.add(new Result.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -48,8 +48,8 @@ class Result {
                   .add(new HealthRecordShareDetailCollection.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -114,8 +114,8 @@ class HealthRecordShareDetailCollection {
               : null;
       endDateTime = json['endDateTime'];
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -151,8 +151,8 @@ class HealthRecordShareStatus {
   HealthRecordShareStatus.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -201,8 +201,8 @@ class ModeOfShare {
       referenceData = json['referenceData'] != null
               ? new ReferenceData.fromJson(json['referenceData'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -254,8 +254,8 @@ class ReferenceData {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

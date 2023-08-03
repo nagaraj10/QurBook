@@ -24,8 +24,8 @@ class TelehealthProviderModel {
       response = json[parameters.strResponse] != null
               ? new Response.fromJson(json[parameters.strResponse])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -51,8 +51,8 @@ class Response {
     try {
       count = json[parameters.strCount];
       data = json[parameters.strData] != null ? new Data.fromJson(json[parameters.strData]) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -76,8 +76,8 @@ class Data {
       medicalPreferences = json[parameters.strmedicalPreferences] != null
               ? new MedicalPreferences.fromJson(json[parameters.strmedicalPreferences])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -100,8 +100,8 @@ class MedicalPreferences {
       preferences = json[parameters.strpreferences] != null
               ? new Preferences.fromJson(json[parameters.strpreferences])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -141,8 +141,8 @@ class Preferences {
               laboratoryIds!.add(new LaboratoryIds.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

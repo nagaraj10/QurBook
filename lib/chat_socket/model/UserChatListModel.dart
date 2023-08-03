@@ -16,8 +16,8 @@ class UserChatListModel {
               payload!.add(new PayloadChat.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -101,8 +101,8 @@ class PayloadChat {
       isPrimaryCareCoordinator = json['isPrimaryCareCoordinator'] != null
               ? json['isPrimaryCareCoordinator']
               : false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -162,8 +162,8 @@ class Messages {
       timestamp = json['timestamp'] != null
               ? new Timestamp.fromJson(json['timestamp'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -192,8 +192,8 @@ class Timestamp {
     try {
       sSeconds = json['_seconds'];
       sNanoseconds = json['_nanoseconds'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

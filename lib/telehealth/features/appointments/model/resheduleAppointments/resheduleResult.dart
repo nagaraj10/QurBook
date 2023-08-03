@@ -19,8 +19,8 @@ class ResheduleResult {
       paymentInfo = json['paymentInfo'] != null
               ?  (json['paymentInfo'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

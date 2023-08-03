@@ -13,8 +13,8 @@ class BookmarkRequest {
     try {
       mediaMetaIds = json[parameters.strMediaMetaIds].cast<String>();
       isBookmarked = json[parameters.strIsBookmarked];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

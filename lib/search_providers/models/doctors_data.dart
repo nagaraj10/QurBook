@@ -79,8 +79,8 @@ class DoctorsData {
       lastModifiedOn = json[parameters.strLastModifiedOn];
       firstName = json[parameters.strFirstName];
       lastName = json[parameters.strLastName];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

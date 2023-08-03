@@ -129,24 +129,24 @@ class _VitalsDetailsState extends State<VitalsDetails>
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
       });
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
 
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       weightUnit = "kg";
     }
 
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       tempUnit = "F";
     }
@@ -167,8 +167,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
           timer.cancel();
         }
       });
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -177,7 +177,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
   // void initBleTimer() async {
   //   try {
   //     qurhomeDashboardController.checkForConnectedDevices(true);
-  //   } catch (e) {
+  //   } catch (e,stackTrace) {
   //     print(e);
   //   }
   // }
@@ -194,8 +194,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
         //   toast.getToast(NoDeviceFound, Colors.red);
         // }
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -210,8 +210,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
       });
       _events.close();
       Navigator.pop(Get.context!);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -252,8 +252,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
       animationController.reverse(
           from:
               animationController.value == 0 ? 1.0 : animationController.value);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -298,8 +298,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                         try {
                                           _events.close();
                                           Navigator.pop(context);
-                                        } catch (e) {
-                                                CommonUtil().appLogs(message: e.toString());
+                                        } catch (e,stackTrace) {
+                                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                                           print(e);
                                         }
@@ -364,8 +364,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
         'screenSessionTime':
             '${DateTime.now().difference(mInitialTime).inSeconds} secs'
       });
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -582,8 +582,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
@@ -1083,8 +1083,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   Widget getCardForThermometer(String deviceName) {
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       tempUnit = "F";
     }
@@ -1360,8 +1360,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   Widget getCardForWeighingScale(String deviceName) {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       weightUnit = "kg";
     }

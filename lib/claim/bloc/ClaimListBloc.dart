@@ -39,8 +39,8 @@ class ClaimListBloc implements BaseBloc {
       claimExpiryResult = claimExpiryResponse.result;
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       claimExpiryListSink.add(ApiResponse.error(e.toString()));
     }
 

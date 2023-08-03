@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
     late bool canCheckBiometrics;
     try {
       canCheckBiometrics = await auth.canCheckBiometrics;
-    } on PlatformException catch (e) {
+    } on PlatformException catch (e,stackTrace) {
       canCheckBiometrics = false;
       print(e);
     }
@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
     late List<BiometricType> availableBiometrics;
     try {
       availableBiometrics = await auth.getAvailableBiometrics();
-    } on PlatformException catch (e) {
+    } on PlatformException catch (e,stackTrace) {
       availableBiometrics = <BiometricType>[];
       print(e);
     }
@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         _isAuthenticating = false;
       });
-    } on PlatformException catch (e) {
+    } on PlatformException catch (e,stackTrace) {
       print(e);
       setState(() {
         _isAuthenticating = false;
@@ -112,7 +112,7 @@ class _MyAppState extends State<MyApp> {
         _isAuthenticating = false;
         _authorized = 'Authenticating';
       });
-    } on PlatformException catch (e) {
+    } on PlatformException catch (e,stackTrace) {
       print(e);
       setState(() {
         _isAuthenticating = false;

@@ -13,8 +13,8 @@ class AddProvidersController extends GetxController {
   void onClose() {
     try {
       super.onClose();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -24,8 +24,8 @@ class AddProvidersController extends GetxController {
   void onInit() {
     try {
       super.onInit();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -53,8 +53,8 @@ class AddProvidersController extends GetxController {
         labTicketTypesResult = null;
         isLoadingProgress.value = false;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       labTicketTypesResult = null;
       isLoadingProgress.value = false;
     }

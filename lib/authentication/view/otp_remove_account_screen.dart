@@ -198,8 +198,8 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
                                   if (Navigator.canPop(context)) {
                                     Get.back();
                                   }
-                                } catch (e) {
-                                  CommonUtil().appLogs(message: e.toString());
+                                } catch (e,stackTrace) {
+                                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                                   print(e);
                                 }
                               },

@@ -11,8 +11,8 @@ class NotificationOntapRequest {
     try {
       logIds = json['logIds'].cast<String>();
       isMarkAllRead = json['isMarkAllRead'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

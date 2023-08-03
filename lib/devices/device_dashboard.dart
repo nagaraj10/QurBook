@@ -430,8 +430,8 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[parameters.strhealthRecordCategory] =
             categoryDataObj.toJson();
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {

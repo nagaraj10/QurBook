@@ -14,8 +14,8 @@ class Content {
               ? new Variables.fromJson(json['variables'])
               : null;
       templateName = json['templateName'] != null ? json['templateName'] : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

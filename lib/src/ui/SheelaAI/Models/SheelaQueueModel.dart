@@ -14,8 +14,8 @@ class SheelaQueueModel {
       message = json['message'];
       result =
           json['result'] != null ? new SheelaInsertResult.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -40,8 +40,8 @@ class SheelaInsertResult {
     try {
       sheelaQueueId = json['sheelaQueueId'];
       queueCount = json['queueCount'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

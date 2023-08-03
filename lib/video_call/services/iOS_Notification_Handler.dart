@@ -163,8 +163,8 @@ class IosNotificationHandler {
           .collection("call_log")
           .doc("${model.callArguments!.channelName}")
           .set({"call_status": status});
-    } catch (e) {
-                              CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
     if (status == parameters.accept.toLowerCase()) {

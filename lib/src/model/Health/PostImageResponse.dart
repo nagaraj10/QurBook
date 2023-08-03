@@ -19,8 +19,8 @@ class PostImageResponse {
     response = json[parameters.strResponse] != null
             ? Response.fromJson(json[parameters.strResponse])
             : null;
-  } catch (e) {
-    CommonUtil().appLogs(message: e.toString());
+  } catch (e,stackTrace) {
+    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
   }
   }
 
@@ -47,8 +47,8 @@ class Response {
     try {
       count = json[parameters.strCount];
       data = json[parameters.strData] != null ? Data.fromJson(json[parameters.strData]) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -70,8 +70,8 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     try {
       mediaMasterId = json[parameters.strmediaMasterId];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

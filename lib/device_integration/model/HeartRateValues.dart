@@ -18,8 +18,8 @@ class HeartRateValues {
               result!.add(HRResult.fromJson(hrtvalue));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -48,8 +48,8 @@ class HRResult {
       startDateTime = json[strStartTimeStamp];
       endDateTime = json[strEndTimeStamp];
       bpm = json[strParamHeartRate];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -16,8 +16,8 @@ class PlanCode {
               result!.add(new PlanCodeResult.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -43,8 +43,8 @@ class PlanCodeResult {
       id = json['id'];
       code = json['code'];
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

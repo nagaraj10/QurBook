@@ -15,8 +15,8 @@ class VirtualUserParent {
       countryCode = json[parameters.strCountryCode];
       phoneNumber = json[parameters.strPhoneNumber];
       email = json[parameters.strEmail];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -66,8 +66,8 @@ class FamilyMemberData {
       countryCode = json[parameters.strCountryCode];
       isEmailVerified = json[parameters.strisEmailVerified];
       status = json[parameters.strStatus];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -96,8 +96,8 @@ class Variables {
               : (json["oldAppointmentDate"]);
       oldAppointmentTime =
               json["oldAppointmentTime"] == null ? null : json["oldAppointmentTime"];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

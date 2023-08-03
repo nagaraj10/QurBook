@@ -20,8 +20,8 @@ class DeviceReadings {
       value = json[parameters.strvalue];
     }
     unit = json[parameters.strunit];
-    }catch(e){
-      CommonUtil().appLogs(message: e.toString());
+    }catch(e,stackTrace){
+      CommonUtil().appLogs(message: e.toString(),stackTrace:stackTrace.toString());
     }
    
   }
@@ -34,8 +34,8 @@ class DeviceReadings {
     data[parameters.strunit] = unit;
     data[parameters.strvalue] = value;
     return data;
-     }catch(e){
-      CommonUtil().appLogs(message: e.toString());
+     }catch(e,stackTrace){
+      CommonUtil().appLogs(message: e.toString(),stackTrace:stackTrace.toString());
     }
   }
 }

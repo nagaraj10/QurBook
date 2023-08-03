@@ -13,8 +13,8 @@ class CommonResponse {
       isSuccess = json['isSuccess'];
       message = json['message'];
       result = json['result'];
-    }catch(e){
-      CommonUtil().appLogs(message: e.toString());
+    }catch(e,stackTrace){
+      CommonUtil().appLogs(message: e.toString(),stackTrace:stackTrace.toString());
     }
 
   }
