@@ -15,8 +15,8 @@ class ResponseInfoResult {
       refund = json[parameters.strRefund] != null
               ? new ResponseInfoResultRefund.fromJson(json[parameters.strRefund])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -18,8 +18,8 @@ class Data {
       deviceMeasurements = json[parameters.strDeviceMeasurements] != null
               ? DeviceMeasurements.fromJson(json[parameters.strDeviceMeasurements])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

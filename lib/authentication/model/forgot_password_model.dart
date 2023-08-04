@@ -21,8 +21,8 @@ class PatientForgotPasswordModel {
       isSuccess = json[strIsSuccess];
       result =
               json['result'] != null ? new ForgorResult.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -48,8 +48,8 @@ class ForgorResult {
     try {
       isVirtualNumber =
               json['isVirtualNumber'] != null ? json['isVirtualNumber'] : false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

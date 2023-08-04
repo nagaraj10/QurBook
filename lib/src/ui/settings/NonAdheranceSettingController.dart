@@ -47,10 +47,10 @@ class NonAdheranceSettingController extends GetxController {
       });
       loadingData.value = false;
       update(["newUpdate"]);
-    } catch (e) {
+    } catch (e,stackTrace) {
     print(e.toString());
     loadingData.value = false;
-                CommonUtil().appLogs(message: e.toString());
+                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -62,10 +62,10 @@ class NonAdheranceSettingController extends GetxController {
       nonAdheranceResponseModel = await nonAdheranceRepository.saveNonAdherance(mins,patientId,reminderFor);
       loadingData.value = false;
       getFamilyMemberList();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e.toString());
       loadingData.value = false;
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -77,10 +77,10 @@ class NonAdheranceSettingController extends GetxController {
       nonAdheranceResponseModel = await nonAdheranceRepository.editNonAdherance(id,mins,patientId,reminderFor);
       loadingData.value = false;
       getFamilyMemberList();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e.toString());
       loadingData.value = false;
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }

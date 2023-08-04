@@ -132,8 +132,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       controller.timer = null;
       controller.startTimer();
       super.initState();
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -189,8 +189,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
         }
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -391,7 +391,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         );
                                       }
                                     });
-                                  } catch (e) {
+                                  } catch (e,stackTrace) {
                                     print(e);
                                   }
                                 },
@@ -582,8 +582,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           strTitle = strServiceType;
         }
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         print(e);
@@ -734,8 +734,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         return getDefaultIcon(
             activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return getDefaultIcon(
           activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
@@ -801,13 +801,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (start != null) {
         first = title.substring(start, length);
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       try {
         first = title.split("|").first;
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         first = title;
       }
@@ -818,8 +818,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (startSecond != null) {
         second = title.substring(startSecond, lengthSecond);
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
 
@@ -854,8 +854,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 onPressed: () {
                                   try {
                                     Navigator.pop(context);
-                                  } catch (e) {
-                                          CommonUtil().appLogs(message: e.toString());
+                                  } catch (e,stackTrace) {
+                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                                     print(e);
                                   }
@@ -1068,8 +1068,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             final jsonString = convert.jsonEncode(snoozedBody);
                             try {
                               QurHomeApiProvider.snoozeEvent(jsonString);
-                            } catch (e) {
-                                    CommonUtil().appLogs(message: e.toString());
+                            } catch (e,stackTrace) {
+                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                             }
                             QurPlanReminders.updateReminderswithLocal(data);
@@ -1148,8 +1148,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 onPressed: () {
                                   try {
                                     Navigator.pop(context);
-                                  } catch (e) {
-                                          CommonUtil().appLogs(message: e.toString());
+                                  } catch (e,stackTrace) {
+                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                                     print(e);
                                   }
@@ -1695,8 +1695,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             cardColor = Color(CommonUtil().getMyPrimaryColor());
         }
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       cardColor = Color(CommonUtil().getMyPrimaryColor());
     }
@@ -1791,8 +1791,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       }*/
       initSOSTimer();
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -1814,7 +1814,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       }
       controller.getCurrentLocation();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
     }
   }*/
@@ -1841,8 +1841,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         startTimer();
         showSOSTimerDialog(context);
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -1863,8 +1863,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           timer.cancel();
         }
       });
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -1875,9 +1875,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (_counter == 0) {
         callNowSOS();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -1915,9 +1915,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
         }
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -1929,9 +1929,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         _events.close();
         controller.updateisShowTimerDialog(false);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -2000,9 +2000,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           from: animationController!.value == 0
               ? 1.0
               : animationController!.value);
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
 
@@ -2045,7 +2045,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                       onPressed: () {
                                         try {
                                           _closeDialog();
-                                        } catch (e) {
+                                        } catch (e,stackTrace) {
                                           print(e);
                                         }
                                       })
@@ -2117,9 +2117,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       onTap: () async {
         try {
           callNowSOS();
-        } catch (e) {
+        } catch (e,stackTrace) {
           print(e);
-                CommonUtil().appLogs(message: e.toString());
+                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         }
       },
@@ -2158,9 +2158,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       onTap: () async {
         try {
           closeDialog();
-        } catch (e) {
+        } catch (e,stackTrace) {
           print(e);
-                CommonUtil().appLogs(message: e.toString());
+                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         }
       },
@@ -2204,7 +2204,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       _events.close();
       WidgetsBinding.instance!.removeObserver(this);
       super.dispose();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
     }
   }
@@ -2315,7 +2315,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (sheelBadgeController.sheelaIconBadgeCount.value > 0) {
         sheelBadgeController.getSheelaBadgeCount();
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {}
   }
 
   openFormDataDialog(
@@ -2382,7 +2382,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogClosed);
-    } catch (e) {
+    } catch (e,stackTrace) {
       if (kDebugMode) {
         print(e);
       }
@@ -2441,7 +2441,7 @@ class SOSAgentCallWidget extends StatelessWidget {
                       var regController = Get.find<QurhomeRegimenController>();
                       regController.updateSOSAgentCallDialogStatus(false);
                       Get.back();
-                    } catch (e) {
+                    } catch (e,stackTrace) {
                       print(e);
                     }
                   },
@@ -2476,7 +2476,7 @@ class SOSAgentCallWidget extends StatelessWidget {
                       if (await canLaunch('tel:$SOSAgentNumber')) {
                         await launch('tel:$SOSAgentNumber');
                       }
-                    } catch (e) {
+                    } catch (e,stackTrace) {
                       print(e);
                     }
                   },

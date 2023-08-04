@@ -11,8 +11,8 @@ class VerifyOTPModel {
     try {
       verificationCode = json['verificationCode'];
       phoneNumber = json['phoneNumber'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

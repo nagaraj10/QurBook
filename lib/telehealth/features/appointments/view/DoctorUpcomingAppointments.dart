@@ -87,8 +87,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           appointmentDetailsController
               .getAppointmentDetail(widget.doc?.id ?? "");
           Get.to(() => AppointmentDetailScreen());
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           if (kDebugMode) {
             printError(info: e.toString());
@@ -517,8 +517,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
               toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
             }
           });
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -535,8 +535,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
               .fetchCancelAppointment(bookingIds, dates);
 
       return cancelAppointment??CancelAppointmentModel();
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }

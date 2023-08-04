@@ -11,8 +11,8 @@ class NotificationResponseText {
     try {
       code = json['code'];
       message = json['message'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

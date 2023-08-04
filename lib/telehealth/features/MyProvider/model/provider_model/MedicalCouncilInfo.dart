@@ -14,8 +14,8 @@ class MedicalCouncilInfo {
       name = json[parameters.strName];
       isActive = json[parameters.strIsActive];
       description = json[parameters.strDescription];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

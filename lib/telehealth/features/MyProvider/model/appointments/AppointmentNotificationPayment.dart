@@ -13,8 +13,8 @@ class AppointmentNotificationPayment {
       isSuccess = json['isSuccess'];
       result =
               json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -47,8 +47,8 @@ class Result {
                 ? new Payment.fromJson(json['payment'])
                 : null;
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -137,8 +137,8 @@ class Appointment {
       bookedFor = json['bookedFor'] != null
               ? new BookedFor.fromJson(json['bookedFor'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -205,8 +205,8 @@ class AppointmentStatus {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -320,8 +320,8 @@ class BookedFor {
       additionalInfo = json['additionalInfo'] != null
               ? new AdditionalInfo.fromJson(json['additionalInfo'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -395,8 +395,8 @@ class AdditionalInfo {
       uhidNumber = json['uhidNumber'];
       visitReason = json['visitReason'];
       patientHistory = json['patientHistory'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -462,8 +462,8 @@ class Doctor {
               ? new BusinessDetail.fromJson(json['businessDetail'])
               : null;
       user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -497,8 +497,8 @@ class BusinessDetail {
   BusinessDetail.fromJson(Map<String, dynamic> json) {
     try {
       experience = json['experience'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -521,8 +521,8 @@ class Payment {
       id = json['id'];
       longUrl = json['longUrl'];
       amount = json['amount'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

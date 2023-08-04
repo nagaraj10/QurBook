@@ -12,8 +12,8 @@ class UpdatePaymentStatusSubscribe {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? PaymentSubscribeResult.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -55,8 +55,8 @@ class PaymentSubscribeResult {
       pdfGenResult = json['pdfGenResult'] != null
               ? PdfGenResult.fromJson(json['pdfGenResult'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -132,8 +132,8 @@ class PlanPackage {
       providers = json['providers'] != null
               ? Providers.fromJson(json['providers'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -188,8 +188,8 @@ class Providers {
       deleted = json['deleted'];
       linkid = json['linkid'];
       ts = json['ts'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -217,8 +217,8 @@ class PdfGenResult {
       isSuccess = json['isSuccess'];
       payload =
           json['payload'] != null ? Payload.fromJson(json['payload']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -252,8 +252,8 @@ class Payload {
       mD5OfMessageBody = json['MD5OfMessageBody'];
       messageId = json['MessageId'];
       sequenceNumber = json['SequenceNumber'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -277,8 +277,8 @@ class ResponseMetadata {
   ResponseMetadata.fromJson(Map<String, dynamic> json) {
     try {
       requestId = json['RequestId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

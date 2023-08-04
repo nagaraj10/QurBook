@@ -178,8 +178,8 @@ class ApiBaseHelper {
         print(res);
         return false;
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
       return false;
@@ -216,9 +216,9 @@ class ApiBaseHelper {
         print(res);
         return false;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e.toString());
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }
@@ -559,9 +559,9 @@ class ApiBaseHelper {
           body: jsonBody);
 
       responseJson = _returnResponse(response);
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return responseJson;
@@ -645,8 +645,8 @@ class ApiBaseHelper {
             final responseJson = convert.jsonDecode(response.body.toString());
             return responseJson;
           }
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           final responseJson = convert.jsonDecode(response.body.toString());
           return responseJson;
@@ -1440,7 +1440,7 @@ class ApiBaseHelper {
       } else {
         return response;
       }
-    } on DioError catch (e) {
+    } on DioError catch (e,stackTrace) {
       print(e.toString());
       print(e);
       return response;
@@ -1507,7 +1507,7 @@ class ApiBaseHelper {
       } else {
         return response;
       }
-    } on DioError catch (e) {
+    } on DioError catch (e,stackTrace) {
       print(e.toString());
       print(e);
       return response;
@@ -1540,12 +1540,12 @@ class ApiBaseHelper {
       } else {
         return false;
       }
-    } on DioError catch (e) {
+    } on DioError catch (e,stackTrace) {
       print(e.toString());
       print(e);
       return false;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
       return false;
@@ -1615,7 +1615,7 @@ class ApiBaseHelper {
       } else {
         return response;
       }
-    } on DioError catch (e) {
+    } on DioError catch (e,stackTrace) {
       print(e.toString());
       print(e);
       return response;
@@ -1690,7 +1690,7 @@ class ApiBaseHelper {
       } else {
         return response?.data;
       }
-    } on DioError catch (e) {
+    } on DioError catch (e,stackTrace) {
       print(e.toString());
       print(e);
       return response?.data;
@@ -1732,7 +1732,7 @@ class ApiBaseHelper {
       } else {
         return response.data['isSuccess'];
       }
-    } on DioError catch (e) {
+    } on DioError catch (e,stackTrace) {
       print("dio attachment error");
       print(e.toString());
       print(e);
@@ -1938,8 +1938,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuths(),
       );
       responseJson = _returnResponse(response);
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2122,8 +2122,8 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -2165,8 +2165,8 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print("**********************" + e.toString());
     }
@@ -2197,8 +2197,8 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -2228,8 +2228,8 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -2255,8 +2255,8 @@ class ApiBaseHelper {
         throw FetchDataException(variable.strNoInternet);
       }
       return responseJson;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
     }
@@ -2282,8 +2282,8 @@ class ApiBaseHelper {
         throw FetchDataException(variable.strNoInternet);
       }
       return responseJson;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -2338,8 +2338,8 @@ class ApiBaseHelper {
       }
       return responseJson;
       //}
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -2539,8 +2539,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuths(),
       );
       responseJson = _returnResponse(response);
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2558,8 +2558,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuths(),
       );
       responseJson = _returnResponse(response);
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2590,8 +2590,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuths(),
       );
       responseJson = _returnResponse(response);
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2609,8 +2609,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuthsClaimList(),
       );
       responseJson = _returnResponse(response);
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2668,7 +2668,7 @@ class ApiBaseHelper {
       } else {
         return response?.data;
       }
-    } on DioError catch (e) {
+    } on DioError catch (e,stackTrace) {
       print(e.toString());
 
       print(e);
@@ -2854,7 +2854,7 @@ class ApiBaseHelper {
     //       } else {
     //         responses.add(response);
     //       }
-    //     } on DioError catch (e) {
+    //     } on DioError catch (e,stackTrace) {
     //       print(e.toString());
     //       print(e);
     //       responses.add(response);
@@ -2876,7 +2876,7 @@ class ApiBaseHelper {
           } else {
             responses.add(response);
           }
-        } on DioError catch (e) {
+        } on DioError catch (e,stackTrace) {
           print(e.toString());
           print(e);
           responses.add(response);

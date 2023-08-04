@@ -13,8 +13,8 @@ class AppointmentDetailsModel {
       isSuccess = json['isSuccess'];
       result =
               json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -67,8 +67,8 @@ class Result {
       doctor =
           json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
 
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -202,8 +202,8 @@ class AdditionalInfo {
           : null;
 
 
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -240,8 +240,8 @@ class Status {
   Status.fromJson(Map<String, dynamic> json) {
     try {
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -266,8 +266,8 @@ class ServiceCategory {
       additionalInfo = json['additionalInfo'] != null
               ? new ServiceCategoryAdditionalInfo.fromJson(json['additionalInfo'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -296,8 +296,8 @@ class ServiceCategoryAdditionalInfo {
             });
           }
       iconUrl = json['iconUrl'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -326,8 +326,8 @@ class Field {
               data!.add(new Data.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -351,8 +351,8 @@ class Data {
     try {
       id = json['id'];
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -381,8 +381,8 @@ class HealthOrganization {
                   .add(new HealthOrganizationAddressCollection.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -420,8 +420,8 @@ class HealthOrganizationAddressCollection {
       pincode = json['pincode'];
       state = json['state'] != null ? new State.fromJson(json['state']) : null;
       city = json['city'] != null ? new City.fromJson(json['city']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -448,8 +448,8 @@ class State {
   State.fromJson(Map<String, dynamic> json) {
     try {
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -468,8 +468,8 @@ class City {
   City.fromJson(Map<String, dynamic> json) {
     try {
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -490,8 +490,8 @@ class Doctor {
   Doctor.fromJson(Map<String, dynamic> json) {
     try {
       user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -514,8 +514,8 @@ class User {
     try {
       firstName = json['firstName'];
       lastName = json['lastName'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

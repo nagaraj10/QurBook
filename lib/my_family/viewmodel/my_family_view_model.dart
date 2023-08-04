@@ -27,8 +27,8 @@ class MyFamilyViewModel with ChangeNotifier {
           .getFamilyMembersList(webserviceCall.getQueryForFamilyMemberList());
       familyMembersList = FamilyMembersList.fromJson(response);
       notifyListeners();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
     }
@@ -41,8 +41,8 @@ class MyFamilyViewModel with ChangeNotifier {
       var response = await _helper.getCustomRoles(query.qr_customRole);
       relationShipResponseList = RelationShipResponseList.fromJson(response);
       notifyListeners();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
     }

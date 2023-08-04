@@ -16,8 +16,8 @@ class Result {
       _id = json['id'];
       _code = json['code'];
       _name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   String? _id;

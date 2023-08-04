@@ -14,8 +14,8 @@ class Degree {
       id = json[parameters.strId];
       name = json[parameters.strName];
       isActive = json[parameters.strIsActive];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

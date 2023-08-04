@@ -50,8 +50,8 @@ class MediaTypeBlock implements BaseBloc {
       PreferenceUtil.init();
       //PreferenceUtil.saveMediaType(Constants.KEY_METADATA, mediaTypesResponse.response.data);
       mediaTypeSink.add(ApiResponse.completed(mediaTypesResponse));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       mediaTypeSink.add(ApiResponse.error(e.toString()));
     }
@@ -67,8 +67,8 @@ class MediaTypeBlock implements BaseBloc {
       await PreferenceUtil.saveMediaType(
           Constants.KEY_METADATA, mediaTypesResponse.result);
       mediaTypeSinks.add(ApiResponse.completed(mediaTypesResponse));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       mediaTypeSinks.add(ApiResponse.error(e.toString()));
     }

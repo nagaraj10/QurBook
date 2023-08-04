@@ -14,8 +14,8 @@ class UpdateMediaResponseData {
       mediaMetaInfo = json[parameters.strmediaMetaInfo] != null
               ? MediaMetaInfo.fromJson(json[parameters.strmediaMetaInfo])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

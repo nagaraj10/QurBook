@@ -40,8 +40,8 @@ class LanguageBlock implements BaseBloc {
           Constants.KEY_LANGUAGE, languageModelList.result);
 
       categoryListSinks.add(ApiResponse.completed(languageModelList));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       categoryListSinks.add(ApiResponse.error(e.toString()));
     }

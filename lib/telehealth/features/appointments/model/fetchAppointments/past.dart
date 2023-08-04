@@ -141,8 +141,8 @@ class Past {
       additionalinfo = json["additionalInfo"] == null
               ? null
               : AdditionalInfo.fromJson(json["additionalInfo"]);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -203,8 +203,8 @@ class ChatMessage {
       deliveredOn = json["deliveredOn"];
       documentId = json["documentId"];
       chatMessageId = json["chatMessageId"];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }
@@ -242,8 +242,8 @@ class AdditionalInfo {
       healthOrganizationId = json.containsKey('healthOrganizationId') ? json["healthOrganizationId"] : null;
 
       fee = json.containsKey('fee') ? json["fee"] : 0;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   Map<String, dynamic>? toJson() {

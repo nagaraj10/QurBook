@@ -177,8 +177,8 @@ class _SplashScreenState extends State<SplashScreen> {
           _loaded = true;
         });
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) print(e.toString());
     }
@@ -796,8 +796,8 @@ class _SplashScreenState extends State<SplashScreen> {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing);
                           }
-                        } catch (e) {
-                                      CommonUtil().appLogs(message: e.toString());
+                        } catch (e,stackTrace) {
+                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing);
@@ -913,8 +913,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                 (value) => PageNavigator.goToPermanent(
                                     context, router.rt_Landing));
                           }
-                        } catch (e) {
-                                      CommonUtil().appLogs(message: e.toString());
+                        } catch (e,stackTrace) {
+                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                           AppointmentDetailsController
                               appointmentDetailsController =
@@ -1005,8 +1005,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void getProfileData() async {
     try {
       await new CommonUtil().getUserProfileData();
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }

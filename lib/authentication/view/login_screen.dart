@@ -54,7 +54,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
     authViewModel = AuthViewModel();
     /* try {
       commonUtil.versionCheck(context);
-    } catch (e) {
+    } catch (e,stackTrace) {
     }*/
   }
 

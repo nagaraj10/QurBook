@@ -14,8 +14,8 @@ class UpdateAddFamilyInfo {
       message = json['message'];
       result =
               json['result'] != null ? Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -38,8 +38,8 @@ class Result {
   Result.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

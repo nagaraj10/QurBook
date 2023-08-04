@@ -18,8 +18,8 @@ class TemperatureValues {
               result!.add(TMPResult.fromJson(tempaturevalue));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -58,8 +58,8 @@ class TMPResult {
       endDateTime = json[strEndTimeStamp];
       temperature = json[strParamTemp];
       temperatureUnit = json[strParamTempUnit];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

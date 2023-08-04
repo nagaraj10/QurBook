@@ -152,21 +152,21 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       try {
         weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         weightUnit = "kg";
       }
 
       try {
         tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         tempUnit = "F";
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       //print(e);
     }
@@ -189,8 +189,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       activitiesFilteredList =
           await CommonUtil().getMasterData(Get.context!, '');
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       //print(e);
     }
@@ -397,8 +397,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
@@ -910,8 +910,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForThermometer(String? deviceName) {
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       tempUnit = "F";
     }
@@ -1187,8 +1187,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForWeighingScale(String? deviceName) {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       weightUnit = "kg";
     }

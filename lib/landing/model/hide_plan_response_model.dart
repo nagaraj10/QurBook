@@ -13,8 +13,8 @@ class HidePlanResponseModel {
     try {
       _isSuccess = json['isSuccess'];
       _result = json['result'] != null ? Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   bool? _isSuccess;
@@ -43,8 +43,8 @@ class Result {
   Result.fromJson(dynamic json) {
     try {
       _qurBook = json['qurBook'] != null ? QurBook.fromJson(json['qurBook']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   QurBook? _qurBook;
@@ -76,8 +76,8 @@ class QurBook {
       _addPlanBtn = json['addPlanBtn'];
       _cart = json['cart'];
       _unSubscribeBtn = json['unSubscribeBtn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   bool? _addPlanBtn;

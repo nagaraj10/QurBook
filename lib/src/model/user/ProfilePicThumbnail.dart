@@ -13,8 +13,8 @@ class ProfilePicThumbnailMain {
     try {
       type = json[parameters.strtype];
       data = json[parameters.strData].cast<int>();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

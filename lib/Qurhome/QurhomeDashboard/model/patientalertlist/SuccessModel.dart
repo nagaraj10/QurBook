@@ -8,8 +8,8 @@ class SuccessModel {
   SuccessModel.fromJson(Map<String, dynamic> json) {
     try {
       isSuccess = json['isSuccess'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

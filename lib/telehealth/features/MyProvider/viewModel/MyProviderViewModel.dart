@@ -39,8 +39,8 @@ class MyProviderViewModel extends ChangeNotifier {
       doctorIdsList = myProvidersResponseList
           .response!.data!.medicalPreferences!.preferences!.doctorIds;
       return doctorIdsList;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -94,8 +94,8 @@ class MyProviderViewModel extends ChangeNotifier {
               doctorId, userId, healthRecords);
       associateRecordResponse = bookAppointmentModel;
       return associateRecordResponse;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -108,8 +108,8 @@ class MyProviderViewModel extends ChangeNotifier {
               bookingID, healthResult);
       associateUpdateRecordResponse = bookAppointmentModel;
       return associateUpdateRecordResponse;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -122,8 +122,8 @@ class MyProviderViewModel extends ChangeNotifier {
 
       //healthOrganizationResult = healthOrganizationModel.result;
       return healthOrganizationModel;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -135,8 +135,8 @@ class MyProviderViewModel extends ChangeNotifier {
 
       doctorsFromHospital = doctorListFromHospitalModel.result;
       return doctorsFromHospital;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

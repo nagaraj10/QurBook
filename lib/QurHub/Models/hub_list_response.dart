@@ -11,8 +11,8 @@ class HubListResponse {
       isSuccess = json['isSuccess'];
       result =
               json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -65,8 +65,8 @@ class Result {
               userDeviceCollection!.add(new UserDeviceCollection.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -96,8 +96,8 @@ class AdditionalDetails {
   AdditionalDetails.fromJson(Map<String, dynamic> json) {
     try {
       isVirtualHub = json['isVirtualHub'];
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -106,9 +106,9 @@ class AdditionalDetails {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     try {
       data['isVirtualHub'] = this.isVirtualHub;
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;
@@ -142,8 +142,8 @@ class Hub {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }
@@ -194,8 +194,8 @@ class UserDeviceCollection {
       userId = json['userId'];
       user = json['user'] != null ? User.fromJson(json['user']) : null;
       device = json['device'] != null ? Device.fromJson(json['device']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -250,8 +250,8 @@ class Device {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       deviceTypeId = json['deviceTypeId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }
@@ -290,8 +290,8 @@ class DeviceType {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }
@@ -374,8 +374,8 @@ class User {
       // countryCode = json['countryCode'];
       profilePicUrl = json['profilePicUrl'];
       profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     // isTempUser = json['isTempUser'];
     // isVirtualUser = json['isVirtualUser'];
@@ -475,8 +475,8 @@ class AdditionalInfo {
       uhidNumber = json['uhidNumber'];
       visitReason = json['visitReason'];
       patientHistory = json['patientHistory'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -38,8 +38,8 @@ class AddNewBlock implements BaseBloc {
       final response = await _helper.addNewPlan(jsonData);
       addPlanSuccessResponse = AddPlanSuccessResponse.fromJson(response);
       // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       addPlanSink.add(ApiResponse.error(e.toString()));
     }
     return addPlanSuccessResponse;

@@ -14,8 +14,8 @@ class DigitRecogResponse {
       message = json['message'];
       result =
           json['result'] != null ? Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -47,8 +47,8 @@ class Result {
               : null;
       healthRecordDocumentId = json['healthRecordDocumentId'];
       healthRecordMetaId = json['healthRecordMetaId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -78,8 +78,8 @@ class DeviceMeasurementsHead {
               deviceMeasurements!.add(DeviceMeasurements.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -111,8 +111,8 @@ class DeviceMeasurements {
       parameter = json['parameter'];
       unit = json['unit'];
       values = json['values'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -142,8 +142,8 @@ class Coordinates {
       width = json['width'];
       x = json['x'];
       y = json['y'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

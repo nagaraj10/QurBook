@@ -178,9 +178,9 @@ class ChatViewModel extends ChangeNotifier {
       } else {
         return unReadMSGCount;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e.toString());
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -210,8 +210,8 @@ class ChatViewModel extends ChangeNotifier {
           .getAppointmentDetail(doctorId, patientId, careCoorId,isNormalChatUserList);
       appointments = appointmentModel.result;
       return appointments;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }

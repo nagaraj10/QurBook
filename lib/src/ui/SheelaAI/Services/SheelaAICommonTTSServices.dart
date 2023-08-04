@@ -25,8 +25,8 @@ class SheelaAICommonTTSService {
       try {
         final status = await controller.playUsingLocalTTSEngineFor(msg);
         completedPlaying();
-      } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         //failed to play in local tts
         completedPlaying();
@@ -56,8 +56,8 @@ class SheelaAICommonTTSService {
               },
             );
           }
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           //failed play the audio
           print(e.toString());

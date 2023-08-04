@@ -16,8 +16,8 @@ class TotalCountModel {
               payload!.add(new Payload.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -39,8 +39,8 @@ class Payload {
   Payload.fromJson(Map<String, dynamic> json) {
     try {
       count = json['count'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

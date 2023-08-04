@@ -12,8 +12,8 @@ class GetEventIdModel {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -165,8 +165,8 @@ class Result {
       uform = json['uform'];
       alertdata = json['alertdata'];
       isSymptom = json['isSymptom'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

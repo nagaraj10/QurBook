@@ -59,8 +59,8 @@ class ProvidersBloc implements BaseBloc {
       doctors = myProvidersResponseList.result!.doctors;
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       providersListSink.add(ApiResponse.error(e.toString()));
     }
@@ -78,15 +78,15 @@ class ProvidersBloc implements BaseBloc {
           .getMedicalPreferencesForDoctors(userId: userId);
       try {
         doctors = myProvidersResponseList.result?.doctors;
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
       providersListSink.add(ApiResponse.completed(myProvidersResponseList));
 
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       providersListSink.add(ApiResponse.error(e.toString()));
     }
@@ -105,8 +105,8 @@ class ProvidersBloc implements BaseBloc {
 
       try {
         hospitals = myProvidersResponseList.result?.hospitals;
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
 
       providershospitalListSink
@@ -115,8 +115,8 @@ class ProvidersBloc implements BaseBloc {
       //doctors = myProvidersResponseList.result.doctors;
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       providershospitalListSink.add(ApiResponse.error(e.toString()));
     }
@@ -134,8 +134,8 @@ class ProvidersBloc implements BaseBloc {
       //doctors = myProvidersResponseList.result.doctors;
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       providersListSink.add(ApiResponse.error(e.toString()));
     }
@@ -191,8 +191,8 @@ class ProvidersBloc implements BaseBloc {
     try {
       getDoctorsByIdModel =
           await _providersListRepository.getDoctorsByID(doctorId: doctorId);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       providersListSink.add(ApiResponse.error(e.toString()));
     }

@@ -178,8 +178,8 @@ class QurhomeRegimenController extends GetxController {
                       await platform.invokeMethod(APPOINTMENT_DETAILS,
                           {'data': jsonEncode(apiReminder.toJson())});
                     }
-                  } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+                  } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                     if (kDebugMode) {
                       print(e);
@@ -200,8 +200,8 @@ class QurhomeRegimenController extends GetxController {
         getUserDetails();
         getCareCoordinatorId();
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: "Regimentlist: "+e.toString());
@@ -242,8 +242,8 @@ class QurhomeRegimenController extends GetxController {
     try {
       timer?.cancel();
       super.onClose();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -287,8 +287,8 @@ class QurhomeRegimenController extends GetxController {
           }
         });
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -323,8 +323,8 @@ class QurhomeRegimenController extends GetxController {
                   CommonUtil().validString(address.subThoroughfare));
         }
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -363,8 +363,8 @@ class QurhomeRegimenController extends GetxController {
           }
         }
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -425,8 +425,8 @@ class QurhomeRegimenController extends GetxController {
         FlutterToast().getToast(
             'Could not start call due to permission issue', Colors.red);
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -452,8 +452,8 @@ class QurhomeRegimenController extends GetxController {
           ? CommonUtil()
               .validString(prof.result!.userContactCollection3![0]!.phoneNumber)
           : '';
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -484,8 +484,8 @@ class QurhomeRegimenController extends GetxController {
               .validString(sosCallAgentNumberData.result!.exoPhoneNumber);
         }
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -550,8 +550,8 @@ class QurhomeRegimenController extends GetxController {
           }
         },
       );
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -570,8 +570,8 @@ class QurhomeRegimenController extends GetxController {
       }
 
       startTimer();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -629,8 +629,8 @@ class QurhomeRegimenController extends GetxController {
       await getSOSButtonStatus();
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         print(e);
@@ -641,7 +641,7 @@ class QurhomeRegimenController extends GetxController {
   getSOSButtonStatus() async {
     try {
       await _apiProvider.getSOSButtonStatus();
-    } catch (e) {
+    } catch (e,stackTrace) {
       if (kDebugMode) {
         print(e);
       }

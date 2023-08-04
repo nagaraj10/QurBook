@@ -25,8 +25,8 @@ class MetaDataForHospitalLogo {
       zip = json['Zip'];
       descriptionURL = json['DescriptionURL'];
       siteURL = json['SiteURL'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

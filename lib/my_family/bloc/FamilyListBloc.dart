@@ -107,8 +107,8 @@ class FamilyListBloc implements BaseBloc {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersList();
       familyMemberListSink.add(ApiResponse.completed(familyResponseList));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       familyMemberListSink.add(ApiResponse.error(e.toString()));
     }
@@ -122,8 +122,8 @@ class FamilyListBloc implements BaseBloc {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersListNew();
       familyMemberListNewSink.add(ApiResponse.completed(familyResponseList));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       familyMemberListNewSink.add(ApiResponse.error(e.toString()));
     }
@@ -135,8 +135,8 @@ class FamilyListBloc implements BaseBloc {
     try {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersListNew();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       familyMemberListNewSink.add(ApiResponse.error(e.toString()));
     }
@@ -149,8 +149,8 @@ class FamilyListBloc implements BaseBloc {
       var relationShipResponseList =
           await _familyResponseListRepository.getCustomRoles();
       relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       relationShipListSink.add(ApiResponse.error(e.toString()));
     }
@@ -164,8 +164,8 @@ class FamilyListBloc implements BaseBloc {
       userLinking =
           await _familyResponseListRepository.postUserLinking(jsonString);
 //      userLinkingSink.add(ApiResponse.completed(userLinking));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       userLinkingSink.add(ApiResponse.error(e.toString()));
     }
@@ -182,8 +182,8 @@ class FamilyListBloc implements BaseBloc {
       userDeLinking =
           await _familyResponseListRepository.postUserDeLinking(jsonString);
 //      userLinkingSink.add(ApiResponse.completed(userLinking));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       userDeLinkingSink.add(ApiResponse.error(e.toString()));
     }
@@ -201,8 +201,8 @@ class FamilyListBloc implements BaseBloc {
     try {
       addFamilyOTPResponse = await _familyResponseListRepository
           .postUserLinkingForPrimaryNo(jsonString);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       userLinkingForPrimaryNoSink.add(ApiResponse.error(e.toString()));
     }

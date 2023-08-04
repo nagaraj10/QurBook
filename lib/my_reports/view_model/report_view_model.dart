@@ -30,8 +30,8 @@ class MyReportViewModel extends ChangeNotifier {
       try {
         var myPlanListModel = await reportService.getReportList(userid);
         return myPlanListModel;
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
     }
   }

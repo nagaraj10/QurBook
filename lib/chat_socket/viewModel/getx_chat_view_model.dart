@@ -38,8 +38,8 @@ class ChatUserListController extends GetxController {
           await chocketService.getFamilyListMap(userId);
 
       return familyList;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -51,8 +51,8 @@ class ChatUserListController extends GetxController {
           await chocketService.getUnreadCountFamily(userId);
 
       return getUserIdModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

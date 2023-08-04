@@ -76,8 +76,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
@@ -194,8 +194,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
@@ -218,8 +218,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
@@ -241,8 +241,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
@@ -264,8 +264,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }

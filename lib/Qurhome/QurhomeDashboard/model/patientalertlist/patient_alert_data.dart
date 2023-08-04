@@ -40,8 +40,8 @@ class PatientAlertData {
       createdOn = DateTime.tryParse(json['createdOn'] ?? '');
       isEscalated = json['isEscalated'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

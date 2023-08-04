@@ -71,8 +71,8 @@ class Hospitals {
               : null;
       isPrimaryProvider =
               json['isPrimaryProvider'] != null ? json['isPrimaryProvider'] : false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -138,8 +138,8 @@ class HealthOrganizationTypeNew {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -200,8 +200,8 @@ class HealthOrganizationAddressCollectionNew {
       addressType = json['addressType'] != null
               ? HealthOrganizationTypeNew.fromJson(json['addressType'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -245,8 +245,8 @@ class CityProviders {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -285,8 +285,8 @@ class StateProviders {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -331,8 +331,8 @@ class HealthOrganizationContactCollectionNew {
       phoneNumberType = json['phoneNumberType'] != null
               ? HealthOrganizationTypeNew.fromJson(json['phoneNumberType'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -438,8 +438,8 @@ class CreatedBy {
       lastModifiedBy = json['lastModifiedBy'];
       lastModifiedOn = json['lastModifiedOn'];
       providerId = json['providerId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

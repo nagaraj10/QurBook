@@ -20,8 +20,8 @@ class AddHospitalsProvidersId {
       response = json[parameters.strResponse] != null
               ? Response.fromJson(json[parameters.strResponse])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }
@@ -41,8 +41,8 @@ class Response {
             dic = json[parameters.strData];
             data = AddMoreData.fromJson(dic!);
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }

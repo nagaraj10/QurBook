@@ -36,8 +36,8 @@ class HealthRecord {
       prescription = json[parameters.strPrescription] == null
               ? null
               : List<dynamic>.from(json[parameters.strPrescription].map((x) => x));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -148,8 +148,8 @@ class MyProfileResult {
       if (json.containsKey("isCaregiver")) {
             isCaregiver = json['isCaregiver'];
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -248,20 +248,19 @@ class AdditionalInfo {
         heightObj =
             json['height'] != null ? HeightObj.fromJson(json['height']) : null;
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     weight = json['weight'];
     try {
-      height = json['height'];
+      //height = json['height'];
       weight = json['weight'];
       if (json.containsKey('language') && json['language'] != null) {
         language = json['language'].cast<String>();
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
-
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     if (json.containsKey('mrdNumber') && json['mrdNumber'] != null)
@@ -325,8 +324,8 @@ class UserContactCollection3 {
       phoneNumberType = json['phoneNumberType'] != null
               ? AddressType.fromJson(json['phoneNumberType'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -363,8 +362,8 @@ class UserRoleCollection3 {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       role = json['role'] != null ? Role.fromJson(json['role']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -414,8 +413,8 @@ class Role {
       description = json['description'];
       isSystemRole = json['isSystemRole'];
       isEnabled = json['isEnabled'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -460,8 +459,8 @@ class UserProfileSettingCollection3 {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -489,8 +488,8 @@ class HeightObj {
     try {
       valueFeet = json['valueFeet'];
       valueInches = json['valueInches'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
