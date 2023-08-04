@@ -77,7 +77,7 @@ class _RegimentWebViewState extends State<RegimentWebView> {
               linkUrl,
               false,
             );
-            print(linkUrl);
+            
           },
         ),
       ),
