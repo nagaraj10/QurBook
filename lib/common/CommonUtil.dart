@@ -6491,7 +6491,6 @@ class CommonUtil {
   }
 
   showErrorLogPopUp(ErrorAppLogDataModel errorAppLogDataModel) {
-    return;
     final scrollController = ScrollController();
     final dialog = StatefulBuilder(builder: (context, setState) {
       return WillPopScope(

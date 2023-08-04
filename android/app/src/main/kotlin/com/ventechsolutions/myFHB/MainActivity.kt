@@ -2161,20 +2161,20 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 override fun onListen(arguments: Any?, events: EventSink?) {
                     BLEEventChannel = events!!
                     measurementNotTaken=true
-                    //onCancel("")
+                    onCancel("")
                     Log.d("BLE VITALS", "StartingPoint")
-                    /*BleManager.getInstance().init(application)
+                    BleManager.getInstance().init(application)
                     BleManager.getInstance()
                         .enableLog(true)
                     // .setReConnectCount(1, 5000)
                     // .setConnectOverTime(20000).operateTimeout = 5000
 //                    val temp = checkPermissionStartScan(false)
-                    startScanTimer()*/
+                    startScanTimer()
                 }
 
                 override fun onCancel(arguments: Any?) {
                     Log.d("BLE_SCAN_CANCEL", "bleScanCancel")
-                    //stopScan()
+                    stopScan()
                     gManager?.scanLeDevice(false)
                     gManager?.disconnect()
                     gManager?.destroy()
@@ -2443,13 +2443,13 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             if (call.method == "bleconnect") {
                 // bluetoothFlutterResult=result
                 Log.d("BLE VITALS", "StartingPoint")
-                /*BleManager.getInstance().init(application)
+                BleManager.getInstance().init(application)
                 BleManager.getInstance()
                     .enableLog(true)
                     .setReConnectCount(1, 5000)
                     .setConnectOverTime(20000).operateTimeout = 5000
 
-                val temp = checkPermissionStartScan(false)*/
+                val temp = checkPermissionStartScan(false)
 
 /*                try {
                     statusBleTimer = Timer()
@@ -2487,7 +2487,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         ).setMethodCallHandler { call, result ->
             if (call.method == "bleScanCancel") {
                 Log.d("BLE_SCAN_CANCEL", "bleScanCancel")
-                //stopScan()
+                stopScan()
                 LSBluetoothManager.getInstance().stopDeviceSync()
                 LSBluetoothManager.getInstance().stopDiscovery()
                 LSBluetoothManager.getInstance().stopSearch()
