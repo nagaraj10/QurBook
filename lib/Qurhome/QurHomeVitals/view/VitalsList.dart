@@ -129,8 +129,8 @@ class _VitalsListState extends State<VitalsList> {
       mInitialTime = DateTime.now();
       //onInit();
       super.initState();
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -139,8 +139,8 @@ class _VitalsListState extends State<VitalsList> {
   onInit() async {
     try {
       qurhomeDashboardController.getModuleAccess();
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -159,9 +159,9 @@ class _VitalsListState extends State<VitalsList> {
         'screenSessionTime':
             '${DateTime.now().difference(mInitialTime).inSeconds} secs'
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -446,8 +446,8 @@ class _VitalsListState extends State<VitalsList> {
           averageForSys = '';
           averageForDia = '';
         }
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForSys = '';
         averageForDia = '';
@@ -508,8 +508,8 @@ class _VitalsListState extends State<VitalsList> {
                 ? deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage
                     .toString()
                 : '';
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForFasting = '';
         averageForPP = '';
@@ -585,8 +585,8 @@ class _VitalsListState extends State<VitalsList> {
                           .oxygenLevelAverage
                           .toString()
                       : '';
-            } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+            } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
               averageForPul = '';
               averageForPRBpm = '';
@@ -601,8 +601,8 @@ class _VitalsListState extends State<VitalsList> {
           averageForPRBpm = '';
           prbPMOxi = '';
         }
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForPulForBp = '';
         averageForPul = '';
@@ -618,8 +618,8 @@ class _VitalsListState extends State<VitalsList> {
                 .oxygenSaturation!.entities![0].averageAsOfNow!.oxygenLevelAverage
                 .toString()
             : '';
-      } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForSPO2 = '';
       }
@@ -656,8 +656,8 @@ class _VitalsListState extends State<VitalsList> {
                 .bodyTemperature!.entities![0].averageAsOfNow!.temperatureAverage
                 .toString()
             : '';
-      } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForTemp = '';
       }
@@ -666,8 +666,8 @@ class _VitalsListState extends State<VitalsList> {
             deviceValues!.bodyTemperature!.entities![0].temperatureUnit != null
                 ? deviceValues!.bodyTemperature!.entities![0].temperatureUnit!.code
                 : '';
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         unitForTemp = '';
       }
@@ -704,8 +704,8 @@ class _VitalsListState extends State<VitalsList> {
             ? deviceValues!.bodyWeight!.entities![0].averageAsOfNow!.weightAverage
                 .toString()
             : '';
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForWeigh = '';
       }
@@ -713,8 +713,8 @@ class _VitalsListState extends State<VitalsList> {
         unitForWeight = deviceValues!.bodyWeight!.entities![0].weightUnit != null
             ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
             : '';
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         unitForWeight = '';
       }

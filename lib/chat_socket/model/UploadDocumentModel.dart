@@ -12,8 +12,8 @@ class UploadDocumentModel {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -37,8 +37,8 @@ class Result {
     try {
       chatMessageId = json['chatMessageId'];
       fileUrl = json['fileUrl'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -83,8 +83,8 @@ class AddFamilyOTPResponse {
       isSuccess = json['isSuccess'];
       message = json['message'];
       result = json['result'] != null ? Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -199,8 +199,8 @@ class Result {
       childInfo = json['childInfo'] != null
               ? ChildInfo.fromJson(json['childInfo'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -270,8 +270,8 @@ class ContactInfo {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       email = json['email'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -395,8 +395,8 @@ class ChildInfo {
       additionalInfo = json['additionalInfo'] != null
               ? AdditionalInfos.fromJson(json['additionalInfo'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -450,8 +450,8 @@ class HeightObjNew {
     try {
       valueFeet = json['valueFeet'];
       valueInches = json['valueInches'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -480,15 +480,15 @@ class AdditionalInfos {
             ? HeightObjNew.fromJson(json['height'])
             : null;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     weight = json['weight'];
     try {
       height = json['height'];
       weight = json['weight'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

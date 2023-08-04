@@ -99,8 +99,8 @@ class Booked {
               ? null
               : List<UserAddressCollection3>.from(json[parameters.strUserAddressCollection3]
                   .map((x) => UserAddressCollection3.fromJson(x)));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

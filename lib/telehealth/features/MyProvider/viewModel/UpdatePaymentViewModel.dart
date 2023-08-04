@@ -25,8 +25,8 @@ class UpdatePaymentViewModel {
               paymentRequestId, isFromRazor, signature);
       updatePaymentModel = _updatePaymentModel;
       return updatePaymentModel;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -42,8 +42,8 @@ class UpdatePaymentViewModel {
               paymentOrderId, paymentRequestId, isFromRazor, signature);
       updatePaymentStatusModel = _updatePaymentStatusSubscribe;
       return updatePaymentStatusModel;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -55,8 +55,8 @@ class UpdatePaymentViewModel {
       await updatePaymentService.failureRetry(appointmentId);
       paymentFailureRetryModel = paymentFailure;
       return paymentFailureRetryModel;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }

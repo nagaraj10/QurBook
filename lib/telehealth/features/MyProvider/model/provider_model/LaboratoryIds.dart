@@ -99,8 +99,8 @@ class LaboratoryIds {
       entityCode = json[parameters.strentityCode];
       goFhbCode = json[parameters.strgoFhbCode];
       labPatientMappingId = json[parameters.strlabPatientMappingId];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

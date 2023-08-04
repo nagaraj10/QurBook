@@ -192,8 +192,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       //   });
       // });
       //}
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     /* if (widget.arguments.fromClass == CommonConstants.my_family) {
@@ -232,8 +232,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             //     emailController.text =
             //         myProf.result.userContactCollection3[0].email;
           }
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           mobileNoController.text = '';
           emailController.text = '';
         }
@@ -246,7 +246,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         mobileNoController.text =
             myProf.result.userContactCollection3[0].phoneNumber;
         emailController.text = myProf.result.userContactCollection3[0].email;
-      } catch (e) {
+      } catch (e,stackTrace) {
         mobileNoController.text = '';
         emailController.text = '';
       }
@@ -511,8 +511,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             selectedBloodRange = null;
           }
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         selectedBloodGroup = null;
         selectedBloodRange = null;
       }

@@ -27,8 +27,8 @@ class PatientConfirmPasswordModel {
       source = json[strsource];
       message = json[strmessage];
       isSuccess = json[strIsSuccess];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

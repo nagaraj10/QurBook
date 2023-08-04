@@ -31,8 +31,8 @@ class CallDialWidget extends StatelessWidget {
             if (await canLaunch('tel:$phoneNumber')) {
               await launch('tel:$phoneNumber');
             }
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             print(e);
           }
         },

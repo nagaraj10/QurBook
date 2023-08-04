@@ -15,8 +15,8 @@ class RefundInfo {
       payload = json[parameters.strPayload] != null
               ? new Payload.fromJson(json[parameters.strPayload])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

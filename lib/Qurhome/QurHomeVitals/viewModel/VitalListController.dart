@@ -22,8 +22,8 @@ class VitalListController extends GetxController {
       final response = lastMeasureSyncFromJson(res);
       final result = response.result;
       return result;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

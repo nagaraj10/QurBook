@@ -54,8 +54,8 @@ class NotificationResult {
               : null;
       isActionDone = json['isActionDone'];
       isUnread = json['isUnread'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

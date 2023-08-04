@@ -16,8 +16,8 @@ class ResheduleAppointmentViewModel extends ChangeNotifier {
           bookingId as List<String>, slotNumber, resheduleDate, doctorSessionId);
       resheduleAppointmentModel = resheduleAp;
       return resheduleAppointmentModel;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }

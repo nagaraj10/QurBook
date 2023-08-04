@@ -54,7 +54,7 @@ class FetchNotificationViewModel extends ChangeNotifier {
     //   this.loadingStatus = LoadingStatus.completed;
     //   notifyListeners();
     //   return _notificationModel;
-    // } catch (e) {
+    // } catch (e,stackTrace) {
     //   this.loadingStatus = LoadingStatus.empty;
     //   notifyListeners();
     // }
@@ -88,8 +88,8 @@ class FetchNotificationViewModel extends ChangeNotifier {
       body[qr_clearIds] = deleteLogId;
       final status = await _fetchNotificationService.clearNotifications(body);
       fetchNotifications();
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
       fetchNotifications();

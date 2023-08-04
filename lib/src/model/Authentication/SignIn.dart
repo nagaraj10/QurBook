@@ -20,8 +20,8 @@ class SignIn {
        response = json[parameters.strResponse] != null
                ? SignInAndSignUpResponse.fromJson(json[parameters.strResponse])
                : null;
-     } catch (e) {
-       CommonUtil().appLogs(message: e.toString());
+     } catch (e,stackTrace) {
+       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
      }
   }
 

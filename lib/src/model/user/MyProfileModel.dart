@@ -16,8 +16,8 @@ class MyProfileModel {
       message = json['message'];
       result =
           json['result'] != null ? MyProfileResult.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

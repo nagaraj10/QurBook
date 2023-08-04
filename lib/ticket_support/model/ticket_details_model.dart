@@ -20,8 +20,8 @@ class TicketDetailResponseModel {
       message = json['message'];
       result =
               json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -47,8 +47,8 @@ class Result {
       success = json['success'];
       ticket =
               json['ticket'] != null ? new Ticket.fromJson(json['ticket']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -214,11 +214,11 @@ class Ticket {
           dataFields[strCity] = cityName;
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       if (kDebugMode) {
         print(e.toString());
       }
-      CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -301,8 +301,8 @@ class Attachments {
       type = json['type'];
       date = json['date'];
       fileKey = json['fileKey'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -329,8 +329,8 @@ class Tags {
   Tags.fromJson(dynamic json) {
     try {
       _id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -355,8 +355,8 @@ class Notes {
   Notes.fromJson(dynamic json) {
     try {
       _id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -387,8 +387,8 @@ class Comments {
       owner = json['owner'] != null ? new Owner.fromJson(json['owner']) : null;
       date = json['date'];
       comment = json['comment'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -429,8 +429,8 @@ class Owner {
       email = json['email'];
       role = json['role'] != null ? new Role.fromJson(json['role']) : null;
       title = json['title'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -472,8 +472,8 @@ class Subscribers {
       fullname = json['fullname'];
       title = json['title'];
       role = json['role'] != null ? new Role.fromJson(json['role']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -518,8 +518,8 @@ class Role {
       isAdmin = json['isAdmin'];
       isAgent = json['isAgent'];
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -567,8 +567,8 @@ class Group {
       sId = json['_id'];
       name = json['name'];
       iV = json['__v'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -598,8 +598,8 @@ class SendMailTo {
   SendMailTo.fromJson(dynamic json) {
     try {
       _id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -641,8 +641,8 @@ class Members {
       email = json['email'];
       role = json['role'] != null ? new Role.fromJson(json['role']) : null;
       title = json['title'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -684,8 +684,8 @@ class Type {
       additionalInfo = json['additionalInfo'] != null
           ? new AdditionalInfoType.fromJson(json['additionalInfo'])
           : null;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -701,9 +701,9 @@ class Type {
       if (this.additionalInfo != null) {
         data['additionalInfo'] = this.additionalInfo!.toJson();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;
@@ -743,8 +743,8 @@ class Priorities {
       iV = json['__v'];
       durationFormatted = json['durationFormatted'];
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -780,8 +780,8 @@ class History {
       owner =
               json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
       date = json['date'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -813,9 +813,9 @@ class AdditionalInfoType {
         });
       }
       healthOrgTypeId = json['healthOrgTypeId'];
-    } catch (e) {
+    } catch (e,stackTrace) {
 
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -827,9 +827,9 @@ class AdditionalInfoType {
         data['field'] = this.field!.map((v) => v.toJson()).toList();
       }
       data['healthOrgTypeId'] = this.healthOrgTypeId;
-    } catch (e) {
+    } catch (e,stackTrace) {
 
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;
@@ -886,9 +886,9 @@ class Field {
       placeholder = json['placeholder'];
       selValueDD = null;
       isVisible = json['is_visible'];
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -910,9 +910,9 @@ class Field {
       data['display_name'] = this.displayName;
       data['placeholder'] = this.placeholder;
       data['is_visible'] = this.isVisible;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
 
@@ -932,9 +932,9 @@ class FieldData {
       id = json['id'];
       name = json['name'];
       fieldName = null;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -944,9 +944,9 @@ class FieldData {
     try {
       data['id'] = this.id;
       data['name'] = this.name;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;

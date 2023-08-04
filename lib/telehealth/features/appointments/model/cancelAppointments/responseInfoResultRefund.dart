@@ -38,8 +38,8 @@ class ResponseInfoResultRefund {
       transactionId = json[parameters.strTransaction_id];
       creatorName = json[parameters.strCreator_name];
       createdAt = json[parameters.strCreated_at];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

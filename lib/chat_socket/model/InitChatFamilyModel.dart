@@ -12,8 +12,8 @@ class InitChatFamilyModel {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -35,8 +35,8 @@ class Result {
   Result.fromJson(Map<String, dynamic> json) {
     try {
       chatListId = json['chatListId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

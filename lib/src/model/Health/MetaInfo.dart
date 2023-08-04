@@ -78,8 +78,8 @@ class MetaInfo {
               : null;
       dateOfExpiry = json[parameters.strdateOfExpiry];
       idType = json[parameters.stridType] != null ? json[parameters.stridType] : '';
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

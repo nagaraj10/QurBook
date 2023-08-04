@@ -16,8 +16,8 @@ class CancelAppointmentViewModel extends ChangeNotifier {
       await cancelAppointmentsService.getCancelAppointment(bookingId,date);
       cancelAppointmentModel = cancelAppointment;
       return cancelAppointmentModel;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }

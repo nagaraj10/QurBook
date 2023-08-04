@@ -342,8 +342,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     myProf.result!.userContactCollection3![0]!.email!;
               }
             }
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
             if (sharedbyme.child!.isVirtualUser!) {
               mobileNoController.text =
@@ -364,8 +364,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 sharedbyme.child!.userContactCollection3![0].email!;
           }
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         if (sharedbyme.child!.isVirtualUser!) {
           mobileNoController.text =
@@ -427,9 +427,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           } else {
             isKg = false;
           }
-        } catch (e) {
+        } catch (e,stackTrace) {
 
-      CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           if (CommonUtil.REGION_CODE == 'IN') {
             isFeetOrInches = true;
             isKg = true;
@@ -740,8 +740,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             selectedBloodRange = null;
           }
         }
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         selectedBloodGroup = null;
         selectedBloodRange = null;

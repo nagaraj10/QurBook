@@ -15,8 +15,8 @@ class CareGiverPatientList {
               result!.add(CareGiverPatientListResult.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -50,8 +50,8 @@ class CareGiverPatientListResult {
       middleName = json['middleName'];
       lastName = json['lastName'];
       relationship = json['relationship'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -189,9 +189,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                                 CreateTicketScreen(ticketList[i])),
                       )
                     : null;
-              } catch (e) {
+              } catch (e,stackTrace) {
                 //print(e);
-                      CommonUtil().appLogs(message: e.toString());
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
               }
             },
             child: Container(

@@ -174,8 +174,8 @@ class Input {
       source = json['source'];
       uid = json['uid'];
       providerId = json['providerId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

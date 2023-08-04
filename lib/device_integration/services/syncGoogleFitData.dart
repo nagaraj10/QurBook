@@ -123,7 +123,7 @@ class SyncGoogleFitData {
         // throw "$errorString";
       }
       return true;
-    } catch (e) {
+    } catch (e,stackTrace) {
       throw 'Failed to sync GoogleFit Data please try again later';
     }
   }
@@ -135,8 +135,8 @@ class SyncGoogleFitData {
       final response = await _deviceHealthRecord.postDeviceData(params);
 
       return response;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       rethrow;
     }
@@ -154,8 +154,8 @@ class SyncGoogleFitData {
         return null;
       }
       return lastSync.result!.lastSyncDateTime;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }

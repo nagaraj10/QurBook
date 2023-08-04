@@ -14,8 +14,8 @@ class SheelaBadgeModel {
       message = json['message'];
       result =
           json['result'] != null ? new SheelaBadgeResult.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -39,8 +39,8 @@ class SheelaBadgeResult {
   SheelaBadgeResult.fromJson(Map<String, dynamic> json) {
     try {
       queueCount = json['queueCount'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
    /* if (json['queueDetails'] != null) {
       queueDetails = <QueueDetails>[];
@@ -72,8 +72,8 @@ class QueueDetails {
       messageDetails = json['messageDetails'] != null
               ? new MessageDetails.fromJson(json['messageDetails'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -114,8 +114,8 @@ class MessageDetails {
       messageContent = json['messageContent'] != null
               ? new MessageContent.fromJson(json['messageContent'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -148,8 +148,8 @@ class Content {
     try {
       messageBody = json['messageBody'];
       messageTitle = json['messageTitle'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -182,8 +182,8 @@ class Payload {
       redirectTo = json['redirectTo'];
       notificationListId = json['notificationListId'];
       isSheela = json['isSheela'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -216,8 +216,8 @@ class MessageContent {
       messageTitle = json['messageTitle'];
       rawMessageBody = json['rawMessageBody'];
       rawMessageTitle = json['rawMessageTitle'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

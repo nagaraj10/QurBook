@@ -89,8 +89,8 @@ class AppointmentInfoModel {
       isRefunded = json[strIsRefunded];
       isFollowupFee = json[strIsFollowUpFee];
       createdOn = json[strCreatedOn];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -143,8 +143,8 @@ class DoctorSession {
   DoctorSession.fromJson(Map<String, dynamic> json) {
     try {
       id = json[strId];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

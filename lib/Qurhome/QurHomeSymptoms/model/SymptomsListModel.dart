@@ -14,8 +14,8 @@ class SymptomsListModel {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -48,8 +48,8 @@ class Result {
               data!.add(new SymptomListData.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -254,8 +254,8 @@ class SymptomListData {
               forms!.add(new Forms.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -364,8 +364,8 @@ class Providers {
       ts = json['ts'];
       prtags = json['prtags'];
       providerType = json['providerType'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -441,8 +441,8 @@ class Fields {
       depth = json['depth'];
       ts = json['ts'];
       deleted = json['deleted'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -592,8 +592,8 @@ class Doneevents {
       ack = json['ack'];
       parentTplanid = json['parentTplanid'];
       description = json['description'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -684,8 +684,8 @@ class PersonalPlanCollection {
       ts = json['ts'];
       deleted = json['deleted'];
       metadata = json['metadata'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -752,8 +752,8 @@ class Forms {
       deleted = json['deleted'];
       fieldcount = json['fieldcount'];
       points = json['points'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

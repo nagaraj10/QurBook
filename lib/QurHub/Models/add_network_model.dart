@@ -24,8 +24,8 @@ class AddNetworkModel {
       diagnostics = json['diagnostics'] != null
           ? new Diagnostics.fromJson(json['diagnostics'])
           : null;
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -40,8 +40,8 @@ class AddNetworkModel {
       if (this.diagnostics != null) {
         data['diagnostics'] = this.diagnostics!.toJson();
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;

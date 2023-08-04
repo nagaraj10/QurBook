@@ -41,8 +41,8 @@ class RefundStatus {
       referenceData = json[parameters.strReferenceData] != null
               ? new ReferenceData.fromJson(json[parameters.strReferenceData])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

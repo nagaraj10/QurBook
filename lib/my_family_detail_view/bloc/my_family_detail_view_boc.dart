@@ -80,8 +80,8 @@ class MyFamilyDetailViewBloc implements BaseBloc {
       final userHealthResponseList =
           await _healthReportListForUserRepository.getHealthReportList(userId!);
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       healthReportListSink.add(ApiResponse.error(e.toString()));
     }
@@ -95,8 +95,8 @@ class MyFamilyDetailViewBloc implements BaseBloc {
       userHealthResponseList =
           await _healthReportListForUserRepository.getHealthReportLists(userId);
       healthReportListSinks.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       healthReportListSinks.add(ApiResponse.error(e.toString()));
     }
@@ -111,8 +111,8 @@ class MyFamilyDetailViewBloc implements BaseBloc {
     try {
       categoryResponseList =
           await _healthReportListForUserRepository.getCategoryList();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       categoryListSink.add(ApiResponse.error(e.toString()));
     }
@@ -129,8 +129,8 @@ class MyFamilyDetailViewBloc implements BaseBloc {
       categoryResponseList =
           await _healthReportListForUserRepository.getCategoryLists();
       categoryListSinks.add(ApiResponse.completed(categoryResponseList));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       categoryListSinks.add(ApiResponse.error(e.toString()));
     }

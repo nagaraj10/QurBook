@@ -16,8 +16,8 @@ class ChatHistoryModel {
               result!.add(new ChatHistoryResult.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -65,8 +65,8 @@ class ChatHistoryResult {
               ? new Messages.fromJson(json['messages'])
               : null;
       documentId = json['documentId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -115,8 +115,8 @@ class Messages {
       timestamp = json['timestamp'] != null
               ? new Timestamp.fromJson(json['timestamp'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -145,8 +145,8 @@ class Timestamp {
     try {
       sSeconds = json['_seconds'];
       sNanoseconds = json['_nanoseconds'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

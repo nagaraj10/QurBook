@@ -28,8 +28,8 @@ class Owner {
       _email = json['email'];
       _role = json['role'] != null ? Role.fromJson(json['role']) : null;
       _title = json['title'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   String? _id;

@@ -343,9 +343,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                       onPressed: () {
                                                                                         try {
                                                                                           Navigator.pop(context);
-                                                                                        } catch (e) {
+                                                                                        } catch (e,stackTrace) {
                                                                                           //print(e);
-                                                                                          CommonUtil().appLogs(message: e.toString());
+                                                                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                                                                                         }
                                                                                       },
                                                                                       child: TextWidget(
@@ -368,9 +368,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                             Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
                                                                                             Navigator.pop(context);
                                                                                           }
-                                                                                        } catch (e) {
+                                                                                        } catch (e,stackTrace) {
                                                                                           //print(e);
-                                                                                          CommonUtil().appLogs(message: e.toString());
+                                                                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                                                                                         }
                                                                                       },
                                                                                       child: TextWidget(
@@ -1056,7 +1056,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 try {
                                                                   Navigator.pop(
                                                                       context);
-                                                                } catch (e) {
+                                                                } catch (e,stackTrace) {
                                                                   //print(e);
                                                                   CommonUtil().appLogs(
                                                                       message: e
@@ -1126,7 +1126,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
                                                                   Navigator.pop(
                                                                       context);
-                                                                } catch (e) {
+                                                                } catch (e,stackTrace) {
                                                                   //print(e);
                                                                   CommonUtil().appLogs(
                                                                       message: e

@@ -619,8 +619,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           averageForSys = '';
           averageForDia = '';
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForSys = '';
         averageForDia = '';
@@ -682,8 +682,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             ? deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage
                 .toString()
             : '';
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForFasting = '';
         averageForPP = '';
@@ -769,8 +769,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           .averageAsOfNow!.oxygenLevelAverage
                           .toString()
                       : '';
-            } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+            } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
               averageForPul = '';
               averageForPRBpm = '';
@@ -785,8 +785,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           averageForPRBpm = '';
           prbPMOxi = '';
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForPulForBp = '';
         averageForPul = '';
@@ -802,8 +802,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .oxygenLevelAverage
                 .toString()
             : '';
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForSPO2 = '';
       }
@@ -841,8 +841,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .temperatureAverage
                 .toString()
             : '';
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForTemp = '';
       }
@@ -852,8 +852,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 ? deviceValues!
                     .bodyTemperature!.entities![0].temperatureUnit!.code
                 : '';
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         unitForTemp = '';
       }
@@ -891,8 +891,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .bodyWeight!.entities![0].averageAsOfNow!.weightAverage
                 .toString()
             : '';
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         averageForWeigh = '';
       }
@@ -902,8 +902,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             deviceValues!.bodyWeight!.entities![0].weightUnit != null
                 ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
                 : '';
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         unitForWeight = '';
       }

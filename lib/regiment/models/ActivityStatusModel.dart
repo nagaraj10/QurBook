@@ -16,8 +16,8 @@ class ActivityStatusModel {
               result!.add(new ActivityStatusResult.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -41,8 +41,8 @@ class ActivityStatusResult {
     try {
       planStatus = json['PlanStatus'];
       curDate = json['CurDate'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

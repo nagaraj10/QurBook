@@ -57,8 +57,8 @@ class Data {
 
       specialist = json['specialist'];
       city = json['city'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

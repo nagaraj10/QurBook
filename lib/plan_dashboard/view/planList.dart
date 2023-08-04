@@ -89,8 +89,8 @@ class _MyPlanState extends State<PlanList> {
                 : ShowCaseWidget.of(_myContext)!
                     .startShowCase([_subscribeKey]));
       });
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

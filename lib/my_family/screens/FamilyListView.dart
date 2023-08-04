@@ -94,8 +94,8 @@ class FamilyListView {
               id: myProfile!.result!.id,
               nickName: 'Self',
               relationship: RelationsShipModel(name: 'Self')));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     /* if (sharedByMeList == null) {

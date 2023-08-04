@@ -16,8 +16,8 @@ class ReferAFriendRequest {
             });
           }
       source = json['source'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -41,8 +41,8 @@ class Contacts {
     try {
       phoneNumber = json['phoneNumber'];
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

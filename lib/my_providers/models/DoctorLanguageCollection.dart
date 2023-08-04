@@ -24,8 +24,8 @@ class DoctorLanguageCollection {
       language = json['language'] != null
               ? Language.fromJson(json['language'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -79,9 +79,9 @@ class AdditionalInfo {
       issymptom = json.containsKey('issymptom') ? json['issymptom'] : false;
       try {
             if (json['uformdata'] != null) getDynamicFieldList(json['uformdata']);
-          } catch (e) {
+          } catch (e,stackTrace) {
             print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
             dynamicFieldModel = [];
           }
@@ -89,8 +89,8 @@ class AdditionalInfo {
       try {
             if (json['uform'] != null)
               getDynamicFieldListFromUfrom(jsonDecode(json['uform']));
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
             print(e);
 
@@ -130,8 +130,8 @@ class AdditionalInfo {
       risklevel = json.containsKey('risklevel') ? json['risklevel'] : 0;
       escalatedComment =
               json.containsKey('escalated_comment') ? json['escalated_comment'] : '';
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -180,8 +180,8 @@ class AdditionalInfo {
             : DynamicFieldModel()));
     try {
       dynamicFieldModelfromUForm?.sort((a, b) => a?.seq.compareTo(b?.seq));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -223,8 +223,8 @@ class AdditionalInfo {
     }
     try {
       dynamicFieldModel?.sort((a, b) => a?.seq.compareTo(b?.seq));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }

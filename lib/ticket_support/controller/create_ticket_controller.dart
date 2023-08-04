@@ -48,9 +48,9 @@ class CreateTicketController extends GetxController {
   void onClose() {
     try {
       super.onClose();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -59,9 +59,9 @@ class CreateTicketController extends GetxController {
   void onInit() {
     try {
       super.onInit();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -93,12 +93,12 @@ class CreateTicketController extends GetxController {
           }
         });
       } else {}
-    } catch (e) {
+    } catch (e,stackTrace) {
       labsList = [];
       labsList!.insert(0, new Hospitals(name: 'Select'));
       isCTLoading.value = false;
       isPreferredLabDisable.value = true;
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -132,12 +132,12 @@ class CreateTicketController extends GetxController {
           }
         });
       } else {}
-    } catch (e) {
+    } catch (e,stackTrace) {
       doctorsList = [];
       doctorsList!.insert(0, new Doctors(user: User(name: 'Select')));
       isCTLoading.value = false;
       isPreferredDoctorDisable.value = true;
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -169,8 +169,8 @@ class CreateTicketController extends GetxController {
       field.setFieldData(providerList);
 
       isCTLoading.value = false;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         print(e.toString());

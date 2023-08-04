@@ -118,8 +118,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             ? claimAmountTotal!.split(".")[0]
             : claimAmountTotal;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     memberShipStartDate = new CommonUtil().getMemberSipStartDate();
@@ -565,8 +565,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
               ' ' +
               myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     if (sharedByMeList == null) {

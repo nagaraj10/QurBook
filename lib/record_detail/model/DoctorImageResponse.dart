@@ -13,8 +13,8 @@ class DoctorImageResponse {
       status = json['status'];
       success = json['success'];
       response = json['response'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -16,8 +16,8 @@ class GetGFDataFromFHBRepo {
       var response = await _deviceHealthRecord!
           .queryBydeviceInterval(params, filter: filter);
       return response;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -36,8 +36,8 @@ class GetGFDataFromFHBRepo {
       final response = await _getDataByDataType(params, filter: filter);
       final res = json.encode(response);
       return res;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -56,8 +56,8 @@ class GetGFDataFromFHBRepo {
       final response = await _getDataByDataType(params);
       final res = json.encode(response);
       return res;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -76,8 +76,8 @@ class GetGFDataFromFHBRepo {
       final response = await _getDataByDataType(params, filter: filter);
       var res = json.encode(response);
       return res;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -96,8 +96,8 @@ class GetGFDataFromFHBRepo {
       final response = await _getDataByDataType(params, filter: filter);
       var res = json.encode(response);
       return res;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -116,8 +116,8 @@ class GetGFDataFromFHBRepo {
       final response = await _getDataByDataType(params, filter: filter);
       final res = json.encode(response);
       return res;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -136,8 +136,8 @@ class GetGFDataFromFHBRepo {
       final response = await _getDataByDataType(params, filter: filter);
       final res = json.encode(response);
       return res;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -148,8 +148,8 @@ class GetGFDataFromFHBRepo {
       }
       final response = await _deviceHealthRecord!.getlastMeasureSync();
       return response;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }

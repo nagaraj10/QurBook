@@ -50,8 +50,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       getConfiguration();
       super.initState();
       //initilizeViewModel();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -61,8 +61,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     try {
       addPlanButton = await PreferenceUtil.getAddPlanBtn();
       //setState(() {});
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -552,8 +552,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       } else {
         return constants.strNoPlansAdded;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return constants.strNoPlansAdded;
     }

@@ -13,8 +13,8 @@ class ConfigData {
     try {
       _name = json['name'];
       _value = json['value'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   String? _name;

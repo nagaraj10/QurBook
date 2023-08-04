@@ -18,8 +18,8 @@ class BPValues {
               result!.add(BPResult.fromJson(bpvalue));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -61,8 +61,8 @@ class BPResult {
       endDateTime = json[strEndTimeStamp];
       systolic = json[strParamSystolic];
       diastolic = json[strParamDiastolic];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

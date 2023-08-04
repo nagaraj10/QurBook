@@ -25,8 +25,8 @@ class SubscribeViewModel extends ChangeNotifier {
       await Provider.of<UserPlansViewModel>(Get.context!, listen: false)
           .getUserPlanInfo();
       return myPlanListModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -38,8 +38,8 @@ class SubscribeViewModel extends ChangeNotifier {
       await Provider.of<UserPlansViewModel>(Get.context!, listen: false)
           .getUserPlanInfo();
       return myPlanListModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -49,8 +49,8 @@ class SubscribeViewModel extends ChangeNotifier {
       var createSubscribeModel =
           await myPlanService.createSubscribe(packageId, userid);
       return createSubscribeModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }

@@ -30,8 +30,8 @@ class SheelAIAPIService {
       // print("-----------------Sheela response---------------------");
       // print(response.body);
       return response!;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       throw Exception('$e was thrown');
     }
@@ -54,8 +54,8 @@ class SheelAIAPIService {
       // print("-----------------Sheela response---------------------");
       // print(response.body);
       return response!;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       throw Exception('$e was thrown');
     }
