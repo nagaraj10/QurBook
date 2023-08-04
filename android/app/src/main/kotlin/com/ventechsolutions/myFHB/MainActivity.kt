@@ -543,7 +543,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     }
                 } else if (p1 == BluetoothStatus.BLE_STATUS_CONNECTING) {
                     if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+                        //MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
 //                            BLEEventChannel.success("scanstarted|connection started")
                     }
                 }else if (p1 == BluetoothStatus.BLE_ERROR){
@@ -659,7 +659,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                         runOnUiThread {
                             Log.e("qurhealth","wowgostatus: scanstarted")
                         }
-                        MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+                        //MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
 
 //                        BLEEventChannel.success("scanstarted|connection started")
                     }
@@ -800,7 +800,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                         Log.e("qurhealth","wowgostatus: scanstarted")
                     }
 
-                    MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+                    //MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
 //                        BLEEventChannel.success("scanstarted|connection started")
                 }
             }else if (p1 == BluetoothStatus.BLE_ERROR){
@@ -1235,7 +1235,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             }
             if(status!=null&&status==1&&measurementNotTaken){
                 if (::BLEEventChannel.isInitialized) {
-                    MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
+                    //MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
                 }
             }else if(status!=null&&status==2&&measurementNotTaken){
                 if (::BLEEventChannel.isInitialized) {
@@ -2361,6 +2361,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             Log.d("BLE VITALS", "call method"+call.method)
             Log.d("BLE VITALS", "call arguments"+call.arguments)
             measurementNotTaken=true;
+            MainThreadEventSink(BLEEventChannel).success("scanstarted|connection started")
             if (call.method == "scanAll") {
                 scanType=call.method
                 deviceType=""
@@ -2672,6 +2673,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     }
 
     fun startTransteckWowGoDevice(){
+        LSBluetoothManager.getInstance().setDevices(null)
         LSBluetoothManager.getInstance().resetSyncingListener(onSyncingListener)
         LSBluetoothManager.getInstance().searchDevice(listOf(LSDeviceType.WeightScale,LSDeviceType.BloodGlucoseMeter),searchingListener)
     }
