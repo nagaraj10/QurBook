@@ -720,9 +720,6 @@ class SheelaBLEController extends GetxController {
     addingDevicesInHublist = false;
     isFromVitals = false;
     filteredDeviceType = '';
-    hublistController.bleMacId = null;
-    hublistController.bleDeviceType = null;
-    hublistController.manufacturer = null;
     removeTimeOutTimer();
     SheelaController.isBLEStatus.value = BLEStatus.Disabled;
   }
