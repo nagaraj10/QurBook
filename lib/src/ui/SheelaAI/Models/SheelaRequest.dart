@@ -56,8 +56,8 @@ class SheelaRequestModel {
       ProviderMsg = json['provider_msg'];
       directCall = json['directCall'];
       additionalInfo = json['additionalInfo'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

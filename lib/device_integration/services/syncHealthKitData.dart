@@ -18,8 +18,8 @@ class SyncHealthKitData {
   Future<void> activateHealthKit() async {
     try {
       await _hkHelper!.activateHealthKit();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       rethrow;
     }
@@ -87,8 +87,8 @@ class SyncHealthKitData {
       //   await postHealthKitData(heartRateParams);
       // }
       return true;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       throw 'Failed to sync Apple Health Data please try again later';
     }
@@ -101,8 +101,8 @@ class SyncHealthKitData {
       _deviceHealthRecord = DeviceHealthRecord();
       final response = await _deviceHealthRecord!.postDeviceData(params);
       return response;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       rethrow;
     }
@@ -119,8 +119,8 @@ class SyncHealthKitData {
 
       if (!lastSync.isSuccess!) return null;
       if (lastSync.result != null) return lastSync.result!.lastSyncDateTime;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }

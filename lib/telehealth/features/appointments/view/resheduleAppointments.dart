@@ -473,8 +473,8 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
           fees = new CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(fees))
               .toString();
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           widget = SizedBox.shrink();
         }

@@ -153,8 +153,8 @@ class Payload {
           }
       sheelaAudioMsgUrl =
               json["sheelaAudioMsgUrl"] == null ? null : json["sheelaAudioMsgUrl"];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

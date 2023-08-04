@@ -10,8 +10,8 @@ class FollowupIn {
   FollowupIn.fromJson(Map<String, dynamic> json) {
     try {
       days = json[parameters.strdays].cast<int>();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

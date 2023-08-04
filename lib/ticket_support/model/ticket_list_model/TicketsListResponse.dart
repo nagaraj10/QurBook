@@ -40,8 +40,8 @@ class TicketsListResponse {
       page = json['page'];
       prevPage = json['prevPage'];
       nextPage = json['nextPage'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -169,8 +169,8 @@ class Tickets {
           }
       uid = json['uid'];
       iV = json['__v'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -233,8 +233,8 @@ class Tags {
   Tags.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -269,8 +269,8 @@ class Subscribers {
       email = json['email'];
       role = json['role'] != null ? new Role.fromJson(json['role']) : null;
       title = json['title'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -312,8 +312,8 @@ class Role {
       normalized = json['normalized'];
       isAdmin = json['isAdmin'];
       isAgent = json['isAgent'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -350,8 +350,8 @@ class Group {
       public = json['public'];
       sId = json['_id'];
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -389,8 +389,8 @@ class Type {
       sId = json['_id'];
       name = json['name'];
       iV = json['__v'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -433,8 +433,8 @@ class Priorities {
       migrationNum = json['migrationNum'];
       defaultBool = json['defaultBool'];
       durationFormatted = json['durationFormatted'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -481,8 +481,8 @@ class Priority {
       defaultBool = json['defaultBool'];
       iV = json['__v'];
       durationFormatted = json['durationFormatted'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -517,8 +517,8 @@ class History {
       owner =
               json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
       date = json['date'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

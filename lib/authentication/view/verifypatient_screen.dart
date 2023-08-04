@@ -197,8 +197,8 @@ class _VerifyPatientState extends State<VerifyPatient>
                                   if (Navigator.canPop(context)) {
                                     Get.back();
                                   }
-                                } catch (e) {
-                                  CommonUtil().appLogs(message: e.toString());
+                                } catch (e,stackTrace) {
+                                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                                   print(e);
                                 }
                               },
@@ -675,8 +675,8 @@ class _VerifyPatientState extends State<VerifyPatient>
     try {
       var apiBaseHelper = ApiBaseHelper();
       final res = apiBaseHelper.updateLastVisited();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     if (widget.from == strFromSignUp) {
       if (widget.userConfirm!) {
@@ -754,8 +754,8 @@ class _VerifyPatientState extends State<VerifyPatient>
       var token = '';
       try {
         token = (await _firebaseMessaging.getToken())!;
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
       CommonUtil().OnInitAction();
       await CommonUtil()

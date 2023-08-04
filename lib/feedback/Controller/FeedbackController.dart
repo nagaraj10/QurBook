@@ -28,8 +28,8 @@ class FeedbackController extends GetxController {
         categories = feedbackCategoryTypeFromJson(response.body);
       }
       loadingData.value = false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
       loadingData.value = false;

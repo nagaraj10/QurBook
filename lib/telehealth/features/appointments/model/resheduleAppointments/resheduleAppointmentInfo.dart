@@ -93,8 +93,8 @@ class ResheduleAppointmentInfo {
       isRefunded = json['isRefunded'];
       isFollowupFee = json['isFollowupFee'];
       createdOn = json['createdOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

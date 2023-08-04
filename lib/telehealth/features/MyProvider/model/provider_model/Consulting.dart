@@ -10,8 +10,8 @@ class Consulting {
   Consulting.fromJson(Map<String, dynamic> json) {
     try {
       fee = json[parameters.strfee];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

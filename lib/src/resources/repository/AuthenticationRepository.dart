@@ -24,8 +24,8 @@ class AuthenticationRepository {
       if (response is String) {
         return SignIn.fromJson(convert.jsonDecode(response));
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return SignIn.fromJson(response);
@@ -97,8 +97,8 @@ class AuthenticationRepository {
       if (response is String) {
         return SignOutResponse.fromJson(convert.jsonDecode(response));
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return SignOutResponse.fromJson(response);

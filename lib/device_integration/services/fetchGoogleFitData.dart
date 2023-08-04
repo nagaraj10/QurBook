@@ -122,7 +122,7 @@ class GoogleFitData {
         var params = json.encode(healthRecord);
         return params;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       return strWeight;
     }
   }
@@ -175,8 +175,8 @@ class GoogleFitData {
         var params = json.encode(healthRecord);
         return params;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       return strDataTypeBP;
     }
   }
@@ -233,8 +233,8 @@ class GoogleFitData {
         final params = json.encode(healthRecord);
         return params;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return strGlusoceLevel;
     }
@@ -289,8 +289,8 @@ class GoogleFitData {
         final params = json.encode(healthRecord);
         return params;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return strTemperature;
     }
@@ -346,8 +346,8 @@ class GoogleFitData {
         var params = json.encode(healthRecord);
         return params;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return strOxgenSaturation;
     }
@@ -401,8 +401,8 @@ class GoogleFitData {
         var params = json.encode(healthRecord);
         return params;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return strHeartRate;
     }

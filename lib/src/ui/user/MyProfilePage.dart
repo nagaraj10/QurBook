@@ -117,13 +117,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (userid != null) {
           languageModelList = await languageBlock.getLanguage();
         }
-      } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
 
       return setValueLanguages(myProfile);
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       String currentLanguage = '';
       final lan = CommonUtil.getCurrentLanCode();
@@ -342,8 +342,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (profileImageFile != null) {
           profileImage = File(profileImageFile);
         }
-      } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       }
       return Container(
@@ -771,8 +771,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               ],
             ),
           ));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return Container(
         child: Center(
@@ -869,8 +869,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
           } else {
             isKg = false;
           }
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           if (CommonUtil.REGION_CODE == 'IND') {
             isFeetOrInches = true;

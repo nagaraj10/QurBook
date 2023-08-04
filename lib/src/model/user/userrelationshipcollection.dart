@@ -34,8 +34,8 @@ class UserRelationshipCollection {
       relationship = json['relationship'] != null
               ? Relationship.fromJson(json['relationship'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -147,8 +147,8 @@ class Parent {
       lastModifiedBy = json['lastModifiedBy'];
       lastModifiedOn = json['lastModifiedOn'];
       providerId = json['providerId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -219,8 +219,8 @@ class Relationship {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -56,8 +56,8 @@ class Refund {
       receiptUrl = json[parameters.strReceiptUrl];
       lastModifiedOn = json[parameters.strLastModifiedOn];
       id = json[parameters.strId];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

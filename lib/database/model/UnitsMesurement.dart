@@ -18,8 +18,8 @@ class UnitsMesurements {
       minValue = obj[parameters.strminValue];
       maxValue = obj[parameters.strmaxValue];
       range = obj[parameters.strRange];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

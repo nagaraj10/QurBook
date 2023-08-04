@@ -39,7 +39,7 @@ class PatientSignUp {
           }
       result =
               json[strResult] != null ? Result.fromJson(json[strResult]) : null;
-    } catch (e) {
+    } catch (e,stackTrace) {
       CommonUtil().appLogs(
           message: e.toString(),
           userName: (json[strfirstName] ?? "" + json[strlastName] ?? ""));
@@ -77,8 +77,8 @@ class UserContactCollection3 {
       phoneNumber = json[strphoneNumber];
       email = json[stremail];
       isPrimary = json[strisPrimary];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -101,7 +101,7 @@ class Result {
     try {
       userId = json[strUserId];
       userName = json[struserName];
-    } catch (e) {
+    } catch (e,stackTrace) {
       CommonUtil().appLogs(
           message: e.toString(),
           userName: json[struserName] != null ? json[struserName] : "");

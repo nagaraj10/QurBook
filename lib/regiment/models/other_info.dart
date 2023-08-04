@@ -20,8 +20,8 @@ class OtherInfo {
       needAudio = json['NeedAudio'];
       needVideo = json['NeedVideo'];
       needFile = json['NeedFile'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

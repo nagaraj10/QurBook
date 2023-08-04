@@ -35,8 +35,8 @@ class PaymentMode {
       createdBy = json[parameters.strCreatedBy];
       createdOn = json[parameters.strCreatedOn];
       lastModifiedOn = json[parameters.strLastModifiedOn];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

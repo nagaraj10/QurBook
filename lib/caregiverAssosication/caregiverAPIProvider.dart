@@ -39,8 +39,8 @@ class CaregiverAPIProvider {
         model.message!,
         model.isSuccess! ? Colors.green : Colors.red,
       );
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       FlutterToast().getToast(
         'Failed to approve the caregiver',
         Colors.red,
@@ -74,8 +74,8 @@ class CaregiverAPIProvider {
         model.message!,
         model.isSuccess! ? Colors.green : Colors.red,
       );
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       FlutterToast().getToast(
         'Failed to reject the caregiver',
         Colors.red,

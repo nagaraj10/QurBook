@@ -28,8 +28,8 @@ class ServiceCategory {
       isActive = json['isActive'];
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

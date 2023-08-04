@@ -91,8 +91,8 @@ class History {
       status = json[parameters.strStatus];
       paymentMediaMetaId = json[parameters.strPaymentMediaMetaId];
       refundMediaMetaId = json[parameters.strRefundMediaMetaId];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

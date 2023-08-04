@@ -175,8 +175,8 @@ class NotificationModel {
       viewRecordAction = message['viewRecordAction'];
       chatWithCC = message['chatWithCC'];
       appointmentId = message['appointmentId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -40,8 +40,8 @@ class CountryMetrics {
       tempUnit = obj[parameters.strtempUnit];
 
       weightUnit = obj[parameters.strweightUnit];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   CountryMetrics.map(obj) {

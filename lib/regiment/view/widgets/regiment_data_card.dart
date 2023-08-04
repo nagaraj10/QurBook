@@ -410,8 +410,8 @@ class RegimentDataCard extends StatelessWidget {
                   double.tryParse(vitalData.value)! >=
                       double.tryParse(vitalData.amin)!)
               : true;
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           //print(e);
         }
@@ -782,8 +782,8 @@ class RegimentDataCard extends StatelessWidget {
           Colors.black,
         );
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       LoaderClass.hideLoadingDialog(Get.context!);
     }

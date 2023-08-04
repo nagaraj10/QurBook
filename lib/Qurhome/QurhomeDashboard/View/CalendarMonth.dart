@@ -43,8 +43,8 @@ class _HomePageState extends State<CalendarMonth> {
       try {
         data = data.toList();
         _events = _groupEvents(data);
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
 
       return Column(
@@ -196,8 +196,8 @@ class _HomePageState extends State<CalendarMonth> {
           ),
         ],
       );
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -214,8 +214,8 @@ class _HomePageState extends State<CalendarMonth> {
         try {
           boolList.add(true);
           data[date] = boolList;
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           print(e);
         }

@@ -153,8 +153,8 @@ class CheckoutPageProvider extends ChangeNotifier {
             productList?.additionalInfo?.planType == "DIET") {
           updateDietPlanCount(false);
         }
-      } catch (e) {
-                                CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
       if (needToast) {
         FlutterToast().getToast(value.message!, Colors.green);

@@ -156,8 +156,8 @@ class ChatSocketViewModel extends ChangeNotifier {
           isFromFamilyList ?? false);
 
       return chatHistoryModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
   }
@@ -170,8 +170,8 @@ class ChatSocketViewModel extends ChangeNotifier {
           await chocketService!.initNewChat(userId, peerId);
 
       return chatHistoryModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -185,8 +185,8 @@ class ChatSocketViewModel extends ChangeNotifier {
               userId, peerId, familyName, isCareCoordinator, careCooId);
 
       return chatHistoryModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -198,8 +198,8 @@ class ChatSocketViewModel extends ChangeNotifier {
         peerId: peerId!,
         selectedDate: selectedDate!,
       );
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       if (kDebugMode) print(e.toString());
     }
   }
@@ -210,8 +210,8 @@ class ChatSocketViewModel extends ChangeNotifier {
           await chocketService!.getUserIdFromDocId(docId!);
 
       return getUserIdModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }

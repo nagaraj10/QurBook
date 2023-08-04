@@ -17,8 +17,8 @@ class GetDeviceSelectionModel {
           result!.add(SelectionResult.fromJson(v));
         });
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -71,8 +71,8 @@ class SelectionResult {
       primaryProvider = json['primaryProvider'] != null
           ? new PrimaryProvider.fromJson(json['primaryProvider'])
           : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -174,8 +174,8 @@ class ProfileSetting {
             ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
             : null;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -224,8 +224,8 @@ class PreferredMeasurement {
       temperature = json['temperature'] != null
           ? new Height.fromJson(json['temperature'])
           : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -254,8 +254,8 @@ class Height {
     try {
       unitCode = json['unitCode'];
       unitName = json['unitName'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -279,8 +279,8 @@ class PrimaryProvider {
       additionalInfo = json['additionalInfo'] != null
           ? new AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
           : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -307,8 +307,8 @@ class AdditionalInfoModuleAccess {
           moduleAccess?.add(new ModuleAccess.fromJson(v));
         });
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -334,8 +334,8 @@ class ModuleAccess {
       id = json['id'];
       name = json['name'];
       access = json['access'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 

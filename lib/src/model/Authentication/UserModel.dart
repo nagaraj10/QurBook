@@ -27,8 +27,8 @@ class UserModel {
       family_name = json['family_name'];
       email = json['email'];
       userId = json['userId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

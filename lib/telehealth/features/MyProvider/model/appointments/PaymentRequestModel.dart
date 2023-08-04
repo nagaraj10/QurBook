@@ -67,8 +67,8 @@ class PaymentRequestModel {
       customerId = json['customer_id'];
       createdAt = json['created_at'];
       modifiedAt = json['modified_at'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

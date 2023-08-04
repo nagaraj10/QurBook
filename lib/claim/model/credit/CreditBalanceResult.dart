@@ -28,8 +28,8 @@ class CreditBalanceResult {
       balanceCarePlans = json['balanceCarePlans'];
       balanceDietPlans = json['balanceDietPlans'];
       isMembershipUser = json['isMembershipUser'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

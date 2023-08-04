@@ -282,8 +282,8 @@ class RegimentViewModel extends ChangeNotifier {
             regimentsFilteredList.add(event);
           }
         });
-      } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print(e);
       }
@@ -600,8 +600,8 @@ class RegimentViewModel extends ChangeNotifier {
             activitiesFilteredList.add(event);
           }
         });
-      } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print(e);
       }

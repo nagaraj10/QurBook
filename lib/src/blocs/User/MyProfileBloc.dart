@@ -44,8 +44,8 @@ class MyProfileBloc implements BaseBloc {
     try {
       profileResponse = await _myProfileRepository.getMyProfileInfo(profileKey);
       myProfileInfoSink.add(ApiResponse.completed(profileResponse));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       myProfileInfoSink.add(ApiResponse.error(e.toString()));
     }
@@ -60,8 +60,8 @@ class MyProfileBloc implements BaseBloc {
       profileCompleteData =
           await _myProfileRepository.getCompleteMyProfileInfo(profileKey);
       myCompleteProfileInfoSink.add(ApiResponse.completed(profileCompleteData));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       myCompleteProfileInfoSink.add(ApiResponse.error(e.toString()));
       

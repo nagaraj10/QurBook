@@ -19,8 +19,8 @@ class DeviceReadings {
             value = json[parameters.strvalue];
           }
       unit = json[parameters.strUnit];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

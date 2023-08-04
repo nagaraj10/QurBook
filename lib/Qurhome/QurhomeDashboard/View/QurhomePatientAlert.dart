@@ -362,7 +362,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           onPressed: () {
                             try {
                               Navigator.pop(context);
-                            } catch (e) {
+                            } catch (e,stackTrace) {
                               print(e);
                             }
                           })
@@ -443,8 +443,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
         12,
         forDetails: false,
       ));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     showDialog(
         context: context,
@@ -470,9 +470,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                             onPressed: () {
                               try {
                                 Navigator.pop(context);
-                              } catch (e) {
+                              } catch (e,stackTrace) {
                                 print(e);
-                                CommonUtil().appLogs(message: e.toString());
+                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                               }
                             })
                       ],
@@ -753,8 +753,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
             }
         }
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return "NA";
     }

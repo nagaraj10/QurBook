@@ -11,8 +11,8 @@ class Attachments {
   Attachments.fromJson(dynamic json) {
     try {
       _id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   String? _id;

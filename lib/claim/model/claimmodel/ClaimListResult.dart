@@ -63,8 +63,8 @@ class ClaimListResult {
       submittedFor = json['submittedFor'] != null
               ? new MyProfileResult.fromJson(json['submittedFor'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

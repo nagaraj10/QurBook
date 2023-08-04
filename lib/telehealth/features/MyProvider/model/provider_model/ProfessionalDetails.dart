@@ -52,8 +52,8 @@ class ProfessionalDetails {
       createdOn = json[parameters.strCreatedOn];
       lastModifiedOn = json[parameters.strLastModifiedOn];
       lastModifiedBy = json[parameters.strlastModifiedBy];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

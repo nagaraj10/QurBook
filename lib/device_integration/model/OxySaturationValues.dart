@@ -18,8 +18,8 @@ class OxySaturationValues {
               result!.add(OxyResult.fromJson(oxygenvalue));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   Map<String, dynamic> toJson() {
@@ -56,8 +56,8 @@ class OxyResult {
       startDateTime = json[strStartTimeStamp];
       endDateTime = json[strEndTimeStamp];
       oxygenSaturation = json[strParamOxygen];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

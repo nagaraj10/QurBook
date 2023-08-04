@@ -66,8 +66,8 @@ class _SearchListState extends State<SearchListHome> {
                 ? null
                 : ShowCaseWidget.of(_myContext)!.startShowCase([_hospitalKey]));
       });
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

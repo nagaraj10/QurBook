@@ -20,8 +20,8 @@ class FamilyMembersList {
      response = json[parameters.strResponse] != null
              ? Response.fromJson(json[parameters.strResponse])
              : null;
-   } catch (e) {
-     CommonUtil().appLogs(message: e.toString());
+   } catch (e,stackTrace) {
+     CommonUtil().appLogs(message: e,stackTrace:stackTrace);
    }
   }
 
@@ -45,8 +45,8 @@ class Response {
   Response.fromJson(Map<String, dynamic> json) {
     try {
       data = json[parameters.strData] != null ? FamilyData.fromJson(json[parameters.strData]) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

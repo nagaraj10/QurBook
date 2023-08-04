@@ -32,9 +32,9 @@ class _MakeCallLocalPreviewState extends State<MakeCallLocalPreview> {
                   hideStatus.hideMe();
                 });
               }
-            } catch (e) {
+            } catch (e,stackTrace) {
               print(e);
-                                      CommonUtil().appLogs(message: e.toString());
+                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             }
           },
           child: Container(),
@@ -85,9 +85,9 @@ class _MakeCallLocalPreviewState extends State<MakeCallLocalPreview> {
                                         listen: false)
                                     .rtcEngine
                                     ?.switchCamera();
-                              } catch (e) {
+                              } catch (e,stackTrace) {
                                 print(e);
-                                                        CommonUtil().appLogs(message: e.toString());
+                                                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                               }
                             }),
                       )

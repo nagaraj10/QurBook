@@ -39,8 +39,8 @@ class DynamicFieldModel {
       value = json.containsKey('value') ? json['value'] : '';
       display = json.containsKey('display') ? json['display'] : '';
       description = json.containsKey('description') ? json['description'] : '';
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

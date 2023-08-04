@@ -23,8 +23,8 @@ class BleDataModel {
       uid = json['uid'];
       ackLocal = json['ackLocal'];
       data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -41,8 +41,8 @@ class BleDataModel {
       if (this.data != null) {
         data['Data'] = this.data!.toJson();
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -75,8 +75,8 @@ class Data {
       diastolic = json['Diastolic'].toString();
       weight = json['Weight'].toString();
       bgl = json['BGL'].toString();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -89,8 +89,8 @@ class Data {
       data['Diastolic'] = this.diastolic;
       data['Weight'] = this.weight;
       data['BGL'] = this.bgl;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return data;
   }
@@ -108,8 +108,8 @@ class BleDataResponseModel {
       result = json['result'] != null
           ? new BleDataResult.fromJson(json['result'])
           : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -120,8 +120,8 @@ class BleDataResponseModel {
       if (this.result != null) {
         data['result'] = this.result!.toJson();
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return data;
@@ -154,8 +154,8 @@ class BleDataResult {
       deviceType = json['deviceType'];
       status = json['Status'];
       deviceName = json['deviceName'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -170,8 +170,8 @@ class BleDataResult {
       data['deviceType'] = this.deviceType;
       data['Status'] = this.status;
       data['deviceName'] = this.deviceName;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return data;
@@ -188,8 +188,8 @@ class BleDataResponseData {
     try {
       pulse = json['Pulse'];
       sPO2 = json['SPO2'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -198,8 +198,8 @@ class BleDataResponseData {
     try {
       data['Pulse'] = this.pulse;
       data['SPO2'] = this.sPO2;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return data;
   }

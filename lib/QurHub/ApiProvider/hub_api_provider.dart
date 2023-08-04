@@ -31,8 +31,8 @@ class HubApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -54,8 +54,8 @@ class HubApiProvider {
       return null;
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -93,8 +93,8 @@ class HubApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -118,7 +118,7 @@ class HubApiProvider {
   //     }
   //   } on SocketException {
   //     throw FetchDataException(strNoInternet);
-  //   } catch (e) {
+  //   } catch (e,stackTrace) {
   //     return null;
   //   }
   // }
@@ -138,8 +138,8 @@ class HubApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -162,8 +162,8 @@ class HubApiProvider {
       } else {
         return responseJson;
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }

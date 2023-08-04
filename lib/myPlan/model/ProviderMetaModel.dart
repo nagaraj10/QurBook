@@ -9,8 +9,8 @@ class ProviderMetaModel {
   ProviderMetaModel.fromJson(Map<String, dynamic> json) {
     try {
       icon = json['icon'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

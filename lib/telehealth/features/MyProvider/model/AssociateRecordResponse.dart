@@ -18,8 +18,8 @@ class AssociateRecordsResponse {
       response = json['response'] != null
               ? new Response.fromJson(json['response'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -50,8 +50,8 @@ class Response {
               data!.add(new Data.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -78,8 +78,8 @@ class Data {
       success = json['success'];
       data =
               json['data'] != null ? new AssociateData.fromJson(json['data']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -106,8 +106,8 @@ class AssociateData {
       id = json['id'];
       isActive = json['isActive'];
       approvedOn = json['approvedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

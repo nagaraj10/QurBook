@@ -59,8 +59,8 @@ class QurPlanReminders {
       print(reminders.toString());
 
       await updateReminderswithLocal(reminders);
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
     }
@@ -90,8 +90,8 @@ class QurPlanReminders {
       var dataToJson = json.encode(dataToSave);
       await file.writeAsString(dataToJson);
       return true;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
       return false;
@@ -315,8 +315,8 @@ class QurPlanReminders {
         notifications.add(val);
       }
       return notifications;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
       return [];

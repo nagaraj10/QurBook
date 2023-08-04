@@ -20,8 +20,8 @@ class EmitAckResponse {
       lastSentMessageInfo = json['lastSentMessageInfo'] != null
               ? new ChatHistoryResult.fromJson(json['lastSentMessageInfo'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

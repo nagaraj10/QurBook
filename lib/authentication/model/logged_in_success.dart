@@ -9,8 +9,8 @@ class LoginDetails {
   LoginDetails.fromJson(Map<String, dynamic> json) {
     try {
       result = json['result'] != null ? Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -71,8 +71,8 @@ class Result {
       lastModifiedOn = json['lastModifiedOn'];
       passwordChangedOn = json['passwordChangedOn'];
       firstLoggedIn = json['firstLoggedIn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

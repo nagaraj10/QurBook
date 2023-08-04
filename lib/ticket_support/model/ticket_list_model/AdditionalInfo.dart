@@ -30,8 +30,8 @@ class AdditionalInfo {
       _ticketStatus = json['ticketStatus'] != null
               ? new Data.fromJson(json['ticketStatus'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -85,8 +85,8 @@ class Data {
     try {
       id = json['id'];
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

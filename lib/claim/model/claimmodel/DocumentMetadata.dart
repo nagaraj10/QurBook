@@ -24,8 +24,8 @@ class DocumentMetadata {
       claimType = json['claim_type'];
       claimAmount = json['claim_amount'].toString();
       healthRecordId = json['health_record_id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

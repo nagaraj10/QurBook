@@ -19,8 +19,8 @@ class ClaimSuccess {
                 ? Diagnostics.fromJson(json['diagnostics'])
                 : null;
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -48,8 +48,8 @@ class Diagnostics {
   Diagnostics.fromJson(Map<String, dynamic> json) {
     try {
       message = json['message'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

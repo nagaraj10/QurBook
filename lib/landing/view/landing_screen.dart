@@ -108,7 +108,9 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     try {
       super.initState();
-      onInit();
+      Future.delayed(Duration.zero, () async {
+        onInit();
+      });
       SystemChannels.lifecycle.setMessageHandler((msg) {
         if (msg == AppLifecycleState.resumed.toString()) {
           imageCache!.clear();
@@ -116,10 +118,8 @@ class _LandingScreenState extends State<LandingScreen> {
           profileData = getMyProfile();
         }
       } as Future<String?> Function(String?)?);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
-
-      //print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -143,7 +143,7 @@ class _LandingScreenState extends State<LandingScreen> {
       if (widget.landingArguments?.needFreshLoad ?? true) {
         // try {
         //   commonUtil.versionCheck(context);
-        // } catch (e) {}
+        // } catch (e,stackTrace) {}
         profileData = getMyProfile();
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
@@ -162,8 +162,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
       CommonUtil().initSocket();
       sheelBadgeController.getSheelaBadgeCount();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -242,8 +242,8 @@ class _LandingScreenState extends State<LandingScreen> {
           Get.to(() => ChatUserList());
         }
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       //print(e.toString());
       await PreferenceUtil.removeNotificationData();
@@ -776,8 +776,8 @@ class _LandingScreenState extends State<LandingScreen> {
     }
     try {
       await getDeviceSelectionValues().then((value) => {});
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     if (userId != null && userId.isNotEmpty) {
       try {
@@ -814,8 +814,8 @@ class _LandingScreenState extends State<LandingScreen> {
         } else {
           new CommonUtil().commonMethodToSetPreference();
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         new CommonUtil().commonMethodToSetPreference();
       }
@@ -847,8 +847,8 @@ class _LandingScreenState extends State<LandingScreen> {
         profileData = getMyProfile();
       }
       setState(() {});
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -894,8 +894,8 @@ class _LandingScreenState extends State<LandingScreen> {
     if (widget.landingArguments?.needFreshLoad ?? true) {
       try {
         commonUtil.versionCheck(context);
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
     }
   }
@@ -917,19 +917,19 @@ class _LandingScreenState extends State<LandingScreen> {
 
     try {
       getFamilyRelationAndMediaType();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     try {
       getProfileData();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     try {
       await CommonUtil().getMedicalPreference();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     try {
@@ -937,28 +937,28 @@ class _LandingScreenState extends State<LandingScreen> {
         CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
         _categoryListBlock.getCategoryLists().then((value) {});
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
 
       getFamilyRelationAndMediaType();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     try {
       final addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
       await addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
     if (url.isNotEmpty) {
       try {
         Uri deepLink = Uri.parse(jsonDecode(url));
         DynamicLinks.processDynamicLink(deepLink);
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
     }
     checkCpUser();
@@ -1061,13 +1061,13 @@ class _LandingScreenState extends State<LandingScreen> {
   void getFamilyRelationAndMediaType() async {
     try {
       await CommonUtil().getAllCustomRoles();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     try {
       await CommonUtil().getMediaTypes();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -1075,8 +1075,8 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       await CommonUtil().getUserProfileData();
       profileData = getMyProfile();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

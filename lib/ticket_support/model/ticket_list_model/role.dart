@@ -26,8 +26,8 @@ class Role {
       _normalized = json['normalized'];
       _isAdmin = json['isAdmin'];
       _isAgent = json['isAgent'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   String? _id;

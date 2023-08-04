@@ -234,8 +234,8 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
         );
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       //print(e);
     }
@@ -1364,8 +1364,8 @@ class _NotificationScreen extends State<NotificationScreen> {
   void getProfileData() async {
     try {
       await new CommonUtil().getUserProfileData();
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -2088,7 +2088,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         } else {
           return true;
         }
-      } catch (e) {
+      } catch (e,stackTrace) {
         return false;
       }
     } else {

@@ -84,8 +84,8 @@ class DeviceHealthRecord {
               ? SourceType.fromJson(json['sourceType'])
               : null;
       createdOn = DateTime.parse(json[param.strCreatedOn]);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -107,8 +107,8 @@ class AverageAsOfNow {
   AverageAsOfNow.fromJson(Map<String, dynamic> json) {
     try {
       weightAverage = json['weightAverage'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -127,8 +127,8 @@ class SourceType {
   SourceType.fromJson(Map<String, dynamic> json) {
     try {
       code = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

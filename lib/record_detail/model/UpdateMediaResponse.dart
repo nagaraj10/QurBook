@@ -24,8 +24,8 @@ class UpdateMediaResponse {
       response = json[parameters.strResponse] != null
               ? Response.fromJson(json[parameters.strResponse])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -53,8 +53,8 @@ class Response {
       data = json[parameters.strData] != null
               ? UpdateMediaResponseData.fromJson(json[parameters.strData])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -116,8 +116,8 @@ class MetaInfo {
       hospital = json[parameters.strhospital] != null
               ? Hospital.fromJson(json[parameters.strhospital])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

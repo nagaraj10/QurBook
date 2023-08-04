@@ -95,8 +95,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
           appointmentDetailsController
               .getAppointmentDetail(widget.doc?.id ?? "");
           Get.to(() => AppointmentDetailScreen());
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           if (kDebugMode) {
             printError(info: e.toString());
@@ -523,8 +523,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     try {
       filteredCategoryData =
           PreferenceUtil.getCategoryTypeDisplay(ConstantKey.KEY_CATEGORYLIST)!;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());

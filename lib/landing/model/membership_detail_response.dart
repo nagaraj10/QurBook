@@ -16,8 +16,8 @@ class MemberShipDetailResponse {
               result!.add(new Result.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -63,8 +63,8 @@ class Result {
       planStartDate = json['planStartDate'];
       planEndDate = json['planEndDate'];
       planSubscriptionInfoId = json['planSubscriptionInfoId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -123,8 +123,8 @@ class AdditionalInfo {
       terminationDate = json['terminationDate'];
       prescribedDoctor = json['prescribedDoctor'];
       planPackageCategoryName = json['planPackageCategoryName'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

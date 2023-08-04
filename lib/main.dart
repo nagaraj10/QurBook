@@ -173,8 +173,8 @@ Future<void> main() async {
       if (!isFirstTime && (tokenForLogin ?? '').isNotEmpty) {
         CategoryListBlock().getCategoryLists();
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         print(e.toString());
@@ -351,8 +351,8 @@ class _MyFHBState extends State<MyFHB> {
   CheckForShowingTheIntroScreens() async {
     try {
       isFirstTime = PreferenceUtil.isKeyValid(Constants.KeyShowIntroScreens);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       isFirstTime = false;
     }
   }
@@ -618,8 +618,8 @@ class _MyFHBState extends State<MyFHB> {
             } else {
               Get.to(SuperMaya());
             }
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             Get.to(SuperMaya());
           }
         } else if (passedValArr[1] == 'profile_page' ||
@@ -871,8 +871,8 @@ class _MyFHBState extends State<MyFHB> {
                     .getAppointmentDetail(passedValArr[2]);
                 Get.to(() => AppointmentDetailScreen());
               }
-            } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+            } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
               AppointmentDetailsController appointmentDetailsController =
                   CommonUtil().onInitAppointmentDetailsController();
               appointmentDetailsController
@@ -1057,8 +1057,8 @@ class _MyFHBState extends State<MyFHB> {
             if (doctorPic.isNotEmpty) {
               try {
                 doctorPic = json.decode(doctorPic);
-              } catch (e) {
-                CommonUtil().appLogs(message: e.toString());
+              } catch (e,stackTrace) {
+                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
               }
             } else {
               doctorPic = '';
@@ -1066,8 +1066,8 @@ class _MyFHBState extends State<MyFHB> {
             if (patientPic.isNotEmpty) {
               try {
                 patientPic = json.decode(patientPic);
-              } catch (e) {
-                CommonUtil().appLogs(message: e.toString());
+              } catch (e,stackTrace) {
+                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
               }
             } else {
               patientPic = '';
@@ -1098,8 +1098,8 @@ class _MyFHBState extends State<MyFHB> {
               isAppExists: true,
               isWeb: isWeb,
             ));
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           }
         }
       }
@@ -1117,8 +1117,8 @@ class _MyFHBState extends State<MyFHB> {
           .then((value) {
         try {
           sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           if (kDebugMode) {
             print(e);
           }
@@ -1141,8 +1141,8 @@ class _MyFHBState extends State<MyFHB> {
             .then((value) {
           try {
             sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             if (kDebugMode) {
               print(e);
             }
@@ -1164,8 +1164,8 @@ class _MyFHBState extends State<MyFHB> {
   void getProfileData() async {
     try {
       await CommonUtil().getUserProfileData();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -1577,8 +1577,8 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen();
           }
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
     }
   }
@@ -1588,9 +1588,9 @@ class _MyFHBState extends State<MyFHB> {
     try {
       final result = await platform.invokeMethod(variable.strGetAppVersion);
       res = result;
-    } on PlatformException catch (e) {
+    } on PlatformException catch (e,stackTrace) {
       res = TranslationConstants.failedToInvoke.t() + "'${e.message}'.";
-      CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     setState(() {
@@ -1602,8 +1602,8 @@ class _MyFHBState extends State<MyFHB> {
   Future<void> showSecurityWall() async {
     try {
       final RESULTCODE = await secure_platform.invokeMethod(variable.strSecure);
-    } on PlatformException catch (e, s) {
-      CommonUtil().appLogs(message: e.toString());
+    } on PlatformException catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e.toString(),stackTrace:stackTrace.toString());
     }
   }
 
@@ -1612,8 +1612,8 @@ class _MyFHBState extends State<MyFHB> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } on PlatformException catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     // If the widget was removed from the tree while the asynchronous platform

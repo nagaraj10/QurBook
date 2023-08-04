@@ -18,8 +18,8 @@ class LinkedData {
       customRoleId = json[parameters.strcustomRoleId];
       roleName = json[parameters.strroleName];
       modeOfShare = json[parameters.strmodeOfShare];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

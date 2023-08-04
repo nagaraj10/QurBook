@@ -1014,8 +1014,8 @@ class FHBBasicWidget {
                       onTextChanged(errorValue);
                     }
                   }
-                } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+                } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                   onTextChanged('');
                 }
@@ -1169,8 +1169,8 @@ class FHBBasicWidget {
       } else {
         return false;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }

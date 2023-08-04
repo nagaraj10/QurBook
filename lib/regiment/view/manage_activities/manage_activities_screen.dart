@@ -79,8 +79,8 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
             cardColor = Color(CommonUtil().getMyPrimaryColor());
         }
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       cardColor = Color(CommonUtil().getMyPrimaryColor());
     }

@@ -21,8 +21,8 @@ class CategoryResponseList {
        response = json[parameters.strResponse] != null
                ? Response.fromJson(json[parameters.strResponse])
                : null;
-     } catch (e) {
-       CommonUtil().appLogs(message: e.toString());
+     } catch (e,stackTrace) {
+       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
      }
   }
 
@@ -53,8 +53,8 @@ class Response {
               data!.add(CategoryData.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
