@@ -2601,7 +2601,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
     fun scanAllBleDevices(){
         startAllDevicesScanForWOWGo()
-        //startTransteckWowGoDevice();
+        startTransteckWowGoDevice();
     }
 
     fun startTransteckWowGoDevice(){
@@ -2626,7 +2626,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         if (isExecuting) {
             stopScanWowgoDevices()
             startWowGoSpo2DeviceScan()
-            handlerBle.postDelayed(::executeSecondMethod, 2000) // 1 minute delay
+            handlerBle.postDelayed(::executeSecondMethod, 2000) // 2 sec delay
         }
     }
 
@@ -2634,7 +2634,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         if (isExecuting) {
             stopScanWowgoDevices()
             startWowGoBPDeviceScan()
-            handlerBle.postDelayed(::executeThirdMethod, 2000) // 1 minute delay
+            handlerBle.postDelayed(::executeThirdMethod, 2000) // 2 sec delay
         }
     }
 
@@ -2642,7 +2642,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         if (isExecuting) {
             stopScanWowgoDevices()
             startWowGoWeightDeviceScan()
-            handlerBle.postDelayed(::executeMethods, 2000) // 1 minute delay, loop to the first method
+            handlerBle.postDelayed(::executeMethods, 2000) // 2 sec delay, loop to the first method
         }
     }
 
