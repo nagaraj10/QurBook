@@ -266,7 +266,9 @@ class SheelaBLEController extends GetxController {
               showFailure();
               break;
             case "connectionfailed":
+              print("Connection failed");
               _disableTimer();
+              showFailure();
               await Future.delayed(const Duration(seconds: 2));
               //setupListenerForReadings();
               break;
