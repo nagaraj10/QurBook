@@ -2122,7 +2122,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
                 override fun onCancel(arguments: Any?) {
                     Log.d("BLE_SCAN_CANCEL", "bleScanCancel")
-                  //  stopScan()
+                    stopScan()
                     stopExecutingMethods()
                     gManager?.scanLeDevice(false)
                     gManager?.disconnect()
@@ -2335,7 +2335,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
                 scanType=call.method.toString()
                 Log.e("check", "callMethodsDelayed: " + "wowgobeforeoutside" + wowGoFunctionIndex)
-
+                stopExecutingMethods()
                 scanSingleWowGoDevices();
                 devicesList.forEachIndexed { index: Int, any: Any? ->
                     if((any as HashMap<String, String>).get("manufacture").equals("Transteck",ignoreCase = true)){
@@ -2375,13 +2375,13 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             if (call.method == "bleconnect") {
                 // bluetoothFlutterResult=result
                 Log.d("BLE VITALS", "StartingPoint")
-                BleManager.getInstance().init(application)
+                /*BleManager.getInstance().init(application)
                 BleManager.getInstance()
                     .enableLog(true)
                     .setReConnectCount(1, 5000)
                     .setConnectOverTime(20000).operateTimeout = 5000
 
-                val temp = checkPermissionStartScan(false)
+                val temp = checkPermissionStartScan(false)*/
 
 /*                try {
                     statusBleTimer = Timer()
@@ -2453,7 +2453,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             if (call.method == "bpconnect") {
                 Log.d("BP START", "StartingPoint")
                 //startBpScan()
-                checkPermissionStartScan(true)
+                //checkPermissionStartScan(true)
             }
         }
 
@@ -2657,13 +2657,13 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 var device =
                     (any as HashMap<String, String>).get("deviceType").toString().toLowerCase();
                 wowGoDeviceList?.add(device)
-                if (device.equals("spo2")) {
+                /*if (device.equals("spo2")) {
                     wowgoFunctionList?.add(startWowGoSpo2DeviceScan())
                 } else if (device.equals("bp")) {
                     wowgoFunctionList?.add(startWowGoBPDeviceScan())
                 } else if (device.equals("weight")) {
                     wowgoFunctionList?.add(startWowGoWeightDeviceScan())
-                }
+                }*/
             }
         }
 
@@ -2681,7 +2681,6 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             handlerBleWowGo.removeCallbacksAndMessages(null)
 
             Log.e("check", "callMethodsDelayed: " + "wowgobefore" + wowGoFunctionIndex)
-
             callMethodsDelayed()
         }
 //       wowGoDeviceList.forEachIndexed { index, device ->
@@ -2734,13 +2733,13 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 }
                 Log.e("check", "callMethodsDelayed: " + "wowgo" + wowGoFunctionIndex)
                 wowGoFunctionIndex++
-                handlerBleWowGo.removeCallbacksAndMessages(null)
+//                handlerBleWowGo.removeCallbacksAndMessages(null)
                 handlerBleWowGo.postDelayed(::callMethodsDelayed, 3000)
 
             } else {
                 // All methods completed, start again
                 wowGoFunctionIndex = 0
-                handlerBleWowGo.removeCallbacksAndMessages(null)
+                //handlerBleWowGo.removeCallbacksAndMessages(null)
 
                 Log.e("check", "callMethodsDelayed: " + "starting again" + wowGoFunctionIndex)
 
