@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ActivityStatusModel {
   bool? isSuccess;
   List<ActivityStatusResult>? result;
@@ -6,12 +8,16 @@ class ActivityStatusModel {
   ActivityStatusModel({this.isSuccess, this.result});
 
   ActivityStatusModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <ActivityStatusResult>[];
-      json['result'].forEach((v) {
-        result!.add(new ActivityStatusResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <ActivityStatusResult>[];
+            json['result'].forEach((v) {
+              result!.add(new ActivityStatusResult.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -32,8 +38,12 @@ class ActivityStatusResult {
   ActivityStatusResult({this.planStatus, this.curDate});
 
   ActivityStatusResult.fromJson(Map<String, dynamic> json) {
-    planStatus = json['PlanStatus'];
-    curDate = json['CurDate'];
+    try {
+      planStatus = json['PlanStatus'];
+      curDate = json['CurDate'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

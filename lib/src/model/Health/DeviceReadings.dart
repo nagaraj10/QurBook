@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class DeviceReadings {
@@ -18,8 +20,8 @@ class DeviceReadings {
       value = json[parameters.strvalue];
     }
     unit = json[parameters.strunit];
-    }catch(e){
-      
+    }catch(e,stackTrace){
+      CommonUtil().appLogs(message: e.toString(),stackTrace:stackTrace.toString());
     }
    
   }
@@ -32,8 +34,8 @@ class DeviceReadings {
     data[parameters.strunit] = unit;
     data[parameters.strvalue] = value;
     return data;
-     }catch(e){
-      
+     }catch(e,stackTrace){
+      CommonUtil().appLogs(message: e.toString(),stackTrace:stackTrace.toString());
     }
   }
 }

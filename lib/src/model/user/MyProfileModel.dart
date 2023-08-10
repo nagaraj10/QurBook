@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'MyProfileResult.dart';
 
 class MyProfileModel {
@@ -9,10 +11,14 @@ class MyProfileModel {
   MyProfileModel({this.isSuccess, this.message, this.result});
 
   MyProfileModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result =
-    json['result'] != null ? MyProfileResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result =
+          json['result'] != null ? MyProfileResult.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

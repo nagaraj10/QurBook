@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class LanguageModel {
   bool? isSuccess;
   List<LanguageResult>? result;
@@ -6,12 +8,16 @@ class LanguageModel {
   LanguageModel({this.isSuccess, this.result});
 
   LanguageModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <LanguageResult>[];
-      json['result'].forEach((v) {
-        result!.add(LanguageResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <LanguageResult>[];
+            json['result'].forEach((v) {
+              result!.add(LanguageResult.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -48,19 +54,23 @@ class LanguageResult {
       this.referenceValueCollection});
 
   LanguageResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    if (json['referenceValueCollection'] != null) {
-      referenceValueCollection = <ReferenceValueCollection>[];
-      json['referenceValueCollection'].forEach((v) {
-        referenceValueCollection!.add(ReferenceValueCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      if (json['referenceValueCollection'] != null) {
+            referenceValueCollection = <ReferenceValueCollection>[];
+            json['referenceValueCollection'].forEach((v) {
+              referenceValueCollection!.add(ReferenceValueCollection.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -105,15 +115,19 @@ class ReferenceValueCollection {
       this.lastModifiedOn});
 
   ReferenceValueCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

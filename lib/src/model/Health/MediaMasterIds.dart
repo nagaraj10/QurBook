@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class MediaMasterIds {
@@ -8,8 +10,12 @@ class MediaMasterIds {
   MediaMasterIds({this.id, this.fileType});
 
   MediaMasterIds.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    fileType = json[parameters.strfileType];
+    try {
+      id = json[parameters.strId];
+      fileType = json[parameters.strfileType];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

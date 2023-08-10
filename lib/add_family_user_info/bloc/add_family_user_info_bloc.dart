@@ -178,7 +178,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       var relationShipResponseList =
           await addFamilyUserInfoRepository.getCustomRoles();
       relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       relationShipListSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -191,7 +192,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       myProfile =
           await addFamilyUserInfoRepository.getMyProfileInfoNew(userId!);
       myprofileObject = myProfile;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       myProfileSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -223,7 +225,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
               zipcode,
               fromFamily);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       userProfileSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -239,7 +242,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       updateAddFamilyRelationInfo = await addFamilyUserInfoRepository
           .updateRelationShip(relationshipJsonString);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       updateRelationshipSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -289,7 +293,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       //userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
 
       await updateDeviceSelectionModel(preferredLanguage: preferred_language);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       userProfileSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -303,7 +308,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     try {
       verifyEmailResponse = await addFamilyUserInfoRepository.verifyEmail();
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       verifyEmailSink.add(ApiResponse.error(e.toString()));
     }
 

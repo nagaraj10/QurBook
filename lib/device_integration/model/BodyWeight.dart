@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'RefrenceValueMeta.dart';
 import '../../constants/fhb_parameters.dart' as param;
 
@@ -77,10 +79,14 @@ class DeviceHealthRecord {
   DeviceHealthRecord({this.sourceType, this.createdOn});
 
   DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
-    sourceType = json['sourceType'] != null
-        ? SourceType.fromJson(json['sourceType'])
-        : null;
-    createdOn = DateTime.parse(json[param.strCreatedOn]);
+    try {
+      sourceType = json['sourceType'] != null
+              ? SourceType.fromJson(json['sourceType'])
+              : null;
+      createdOn = DateTime.parse(json[param.strCreatedOn]);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -99,7 +105,11 @@ class AverageAsOfNow {
   AverageAsOfNow({this.weightAverage});
 
   AverageAsOfNow.fromJson(Map<String, dynamic> json) {
-    weightAverage = json['weightAverage'];
+    try {
+      weightAverage = json['weightAverage'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -115,7 +125,11 @@ class SourceType {
   SourceType({this.code});
 
   SourceType.fromJson(Map<String, dynamic> json) {
-    code = json['name'];
+    try {
+      code = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

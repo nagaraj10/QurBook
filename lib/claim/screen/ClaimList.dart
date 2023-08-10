@@ -341,7 +341,8 @@ class _ClaimListState extends State<ClaimList> {
       } else {
         isCreditBalnceZero = false;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       ClaimAmount = "";
       isCreditBalnceZero = false;
     }
@@ -424,7 +425,8 @@ class _ClaimListState extends State<ClaimList> {
       } else {
         setCategoryId(categoryDataList);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       _categoryListBlock = new CategoryListBlock();
       _categoryListBlock.getCategoryLists();
 
@@ -613,7 +615,8 @@ class _ClaimListState extends State<ClaimList> {
         final df = new DateFormat('dd-MMM-yyyy');
 
         return df.format(now);
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         return "";
       }
     } else {
@@ -631,7 +634,8 @@ class _ClaimListState extends State<ClaimList> {
             CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
         return df.format(now);
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         return "";
       }
     } else {

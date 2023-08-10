@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class AssociateRecordsResponse {
   int? status;
   bool? success;
@@ -9,12 +11,16 @@ class AssociateRecordsResponse {
       {this.status, this.success, this.message, this.response});
 
   AssociateRecordsResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
-        : null;
+    try {
+      status = json['status'];
+      success = json['success'];
+      message = json['message'];
+      response = json['response'] != null
+              ? new Response.fromJson(json['response'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -36,12 +42,16 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    if (json['data'] != null) {
-      data = <Data>[];
-      json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
-      });
+    try {
+      count = json['count'];
+      if (json['data'] != null) {
+            data = <Data>[];
+            json['data'].forEach((v) {
+              data!.add(new Data.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -63,10 +73,14 @@ class Data {
   Data({this.mediaMetaId, this.success, this.data});
 
   Data.fromJson(Map<String, dynamic> json) {
-    mediaMetaId = json['mediaMetaId'];
-    success = json['success'];
-    data =
-        json['data'] != null ? new AssociateData.fromJson(json['data']) : null;
+    try {
+      mediaMetaId = json['mediaMetaId'];
+      success = json['success'];
+      data =
+              json['data'] != null ? new AssociateData.fromJson(json['data']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -88,9 +102,13 @@ class AssociateData {
   AssociateData({this.id, this.isActive, this.approvedOn});
 
   AssociateData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    isActive = json['isActive'];
-    approvedOn = json['approvedOn'];
+    try {
+      id = json['id'];
+      isActive = json['isActive'];
+      approvedOn = json['approvedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

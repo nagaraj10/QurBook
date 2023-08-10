@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class WeekdayPreference {
   String? day;
   bool? isAvailable;
@@ -6,8 +8,12 @@ class WeekdayPreference {
   WeekdayPreference({this.day, this.isAvailable});
 
   WeekdayPreference.fromJson(Map<String, dynamic> json) {
-    day = json['Day'];
-    isAvailable = json['isAvailable'];
+    try {
+      day = json['Day'];
+      isAvailable = json['isAvailable'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

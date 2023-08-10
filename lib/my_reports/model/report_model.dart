@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ReportModel {
   bool? isSuccess;
   List<MyReportResult>? result;
@@ -6,12 +8,16 @@ class ReportModel {
   ReportModel({this.isSuccess, this.result});
 
   ReportModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <MyReportResult>[];
-      json['result'].forEach((v) {
-        result!.add(new MyReportResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <MyReportResult>[];
+            json['result'].forEach((v) {
+              result!.add(new MyReportResult.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -52,17 +58,21 @@ class MyReportResult {
         this.lastModifiedOn});
 
   MyReportResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    groupId = json['groupId'];
-    groupName = json['groupName'];
-    reportId = json['reportId'];
-    reportName = json['reportName'];
-    embeddedUrl = json['embeddedUrl'];
-    datasetId = json['datasetId'];
-    roles = json['roles'].cast<String>();
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      groupId = json['groupId'];
+      groupName = json['groupName'];
+      reportId = json['reportId'];
+      reportName = json['reportName'];
+      embeddedUrl = json['embeddedUrl'];
+      datasetId = json['datasetId'];
+      roles = json['roles'].cast<String>();
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

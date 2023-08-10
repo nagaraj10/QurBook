@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'CompleteData.dart';
 
@@ -12,12 +14,16 @@ class UserHealthResponseList {
       {this.status, this.success, this.message, this.response});
 
   UserHealthResponseList.fromJson(Map<String, dynamic> json) {
-     status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+     try {
+       status = json[parameters.strStatus];
+       success = json[parameters.strSuccess];
+       message = json[parameters.strMessage];
+       response = json[parameters.strResponse] != null
+               ? Response.fromJson(json[parameters.strResponse])
+               : null;
+     } catch (e,stackTrace) {
+       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+     }
   }
 
   Map<String, dynamic> toJson() {
@@ -39,9 +45,13 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json[parameters.strCount];
-    data =
-        json[parameters.strData] != null ? CompleteData.fromJson(json[parameters.strData]) : null;
+    try {
+      count = json[parameters.strCount];
+      data =
+              json[parameters.strData] != null ? CompleteData.fromJson(json[parameters.strData]) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

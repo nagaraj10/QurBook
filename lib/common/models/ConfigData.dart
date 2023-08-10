@@ -1,4 +1,6 @@
 
+import '../CommonUtil.dart';
+
 class ConfigData {
   ConfigData({
       String? name, 
@@ -8,8 +10,12 @@ class ConfigData {
 }
 
   ConfigData.fromJson(dynamic json) {
-    _name = json['name'];
-    _value = json['value'];
+    try {
+      _name = json['name'];
+      _value = json['value'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
   String? _name;
   String? _value;

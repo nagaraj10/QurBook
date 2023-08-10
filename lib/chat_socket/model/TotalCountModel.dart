@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class TotalCountModel {
   bool? isSuccess;
   List<Payload>? payload;
@@ -6,12 +8,16 @@ class TotalCountModel {
   TotalCountModel({this.isSuccess, this.payload});
 
   TotalCountModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['payload'] != null) {
-      payload = <Payload>[];
-      json['payload'].forEach((v) {
-        payload!.add(new Payload.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['payload'] != null) {
+            payload = <Payload>[];
+            json['payload'].forEach((v) {
+              payload!.add(new Payload.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -31,7 +37,11 @@ class Payload {
   Payload({this.count});
 
   Payload.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
+    try {
+      count = json['count'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

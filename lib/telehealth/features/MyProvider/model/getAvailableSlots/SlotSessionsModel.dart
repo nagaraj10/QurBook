@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/WeekdayPreference.dart';
 
@@ -25,24 +26,28 @@ class SlotSessionsModel {
         this.slots});
 
   SlotSessionsModel.fromJson(Map<String, dynamic> json) {
-    doctorSessionId = json['doctorSessionId'];
-    sessionStartTime = json['sessionStartTime'];
-    sessionEndTime = json['sessionEndTime'];
-    duration = json['duration'];
-    if (json['weekdayPreference'] != null) {
-      weekdayPreference = <WeekdayPreference>[];
-      json['weekdayPreference'].forEach((v) {
-        weekdayPreference!.add(new WeekdayPreference.fromJson(v));
-      });
-    }
-    isEnabled = json['isEnabled'];
-    isActive = json['isActive'];
-    slotCounts = json['slotCounts'];
-    if (json['slots'] != null) {
-      slots = <Slots>[];
-      json['slots'].forEach((v) {
-        slots!.add(new Slots.fromJson(v));
-      });
+    try {
+      doctorSessionId = json['doctorSessionId'];
+      sessionStartTime = json['sessionStartTime'];
+      sessionEndTime = json['sessionEndTime'];
+      duration = json['duration'];
+      if (json['weekdayPreference'] != null) {
+            weekdayPreference = <WeekdayPreference>[];
+            json['weekdayPreference'].forEach((v) {
+              weekdayPreference!.add(new WeekdayPreference.fromJson(v));
+            });
+          }
+      isEnabled = json['isEnabled'];
+      isActive = json['isActive'];
+      slotCounts = json['slotCounts'];
+      if (json['slots'] != null) {
+            slots = <Slots>[];
+            json['slots'].forEach((v) {
+              slots!.add(new Slots.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

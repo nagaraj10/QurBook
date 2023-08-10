@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class InitChatModel {
   bool? isSuccess;
   Result? result;
@@ -6,9 +8,13 @@ class InitChatModel {
   InitChatModel({this.isSuccess, this.result});
 
   InitChatModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -27,7 +33,11 @@ class Result {
   Result({this.chatListId});
 
   Result.fromJson(Map<String, dynamic> json) {
-    chatListId = json['chatListId'];
+    try {
+      chatListId = json['chatListId'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

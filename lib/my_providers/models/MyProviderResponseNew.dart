@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'MyProviderResponseData.dart';
 
 class MyProvidersResponse {
@@ -9,12 +11,16 @@ class MyProvidersResponse {
   MyProvidersResponse({this.isSuccess, this.message, this.result});
 
   MyProvidersResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    if (json.containsKey('result')) {
-      result = json['result'] != null
-          ? MyProvidersResponseData.fromJson(json['result'])
-          : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      if (json.containsKey('result')) {
+            result = json['result'] != null
+                ? MyProvidersResponseData.fromJson(json['result'])
+                : null;
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

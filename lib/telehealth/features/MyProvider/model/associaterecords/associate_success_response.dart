@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class AssociateSuccessResponse {
   bool? isSuccess;
   List<Result>? result;
@@ -6,12 +8,16 @@ class AssociateSuccessResponse {
   AssociateSuccessResponse({this.isSuccess, this.result});
 
   AssociateSuccessResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <Result>[];
-      json['result'].forEach((v) {
-        result!.add(new Result.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <Result>[];
+            json['result'].forEach((v) {
+              result!.add(new Result.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -32,14 +38,18 @@ class Result {
   Result({this.id, this.healthRecordShareDetailCollection});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    if (json['healthRecordShareDetailCollection'] != null) {
-      healthRecordShareDetailCollection =
-          <HealthRecordShareDetailCollection>[];
-      json['healthRecordShareDetailCollection'].forEach((v) {
-        healthRecordShareDetailCollection!
-            .add(new HealthRecordShareDetailCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      if (json['healthRecordShareDetailCollection'] != null) {
+            healthRecordShareDetailCollection =
+                <HealthRecordShareDetailCollection>[];
+            json['healthRecordShareDetailCollection'].forEach((v) {
+              healthRecordShareDetailCollection!
+                  .add(new HealthRecordShareDetailCollection.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -85,24 +95,28 @@ class HealthRecordShareDetailCollection {
       this.id});
 
   HealthRecordShareDetailCollection.fromJson(Map<String, dynamic> json) {
-    healthRecordShare = json['healthRecordShare'];
-    status = json['status'];
-    startDateTime = json['startDateTime'];
-    healthRecordShareStatus = json['healthRecordShareStatus'] != null
-        ? new HealthRecordShareStatus.fromJson(json['healthRecordShareStatus'])
-        : null;
-    modeOfShare = json['modeOfShare'] != null
-        ? new ModeOfShare.fromJson(json['modeOfShare'])
-        : null;
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    healthRecordMetadata = json['healthRecordMetadata'] != null
-        ? new HealthRecordShareStatus.fromJson(json['healthRecordMetadata'])
-        : null;
-    endDateTime = json['endDateTime'];
-    id = json['id'];
+    try {
+      healthRecordShare = json['healthRecordShare'];
+      status = json['status'];
+      startDateTime = json['startDateTime'];
+      healthRecordShareStatus = json['healthRecordShareStatus'] != null
+              ? new HealthRecordShareStatus.fromJson(json['healthRecordShareStatus'])
+              : null;
+      modeOfShare = json['modeOfShare'] != null
+              ? new ModeOfShare.fromJson(json['modeOfShare'])
+              : null;
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      healthRecordMetadata = json['healthRecordMetadata'] != null
+              ? new HealthRecordShareStatus.fromJson(json['healthRecordMetadata'])
+              : null;
+      endDateTime = json['endDateTime'];
+      id = json['id'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -135,7 +149,11 @@ class HealthRecordShareStatus {
   HealthRecordShareStatus({this.id});
 
   HealthRecordShareStatus.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    try {
+      id = json['id'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -170,18 +188,22 @@ class ModeOfShare {
       this.referenceData});
 
   ModeOfShare.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    referenceData = json['referenceData'] != null
-        ? new ReferenceData.fromJson(json['referenceData'])
-        : null;
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      referenceData = json['referenceData'] != null
+              ? new ReferenceData.fromJson(json['referenceData'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -223,14 +245,18 @@ class ReferenceData {
       this.lastModifiedOn});
 
   ReferenceData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,6 +1,8 @@
 
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class SymptomsListModel {
   bool? isSuccess;
   Result? result;
@@ -8,9 +10,13 @@ class SymptomsListModel {
   SymptomsListModel({this.isSuccess, this.result});
 
   SymptomsListModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -32,14 +38,18 @@ class Result {
   Result({this.totalRecord, this.currentPage, this.totalPage, this.data});
 
   Result.fromJson(Map<String, dynamic> json) {
-    totalRecord = json['totalRecord'];
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    if (json['data'] != null) {
-      data = <SymptomListData>[];
-      json['data'].forEach((v) {
-        data!.add(new SymptomListData.fromJson(v));
-      });
+    try {
+      totalRecord = json['totalRecord'];
+      currentPage = json['currentPage'];
+      totalPage = json['totalPage'];
+      if (json['data'] != null) {
+            data = <SymptomListData>[];
+            json['data'].forEach((v) {
+              data!.add(new SymptomListData.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -168,80 +178,84 @@ class SymptomListData {
         this.forms});
 
   SymptomListData.fromJson(Map<String, dynamic> json) {
-    eid = json['eid'];
-    providerid = json['providerid'];
-    uid = json['uid'];
-    title = json['title'];
-    description = json['description'];
-    tplanid = json['tplanid'];
-    teidUser = json['teidUser'];
-    aid = json['aid'];
-    activityname = json['activityname'];
-    pformid = json['pformid'];
-    uformid = json['uformid'];
-    uformname = json['uformname'];
-    estart = json['estart'];
-    eend = json['eend'];
-    html = json['html'];
-    otherinfo = json['otherinfo'] != null
-        ? new OtherinfoSymptom.fromJson(jsonDecode(json['otherinfo']))
-        : null;
-    remindin = json['remindin'];
-    remindinType = json['remindinType'];
-    ack = json['ack'];
-    alarm = json['alarm'];
-    uformdata = json['uformdata'];
-    ts = json['ts'];
-    deleted = json['deleted'];
-    evDuration = json['evDuration'];
-    dosemeal = json['dosemeal'];
-    pformname = json['pformname'];
-    pformdata = json['pformdata'];
-    pplanid = json['pplanid'];
-    evDisabled = json['evDisabled'];
-    importance = json['importance'];
-    evMuted = json['evMuted'];
-    evSource = json['evSource'];
-    points = json['points'];
-    ackLocal = json['ackLocal'];
-    remindbefore = json['remindbefore'];
-    remindbeforeType = json['remindbeforeType'];
-    custform = json['custform'];
-    langTitle = json['langTitle'];
-    doserepeat = json['doserepeat'];
-    issymptom = json['issymptom'];
-    disabled = json['disabled'];
-    pform = json['pform'];
-    uform = json['uform'];
-    alertdata = json['alertdata'];
-    providers = json['providers'] != null
-        ? new Providers.fromJson(json['providers'])
-        : null;
-    planTemplate = json['planTemplate'];
-    if (json['fields'] != null) {
-      fields = <Fields>[];
-      json['fields'].forEach((v) {
-        fields!.add(new Fields.fromJson(v));
-      });
-    }
-    if (json['doneevents'] != null) {
-      doneevents = <Doneevents>[];
-      json['doneevents'].forEach((v) {
-        doneevents!.add(new Doneevents.fromJson(v));
-      });
-    }
-    doeventUserTemplateCustform = json['doevent_userTemplate_custform'];
-    doeventUserTemplateHtml = json['doevent_userTemplate_html'];
-    personalPlanCollection = json['personalPlanCollection'] != null
-        ? new PersonalPlanCollection.fromJson(json['personalPlanCollection'])
-        : null;
-    isCustomized = json['isCustomized'];
-    doeventsTemplateUserTs = json['doeventsTemplateUserTs'];
-    if (json['forms'] != null) {
-      forms = <Forms>[];
-      json['forms'].forEach((v) {
-        forms!.add(new Forms.fromJson(v));
-      });
+    try {
+      eid = json['eid'];
+      providerid = json['providerid'];
+      uid = json['uid'];
+      title = json['title'];
+      description = json['description'];
+      tplanid = json['tplanid'];
+      teidUser = json['teidUser'];
+      aid = json['aid'];
+      activityname = json['activityname'];
+      pformid = json['pformid'];
+      uformid = json['uformid'];
+      uformname = json['uformname'];
+      estart = json['estart'];
+      eend = json['eend'];
+      html = json['html'];
+      otherinfo = json['otherinfo'] != null
+              ? new OtherinfoSymptom.fromJson(jsonDecode(json['otherinfo']))
+              : null;
+      remindin = json['remindin'];
+      remindinType = json['remindinType'];
+      ack = json['ack'];
+      alarm = json['alarm'];
+      uformdata = json['uformdata'];
+      ts = json['ts'];
+      deleted = json['deleted'];
+      evDuration = json['evDuration'];
+      dosemeal = json['dosemeal'];
+      pformname = json['pformname'];
+      pformdata = json['pformdata'];
+      pplanid = json['pplanid'];
+      evDisabled = json['evDisabled'];
+      importance = json['importance'];
+      evMuted = json['evMuted'];
+      evSource = json['evSource'];
+      points = json['points'];
+      ackLocal = json['ackLocal'];
+      remindbefore = json['remindbefore'];
+      remindbeforeType = json['remindbeforeType'];
+      custform = json['custform'];
+      langTitle = json['langTitle'];
+      doserepeat = json['doserepeat'];
+      issymptom = json['issymptom'];
+      disabled = json['disabled'];
+      pform = json['pform'];
+      uform = json['uform'];
+      alertdata = json['alertdata'];
+      providers = json['providers'] != null
+              ? new Providers.fromJson(json['providers'])
+              : null;
+      planTemplate = json['planTemplate'];
+      if (json['fields'] != null) {
+            fields = <Fields>[];
+            json['fields'].forEach((v) {
+              fields!.add(new Fields.fromJson(v));
+            });
+          }
+      if (json['doneevents'] != null) {
+            doneevents = <Doneevents>[];
+            json['doneevents'].forEach((v) {
+              doneevents!.add(new Doneevents.fromJson(v));
+            });
+          }
+      doeventUserTemplateCustform = json['doevent_userTemplate_custform'];
+      doeventUserTemplateHtml = json['doevent_userTemplate_html'];
+      personalPlanCollection = json['personalPlanCollection'] != null
+              ? new PersonalPlanCollection.fromJson(json['personalPlanCollection'])
+              : null;
+      isCustomized = json['isCustomized'];
+      doeventsTemplateUserTs = json['doeventsTemplateUserTs'];
+      if (json['forms'] != null) {
+            forms = <Forms>[];
+            json['forms'].forEach((v) {
+              forms!.add(new Forms.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -340,15 +354,19 @@ class Providers {
         this.providerType});
 
   Providers.fromJson(Map<String, dynamic> json) {
-    providerid = json['providerid'];
-    title = json['title'];
-    description = json['description'];
-    metadata = json['metadata'];
-    deleted = json['deleted'];
-    linkid = json['linkid'];
-    ts = json['ts'];
-    prtags = json['prtags'];
-    providerType = json['providerType'];
+    try {
+      providerid = json['providerid'];
+      title = json['title'];
+      description = json['description'];
+      metadata = json['metadata'];
+      deleted = json['deleted'];
+      linkid = json['linkid'];
+      ts = json['ts'];
+      prtags = json['prtags'];
+      providerType = json['providerType'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -405,23 +423,27 @@ class Fields {
         this.deleted});
 
   Fields.fromJson(Map<String, dynamic> json) {
-    fieldid = json['fieldid'];
-    providerid = json['providerid'];
-    formid = json['formid'];
-    title = json['title'];
-    description = json['description'];
-    uomid = json['uomid'];
-    fdata = json['fdata'];
-    ftype = json['ftype'];
-    vmin = json['vmin'];
-    vmax = json['vmax'];
-    amin = json['amin'];
-    amax = json['amax'];
-    validation = json['validation'];
-    seq = json['seq'];
-    depth = json['depth'];
-    ts = json['ts'];
-    deleted = json['deleted'];
+    try {
+      fieldid = json['fieldid'];
+      providerid = json['providerid'];
+      formid = json['formid'];
+      title = json['title'];
+      description = json['description'];
+      uomid = json['uomid'];
+      fdata = json['fdata'];
+      ftype = json['ftype'];
+      vmin = json['vmin'];
+      vmax = json['vmax'];
+      amin = json['amin'];
+      amax = json['amax'];
+      validation = json['validation'];
+      seq = json['seq'];
+      depth = json['depth'];
+      ts = json['ts'];
+      deleted = json['deleted'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -530,45 +552,49 @@ class Doneevents {
         this.description});
 
   Doneevents.fromJson(Map<String, dynamic> json) {
-    doneid = json['doneid'];
-    eid = json['eid'];
-    tplanid = json['tplanid'];
-    teidUser = json['teidUser'];
-    aid = json['aid'];
-    activityname = json['activityname'];
-    pformid = json['pformid'];
-    uformid = json['uformid'];
-    uformname = json['uformname'];
-    alarm = json['alarm'];
-    uformdata = json['uformdata'];
-    otherinfo = json['otherinfo'];
-    remindin = json['remindin'];
-    remindinType = json['remindinType'];
-    ts = json['ts'];
-    deleted = json['deleted'];
-    evDuration = json['evDuration'];
-    dosemeal = json['dosemeal'];
-    isUnDone = json['isUnDone'];
-    pplanid = json['pplanid'];
-    importance = json['importance'];
-    evSource = json['evSource'];
-    points = json['points'];
-    ackLocal = json['ackLocal'];
-    remindbefore = json['remindbefore'];
-    remindbeforeType = json['remindbeforeType'];
-    evDisabled = json['evDisabled'];
-    evMuted = json['evMuted'];
-    custform = json['custform'];
-    langTitle = json['langTitle'];
-    doserepeat = json['doserepeat'];
-    issymptom = json['issymptom'];
-    disabled = json['disabled'];
-    pform = json['pform'];
-    uform = json['uform'];
-    alertdata = json['alertdata'];
-    ack = json['ack'];
-    parentTplanid = json['parentTplanid'];
-    description = json['description'];
+    try {
+      doneid = json['doneid'];
+      eid = json['eid'];
+      tplanid = json['tplanid'];
+      teidUser = json['teidUser'];
+      aid = json['aid'];
+      activityname = json['activityname'];
+      pformid = json['pformid'];
+      uformid = json['uformid'];
+      uformname = json['uformname'];
+      alarm = json['alarm'];
+      uformdata = json['uformdata'];
+      otherinfo = json['otherinfo'];
+      remindin = json['remindin'];
+      remindinType = json['remindinType'];
+      ts = json['ts'];
+      deleted = json['deleted'];
+      evDuration = json['evDuration'];
+      dosemeal = json['dosemeal'];
+      isUnDone = json['isUnDone'];
+      pplanid = json['pplanid'];
+      importance = json['importance'];
+      evSource = json['evSource'];
+      points = json['points'];
+      ackLocal = json['ackLocal'];
+      remindbefore = json['remindbefore'];
+      remindbeforeType = json['remindbeforeType'];
+      evDisabled = json['evDisabled'];
+      evMuted = json['evMuted'];
+      custform = json['custform'];
+      langTitle = json['langTitle'];
+      doserepeat = json['doserepeat'];
+      issymptom = json['issymptom'];
+      disabled = json['disabled'];
+      pform = json['pform'];
+      uform = json['uform'];
+      alertdata = json['alertdata'];
+      ack = json['ack'];
+      parentTplanid = json['parentTplanid'];
+      description = json['description'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -645,18 +671,22 @@ class PersonalPlanCollection {
         this.metadata});
 
   PersonalPlanCollection.fromJson(Map<String, dynamic> json) {
-    pplanid = json['pplanid'];
-    providerid = json['providerid'];
-    title = json['title'];
-    description = json['description'];
-    uid = json['uid'];
-    startdate = json['startdate'];
-    packageduration = json['packageduration'];
-    seq = json['seq'];
-    depth = json['depth'];
-    ts = json['ts'];
-    deleted = json['deleted'];
-    metadata = json['metadata'];
+    try {
+      pplanid = json['pplanid'];
+      providerid = json['providerid'];
+      title = json['title'];
+      description = json['description'];
+      uid = json['uid'];
+      startdate = json['startdate'];
+      packageduration = json['packageduration'];
+      seq = json['seq'];
+      depth = json['depth'];
+      ts = json['ts'];
+      deleted = json['deleted'];
+      metadata = json['metadata'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -708,19 +738,23 @@ class Forms {
         this.points});
 
   Forms.fromJson(Map<String, dynamic> json) {
-    formid = json['formid'];
-    providerid = json['providerid'];
-    title = json['title'];
-    description = json['description'];
-    aid = json['aid'];
-    forprovider = json['forprovider'];
-    seq = json['seq'];
-    depth = json['depth'];
-    metadata = json['metadata'];
-    ts = json['ts'];
-    deleted = json['deleted'];
-    fieldcount = json['fieldcount'];
-    points = json['points'];
+    try {
+      formid = json['formid'];
+      providerid = json['providerid'];
+      title = json['title'];
+      description = json['description'];
+      aid = json['aid'];
+      forprovider = json['forprovider'];
+      seq = json['seq'];
+      depth = json['depth'];
+      metadata = json['metadata'];
+      ts = json['ts'];
+      deleted = json['deleted'];
+      fieldcount = json['fieldcount'];
+      points = json['points'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

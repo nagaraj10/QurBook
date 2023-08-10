@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'FamilyData.dart';
 
@@ -11,12 +13,16 @@ class FamilyMembersList {
   FamilyMembersList({this.status, this.success, this.message, this.response});
 
   FamilyMembersList.fromJson(Map<String, dynamic> json) {
-   status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+   try {
+     status = json[parameters.strStatus];
+     success = json[parameters.strSuccess];
+     message = json[parameters.strMessage];
+     response = json[parameters.strResponse] != null
+             ? Response.fromJson(json[parameters.strResponse])
+             : null;
+   } catch (e,stackTrace) {
+     CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+   }
   }
 
   Map<String, dynamic> toJson() {
@@ -37,7 +43,11 @@ class Response {
   Response({this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    data = json[parameters.strData] != null ? FamilyData.fromJson(json[parameters.strData]) : null;
+    try {
+      data = json[parameters.strData] != null ? FamilyData.fromJson(json[parameters.strData]) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

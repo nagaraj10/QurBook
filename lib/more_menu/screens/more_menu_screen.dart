@@ -1593,7 +1593,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           },
                         ),
                       );
-                    } catch (e) {}
+                    } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                    }
                   },
                   title: Text(variable.strConnectedDevices,
                       style: TextStyle(
@@ -1642,7 +1644,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                   appLockStatus: value,
                                 );
                               });
-                            } on PlatformException catch (e) {
+                            } on PlatformException catch (e,stackTrace) {
                               msg = "Error while opening pattern/pin/passcode";
                               if (kDebugMode) {
                                 printError(info: msg.toString());

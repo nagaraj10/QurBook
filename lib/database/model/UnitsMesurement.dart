@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class UnitsMesurements {
@@ -10,11 +12,15 @@ class UnitsMesurements {
   UnitsMesurements(this.id, this.units, this.minValue, this.maxValue,this.range);
 
   UnitsMesurements.fromJson(Map<String, dynamic> obj) {
-    id = obj[parameters.strId];
-    units = obj[parameters.strUnits];
-    minValue = obj[parameters.strminValue];
-    maxValue = obj[parameters.strmaxValue];
-    range = obj[parameters.strRange];
+    try {
+      id = obj[parameters.strId];
+      units = obj[parameters.strUnits];
+      minValue = obj[parameters.strminValue];
+      maxValue = obj[parameters.strmaxValue];
+      range = obj[parameters.strRange];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   UnitsMesurements.map(obj) {

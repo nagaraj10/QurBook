@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class LabsSearchListResponse {
   bool? isSuccess;
   List<LabListResult>? result;
@@ -6,12 +8,16 @@ class LabsSearchListResponse {
   LabsSearchListResponse({this.isSuccess, this.result});
 
   LabsSearchListResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <LabListResult>[];
-      json['result'].forEach((v) {
-        result!.add(LabListResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <LabListResult>[];
+            json['result'].forEach((v) {
+              result!.add(LabListResult.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -56,19 +62,23 @@ class LabListResult {
         this.healthOrganizationReferenceId});
 
   LabListResult.fromJson(Map<String, dynamic> json) {
-    healthOrganizationId = json['healthOrganizationId'];
-    healthOrganizationName = json['healthOrganizationName'];
-    healthOrganizationTypeId = json['healthOrganizationTypeId'];
-    healthOrganizationTypeName = json['healthOrganizationTypeName'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    pincode = json['pincode'];
-    cityName = json['cityName'];
-    stateName = json['stateName'];
-    phoneNumber = json['phoneNumber'];
-    phoneNumberTypeId = json['phoneNumberTypeId'];
-    phoneNumberTypeName = json['phoneNumberTypeName'];
-    healthOrganizationReferenceId = json['healthOrganizationReferenceId'];
+    try {
+      healthOrganizationId = json['healthOrganizationId'];
+      healthOrganizationName = json['healthOrganizationName'];
+      healthOrganizationTypeId = json['healthOrganizationTypeId'];
+      healthOrganizationTypeName = json['healthOrganizationTypeName'];
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      pincode = json['pincode'];
+      cityName = json['cityName'];
+      stateName = json['stateName'];
+      phoneNumber = json['phoneNumber'];
+      phoneNumberTypeId = json['phoneNumberTypeId'];
+      phoneNumberTypeName = json['phoneNumberTypeName'];
+      healthOrganizationReferenceId = json['healthOrganizationReferenceId'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

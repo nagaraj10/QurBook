@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -144,8 +143,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       catgoryDataList = PreferenceUtil.getCategoryType()!;
       if (catgoryDataList == null) {
         _categoryListBlock.getCategoryLists().then((value) {
-          catgoryDataList = value.result!;
-        } as FutureOr Function(CategoryDataList?));
+              catgoryDataList = value.result!;
+            } as FutureOr Function(CategoryDataList?));
       }
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
@@ -153,16 +152,22 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       try {
         weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         weightUnit = "kg";
       }
 
       try {
         tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         tempUnit = "F";
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       //print(e);
     }
 
@@ -184,7 +189,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       activitiesFilteredList =
           await CommonUtil().getMasterData(Get.context!, '');
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       //print(e);
     }
   }
@@ -263,7 +270,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             arguments: SheelaArgument(
               sheelaInputs: widget.sheelaRequestString,
             ),
-          )!.then((value) {
+          )!
+              .then((value) {
             setState(() {});
           });
           /* Navigator.of(context).push(
@@ -389,14 +397,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
-            catgoryDataList = value.result!;
-            categoryDataObj = CommonUtil()
-                .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-            postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-          } as FutureOr Function(CategoryDataList?));
+                catgoryDataList = value.result!;
+                categoryDataObj = CommonUtil().getCategoryObjForSelectedLabel(
+                    categoryID, catgoryDataList);
+                postMediaData[strhealthRecordCategory] =
+                    categoryDataObj.toJson();
+              } as FutureOr Function(CategoryDataList?));
         }
       }
 
@@ -899,7 +910,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForThermometer(String? deviceName) {
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       tempUnit = "F";
     }
     return Container(
@@ -1174,7 +1187,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForWeighingScale(String? deviceName) {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       weightUnit = "kg";
     }
     return Container(
@@ -2609,7 +2624,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           );
         },
       );
-  } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) || (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
+    } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) ||
+        (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
       return Image.asset(
         'assets/Qurhome/Qurhome.png',
         height: 20.0.h,
@@ -2718,8 +2734,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
                     configurationData.unitSystemList!.us!.height![0].unitCode!)
                 .then((value) {
-              PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      configurationData.unitSystemList!.us!.weight![0].unitCode!)
+              PreferenceUtil.saveString(
+                      Constants.STR_KEY_WEIGHT,
+                      configurationData
+                          .unitSystemList!.us!.weight![0].unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(
                         Constants.STR_KEY_TEMP,

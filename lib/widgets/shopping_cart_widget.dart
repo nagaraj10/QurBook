@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
-import 'package:myfhb/widgets/shopping_card_provider.dart';
 import 'package:provider/provider.dart';
 
 class ShoppingCartWidget extends StatelessWidget {

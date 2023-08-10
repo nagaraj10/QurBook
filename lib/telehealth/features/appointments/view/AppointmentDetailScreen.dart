@@ -651,8 +651,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             if (await canLaunch(value)) {
                               await launch(value);
                             }
-                          } catch (e) {
+                          } catch (e,stackTrace) {
                             print(e);
+                                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                           }
                         },
                         child: Text(

@@ -1,5 +1,7 @@
 
 import 'dart:convert';
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as param;
 
 
@@ -22,10 +24,14 @@ class LatestSync {
   // );
 
   LatestSync.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[param.is_Success];
-    if (json[param.dataResult] != null) {
-      result:
-      Result.fromJson(json[param.dataResult]);
+    try {
+      isSuccess = json[param.is_Success];
+      if (json[param.dataResult] != null) {
+            result:
+            Result.fromJson(json[param.dataResult]);
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:myfhb/claim/model/claimmodel/ClaimSuccess.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
@@ -75,7 +76,9 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
@@ -191,7 +194,9 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
@@ -213,7 +218,9 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
@@ -234,7 +241,9 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
@@ -255,7 +264,9 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
     var jsonString = healthResult.metadata!.toJson();

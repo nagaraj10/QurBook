@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'health_record_collection.dart';
 
 class HealthRecordSuccess {
@@ -8,12 +10,16 @@ class HealthRecordSuccess {
   HealthRecordSuccess({this.isSuccess, this.result});
 
   HealthRecordSuccess.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <Result>[];
-      json['result'].forEach((v) {
-        result!.add(Result.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <Result>[];
+            json['result'].forEach((v) {
+              result!.add(Result.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -56,24 +62,28 @@ class Result {
       this.healthRecordCollection});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    healthRecordTypeId = json['healthRecordTypeId'];
-    healthRecordTypeName = json['healthRecordTypeName'];
-    metadata = json['metadata'] != null
-        ? Metadata.fromJson(json['metadata'])
-        : null;
-    userId = json['userId'];
-    isBookmarked = json['isBookmarked'];
-    isDraft = json['isDraft'];
-    isVisible = json['isVisible'];
-    isActive = json['isActive'];
-    isCompleted = json['isCompleted'];
-    doctorId = json['doctorId'];
-    if (json['healthRecordCollection'] != null) {
-      healthRecordCollection = <HealthRecordCollection>[];
-      json['healthRecordCollection'].forEach((v) {
-        healthRecordCollection!.add(HealthRecordCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      healthRecordTypeId = json['healthRecordTypeId'];
+      healthRecordTypeName = json['healthRecordTypeName'];
+      metadata = json['metadata'] != null
+              ? Metadata.fromJson(json['metadata'])
+              : null;
+      userId = json['userId'];
+      isBookmarked = json['isBookmarked'];
+      isDraft = json['isDraft'];
+      isVisible = json['isVisible'];
+      isActive = json['isActive'];
+      isCompleted = json['isCompleted'];
+      doctorId = json['doctorId'];
+      if (json['healthRecordCollection'] != null) {
+            healthRecordCollection = <HealthRecordCollection>[];
+            json['healthRecordCollection'].forEach((v) {
+              healthRecordCollection!.add(HealthRecordCollection.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -127,27 +137,34 @@ class Metadata {
       this.fileName});
 
   Metadata.fromJson(Map<String, dynamic> json) {
-    healthRecordCategory = json['healthRecordCategory'] != null
-        ? HealthRecordCategory.fromJson(json['healthRecordCategory'])
-        : null;
-    healthRecordType = json['healthRecordType'] != null
-        ? HealthRecordType.fromJson(json['healthRecordType'])
-        : null;
-    memoText = json['memoText'];
-    hasVoiceNotes = json['hasVoiceNotes'];
-    dateOfVisit = json['dateOfVisit'];
-    isDraft = json['isDraft'];
-    sourceName = json['sourceName'];
-    memoTextRaw = json['memoTextRaw'];
-
-    fileName = json['fileName'];
     try {
-      doctor =
-          json['doctor'] != null ? Doctor.fromJson(json['doctor']) : null;
-      hospital = json['hospital'] != null
-          ? Hospital.fromJson(json['hospital'])
-          : null;
-    } catch (e) {}
+      healthRecordCategory = json['healthRecordCategory'] != null
+              ? HealthRecordCategory.fromJson(json['healthRecordCategory'])
+              : null;
+      healthRecordType = json['healthRecordType'] != null
+              ? HealthRecordType.fromJson(json['healthRecordType'])
+              : null;
+      memoText = json['memoText'];
+      hasVoiceNotes = json['hasVoiceNotes'];
+      dateOfVisit = json['dateOfVisit'];
+      isDraft = json['isDraft'];
+      sourceName = json['sourceName'];
+      memoTextRaw = json['memoTextRaw'];
+
+      fileName = json['fileName'];
+      try {
+            doctor =
+                json['doctor'] != null ? Doctor.fromJson(json['doctor']) : null;
+            hospital = json['hospital'] != null
+                ? Hospital.fromJson(json['hospital'])
+                : null;
+          } catch (e,stackTrace) {
+                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -196,14 +213,18 @@ class HealthRecordCategory {
       this.lastModifiedOn});
 
   HealthRecordCategory.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    categoryName = json['categoryName'];
-    categoryDescription = json['categoryDescription'];
-    logo = json['logo'];
-    isDisplay = json['isDisplay'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      categoryName = json['categoryName'];
+      categoryDescription = json['categoryDescription'];
+      logo = json['logo'];
+      isDisplay = json['isDisplay'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -243,15 +264,19 @@ class HealthRecordType {
       this.lastModifiedOn});
 
   HealthRecordType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    description = json['description'];
-    logo = json['logo'];
-    isDisplay = json['isDisplay'];
-    isAiTranscription = json['isAiTranscription'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      description = json['description'];
+      logo = json['logo'];
+      isDisplay = json['isDisplay'];
+      isAiTranscription = json['isAiTranscription'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -298,18 +323,22 @@ class Doctor {
       this.isMciVerified});
 
   Doctor.fromJson(Map<String, dynamic> json) {
-    doctorId = json['doctorId'];
-    userId = json['userId'];
-    name = json['name'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    specialization = json['specialization'];
-    doctorReferenceId = json['doctorReferenceId'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTelehealthEnabled = json['isTelehealthEnabled'];
-    isMciVerified = json['isMciVerified'];
+    try {
+      doctorId = json['doctorId'];
+      userId = json['userId'];
+      name = json['name'];
+      firstName = json['firstName'];
+      lastName = json['lastName'];
+      specialization = json['specialization'];
+      doctorReferenceId = json['doctorReferenceId'];
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTelehealthEnabled = json['isTelehealthEnabled'];
+      isMciVerified = json['isMciVerified'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -361,23 +390,27 @@ class Hospital {
       this.createdBy});
 
   Hospital.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    city = json['city'];
-    state = json['state'];
-    pincode = json['pincode'];
-    isReferenced = json['isReferenced'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    healthOrganizationType = json['healthOrganizationType'] != null
-        ? HealthOrganizationType.fromJson(json['healthOrganizationType'])
-        : null;
-    createdBy = json['createdBy'] != null
-        ? CreatedBy.fromJson(json['createdBy'])
-        : null;
+    try {
+      id = json['id'];
+      name = json['name'];
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      city = json['city'];
+      state = json['state'];
+      pincode = json['pincode'];
+      isReferenced = json['isReferenced'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      healthOrganizationType = json['healthOrganizationType'] != null
+              ? HealthOrganizationType.fromJson(json['healthOrganizationType'])
+              : null;
+      createdBy = json['createdBy'] != null
+              ? CreatedBy.fromJson(json['createdBy'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -426,15 +459,19 @@ class HealthOrganizationType {
       this.lastModifiedOn});
 
   HealthOrganizationType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -511,33 +548,37 @@ class CreatedBy {
       this.lastModifiedOn});
 
   CreatedBy.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    userName = json['userName'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    dateOfBirth = json['dateOfBirth'];
-    bloodGroup = json['bloodGroup'];
-    countryCode = json['countryCode'];
-    profilePicUrl = json['profilePicUrl'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTempUser = json['isTempUser'];
-    isVirtualUser = json['isVirtualUser'];
-    isMigrated = json['isMigrated'];
-    isClaimed = json['isClaimed'];
-    isIeUser = json['isIeUser'];
-    isEmailVerified = json['isEmailVerified'];
-    isCpUser = json['isCpUser'];
-    communicationPreferences = json['communicationPreferences'];
-    medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      countryCode = json['countryCode'];
+      profilePicUrl = json['profilePicUrl'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTempUser = json['isTempUser'];
+      isVirtualUser = json['isVirtualUser'];
+      isMigrated = json['isMigrated'];
+      isClaimed = json['isClaimed'];
+      isIeUser = json['isIeUser'];
+      isEmailVerified = json['isEmailVerified'];
+      isCpUser = json['isCpUser'];
+      communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json['medicalPreferences'];
+      isSignedIn = json['isSignedIn'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

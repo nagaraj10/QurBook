@@ -1,4 +1,5 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'CallArguments.dart';
 
@@ -139,40 +140,44 @@ class NotificationModel {
   }
 
   NotificationModel.fromSharePreferences(Map<String, dynamic> message) {
-    title = message['title'];
-    body = message['body'];
-    ringtone = message['ringtone'];
-    templateName = message['templateName'];
-    userId = message['userId'];
-    idToHighlight = message['idToHighlight'];
-    redirect = message['redirect'];
-    healthRecordMetaIds = message['healthRecordMetaIds'];
-    isCall = message['isCall'];
-    needToHighlight = message['needToHighlight'];
-    meeting_id = message['meeting_id'];
-    doctorId = message['doctorId'];
-    doctorName = message['doctorName'];
-    doctorPicture = message['doctorPicture'];
-    username = message['username'];
-    type = message['type'];
-    externalLink = message['externalLink'];
-    callType = message['callType'];
-    isWeb = message['isWeb'];
-    claimId = message['claimId'];
-    notificationListId = message['notificationListId'];
-    careCoordinatorUserId = message['careCoordinatorUserId'];
-    activityName = message['activityName'];
-    activityTime = message['activityTime'];
-    careGiverName = message['careGiverName'];
-    isCaregiver = message['isCaregiver'];
-    deliveredDateTime = message['deliveredDateTime'];
-    isFromCareCoordinator = message['isFromCareCoordinator'];
-    sheelaAudioMsgUrl = message['sheelaAudioMsgUrl'];
-    eventType = message['eventType'];
-    others = message['others'];
-    viewRecordAction = message['viewRecordAction'];
-    chatWithCC = message['chatWithCC'];
-    appointmentId = message['appointmentId'];
+    try {
+      title = message['title'];
+      body = message['body'];
+      ringtone = message['ringtone'];
+      templateName = message['templateName'];
+      userId = message['userId'];
+      idToHighlight = message['idToHighlight'];
+      redirect = message['redirect'];
+      healthRecordMetaIds = message['healthRecordMetaIds'];
+      isCall = message['isCall'];
+      needToHighlight = message['needToHighlight'];
+      meeting_id = message['meeting_id'];
+      doctorId = message['doctorId'];
+      doctorName = message['doctorName'];
+      doctorPicture = message['doctorPicture'];
+      username = message['username'];
+      type = message['type'];
+      externalLink = message['externalLink'];
+      callType = message['callType'];
+      isWeb = message['isWeb'];
+      claimId = message['claimId'];
+      notificationListId = message['notificationListId'];
+      careCoordinatorUserId = message['careCoordinatorUserId'];
+      activityName = message['activityName'];
+      activityTime = message['activityTime'];
+      careGiverName = message['careGiverName'];
+      isCaregiver = message['isCaregiver'];
+      deliveredDateTime = message['deliveredDateTime'];
+      isFromCareCoordinator = message['isFromCareCoordinator'];
+      sheelaAudioMsgUrl = message['sheelaAudioMsgUrl'];
+      eventType = message['eventType'];
+      others = message['others'];
+      viewRecordAction = message['viewRecordAction'];
+      chatWithCC = message['chatWithCC'];
+      appointmentId = message['appointmentId'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {

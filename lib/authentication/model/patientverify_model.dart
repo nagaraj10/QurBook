@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../constants/constants.dart';
 
 class PatientSignupOtp {
@@ -18,12 +20,17 @@ class PatientSignupOtp {
       this.isSuccess});
 
   PatientSignupOtp.fromJson(Map<String, dynamic> json) {
-    verificationCode = json[strverificationCode];
-    userName = json[struserName];
-    source = json[strsource];
-    userId = json[strUserId];
-    message = json[strmessage];
-    isSuccess = json[strIsSuccess];
+    try {
+      verificationCode = json[strverificationCode];
+      userName = json[struserName];
+      source = json[strsource];
+      userId = json[strUserId];
+      message = json[strmessage];
+      isSuccess = json[strIsSuccess];
+    } catch (e,stackTrace) {
+      CommonUtil()
+          .appLogs(message: e,stackTrace:stackTrace, userName: (json[struserName] ?? ""));
+    }
   }
 
   Map<String, dynamic> toJson() {

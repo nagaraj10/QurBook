@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class NotificationOntapRequest {
   List<String?>? logIds;
   bool? isMarkAllRead;
@@ -6,8 +8,12 @@ class NotificationOntapRequest {
   NotificationOntapRequest({this.logIds, this.isMarkAllRead});
 
   NotificationOntapRequest.fromJson(Map<String, dynamic> json) {
-    logIds = json['logIds'].cast<String>();
-    isMarkAllRead = json['isMarkAllRead'];
+    try {
+      logIds = json['logIds'].cast<String>();
+      isMarkAllRead = json['isMarkAllRead'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

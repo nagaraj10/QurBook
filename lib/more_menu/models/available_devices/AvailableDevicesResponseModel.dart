@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'Result.dart';
 
 class AvailableDevicesResponseModel {
@@ -10,12 +12,16 @@ class AvailableDevicesResponseModel {
 }
 
   AvailableDevicesResponseModel.fromJson(dynamic json) {
-    _isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      _result = [];
-      json['result'].forEach((v) {
-        _result!.add(Result.fromJson(v));
-      });
+    try {
+      _isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            _result = [];
+            json['result'].forEach((v) {
+              _result!.add(Result.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   bool? _isSuccess;

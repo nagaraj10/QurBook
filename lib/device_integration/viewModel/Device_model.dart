@@ -100,7 +100,9 @@ class DevicesViewModel with ChangeNotifier {
 
       //notifyListeners();
       return result;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Future<List<dynamic>?> fetchBPDetails() async {
@@ -155,7 +157,9 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Future<List<dynamic>?> fetchGLDetails() async {
@@ -207,7 +211,9 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Future<List<dynamic>?> fetchOXYDetails(String response) async {
@@ -264,7 +270,9 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Future<List<dynamic>?> fetchTMPDetails() async {
@@ -309,7 +317,9 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
     }
   }
@@ -358,7 +368,9 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e.toString());
     }
   }
@@ -392,7 +404,9 @@ class DevicesViewModel with ChangeNotifier {
         });
       });
       return ret;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   getUnit(String unit) {

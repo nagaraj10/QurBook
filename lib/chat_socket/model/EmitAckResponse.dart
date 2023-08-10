@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'ChatHistoryModel.dart';
 
 class EmitAckResponse {
@@ -14,9 +16,13 @@ class EmitAckResponse {
         chatList.add(new ChatList.fromJson(v));
       });
     }*/
-    lastSentMessageInfo = json['lastSentMessageInfo'] != null
-        ? new ChatHistoryResult.fromJson(json['lastSentMessageInfo'])
-        : null;
+    try {
+      lastSentMessageInfo = json['lastSentMessageInfo'] != null
+              ? new ChatHistoryResult.fromJson(json['lastSentMessageInfo'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

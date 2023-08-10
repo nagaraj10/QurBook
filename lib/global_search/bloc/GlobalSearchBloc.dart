@@ -1,5 +1,6 @@
-
 import 'dart:async';
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../model/GlobalSearch.dart';
 import '../services/GlobalSearchRepository.dart';
@@ -33,7 +34,9 @@ class GlobalSearchBloc implements BaseBloc {
       var globalSearch =
           await _globalSearchrepository.getSearchedMediaType(param);
       globalSearchSink.add(ApiResponse.completed(globalSearch));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       globalSearchSink.add(ApiResponse.error(e.toString()));
     }
   }

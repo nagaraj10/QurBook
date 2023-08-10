@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Specialty {
@@ -18,12 +19,16 @@ class Specialty {
       this.lastModifiedOn});
 
   Specialty.fromJson(Map<String, dynamic> json) {
-    name = json[parameters.strName];
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    description = json[parameters.strDescription];
-    lastModifiedBy = json[parameters.strlastModifiedBy];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
+    try {
+      name = json[parameters.strName];
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      description = json[parameters.strDescription];
+      lastModifiedBy = json[parameters.strlastModifiedBy];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

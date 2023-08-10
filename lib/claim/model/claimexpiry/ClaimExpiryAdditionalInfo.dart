@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ClaimExpiryAdditionalInfo {
   String? remarks;
   String? planTags;
@@ -28,18 +30,22 @@ class ClaimExpiryAdditionalInfo {
         this.planPackageCategoryName});
 
   ClaimExpiryAdditionalInfo.fromJson(Map<String, dynamic> json) {
-    remarks = json['remarks'];
-    planTags = json['planTags'];
-    actualFee = json['actualFee'];
-    isRenewal = json['isRenewal'];
-    paymentId = json['paymentId'];
-    planEndDate = json['planEndDate'];
-    isTerminated = json['isTerminated'];
-    planStartDate = json['planStartDate'];
-    packageDuration = json['packageDuration'];
-    terminationDate = json['terminationDate'];
-    prescribedDoctor = json['prescribedDoctor'];
-    planPackageCategoryName = json['planPackageCategoryName'];
+    try {
+      remarks = json['remarks'];
+      planTags = json['planTags'];
+      actualFee = json['actualFee'];
+      isRenewal = json['isRenewal'];
+      paymentId = json['paymentId'];
+      planEndDate = json['planEndDate'];
+      isTerminated = json['isTerminated'];
+      planStartDate = json['planStartDate'];
+      packageDuration = json['packageDuration'];
+      terminationDate = json['terminationDate'];
+      prescribedDoctor = json['prescribedDoctor'];
+      planPackageCategoryName = json['planPackageCategoryName'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

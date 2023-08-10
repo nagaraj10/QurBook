@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'State.dart';
 
 import 'AddressTypeModel.dart';
@@ -32,20 +34,24 @@ class UserAddressCollection3 {
       this.state});
 
   UserAddressCollection3.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    pincode = json['pincode'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    createdBy = json['createdBy'];
-    addressType = json['addressType'] != null
-        ? AddressType.fromJson(json['addressType'])
-        : null;
-    city = json['city'] != null ? City.fromJson(json['city']) : null;
-    state = json['state'] != null ? State.fromJson(json['state']) : null;
+    try {
+      id = json['id'];
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      pincode = json['pincode'];
+      isPrimary = json['isPrimary'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      createdBy = json['createdBy'];
+      addressType = json['addressType'] != null
+              ? AddressType.fromJson(json['addressType'])
+              : null;
+      city = json['city'] != null ? City.fromJson(json['city']) : null;
+      state = json['state'] != null ? State.fromJson(json['state']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -83,11 +89,15 @@ class City {
       {this.id, this.name, this.isActive, this.createdOn, this.lastModifiedOn});
 
   City.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

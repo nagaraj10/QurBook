@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../common/CommonUtil.dart';
@@ -55,7 +54,8 @@ class _SearchListState extends State<SearchListHome> {
     // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
     //   isInitial: true,
     // );
-    providerList = myPlanViewModel.getUserSearchListInit() as Future<SearchListModel>?;
+    providerList =
+        myPlanViewModel.getUserSearchListInit() as Future<SearchListModel>?;
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_hospitalList);
 
     try {
@@ -66,7 +66,9 @@ class _SearchListState extends State<SearchListHome> {
                 ? null
                 : ShowCaseWidget.of(_myContext)!.startShowCase([_hospitalKey]));
       });
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   @override

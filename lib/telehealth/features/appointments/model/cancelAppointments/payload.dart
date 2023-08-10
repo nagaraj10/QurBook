@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/paymentGatewayDetail.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/refund.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
@@ -10,13 +11,17 @@ class Payload {
   Payload({this.refund, this.paymentGatewayDetail});
 
   Payload.fromJson(Map<String, dynamic> json) {
-    refund = json[parameters.strRefund] != null
-        ? new Refund.fromJson(json[parameters.strRefund])
-        : null;
-    paymentGatewayDetail = json[parameters.strPaymentGatewayDetail] != null
-        ? new PaymentGatewayDetail.fromJson(
-            json[parameters.strPaymentGatewayDetail])
-        : null;
+    try {
+      refund = json[parameters.strRefund] != null
+              ? new Refund.fromJson(json[parameters.strRefund])
+              : null;
+      paymentGatewayDetail = json[parameters.strPaymentGatewayDetail] != null
+              ? new PaymentGatewayDetail.fromJson(
+                  json[parameters.strPaymentGatewayDetail])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'MediaMasterIds.dart';
 import 'MetaInfo.dart';
@@ -34,24 +36,28 @@ class MediaMetaInfo {
       this.isSelected});
 
   MediaMetaInfo.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    metaTypeId = json[parameters.strmetaTypeId];
-    userId = json[parameters.struserId];
-    metaInfo = json[parameters.strmetaInfo] != null
-        ? MetaInfo.fromJson(json[parameters.strmetaInfo])
-        : null;
-    isActive = json[parameters.strIsActive] ?? false;
-    createdBy = json[parameters.strCreatedBy];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    isBookmarked = json[parameters.strIsBookmarked] ?? false;
-    isDraft = json[parameters.strisDraft] ?? false;
-    createdByUser = json[parameters.strcreatedByUser];
-    if (json[parameters.strmediaMasterIds] != null) {
-      mediaMasterIds = <MediaMasterIds>[];
-      json[parameters.strmediaMasterIds].forEach((v) {
-        mediaMasterIds!.add(MediaMasterIds.fromJson(v));
-      });
+    try {
+      id = json[parameters.strId];
+      metaTypeId = json[parameters.strmetaTypeId];
+      userId = json[parameters.struserId];
+      metaInfo = json[parameters.strmetaInfo] != null
+              ? MetaInfo.fromJson(json[parameters.strmetaInfo])
+              : null;
+      isActive = json[parameters.strIsActive] ?? false;
+      createdBy = json[parameters.strCreatedBy];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      isBookmarked = json[parameters.strIsBookmarked] ?? false;
+      isDraft = json[parameters.strisDraft] ?? false;
+      createdByUser = json[parameters.strcreatedByUser];
+      if (json[parameters.strmediaMasterIds] != null) {
+            mediaMasterIds = <MediaMasterIds>[];
+            json[parameters.strmediaMasterIds].forEach((v) {
+              mediaMasterIds!.add(MediaMasterIds.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Degree.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/UniversityModel.dart';
 
@@ -11,17 +12,21 @@ class QualificationInfo {
   QualificationInfo({this.degree, this.university});
 
   QualificationInfo.fromJson(Map<String, dynamic> json) {
-    if (json[parameters.strdegree] != null) {
-      degree = <Degree>[];
-      json[parameters.strdegree].forEach((v) {
-        degree!.add(new Degree.fromJson(v));
-      });
-    }
-    if (json[parameters.struniversity] != null) {
-      university = <University>[];
-      json[parameters.struniversity].forEach((v) {
-        university!.add(new University.fromJson(v));
-      });
+    try {
+      if (json[parameters.strdegree] != null) {
+            degree = <Degree>[];
+            json[parameters.strdegree].forEach((v) {
+              degree!.add(new Degree.fromJson(v));
+            });
+          }
+      if (json[parameters.struniversity] != null) {
+            university = <University>[];
+            json[parameters.struniversity].forEach((v) {
+              university!.add(new University.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

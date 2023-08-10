@@ -43,7 +43,9 @@ class _HomePageState extends State<CalendarMonth> {
       try {
         data = data.toList();
         _events = _groupEvents(data);
-      } catch (e) {}
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      }
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +196,9 @@ class _HomePageState extends State<CalendarMonth> {
           ),
         ],
       );
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<DateTime, List<dynamic>> _groupEvents(
@@ -210,7 +214,9 @@ class _HomePageState extends State<CalendarMonth> {
         try {
           boolList.add(true);
           data[date] = boolList;
-        } catch (e) {
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
           print(e);
         }
       }

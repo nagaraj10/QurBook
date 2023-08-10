@@ -197,7 +197,9 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       var contents = await file.readAsBytes();
 
       return contents;
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return null;
     }
   }

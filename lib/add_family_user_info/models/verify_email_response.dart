@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class VerifyEmailResponse {
@@ -10,12 +12,16 @@ class VerifyEmailResponse {
   VerifyEmailResponse({this.status, this.success, this.message, this.response});
 
   VerifyEmailResponse.fromJson(Map<String, dynamic> json) {
-    status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+    try {
+      status = json[parameters.strStatus];
+      success = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+      response = json[parameters.strResponse] != null
+              ? Response.fromJson(json[parameters.strResponse])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -37,8 +43,12 @@ class Response {
   Response({this.creationTime, this.expirationTime});
 
   Response.fromJson(Map<String, dynamic> json) {
-    creationTime = json[parameters.strCreationTime];
-    expirationTime = json[parameters.strExpirationTime];
+    try {
+      creationTime = json[parameters.strCreationTime];
+      expirationTime = json[parameters.strExpirationTime];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Fees.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Languages.dart';
@@ -88,64 +89,68 @@ class DoctorIds {
       this.profilePicThumbnailURL});
 
   DoctorIds.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    createdBy = json[parameters.strCreatedBy];
-    name = json[parameters.strName];
-    phoneNumber1 = json[parameters.strPhoneNumber1];
-    phoneNumber2 = json[parameters.strPhoneNumber2];
-    phoneNumber3 = json[parameters.strPhoneNumber3];
-    phoneNumber4 = json[parameters.strPhoneNumber4];
-    addressLine1 = json[parameters.strAddressLine1];
-    addressLine2 = json[parameters.strAddressLine2];
-    city = json[parameters.strCity];
-    state = json[parameters.strState];
+    try {
+      id = json[parameters.strId];
+      createdBy = json[parameters.strCreatedBy];
+      name = json[parameters.strName];
+      phoneNumber1 = json[parameters.strPhoneNumber1];
+      phoneNumber2 = json[parameters.strPhoneNumber2];
+      phoneNumber3 = json[parameters.strPhoneNumber3];
+      phoneNumber4 = json[parameters.strPhoneNumber4];
+      addressLine1 = json[parameters.strAddressLine1];
+      addressLine2 = json[parameters.strAddressLine2];
+      city = json[parameters.strCity];
+      state = json[parameters.strState];
 
-    website = json[parameters.strWebsite];
-    email = json[parameters.strEmail];
-    googleMapUrl = json[parameters.strGoogleMapUrl];
-    isUserDefined = json[parameters.strIsUserDefined];
-    description = json[parameters.strDescription];
-    isActive = json[parameters.strIsActive];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    isDefault = json[parameters.strisDefault];
-    createdBy = json[parameters.strCreatedBy];
+      website = json[parameters.strWebsite];
+      email = json[parameters.strEmail];
+      googleMapUrl = json[parameters.strGoogleMapUrl];
+      isUserDefined = json[parameters.strIsUserDefined];
+      description = json[parameters.strDescription];
+      isActive = json[parameters.strIsActive];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      isDefault = json[parameters.strisDefault];
+      createdBy = json[parameters.strCreatedBy];
 
-    profilePic = json[parameters.strprofilePic] != null
-        ? new ProfilePic.fromJson(json[parameters.strprofilePic])
-        : null;
-    profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
-        ? new ProfilePic.fromJson(json[parameters.strprofilePicThumbnail])
-        : null;
-    firstName = json[parameters.strfirstName];
-    lastName = json[parameters.strlastName];
-    genderId = json[parameters.strGender];
-    dob = json[parameters.strdob];
-    cityId = json[parameters.strcityId];
-    stateId = json[parameters.strstateId];
-    pinCode = json[parameters.strpinCode];
-    lastModifiedBy = json[parameters.strlastModifiedBy];
-    isTelehealthEnabled = json[parameters.strisTelehealthEnabled];
-    isMCIVerified = json[parameters.strisMCIVerified];
-    if (json[parameters.strlanguages] != null) {
-      languages = <Languages>[];
-      json[parameters.strlanguages].forEach((v) {
-        languages!.add(new Languages.fromJson(v));
-      });
+      profilePic = json[parameters.strprofilePic] != null
+              ? new ProfilePic.fromJson(json[parameters.strprofilePic])
+              : null;
+      profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
+              ? new ProfilePic.fromJson(json[parameters.strprofilePicThumbnail])
+              : null;
+      firstName = json[parameters.strfirstName];
+      lastName = json[parameters.strlastName];
+      genderId = json[parameters.strGender];
+      dob = json[parameters.strdob];
+      cityId = json[parameters.strcityId];
+      stateId = json[parameters.strstateId];
+      pinCode = json[parameters.strpinCode];
+      lastModifiedBy = json[parameters.strlastModifiedBy];
+      isTelehealthEnabled = json[parameters.strisTelehealthEnabled];
+      isMCIVerified = json[parameters.strisMCIVerified];
+      if (json[parameters.strlanguages] != null) {
+            languages = <Languages>[];
+            json[parameters.strlanguages].forEach((v) {
+              languages!.add(new Languages.fromJson(v));
+            });
+          }
+      if (json[parameters.strprofessionalDetails] != null) {
+            professionalDetails = <ProfessionalDetails>[];
+            json[parameters.strprofessionalDetails].forEach((v) {
+              professionalDetails!.add(new ProfessionalDetails.fromJson(v));
+            });
+          }
+      fees = json[parameters.strfees] != null
+              ? new Fees.fromJson(json[parameters.strfees])
+              : null;
+      isDefault = json[parameters.strisDefault];
+      doctorPatientMappingId = json[parameters.strdoctorPatientMappingId];
+      gender = json[parameters.strGender];
+      specialization = json[parameters.strSpecilization];
+      profilePicThumbnailURL = json[parameters.strprofilePicThumbnailURL];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
-    if (json[parameters.strprofessionalDetails] != null) {
-      professionalDetails = <ProfessionalDetails>[];
-      json[parameters.strprofessionalDetails].forEach((v) {
-        professionalDetails!.add(new ProfessionalDetails.fromJson(v));
-      });
-    }
-    fees = json[parameters.strfees] != null
-        ? new Fees.fromJson(json[parameters.strfees])
-        : null;
-    isDefault = json[parameters.strisDefault];
-    doctorPatientMappingId = json[parameters.strdoctorPatientMappingId];
-    gender = json[parameters.strGender];
-    specialization = json[parameters.strSpecilization];
-    profilePicThumbnailURL = json[parameters.strprofilePicThumbnailURL];
   }
 
   Map<String, dynamic> toJson() {

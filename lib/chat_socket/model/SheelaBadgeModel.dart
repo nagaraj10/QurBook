@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class SheelaBadgeModel {
   bool? isSuccess;
   String? message;
@@ -7,10 +9,14 @@ class SheelaBadgeModel {
   SheelaBadgeModel({this.isSuccess, this.message, this.result});
 
   SheelaBadgeModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result =
-    json['result'] != null ? new SheelaBadgeResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result =
+          json['result'] != null ? new SheelaBadgeResult.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -31,7 +37,11 @@ class SheelaBadgeResult {
   SheelaBadgeResult({this.queueCount/*, this.queueDetails*/});
 
   SheelaBadgeResult.fromJson(Map<String, dynamic> json) {
-    queueCount = json['queueCount'];
+    try {
+      queueCount = json['queueCount'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
    /* if (json['queueDetails'] != null) {
       queueDetails = <QueueDetails>[];
       json['queueDetails'].forEach((v) {
@@ -57,10 +67,14 @@ class QueueDetails {
   QueueDetails({this.sheelaQueueId, this.messageDetails});
 
   QueueDetails.fromJson(Map<String, dynamic> json) {
-    sheelaQueueId = json['sheelaQueueId'];
-    messageDetails = json['messageDetails'] != null
-        ? new MessageDetails.fromJson(json['messageDetails'])
-        : null;
+    try {
+      sheelaQueueId = json['sheelaQueueId'];
+      messageDetails = json['messageDetails'] != null
+              ? new MessageDetails.fromJson(json['messageDetails'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -88,17 +102,21 @@ class MessageDetails {
         this.messageContent});
 
   MessageDetails.fromJson(Map<String, dynamic> json) {
-    source = json['source'];
-    content =
-    json['content'] != null ? new Content.fromJson(json['content']) : null;
-    payload =
-    json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
-    rawMessage = json['rawMessage'] != null
-        ? new Content.fromJson(json['rawMessage'])
-        : null;
-    messageContent = json['messageContent'] != null
-        ? new MessageContent.fromJson(json['messageContent'])
-        : null;
+    try {
+      source = json['source'];
+      content =
+          json['content'] != null ? new Content.fromJson(json['content']) : null;
+      payload =
+          json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+      rawMessage = json['rawMessage'] != null
+              ? new Content.fromJson(json['rawMessage'])
+              : null;
+      messageContent = json['messageContent'] != null
+              ? new MessageContent.fromJson(json['messageContent'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -127,8 +145,12 @@ class Content {
   Content({this.messageBody, this.messageTitle});
 
   Content.fromJson(Map<String, dynamic> json) {
-    messageBody = json['messageBody'];
-    messageTitle = json['messageTitle'];
+    try {
+      messageBody = json['messageBody'];
+      messageTitle = json['messageTitle'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -154,11 +176,15 @@ class Payload {
         this.isSheela});
 
   Payload.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    priority = json['priority'];
-    redirectTo = json['redirectTo'];
-    notificationListId = json['notificationListId'];
-    isSheela = json['isSheela'];
+    try {
+      type = json['type'];
+      priority = json['priority'];
+      redirectTo = json['redirectTo'];
+      notificationListId = json['notificationListId'];
+      isSheela = json['isSheela'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -185,10 +211,14 @@ class MessageContent {
         this.rawMessageTitle});
 
   MessageContent.fromJson(Map<String, dynamic> json) {
-    messageBody = json['messageBody'];
-    messageTitle = json['messageTitle'];
-    rawMessageBody = json['rawMessageBody'];
-    rawMessageTitle = json['rawMessageTitle'];
+    try {
+      messageBody = json['messageBody'];
+      messageTitle = json['messageTitle'];
+      rawMessageBody = json['rawMessageBody'];
+      rawMessageTitle = json['rawMessageTitle'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

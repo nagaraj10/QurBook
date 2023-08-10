@@ -184,8 +184,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           preferredTimeController.text = preferredTimeStr;
         });
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -207,7 +209,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               .getHealthConditions();
 
       setBooleanValues();
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         print(e);
       }
@@ -226,8 +230,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       });
 
       super.dispose();
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -321,8 +327,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             }
           }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -331,7 +339,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       var textEditingController = new TextEditingController();
       textEditingControllers.putIfAbsent(
           CommonUtil().getFieldName(field.name), () => textEditingController);
-    } catch (e) {}
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   @override
@@ -774,8 +784,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                       moveToSearchScreen(context,
                                           CommonConstants.keyLabs, field,
                                           setState: setState);
-                                    } catch (e) {
+                                    } catch (e,stackTrace) {
                                       //print(e);
+                                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                                     }
                                   },
                                   child: getIconButton()),
@@ -863,7 +874,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                     moveToSearchScreen(
                                         context, CommonConstants.keyCity, field,
                                         setState: setState);
-                                  } catch (e) {}
+                                  } catch (e,stackTrace) {
+                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                  }
                                 },
                                 child: getIconButton()),
                           ),
@@ -878,7 +891,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           isFirstTym = false;
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       //print(e.toString());
     }
     // widgetForColumn.add(getWidgetForLab());
@@ -942,8 +956,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           }
         }
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -1051,8 +1066,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       tckConstants.STR_NO_CONNECTIVITY, scaffold_state);
                 }
               });
-            } catch (e) {
+            } catch (e,stackTrace) {
               //print(e);
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             }
           },
           child: Container(
@@ -1523,8 +1539,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       selectedTime = TimeOfDay.now();
       preferredTimeStr = FHBUtils().formatTimeOfDay(selectedTime);
       preferredTimeController.text = preferredTimeStr;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -1541,8 +1558,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           }
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return SizedBoxWithChild(
       height: 50,
@@ -1591,7 +1609,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.selPrefLabId.value =
                     CommonUtil().validString(currLab.id);
                 setState(() {});
-              } catch (e) {}
+              } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+              }
             },
           ),
         ),
@@ -1610,8 +1630,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           }
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return SizedBoxWithChild(
       height: 50,
@@ -1660,7 +1681,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.selPrefDoctorId.value =
                     CommonUtil().validString(currDoc.id);
                 setState(() {});
-              } catch (e) {}
+              } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+              }
             },
           ),
         ),
@@ -2464,16 +2487,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (strMsg.trim().isNotEmpty) {
               FlutterToast().getToast(strMsg, Colors.red);
             }
-          } catch (e) {
+          } catch (e,stackTrace) {
             //print(e);
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           }
         }
       }).catchError((error) {
         Navigator.of(context, rootNavigator: true).pop();
         //print('API Error Occured : $error');
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -2586,7 +2611,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
-    } on FetchException catch (e) {}
+    } on FetchException catch (e,stackTrace) {}
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
@@ -2950,8 +2975,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           //print("file.path" + file.path);
           filePathist.add(file.path);
         });
-      } catch (e) {
+      } catch (e,stackTrace) {
         //print('$e exception thrown');
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
     }
     if (filePathist.length == imagesPathMain.length) {
@@ -3002,8 +3028,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       controller.strCityName.value = "";
       controller.strPincode.value = "";
       controller.strStateName.value = "";
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -3083,14 +3110,17 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             field.selValueDD!.name!;
       });
       onRefreshWidget();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   onRefreshWidget() {
     try {
       setState(() {});
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -3102,7 +3132,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           ? displayName
           : CommonUtil().getFieldName(field.name)!;
       return displayName;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
     return displayName;
   }
 
@@ -3112,7 +3144,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       strText = CommonUtil().validString(
           textEditingControllers[CommonUtil().getFieldName(field.name)]!.text);
       return strText;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
     return strText;
   }
 }

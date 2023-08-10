@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
 import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_reports/model/report_model.dart';
@@ -40,7 +41,8 @@ class TicketViewModel extends ChangeNotifier {
       try {
         var userTicketModel = await userTicketService.getTicketList();
         return userTicketModel;
-      } catch (e) {
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         print('Exception in getting list of Ticket VM Model : ${e.toString()}');
       }
     }
@@ -52,7 +54,9 @@ class TicketViewModel extends ChangeNotifier {
       try {
         var userTicketModel = await userTicketService.getTicketDetails(sId);
         return userTicketModel;
-      } catch (e) {
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         print('Exception in getting list of Ticket VM Model : ${e.toString()}');
       }
     }
@@ -65,7 +69,9 @@ class TicketViewModel extends ChangeNotifier {
       try {
         var userTicketTypesModel = await userTicketService.getTicketTypesList();
         return userTicketTypesModel;
-      } catch (e) {
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         print(
             'Exception in Get ticket category Ticket VM Model : ${e.toString()}');
       }
@@ -79,7 +85,9 @@ class TicketViewModel extends ChangeNotifier {
     if (userid != null) {
       try {
         createTicketModel = await userTicketService.createTicket();
-      } catch (e) {
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         print('Exception in Craete Ticket VM Model : ${e.toString()}');
       }
     }
@@ -94,7 +102,9 @@ class TicketViewModel extends ChangeNotifier {
       try {
         var commentTicketModel = await userTicketService.commentTicket();
         return commentTicketModel;
-      } catch (e) {
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         print('Exception in Comment Ticket VM Model : ${e.toString()}');
       }
     }

@@ -11,11 +11,15 @@ class OTPEmailResponse {
   OTPEmailResponse({this.status, this.success, this.message, this.response});
 
   OTPEmailResponse.fromJson(Map<String, dynamic> json) {
-    final commonUtil = CommonUtil();
-    status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = commonUtil.checkIfStringIsEmpty(json[parameters.strResponse]);
+    try {
+      final commonUtil = CommonUtil();
+      status = json[parameters.strStatus];
+      success = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+      response = commonUtil.checkIfStringIsEmpty(json[parameters.strResponse]);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

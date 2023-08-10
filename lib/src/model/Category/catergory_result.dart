@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class CategoryResult {
@@ -30,25 +32,29 @@ class CategoryResult {
       this.isDelete});
 
   CategoryResult.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    categoryName = json[parameters.strCategoryName];
-    categoryDescription = json[parameters.strCategoryDesc];
-    logo = json[parameters.strLogo];
-    isDisplay = json[parameters.strIsDisplay];
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    if (json.containsKey(parameters.strIsCreate)) {
-      isCreate = json[parameters.strIsCreate];
-    }
-    if (json.containsKey(parameters.strIsRead)) {
-      isRead = json[parameters.strIsRead];
-    }
-    if (json.containsKey(parameters.strIsEdit)) {
-      isEdit = json[parameters.strIsEdit];
-    }
-    if (json.containsKey(parameters.strIsDelete)) {
-      isDelete = json[parameters.strIsDelete];
+    try {
+      id = json[parameters.strId];
+      categoryName = json[parameters.strCategoryName];
+      categoryDescription = json[parameters.strCategoryDesc];
+      logo = json[parameters.strLogo];
+      isDisplay = json[parameters.strIsDisplay];
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      if (json.containsKey(parameters.strIsCreate)) {
+            isCreate = json[parameters.strIsCreate];
+          }
+      if (json.containsKey(parameters.strIsRead)) {
+            isRead = json[parameters.strIsRead];
+          }
+      if (json.containsKey(parameters.strIsEdit)) {
+            isEdit = json[parameters.strIsEdit];
+          }
+      if (json.containsKey(parameters.strIsDelete)) {
+            isDelete = json[parameters.strIsDelete];
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -1,6 +1,7 @@
-
 import 'dart:async';
 import 'dart:convert' as convert;
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../models/add_family_otp_response.dart';
 import '../../common/CommonConstants.dart';
@@ -26,7 +27,8 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
   Stream<bool> get submitCheck => mobileNumber.map((m) => true);
 
   StreamSink<ApiResponse<AddFamilyOTPResponse>> get otpSink =>
-      _otpVerifyController!.sink as StreamSink<ApiResponse<AddFamilyOTPResponse>>;
+      _otpVerifyController!.sink
+          as StreamSink<ApiResponse<AddFamilyOTPResponse>>;
 
   Stream<ApiResponse<AddFamilyOTPResponse>> get otpStream =>
       _otpVerifyController!.stream as Stream<ApiResponse<AddFamilyOTPResponse>>;
@@ -53,7 +55,7 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
     verifyOTP[variable.strOTP] = otp;
     verifyOTP[variable.strOperation] = CommonConstants.user_linking;
     verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
-    verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
+    verifyOTP[parameters.strEntityId] = parameters.strEntityIdVal;
     verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
 
     final jsonString = convert.jsonEncode(verifyOTP);
@@ -64,7 +66,8 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
     try {
       addFamilyOTPResponse =
           await _authenticationRepository.verifyAddFamilyOTP(jsonString);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       otpSink.add(ApiResponse.error(e.toString()));
     }
     return addFamilyOTPResponse;

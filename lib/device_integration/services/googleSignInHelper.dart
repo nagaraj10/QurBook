@@ -1,5 +1,5 @@
-
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
@@ -79,7 +79,9 @@ class GoogleSignInHelper {
         await _googleSignIn.disconnect();
       }
       return true;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return false;
     }
   }

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'State.dart';
 
 class StateModel {
@@ -8,12 +10,16 @@ class StateModel {
   StateModel({this.isSuccess, this.result});
 
   StateModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <State>[];
-      json['result'].forEach((v) {
-        result!.add(State.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <State>[];
+            json['result'].forEach((v) {
+              result!.add(State.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

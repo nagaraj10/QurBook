@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/refundInfo.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
@@ -10,11 +11,15 @@ class CancelResult {
   CancelResult({this.bookingId, this.refundInfo, this.status});
 
   CancelResult.fromJson(Map<String, dynamic> json) {
-    bookingId = json[parameters.strBookingId];
-    refundInfo = json[parameters.strRefundInfo] != null
-        ? new RefundInfo.fromJson(json[parameters.strRefundInfo])
-        : null;
-    status = json[parameters.strStatus];
+    try {
+      bookingId = json[parameters.strBookingId];
+      refundInfo = json[parameters.strRefundInfo] != null
+              ? new RefundInfo.fromJson(json[parameters.strRefundInfo])
+              : null;
+      status = json[parameters.strStatus];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

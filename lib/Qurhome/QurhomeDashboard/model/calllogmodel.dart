@@ -1,5 +1,5 @@
-
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class CallLogModel {
   String? callerUser;
@@ -34,8 +34,8 @@ class CallLogModel {
       additionalInfo = json["additionalInfo"] != null
           ? new AdditionalInfo.fromJson(json["additionalInfo"])
           : null;
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -52,8 +52,8 @@ class CallLogModel {
       if (this.additionalInfo != null) {
         data["additionalInfo"] = this.additionalInfo!.toJson();
       }
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return data;
@@ -96,8 +96,8 @@ class CallEndModel {
           ? new AdditionalInfo.fromJson(json["additionalInfo"])
           : null;
       id = json['id'];
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -115,8 +115,8 @@ class CallEndModel {
         data["additionalInfo"] = this.additionalInfo!.toJson();
       }
       data['id'] = this.id;
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return data;
@@ -133,8 +133,9 @@ class AdditionalInfo {
       location = json["location"] != null
           ? new Location.fromJson(json["location"])
           : null;
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -144,8 +145,8 @@ class AdditionalInfo {
       if (this.location != null) {
         data["location"] = this.location!.toJson();
       }
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return data;
   }
@@ -156,16 +157,16 @@ class CallLogResponseModel {
   String? message;
   String? result;
 
-  CallLogResponseModel(
-      {this.isSuccess, this.message, this.result});
+  CallLogResponseModel({this.isSuccess, this.message, this.result});
 
   CallLogResponseModel.fromJson(Map<String, dynamic> json) {
     try {
       isSuccess = json['isSuccess'];
       message = json['message'];
       result = json['result'];
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -175,8 +176,9 @@ class CallLogResponseModel {
       data['isSuccess'] = this.isSuccess;
       data['message'] = this.message;
       data['result'] = this.result;
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
 
     return data;
@@ -193,11 +195,11 @@ class CallRecordModel {
     try {
       isSuccess = json['isSuccess'];
       result =
-      json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      print(e);
-    }
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -207,15 +209,14 @@ class CallRecordModel {
       if (this.result != null) {
         data['result'] = this.result!.toJson();
       }
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
 
     return data;
   }
 }
-
-
 
 class Result {
   String? resourceId;
@@ -224,8 +225,12 @@ class Result {
   Result({this.resourceId, this.sid});
 
   Result.fromJson(Map<String, dynamic> json) {
-    resourceId = json['resourceId'];
-    sid = json['sid'];
+    try {
+      resourceId = json['resourceId'];
+      sid = json['sid'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -246,12 +251,16 @@ class CallLogErrorResponseModel {
       {this.status, this.isSuccess, this.message, this.response});
 
   CallLogErrorResponseModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    response = json['response'] != null
-        ? new ResponseData.fromJson(json['response'])
-        : null;
+    try {
+      status = json['status'];
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      response = json['response'] != null
+              ? new ResponseData.fromJson(json['response'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -273,8 +282,12 @@ class ResponseData {
   ResponseData({this.count, this.data});
 
   ResponseData.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    data = json['data'] != null ? new DataModel.fromJson(json['data']) : null;
+    try {
+      count = json['count'];
+      data = json['data'] != null ? new DataModel.fromJson(json['data']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -293,7 +306,11 @@ class DataModel {
   DataModel({this.msg});
 
   DataModel.fromJson(Map<String, dynamic> json) {
-    msg = json['msg'];
+    try {
+      msg = json['msg'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

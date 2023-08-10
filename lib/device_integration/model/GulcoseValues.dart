@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart';
 
 class GlucoseValues {
@@ -8,12 +10,16 @@ class GlucoseValues {
   GlucoseValues({this.isSuccess, this.result});
 
   GlucoseValues.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[is_Success];
-    if (json[dataResult] != null) {
-      result = <GVResult>[];
-      json[dataResult].forEach((glucosevalue) {
-        result!.add(GVResult.fromJson(glucosevalue));
-      });
+    try {
+      isSuccess = json[is_Success];
+      if (json[dataResult] != null) {
+            result = <GVResult>[];
+            json[dataResult].forEach((glucosevalue) {
+              result!.add(GVResult.fromJson(glucosevalue));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -50,13 +56,17 @@ class GVResult {
       this.dateTimeValue});
 
   GVResult.fromJson(Map<String, dynamic> json) {
-    sourceType = json[strsourcetype];
-    startDateTime = json[strStartTimeStamp];
-    endDateTime = json[strEndTimeStamp];
-    bloodGlucoseLevel = json[strParamBGLevel];
-    bgUnit = json[strParamBGUnit];
-    mealContext = json[strParamBGMealContext];
-    mealType = json[strParamBGMealType];
+    try {
+      sourceType = json[strsourcetype];
+      startDateTime = json[strStartTimeStamp];
+      endDateTime = json[strEndTimeStamp];
+      bloodGlucoseLevel = json[strParamBGLevel];
+      bgUnit = json[strParamBGUnit];
+      mealContext = json[strParamBGMealContext];
+      mealType = json[strParamBGMealType];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

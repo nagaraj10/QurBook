@@ -1,21 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/dynamicfieldmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class QurhomePatientALert extends StatefulWidget {
@@ -25,7 +19,7 @@ class QurhomePatientALert extends StatefulWidget {
 
 class _QurhomePatientALertState extends State<QurhomePatientALert> {
   final controller = Get.put(QurhomeDashboardController());
-  final qurhomeRegimenController = Get.put(QurhomeRegimenController());
+  final qurhomeRegimenController = CommonUtil().onInitQurhomeRegimenController();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   @override
@@ -337,6 +331,107 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
     return '';
   }
 
+  void showEscalateNotes(
+      PatientAlertData patientAlertData, String activityName) {
+    TextEditingController controller=TextEditingController();
+    showDialog(
+        context: context,
+        builder: (__) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.all(8),
+            content: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left:8.0),
+                        child: Text(COMMENTS,style: TextStyle(fontWeight: FontWeight.bold),),
+                      ),
+                      Spacer(),
+                      IconButton(
+                          padding: EdgeInsets.all(8.0),
+                          icon: Icon(
+                            Icons.close,
+                            size: CommonUtil().isTablet!
+                                ? imageCloseTab
+                                : imageCloseMobile,
+                          ),
+                          onPressed: () {
+                            try {
+                              Navigator.pop(context);
+                            } catch (e,stackTrace) {
+                              print(e);
+                            }
+                          })
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: controller,
+                      decoration: InputDecoration(
+                        hintText: REASON_FOR_ESCALATION,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color:
+                                  Color(CommonUtil().getQurhomePrimaryColor())),
+                        ),
+                        border: OutlineInputBorder(
+                            // borderSide: new BorderSide(color: Colors.teal)
+                            ),
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      minLines: 5, //Normal textInputField will be displayed
+                      maxLines:
+                          6, // when user presses enter it will adapt to it
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary:
+                              Color(CommonUtil().getQurhomePrimaryColor())),
+                      onPressed: () {
+                        if(controller.text.isNotEmpty){
+                          callEscalateApi(patientAlertData,activityName,controller.text);
+                        }else{
+                          FlutterToast().getToast(PLEASE_ADD_COMMENTS, Colors.red);
+                        }
+                      },
+                      child: Text(
+                        SUBMIT,
+                        style: TextStyle(color: Colors.white),
+                      ))
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future<void> callEscalateApi(PatientAlertData patientAlertData, String activityName,String notes) async {
+    CommonUtil().showSingleLoadingDialog(context);
+    bool response = await controller.caregiverEscalateAction(
+      patientAlertData,
+      activityName,
+      notes: notes
+    );
+    if (response) {
+      Navigator.pop(context);
+      CommonUtil().hideLoadingDialog(context);
+      FlutterToast().getToast(strEscalateAlertMsg, Colors.green);
+    } else {
+      CommonUtil().hideLoadingDialog(context);
+
+      FlutterToast().getToast(NOT_FILE_IMAGE, Colors.red);
+    }
+  }
+
   void showRegimenDialog(PatientAlertData patientAlertData, int itemIndex) {
     String activityName = " ";
     try {
@@ -348,7 +443,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
         12,
         forDetails: false,
       ));
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
     showDialog(
         context: context,
         builder: (__) {
@@ -373,8 +470,9 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                             onPressed: () {
                               try {
                                 Navigator.pop(context);
-                              } catch (e) {
+                              } catch (e,stackTrace) {
                                 print(e);
+                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                               }
                             })
                       ],
@@ -572,23 +670,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                               )),
                           InkWell(
                             onTap: () async {
-                              CommonUtil().showSingleLoadingDialog(context);
-                              bool response =
-                                  await controller.caregiverEscalateAction(
-                                patientAlertData,
-                                activityName,
-                              );
-                              if (response) {
-                                Navigator.pop(context);
-                                CommonUtil().hideLoadingDialog(context);
-                                FlutterToast().getToast(
-                                    strEscalateAlertMsg, Colors.green);
-                              } else {
-                                CommonUtil().hideLoadingDialog(context);
-
-                                FlutterToast()
-                                    .getToast(NOT_FILE_IMAGE, Colors.red);
-                              }
+                              Navigator.pop(context);
+                              showEscalateNotes(patientAlertData, activityName);
                             },
                             child: Column(
                               children: [
@@ -670,8 +753,10 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
             }
         }
       }
-    } catch (e) {
-      return vitalValue;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+      return "NA";
     }
 
     return vitalValue;

@@ -121,8 +121,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
           );
         },
       );
-    } catch (e) {
+    } catch (e,stackTrace) {
       _isRecording = false;
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       setState(
         () {},
       );
@@ -176,8 +178,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
         if (value != null && value != '')
           Navigator.of(context).pop({Constants.keyAudioFile: value});
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print("Failed to stop recorder");
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
     _isRecording = false;
     if (_recorderSubscription != null) {

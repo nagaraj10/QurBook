@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class CreatedBy {
@@ -7,7 +8,11 @@ class CreatedBy {
   CreatedBy({this.id});
 
   CreatedBy.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
+    try {
+      id = json[parameters.strId];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class AddProviderPlanResponse {
   bool? isSuccess;
   List<AddProviderPlanResponseResult>? result;
@@ -6,12 +8,16 @@ class AddProviderPlanResponse {
   AddProviderPlanResponse({this.isSuccess, this.result});
 
   AddProviderPlanResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result =  <AddProviderPlanResponseResult>[];
-      json['result'].forEach((v) {
-        result!.add(new AddProviderPlanResponseResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result =  <AddProviderPlanResponseResult>[];
+            json['result'].forEach((v) {
+              result!.add(new AddProviderPlanResponseResult.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -56,25 +62,29 @@ class AddProviderPlanResponseResult {
         this.isActive});
 
   AddProviderPlanResponseResult.fromJson(Map<String, dynamic> json) {
-    providerType = json['providerType'];
-    createdBy = json['createdBy'] != null
-        ? new CreatedBy.fromJson(json['createdBy'])
-        : null;
-    createdOn = json['createdOn'];
-    isDefault = json['isDefault'];
-    isInvite = json['isInvite'];
-    doctor = json['doctor'];
-    healthOrganization = json['healthOrganization'] != null
-        ? new CreatedBy.fromJson(json['healthOrganization'])
-        : null;
-    patient = json['patient'] != null
-        ? new CreatedBy.fromJson(json['patient'])
-        : null;
-    startDate = json['startDate'];
-    endDate = json['endDate'];
-    lastModifiedOn = json['lastModifiedOn'];
-    id = json['id'];
-    isActive = json['isActive'];
+    try {
+      providerType = json['providerType'];
+      createdBy = json['createdBy'] != null
+              ? new CreatedBy.fromJson(json['createdBy'])
+              : null;
+      createdOn = json['createdOn'];
+      isDefault = json['isDefault'];
+      isInvite = json['isInvite'];
+      doctor = json['doctor'];
+      healthOrganization = json['healthOrganization'] != null
+              ? new CreatedBy.fromJson(json['healthOrganization'])
+              : null;
+      patient = json['patient'] != null
+              ? new CreatedBy.fromJson(json['patient'])
+              : null;
+      startDate = json['startDate'];
+      endDate = json['endDate'];
+      lastModifiedOn = json['lastModifiedOn'];
+      id = json['id'];
+      isActive = json['isActive'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -108,7 +118,11 @@ class CreatedBy {
   CreatedBy({this.id});
 
   CreatedBy.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    try {
+      id = json['id'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

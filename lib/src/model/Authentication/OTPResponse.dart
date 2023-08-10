@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class OTPResponse {
@@ -10,12 +12,16 @@ class OTPResponse {
   OTPResponse({this.status, this.success, this.message, this.response});
 
   OTPResponse.fromJson(Map<String, dynamic> json) {
-   status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+   try {
+     status = json[parameters.strStatus];
+     success = json[parameters.strSuccess];
+     message = json[parameters.strMessage];
+     response = json[parameters.strResponse] != null
+             ? Response.fromJson(json[parameters.strResponse])
+             : null;
+   } catch (e,stackTrace) {
+     CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+   }
   }
 
   Map<String, dynamic> toJson() {
@@ -45,11 +51,15 @@ class Response {
       this.authToken});
 
   Response.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    countryCode = json[parameters.strCountryCode];
-    phoneNumber = json[parameters.strPhoneNumber];
-    lastLoggedIn = json[parameters.strLastLoggedIn];
-    authToken = json[parameters.strAuthToken];
+    try {
+      id = json[parameters.strId];
+      countryCode = json[parameters.strCountryCode];
+      phoneNumber = json[parameters.strPhoneNumber];
+      lastLoggedIn = json[parameters.strLastLoggedIn];
+      authToken = json[parameters.strAuthToken];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

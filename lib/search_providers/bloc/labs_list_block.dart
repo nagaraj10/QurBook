@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/search_providers/models/CityListModel.dart';
 
 import '../../constants/variable_constant.dart' as variable;
@@ -54,7 +55,9 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
       final labsListResponse =
           await _labsListRepository.getLabsFromSearch(param);
       labListSink.add(ApiResponse.completed(labsListResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       labListSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -65,7 +68,9 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
       final labsListResponse =
           await _labsListRepository.getLabsFromSearchNew(param,isFromCreateTicket);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       labListNewSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -76,7 +81,9 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
     try {
       labsListResponse = await _labsListRepository.getLabsFromId(labId);
       labListSink.add(ApiResponse.completed(labsListResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       labListSink.add(ApiResponse.error(e.toString()));
     }
     return labsListResponse;
@@ -88,7 +95,9 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
       var labsListResponse =
           await _labsListRepository.getExistingLabsFromSearchNew(param,isFromCreateTicket);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       labListNewSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -98,7 +107,9 @@ StreamSink<ApiResponse<CityListModel>> get cityListNewSink =>
     try {
       var labsListResponse = await _labsListRepository.getCityList(param);
       cityListNewSink.add(ApiResponse.completed(labsListResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       cityListNewSink.add(ApiResponse.error(e.toString()));
     }
   }

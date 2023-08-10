@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/responseInfoResult.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
@@ -9,9 +10,13 @@ class CancelResponseInfo {
   CancelResponseInfo({this.result, this.isSuccess});
 
   CancelResponseInfo.fromJson(Map<String, dynamic> json) {
-    result =
-    json[parameters.dataResult] != null ? new ResponseInfoResult.fromJson(json[parameters.dataResult]) : null;
-    isSuccess = json[parameters.strIsSuccess];
+    try {
+      result =
+          json[parameters.dataResult] != null ? new ResponseInfoResult.fromJson(json[parameters.dataResult]) : null;
+      isSuccess = json[parameters.strIsSuccess];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

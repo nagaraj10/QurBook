@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'DoctorLanguageCollection.dart';
 import 'User.dart';
 import 'UserProfessionalCollection.dart';
@@ -11,10 +13,14 @@ class GetDoctorsByIdModel {
   GetDoctorsByIdModel({this.isSuccess, this.message, this.result});
 
   GetDoctorsByIdModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result =
-        json['result'] != null ? DoctorResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result =
+              json['result'] != null ? DoctorResult.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -60,31 +66,35 @@ class DoctorResult {
   });
 
   DoctorResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    specialization = json['specialization'];
-    isTelehealthEnabled = json['isTelehealthEnabled'];
-    isMciVerified = json['isMciVerified'];
-    isActive = json['isActive'];
-    isWelcomeMailSent = json['isWelcomeMailSent'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
-    if (json['doctorProfessionalDetailCollection'] != null) {
-      doctorProfessionalDetailCollection =
-          <DoctorProfessionalDetailCollection>[];
-      json['doctorProfessionalDetailCollection'].forEach((v) {
-        doctorProfessionalDetailCollection!
-            .add(DoctorProfessionalDetailCollection.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      specialization = json['specialization'];
+      isTelehealthEnabled = json['isTelehealthEnabled'];
+      isMciVerified = json['isMciVerified'];
+      isActive = json['isActive'];
+      isWelcomeMailSent = json['isWelcomeMailSent'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      user = json['user'] != null ? User.fromJson(json['user']) : null;
+      if (json['doctorProfessionalDetailCollection'] != null) {
+            doctorProfessionalDetailCollection =
+                <DoctorProfessionalDetailCollection>[];
+            json['doctorProfessionalDetailCollection'].forEach((v) {
+              doctorProfessionalDetailCollection!
+                  .add(DoctorProfessionalDetailCollection.fromJson(v));
+            });
+          }
+      if (json['doctorLanguageCollection'] != null) {
+            doctorLanguageCollection = <DoctorLanguageCollection>[];
+            json['doctorLanguageCollection'].forEach((v) {
+              doctorLanguageCollection!.add(DoctorLanguageCollection.fromJson(v));
+            });
+          }
+      isResident = json['isResident'] ?? false;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
-    if (json['doctorLanguageCollection'] != null) {
-      doctorLanguageCollection = <DoctorLanguageCollection>[];
-      json['doctorLanguageCollection'].forEach((v) {
-        doctorLanguageCollection!.add(DoctorLanguageCollection.fromJson(v));
-      });
-    }
-    isResident = json['isResident'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UserRelationshipCollection {
   String? id;
   String? status;
@@ -20,17 +22,21 @@ class UserRelationshipCollection {
       this.relationship});
 
   UserRelationshipCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    status = json['status'];
-    nickName = json['nickName'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    parent =
-        json['parent'] != null ? Parent.fromJson(json['parent']) : null;
-    relationship = json['relationship'] != null
-        ? Relationship.fromJson(json['relationship'])
-        : null;
+    try {
+      id = json['id'];
+      status = json['status'];
+      nickName = json['nickName'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      parent =
+              json['parent'] != null ? Parent.fromJson(json['parent']) : null;
+      relationship = json['relationship'] != null
+              ? Relationship.fromJson(json['relationship'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -112,34 +118,38 @@ class Parent {
       this.providerId});
 
   Parent.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    userName = json['userName'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    dateOfBirth = json['dateOfBirth'];
-    bloodGroup = json['bloodGroup'];
-    countryCode = json['countryCode'];
-    profilePicUrl = json['profilePicUrl'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTempUser = json['isTempUser'];
-    isVirtualUser = json['isVirtualUser'];
-    isMigrated = json['isMigrated'];
-    isClaimed = json['isClaimed'];
-    isIeUser = json['isIeUser'];
-    isEmailVerified = json['isEmailVerified'];
-    isCpUser = json['isCpUser'];
-    communicationPreferences = json['communicationPreferences'];
-    medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    providerId = json['providerId'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      countryCode = json['countryCode'];
+      profilePicUrl = json['profilePicUrl'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTempUser = json['isTempUser'];
+      isVirtualUser = json['isVirtualUser'];
+      isMigrated = json['isMigrated'];
+      isClaimed = json['isClaimed'];
+      isIeUser = json['isIeUser'];
+      isEmailVerified = json['isEmailVerified'];
+      isCpUser = json['isCpUser'];
+      communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json['medicalPreferences'];
+      isSignedIn = json['isSignedIn'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      providerId = json['providerId'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -199,15 +209,19 @@ class Relationship {
       this.lastModifiedOn});
 
   Relationship.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

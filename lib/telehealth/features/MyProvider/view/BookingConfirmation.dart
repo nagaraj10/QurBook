@@ -207,7 +207,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ? getFeesFromHospital(
                   widget.resultFromHospitalList![widget.doctorListIndex!], false)
               : getFees(widget.healthOrganizationResult![widget.i!], false));
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 
   @override
@@ -335,8 +338,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     null
                 ? firstName! + " " + lastName!
                 : "";
-      } catch (e) {
+      } catch (e,stackTrace) {
         patientName = "";
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       }
 
       doctorName = appointmentNotificationPayment.result?.doctor?.user != null
@@ -420,7 +425,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ' ' +
               myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
 
     if (sharedByMeList == null) {
       sharedByMeList = [];
@@ -706,8 +714,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           discount = new CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(discount))
               .toString();
-        } catch (e) {
+        } catch (e,stackTrace) {
           widget = SizedBox.shrink();
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         }
         widget = Container(
           child: Center(
@@ -1028,9 +1038,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           isResidentDoctorMembership: isResidentDoctorMembership,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       pr.hide();
       toast.getToast(someWentWrong, Colors.red);
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -1661,7 +1673,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 double.parse(discountPercent!),
               )
               .toString();
-        } catch (e) {
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
           return;
         }
         if (originalFees!.contains(',')) {
@@ -1962,7 +1976,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 .doubleWithoutDecimalToInt(double.parse(price.toString()))
                 .toStringAsFixed(2)
                 .toString();
-      } catch (e) {
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         return price.toString();
       }
     }

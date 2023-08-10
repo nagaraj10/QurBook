@@ -4,6 +4,8 @@
 //     final regimentModel = regimentModelFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'regiment_data_model.dart';
 
 List<RegimentDataModel> regimentModelFromJson(String str) =>
@@ -23,8 +25,12 @@ class RegimentQurHubResponseModel {
   Result? result;
 
   RegimentQurHubResponseModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result = json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result = json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -46,13 +52,17 @@ class Result {
         this.upcomingActivities});
 
   Result.fromJson(Map<String, dynamic> json) {
-    date = json['date'];
+    try {
+      date = json['date'];
 
-    if (json['upcomingActivities'] != null) {
-      upcomingActivities = <RegimentDataModel>[];
-      json['upcomingActivities'].forEach((v) {
-        upcomingActivities!.add(new RegimentDataModel.fromJson(v));
-      });
+      if (json['upcomingActivities'] != null) {
+            upcomingActivities = <RegimentDataModel>[];
+            json['upcomingActivities'].forEach((v) {
+              upcomingActivities!.add(new RegimentDataModel.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class NewHospitalResponse {
   bool? isSuccess;
   Result? result;
@@ -6,9 +8,13 @@ class NewHospitalResponse {
   NewHospitalResponse({this.isSuccess, this.result});
 
   NewHospitalResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -52,23 +58,27 @@ class Result {
         this.id});
 
   Result.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    healthOrganizationType = json['healthOrganizationType'] != null
-        ? new HealthOrganizationType.fromJson(json['healthOrganizationType'])
-        : null;
-    createdBy = json['createdBy'] != null
-        ? new HealthOrganizationType.fromJson(json['createdBy'])
-        : null;
-    createdOn = json['createdOn'];
-    isActive = json['isActive'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    city = json['city'];
-    state = json['state'];
-    pincode = json['pincode'];
-    isReferenced = json['isReferenced'];
-    lastModifiedOn = json['lastModifiedOn'];
-    id = json['id'];
+    try {
+      name = json['name'];
+      healthOrganizationType = json['healthOrganizationType'] != null
+              ? new HealthOrganizationType.fromJson(json['healthOrganizationType'])
+              : null;
+      createdBy = json['createdBy'] != null
+              ? new HealthOrganizationType.fromJson(json['createdBy'])
+              : null;
+      createdOn = json['createdOn'];
+      isActive = json['isActive'];
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      city = json['city'];
+      state = json['state'];
+      pincode = json['pincode'];
+      isReferenced = json['isReferenced'];
+      lastModifiedOn = json['lastModifiedOn'];
+      id = json['id'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -100,7 +110,11 @@ class HealthOrganizationType {
   HealthOrganizationType({this.id});
 
   HealthOrganizationType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    try {
+      id = json['id'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class FollowupIn {
@@ -7,7 +8,11 @@ class FollowupIn {
   FollowupIn({this.days});
 
   FollowupIn.fromJson(Map<String, dynamic> json) {
-    days = json[parameters.strdays].cast<int>();
+    try {
+      days = json[parameters.strdays].cast<int>();
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

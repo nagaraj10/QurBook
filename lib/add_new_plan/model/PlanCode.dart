@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class PlanCode {
   bool? isSuccess;
   List<PlanCodeResult>? result;
@@ -6,12 +8,16 @@ class PlanCode {
   PlanCode({this.isSuccess, this.result});
 
   PlanCode.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result =  <PlanCodeResult>[];
-      json['result'].forEach((v) {
-        result!.add(new PlanCodeResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result =  <PlanCodeResult>[];
+            json['result'].forEach((v) {
+              result!.add(new PlanCodeResult.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -33,9 +39,13 @@ class PlanCodeResult {
   PlanCodeResult({this.id, this.code, this.name});
 
   PlanCodeResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

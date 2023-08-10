@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'ProfilePic.dart';
 
@@ -56,37 +58,41 @@ class DoctorsModel {
       this.isDefault});
 
   DoctorsModel.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    name = json[parameters.strName];
-    addressLine1 = json[parameters.strAddressLine1];
-    addressLine2 = json[parameters.strAddressLine2];
-    website = json[parameters.strWebsite];
-    googleMapUrl = json[parameters.strGoogleMapUrl];
-    phoneNumber1 = json[parameters.strPhoneNumber1];
-    phoneNumber2 = json[parameters.strPhoneNumber2];
-    phoneNumber3 = json[parameters.strPhoneNumber3];
-    phoneNumber4 = json[parameters.strPhoneNumber4];
-    email = json[parameters.strEmail];
-    state = json[parameters.strState];
-    city = json[parameters.strCity];
-    latitude = json[parameters.strLatitude];
-    longitude = json[parameters.strLongitute];
-    isActive = json[parameters.strIsActive];
-    specialization = json[parameters.strSpecilization];
-    isUserDefined = json[parameters.strIsUserDefined];
-    description = json[parameters.strDescription];
-    createdBy = json[parameters.strCreatedBy];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    profilePic = json[parameters.strprofilePic] != null
-        ? ProfilePic.fromJson(json[parameters.strprofilePic])
-        : null;
-    profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
-        ? ProfilePic.fromJson(json[parameters.strprofilePicThumbnail])
-        : null;
-    isDefault = json[parameters.strisDefault];
-    profilePicThumbnailUrl = json['profilePicThumbnailURL'] != null
-        ? json['profilePicThumbnailURL']
-        : null;
+    try {
+      id = json[parameters.strId];
+      name = json[parameters.strName];
+      addressLine1 = json[parameters.strAddressLine1];
+      addressLine2 = json[parameters.strAddressLine2];
+      website = json[parameters.strWebsite];
+      googleMapUrl = json[parameters.strGoogleMapUrl];
+      phoneNumber1 = json[parameters.strPhoneNumber1];
+      phoneNumber2 = json[parameters.strPhoneNumber2];
+      phoneNumber3 = json[parameters.strPhoneNumber3];
+      phoneNumber4 = json[parameters.strPhoneNumber4];
+      email = json[parameters.strEmail];
+      state = json[parameters.strState];
+      city = json[parameters.strCity];
+      latitude = json[parameters.strLatitude];
+      longitude = json[parameters.strLongitute];
+      isActive = json[parameters.strIsActive];
+      specialization = json[parameters.strSpecilization];
+      isUserDefined = json[parameters.strIsUserDefined];
+      description = json[parameters.strDescription];
+      createdBy = json[parameters.strCreatedBy];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      profilePic = json[parameters.strprofilePic] != null
+              ? ProfilePic.fromJson(json[parameters.strprofilePic])
+              : null;
+      profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
+              ? ProfilePic.fromJson(json[parameters.strprofilePicThumbnail])
+              : null;
+      isDefault = json[parameters.strisDefault];
+      profilePicThumbnailUrl = json['profilePicThumbnailURL'] != null
+              ? json['profilePicThumbnailURL']
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

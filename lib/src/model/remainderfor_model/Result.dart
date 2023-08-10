@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class Result {
   Result({
       String? id, 
@@ -10,9 +12,13 @@ class Result {
 }
 
   Result.fromJson(dynamic json) {
-    _id = json['id'];
-    _code = json['code'];
-    _name = json['name'];
+    try {
+      _id = json['id'];
+      _code = json['code'];
+      _name = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
   String? _id;
   String? _code;

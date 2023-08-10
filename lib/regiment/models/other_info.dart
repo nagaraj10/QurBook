@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class OtherInfo {
   OtherInfo({
     this.needPhoto,
@@ -13,10 +15,14 @@ class OtherInfo {
   int? needFile;
 
   OtherInfo.fromJson(Map<String, dynamic> json) {
-    needPhoto = json['NeedPhoto'];
-    needAudio = json['NeedAudio'];
-    needVideo = json['NeedVideo'];
-    needFile = json['NeedFile'];
+    try {
+      needPhoto = json['NeedPhoto'];
+      needAudio = json['NeedAudio'];
+      needVideo = json['NeedVideo'];
+      needFile = json['NeedFile'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

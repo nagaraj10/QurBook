@@ -1,5 +1,6 @@
-
 import 'dart:async';
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../bookmark_record/bloc/bookmarkRecordBloc.dart';
 import '../models/my_family_detail_view_repository.dart';
@@ -20,14 +21,17 @@ class MyFamilyDetailViewBloc implements BaseBloc {
   // 1
 
   StreamSink<ApiResponse<UserHealthResponseList>> get healthReportListSink =>
-      _healthReportListController!.sink as StreamSink<ApiResponse<UserHealthResponseList>>;
+      _healthReportListController!.sink
+          as StreamSink<ApiResponse<UserHealthResponseList>>;
 
   Stream<ApiResponse<UserHealthResponseList>> get healthReportStream =>
-      _healthReportListController!.stream as Stream<ApiResponse<UserHealthResponseList>>;
+      _healthReportListController!.stream
+          as Stream<ApiResponse<UserHealthResponseList>>;
 
   // 2
   StreamSink<ApiResponse<CategoryResponseList>> get categoryListSink =>
-      _categoryController!.sink as StreamSink<ApiResponse<CategoryResponseList>>;
+      _categoryController!.sink
+          as StreamSink<ApiResponse<CategoryResponseList>>;
 
   Stream<ApiResponse<CategoryResponseList>> get categoryListStream =>
       _categoryController!.stream as Stream<ApiResponse<CategoryResponseList>>;
@@ -41,7 +45,8 @@ class MyFamilyDetailViewBloc implements BaseBloc {
       _categoryControllers!.stream as Stream<ApiResponse<CategoryDataList>>;
 
   StreamSink<ApiResponse<HealthRecordList>> get healthReportListSinks =>
-      _healthListControlllers!.sink as StreamSink<ApiResponse<HealthRecordList>>;
+      _healthListControlllers!.sink
+          as StreamSink<ApiResponse<HealthRecordList>>;
   Stream<ApiResponse<HealthRecordList>> get healthReportStreams =>
       _healthListControlllers!.stream as Stream<ApiResponse<HealthRecordList>>;
 
@@ -75,7 +80,9 @@ class MyFamilyDetailViewBloc implements BaseBloc {
       final userHealthResponseList =
           await _healthReportListForUserRepository.getHealthReportList(userId!);
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       healthReportListSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -88,7 +95,9 @@ class MyFamilyDetailViewBloc implements BaseBloc {
       userHealthResponseList =
           await _healthReportListForUserRepository.getHealthReportLists(userId);
       healthReportListSinks.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       healthReportListSinks.add(ApiResponse.error(e.toString()));
     }
     return userHealthResponseList;
@@ -102,7 +111,9 @@ class MyFamilyDetailViewBloc implements BaseBloc {
     try {
       categoryResponseList =
           await _healthReportListForUserRepository.getCategoryList();
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       categoryListSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -118,7 +129,9 @@ class MyFamilyDetailViewBloc implements BaseBloc {
       categoryResponseList =
           await _healthReportListForUserRepository.getCategoryLists();
       categoryListSinks.add(ApiResponse.completed(categoryResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       categoryListSinks.add(ApiResponse.error(e.toString()));
     }
 

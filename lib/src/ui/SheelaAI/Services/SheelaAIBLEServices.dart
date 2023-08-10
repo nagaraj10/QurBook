@@ -85,7 +85,9 @@ class SheelaBLEController extends GetxController {
         }
         _enableTimer();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e.toString());
     }
   }
@@ -376,7 +378,9 @@ class SheelaBLEController extends GetxController {
         }
       }
       return (index >= 0 && filteredDeviceTypeCheck);
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       printError(info: e.toString());
       return false;
     }
@@ -402,7 +406,9 @@ class SheelaBLEController extends GetxController {
       } else {
         return true;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       printError(info: e.toString());
       return false;
     }
@@ -507,7 +513,10 @@ class SheelaBLEController extends GetxController {
           model.deviceType = model.deviceType?.toUpperCase();
           try {
             weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT)!;
-          } catch (e) {}
+          } catch (e,stackTrace) {
+                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+          }
           if ((weightUnit).isEmpty) {
             weightUnit = CommonUtil.REGION_CODE == "IN"
                 ? STR_VAL_WEIGHT_IND
@@ -516,8 +525,9 @@ class SheelaBLEController extends GetxController {
           double convertedWeight = 1.000;
           try {
             convertedWeight = double.parse(model.data!.weight!);
-          } catch (e) {
+          } catch (e,stackTrace) {
             convertedWeight = 1.000;
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           }
           if (weightUnit == STR_VAL_WEIGHT_US) {
             convertedWeight = (convertedWeight * 2.205);
@@ -612,7 +622,9 @@ class SheelaBLEController extends GetxController {
           }
         }
         isCompleted = true;
-      } catch (e) {
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         receivedData = false;
         showFailure();
       }
@@ -647,7 +659,9 @@ class SheelaBLEController extends GetxController {
             playTTS();
           }
         }
-      } catch (e) {
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         stopTTS();
       }
     } else {
@@ -681,7 +695,9 @@ class SheelaBLEController extends GetxController {
             await player.play('${dir.path}/tempAudioFile$randomNum.mp3',
                 isLocal: true);
           }
-        } catch (e) {
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
           //failed play the audio
           print(e.toString());
           stopTTS();

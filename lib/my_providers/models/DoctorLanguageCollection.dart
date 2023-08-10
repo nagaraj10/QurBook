@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class DoctorLanguageCollection {
   String? id;
   bool? isActive;
@@ -14,13 +16,17 @@ class DoctorLanguageCollection {
         this.language});
 
   DoctorLanguageCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    language = json['language'] != null
-        ? Language.fromJson(json['language'])
-        : null;
+    try {
+      id = json['id'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      language = json['language'] != null
+              ? Language.fromJson(json['language'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

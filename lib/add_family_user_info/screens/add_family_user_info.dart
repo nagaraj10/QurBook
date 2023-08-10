@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:io';
@@ -193,7 +192,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       //   });
       // });
       //}
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
 
     /* if (widget.arguments.fromClass == CommonConstants.my_family) {
       /* for (var i = 0; i < relationShipResponseList?.length; i++) {
@@ -231,7 +232,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             //     emailController.text =
             //         myProf.result.userContactCollection3[0].email;
           }
-        } catch (e) {
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           mobileNoController.text = '';
           emailController.text = '';
         }
@@ -244,7 +246,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         mobileNoController.text =
             myProf.result.userContactCollection3[0].phoneNumber;
         emailController.text = myProf.result.userContactCollection3[0].email;
-      } catch (e) {
+      } catch (e,stackTrace) {
         mobileNoController.text = '';
         emailController.text = '';
       }
@@ -265,8 +267,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         firstNameController.text = '';
       }
-      if (commonUtil
-          .checkIfStringisNull(widget.arguments!.sharedbyme!.child!.bloodGroup)) {
+      if (commonUtil.checkIfStringisNull(
+          widget.arguments!.sharedbyme!.child!.bloodGroup)) {
         selectedBloodGroup = widget.arguments!.sharedbyme!.child!.bloodGroup;
         currentselectedBloodGroup =
             widget.arguments!.sharedbyme!.child!.bloodGroup!.split(' ')[0];
@@ -335,31 +337,31 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             widget.arguments!.myProfileResult!.dateOfBirth)!;
 
         if (widget.arguments!.myProfileResult!.userAddressCollection3 != null &&
-            widget
-                .arguments!.myProfileResult!.userAddressCollection3!.isNotEmpty) {
-          cntrlr_addr_one.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].addressLine1!;
-          cntrlr_addr_two.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].addressLine2!;
-          cntrlr_addr_city.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].city!.name!;
-          cntrlr_addr_state.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].state!.name!;
+            widget.arguments!.myProfileResult!.userAddressCollection3!
+                .isNotEmpty) {
+          cntrlr_addr_one.text = widget.arguments!.myProfileResult!
+              .userAddressCollection3![0].addressLine1!;
+          cntrlr_addr_two.text = widget.arguments!.myProfileResult!
+              .userAddressCollection3![0].addressLine2!;
+          cntrlr_addr_city.text = widget.arguments!.myProfileResult!
+              .userAddressCollection3![0].city!.name!;
+          cntrlr_addr_state.text = widget.arguments!.myProfileResult!
+              .userAddressCollection3![0].state!.name!;
           cntrlr_addr_zip.text = widget
               .arguments!.myProfileResult!.userAddressCollection3![0].pincode!;
 
-          cityVal =
-              widget.arguments!.myProfileResult!.userAddressCollection3![0].city;
-          stateVal =
-              widget.arguments!.myProfileResult!.userAddressCollection3![0].state;
+          cityVal = widget
+              .arguments!.myProfileResult!.userAddressCollection3![0].city;
+          stateVal = widget
+              .arguments!.myProfileResult!.userAddressCollection3![0].state;
 
           _addressResult = AddressResult(
               id: widget.arguments!.myProfileResult!.userAddressCollection3![0]
                   .addressType!.id,
-              code: widget.arguments!.myProfileResult!.userAddressCollection3![0]
-                  .addressType!.code,
-              name: widget.arguments!.myProfileResult!.userAddressCollection3![0]
-                  .addressType!.name);
+              code: widget.arguments!.myProfileResult!
+                  .userAddressCollection3![0].addressType!.code,
+              name: widget.arguments!.myProfileResult!
+                  .userAddressCollection3![0].addressType!.name);
         }
       }
       if (widget.arguments!.myProfileResult!.firstName != null) {
@@ -420,11 +422,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
           mobileNoController.text =
               myProf!.result!.userContactCollection3![0]!.phoneNumber!;
-          emailController.text = myProf.result!.userContactCollection3![0]!.email!;
+          emailController.text =
+              myProf.result!.userContactCollection3![0]!.email!;
         } else {
           mobileNoController.text =
               value!.result!.userContactCollection3![0]!.phoneNumber!;
-          emailController.text = value.result!.userContactCollection3![0]!.email!;
+          emailController.text =
+              value.result!.userContactCollection3![0]!.email!;
         }
 
         firstNameController.text = widget.arguments!.enteredFirstName!;
@@ -450,7 +454,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             : toBeginningOfSentenceCase(value.result!.gender!.toLowerCase());
 
         dateofBirthStr = value.result!.dateOfBirth != null
-            ? FHBUtils().getFormattedDateForUserBirth(value.result!.dateOfBirth!)
+            ? FHBUtils()
+                .getFormattedDateForUserBirth(value.result!.dateOfBirth!)
             : '';
         dateOfBirthController.text = value.result!.dateOfBirth != null
             ? FHBUtils().getFormattedDateOnlyNew(value.result!.dateOfBirth)!
@@ -506,7 +511,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             selectedBloodRange = null;
           }
         }
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         selectedBloodGroup = null;
         selectedBloodRange = null;
       }
@@ -942,7 +948,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     _showMiddleNameTextField(),
                     _showLastNameTextField(),
                     //_showRelationShipTextField(),
-                    if (widget.arguments!.fromClass == CommonConstants.my_family)
+                    if (widget.arguments!.fromClass ==
+                        CommonConstants.my_family)
                       relationShipResponseList!.isNotEmpty
                           ? Row(
                               mainAxisSize: MainAxisSize.max,
@@ -1376,10 +1383,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     pattern,
                     'city',
                   ) as FutureOr<Iterable<City>>);
-                }else{
-                return [];
+                } else {
+                  return [];
                 }
-              } ,//as FutureOr<Iterable<City>> Function(String), // FUcrash
+              }, //as FutureOr<Iterable<City>> Function(String), // FUcrash
               itemBuilder: (context, suggestion) {
                 return ListTile(
                   title: Text(
@@ -1438,7 +1445,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     pattern,
                     'state',
                   ) as FutureOr<Iterable<stateObj.State>>);
-                }else{
+                } else {
                   return [];
                 }
               }, //as FutureOr<Iterable<stateObj.State>> Function(String),// FUcrash
@@ -2111,7 +2118,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           else if (widget.arguments!.fromClass == CommonConstants.user_update) {
             //NOTE user profile update
 
-            addFamilyUserInfoBloc.userId = widget.arguments!.myProfileResult!.id;
+            addFamilyUserInfoBloc.userId =
+                widget.arguments!.myProfileResult!.id;
             //addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
             // addFamilyUserInfoBloc.relationship = UpdateRelationshipModel(
             //     id: widget.arguments.sharedbyme.id,

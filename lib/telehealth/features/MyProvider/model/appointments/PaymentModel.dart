@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/PaymentStatusModel.dart';
 
 class PaymentModel {
@@ -28,19 +29,23 @@ class PaymentModel {
         this.lastModifiedOn});
 
   PaymentModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    paymentStatus = json['paymentStatus'] != null
-        ? new PaymentStatusModel.fromJson(json['paymentStatus'])
-        : null;
-    createdOn = json['createdOn'];
-    isActive = json['isActive'];
-    purpose = json['purpose'];
-    paidAmount = json['paidAmount'];
-    transactionDateTime = json['transactionDateTime'];
-    paymentReference = json['paymentReference'];
-    paidDate = json['paidDate'];
-    receiptUrl = json['receiptUrl'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      paymentStatus = json['paymentStatus'] != null
+              ? new PaymentStatusModel.fromJson(json['paymentStatus'])
+              : null;
+      createdOn = json['createdOn'];
+      isActive = json['isActive'];
+      purpose = json['purpose'];
+      paidAmount = json['paidAmount'];
+      transactionDateTime = json['transactionDateTime'];
+      paymentReference = json['paymentReference'];
+      paidDate = json['paidDate'];
+      receiptUrl = json['receiptUrl'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

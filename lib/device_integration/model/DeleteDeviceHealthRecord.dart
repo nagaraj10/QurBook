@@ -1,11 +1,17 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class DeleteDeviceHealthRecord {
   bool? isSuccess;
 
   DeleteDeviceHealthRecord({this.isSuccess});
 
   DeleteDeviceHealthRecord.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
+    try {
+      isSuccess = json['isSuccess'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

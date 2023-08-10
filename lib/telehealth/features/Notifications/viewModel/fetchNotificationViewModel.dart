@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notificationResult.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
@@ -53,7 +54,7 @@ class FetchNotificationViewModel extends ChangeNotifier {
     //   this.loadingStatus = LoadingStatus.completed;
     //   notifyListeners();
     //   return _notificationModel;
-    // } catch (e) {
+    // } catch (e,stackTrace) {
     //   this.loadingStatus = LoadingStatus.empty;
     //   notifyListeners();
     // }
@@ -87,7 +88,9 @@ class FetchNotificationViewModel extends ChangeNotifier {
       body[qr_clearIds] = deleteLogId;
       final status = await _fetchNotificationService.clearNotifications(body);
       fetchNotifications();
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e.toString());
       fetchNotifications();
     }

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/AppointmentStatus.dart';
 
 class UpdatePaymentResult {
@@ -20,17 +21,21 @@ class UpdatePaymentResult {
         this.paymentStatus});
 
   UpdatePaymentResult.fromJson(Map<String, dynamic> json) {
-    appointmentId = json['appointmentId'];
-    bookingId = json['bookingId'];
-    paymentId = json['paymentId'];
-    paymentOrderId = json['paymentOrderId'];
-    paymentRequestId = json['paymentRequestId'];
-    appointmentStatus = json['appointmentStatus'] != null
-        ? new AppointmentStatus.fromJson(json['appointmentStatus'])
-        : null;
-    paymentStatus = json['paymentStatus'] != null
-        ? new AppointmentStatus.fromJson(json['paymentStatus'])
-        : null;
+    try {
+      appointmentId = json['appointmentId'];
+      bookingId = json['bookingId'];
+      paymentId = json['paymentId'];
+      paymentOrderId = json['paymentOrderId'];
+      paymentRequestId = json['paymentRequestId'];
+      appointmentStatus = json['appointmentStatus'] != null
+              ? new AppointmentStatus.fromJson(json['appointmentStatus'])
+              : null;
+      paymentStatus = json['paymentStatus'] != null
+              ? new AppointmentStatus.fromJson(json['paymentStatus'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

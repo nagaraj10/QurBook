@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'DeviceMeasurement.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 
@@ -10,11 +12,15 @@ class Data {
   Data({this.mediaMetaId, this.mediaMasterId, this.deviceMeasurements});
 
   Data.fromJson(Map<String, dynamic> json) {
-    mediaMetaId = json[parameters.strmediaMetaId];
-    mediaMasterId = json[parameters.strmediaMasterId];
-    deviceMeasurements = json[parameters.strDeviceMeasurements] != null
-        ? DeviceMeasurements.fromJson(json[parameters.strDeviceMeasurements])
-        : null;
+    try {
+      mediaMetaId = json[parameters.strmediaMetaId];
+      mediaMasterId = json[parameters.strmediaMasterId];
+      deviceMeasurements = json[parameters.strDeviceMeasurements] != null
+              ? DeviceMeasurements.fromJson(json[parameters.strDeviceMeasurements])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

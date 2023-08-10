@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
     as parameters;
 import 'package:myfhb/telehealth/features/appointments/model/createdBy.dart';
@@ -56,41 +57,45 @@ class ResheduleAppointmentInfo {
       this.createdOn});
 
   ResheduleAppointmentInfo.fromJson(Map<String, dynamic> json) {
-    isFollowUp = json['isFollowUp'];
-    slotNumber = json['slotNumber'];
-    isHealthRecordShared = json['isHealthRecordShared'];
-    sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'];
-    doctorSession = json['doctorSession'] != null
-        ? new CreatedBy.fromJson(json['doctorSession'])
-        : null;
-    isActive = json['isActive'];
-    lastModifiedBy = json['lastModifiedBy'] != null
-        ? new CreatedBy.fromJson(json['lastModifiedBy'])
-        : null;
-    bookedFor = json['bookedFor'] != null
-        ? new CreatedBy.fromJson(json['bookedFor'])
-        : null;
-    createdBy = json['createdBy'] != null
-        ? new CreatedBy.fromJson(json['createdBy'])
-        : null;
-    bookedBy = json['bookedBy'] != null
-        ? new CreatedBy.fromJson(json['bookedBy'])
-        : null;
-    bookingId = json['bookingId'];
-    plannedStartDateTime = json['plannedStartDateTime'];
-    plannedEndDateTime = json['plannedEndDateTime'];
-    status =
-        json['status'] != null ? new CreatedBy.fromJson(json['status']) : null;
-    doctorSessionId = json['doctorSessionId'];
-    actualStartDateTime = json['actualStartDateTime'];
-    actualEndDateTime = json['actualEndDateTime'];
-    plannedFollowupDate = json['plannedFollowupDate'];
-    isFollowup = json['isFollowup'];
-    lastModifiedOn = json['lastModifiedOn'];
-    id = json['id'];
-    isRefunded = json['isRefunded'];
-    isFollowupFee = json['isFollowupFee'];
-    createdOn = json['createdOn'];
+    try {
+      isFollowUp = json['isFollowUp'];
+      slotNumber = json['slotNumber'];
+      isHealthRecordShared = json['isHealthRecordShared'];
+      sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'];
+      doctorSession = json['doctorSession'] != null
+              ? new CreatedBy.fromJson(json['doctorSession'])
+              : null;
+      isActive = json['isActive'];
+      lastModifiedBy = json['lastModifiedBy'] != null
+              ? new CreatedBy.fromJson(json['lastModifiedBy'])
+              : null;
+      bookedFor = json['bookedFor'] != null
+              ? new CreatedBy.fromJson(json['bookedFor'])
+              : null;
+      createdBy = json['createdBy'] != null
+              ? new CreatedBy.fromJson(json['createdBy'])
+              : null;
+      bookedBy = json['bookedBy'] != null
+              ? new CreatedBy.fromJson(json['bookedBy'])
+              : null;
+      bookingId = json['bookingId'];
+      plannedStartDateTime = json['plannedStartDateTime'];
+      plannedEndDateTime = json['plannedEndDateTime'];
+      status =
+              json['status'] != null ? new CreatedBy.fromJson(json['status']) : null;
+      doctorSessionId = json['doctorSessionId'];
+      actualStartDateTime = json['actualStartDateTime'];
+      actualEndDateTime = json['actualEndDateTime'];
+      plannedFollowupDate = json['plannedFollowupDate'];
+      isFollowup = json['isFollowup'];
+      lastModifiedOn = json['lastModifiedOn'];
+      id = json['id'];
+      isRefunded = json['isRefunded'];
+      isFollowupFee = json['isFollowupFee'];
+      createdOn = json['createdOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

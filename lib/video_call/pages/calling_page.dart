@@ -57,8 +57,10 @@ class _CallingPageState extends State<CallingPage> {
       if (regController.isFromSOS.value) {
         regController.onGoingSOSCall.value = true;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -74,8 +76,10 @@ class _CallingPageState extends State<CallingPage> {
         'screenSessionTime':
             '${DateTime.now().difference(mInitialTime).inSeconds} secs'
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -84,8 +88,10 @@ class _CallingPageState extends State<CallingPage> {
       _audioCache.clearAll();
       await audioPlayer!.stop();
       await audioPlayer!.release();
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -94,7 +100,9 @@ class _CallingPageState extends State<CallingPage> {
 //SharedPrefUtils sharedPref = new SharedPrefUtils();
       try {
         isDoctor = false; //await sharedPref.getBool('isDoctor');
-      } catch (e) {}
+      } catch (e,stackTrace) {
+                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      }
       audioPlayer = await _audioCache.play('raw/dailer_tone.mp3');
       audioPlayer!.setVolume(0.1);
       audioPlayer!.playingRouteState = PlayingRoute.EARPIECE;
@@ -110,8 +118,9 @@ class _CallingPageState extends State<CallingPage> {
           patienInfo: widget.patienInfo,
           isFromAppointment: widget.isFromAppointment,
           isDoctor: isDoctor);
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -205,8 +214,9 @@ class _CallingPageState extends State<CallingPage> {
                                   bookingId: widget.callMetaData!.bookId);
                             }
                             VideoCallCommonUtils().callEnd(context, widget.id);
-                          } catch (e) {
+                          } catch (e,stackTrace) {
                             print(e);
+                                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                           }
                         },
                       ),

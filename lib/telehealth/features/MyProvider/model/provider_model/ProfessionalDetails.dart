@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/MedicalCouncilInfo.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/QualificationInfo.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Specialty.dart';
@@ -31,25 +32,29 @@ class ProfessionalDetails {
       this.lastModifiedBy});
 
   ProfessionalDetails.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    doctorId = json[parameters.strDoctorId];
-    aboutMe = json[parameters.straboutMe];
-    qualificationInfo = json[parameters.strqualificationInfo] != null
-        ? new QualificationInfo.fromJson(json[parameters.strqualificationInfo])
-        : null;
-    medicalCouncilInfo = json[parameters.strmedicalCouncilInfo] != null
-        ? new MedicalCouncilInfo.fromJson(json[parameters.strmedicalCouncilInfo])
-        : null;
-    specialty = json[parameters.strspecialty] != null
-        ? new Specialty.fromJson(json[parameters.strspecialty])
-        : null;
-    clinicName = json[parameters.strclinicName] != null
-        ? new Specialty.fromJson(json[parameters.strclinicName])
-        : null;
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    lastModifiedBy = json[parameters.strlastModifiedBy];
+    try {
+      id = json[parameters.strId];
+      doctorId = json[parameters.strDoctorId];
+      aboutMe = json[parameters.straboutMe];
+      qualificationInfo = json[parameters.strqualificationInfo] != null
+              ? new QualificationInfo.fromJson(json[parameters.strqualificationInfo])
+              : null;
+      medicalCouncilInfo = json[parameters.strmedicalCouncilInfo] != null
+              ? new MedicalCouncilInfo.fromJson(json[parameters.strmedicalCouncilInfo])
+              : null;
+      specialty = json[parameters.strspecialty] != null
+              ? new Specialty.fromJson(json[parameters.strspecialty])
+              : null;
+      clinicName = json[parameters.strclinicName] != null
+              ? new Specialty.fromJson(json[parameters.strclinicName])
+              : null;
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      lastModifiedBy = json[parameters.strlastModifiedBy];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

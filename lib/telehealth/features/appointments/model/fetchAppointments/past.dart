@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
     as parameters;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/booked.dart';
@@ -76,69 +77,73 @@ class Past {
   AdditionalInfo? additionalinfo;
 
   Past.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    bookingId = json[parameters.strBookingId];
-    doctorSessionId = json[parameters.strDoctorSessionId];
-    plannedStartDateTime = json[parameters.strPlannedStartDateTime];
-    plannedEndDateTime = json[parameters.strPlannedEndDateTime];
-    actualStartDateTime = json[parameters.strActualStartDateTime];
-    actualEndDateTime = json[parameters.strActualEndDateTime];
-    slotNumber = json[parameters.strSlotNumber];
-    isHealthRecordShared = json[parameters.strIsHealthRecordShared];
-    plannedFollowupDate = json[parameters.strPlannedFollowupDate];
-    isRefunded = json[parameters.strIsRefunded];
-    isFollowupFee = json[parameters.strIsFollowUpFee];
-    isFollowup = json[parameters.strIsFollowup];
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    isEndTimeOptional = json[parameters.strisEndTimeOptional];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    bookedFor = json[parameters.strBookedFor] == null
-        ? null
-        : Booked.fromJson(json[parameters.strBookedFor]);
-    bookedBy = json[parameters.strBookedBy] == null
-        ? null
-        : Booked.fromJson(json[parameters.strBookedBy]);
-    status = json[parameters.strStatus] == null
-        ? null
-        : Status.fromJson(json[parameters.strStatus]);
-    prescriptionCollection = json[parameters.strPrescriptionCollection] == null
-        ? null
-        : List<dynamic>.from(
-            json[parameters.strPrescriptionCollection].map((x) => x));
-    healthRecord = json[parameters.strHealthRecord] == null
-        ? null
-        : HealthRecord.fromJson(json[parameters.strHealthRecord]);
-    feeDetails = json[parameters.strFeeDetails] != null
-        ? new FeeDetails.fromJson(json[parameters.strFeeDetails])
-        : null;
-    doctorFollowUpFee = json[parameters.strDoctorFollowUpFee] == null
-        ? null
-        : json[parameters.strDoctorFollowUpFee];
-    doctor = json[parameters.strdoctor] == null
-        ? null
-        : Doctor.fromJson(json[parameters.strdoctor]);
-    healthOrganization = json[parameters.strHealthOrganization] != null
-        ? new City.fromJson(json[parameters.strHealthOrganization])
-        : null;
-    isFollowUpTaken = json[parameters.strIsFollowUpTaken] != null
-        ? json[parameters.strIsFollowUpTaken]
-        : null;
-    chatListId = json[parameters.strChatListId] == null
-        ? null
-        : json[parameters.strChatListId];
-    chatMessage = json["chatMessage"] == null
-        ? null
-        : ChatMessage.fromJson(json["chatMessage"]);
-    serviceCategory = json["serviceCategory"] == null
-        ? null
-        : ServiceCategory.fromJson(json["serviceCategory"]);
-    modeOfService = json["modeOfService"] == null
-        ? null
-        : ServiceCategory.fromJson(json["modeOfService"]);
-    additionalinfo = json["additionalInfo"] == null
-        ? null
-        : AdditionalInfo.fromJson(json["additionalInfo"]);
+    try {
+      id = json[parameters.strId];
+      bookingId = json[parameters.strBookingId];
+      doctorSessionId = json[parameters.strDoctorSessionId];
+      plannedStartDateTime = json[parameters.strPlannedStartDateTime];
+      plannedEndDateTime = json[parameters.strPlannedEndDateTime];
+      actualStartDateTime = json[parameters.strActualStartDateTime];
+      actualEndDateTime = json[parameters.strActualEndDateTime];
+      slotNumber = json[parameters.strSlotNumber];
+      isHealthRecordShared = json[parameters.strIsHealthRecordShared];
+      plannedFollowupDate = json[parameters.strPlannedFollowupDate];
+      isRefunded = json[parameters.strIsRefunded];
+      isFollowupFee = json[parameters.strIsFollowUpFee];
+      isFollowup = json[parameters.strIsFollowup];
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      isEndTimeOptional = json[parameters.strisEndTimeOptional];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      bookedFor = json[parameters.strBookedFor] == null
+              ? null
+              : Booked.fromJson(json[parameters.strBookedFor]);
+      bookedBy = json[parameters.strBookedBy] == null
+              ? null
+              : Booked.fromJson(json[parameters.strBookedBy]);
+      status = json[parameters.strStatus] == null
+              ? null
+              : Status.fromJson(json[parameters.strStatus]);
+      prescriptionCollection = json[parameters.strPrescriptionCollection] == null
+              ? null
+              : List<dynamic>.from(
+                  json[parameters.strPrescriptionCollection].map((x) => x));
+      healthRecord = json[parameters.strHealthRecord] == null
+              ? null
+              : HealthRecord.fromJson(json[parameters.strHealthRecord]);
+      feeDetails = json[parameters.strFeeDetails] != null
+              ? new FeeDetails.fromJson(json[parameters.strFeeDetails])
+              : null;
+      doctorFollowUpFee = json[parameters.strDoctorFollowUpFee] == null
+              ? null
+              : json[parameters.strDoctorFollowUpFee];
+      doctor = json[parameters.strdoctor] == null
+              ? null
+              : Doctor.fromJson(json[parameters.strdoctor]);
+      healthOrganization = json[parameters.strHealthOrganization] != null
+              ? new City.fromJson(json[parameters.strHealthOrganization])
+              : null;
+      isFollowUpTaken = json[parameters.strIsFollowUpTaken] != null
+              ? json[parameters.strIsFollowUpTaken]
+              : null;
+      chatListId = json[parameters.strChatListId] == null
+              ? null
+              : json[parameters.strChatListId];
+      chatMessage = json["chatMessage"] == null
+              ? null
+              : ChatMessage.fromJson(json["chatMessage"]);
+      serviceCategory = json["serviceCategory"] == null
+              ? null
+              : ServiceCategory.fromJson(json["serviceCategory"]);
+      modeOfService = json["modeOfService"] == null
+              ? null
+              : ServiceCategory.fromJson(json["modeOfService"]);
+      additionalinfo = json["additionalInfo"] == null
+              ? null
+              : AdditionalInfo.fromJson(json["additionalInfo"]);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -194,9 +199,13 @@ class ChatMessage {
   String? chatMessageId;
 
   ChatMessage.fromJson(Map<String, dynamic> json) {
-    deliveredOn = json["deliveredOn"];
-    documentId = json["documentId"];
-    chatMessageId = json["chatMessageId"];
+    try {
+      deliveredOn = json["deliveredOn"];
+      documentId = json["documentId"];
+      chatMessageId = json["chatMessageId"];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 }
 
@@ -223,15 +232,19 @@ class AdditionalInfo {
   int? fee;
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
-    title = json.containsKey('title') ? json["title"] : '';
-    Address = json.containsKey('Address') ? json["Address"] : '';
-    description = json.containsKey('description') ? json["description"] : '';
-    serviceType = json.containsKey('serviceType') ? json["serviceType"] : '';
-    lab_name = json.containsKey('lab_name') ? json["lab_name"] : '';
-    provider_name = json.containsKey('provider_name') ? json["provider_name"] : null;
-    healthOrganizationId = json.containsKey('healthOrganizationId') ? json["healthOrganizationId"] : null;
+    try {
+      title = json.containsKey('title') ? json["title"] : '';
+      Address = json.containsKey('Address') ? json["Address"] : '';
+      description = json.containsKey('description') ? json["description"] : '';
+      serviceType = json.containsKey('serviceType') ? json["serviceType"] : '';
+      lab_name = json.containsKey('lab_name') ? json["lab_name"] : '';
+      provider_name = json.containsKey('provider_name') ? json["provider_name"] : null;
+      healthOrganizationId = json.containsKey('healthOrganizationId') ? json["healthOrganizationId"] : null;
 
-    fee = json.containsKey('fee') ? json["fee"] : 0;
+      fee = json.containsKey('fee') ? json["fee"] : 0;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
   Map<String, dynamic>? toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

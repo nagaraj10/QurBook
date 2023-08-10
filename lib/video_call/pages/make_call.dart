@@ -81,8 +81,9 @@ class _MakeCallPageState extends State<MakeCallPage> {
         'screenSessionTime':
             '${DateTime.now().difference(mInitialTime).inSeconds} secs'
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -94,8 +95,9 @@ class _MakeCallPageState extends State<MakeCallPage> {
       //Screen.keepOn(true);  FU2.5
       _connectivitySubscription =
           _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -108,7 +110,9 @@ class _MakeCallPageState extends State<MakeCallPage> {
         specialityName = /*await prefs.getString("speciality")*/ "";
         userIdForNotify =
             await PreferenceUtil.getStringValue(constants.KEY_USERID);
-      } catch (e) {}
+      } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      }
       switch (result) {
         case ConnectivityResult.wifi:
           setState(() {
@@ -161,8 +165,9 @@ class _MakeCallPageState extends State<MakeCallPage> {
           });
           break;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -179,7 +184,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
   //     prefs.getValueBasedOnKey(struserID).then((value) {
   //       userIdForNotify = value;
   //     });
-  //   } catch (e) {}
+  //   } catch (e,stackTrace) {}
   //
   //   body['startTime'] = widget.startedTime;
   //   body['endTime'] = endTime;

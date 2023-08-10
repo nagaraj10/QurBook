@@ -1,5 +1,6 @@
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/Authentication/OTPEmailResponse.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
@@ -23,7 +24,10 @@ class AuthenticationRepository {
       if (response is String) {
         return SignIn.fromJson(convert.jsonDecode(response));
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
     return SignIn.fromJson(response);
   }
 
@@ -93,7 +97,10 @@ class AuthenticationRepository {
       if (response is String) {
         return SignOutResponse.fromJson(convert.jsonDecode(response));
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
     return SignOutResponse.fromJson(response);
   }
 

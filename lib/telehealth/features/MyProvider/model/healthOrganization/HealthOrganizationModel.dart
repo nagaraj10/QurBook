@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 
 class HealthOrganizationModel {
@@ -9,13 +10,17 @@ class HealthOrganizationModel {
   HealthOrganizationModel({this.isSuccess, this.result,this.message});
 
   HealthOrganizationModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    if (json['result'] != null) {
-      result = <HealthOrganizationResult>[];
-      json['result'].forEach((v) {
-        result!.add(new HealthOrganizationResult.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      if (json['result'] != null) {
+            result = <HealthOrganizationResult>[];
+            json['result'].forEach((v) {
+              result!.add(new HealthOrganizationResult.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

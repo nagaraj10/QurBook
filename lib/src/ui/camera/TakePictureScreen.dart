@@ -238,7 +238,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           imagePaths.add(image!.files[0].path);
                                         }
                                         callDisplayPictureScreen(context);
-                                      } catch (e) {
+                                      } catch (e,stackTrace) {
+                                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                                         // If an error occurs, log the error to the console.
                                       }
                                     }
@@ -278,7 +280,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                         await _controller.takePicture();
                                     imagePaths.add(xpath.path);
                                     setState(() {});
-                                  } catch (e) {
+                                  } catch (e,stackTrace) {
+                                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                                     // If an error occurs, log the error to the console.
                                   }
                                 },
@@ -350,7 +354,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           filePath = image!.path;
                                           imagePaths.add(filePath);
                                           callDisplayPictureScreen(context);
-                                        } catch (e) {
+                                        } catch (e,stackTrace) {
+                                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                                           // If an error occurs, log the error to the console.
                                         }
                                       }
@@ -387,7 +393,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                               imagePaths
                                                   .add(image!.files[0].path);
                                             callDisplayPictureScreen(context);
-                                          } catch (e) {
+                                          } catch (e,stackTrace) {
+                                                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                                             // If an error occurs, log the error to the console.
                                           }
                                         }
@@ -437,8 +445,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       imagePaths.add(xpath.path);
                                       callDisplayPictureScreen(context);
                                     }
-                                  } catch (e) {
+                                  } catch (e,stackTrace) {
                                     // If an error occurs, log the error to the console.
+                                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                                   }
                                 },
                               ),
@@ -534,7 +544,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
-    } on FetchException catch (e) {}
+    } on FetchException catch (e,stackTrace) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

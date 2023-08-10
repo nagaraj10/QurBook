@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
@@ -9,14 +8,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/claim/screen/ClaimList.dart';
-import 'package:myfhb/claim/service/ClaimListRepository.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
@@ -27,9 +21,6 @@ import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:open_filex/open_filex.dart'; //FU2.5
 
 import '../../colors/fhb_colors.dart' as fhbColors;
@@ -44,7 +35,6 @@ import '../../my_family/models/FamilyMembersRes.dart';
 import '../../src/model/Health/asgard/health_record_collection.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/resources/network/ApiResponse.dart';
-import '../../src/ui/imageSlider.dart';
 import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
@@ -128,7 +118,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             ? claimAmountTotal!.split(".")[0]
             : claimAmountTotal;
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
 
     memberShipStartDate = new CommonUtil().getMemberSipStartDate();
     memberShipEndDate = new CommonUtil().getMemberSipEndDate();
@@ -139,7 +131,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     setAuthToken();
     initializeData();
 
-    if (length == 1 && new CommonUtil().checkIfFileIsPdf(widget.imagePath![0]!)) {
+    if (length == 1 &&
+        new CommonUtil().checkIfFileIsPdf(widget.imagePath![0]!)) {
       ispdfPresent = true;
       pdfFile = File(widget.imagePath![0]!);
       final fileNoun = pdfFile.path.split('/').last;
@@ -166,13 +159,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       key: scaffold_state,
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        title: 
-        Text(  //FU2.5
-        //AutoSizeText( FU2.5
+        title: Text(
+          //FU2.5
+          //AutoSizeText( FU2.5
           "My Claim",
           maxLines: 1,
           //maxFontSize: 16, FU2.5
-        ),  
+        ),
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -572,7 +565,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
               ' ' +
               myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
 
     if (sharedByMeList == null) {
       sharedByMeList = [];
@@ -658,7 +653,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           categoryDataObj.toJson();
       var _mediaTypeBlock = MediaTypeBlock();
 
-      var mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
+      var mediaTypesResponse =
+          await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
 
       final metaDataFromSharedPrefernce = mediaTypesResponse.result!;
       mediaDataObj = CommonUtil().getMediaTypeInfoForParticularLabel(
@@ -870,9 +866,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                               user.child == null
                                   ? 'Self'
                                   : ((user.child?.firstName ?? '') +
-                                              ' ' +
-                                              (user.child?.lastName ?? ''))
-                                          .capitalizeFirstofEach,
+                                          ' ' +
+                                          (user.child?.lastName ?? ''))
+                                      .capitalizeFirstofEach,
                               style: fhbBasicWidget.getTextStyleForValue()),
                           padding: EdgeInsets.only(
                               left: 20,
@@ -917,7 +913,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             onPressed: () async {
               await OpenFilex.open(
                 pdfFile.path,
-              );//FU2.5
+              ); //FU2.5
             },
           )
         ],

@@ -1,5 +1,7 @@
 
 import 'dart:async';
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../model/deleteRecord.dart';
 import '../model/deleteRecordResponse.dart';
 import '../services/deleteRecordRepository.dart';
@@ -35,7 +37,9 @@ class DeleteRecordBloc with Validators implements BaseBloc {
     try {
       deleteRecordResponse =
           await _deleteRecordRepository.deleteRecordForIds(metaId);
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       delteRecordSink.add(ApiResponse.error(e.toString()));
     }
     return deleteRecordResponse;
@@ -50,7 +54,9 @@ class DeleteRecordBloc with Validators implements BaseBloc {
     try {
       deleteRecordResponse =
           await _deleteRecordRepository.deleteRecordForMediaMasterIds(metaId);
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       delteRecordSink.add(ApiResponse.error(e.toString()));
     }
     return deleteRecordResponse;

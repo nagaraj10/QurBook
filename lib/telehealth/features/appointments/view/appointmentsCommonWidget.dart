@@ -204,7 +204,10 @@ class AppointmentsCommonWidget {
                   toast.getToast(parameters.errNoRecordsSelected, Colors.red);
                 }
               }
-            } catch (e) {}
+            } catch (e,stackTrace) {
+                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+            }
           });
         }, notesCount),
         SizedBoxWidget(width: 15.0.w),
@@ -256,7 +259,10 @@ class AppointmentsCommonWidget {
                   toast.getToast(parameters.errNoRecordsSelected, Colors.red);
                 }
               }
-            } catch (e) {}
+            } catch (e,stackTrace) {
+                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+            }
           });
         }, voiceNotesCount),
         SizedBoxWidget(width: 15.0.w),
@@ -309,7 +315,10 @@ class AppointmentsCommonWidget {
                     toast.getToast(parameters.errNoRecordsSelected, Colors.red);
                   }
                 }
-              } catch (e) {}
+              } catch (e,stackTrace) {
+                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+              }
             });
           }
         }, rxCount),
@@ -532,7 +541,10 @@ class AppointmentsCommonWidget {
     try {
       filteredCategoryData = PreferenceUtil.getCategoryTypeDisplay(
           ConstantKey.KEY_CATEGORYLIST_VISIBLE)!;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = new CommonUtil().fliterCategories(value!.result!);

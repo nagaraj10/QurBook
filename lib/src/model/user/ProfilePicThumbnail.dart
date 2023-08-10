@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class ProfilePicThumbnailMain {
@@ -8,8 +10,12 @@ class ProfilePicThumbnailMain {
   ProfilePicThumbnailMain({this.type, this.data});
 
   ProfilePicThumbnailMain.fromJson(Map<String, dynamic> json) {
-    type = json[parameters.strtype];
-    data = json[parameters.strData].cast<int>();
+    try {
+      type = json[parameters.strtype];
+      data = json[parameters.strData].cast<int>();
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

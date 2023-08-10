@@ -1,6 +1,6 @@
-
 import 'dart:core';
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 
 class CareCoordinatorData {
@@ -18,8 +18,9 @@ class CareCoordinatorData {
           result!.add(new Result.fromJson(v));
         });
       }
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -30,8 +31,8 @@ class CareCoordinatorData {
       if (this.result != null) {
         data['result'] = this.result!.map((v) => v.toJson()).toList();
       }
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return data;
@@ -44,7 +45,7 @@ class Result {
   String? userType;
   String? name;
 
-  Result({this.patientId, this.userId, this.userType,this.name});
+  Result({this.patientId, this.userId, this.userType, this.name});
 
   Result.fromJson(Map<String, dynamic> json) {
     try {
@@ -52,8 +53,8 @@ class Result {
       userId = json['userId'];
       userType = json['userType'];
       name = json['name'];
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -64,7 +65,9 @@ class Result {
       data['userId'] = this.userId;
       data['userType'] = this.userType;
       data['name'] = this.name;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
     }
     return data;
@@ -79,11 +82,15 @@ class CallMessagingErrorResponse {
   CallMessagingErrorResponse({this.isSuccess, this.message, this.diagnostics});
 
   CallMessagingErrorResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    diagnostics = json['diagnostics'] != null
-        ? new Diagnostics.fromJson(json['diagnostics'])
-        : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      diagnostics = json['diagnostics'] != null
+              ? new Diagnostics.fromJson(json['diagnostics'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -105,11 +112,15 @@ class Diagnostics {
   Diagnostics({this.message, this.errorData, this.includeErrorDataInResponse});
 
   Diagnostics.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    errorData = json['errorData'] != null
-        ? new ErrorData.fromJson(json['errorData'])
-        : null;
-    includeErrorDataInResponse = json['includeErrorDataInResponse'];
+    try {
+      message = json['message'];
+      errorData = json['errorData'] != null
+              ? new ErrorData.fromJson(json['errorData'])
+              : null;
+      includeErrorDataInResponse = json['includeErrorDataInResponse'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -130,8 +141,12 @@ class ErrorData {
   ErrorData({this.code, this.message});
 
   ErrorData.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    message = json['message'];
+    try {
+      code = json['code'];
+      message = json['message'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -141,4 +156,3 @@ class ErrorData {
     return data;
   }
 }
-

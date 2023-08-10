@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class MetaDataForHospitalLogo {
   String? icon;
   String? address;
@@ -16,12 +18,16 @@ class MetaDataForHospitalLogo {
         this.siteURL});
 
   MetaDataForHospitalLogo.fromJson(Map<String, dynamic> json) {
-    icon = json['icon'];
-    address = json['Address'];
-    city = json['City'];
-    zip = json['Zip'];
-    descriptionURL = json['DescriptionURL'];
-    siteURL = json['SiteURL'];
+    try {
+      icon = json['icon'];
+      address = json['Address'];
+      city = json['City'];
+      zip = json['Zip'];
+      descriptionURL = json['DescriptionURL'];
+      siteURL = json['SiteURL'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

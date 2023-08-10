@@ -1,5 +1,6 @@
-
 import 'dart:async';
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../models/Doctors.dart';
 import '../models/GetDoctorsByIdModel.dart';
@@ -17,14 +18,18 @@ class ProvidersBloc implements BaseBloc {
   StreamController? _providershospitalListControlller;
 
   StreamSink<ApiResponse<MyProvidersResponse>> get providersListSink =>
-      _providersListControlller!.sink as StreamSink<ApiResponse<MyProvidersResponse>>;
+      _providersListControlller!.sink
+          as StreamSink<ApiResponse<MyProvidersResponse>>;
   Stream<ApiResponse<MyProvidersResponse>> get providersListStream =>
-      _providersListControlller!.stream as Stream<ApiResponse<MyProvidersResponse>>;
+      _providersListControlller!.stream
+          as Stream<ApiResponse<MyProvidersResponse>>;
 
   StreamSink<ApiResponse<MyProvidersResponse>> get providershospitalListSink =>
-      _providershospitalListControlller!.sink as StreamSink<ApiResponse<MyProvidersResponse>>;
+      _providershospitalListControlller!.sink
+          as StreamSink<ApiResponse<MyProvidersResponse>>;
   Stream<ApiResponse<MyProvidersResponse>> get providershospitalListStream =>
-      _providershospitalListControlller!.stream as Stream<ApiResponse<MyProvidersResponse>>;
+      _providershospitalListControlller!.stream
+          as Stream<ApiResponse<MyProvidersResponse>>;
 
   List<Doctors?>? doctors = [];
   List<Hospitals>? hospitals = [];
@@ -44,7 +49,8 @@ class ProvidersBloc implements BaseBloc {
     _providersListRepository = ProvidersListRepository();
   }
 
-  Future<MyProvidersResponse?> getMedicalPreferencesList({String? userId}) async {
+  Future<MyProvidersResponse?> getMedicalPreferencesList(
+      {String? userId}) async {
     // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
     MyProvidersResponse? myProvidersResponseList;
     try {
@@ -53,7 +59,9 @@ class ProvidersBloc implements BaseBloc {
       doctors = myProvidersResponseList.result!.doctors;
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       providersListSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -70,12 +78,16 @@ class ProvidersBloc implements BaseBloc {
           .getMedicalPreferencesForDoctors(userId: userId);
       try {
         doctors = myProvidersResponseList.result?.doctors;
-      } catch (e) {}
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      }
       providersListSink.add(ApiResponse.completed(myProvidersResponseList));
 
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       providersListSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -84,7 +96,8 @@ class ProvidersBloc implements BaseBloc {
 
   Future<MyProvidersResponse?> getMedicalPreferencesForHospital(
       {String? userId}) async {
-    providershospitalListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
+    providershospitalListSink
+        .add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
     MyProvidersResponse? myProvidersResponseList;
     try {
       myProvidersResponseList = await _providersListRepository
@@ -92,21 +105,27 @@ class ProvidersBloc implements BaseBloc {
 
       try {
         hospitals = myProvidersResponseList.result?.hospitals;
-      } catch (e) {}
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      }
 
-      providershospitalListSink.add(ApiResponse.completed(myProvidersResponseList));
+      providershospitalListSink
+          .add(ApiResponse.completed(myProvidersResponseList));
 
       //doctors = myProvidersResponseList.result.doctors;
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       providershospitalListSink.add(ApiResponse.error(e.toString()));
     }
 
     return myProvidersResponseList;
   }
 
-  Future<MyProvidersResponse?> getMedicalPreferencesAll({String? userId}) async {
+  Future<MyProvidersResponse?> getMedicalPreferencesAll(
+      {String? userId}) async {
     // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
     MyProvidersResponse? myProvidersResponseList;
     try {
@@ -115,7 +134,9 @@ class ProvidersBloc implements BaseBloc {
       //doctors = myProvidersResponseList.result.doctors;
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       providersListSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -126,29 +147,28 @@ class ProvidersBloc implements BaseBloc {
     final filterDoctorData = <Doctors?>[];
     for (final doctorData in doctors!) {
       if (doctorData!.user!.name != null && doctorData.user!.name != '') {
-        var speciality = doctorData.doctorProfessionalDetailCollection !=
-            null
+        var speciality = doctorData.doctorProfessionalDetailCollection != null
             ? doctorData.doctorProfessionalDetailCollection!.isNotEmpty
-            ? doctorData.doctorProfessionalDetailCollection![0].specialty !=
-            null
-            ? doctorData
-            .doctorProfessionalDetailCollection![0].specialty!.name
-            : ''
-            : ''
+                ? doctorData.doctorProfessionalDetailCollection![0].specialty !=
+                        null
+                    ? doctorData
+                        .doctorProfessionalDetailCollection![0].specialty!.name
+                    : ''
+                : ''
             : '';
         final address = doctorData.user != null
             ? doctorData.user!.userAddressCollection3 != null
-            ? doctorData.user!.userAddressCollection3!.isNotEmpty
-            ? doctorData.user!.userAddressCollection3![0].city != null
-            ? doctorData.user!.userAddressCollection3![0].city!.name
-            : ''
-            : ''
-            : ''
+                ? doctorData.user!.userAddressCollection3!.isNotEmpty
+                    ? doctorData.user!.userAddressCollection3![0].city != null
+                        ? doctorData.user!.userAddressCollection3![0].city!.name
+                        : ''
+                    : ''
+                : ''
             : '';
         if (doctorData.user!.name!
-            .toLowerCase()
-            .trim()
-            .contains(doctorName.toLowerCase().trim()) ||
+                .toLowerCase()
+                .trim()
+                .contains(doctorName.toLowerCase().trim()) ||
             (speciality != '' &&
                 speciality!
                     .toLowerCase()
@@ -165,12 +185,15 @@ class ProvidersBloc implements BaseBloc {
     return filterDoctorData;
   }
 
-  Future<GetDoctorsByIdModel?> getDoctorsById({required String doctorId}) async {
+  Future<GetDoctorsByIdModel?> getDoctorsById(
+      {required String doctorId}) async {
     GetDoctorsByIdModel? getDoctorsByIdModel;
     try {
       getDoctorsByIdModel =
-      await _providersListRepository.getDoctorsByID(doctorId: doctorId);
-    } catch (e) {
+          await _providersListRepository.getDoctorsByID(doctorId: doctorId);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       providersListSink.add(ApiResponse.error(e.toString()));
     }
 

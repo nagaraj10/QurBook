@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class PaymentRequestModel {
   String? id;
   String? phone;
@@ -44,26 +46,30 @@ class PaymentRequestModel {
         this.modifiedAt});
 
   PaymentRequestModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    phone = json['phone'];
-    email = json['email'];
-    buyerName = json['buyer_name'];
-    amount = json['amount'];
-    purpose = json['purpose'];
-    expiresAt = json['expires_at'];
-    status = json['status'];
-    sendSms = json['send_sms'];
-    sendEmail = json['send_email'];
-    smsStatus = json['sms_status'];
-    emailStatus = json['email_status'];
-    shorturl = json['shorturl'];
-    longurl = json['longurl'];
-    redirectUrl = json['redirect_url'];
-    webhook = json['webhook'];
-    allowRepeatedPayments = json['allow_repeated_payments'];
-    customerId = json['customer_id'];
-    createdAt = json['created_at'];
-    modifiedAt = json['modified_at'];
+    try {
+      id = json['id'];
+      phone = json['phone'];
+      email = json['email'];
+      buyerName = json['buyer_name'];
+      amount = json['amount'];
+      purpose = json['purpose'];
+      expiresAt = json['expires_at'];
+      status = json['status'];
+      sendSms = json['send_sms'];
+      sendEmail = json['send_email'];
+      smsStatus = json['sms_status'];
+      emailStatus = json['email_status'];
+      shorturl = json['shorturl'];
+      longurl = json['longurl'];
+      redirectUrl = json['redirect_url'];
+      webhook = json['webhook'];
+      allowRepeatedPayments = json['allow_repeated_payments'];
+      customerId = json['customer_id'];
+      createdAt = json['created_at'];
+      modifiedAt = json['modified_at'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class MediaTypeInfo {
@@ -36,26 +38,30 @@ class MediaTypeInfo {
       this.isAITranscription});
 
   MediaTypeInfo.fromJson(Map<String, dynamic> json) {
-    categoryId = json[parameters.strcategoryId];
-    createdOn = json[parameters.strCreatedOn];
-    description = json[parameters.strDescription];
-    id = json[parameters.strId];
-    isAITranscription = json[parameters.strisAITranscription];
-    if (json[parameters.strIsActive] is bool) {
-      isActive = json[parameters.strIsActive];
-    } else {
-      isActive = true;
-    }
+    try {
+      categoryId = json[parameters.strcategoryId];
+      createdOn = json[parameters.strCreatedOn];
+      description = json[parameters.strDescription];
+      id = json[parameters.strId];
+      isAITranscription = json[parameters.strisAITranscription];
+      if (json[parameters.strIsActive] is bool) {
+            isActive = json[parameters.strIsActive];
+          } else {
+            isActive = true;
+          }
 
-    isCreate = json[parameters.strIsCreate];
-    isDelete = json[parameters.strIsDelete];
-    isDisplay = json[parameters.strIsDisplay];
-    isEdit = json[parameters.strIsEdit];
-    isManualTranscription = json[parameters.strisManualTranscription];
-    isRead = json[parameters.strIsRead];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    logo = json[parameters.strLogo];
-    name = json[parameters.strName];
+      isCreate = json[parameters.strIsCreate];
+      isDelete = json[parameters.strIsDelete];
+      isDisplay = json[parameters.strIsDisplay];
+      isEdit = json[parameters.strIsEdit];
+      isManualTranscription = json[parameters.strisManualTranscription];
+      isRead = json[parameters.strIsRead];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      logo = json[parameters.strLogo];
+      name = json[parameters.strName];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

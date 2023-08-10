@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class GetEventIdModel {
   bool? isSuccess;
   Result? result;
@@ -6,9 +8,13 @@ class GetEventIdModel {
   GetEventIdModel({this.isSuccess, this.result});
 
   GetEventIdModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -114,50 +120,54 @@ class Result {
         this.isSymptom});
 
   Result.fromJson(Map<String, dynamic> json) {
-    eid = json['eid'];
-    providerid = json['providerid'];
-    title = json['title'];
-    description = json['description'];
-    tplanid = json['tplanid'];
-    teidUser = json['teidUser'];
-    aid = json['aid'];
-    activityname = json['activityname'];
-    pformid = json['pformid'];
-    uformid = json['uformid'];
-    uformname = json['uformname'];
-    estart = json['estart'];
-    eend = json['eend'];
-    html = json['html'];
-    otherinfo = json['otherinfo'];
-    remindin = json['remindin'];
-    remindinType = json['remindinType'];
-    ack = json['ack'];
-    alarm = json['alarm'];
-    uformdata = json['uformdata'];
-    ts = json['ts'];
-    deleted = json['deleted'];
-    evDuration = json['evDuration'];
-    dosemeal = json['dosemeal'];
-    pformname = json['pformname'];
-    pformdata = json['pformdata'];
-    pplanid = json['pplanid'];
-    evDisabled = json['evDisabled'];
-    importance = json['importance'];
-    evMuted = json['evMuted'];
-    evSource = json['evSource'];
-    points = json['points'];
-    ackLocal = json['ackLocal'];
-    remindbefore = json['remindbefore'];
-    remindbeforeType = json['remindbeforeType'];
-    custform = json['custform'];
-    langTitle = json['langTitle'];
-    doserepeat = json['doserepeat'];
-    issymptom = json['issymptom'];
-    disabled = json['disabled'];
-    pform = json['pform'];
-    uform = json['uform'];
-    alertdata = json['alertdata'];
-    isSymptom = json['isSymptom'];
+    try {
+      eid = json['eid'];
+      providerid = json['providerid'];
+      title = json['title'];
+      description = json['description'];
+      tplanid = json['tplanid'];
+      teidUser = json['teidUser'];
+      aid = json['aid'];
+      activityname = json['activityname'];
+      pformid = json['pformid'];
+      uformid = json['uformid'];
+      uformname = json['uformname'];
+      estart = json['estart'];
+      eend = json['eend'];
+      html = json['html'];
+      otherinfo = json['otherinfo'];
+      remindin = json['remindin'];
+      remindinType = json['remindinType'];
+      ack = json['ack'];
+      alarm = json['alarm'];
+      uformdata = json['uformdata'];
+      ts = json['ts'];
+      deleted = json['deleted'];
+      evDuration = json['evDuration'];
+      dosemeal = json['dosemeal'];
+      pformname = json['pformname'];
+      pformdata = json['pformdata'];
+      pplanid = json['pplanid'];
+      evDisabled = json['evDisabled'];
+      importance = json['importance'];
+      evMuted = json['evMuted'];
+      evSource = json['evSource'];
+      points = json['points'];
+      ackLocal = json['ackLocal'];
+      remindbefore = json['remindbefore'];
+      remindbeforeType = json['remindbeforeType'];
+      custform = json['custform'];
+      langTitle = json['langTitle'];
+      doserepeat = json['doserepeat'];
+      issymptom = json['issymptom'];
+      disabled = json['disabled'];
+      pform = json['pform'];
+      uform = json['uform'];
+      alertdata = json['alertdata'];
+      isSymptom = json['isSymptom'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

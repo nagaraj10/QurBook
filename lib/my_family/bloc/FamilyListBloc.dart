@@ -1,5 +1,6 @@
-
 import 'dart:async';
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../add_family_otp/models/add_family_otp_response.dart';
 import '../../constants/variable_constant.dart' as variable;
@@ -34,34 +35,42 @@ class FamilyListBloc implements BaseBloc {
   StreamController? _relationshipListController;
 
   StreamSink<ApiResponse<RelationShipResponseList>> get relationShipListSink =>
-      _relationshipListController!.sink as StreamSink<ApiResponse<RelationShipResponseList>>;
+      _relationshipListController!.sink
+          as StreamSink<ApiResponse<RelationShipResponseList>>;
   Stream<ApiResponse<RelationShipResponseList>> get relationShipStream =>
-      _relationshipListController!.stream as Stream<ApiResponse<RelationShipResponseList>>;
+      _relationshipListController!.stream
+          as Stream<ApiResponse<RelationShipResponseList>>;
 
   // 3
   StreamController? _userLinkingController;
 
   StreamSink<ApiResponse<UserLinkingResponseList>> get userLinkingSink =>
-      _userLinkingController!.sink as StreamSink<ApiResponse<UserLinkingResponseList>>;
+      _userLinkingController!.sink
+          as StreamSink<ApiResponse<UserLinkingResponseList>>;
   Stream<ApiResponse<UserLinkingResponseList>> get userLinkingStream =>
-      _userLinkingController!.stream as Stream<ApiResponse<UserLinkingResponseList>>;
+      _userLinkingController!.stream
+          as Stream<ApiResponse<UserLinkingResponseList>>;
 
   // 4
   StreamController? _userDeLinkingController;
 
   StreamSink<ApiResponse<UserLinkingResponseList>> get userDeLinkingSink =>
-      _userDeLinkingController!.sink as StreamSink<ApiResponse<UserLinkingResponseList>>;
+      _userDeLinkingController!.sink
+          as StreamSink<ApiResponse<UserLinkingResponseList>>;
   Stream<ApiResponse<UserLinkingResponseList>> get userDeLinkingStream =>
-      _userDeLinkingController!.stream as Stream<ApiResponse<UserLinkingResponseList>>;
+      _userDeLinkingController!.stream
+          as Stream<ApiResponse<UserLinkingResponseList>>;
 
   // 5
   StreamController? _userLinkingForPrimaryNoController;
 
   StreamSink<ApiResponse<AddFamilyOTPResponse>>
       get userLinkingForPrimaryNoSink =>
-          _userLinkingForPrimaryNoController!.sink as StreamSink<ApiResponse<AddFamilyOTPResponse>>;
+          _userLinkingForPrimaryNoController!.sink
+              as StreamSink<ApiResponse<AddFamilyOTPResponse>>;
   Stream<ApiResponse<AddFamilyOTPResponse>> get userLinkingForPrimaryNoStream =>
-      _userLinkingForPrimaryNoController!.stream as Stream<ApiResponse<AddFamilyOTPResponse>>;
+      _userLinkingForPrimaryNoController!.stream
+          as Stream<ApiResponse<AddFamilyOTPResponse>>;
 
   @override
   void dispose() {
@@ -98,7 +107,9 @@ class FamilyListBloc implements BaseBloc {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersList();
       familyMemberListSink.add(ApiResponse.completed(familyResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       familyMemberListSink.add(ApiResponse.error(e.toString()));
     }
     return familyResponseList;
@@ -111,7 +122,9 @@ class FamilyListBloc implements BaseBloc {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersListNew();
       familyMemberListNewSink.add(ApiResponse.completed(familyResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       familyMemberListNewSink.add(ApiResponse.error(e.toString()));
     }
     return familyResponseList;
@@ -122,7 +135,9 @@ class FamilyListBloc implements BaseBloc {
     try {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersListNew();
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       familyMemberListNewSink.add(ApiResponse.error(e.toString()));
     }
     return familyResponseList;
@@ -134,7 +149,9 @@ class FamilyListBloc implements BaseBloc {
       var relationShipResponseList =
           await _familyResponseListRepository.getCustomRoles();
       relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       relationShipListSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -147,14 +164,17 @@ class FamilyListBloc implements BaseBloc {
       userLinking =
           await _familyResponseListRepository.postUserLinking(jsonString);
 //      userLinkingSink.add(ApiResponse.completed(userLinking));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       userLinkingSink.add(ApiResponse.error(e.toString()));
     }
 
     return userLinking;
   }
 
-  Future<UserDeLinkingResponseList?> postUserDeLinking(String jsonString) async {
+  Future<UserDeLinkingResponseList?> postUserDeLinking(
+      String jsonString) async {
     userDeLinkingSink.add(ApiResponse.loading(variable.strPostuserDelink));
 
     UserDeLinkingResponseList? userDeLinking;
@@ -162,7 +182,9 @@ class FamilyListBloc implements BaseBloc {
       userDeLinking =
           await _familyResponseListRepository.postUserDeLinking(jsonString);
 //      userLinkingSink.add(ApiResponse.completed(userLinking));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       userDeLinkingSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -179,7 +201,9 @@ class FamilyListBloc implements BaseBloc {
     try {
       addFamilyOTPResponse = await _familyResponseListRepository
           .postUserLinkingForPrimaryNo(jsonString);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       userLinkingForPrimaryNoSink.add(ApiResponse.error(e.toString()));
     }
 

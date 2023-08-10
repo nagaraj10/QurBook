@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class AddNetworkModel {
   String? result;
   String? hubId;
@@ -22,8 +24,9 @@ class AddNetworkModel {
       diagnostics = json['diagnostics'] != null
           ? new Diagnostics.fromJson(json['diagnostics'])
           : null;
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -37,8 +40,9 @@ class AddNetworkModel {
       if (this.diagnostics != null) {
         data['diagnostics'] = this.diagnostics!.toJson();
       }
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
     return data;
   }

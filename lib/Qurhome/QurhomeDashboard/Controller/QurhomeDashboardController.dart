@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
@@ -55,6 +53,8 @@ class QurhomeDashboardController extends GetxController {
 
   int nextAlertPosition = 0;
   int currentIndex = 0;
+
+
 
   @override
   void onInit() {
@@ -122,7 +122,9 @@ class QurhomeDashboardController extends GetxController {
       firstName = myProfile.result != null
           ? myProfile.result!.firstName!.capitalizeFirstofEach
           : '';
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
 
     switch (currentSelectedIndex.value) {
       case 0:
@@ -185,7 +187,9 @@ class QurhomeDashboardController extends GetxController {
                 KIOSK_say_text: data[sayText_sheela] ?? ''.toString(),
               };
               CommonUtil().callQueueNotificationPostApi(reqJson);
-            } catch (e) {}
+            } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            }
           } else if (PreferenceUtil.getIfQurhomeisAcive()) {
             redirectToSheelaScheduleAppointment();
           }
@@ -238,7 +242,9 @@ class QurhomeDashboardController extends GetxController {
           }
         }
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   getModuleAccess() async {
@@ -280,7 +286,9 @@ class QurhomeDashboardController extends GetxController {
             (b?.createdOn?.compareTo(a?.createdOn ?? DateTime.now()) ?? 0));
 
         update(["newUpdate"]);
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         return;
       }
     } else {
@@ -313,20 +321,24 @@ class QurhomeDashboardController extends GetxController {
           careGiverPatientListResult, patientAlertData);
       loadingPatientData.value = false;
       return responseBool;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return false;
     }
   }
 
   Future<bool> caregiverEscalateAction(
-      PatientAlertData patientAlertData, String activityName) async {
+      PatientAlertData patientAlertData, String activityName,{String? notes}) async {
     try {
       loadingPatientData.value = true;
       var responseBool = await _apiProvider.careGiverEscalateAction(
-          patientAlertData, careGiverPatientListResult, activityName);
+          patientAlertData, careGiverPatientListResult, activityName,patientAlert?.result?.healthOrganizationId??'',notes: notes);
       loadingPatientData.value = false;
       return responseBool;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return false;
     }
   }

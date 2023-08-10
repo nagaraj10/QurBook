@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class AssociateUpdateSuccessResponse {
   bool? isSuccess;
   String? message;
@@ -7,9 +9,13 @@ class AssociateUpdateSuccessResponse {
   AssociateUpdateSuccessResponse({this.isSuccess, this.message, this.result});
 
   AssociateUpdateSuccessResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result = json['result'];
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result = json['result'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

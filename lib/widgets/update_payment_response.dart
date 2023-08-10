@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UpdatePaymentResponse {
   bool? isSuccess;
   Result? result;
@@ -6,9 +8,13 @@ class UpdatePaymentResponse {
   UpdatePaymentResponse({this.isSuccess, this.result});
 
   UpdatePaymentResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+              json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -40,15 +46,19 @@ class Result {
       this.cartUserId});
 
   Result.fromJson(Map<String, dynamic> json) {
-    subscribeResponse = json['subscribeResponse'] != null
-        ? new SubscribeResponse.fromJson(json['subscribeResponse'])
-        : null;
-    paymentId = json['paymentId'];
-    paymentOrderId = json['paymentOrderId'];
-    paymentRequestId = json['paymentRequestId'];
-    paymentStatus = json['paymentStatus'];
-    cartId = json['cartId'];
-    cartUserId = json['cartUserId'];
+    try {
+      subscribeResponse = json['subscribeResponse'] != null
+              ? new SubscribeResponse.fromJson(json['subscribeResponse'])
+              : null;
+      paymentId = json['paymentId'];
+      paymentOrderId = json['paymentOrderId'];
+      paymentRequestId = json['paymentRequestId'];
+      paymentStatus = json['paymentStatus'];
+      cartId = json['cartId'];
+      cartUserId = json['cartUserId'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -73,12 +83,16 @@ class SubscribeResponse {
   SubscribeResponse({this.isSuccess, this.payload});
 
   SubscribeResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['payload'] != null) {
-      payload = <Payload>[];
-      json['payload'].forEach((v) {
-        payload!.add(new Payload.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['payload'] != null) {
+            payload = <Payload>[];
+            json['payload'].forEach((v) {
+              payload!.add(new Payload.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -109,12 +123,16 @@ class Payload {
       this.docid});
 
   Payload.fromJson(Map<String, dynamic> json) {
-    result = json['Result'];
-    planStartDate = json['PlanStartDate'];
-    message = json['Message'];
-    packageid = json['packageid'];
-    price = json['price'];
-    docid = json['docid'];
+    try {
+      result = json['Result'];
+      planStartDate = json['PlanStartDate'];
+      message = json['Message'];
+      packageid = json['packageid'];
+      price = json['price'];
+      docid = json['docid'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

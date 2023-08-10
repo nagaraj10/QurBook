@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'CategoryInfo.dart';
 import 'DeviceReadings.dart';
@@ -42,39 +44,43 @@ class MetaInfo {
       this.idType});
 
   MetaInfo.fromJson(Map<String, dynamic> json) {
-    categoryInfo = json[parameters.strcategoryInfo] != null
-        ? CategoryInfo.fromJson(json[parameters.strcategoryInfo])
-        : null;
-    dateOfVisit = json[parameters.strdateOfVisit];
-    try{
-    if (json[parameters.strdeviceReadings] != null) {
-      deviceReadings = <DeviceReadings>[];
-      json[parameters.strdeviceReadings].forEach((v) {
-        deviceReadings!.add(DeviceReadings.fromJson(v));
-      });
-    }
-     }catch(e){
+    try {
+      categoryInfo = json[parameters.strcategoryInfo] != null
+              ? CategoryInfo.fromJson(json[parameters.strcategoryInfo])
+              : null;
+      dateOfVisit = json[parameters.strdateOfVisit];
+      try{
+          if (json[parameters.strdeviceReadings] != null) {
+            deviceReadings = <DeviceReadings>[];
+            json[parameters.strdeviceReadings].forEach((v) {
+              deviceReadings!.add(DeviceReadings.fromJson(v));
+            });
+          }
+           }catch(e){
 
+          }
+      doctor =
+              json[parameters.strdoctor] != null ? Doctor.fromJson(json[parameters.strdoctor]) : null;
+      fileName = json[parameters.strfileName];
+      hasVoiceNotes = json[parameters.strhasVoiceNotes] ?? false;
+      isDraft = json[parameters.strisDraft] ?? false;
+      mediaTypeInfo = json[parameters.strmediaTypeInfo] != null
+              ? MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
+              : null;
+      memoText = json[parameters.strmemoText];
+      memoTextRaw = json[parameters.strmemoTextRaw];
+      sourceName = json[parameters.strsourceName];
+      laboratory = json[parameters.strlaboratory] != null
+              ? Laboratory.fromJson(json[parameters.strlaboratory])
+              : null;
+      hospital = json[parameters.strhospital] != null
+              ? Hospital.fromJson(json[parameters.strhospital])
+              : null;
+      dateOfExpiry = json[parameters.strdateOfExpiry];
+      idType = json[parameters.stridType] != null ? json[parameters.stridType] : '';
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
-    doctor =
-        json[parameters.strdoctor] != null ? Doctor.fromJson(json[parameters.strdoctor]) : null;
-    fileName = json[parameters.strfileName];
-    hasVoiceNotes = json[parameters.strhasVoiceNotes] ?? false;
-    isDraft = json[parameters.strisDraft] ?? false;
-    mediaTypeInfo = json[parameters.strmediaTypeInfo] != null
-        ? MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
-        : null;
-    memoText = json[parameters.strmemoText];
-    memoTextRaw = json[parameters.strmemoTextRaw];
-    sourceName = json[parameters.strsourceName];
-    laboratory = json[parameters.strlaboratory] != null
-        ? Laboratory.fromJson(json[parameters.strlaboratory])
-        : null;
-    hospital = json[parameters.strhospital] != null
-        ? Hospital.fromJson(json[parameters.strhospital])
-        : null;
-    dateOfExpiry = json[parameters.strdateOfExpiry];
-    idType = json[parameters.stridType] != null ? json[parameters.stridType] : '';
   }
 
   Map<String, dynamic> toJson() {

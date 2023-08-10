@@ -83,7 +83,9 @@ class RegimentService {
           regimentsList: [],
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e.toString());
 
       return RegimentResponseModel(
@@ -127,7 +129,9 @@ class RegimentService {
           regimentsList: [],
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e.toString());
 
       return RegimentResponseModel(
@@ -153,7 +157,9 @@ class RegimentService {
       } else {
         return ExternalLinksResponseModel();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e.toString());
       return ExternalLinksResponseModel();
     }
@@ -214,7 +220,9 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
       LoaderClass.hideLoadingDialog(Get.context!);
       return SaveResponseModel(
@@ -278,7 +286,9 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -310,7 +320,9 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -341,7 +353,9 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -371,7 +385,9 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -402,7 +418,9 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -436,7 +454,9 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
       throw Exception('$e was thrown');
     }
@@ -476,8 +496,10 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       throw Exception('$e was thrown');
     }
   }
@@ -505,8 +527,10 @@ class RegimentService {
         print(response.body);
         return GetEventIdModel.fromJson(json.decode(response.body));
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       throw Exception('$e was thrown');
     }
   }
@@ -528,7 +552,9 @@ class RegimentService {
       } else {
         return ActivityStatusModel();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       throw Exception('$e was thrown');
     }
   }

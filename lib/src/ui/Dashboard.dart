@@ -86,7 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     // try {
     //   if (!widget.fromPlans) commonUtil.versionCheck(context);
-    // } catch (e) {}
+    // } catch (e,stackTrace) {}
   }
 
   @override
@@ -233,42 +233,69 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void callImportantsMethod() async {
     try {
       getFamilyRelationAndMediaType();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
     try {
       getProfileData();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
     try {
       syncDevices();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
 
     try {
       await new CommonUtil().getMedicalPreference();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
 
     try {
       new CommonDialogBox().getCategoryList();
       getFamilyRelationAndMediaType();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
 
     try {
       AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
       addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 
   void getFamilyRelationAndMediaType() async {
     try {
       await new CommonUtil().getAllCustomRoles();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
     try {
       await new CommonUtil().getMediaTypes();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 
   void getProfileData() async {
     try {
       await new CommonUtil().getUserProfileData();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 
   void syncDevices() async {

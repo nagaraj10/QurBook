@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UpdatePaymentStatusSubscribe {
   bool? isSuccess;
   PaymentSubscribeResult? result;
@@ -6,9 +8,13 @@ class UpdatePaymentStatusSubscribe {
   UpdatePaymentStatusSubscribe({this.isSuccess, this.result});
 
   UpdatePaymentStatusSubscribe.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? PaymentSubscribeResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? PaymentSubscribeResult.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -38,16 +44,20 @@ class PaymentSubscribeResult {
         this.pdfGenResult});
 
   PaymentSubscribeResult.fromJson(Map<String, dynamic> json) {
-    planPackage = json['planPackage'] != null
-        ? PlanPackage.fromJson(json['planPackage'])
-        : null;
-    paymentId = json['paymentId'];
-    paymentOrderId = json['paymentOrderId'];
-    paymentRequestId = json['paymentRequestId'];
-    paymentStatus = json['paymentStatus'];
-    pdfGenResult = json['pdfGenResult'] != null
-        ? PdfGenResult.fromJson(json['pdfGenResult'])
-        : null;
+    try {
+      planPackage = json['planPackage'] != null
+              ? PlanPackage.fromJson(json['planPackage'])
+              : null;
+      paymentId = json['paymentId'];
+      paymentOrderId = json['paymentOrderId'];
+      paymentRequestId = json['paymentRequestId'];
+      paymentStatus = json['paymentStatus'];
+      pdfGenResult = json['pdfGenResult'] != null
+              ? PdfGenResult.fromJson(json['pdfGenResult'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -103,24 +113,28 @@ class PlanPackage {
         this.providers});
 
   PlanPackage.fromJson(Map<String, dynamic> json) {
-    packageid = json['packageid'];
-    providerid = json['providerid'];
-    packcatid = json['packcatid'];
-    careteamid = json['careteamid'];
-    title = json['title'];
-    description = json['description'];
-    price = json['price'];
-    issubscription = json['issubscription'];
-    ispublic = json['ispublic'];
-    html = json['html'];
-    packageDuration = json['packageDuration'];
-    billingCycle = json['billingCycle'];
-    ts = json['ts'];
-    deleted = json['deleted'];
-    docid = json['docid'];
-    providers = json['providers'] != null
-        ? Providers.fromJson(json['providers'])
-        : null;
+    try {
+      packageid = json['packageid'];
+      providerid = json['providerid'];
+      packcatid = json['packcatid'];
+      careteamid = json['careteamid'];
+      title = json['title'];
+      description = json['description'];
+      price = json['price'];
+      issubscription = json['issubscription'];
+      ispublic = json['ispublic'];
+      html = json['html'];
+      packageDuration = json['packageDuration'];
+      billingCycle = json['billingCycle'];
+      ts = json['ts'];
+      deleted = json['deleted'];
+      docid = json['docid'];
+      providers = json['providers'] != null
+              ? Providers.fromJson(json['providers'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -166,13 +180,17 @@ class Providers {
         this.ts});
 
   Providers.fromJson(Map<String, dynamic> json) {
-    providerid = json['providerid'];
-    title = json['title'];
-    description = json['description'];
-    metadata = json['metadata'];
-    deleted = json['deleted'];
-    linkid = json['linkid'];
-    ts = json['ts'];
+    try {
+      providerid = json['providerid'];
+      title = json['title'];
+      description = json['description'];
+      metadata = json['metadata'];
+      deleted = json['deleted'];
+      linkid = json['linkid'];
+      ts = json['ts'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -195,9 +213,13 @@ class PdfGenResult {
   PdfGenResult({this.isSuccess, this.payload});
 
   PdfGenResult.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    payload =
-    json['payload'] != null ? Payload.fromJson(json['payload']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      payload =
+          json['payload'] != null ? Payload.fromJson(json['payload']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -223,12 +245,16 @@ class Payload {
         this.sequenceNumber});
 
   Payload.fromJson(Map<String, dynamic> json) {
-    responseMetadata = json['ResponseMetadata'] != null
-        ? ResponseMetadata.fromJson(json['ResponseMetadata'])
-        : null;
-    mD5OfMessageBody = json['MD5OfMessageBody'];
-    messageId = json['MessageId'];
-    sequenceNumber = json['SequenceNumber'];
+    try {
+      responseMetadata = json['ResponseMetadata'] != null
+              ? ResponseMetadata.fromJson(json['ResponseMetadata'])
+              : null;
+      mD5OfMessageBody = json['MD5OfMessageBody'];
+      messageId = json['MessageId'];
+      sequenceNumber = json['SequenceNumber'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -249,7 +275,11 @@ class ResponseMetadata {
   ResponseMetadata({this.requestId});
 
   ResponseMetadata.fromJson(Map<String, dynamic> json) {
-    requestId = json['RequestId'];
+    try {
+      requestId = json['RequestId'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class CaregiverPatientChatModel {
   bool? isSuccess;
   List<Result>? result;
@@ -6,12 +8,16 @@ class CaregiverPatientChatModel {
   CaregiverPatientChatModel({this.isSuccess, this.result});
 
   CaregiverPatientChatModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <Result>[];
-      json['result'].forEach((v) {
-        result!.add(new Result.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <Result>[];
+            json['result'].forEach((v) {
+              result!.add(new Result.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -54,20 +60,24 @@ class Result {
         this.chatListItem});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    relationshipName = json['relationshipName'];
-    isCarecoordinator = json['isCarecoordinator'];
-    carecoordinatorfirstName = json['carecoordinatorfirstName'];
-    carecoordinatorLastName = json['carecoordinatorLastName'];
-    carecoordinatorProfilePicThumbnailUrl = json['carecoordinatorProfilePicThumbnailUrl'];
-    carecoordinatorId = json['carecoordinatorId'];
-    chatListItem = json['chatListItem'] != null
-        ? new ChatListItem.fromJson(json['chatListItem'])
-        : null;
+    try {
+      id = json['id'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      relationshipName = json['relationshipName'];
+      isCarecoordinator = json['isCarecoordinator'];
+      carecoordinatorfirstName = json['carecoordinatorfirstName'];
+      carecoordinatorLastName = json['carecoordinatorLastName'];
+      carecoordinatorProfilePicThumbnailUrl = json['carecoordinatorProfilePicThumbnailUrl'];
+      carecoordinatorId = json['carecoordinatorId'];
+      chatListItem = json['chatListItem'] != null
+              ? new ChatListItem.fromJson(json['chatListItem'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -114,16 +124,20 @@ class ChatListItem {
         this.lastModifiedOn,this.deliveredOn});
 
   ChatListItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    peerId = json['peerId'];
-    userId = json['userId'];
-    createdOn = json['createdOn'];
-    isActive = json['isActive'];
-    isDisable = json['isDisable'];
-    isMuted = json['isMuted'];
-    unReadNotificationCount = json['unReadNotificationCount'];
-    lastModifiedOn = json['lastModifiedOn'];
-    deliveredOn = json['deliveredOn'];
+    try {
+      id = json['id'];
+      peerId = json['peerId'];
+      userId = json['userId'];
+      createdOn = json['createdOn'];
+      isActive = json['isActive'];
+      isDisable = json['isDisable'];
+      isMuted = json['isMuted'];
+      unReadNotificationCount = json['unReadNotificationCount'];
+      lastModifiedOn = json['lastModifiedOn'];
+      deliveredOn = json['deliveredOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

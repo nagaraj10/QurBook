@@ -463,7 +463,9 @@ class _ChooseUnitState extends State<ChooseUnit> {
 
                   await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
                       preferredMeasurement!.weight!.unitCode!);
-                } catch (e) {
+                } catch (e,stackTrace) {
+                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                   await PreferenceUtil.saveString(
                       Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
                 }
@@ -497,7 +499,9 @@ class _ChooseUnitState extends State<ChooseUnit> {
                       preferredMeasurement!.height!.unitCode!);
 
                   heightObj = preferredMeasurement?.height;
-                } catch (e) {
+                } catch (e,stackTrace) {
+                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                   await PreferenceUtil.saveString(
                       Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
                 }
@@ -531,7 +535,9 @@ class _ChooseUnitState extends State<ChooseUnit> {
                   await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
                       preferredMeasurement!.temperature!.unitCode!);
                   tempObj = preferredMeasurement?.temperature;
-                } catch (e) {
+                } catch (e,stackTrace) {
+                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                   await PreferenceUtil.saveString(
                       Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
                 }

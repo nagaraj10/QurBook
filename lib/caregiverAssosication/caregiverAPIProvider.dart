@@ -1,10 +1,10 @@
-
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../constants/HeaderRequest.dart';
 import '../constants/fhb_constants.dart';
@@ -39,7 +39,8 @@ class CaregiverAPIProvider {
         model.message!,
         model.isSuccess! ? Colors.green : Colors.red,
       );
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       FlutterToast().getToast(
         'Failed to approve the caregiver',
         Colors.red,
@@ -73,7 +74,8 @@ class CaregiverAPIProvider {
         model.message!,
         model.isSuccess! ? Colors.green : Colors.red,
       );
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       FlutterToast().getToast(
         'Failed to reject the caregiver',
         Colors.red,

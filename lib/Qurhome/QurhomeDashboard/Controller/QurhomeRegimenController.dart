@@ -12,6 +12,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/carecoordinatordata.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/soscallagentnumberdata.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
@@ -85,6 +86,9 @@ class QurhomeRegimenController extends GetxController {
   var isFirstTime = true.obs;
 
   var isShowSOSButton = false.obs;
+
+  Rx<bool> isErrorAppLogDialogShowing = false.obs;
+  List<ErrorAppLogDataModel>? errorAppLogList = [];
 
   getRegimenList(
       {bool isLoading = true, String? date, String? patientId}) async {
@@ -174,7 +178,9 @@ class QurhomeRegimenController extends GetxController {
                       await platform.invokeMethod(APPOINTMENT_DETAILS,
                           {'data': jsonEncode(apiReminder.toJson())});
                     }
-                  } catch (e) {
+                  } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                     if (kDebugMode) {
                       print(e);
                     }
@@ -194,9 +200,11 @@ class QurhomeRegimenController extends GetxController {
         getUserDetails();
         getCareCoordinatorId();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
-        printError(info: e.toString());
+        printError(info: "Regimentlist: "+e.toString());
       }
       onStopLoadingCircle();
     }
@@ -234,7 +242,9 @@ class QurhomeRegimenController extends GetxController {
     try {
       timer?.cancel();
       super.onClose();
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -277,7 +287,9 @@ class QurhomeRegimenController extends GetxController {
           }
         });
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -311,7 +323,9 @@ class QurhomeRegimenController extends GetxController {
                   CommonUtil().validString(address.subThoroughfare));
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -349,7 +363,9 @@ class QurhomeRegimenController extends GetxController {
           }
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -409,7 +425,9 @@ class QurhomeRegimenController extends GetxController {
         FlutterToast().getToast(
             'Could not start call due to permission issue', Colors.red);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -434,7 +452,9 @@ class QurhomeRegimenController extends GetxController {
           ? CommonUtil()
               .validString(prof.result!.userContactCollection3![0]!.phoneNumber)
           : '';
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -464,7 +484,9 @@ class QurhomeRegimenController extends GetxController {
               .validString(sosCallAgentNumberData.result!.exoPhoneNumber);
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -516,7 +538,8 @@ class QurhomeRegimenController extends GetxController {
                 //past
                 isTodaySelected.value = false;
                 statusText.value = strViewPastDateRegimen;
-              } else if (CommonUtil().calculateDifference(selectedDate.value) > 0) {
+              } else if (CommonUtil().calculateDifference(selectedDate.value) >
+                  0) {
                 //future
                 isTodaySelected.value = false;
                 statusText.value = strViewFutureDateRegimen;
@@ -527,7 +550,9 @@ class QurhomeRegimenController extends GetxController {
           }
         },
       );
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -545,7 +570,9 @@ class QurhomeRegimenController extends GetxController {
       }
 
       startTimer();
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -602,7 +629,9 @@ class QurhomeRegimenController extends GetxController {
       await getSOSButtonStatus();
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         print(e);
       }
@@ -612,7 +641,7 @@ class QurhomeRegimenController extends GetxController {
   getSOSButtonStatus() async {
     try {
       await _apiProvider.getSOSButtonStatus();
-    } catch (e) {
+    } catch (e,stackTrace) {
       if (kDebugMode) {
         print(e);
       }

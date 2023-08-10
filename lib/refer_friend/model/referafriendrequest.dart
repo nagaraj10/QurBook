@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class ReferAFriendRequest {
   List<Contacts>? contacts;
   String? source;
@@ -6,13 +8,17 @@ class ReferAFriendRequest {
   ReferAFriendRequest({this.contacts, this.source});
 
   ReferAFriendRequest.fromJson(Map<String, dynamic> json) {
-    if (json['contacts'] != null) {
-      contacts = <Contacts>[];
-      json['contacts'].forEach((v) {
-        contacts!.add(Contacts.fromJson(v));
-      });
+    try {
+      if (json['contacts'] != null) {
+            contacts = <Contacts>[];
+            json['contacts'].forEach((v) {
+              contacts!.add(Contacts.fromJson(v));
+            });
+          }
+      source = json['source'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
-    source = json['source'];
   }
 
   Map<String, dynamic> toJson() {
@@ -32,8 +38,12 @@ class Contacts {
   Contacts({this.phoneNumber, this.name});
 
   Contacts.fromJson(Map<String, dynamic> json) {
-    phoneNumber = json['phoneNumber'];
-    name = json['name'];
+    try {
+      phoneNumber = json['phoneNumber'];
+      name = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

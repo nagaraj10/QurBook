@@ -5,6 +5,8 @@
 
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 TicketTypesModel ticketTypesModelFromJson(String str) =>
     TicketTypesModel.fromJson(json.decode(str));
 
@@ -140,8 +142,10 @@ class AdditionalInfo {
             });
           }
       healthOrgTypeId = json['healthOrgTypeId'];
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -152,8 +156,10 @@ class AdditionalInfo {
             data['field'] = this.field!.map((v) => v.toJson()).toList();
           }
       data['healthOrgTypeId'] = this.healthOrgTypeId;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
     return data;
   }
@@ -220,8 +226,10 @@ class Field {
         });
       }
       isDisable = json['isDisable']!=null?json['isDisable']:false;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -245,8 +253,10 @@ class Field {
       data['isProvider'] = this.isProvider;
       data['provider_type'] = this.providerType;
       data['isDisable'] = this.isDisable;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
 
     return data;
@@ -265,8 +275,10 @@ class FieldData {
       id = json['id'];
       name = json['name'];
       fieldName = null;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -275,8 +287,10 @@ class FieldData {
     try {
       data['id'] = this.id;
       data['name'] = this.name;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
     return data;
   }

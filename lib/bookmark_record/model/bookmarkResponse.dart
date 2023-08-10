@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class BookmarkResponse {
@@ -9,9 +11,13 @@ class BookmarkResponse {
   BookmarkResponse({this.status, this.success, this.message});
 
   BookmarkResponse.fromJson(Map<String, dynamic> json) {
-     status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
+     try {
+       status = json[parameters.strStatus];
+       success = json[parameters.strSuccess];
+       message = json[parameters.strMessage];
+     } catch (e,stackTrace) {
+       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+     }
   }
 
   Map<String, dynamic> toJson() {

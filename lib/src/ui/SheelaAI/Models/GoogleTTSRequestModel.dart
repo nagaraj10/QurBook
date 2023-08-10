@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../../constants/fhb_parameters.dart';
 
 class GoogleTTSRequestModel {
@@ -14,15 +16,19 @@ class GoogleTTSRequestModel {
     this.isAudioFile,
   });
   GoogleTTSRequestModel.fromJson(Map<String, dynamic> json) {
-    input = (json[strinput] ?? '').isEmpty
-        ? InputTTS.fromJson({})
-        : InputTTS.fromJson(json[strinput]);
-    voice = (json[strvoice] ?? '').isEmpty
-        ? Voice()
-        : Voice.fromJson(json[strvoice]);
-    audioConfig = (json[straudioConfig] ?? '').isEmpty
-        ? AudioConfig()
-        : AudioConfig.fromJson(json[straudioConfig]);
+    try {
+      input = (json[strinput] ?? '').isEmpty
+              ? InputTTS.fromJson({})
+              : InputTTS.fromJson(json[strinput]);
+      voice = (json[strvoice] ?? '').isEmpty
+              ? Voice()
+              : Voice.fromJson(json[strvoice]);
+      audioConfig = (json[straudioConfig] ?? '').isEmpty
+              ? AudioConfig()
+              : AudioConfig.fromJson(json[straudioConfig]);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -41,7 +47,11 @@ class InputTTS {
   InputTTS({this.text});
 
   InputTTS.fromJson(Map<String, dynamic> json) {
-    text = json[strtext] ?? '';
+    try {
+      text = json[strtext] ?? '';
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -56,7 +66,11 @@ class Voice {
   String ssmlGenderType = Female;
   Voice({this.languageCode});
   Voice.fromJson(Map<String, dynamic> json) {
-    languageCode = json[strlanguageCode];
+    try {
+      languageCode = json[strlanguageCode];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -71,7 +85,11 @@ class AudioConfig {
   String? audioEncodingType;
   AudioConfig({this.audioEncodingType = strMP3});
   AudioConfig.fromJson(Map<String, dynamic> json) {
-    audioEncodingType = json[audioEncoding];
+    try {
+      audioEncodingType = json[audioEncoding];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

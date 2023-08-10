@@ -619,7 +619,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           averageForSys = '';
           averageForDia = '';
         }
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         averageForSys = '';
         averageForDia = '';
         pulseBp = '';
@@ -680,7 +682,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             ? deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage
                 .toString()
             : '';
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         averageForFasting = '';
         averageForPP = '';
       }
@@ -765,7 +769,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           .averageAsOfNow!.oxygenLevelAverage
                           .toString()
                       : '';
-            } catch (e) {
+            } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
               averageForPul = '';
               averageForPRBpm = '';
               prbPMOxi = '';
@@ -779,7 +785,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           averageForPRBpm = '';
           prbPMOxi = '';
         }
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         averageForPulForBp = '';
         averageForPul = '';
         averageForPRBpm = '';
@@ -794,7 +802,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .oxygenLevelAverage
                 .toString()
             : '';
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         averageForSPO2 = '';
       }
     } else {
@@ -831,7 +841,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .temperatureAverage
                 .toString()
             : '';
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         averageForTemp = '';
       }
       try {
@@ -840,7 +852,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 ? deviceValues!
                     .bodyTemperature!.entities![0].temperatureUnit!.code
                 : '';
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         unitForTemp = '';
       }
     } else {
@@ -877,7 +891,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .bodyWeight!.entities![0].averageAsOfNow!.weightAverage
                 .toString()
             : '';
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         averageForWeigh = '';
       }
 
@@ -886,7 +902,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             deviceValues!.bodyWeight!.entities![0].weightUnit != null
                 ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
                 : '';
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         unitForWeight = '';
       }
     } else {

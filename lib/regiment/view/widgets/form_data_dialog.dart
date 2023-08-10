@@ -1227,7 +1227,9 @@ class FormDataDialogState extends State<FormDataDialog> {
       for (VitalsData? vitalsDataObj in vitalsData!) {
         if (vitalsDataObj?.vitalName == fieldModel.title) return vitalsDataObj;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return null;
     }
   }

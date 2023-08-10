@@ -641,7 +641,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               }
             });*/
 
-        } catch (e) {
+        } catch (e,stackTrace) {
+                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           print('$e exception thrown');
         }
       }
@@ -1614,7 +1615,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         });
       });
       return isAudioDownload;
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e.toString());
       return isAudioDownload;
     }
@@ -1682,7 +1685,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         final spilit = pdfFileName.split('_');
         var value = toBeginningOfSentenceCase(spilit[1])! + '_' + spilit[0];
         return value;
-      } catch (e) {
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         return pdfFileName = pdfFileName.replaceAll('.pdf', '');
       }
     }

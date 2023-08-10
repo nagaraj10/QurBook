@@ -1,4 +1,5 @@
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_list_result.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class PatientAlertListModel {
   bool? isSuccess;
@@ -8,17 +9,21 @@ class PatientAlertListModel {
   PatientAlertListModel({this.isSuccess, this.result});
 
   PatientAlertListModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result = json.containsKey('result')
-        ? json['result'] != null
-            ? new PatientAlertListResult.fromJson(json['result'])
-            : null
-        : null;
-    diagnostics = json.containsKey('diagnostics')
-        ? json['diagnostics'] != null
-            ? new Diagnostics.fromJson(json['diagnostics'])
-            : null
-        : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result = json.containsKey('result')
+              ? json['result'] != null
+                  ? new PatientAlertListResult.fromJson(json['result'])
+                  : null
+              : null;
+      diagnostics = json.containsKey('diagnostics')
+              ? json['diagnostics'] != null
+                  ? new Diagnostics.fromJson(json['diagnostics'])
+                  : null
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

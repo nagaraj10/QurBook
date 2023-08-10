@@ -47,7 +47,9 @@ class DownloadMultipleImages {
           print("file.path" + file.path);
           filePathist.add(file.path);
         });
-      } catch (e) {
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         //print('$e exception thrown');
       }
     }

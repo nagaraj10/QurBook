@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -172,9 +171,10 @@ class PlanWizardViewModel extends ChangeNotifier {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
       if (isFrom == strProviderCare) {
-        providerOrganizationResult =
-            (await Provider.of<PlanProviderViewModel>(Get.context!, listen: false)
-                .getCarePlanList(conditionChosen!))!;
+        providerOrganizationResult = (await Provider.of<PlanProviderViewModel>(
+                Get.context!,
+                listen: false)
+            .getCarePlanList(conditionChosen!))!;
 
         planWizardProviderCount =
             providerOrganizationResult.result?.length ?? 0;
@@ -191,7 +191,9 @@ class PlanWizardViewModel extends ChangeNotifier {
         freePlanListResult = [];
       }
       return myPlanListModel;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Future<PlanListModel?> getDietPlanListNew(
@@ -208,7 +210,9 @@ class PlanWizardViewModel extends ChangeNotifier {
         freeDietPlanListResult = [];
       }
       return myPlanListModel;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Future<DietPlanModel?> getDietPlanList({bool isVeg = false}) async {
@@ -222,7 +226,9 @@ class PlanWizardViewModel extends ChangeNotifier {
         dietPlanList = [];
       }
       return myPlanListModel;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Future<Map<String?, List<MenuItem>>?> getHealthConditions() async {
@@ -247,7 +253,9 @@ class PlanWizardViewModel extends ChangeNotifier {
       }
       notifyListeners();
       return healthConditions;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   void getFilteredHealthConditions(
@@ -370,7 +378,8 @@ class PlanWizardViewModel extends ChangeNotifier {
         planListLocal = List.from(planLisDefault);
       }
     } else if (filter == popUpChoiceDefault) {
-      if (providerPlanListResult != null && providerPlanListResult!.length > 0) {
+      if (providerPlanListResult != null &&
+          providerPlanListResult!.length > 0) {
         planListLocal = List.from(providerPlanListResult!);
       }
     } else {
@@ -414,7 +423,8 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   List<PlanListResult> filterSortingForProviderDiet(String filter) {
     List<PlanListResult> planListLocal = [];
-    List<PlanListResult> planLisDefault = List.from(providerDietPlanListResult!);
+    List<PlanListResult> planLisDefault =
+        List.from(providerDietPlanListResult!);
     if (filter == popUpChoicePrice) {
       if (planLisDefault != null && planLisDefault.length > 0) {
         planLisDefault.sort((a, b) {
@@ -467,7 +477,8 @@ class PlanWizardViewModel extends ChangeNotifier {
         planListLocal = List.from(planLisDefault);
       }
     } else if (filter == popUpChoiceDefault) {
-      if (freeDietPlanListResult != null && freeDietPlanListResult!.length > 0) {
+      if (freeDietPlanListResult != null &&
+          freeDietPlanListResult!.length > 0) {
         planListLocal = List.from(freeDietPlanListResult!);
       }
     } else {
@@ -620,15 +631,16 @@ class PlanWizardViewModel extends ChangeNotifier {
           updateProviderId('');
         }
 
-        Get.snackbar(
-            '', (addToCartModel.message ?? 'Adding Failed! Try again'),
+        Get.snackbar('', (addToCartModel.message ?? 'Adding Failed! Try again'),
             backgroundColor:
                 Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.9),
             colorText: Colors.white);
       }
 
       return addToCartModel;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Future<void> removeCart(
@@ -657,7 +669,9 @@ class PlanWizardViewModel extends ChangeNotifier {
         updateSingleSelectionFreeDiet('');
         updateProviderId('');
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   void updateProviderId(String? providerIdNew) {

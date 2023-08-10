@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UpdatedInfo {
   String? bookingId;
   String? actualStartDateTime;
@@ -8,9 +10,13 @@ class UpdatedInfo {
       {this.bookingId, this.actualStartDateTime, this.actualEndDateTime});
 
   UpdatedInfo.fromJson(Map<String, dynamic> json) {
-    bookingId = json['id'];
-    actualStartDateTime = json['actualStartDateTime'];
-    actualEndDateTime = json['actualEndDateTime'];
+    try {
+      bookingId = json['id'];
+      actualStartDateTime = json['actualStartDateTime'];
+      actualEndDateTime = json['actualEndDateTime'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

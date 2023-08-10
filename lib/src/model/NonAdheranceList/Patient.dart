@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'AdditionalInfo.dart';
 
 class Patient {
@@ -64,35 +66,39 @@ class Patient {
 }
 
   Patient.fromJson(dynamic json) {
-    _id = json['id'];
-    _name = json['name'];
-    _userName = json['userName'];
-    _firstName = json['firstName'];
-    _middleName = json['middleName'];
-    _lastName = json['lastName'];
-    _gender = json['gender'];
-    _dateOfBirth = json['dateOfBirth'];
-    _bloodGroup = json['bloodGroup'];
-    _countryCode = json['countryCode'];
-    _profilePicUrl = json['profilePicUrl'];
-    _profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    _isTempUser = json['isTempUser'];
-    _isVirtualUser = json['isVirtualUser'];
-    _isMigrated = json['isMigrated'];
-    _isClaimed = json['isClaimed'];
-    _isIeUser = json['isIeUser'];
-    _isEmailVerified = json['isEmailVerified'];
-    _isCpUser = json['isCpUser'];
-    _communicationPreferences = json['communicationPreferences'];
-    _medicalPreferences = json['medicalPreferences'];
-    _isSignedIn = json['isSignedIn'];
-    _isActive = json['isActive'];
-    _createdBy = json['createdBy'];
-    _createdOn = json['createdOn'];
-    _lastModifiedBy = json['lastModifiedBy'];
-    _lastModifiedOn = json['lastModifiedOn'];
-    _providerId = json['providerId'];
-    _additionalInfo = json['additionalInfo'] != null ? AdditionalInfo.fromJson(json['additionalInfo']) : null;
+    try {
+      _id = json['id'];
+      _name = json['name'];
+      _userName = json['userName'];
+      _firstName = json['firstName'];
+      _middleName = json['middleName'];
+      _lastName = json['lastName'];
+      _gender = json['gender'];
+      _dateOfBirth = json['dateOfBirth'];
+      _bloodGroup = json['bloodGroup'];
+      _countryCode = json['countryCode'];
+      _profilePicUrl = json['profilePicUrl'];
+      _profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      _isTempUser = json['isTempUser'];
+      _isVirtualUser = json['isVirtualUser'];
+      _isMigrated = json['isMigrated'];
+      _isClaimed = json['isClaimed'];
+      _isIeUser = json['isIeUser'];
+      _isEmailVerified = json['isEmailVerified'];
+      _isCpUser = json['isCpUser'];
+      _communicationPreferences = json['communicationPreferences'];
+      _medicalPreferences = json['medicalPreferences'];
+      _isSignedIn = json['isSignedIn'];
+      _isActive = json['isActive'];
+      _createdBy = json['createdBy'];
+      _createdOn = json['createdOn'];
+      _lastModifiedBy = json['lastModifiedBy'];
+      _lastModifiedOn = json['lastModifiedOn'];
+      _providerId = json['providerId'];
+      _additionalInfo = json['additionalInfo'] != null ? AdditionalInfo.fromJson(json['additionalInfo']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
   String? _id;
   dynamic _name;

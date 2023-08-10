@@ -86,8 +86,9 @@ class _ToolbarState extends State<Toolbar> {
     try {
       super.initState();
       prepareMyData();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -95,8 +96,9 @@ class _ToolbarState extends State<Toolbar> {
   void dispose() {
     try {
       super.dispose();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -226,8 +228,9 @@ class _ToolbarState extends State<Toolbar> {
                                         isFromVideoCall: true,
                                         isCareGiver: false,
                                         isForGetUserId: true)));
-                          } catch (e) {
+                          } catch (e,stackTrace) {
                             //print(e);
+                                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                           }
                         },
                         icon: Image.asset('assets/icons/ic_chat.png'),
@@ -328,7 +331,9 @@ class _ToolbarState extends State<Toolbar> {
       if (!widget.isFromAppointment!) {
         callApiToUpdateNonAppointment();
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
     VideoCallCommonUtils().terminate(
         appsID: widget.appointmentId,
         bookId: widget.bookId,
@@ -347,8 +352,9 @@ class _ToolbarState extends State<Toolbar> {
       Provider.of<RTCEngineProvider>(Get.context!, listen: false)
           .rtcEngine
           ?.muteLocalAudioStream(widget.muted);
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -415,27 +421,28 @@ class _ToolbarState extends State<Toolbar> {
               widget.muted, videoIconStatus.isVideoOn, widget.isInSpeaker);
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   void prepareMyData() async {
     /*try {
       mtTitle = await prefs.getValueBasedOnKey("display_name");
-    } catch (e) {}
+    } catch (e,stackTrace) {}
     try {
       specialityName = await prefs.getValueBasedOnKey("speciality");
-    } catch (e) {}
+    } catch (e,stackTrace) {}
     try {
       doctor_id = await prefs.getValueBasedOnKey("doctor_id");
-    } catch (e) {}
+    } catch (e,stackTrace) {}
     try {
       final SharedPreferences sharedPrefs =
           await SharedPreferences.getInstance();
       userIdForNotify = await sharedPrefs.getString('userID');
       userIdForNotify = json.decode(userIdForNotify);
-    } catch (e) {}*/
+    } catch (e,stackTrace) {}*/
   }
 
   callApiToUpdateNonAppointment() async {
@@ -456,8 +463,9 @@ class _ToolbarState extends State<Toolbar> {
           print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
         }
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -551,8 +559,9 @@ class _ToolbarState extends State<Toolbar> {
                                 .doc("${widget.bookId}")
                                 .update(newStatus.toMap());
                           Get.back();
-                        } catch (e) {
+                        } catch (e,stackTrace) {
                           print(e);
+                                                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                         }
                       }),
                 ],
@@ -562,6 +571,8 @@ class _ToolbarState extends State<Toolbar> {
         ),
         barrierDismissible: false,
       );
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 }

@@ -1,11 +1,17 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class PaymentFailureRetryModel {
   bool? isSuccess;
 
   PaymentFailureRetryModel({this.isSuccess});
 
   PaymentFailureRetryModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
+    try {
+      isSuccess = json['isSuccess'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import '../../src/model/common_response_model.dart';
 import 'HubListViewController.dart';
 import '../ApiProvider/hub_api_provider.dart';
@@ -69,7 +70,9 @@ class AddDeviceViewController extends GetxController {
           Colors.red,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       loadingData(false);
       printError(info: e.toString());
     }

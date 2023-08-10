@@ -405,7 +405,10 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     try {
       if ((chat.imageURL ?? []).isNotEmpty)
         return getImageFromUrl(chat.imageURL);
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
 
     try {
       if (chat.imageURLS != null) {
@@ -427,7 +430,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       } else {
         return SizedBox.shrink();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return SizedBox.shrink();
     }
   }

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class DeleteRecord {
@@ -8,8 +10,12 @@ class DeleteRecord {
   DeleteRecord({this.mediaMetaIds,this.mediaMasterIds});
 
   DeleteRecord.fromJson(Map<String, dynamic> json) {
-    mediaMetaIds = json[parameters.strMediaMetaIds].cast<String>();
-    mediaMasterIds=json[parameters.strmediaMasterIds].cast<String>();
+    try {
+      mediaMetaIds = json[parameters.strMediaMetaIds].cast<String>();
+      mediaMasterIds=json[parameters.strmediaMasterIds].cast<String>();
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class Role {
   Role({
     String? id,
@@ -17,12 +19,16 @@ class Role {
   }
 
   Role.fromJson(dynamic json) {
-    _id = json['_id'];
-    _name = json['name'];
-    _description = json['description'];
-    _normalized = json['normalized'];
-    _isAdmin = json['isAdmin'];
-    _isAgent = json['isAgent'];
+    try {
+      _id = json['_id'];
+      _name = json['name'];
+      _description = json['description'];
+      _normalized = json['normalized'];
+      _isAdmin = json['isAdmin'];
+      _isAgent = json['isAgent'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
   String? _id;
   String? _name;

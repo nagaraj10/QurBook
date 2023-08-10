@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class SubscribeModel {
   bool? isSuccess;
   SubscibeResult? result;
@@ -6,9 +8,13 @@ class SubscribeModel {
   SubscribeModel({this.isSuccess, this.result});
 
   SubscribeModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? SubscibeResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+          json['result'] != null ? SubscibeResult.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -28,8 +34,12 @@ class SubscibeResult {
   SubscibeResult({this.result, this.message});
 
   SubscibeResult.fromJson(Map<String, dynamic> json) {
-    result = json['Result'];
-    message = json['Message'];
+    try {
+      result = json['Result'];
+      message = json['Message'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

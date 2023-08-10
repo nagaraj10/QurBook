@@ -1,5 +1,5 @@
-
 import 'package:health/health.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'dart:async';
 import '../../constants/fhb_parameters.dart';
 import 'dart:convert' show json;
@@ -25,7 +25,9 @@ class FetchHealthKitData {
     try {
       var ret = await Health.requestAuthorization(types);
       return ret;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       throw 'HealthKit activation failed with error $e';
     }
   }
@@ -46,7 +48,8 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
-          healthRecord[strlocalTime] = DateTime.now().toLocal().toIso8601String();
+          healthRecord[strlocalTime] =
+              DateTime.now().toLocal().toIso8601String();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strWeighingScale;
@@ -97,7 +100,8 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
-          healthRecord[strlocalTime] = DateTime.now().toLocal().toIso8601String();
+          healthRecord[strlocalTime] =
+              DateTime.now().toLocal().toIso8601String();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strOxymeter;
@@ -147,7 +151,8 @@ class FetchHealthKitData {
         if (systolicData.isNotEmpty && diastolicData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
-          healthRecord[strlocalTime] = DateTime.now().toLocal().toIso8601String();
+          healthRecord[strlocalTime] =
+              DateTime.now().toLocal().toIso8601String();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strBPMonitor;
@@ -175,7 +180,9 @@ class FetchHealthKitData {
           print(params);
           return params;
         }
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         throw 'Unable to fetch Blood pressure from HealthKit $e';
       }
     }
@@ -200,7 +207,8 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
-          healthRecord[strlocalTime] = DateTime.now().toLocal().toIso8601String();
+          healthRecord[strlocalTime] =
+              DateTime.now().toLocal().toIso8601String();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strGlucometer;
@@ -251,7 +259,8 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
-          healthRecord[strlocalTime] = DateTime.now().toLocal().toIso8601String();
+          healthRecord[strlocalTime] =
+              DateTime.now().toLocal().toIso8601String();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strOxymeter;
@@ -299,7 +308,8 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
-          healthRecord[strlocalTime] = DateTime.now().toLocal().toIso8601String();
+          healthRecord[strlocalTime] =
+              DateTime.now().toLocal().toIso8601String();
 
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;

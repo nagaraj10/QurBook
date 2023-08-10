@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class GetUnreadCountFamily {
   bool? isSuccess;
   List<Result>? result;
@@ -6,12 +8,16 @@ class GetUnreadCountFamily {
   GetUnreadCountFamily({this.isSuccess, this.result});
 
   GetUnreadCountFamily.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    if (json['result'] != null) {
-      result = <Result>[];
-      json['result'].forEach((v) {
-        result!.add(new Result.fromJson(v));
-      });
+    try {
+      isSuccess = json['isSuccess'];
+      if (json['result'] != null) {
+            result = <Result>[];
+            json['result'].forEach((v) {
+              result!.add(new Result.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -31,7 +37,11 @@ class Result {
   Result({this.count});
 
   Result.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
+    try {
+      count = json['count'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

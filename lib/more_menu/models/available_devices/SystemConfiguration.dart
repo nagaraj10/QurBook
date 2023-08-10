@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class SystemConfiguration {
   SystemConfiguration({
       String? name, 
@@ -8,8 +10,12 @@ class SystemConfiguration {
 }
 
   SystemConfiguration.fromJson(dynamic json) {
-    _name = json['name'];
-    _value = json['value'].toString();
+    try {
+      _name = json['name'];
+      _value = json['value'].toString();
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
   String? _name;
   String? _value;

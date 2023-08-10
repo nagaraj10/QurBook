@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class CreditBalanceResult {
   String? userId;
   String? balanceAmount;
@@ -18,13 +20,17 @@ class CreditBalanceResult {
         this.isMembershipUser});
 
   CreditBalanceResult.fromJson(Map<String, dynamic> json) {
-    userId = json['userId'];
-    balanceAmount = json['balanceAmount'];
-    balanceDoctorAppointments = json['balanceDoctorAppointments'];
-    balanceDieticianAppointments = json['balanceDieticianAppointments'];
-    balanceCarePlans = json['balanceCarePlans'];
-    balanceDietPlans = json['balanceDietPlans'];
-    isMembershipUser = json['isMembershipUser'];
+    try {
+      userId = json['userId'];
+      balanceAmount = json['balanceAmount'];
+      balanceDoctorAppointments = json['balanceDoctorAppointments'];
+      balanceDieticianAppointments = json['balanceDieticianAppointments'];
+      balanceCarePlans = json['balanceCarePlans'];
+      balanceDietPlans = json['balanceDietPlans'];
+      isMembershipUser = json['isMembershipUser'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

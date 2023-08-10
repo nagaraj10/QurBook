@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentResult.dart';
 
@@ -10,12 +11,16 @@ class CreateAppointmentModel {
   CreateAppointmentModel({this.isSuccess, this.message, this.result});
 
   CreateAppointmentModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[strIsSuccess];
-    message = json[strMessage];
-    result =
-    json[strResult] != null
-        ? new CreateAppointmentResult.fromJson(json[strResult])
-        : null;
+    try {
+      isSuccess = json[strIsSuccess];
+      message = json[strMessage];
+      result =
+          json[strResult] != null
+              ? new CreateAppointmentResult.fromJson(json[strResult])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class VirtualUserParent {
@@ -9,9 +11,13 @@ class VirtualUserParent {
   VirtualUserParent({this.countryCode, this.phoneNumber, this.email});
 
   VirtualUserParent.fromJson(Map<String, dynamic> json) {
-    countryCode = json[parameters.strCountryCode];
-    phoneNumber = json[parameters.strPhoneNumber];
-    email = json[parameters.strEmail];
+    try {
+      countryCode = json[parameters.strCountryCode];
+      phoneNumber = json[parameters.strPhoneNumber];
+      email = json[parameters.strEmail];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

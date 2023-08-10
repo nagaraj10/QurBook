@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'PhoneNumberType.dart';
 
 class UserContactCollection3 {
@@ -22,16 +24,20 @@ class UserContactCollection3 {
         this.phoneNumberType});
 
   UserContactCollection3.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    phoneNumber = json['phoneNumber'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    email = json['email'];
-    phoneNumberType = json['phoneNumberType'] != null
-        ? PhoneNumberType.fromJson(json['phoneNumberType'])
-        : null;
+    try {
+      id = json['id'];
+      phoneNumber = json['phoneNumber'];
+      isPrimary = json['isPrimary'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      email = json['email'];
+      phoneNumberType = json['phoneNumberType'] != null
+              ? PhoneNumberType.fromJson(json['phoneNumberType'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

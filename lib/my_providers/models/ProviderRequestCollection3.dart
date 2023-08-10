@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 
 class ProviderRequestCollection3 {
@@ -20,14 +21,18 @@ class ProviderRequestCollection3 {
       this.doctor});
 
   ProviderRequestCollection3.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userPhoneNumber = json['userPhoneNumber'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    patientInfo = json['patientInfo'];
-    doctor =
-        json['doctor'] != null ? new Doctors.fromJson(json['doctor']) : null;
+    try {
+      id = json['id'];
+      userPhoneNumber = json['userPhoneNumber'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      patientInfo = json['patientInfo'];
+      doctor =
+              json['doctor'] != null ? new Doctors.fromJson(json['doctor']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

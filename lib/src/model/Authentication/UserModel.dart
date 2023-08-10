@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UserModel {
   String? auth_token;
   String? birthdate;
@@ -17,13 +19,17 @@ class UserModel {
       this.userId});
 
   UserModel.fromJson(Map<String, dynamic> json) {
-    auth_token = json['result'];
-    birthdate = json['birthdate'];
-    given_name = json['given_name'];
-    phone_number = json['phone_number'];
-    family_name = json['family_name'];
-    email = json['email'];
-    userId = json['userId'];
+    try {
+      auth_token = json['result'];
+      birthdate = json['birthdate'];
+      given_name = json['given_name'];
+      phone_number = json['phone_number'];
+      family_name = json['family_name'];
+      email = json['email'];
+      userId = json['userId'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

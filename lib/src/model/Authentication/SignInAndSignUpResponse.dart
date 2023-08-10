@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class SignInAndSignUpResponse {
@@ -8,8 +10,12 @@ class SignInAndSignUpResponse {
   SignInAndSignUpResponse({this.createdTimeString, this.expiryTimeString});
 
   SignInAndSignUpResponse.fromJson(Map<String, dynamic> parsedJson) {
-    createdTimeString = parsedJson[parameters.strCreationTime];
-    expiryTimeString = parsedJson[parameters.strExpirationTime];
+    try {
+      createdTimeString = parsedJson[parameters.strCreationTime];
+      expiryTimeString = parsedJson[parameters.strExpirationTime];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};

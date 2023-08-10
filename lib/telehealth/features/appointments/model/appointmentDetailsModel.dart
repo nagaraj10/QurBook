@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class AppointmentDetailsModel {
   bool? isSuccess;
@@ -8,9 +9,13 @@ class AppointmentDetailsModel {
   AppointmentDetailsModel({this.isSuccess, this.result});
 
   AppointmentDetailsModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+              json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -62,7 +67,9 @@ class Result {
       doctor =
           json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
 
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -195,7 +202,9 @@ class AdditionalInfo {
           : null;
 
 
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -229,7 +238,11 @@ class Status {
   Status({this.name});
 
   Status.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
+    try {
+      name = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -247,11 +260,15 @@ class ServiceCategory {
   ServiceCategory({this.name, this.additionalInfo});
 
   ServiceCategory.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    code = json['code'];
-    additionalInfo = json['additionalInfo'] != null
-        ? new ServiceCategoryAdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
+    try {
+      name = json['name'];
+      code = json['code'];
+      additionalInfo = json['additionalInfo'] != null
+              ? new ServiceCategoryAdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -271,13 +288,17 @@ class ServiceCategoryAdditionalInfo {
   ServiceCategoryAdditionalInfo({this.field, this.iconUrl});
 
   ServiceCategoryAdditionalInfo.fromJson(Map<String, dynamic> json) {
-    if (json['field'] != null) {
-      field = <Field>[];
-      json['field'].forEach((v) {
-        field!.add(new Field.fromJson(v));
-      });
+    try {
+      if (json['field'] != null) {
+            field = <Field>[];
+            json['field'].forEach((v) {
+              field!.add(new Field.fromJson(v));
+            });
+          }
+      iconUrl = json['iconUrl'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
-    iconUrl = json['iconUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -297,12 +318,16 @@ class Field {
   Field({this.key, this.data});
 
   Field.fromJson(Map<String, dynamic> json) {
-    key = json['key'];
-    if (json['data'] != null) {
-      data = <Data>[];
-      json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
-      });
+    try {
+      key = json['key'];
+      if (json['data'] != null) {
+            data = <Data>[];
+            json['data'].forEach((v) {
+              data!.add(new Data.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -323,8 +348,12 @@ class Data {
   Data({this.id, this.name});
 
   Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
+    try {
+      id = json['id'];
+      name = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -342,14 +371,18 @@ class HealthOrganization {
   HealthOrganization({this.name, this.healthOrganizationAddressCollection});
 
   HealthOrganization.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    if (json['healthOrganizationAddressCollection'] != null) {
-      healthOrganizationAddressCollection =
-          <HealthOrganizationAddressCollection>[];
-      json['healthOrganizationAddressCollection'].forEach((v) {
-        healthOrganizationAddressCollection!
-            .add(new HealthOrganizationAddressCollection.fromJson(v));
-      });
+    try {
+      name = json['name'];
+      if (json['healthOrganizationAddressCollection'] != null) {
+            healthOrganizationAddressCollection =
+                <HealthOrganizationAddressCollection>[];
+            json['healthOrganizationAddressCollection'].forEach((v) {
+              healthOrganizationAddressCollection!
+                  .add(new HealthOrganizationAddressCollection.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -381,11 +414,15 @@ class HealthOrganizationAddressCollection {
       this.city});
 
   HealthOrganizationAddressCollection.fromJson(Map<String, dynamic> json) {
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    pincode = json['pincode'];
-    state = json['state'] != null ? new State.fromJson(json['state']) : null;
-    city = json['city'] != null ? new City.fromJson(json['city']) : null;
+    try {
+      addressLine1 = json['addressLine1'];
+      addressLine2 = json['addressLine2'];
+      pincode = json['pincode'];
+      state = json['state'] != null ? new State.fromJson(json['state']) : null;
+      city = json['city'] != null ? new City.fromJson(json['city']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -409,7 +446,11 @@ class State {
   State({this.name});
 
   State.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
+    try {
+      name = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -425,7 +466,11 @@ class City {
   City({this.name});
 
   City.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
+    try {
+      name = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -443,7 +488,11 @@ class Doctor {
   });
 
   Doctor.fromJson(Map<String, dynamic> json) {
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    try {
+      user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -462,8 +511,12 @@ class User {
   User({this.firstName, this.lastName});
 
   User.fromJson(Map<String, dynamic> json) {
-    firstName = json['firstName'];
-    lastName = json['lastName'];
+    try {
+      firstName = json['firstName'];
+      lastName = json['lastName'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

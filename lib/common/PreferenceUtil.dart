@@ -163,8 +163,10 @@ class PreferenceUtil {
       var jsonData = _prefsInstance!.getString(keyProfile) ?? '';
       var data = json.decode(jsonData);
       return MyProfileModel.fromJson(data);
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return null;
     }
     // return MyProfileModel.fromJson(json.decode(_prefsInstance!.getString(keyProfile) ?? ''));
@@ -184,7 +186,9 @@ class PreferenceUtil {
         }
       }
       return categoryData;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static Future<bool> clearAllData() async {
@@ -317,7 +321,9 @@ class PreferenceUtil {
   static int? getIntValue(String key) {
     try {
       return _prefsInstance!.getInt(key);
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static Future<bool> saveCompleteData(
@@ -333,7 +339,9 @@ class PreferenceUtil {
       if (_prefsInstance == null) {}
       return HealthRecordList.fromJson(
           json.decode(_prefsInstance!.getString(keyCompletedData)!));
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static List<CategoryResult>? getCategoryTypeDisplay(String key) {
@@ -346,7 +354,9 @@ class PreferenceUtil {
       });
 
       return categoryData;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   //save family data to preference
@@ -359,7 +369,9 @@ class PreferenceUtil {
       var family = json.encode(familyData);
 
       return instance.setString(keyFamily, family);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return instance.setString(keyFamily, ""); // null to ""
     }
   }
@@ -370,7 +382,9 @@ class PreferenceUtil {
 
       return FamilyData.fromJson(
           json.decode(_prefsInstance!.getString(keyFamily)!));
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static Future<bool> saveFamilyDataNew(
@@ -381,7 +395,9 @@ class PreferenceUtil {
       var family = json.encode(familyData);
 
       return instance.setString(keyFamily, family);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return instance.setString(keyFamily, ""); // null to ""
     }
   }
@@ -403,7 +419,9 @@ class PreferenceUtil {
       });
 
       return categoryData;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static FamilyMemberResult? getFamilyDataNew(String keyFamily) {
@@ -412,7 +430,9 @@ class PreferenceUtil {
 
       return FamilyMemberResult.fromJson(
           json.decode(_prefsInstance!.getString(keyFamily)!));
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static Future<bool> saveFamilyRelationShip(
@@ -423,7 +443,9 @@ class PreferenceUtil {
       final family = json.encode(familyData);
 
       return instance.setString(keyFamilyrel, family);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return instance.setString(keyFamilyrel, ""); // null to ""
     }
   }
@@ -434,7 +456,9 @@ class PreferenceUtil {
 
       return RelationShipResponseList?.fromJson(
           json.decode(_prefsInstance!.getString(keyFamilyrel)!));
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return null;
     }
   }
@@ -457,7 +481,9 @@ class PreferenceUtil {
       });
 
       return categoryData;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static bool? getIfMemberShipIsAcive() {
@@ -586,7 +612,9 @@ class PreferenceUtil {
         Constants.QurhomeDefaultUI,
         qurhomeStatus,
       );
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       //print(e);
     }
   }
@@ -616,6 +644,8 @@ class PreferenceUtil {
       if (_prefsInstance == null) {}
       return PreferredMeasurement.fromJson(
           json.decode(_prefsInstance!.getString(keyCompletedData)!));
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 }

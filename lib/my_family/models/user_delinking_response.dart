@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class UserDeLinkingResponseList {
@@ -10,7 +12,11 @@ class UserDeLinkingResponseList {
 
   UserDeLinkingResponseList.fromJson(Map<String, dynamic> json) {
     // status = json[parameters.strStatus];
-    isSuccess = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
+    try {
+      isSuccess = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 }

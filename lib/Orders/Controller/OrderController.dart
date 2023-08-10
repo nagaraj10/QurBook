@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Orders/Model/OrderModel.dart';
 import 'package:http/http.dart' as http;
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
@@ -22,7 +23,9 @@ class OrderController extends GetxController {
         if (usersOrders.isSuccess!) {
           orders.value = usersOrders.result!;
         }
-      } catch (e) {
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         FlutterToast().getToast('Failed to get the past orders', Colors.red);
       }
     }
@@ -43,7 +46,9 @@ class OrderController extends GetxController {
         FlutterToast().getToast('Failed to get the past orders', Colors.red);
         return null;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       FlutterToast().getToast('Failed to get the past orders', Colors.red);
       return null;
     }

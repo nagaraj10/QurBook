@@ -282,7 +282,9 @@ class RegimentViewModel extends ChangeNotifier {
             regimentsFilteredList.add(event);
           }
         });
-      } catch (e) {
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         print(e);
       }
       setViewRegimentsData(
@@ -598,7 +600,9 @@ class RegimentViewModel extends ChangeNotifier {
             activitiesFilteredList.add(event);
           }
         });
-      } catch (e) {
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         print(e);
       }
       setViewActivitiesData(

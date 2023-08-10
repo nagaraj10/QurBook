@@ -1,5 +1,6 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'relationships.dart';
-import '../../src/model/user/AddressTypeModel.dart';
 import '../../src/model/user/UserAddressCollection.dart';
 
 class FamilyMembers {
@@ -10,11 +11,15 @@ class FamilyMembers {
   FamilyMembers({this.isSuccess, this.message, this.result});
 
   FamilyMembers.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result = json['result'] != null
-        ? FamilyMemberResult.fromJson(json['result'])
-        : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result = json['result'] != null
+              ? FamilyMemberResult.fromJson(json['result'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -37,23 +42,29 @@ class FamilyMemberResult {
       {this.sharedByUsers, this.sharedToUsers, this.virtualUserParent});
 
   FamilyMemberResult.fromJson(Map<String, dynamic> json) {
-    if (json['sharedByUsers'] != null) {
-      sharedByUsers = <SharedByUsers>[];
-      json['sharedByUsers'].forEach((v) {
-        sharedByUsers!.add(SharedByUsers.fromJson(v));
-      });
-    }
-    if (json['sharedToUsers'] != null) {
-      sharedToUsers = <SharedToUsers>[];
-      json['sharedToUsers'].forEach((v) {
-        sharedToUsers!.add(SharedToUsers.fromJson(v));
-      });
-    }
     try {
-      virtualUserParent = json['virtualUserParent'] != null
-          ? VirtualUserParent.fromJson(json['virtualUserParent'])
-          : null;
-    } catch (e) {}
+      if (json['sharedByUsers'] != null) {
+            sharedByUsers = <SharedByUsers>[];
+            json['sharedByUsers'].forEach((v) {
+              sharedByUsers!.add(SharedByUsers.fromJson(v));
+            });
+          }
+      if (json['sharedToUsers'] != null) {
+            sharedToUsers = <SharedToUsers>[];
+            json['sharedToUsers'].forEach((v) {
+              sharedToUsers!.add(SharedToUsers.fromJson(v));
+            });
+          }
+      try {
+            virtualUserParent = json['virtualUserParent'] != null
+                ? VirtualUserParent.fromJson(json['virtualUserParent'])
+                : null;
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -108,22 +119,26 @@ class SharedByUsers {
       this.chatListItem});
 
   SharedByUsers.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    status = json['status'];
-    nickName = json['nickName'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isCaregiver = json['isCaregiver'] ?? false;
-    if (json.containsKey('membershipOfferedBy'))
-      membershipOfferedBy = json['membershipOfferedBy'];
-    relationship = json['relationship'] != null
-        ? RelationsShipModel.fromJson(json['relationship'])
-        : null;
-    child = json['child'] != null ? Child.fromJson(json['child']) : null;
-    chatListItem = json['chatListItem'] != null
-        ? new ChatListItem.fromJson(json['chatListItem'])
-        : null;
+    try {
+      id = json['id'];
+      status = json['status'];
+      nickName = json['nickName'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isCaregiver = json['isCaregiver'] ?? false;
+      if (json.containsKey('membershipOfferedBy'))
+            membershipOfferedBy = json['membershipOfferedBy'];
+      relationship = json['relationship'] != null
+              ? RelationsShipModel.fromJson(json['relationship'])
+              : null;
+      child = json['child'] != null ? Child.fromJson(json['child']) : null;
+      chatListItem = json['chatListItem'] != null
+              ? new ChatListItem.fromJson(json['chatListItem'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -263,54 +278,58 @@ class Child {
   });
 
   Child.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    userName = json['userName'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    dateOfBirth = json['dateOfBirth'];
-    bloodGroup = json['bloodGroup'];
-    countryCode = json['countryCode'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTempUser = json['isTempUser'];
-    isVirtualUser = json['isVirtualUser'];
-    isMigrated = json['isMigrated'];
-    isClaimed = json['isClaimed'];
-    isIeUser = json['isIeUser'];
-    isEmailVerified = json['isEmailVerified'];
-    isCpUser = json['isCpUser'];
-    communicationPreferences = json['communicationPreferences'];
-    medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      countryCode = json['countryCode'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTempUser = json['isTempUser'];
+      isVirtualUser = json['isVirtualUser'];
+      isMigrated = json['isMigrated'];
+      isClaimed = json['isClaimed'];
+      isIeUser = json['isIeUser'];
+      isEmailVerified = json['isEmailVerified'];
+      isCpUser = json['isCpUser'];
+      communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json['medicalPreferences'];
+      isSignedIn = json['isSignedIn'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
 
-    lastModifiedOn = json['lastModifiedOn'];
-    if (json['userContactCollection3'] != null) {
-      userContactCollection3 = <UserContactCollectionFamily>[];
-      json['userContactCollection3'].forEach((v) {
-        userContactCollection3!.add(UserContactCollectionFamily.fromJson(v));
-      });
+      lastModifiedOn = json['lastModifiedOn'];
+      if (json['userContactCollection3'] != null) {
+            userContactCollection3 = <UserContactCollectionFamily>[];
+            json['userContactCollection3'].forEach((v) {
+              userContactCollection3!.add(UserContactCollectionFamily.fromJson(v));
+            });
+          }
+      if (json['userRoleCollection3'] != null) {
+            userRoleCollection3 = <UserRoleCollection3>[];
+            json['userRoleCollection3'].forEach((v) {
+              userRoleCollection3!.add(UserRoleCollection3.fromJson(v));
+            });
+          }
+      if (json['userAddressCollection3'] != null) {
+            userAddressCollection3 = <UserAddressCollection3>[];
+            json['userAddressCollection3'].forEach((v) {
+              userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
+            });
+          }
+      additionalInfo = json['additionalInfo'] != null
+              ? AdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
-    if (json['userRoleCollection3'] != null) {
-      userRoleCollection3 = <UserRoleCollection3>[];
-      json['userRoleCollection3'].forEach((v) {
-        userRoleCollection3!.add(UserRoleCollection3.fromJson(v));
-      });
-    }
-    if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = <UserAddressCollection3>[];
-      json['userAddressCollection3'].forEach((v) {
-        userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
-      });
-    }
-    additionalInfo = json['additionalInfo'] != null
-        ? AdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -367,8 +386,12 @@ class HeightObj {
   HeightObj({this.valueFeet, this.valueInches});
 
   HeightObj.fromJson(Map<String, dynamic> json) {
-    valueFeet = json['valueFeet'];
-    valueInches = json['valueInches'];
+    try {
+      valueFeet = json['valueFeet'];
+      valueInches = json['valueInches'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -395,13 +418,17 @@ class AdditionalInfo {
         heightObj =
             json['height'] != null ? HeightObj.fromJson(json['height']) : null;
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
     if (json.containsKey('weightUnitCode')) {
       weightUnitCode = json['weightUnitCode'];
     }
     try {
       weight = json['weight'];
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -496,13 +523,17 @@ class UserContactCollectionFamily {
       this.email});
 
   UserContactCollectionFamily.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? "";
-    phoneNumber = json['phoneNumber'] ?? "";
-    isPrimary = json['isPrimary'] ?? false;
-    isActive = json['isActive'] ?? false;
-    createdOn = json['createdOn'] ?? "";
-    lastModifiedOn = json['lastModifiedOn'] ?? "";
-    email = json['email'] ?? "";
+    try {
+      id = json['id'] ?? "";
+      phoneNumber = json['phoneNumber'] ?? "";
+      isPrimary = json['isPrimary'] ?? false;
+      isActive = json['isActive'] ?? false;
+      createdOn = json['createdOn'] ?? "";
+      lastModifiedOn = json['lastModifiedOn'] ?? "";
+      email = json['email'] ?? "";
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -541,15 +572,19 @@ class PhoneNumberType {
       this.lastModifiedOn});
 
   PhoneNumberType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -577,10 +612,14 @@ class UserRoleCollection3 {
       {this.id, this.isActive, this.createdOn, this.lastModifiedOn});
 
   UserRoleCollection3.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -616,15 +655,19 @@ class Role {
       this.isEnabled});
 
   Role.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    roleCode = json['roleCode'];
-    description = json['description'];
-    isSystemRole = json['isSystemRole'];
-    isEnabled = json['isEnabled'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      roleCode = json['roleCode'];
+      description = json['description'];
+      isSystemRole = json['isSystemRole'];
+      isEnabled = json['isEnabled'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -675,17 +718,21 @@ class SharedToUsers {
       this.remainderForId});
 
   SharedToUsers.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    status = json['status'];
-    nickName = json['nickName'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isCaregiver = json['isCaregiver'] ?? false;
-    relationship = json['relationship'] != null
-        ? RelationsShipModel.fromJson(json['relationship'])
-        : null;
-    parent = json['parent'] != null ? Parent.fromJson(json['parent']) : null;
+    try {
+      id = json['id'];
+      status = json['status'];
+      nickName = json['nickName'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isCaregiver = json['isCaregiver'] ?? false;
+      relationship = json['relationship'] != null
+              ? RelationsShipModel.fromJson(json['relationship'])
+              : null;
+      parent = json['parent'] != null ? Parent.fromJson(json['parent']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -765,33 +812,37 @@ class Parent {
       this.lastModifiedOn});
 
   Parent.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    userName = json['userName'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    dateOfBirth = json['dateOfBirth'];
-    bloodGroup = json['bloodGroup'];
-    countryCode = json['countryCode'];
-    profilePicUrl = json['profilePicUrl'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    isTempUser = json['isTempUser'];
-    isVirtualUser = json['isVirtualUser'];
-    isMigrated = json['isMigrated'];
-    isClaimed = json['isClaimed'];
-    isIeUser = json['isIeUser'];
-    isEmailVerified = json['isEmailVerified'];
-    isCpUser = json['isCpUser'];
-    communicationPreferences = json['communicationPreferences'];
-    medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedBy = json['lastModifiedBy'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      countryCode = json['countryCode'];
+      profilePicUrl = json['profilePicUrl'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTempUser = json['isTempUser'];
+      isVirtualUser = json['isVirtualUser'];
+      isMigrated = json['isMigrated'];
+      isClaimed = json['isClaimed'];
+      isIeUser = json['isIeUser'];
+      isEmailVerified = json['isEmailVerified'];
+      isCpUser = json['isCpUser'];
+      communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json['medicalPreferences'];
+      isSignedIn = json['isSignedIn'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -835,9 +886,13 @@ class VirtualUserParent {
   VirtualUserParent({this.countryCode, this.email, this.phoneNumber});
 
   VirtualUserParent.fromJson(Map<String, dynamic> json) {
-    countryCode = json['countryCode'];
-    email = json['email'];
-    phoneNumber = json['phoneNumber'];
+    try {
+      countryCode = json['countryCode'];
+      email = json['email'];
+      phoneNumber = json['phoneNumber'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -872,15 +927,19 @@ class ChatListItem {
       this.lastModifiedOn});
 
   ChatListItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    peerId = json['peerId'];
-    userId = json['userId'];
-    createdOn = json['createdOn'];
-    isActive = json['isActive'];
-    isDisable = json['isDisable'];
-    isMuted = json['isMuted'];
-    unReadNotificationCount = json['unReadNotificationCount'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      peerId = json['peerId'];
+      userId = json['userId'];
+      createdOn = json['createdOn'];
+      isActive = json['isActive'];
+      isDisable = json['isDisable'];
+      isMuted = json['isMuted'];
+      unReadNotificationCount = json['unReadNotificationCount'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

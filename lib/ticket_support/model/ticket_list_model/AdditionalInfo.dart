@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/Health/Data.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 
@@ -15,19 +16,23 @@ class AdditionalInfo {
   }
 
   AdditionalInfo.fromJson(dynamic json) {
-    _chooseCategory = json['choose_category'];
-    _chooseDoctor = json['choose_doctor'];
-    _chooseHospital = json['choose_hospital'];
-    _packageName = json['package_name'];
-    _preferredLabId = json['preferredLabId'];
-    _preferredLabName = json['preferredLabName'];
-    _preferredTime = json['preferredTime'];
-    _modeOfService = json['modeOfService'] != null||json['mode_of_service']!= null
-        ? new FieldData.fromJson(json['modeOfService'] == null?json['mode_of_service']:json['modeOfService'])
-        : null;
-    _ticketStatus = json['ticketStatus'] != null
-        ? new Data.fromJson(json['ticketStatus'])
-        : null;
+    try {
+      _chooseCategory = json['choose_category'];
+      _chooseDoctor = json['choose_doctor'];
+      _chooseHospital = json['choose_hospital'];
+      _packageName = json['package_name'];
+      _preferredLabId = json['preferredLabId'];
+      _preferredLabName = json['preferredLabName'];
+      _preferredTime = json['preferredTime'];
+      _modeOfService = json['modeOfService'] != null||json['mode_of_service']!= null
+              ? new FieldData.fromJson(json['modeOfService'] == null?json['mode_of_service']:json['modeOfService'])
+              : null;
+      _ticketStatus = json['ticketStatus'] != null
+              ? new Data.fromJson(json['ticketStatus'])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   String? _chooseCategory;
@@ -77,8 +82,12 @@ class Data {
   Data({this.id, this.name});
 
   Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
+    try {
+      id = json['id'];
+      name = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

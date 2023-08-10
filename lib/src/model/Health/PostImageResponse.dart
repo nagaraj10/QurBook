@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class PostImageResponse {
@@ -10,12 +12,16 @@ class PostImageResponse {
   PostImageResponse({this.status, this.success, this.message, this.response});
 
   PostImageResponse.fromJson(Map<String, dynamic> json) {
-  status = json[parameters.strStatus];
+  try {
+    status = json[parameters.strStatus];
     success = json[parameters.strSuccess];
     message = json[parameters.strMessage];
     response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+            ? Response.fromJson(json[parameters.strResponse])
+            : null;
+  } catch (e,stackTrace) {
+    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+  }
   }
 
   Map<String, dynamic> toJson() {
@@ -38,8 +44,12 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json[parameters.strCount];
-    data = json[parameters.strData] != null ? Data.fromJson(json[parameters.strData]) : null;
+    try {
+      count = json[parameters.strCount];
+      data = json[parameters.strData] != null ? Data.fromJson(json[parameters.strData]) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -58,7 +68,11 @@ class Data {
   Data({this.mediaMasterId});
 
   Data.fromJson(Map<String, dynamic> json) {
-    mediaMasterId = json[parameters.strmediaMasterId];
+    try {
+      mediaMasterId = json[parameters.strmediaMasterId];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

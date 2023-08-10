@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 class HubListResponse {
   bool? isSuccess;
   Result? result;
@@ -5,9 +7,13 @@ class HubListResponse {
   HubListResponse({this.isSuccess, this.result});
 
   HubListResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+              json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -45,18 +51,22 @@ class Result {
       this.userDeviceCollection});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    nickName = json['nickName'];
-    createdOn = json['createdOn'];
-    hubId = json['hubId'];
-    userId = json['userId'];
-    hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
+    try {
+      id = json['id'];
+      nickName = json['nickName'];
+      createdOn = json['createdOn'];
+      hubId = json['hubId'];
+      userId = json['userId'];
+      hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
 
-    if (json['userDeviceCollection'] != null) {
-      userDeviceCollection = <UserDeviceCollection>[];
-      json['userDeviceCollection'].forEach((v) {
-        userDeviceCollection!.add(new UserDeviceCollection.fromJson(v));
-      });
+      if (json['userDeviceCollection'] != null) {
+            userDeviceCollection = <UserDeviceCollection>[];
+            json['userDeviceCollection'].forEach((v) {
+              userDeviceCollection!.add(new UserDeviceCollection.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -86,8 +96,9 @@ class AdditionalDetails {
   AdditionalDetails.fromJson(Map<String, dynamic> json) {
     try {
       isVirtualHub = json['isVirtualHub'];
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -95,8 +106,10 @@ class AdditionalDetails {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     try {
       data['isVirtualHub'] = this.isVirtualHub;
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
     return data;
   }
@@ -119,15 +132,19 @@ class Hub {
       this.createdOn,
       this.lastModifiedOn});
   Hub.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    serialNumber = json['serialNumber'];
-    additionalDetails = json['additionalDetails'] != null
-        ? new AdditionalDetails.fromJson(json['additionalDetails'])
-        : null;
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      serialNumber = json['serialNumber'];
+      additionalDetails = json['additionalDetails'] != null
+              ? new AdditionalDetails.fromJson(json['additionalDetails'])
+              : null;
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 }
 
@@ -162,20 +179,24 @@ class UserDeviceCollection {
   });
 
   UserDeviceCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userHubId = json['userHubId'];
-    pairHash = json['pairHash'];
-    // additionalDetails = json['additionalDetails'];
-    var addDetails = json['additionalDetails'];
-    manufacturer = addDetails != null ? addDetails['manufacturer'] : null;
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    hubId = json['hubId'];
-    deviceId = json['deviceId'];
-    userId = json['userId'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
-    device = json['device'] != null ? Device.fromJson(json['device']) : null;
+    try {
+      id = json['id'];
+      userHubId = json['userHubId'];
+      pairHash = json['pairHash'];
+      // additionalDetails = json['additionalDetails'];
+      var addDetails = json['additionalDetails'];
+      manufacturer = addDetails != null ? addDetails['manufacturer'] : null;
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      hubId = json['hubId'];
+      deviceId = json['deviceId'];
+      userId = json['userId'];
+      user = json['user'] != null ? User.fromJson(json['user']) : null;
+      device = json['device'] != null ? Device.fromJson(json['device']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -229,8 +250,8 @@ class Device {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       deviceTypeId = json['deviceTypeId'];
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }
@@ -269,8 +290,8 @@ class DeviceType {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      print(e);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }
@@ -340,18 +361,22 @@ class User {
       this.firstLoggedIn});
 
   User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    // name = json['name'];
-    // userName = json['userName'];
-    firstName = json['firstName'];
-    middleName = json['middleName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    dateOfBirth = json['dateOfBirth'];
-    bloodGroup = json['bloodGroup'];
-    // countryCode = json['countryCode'];
-    profilePicUrl = json['profilePicUrl'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+    try {
+      id = json['id'];
+      // name = json['name'];
+      // userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      // countryCode = json['countryCode'];
+      profilePicUrl = json['profilePicUrl'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
     // isTempUser = json['isTempUser'];
     // isVirtualUser = json['isVirtualUser'];
     // isMigrated = json['isMigrated'];
@@ -435,20 +460,24 @@ class AdditionalInfo {
       this.patientHistory});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
-    age = json['age'];
-    height = json['height'];
-    offset = json['offset'];
-    weight = json['weight'];
-    // if (json['language'] != null) {
-    //   language = new List<Null>();
-    //   json['language'].forEach((v) {
-    //     language.add(new Null.fromJson(v));
-    //   });
-    // }
-    mrdNumber = json['mrdNumber'];
-    uhidNumber = json['uhidNumber'];
-    visitReason = json['visitReason'];
-    patientHistory = json['patientHistory'];
+    try {
+      age = json['age'];
+      height = json['height'];
+      offset = json['offset'];
+      weight = json['weight'];
+      // if (json['language'] != null) {
+      //   language = new List<Null>();
+      //   json['language'].forEach((v) {
+      //     language.add(new Null.fromJson(v));
+      //   });
+      // }
+      mrdNumber = json['mrdNumber'];
+      uhidNumber = json['uhidNumber'];
+      visitReason = json['visitReason'];
+      patientHistory = json['patientHistory'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

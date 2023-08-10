@@ -1,5 +1,6 @@
 
 import 'package:flutter/foundation.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import '../service/referafriend_service.dart';
 import '../model/referafriendrequest.dart';
 import '../model/referafriendresponse.dart';
@@ -15,6 +16,9 @@ class ReferAFriendViewModel extends ChangeNotifier {
           .referAFriendService(addPatientContactRequest);
       _referAFriendResponse = referAFriendResponse;
       return _referAFriendResponse;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 }

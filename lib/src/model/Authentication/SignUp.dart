@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'SignInAndSignUpResponse.dart';
 
@@ -11,12 +13,16 @@ class SignUp {
   SignUp({this.status, this.success, this.message, this.response});
 
   SignUp.fromJson(Map<String, dynamic> json) {
-    status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? SignInAndSignUpResponse.fromJson(json[parameters.strResponse])
-        : null;
+    try {
+      status = json[parameters.strStatus];
+      success = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+      response = json[parameters.strResponse] != null
+              ? SignInAndSignUpResponse.fromJson(json[parameters.strResponse])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

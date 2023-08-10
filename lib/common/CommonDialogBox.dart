@@ -169,7 +169,9 @@ class CommonDialogBox {
           metaInfoId = mediaMetaInfo.id;
         }
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
 
     dateOfVisit.text = dateOfVisitClone.text;
     if (modeOfSave!) {
@@ -438,7 +440,9 @@ class CommonDialogBox {
           metaInfoId = mediaMetaInfo.id;
         }
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
     dateOfVisit.text = dateOfVisitClone.text;
 
     if (modeOfSaveClone) {
@@ -1267,7 +1271,8 @@ class CommonDialogBox {
       categoryName = healthResult!.metadata!.healthRecordCategory!.categoryName;
       deviceName = healthResult.metadata!.healthRecordType!.name;
       categoryID = healthResult.metadata!.healthRecordCategory!.id;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
       categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
@@ -1840,7 +1845,9 @@ class CommonDialogBox {
           doctorsData = json.decode(results[Constants.keyDoctor]);
           try {
             setValueToDoctorDropdown(doctorsData, setState);
-          } catch (e) {}
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          }
 
           print(doctorsData[parameters.strFirstName]);
           if (doctorsData[parameters.strName] != '' &&
@@ -2568,7 +2575,8 @@ class CommonDialogBox {
           doctor.text = preferedDoctorData.name!;
         }
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       doctor.text = doctorsText;
     }
 
@@ -2600,7 +2608,8 @@ class CommonDialogBox {
           hospital.text = preferredHospitalData.name!;
         }
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       hospital.text = hospitalText;
     }
 
@@ -2632,7 +2641,9 @@ class CommonDialogBox {
           lab.text = preferredlabData.name!;
         }
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       lab.text = labtext;
     }
   }

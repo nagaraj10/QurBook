@@ -157,7 +157,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       }
       WidgetsBinding.instance!.addPostFrameCallback(
           (_) => _refreshIndicatorKey.currentState?.show());
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       //print(e);
     }
   }
@@ -777,7 +779,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           data!.add(labListResult);
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       //print(e);
     }
     return RefreshIndicator(
@@ -2008,7 +2012,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       primaryUserProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
     return InkWell(
         onTap: () {
           CommonUtil.showLoadingDialog(
@@ -2278,7 +2285,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         if (widget.toPreviousScreen!) {
                           passCityValue(data[index], context);
                         }
-                      } catch (e) {}
+                      } catch (e,stackTrace) {
+                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+                      }
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(

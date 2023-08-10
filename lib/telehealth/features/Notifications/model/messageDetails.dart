@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/RawMessage.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/content.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/messageContent.dart';
@@ -15,19 +16,23 @@ class MessageDetails {
       {this.content, this.payload, this.messageContent, this.rawMessage});
 
   MessageDetails.fromJson(Map<String, dynamic> json) {
-    content =
-        json['content'] != null ? new Content.fromJson(json['content']) : null;
-    rawMessage = json['rawMessage'] != null
-        ? new RawMessage.fromJson(json['rawMessage'])
-        : null;
-    payload =
-        json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
-    messageContent = json['messageContent'] != null
-        ? new MessageContent.fromJson(json['messageContent'])
-        : null;
-    isAccepted=json['isAccepted'] != null
-        ? json['isAccepted']
-        : null;
+    try {
+      content =
+              json['content'] != null ? new Content.fromJson(json['content']) : null;
+      rawMessage = json['rawMessage'] != null
+              ? new RawMessage.fromJson(json['rawMessage'])
+              : null;
+      payload =
+              json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+      messageContent = json['messageContent'] != null
+              ? new MessageContent.fromJson(json['messageContent'])
+              : null;
+      isAccepted=json['isAccepted'] != null
+              ? json['isAccepted']
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

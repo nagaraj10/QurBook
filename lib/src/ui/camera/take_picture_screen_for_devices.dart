@@ -367,7 +367,9 @@ class TakePictureScreenForDevicesState
                                             imagePaths.add(xpath.path);
 
                                             setState(() {});
-                                          } catch (e) {
+                                          } catch (e,stackTrace) {
+                                                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                                             // If an error occurs, log the error to the console.
                                           }
                                         }
@@ -465,7 +467,9 @@ class TakePictureScreenForDevicesState
                                               setState(() {});
                                               callDisplayPictureScreen(context);
                                             }
-                                          } catch (e) {
+                                          } catch (e,stackTrace) {
+                                                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                                             (await getTemporaryDirectory())
                                                 .delete(recursive: true);
                                             toast.getToast(
@@ -500,7 +504,7 @@ class TakePictureScreenForDevicesState
           selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
-    } on FetchException catch (e) {}
+    } on FetchException catch (e,stackTrace) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/services/createAppointmentService.dart';
@@ -41,7 +42,10 @@ class CreateAppointMentViewModel {
       );
       bookAppointment = bookAppointmentModel;
       return bookAppointment;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 
   Future<AppointmentNotificationPayment?> getAppointmentDetailsUsingId(String appointmentId)async{

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class CategoryData {
@@ -30,18 +32,22 @@ class CategoryData {
       this.isDelete});
 
   CategoryData.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    categoryName = json[parameters.strCategoryName];
-    categoryDescription = json[parameters.strCategoryDesc];
-    logo = json[parameters.strLogo];
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    isDisplay = json[parameters.strIsDisplay];
-    isCreate = json[parameters.strIsCreate];
-    isRead = json[parameters.strIsRead];
-    isEdit = json[parameters.strIsEdit];
-    isDelete = json[parameters.strIsDelete];
+    try {
+      id = json[parameters.strId];
+      categoryName = json[parameters.strCategoryName];
+      categoryDescription = json[parameters.strCategoryDesc];
+      logo = json[parameters.strLogo];
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      isDisplay = json[parameters.strIsDisplay];
+      isCreate = json[parameters.strIsCreate];
+      isRead = json[parameters.strIsRead];
+      isEdit = json[parameters.strIsEdit];
+      isDelete = json[parameters.strIsDelete];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

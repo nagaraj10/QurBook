@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -102,8 +101,7 @@ class _DiseasesList extends State<DiseasesList> {
               element.metadata?.diseases != '') {
             var keysUniq = true;
             categoryListUniq.forEach((catElement) {
-              if (catElement.metadata?.diseases ==
-                  element.metadata?.diseases) {
+              if (catElement.metadata?.diseases == element.metadata?.diseases) {
                 keysUniq = false;
               }
             });
@@ -314,7 +312,9 @@ class _DiseasesList extends State<DiseasesList> {
               }
             });
           }
-        } catch (e) {
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -322,7 +322,8 @@ class _DiseasesList extends State<DiseasesList> {
                     planList[i].metadata?.diseases ?? '', planListFull)),
           ).then((value) => {
                 setState(() {
-                  planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
+                  planListModel =
+                      myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
                 })
               });
         }
@@ -345,7 +346,8 @@ class _DiseasesList extends State<DiseasesList> {
                       planList[i].metadata?.diseases ?? '', planListFull)),
             ).then((value) => {
                   setState(() {
-                    planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
+                    planListModel = myPlanViewModel.getPlanList('')
+                        as Future<PlanListModel>?;
                   })
                 });
           }
@@ -357,7 +359,8 @@ class _DiseasesList extends State<DiseasesList> {
                     planList[i].metadata?.diseases ?? '', planListFull)),
           ).then((value) => {
                 setState(() {
-                  planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
+                  planListModel =
+                      myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
                 })
               });
         }

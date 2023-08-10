@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../../constants/fhb_parameters.dart' as parameters;
 
 class Payload {
@@ -71,85 +73,89 @@ class Payload {
   String? notificationListId;
   dynamic eventId;
   Payload.fromJson(Map<String, dynamic> json) {
-    type = json["type"];
-    isFromCareCoordinator =
-        json["isFromCareCoordinator"].toString().toLowerCase();
-    isCareGiver = json["isCareGiver"].toString().toLowerCase();
-    meetingId = json["meetingId"] == null ? null : json["meetingId"];
-    senderProfilePic =
-        json["senderProfilePic"] == null ? null : json["senderProfilePic"];
-    deliveredDateTime =
-        json["deliveredDateTime"] == null ? null : json["deliveredDateTime"];
-    appointmentId =
-        json["appointmentId"] == null ? null : json["appointmentId"];
-    createdBy = json["createdBy"] == null ? null : json["createdBy"];
+    try {
+      type = json["type"];
+      isFromCareCoordinator =
+              json["isFromCareCoordinator"].toString().toLowerCase();
+      isCareGiver = json["isCareGiver"].toString().toLowerCase();
+      meetingId = json["meetingId"] == null ? null : json["meetingId"];
+      senderProfilePic =
+              json["senderProfilePic"] == null ? null : json["senderProfilePic"];
+      deliveredDateTime =
+              json["deliveredDateTime"] == null ? null : json["deliveredDateTime"];
+      appointmentId =
+              json["appointmentId"] == null ? null : json["appointmentId"];
+      createdBy = json["createdBy"] == null ? null : json["createdBy"];
 
-    priority = json["priority"] == null ? null : json["priority"];
-    appointmentDate =
-        json["appointmentDate"] == null ? null : json["appointmentDate"];
-    userName = json["userName"] == null ? null : json["userName"];
-    patientId = json["patientId"] == null ? null : json["patientId"];
-    doctorId = json["doctorId"] == null ? null : json["doctorId"];
-    payloadMeetingId = json["meetingId"] == null ? null : json["meetingId"];
-    templateName = json["templateName"] == null ? null : json["templateName"];
-    providerRequestId =
-        json["providerRequestId"] == null ? null : json["providerRequestId"];
-    bookingId = json['bookingId'] != null ? json['bookingId'] : null;
+      priority = json["priority"] == null ? null : json["priority"];
+      appointmentDate =
+              json["appointmentDate"] == null ? null : json["appointmentDate"];
+      userName = json["userName"] == null ? null : json["userName"];
+      patientId = json["patientId"] == null ? null : json["patientId"];
+      doctorId = json["doctorId"] == null ? null : json["doctorId"];
+      payloadMeetingId = json["meetingId"] == null ? null : json["meetingId"];
+      templateName = json["templateName"] == null ? null : json["templateName"];
+      providerRequestId =
+              json["providerRequestId"] == null ? null : json["providerRequestId"];
+      bookingId = json['bookingId'] != null ? json['bookingId'] : null;
 
-    doctorSessionId =
-        json['doctorSessionId'] != null ? json['doctorSessionId'] : null;
-    providerRequestId =
-        json['providerRequestId'] != null ? json['providerRequestId'] : null;
-    healthOrganizationId = json['healthOrganizationId'] != null
-        ? json['healthOrganizationId']
-        : null;
-    plannedStartDateTime = json['plannedStartDateTime'] != null
-        ? json['plannedStartDateTime']
-        : null;
-    redirectTo = json["redirectTo"] == null ? null : json["redirectTo"];
-    healthRecordMetaIds = json["healthRecordMetaIds"] == null
-        ? null
-        : json["healthRecordMetaIds"];
-    patientName = json["patientName"] == null ? null : json["patientName"];
-    userId = json["userId"] == null ? null : json["userId"];
-    claimId = json["claimId"] == null ? null : json["claimId"];
-    careCoordinatorUserId = json["careCoordinatorUserId"] == null
-        ? null
-        : json["careCoordinatorUserId"];
-    patientPhoneNumber = json[parameters.patientPhoneNumber] == null
-        ? null
-        : json[parameters.patientPhoneNumber];
-    caregiverRequestor = json[parameters.caregiverRequestor] == null
-        ? null
-        : json[parameters.caregiverRequestor];
-    caregiverReceiver = json[parameters.caregiverReceiver] == null
-        ? null
-        : json[parameters.caregiverReceiver];
-    verificationCode = json[parameters.verificationCode] == null
-        ? null
-        : json[parameters.verificationCode];
+      doctorSessionId =
+              json['doctorSessionId'] != null ? json['doctorSessionId'] : null;
+      providerRequestId =
+              json['providerRequestId'] != null ? json['providerRequestId'] : null;
+      healthOrganizationId = json['healthOrganizationId'] != null
+              ? json['healthOrganizationId']
+              : null;
+      plannedStartDateTime = json['plannedStartDateTime'] != null
+              ? json['plannedStartDateTime']
+              : null;
+      redirectTo = json["redirectTo"] == null ? null : json["redirectTo"];
+      healthRecordMetaIds = json["healthRecordMetaIds"] == null
+              ? null
+              : json["healthRecordMetaIds"];
+      patientName = json["patientName"] == null ? null : json["patientName"];
+      userId = json["userId"] == null ? null : json["userId"];
+      claimId = json["claimId"] == null ? null : json["claimId"];
+      careCoordinatorUserId = json["careCoordinatorUserId"] == null
+              ? null
+              : json["careCoordinatorUserId"];
+      patientPhoneNumber = json[parameters.patientPhoneNumber] == null
+              ? null
+              : json[parameters.patientPhoneNumber];
+      caregiverRequestor = json[parameters.caregiverRequestor] == null
+              ? null
+              : json[parameters.caregiverRequestor];
+      caregiverReceiver = json[parameters.caregiverReceiver] == null
+              ? null
+              : json[parameters.caregiverReceiver];
+      verificationCode = json[parameters.verificationCode] == null
+              ? null
+              : json[parameters.verificationCode];
 
-    uid = json["uid"] == null ? null : json["uid"];
-    eventId = json["eventId"] == null ? null : json["eventId"];
+      uid = json["uid"] == null ? null : json["uid"];
+      eventId = json["eventId"] == null ? null : json["eventId"];
 
-    if (json["planId"] != null) {
-      var plan = json["planId"];
-      if (plan.runtimeType == String) {
-        planId = plan;
-      } else if (plan.runtimeType == int) {
-        planId = '$plan';
-      }
+      if (json["planId"] != null) {
+            var plan = json["planId"];
+            if (plan.runtimeType == String) {
+              planId = plan;
+            } else if (plan.runtimeType == int) {
+              planId = '$plan';
+            }
+          }
+      if ((json[parameters.KIOSK_isSheela] ?? '').isNotEmpty) {
+            isSheela =
+                (json[parameters.KIOSK_isSheela] ?? '').toString().toLowerCase() ==
+                    "true";
+          }
+      if ((json[parameters.notificationListId] ?? '').isNotEmpty) {
+            notificationListId = json[parameters.notificationListId];
+          }
+      sheelaAudioMsgUrl =
+              json["sheelaAudioMsgUrl"] == null ? null : json["sheelaAudioMsgUrl"];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
-    if ((json[parameters.KIOSK_isSheela] ?? '').isNotEmpty) {
-      isSheela =
-          (json[parameters.KIOSK_isSheela] ?? '').toString().toLowerCase() ==
-              "true";
-    }
-    if ((json[parameters.notificationListId] ?? '').isNotEmpty) {
-      notificationListId = json[parameters.notificationListId];
-    }
-    sheelaAudioMsgUrl =
-        json["sheelaAudioMsgUrl"] == null ? null : json["sheelaAudioMsgUrl"];
   }
 
   Map<String, dynamic> toJson() {

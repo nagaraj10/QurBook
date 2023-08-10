@@ -198,7 +198,8 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
                                   if (Navigator.canPop(context)) {
                                     Get.back();
                                   }
-                                } catch (e) {
+                                } catch (e,stackTrace) {
+                                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                                   print(e);
                                 }
                               },
@@ -547,8 +548,7 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
 
     if (response.isSuccess!) {
       // Account deleted
-      toast.getToast(
-          Constants.SUCCESSFULLY_DELETED, Colors.green);
+      toast.getToast(Constants.SUCCESSFULLY_DELETED, Colors.green);
       CommonUtil().logout(moveToLoginPage);
     } else {
       LoaderClass.hideLoadingDialog(context);

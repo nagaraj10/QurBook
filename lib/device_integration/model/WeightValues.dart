@@ -1,5 +1,7 @@
 
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart';
 
 class WeightValues {
@@ -9,12 +11,16 @@ class WeightValues {
   WeightValues({this.isSuccess, this.result});
 
   WeightValues.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[is_Success];
-    if (json[dataResult] != null) {
-      result = <WVResult>[];
-      json[dataResult].forEach((wgtvalue) {
-        result!.add(WVResult.fromJson(wgtvalue));
-      });
+    try {
+      isSuccess = json[is_Success];
+      if (json[dataResult] != null) {
+            result = <WVResult>[];
+            json[dataResult].forEach((wgtvalue) {
+              result!.add(WVResult.fromJson(wgtvalue));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -47,11 +53,15 @@ class WVResult {
       this.dateTimeValue});
 
   WVResult.fromJson(Map<String, dynamic> json) {
-    sourceType = json[strsourcetype];
-    startDateTime = json[strStartTimeStamp];
-    endDateTime = json[strEndTimeStamp];
-    weight = json[strParamWeight];
-    weightUnit = json[strParamWeightUnit];
+    try {
+      sourceType = json[strsourcetype];
+      startDateTime = json[strStartTimeStamp];
+      endDateTime = json[strEndTimeStamp];
+      weight = json[strParamWeight];
+      weightUnit = json[strParamWeightUnit];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import 'role.dart';
 
 class Assignee {
@@ -19,12 +21,16 @@ class Assignee {
   }
 
   Assignee.fromJson(dynamic json) {
-    _id = json['_id'];
-    _username = json['username'];
-    _fullname = json['fullname'];
-    _email = json['email'];
-    _role = json['role'] != null ? Role.fromJson(json['role']) : null;
-    _title = json['title'];
+    try {
+      _id = json['_id'];
+      _username = json['username'];
+      _fullname = json['fullname'];
+      _email = json['email'];
+      _role = json['role'] != null ? Role.fromJson(json['role']) : null;
+      _title = json['title'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
   String? _id;
   String? _username;

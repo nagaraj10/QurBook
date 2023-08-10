@@ -45,7 +45,10 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
           }
         }
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 
   List<Widget> loadCheckboxItems() {
@@ -112,7 +115,9 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
         return true;
       else
         return false;
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       return false;
     }
   }

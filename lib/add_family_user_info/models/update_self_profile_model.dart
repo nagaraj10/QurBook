@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class UpdateSelfProfileModel {
   bool? isSuccess;
   String? message;
@@ -7,9 +9,13 @@ class UpdateSelfProfileModel {
   UpdateSelfProfileModel({this.isSuccess, this.message, this.result});
 
   UpdateSelfProfileModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result = json['result'];
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result = json['result'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

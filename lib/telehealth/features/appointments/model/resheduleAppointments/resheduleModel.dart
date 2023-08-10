@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleResult.dart';
 
@@ -10,9 +11,13 @@ class ResheduleModel {
   ResheduleModel({this.isSuccess, this.message, this.result});
 
   ResheduleModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result = json['result'] != null ? new ResheduleResult.fromJson(json['result']) : null;
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result = json['result'] != null ? new ResheduleResult.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

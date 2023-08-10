@@ -1,5 +1,6 @@
-
 import 'dart:async';
+
+import 'package:myfhb/common/CommonUtil.dart';
 
 import 'fetchGoogleFitData.dart';
 import '../../src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
@@ -44,7 +45,8 @@ class SyncGoogleFitData {
       throw 'GoogleFit is deactivated. Please activate and sync again';
     }
 
-    final DateTime? lastSynctime = await (getLastSynctime() as FutureOr<DateTime?>);
+    final DateTime? lastSynctime =
+        await (getLastSynctime() as FutureOr<DateTime?>);
 
     endTime = DateTime.now().millisecondsSinceEpoch.toString();
     final currentdate = DateTime.now();
@@ -121,7 +123,7 @@ class SyncGoogleFitData {
         // throw "$errorString";
       }
       return true;
-    } catch (e) {
+    } catch (e,stackTrace) {
       throw 'Failed to sync GoogleFit Data please try again later';
     }
   }
@@ -133,7 +135,9 @@ class SyncGoogleFitData {
       final response = await _deviceHealthRecord.postDeviceData(params);
 
       return response;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       rethrow;
     }
   }
@@ -150,6 +154,8 @@ class SyncGoogleFitData {
         return null;
       }
       return lastSync.result!.lastSyncDateTime;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 }

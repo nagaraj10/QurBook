@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/keysofmodel.dart';
 
 class Content {
@@ -8,8 +9,12 @@ class Content {
   Content({this.messageTitle, this.messageBody});
 
   Content.fromJson(Map<String, dynamic> json) {
-    messageTitle = json[c_messageTitle];
-    messageBody = json[c_messageBody];
+    try {
+      messageTitle = json[c_messageTitle];
+      messageBody = json[c_messageBody];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class MediaData {
@@ -36,21 +38,25 @@ class MediaData {
       this.isAITranscription});
 
   MediaData.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    name = json[parameters.strName];
-    description = json[parameters.strDescription];
-    logo = json[parameters.strLogo];
-    categoryId = json[parameters.strcategoryId];
-    isActive = json[parameters.strIsActive];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    isDisplay = json[parameters.strIsDisplay];
-    isCreate = json[parameters.strIsCreate];
-    isRead = json[parameters.strIsRead];
-    isEdit = json[parameters.strIsEdit];
-    isDelete = json[parameters.strIsDelete];
-    isManualTranscription = json[parameters.strisManualTranscription];
-    isAITranscription = json[parameters.strisAITranscription];
+    try {
+      id = json[parameters.strId];
+      name = json[parameters.strName];
+      description = json[parameters.strDescription];
+      logo = json[parameters.strLogo];
+      categoryId = json[parameters.strcategoryId];
+      isActive = json[parameters.strIsActive];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      isDisplay = json[parameters.strIsDisplay];
+      isCreate = json[parameters.strIsCreate];
+      isRead = json[parameters.strIsRead];
+      isEdit = json[parameters.strIsEdit];
+      isDelete = json[parameters.strIsDelete];
+      isManualTranscription = json[parameters.strisManualTranscription];
+      isAITranscription = json[parameters.strisAITranscription];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

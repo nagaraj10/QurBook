@@ -1,5 +1,6 @@
 
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class ReferenceData {
@@ -23,14 +24,18 @@ class ReferenceData {
         this.lastModifiedOn});
 
   ReferenceData.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    code = json[parameters.strCode];
-    name = json[parameters.strName];
-    description = json[parameters.strDescription];
-    isActive = json[parameters.strIsActive];
-    createdBy = json[parameters.strCreatedBy];
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
+    try {
+      id = json[parameters.strId];
+      code = json[parameters.strCode];
+      name = json[parameters.strName];
+      description = json[parameters.strDescription];
+      isActive = json[parameters.strIsActive];
+      createdBy = json[parameters.strCreatedBy];
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

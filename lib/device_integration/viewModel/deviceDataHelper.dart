@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../Device_Integration/services/syncHealthKitData.dart';
 import '../services/syncGoogleFitData.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -37,7 +39,9 @@ class DeviceDataHelper {
             msg: 'Syncing Health Data from Google Fit completed',
             backgroundColor: Colors.green);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       await Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
     }
   }
@@ -45,7 +49,9 @@ class DeviceDataHelper {
   Future<void> activateHealthKit() async {
     try {
       await _syncHealthKitData.activateHealthKit();
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       await Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
     }
   }
@@ -62,7 +68,9 @@ class DeviceDataHelper {
             msg: 'Syncing Health Data from Apple Health completed',
             backgroundColor: Colors.green);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       await Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
     }
   }

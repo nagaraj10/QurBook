@@ -341,7 +341,9 @@ class _ChatUserListState extends State<ChatUserList> {
       if (data.lastName != null && data.lastName != '') {
         fulName = fulName! + ' ' + data.lastName!;
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
 
     if (data.isCarecoordinator!) {
       try {
@@ -353,7 +355,9 @@ class _ChatUserListState extends State<ChatUserList> {
             data.carecoordinatorLastName != '') {
           ccName = ccName! + ' ' + data.carecoordinatorLastName!;
         }
-      } catch (e) {}
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      }
     }
 
     return Card(
@@ -392,7 +396,8 @@ class _ChatUserListState extends State<ChatUserList> {
                   initSocket(false);
                 }
               });
-            } catch (e) {
+            } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
               print(e);
             }
           },
@@ -602,7 +607,9 @@ class _ChatUserListState extends State<ChatUserList> {
         if (userChatList.lastName != null && userChatList.lastName != '') {
           ccName = ccName! + ' ' + userChatList.lastName!;
         }
-      } catch (e) {}
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      }
     }
     return Column(
       children: <Widget>[

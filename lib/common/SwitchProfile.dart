@@ -78,7 +78,9 @@ class SwitchProfile {
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       profileImage = PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       myProfile = null;
     }
 
@@ -166,7 +168,9 @@ class SwitchProfile {
         try {
           ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
           var res = apiBaseHelper.updateLastVisited();
-        } catch (e) {}
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        }
 
         getUserProfileData();
       });
@@ -208,7 +212,9 @@ class SwitchProfile {
             qurhomeDashboardController.currentSelectedIndex.value);
         try {
           Get.find<QurhomeRegimenController>().getRegimenList();
-        } catch (e) {}
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        }
       });
     });
   }
@@ -352,7 +358,9 @@ class SwitchProfile {
       myProfileNew = await PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       profileImage =
           await PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       myProfileNew = null;
     }
 

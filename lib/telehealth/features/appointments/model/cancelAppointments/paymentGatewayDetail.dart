@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelResponseInfo.dart';
 import 'package:myfhb/telehealth/features/appointments/model/createdBy.dart';
 
@@ -29,22 +30,26 @@ class PaymentGatewayDetail {
         this.id});
 
   PaymentGatewayDetail.fromJson(Map<String, dynamic> json) {
-    sourceId = json[parameters.strSourceId];
-    sourceCode = json[parameters.strSourceCode];
-    paymentGatewayRequestId = json[parameters.strPaymentGatewayRequestId];
-    responseInfo = json[parameters.strResponseInfo] != null
-        ? new CancelResponseInfo.fromJson(json[parameters.strResponseInfo])
-        : null;
-    createdBy = json[[parameters.strCreatedBy]] != null
-        ? new CreatedBy.fromJson(json[parameters.strCreatedBy])
-        : null;
-    createdOn = json[parameters.strCreatedOn];
-    lastModifiedBy = json[parameters.strlastModifiedBy] != null
-        ? new CreatedBy.fromJson(json[parameters.strlastModifiedBy])
-        : null;
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    isActive = json[parameters.strIsActive];
-    id = json[parameters.strId];
+    try {
+      sourceId = json[parameters.strSourceId];
+      sourceCode = json[parameters.strSourceCode];
+      paymentGatewayRequestId = json[parameters.strPaymentGatewayRequestId];
+      responseInfo = json[parameters.strResponseInfo] != null
+              ? new CancelResponseInfo.fromJson(json[parameters.strResponseInfo])
+              : null;
+      createdBy = json[[parameters.strCreatedBy]] != null
+              ? new CreatedBy.fromJson(json[parameters.strCreatedBy])
+              : null;
+      createdOn = json[parameters.strCreatedOn];
+      lastModifiedBy = json[parameters.strlastModifiedBy] != null
+              ? new CreatedBy.fromJson(json[parameters.strlastModifiedBy])
+              : null;
+      lastModifiedOn = json[parameters.strLastModifiedOn];
+      isActive = json[parameters.strIsActive];
+      id = json[parameters.strId];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

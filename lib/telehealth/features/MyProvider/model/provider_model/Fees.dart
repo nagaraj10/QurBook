@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Consulting.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Followup.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -12,16 +13,20 @@ class Fees {
   Fees({this.doctorId, this.consulting, this.followup, this.cancellation});
 
   Fees.fromJson(Map<String, dynamic> json) {
-    doctorId = json[parameters.strDoctorId];
-    consulting = json[parameters.strconsulting] != null
-        ? new Consulting.fromJson(json[parameters.strconsulting])
-        : null;
-    followup = json[parameters.strfollowup] != null
-        ? new Followup.fromJson(json[parameters.strfollowup])
-        : null;
-    cancellation = json[parameters.strcancellation] != null
-        ? new Consulting.fromJson(json[parameters.strcancellation])
-        : null;
+    try {
+      doctorId = json[parameters.strDoctorId];
+      consulting = json[parameters.strconsulting] != null
+              ? new Consulting.fromJson(json[parameters.strconsulting])
+              : null;
+      followup = json[parameters.strfollowup] != null
+              ? new Followup.fromJson(json[parameters.strfollowup])
+              : null;
+      cancellation = json[parameters.strcancellation] != null
+              ? new Consulting.fromJson(json[parameters.strcancellation])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

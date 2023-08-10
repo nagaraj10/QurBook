@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:myfhb/claim/model/claimmodel/ClaimSuccess.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../../record_detail/model/DoctorImageResponse.dart';
 import '../../../record_detail/model/ImageDocumentResponse.dart';
@@ -133,7 +134,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       userHealthResponseList = await _healthReportListForUserRepository
           .getHealthReportList(condition: condtion ?? false);
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       healthReportListSink.add(ApiResponse.error(e.toString()));
     }
     return userHealthResponseList;
@@ -146,7 +149,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       saveMetaDataResponse =
           await _healthReportListForUserRepository.postMediaData(jsonData);
       // metadataListSink.add(ApiResponse.completed(saveMetaDataResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       metadataListSink.add(ApiResponse.error(e.toString()));
     }
     return saveMetaDataResponse;
@@ -157,7 +162,10 @@ class HealthReportListForUserBlock implements BaseBloc {
       var userHealthResponseList =
           await _healthReportListForUserRepository.getDoctorProfile(doctorsId);
       return userHealthResponseList;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 
   Future<ImageDocumentResponse?> getDocumentImage(String metaMasterId) async {
@@ -165,7 +173,10 @@ class HealthReportListForUserBlock implements BaseBloc {
       final userHealthResponseList = await _healthReportListForUserRepository
           .getDocumentImage(metaMasterId);
       return userHealthResponseList;
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 
   Future<PostImageResponse?> saveImage(
@@ -176,7 +187,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       postImageResponse = await _healthReportListForUserRepository.postImage(
           fileName, metaID, jsonData);
       imageDataSink.add(ApiResponse.completed(postImageResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       imageDataSink.add(ApiResponse.error(e.toString()));
     }
     return postImageResponse;
@@ -189,7 +202,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     try {
       digitRecogResponse = await _healthReportListForUserRepository
           .postDevicesData(fileName, metaID, jsonData);
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       imageDataSink.add(ApiResponse.error(e.toString()));
     }
     return digitRecogResponse;
@@ -203,7 +218,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       metaDataMovedResponse = await _healthReportListForUserRepository
           .moveDataToOtherUser(familyMemberID, metaId);
       moveMetaDataSInk.add(ApiResponse.completed(metaDataMovedResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       metadataListSink.add(ApiResponse.error(e.toString()));
     }
     return metaDataMovedResponse;
@@ -217,7 +234,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       updateMediaResponse = await _healthReportListForUserRepository
           .updateMediaData(jsonData, metaInfoId);
       metaDataUpdateSink.add(ApiResponse.completed(updateMediaResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       metaDataUpdateSink.add(ApiResponse.error(e.toString()));
     }
     return updateMediaResponse;
@@ -233,7 +252,7 @@ class HealthReportListForUserBlock implements BaseBloc {
           .getDocumentImageList(metaMasterIdList);
 
       imageListSink.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
       imageListSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -250,7 +269,9 @@ class HealthReportListForUserBlock implements BaseBloc {
           .getDocumentImageList(metaMasterIdList);
 
       imageListSink.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       imageListSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -265,7 +286,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       userHealthResponseList = await _healthReportListForUserRepository
           .getHealthReportLists(commonUserId: userID);
       healthReportListSinks.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       healthReportListSink.add(ApiResponse.error(e.toString()));
     }
     return userHealthResponseList;
@@ -280,7 +303,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       healthRecordSuccess = await _healthReportListForUserRepository
           .createMediaData(jsonData, imagePaths, audioPath, isVital: isVital);
       // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       healthRecordSink.add(ApiResponse.error(e.toString()));
     }
     return healthRecordSuccess;
@@ -294,7 +319,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       healthRecordSuccess = await _healthReportListForUserRepository
           .createMediaDataClaim(jsonData, imagePaths, audioPath);
       // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       healthRecordSink.add(ApiResponse.error(e.toString()));
     }
     return healthRecordSuccess;
@@ -308,7 +335,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       healthRecordSuccess = await _healthReportListForUserRepository
           .updateHealthRecords(jsonData, imagePaths, audioPath, metaId);
       // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       healthRecordSink.add(ApiResponse.error(e.toString()));
     }
     return healthRecordSuccess;
@@ -322,7 +351,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       healthRecordSuccess = await _healthReportListForUserRepository
           .updateFileInRecords(audioPath, healthResult);
       // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       healthRecordSink.add(ApiResponse.error(e.toString()));
     }
     return healthRecordSuccess;
@@ -335,7 +366,9 @@ class HealthReportListForUserBlock implements BaseBloc {
       claimSuccess =
           await _healthReportListForUserRepository.createClaimRecord(jsonData);
       // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       claimSink.add(ApiResponse.error(e.toString()));
     }
     return claimSuccess;

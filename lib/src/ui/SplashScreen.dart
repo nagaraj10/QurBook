@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -178,7 +177,9 @@ class _SplashScreenState extends State<SplashScreen> {
           _loaded = true;
         });
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       if (kDebugMode) print(e.toString());
     }
   }
@@ -795,7 +796,9 @@ class _SplashScreenState extends State<SplashScreen> {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing);
                           }
-                        } catch (e) {
+                        } catch (e,stackTrace) {
+                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing);
                         }
@@ -910,7 +913,9 @@ class _SplashScreenState extends State<SplashScreen> {
                                 (value) => PageNavigator.goToPermanent(
                                     context, router.rt_Landing));
                           }
-                        } catch (e) {
+                        } catch (e,stackTrace) {
+                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
                           AppointmentDetailsController
                               appointmentDetailsController =
                               CommonUtil().onInitAppointmentDetailsController();
@@ -1000,6 +1005,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void getProfileData() async {
     try {
       await new CommonUtil().getUserProfileData();
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+    }
   }
 }

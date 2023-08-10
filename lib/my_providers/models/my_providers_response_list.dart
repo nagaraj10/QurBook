@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'DoctorModel.dart';
 import 'HospitalModel.dart';
@@ -15,12 +17,16 @@ class MyProvidersResponseList {
       {this.status, this.success, this.message, this.response});
 
   MyProvidersResponseList.fromJson(Map<String, dynamic> json) {
-    status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? Response.fromJson(json[parameters.strResponse])
-        : null;
+    try {
+      status = json[parameters.strStatus];
+      success = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+      response = json[parameters.strResponse] != null
+              ? Response.fromJson(json[parameters.strResponse])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -41,9 +47,13 @@ class Response {
   Response({this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    data = json[parameters.strData] != null
-        ? MyProvidersData.fromJson(json[parameters.strData])
-        : null;
+    try {
+      data = json[parameters.strData] != null
+              ? MyProvidersData.fromJson(json[parameters.strData])
+              : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -64,31 +74,35 @@ class MyProvidersData {
       {this.doctorsModel, this.laboratoryModel, this.hospitalsModel});
 
   MyProvidersData.fromJson(Map<String, dynamic> json) {
-    final Map<String, dynamic>? medicalJson = json[parameters.strmedicalPreferences];
+    try {
+      final Map<String, dynamic>? medicalJson = json[parameters.strmedicalPreferences];
 
-    if (medicalJson != null) {
-      final Map<String, dynamic>? preferencesJson = medicalJson[parameters.strpreferences];
+      if (medicalJson != null) {
+            final Map<String, dynamic>? preferencesJson = medicalJson[parameters.strpreferences];
 
-      if (preferencesJson != null) {
-        if (preferencesJson[parameters.strdoctorIds] != null) {
-          doctorsModel = <DoctorsModel>[];
-          preferencesJson[parameters.strdoctorIds].forEach((v) {
-            doctorsModel!.add(DoctorsModel.fromJson(v));
-          });
-        }
-        if (preferencesJson[parameters.strlaboratoryIds] != null) {
-          laboratoryModel = <LaboratoryModel>[];
-          preferencesJson[parameters.strlaboratoryIds].forEach((v) {
-            laboratoryModel!.add(LaboratoryModel.fromJson(v));
-          });
-        }
-        if (preferencesJson[parameters.strhospitalIds] != null) {
-          hospitalsModel = <HospitalsModel>[];
-          preferencesJson[parameters.strhospitalIds].forEach((v) {
-            hospitalsModel!.add(HospitalsModel.fromJson(v));
-          });
-        }
-      }
+            if (preferencesJson != null) {
+              if (preferencesJson[parameters.strdoctorIds] != null) {
+                doctorsModel = <DoctorsModel>[];
+                preferencesJson[parameters.strdoctorIds].forEach((v) {
+                  doctorsModel!.add(DoctorsModel.fromJson(v));
+                });
+              }
+              if (preferencesJson[parameters.strlaboratoryIds] != null) {
+                laboratoryModel = <LaboratoryModel>[];
+                preferencesJson[parameters.strlaboratoryIds].forEach((v) {
+                  laboratoryModel!.add(LaboratoryModel.fromJson(v));
+                });
+              }
+              if (preferencesJson[parameters.strhospitalIds] != null) {
+                hospitalsModel = <HospitalsModel>[];
+                preferencesJson[parameters.strhospitalIds].forEach((v) {
+                  hospitalsModel!.add(HospitalsModel.fromJson(v));
+                });
+              }
+            }
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

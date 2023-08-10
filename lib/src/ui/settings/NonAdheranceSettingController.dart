@@ -1,6 +1,7 @@
 
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
@@ -46,9 +47,11 @@ class NonAdheranceSettingController extends GetxController {
       });
       loadingData.value = false;
       update(["newUpdate"]);
-    } catch (e) {
+    } catch (e,stackTrace) {
     print(e.toString());
     loadingData.value = false;
+                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -59,9 +62,11 @@ class NonAdheranceSettingController extends GetxController {
       nonAdheranceResponseModel = await nonAdheranceRepository.saveNonAdherance(mins,patientId,reminderFor);
       loadingData.value = false;
       getFamilyMemberList();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e.toString());
       loadingData.value = false;
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 
@@ -72,9 +77,11 @@ class NonAdheranceSettingController extends GetxController {
       nonAdheranceResponseModel = await nonAdheranceRepository.editNonAdherance(id,mins,patientId,reminderFor);
       loadingData.value = false;
       getFamilyMemberList();
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e.toString());
       loadingData.value = false;
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
   }
 

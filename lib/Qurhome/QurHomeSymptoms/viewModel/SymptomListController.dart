@@ -87,7 +87,9 @@ class SymptomListController extends GetxController {
         }
       }
       loadingData.value = false;
-    } catch (e) {
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       loadingData.value = false;
     }
   }
@@ -174,8 +176,10 @@ class SymptomListController extends GetxController {
           isSuccess: false,
         );
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       throw Exception('$e was thrown');
     }
   }

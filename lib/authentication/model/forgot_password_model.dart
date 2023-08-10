@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../constants/constants.dart';
 
 class PatientForgotPasswordModel {
@@ -12,12 +14,16 @@ class PatientForgotPasswordModel {
       {this.userName, this.source, this.message, this.isSuccess});
 
   PatientForgotPasswordModel.fromJson(Map<String, dynamic> json) {
-    userName = json[struserName];
-    source = json[strsource];
-    message = json[strmessage];
-    isSuccess = json[strIsSuccess];
-    result =
-        json['result'] != null ? new ForgorResult.fromJson(json['result']) : null;
+    try {
+      userName = json[struserName];
+      source = json[strsource];
+      message = json[strmessage];
+      isSuccess = json[strIsSuccess];
+      result =
+              json['result'] != null ? new ForgorResult.fromJson(json['result']) : null;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -39,8 +45,12 @@ class ForgorResult {
   ForgorResult({this.isVirtualNumber});
 
   ForgorResult.fromJson(Map<String, dynamic> json) {
-    isVirtualNumber =
-        json['isVirtualNumber'] != null ? json['isVirtualNumber'] : false;
+    try {
+      isVirtualNumber =
+              json['isVirtualNumber'] != null ? json['isVirtualNumber'] : false;
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

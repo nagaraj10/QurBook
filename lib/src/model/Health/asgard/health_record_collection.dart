@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class HealthRecordCollection {
   String? id;
   String? fileType;
@@ -15,12 +17,16 @@ class HealthRecordCollection {
     this.createdBy});
 
   HealthRecordCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    fileType = json['fileType'];
-    healthRecordUrl = json['healthRecordUrl'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    createdBy = json['createdBy'];
+    try {
+      id = json['id'];
+      fileType = json['fileType'];
+      healthRecordUrl = json['healthRecordUrl'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      createdBy = json['createdBy'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

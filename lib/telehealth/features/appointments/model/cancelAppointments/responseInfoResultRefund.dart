@@ -1,4 +1,5 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class ResponseInfoResultRefund {
@@ -26,16 +27,20 @@ class ResponseInfoResultRefund {
         this.createdAt});
 
   ResponseInfoResultRefund.fromJson(Map<String, dynamic> json) {
-    id = json[parameters.strId];
-    paymentId = json[parameters.strPaymentId];
-    status = json[parameters.strStatus];
-    type = json[parameters.strtype];
-    body = json[parameters.strBody];
-    refundAmount = json[parameters.strRefund_amount];
-    totalAmount = json[parameters.strTotal_amount];
-    transactionId = json[parameters.strTransaction_id];
-    creatorName = json[parameters.strCreator_name];
-    createdAt = json[parameters.strCreated_at];
+    try {
+      id = json[parameters.strId];
+      paymentId = json[parameters.strPaymentId];
+      status = json[parameters.strStatus];
+      type = json[parameters.strtype];
+      body = json[parameters.strBody];
+      refundAmount = json[parameters.strRefund_amount];
+      totalAmount = json[parameters.strTotal_amount];
+      transactionId = json[parameters.strTransaction_id];
+      creatorName = json[parameters.strCreator_name];
+      createdAt = json[parameters.strCreated_at];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

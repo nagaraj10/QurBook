@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class DoctorProfessionalDetailCollection {
   String? id;
   QualificationInfo? qualificationInfo;
@@ -22,26 +24,30 @@ class DoctorProfessionalDetailCollection {
         this.lastModifiedOn});
 
   DoctorProfessionalDetailCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    qualificationInfo = json['qualificationInfo'] != null
-        ? QualificationInfo.fromJson(json['qualificationInfo'])
-        : null;
-    medicalCouncilInfo = json['medicalCouncilInfo'] != null
-        ? MedicalCouncilInfo.fromJson(json['medicalCouncilInfo'])
-        : null;
-    specialty = json['specialty'] != null
-        ? MedicalCouncilInfo.fromJson(json['specialty'])
-        : null;
-    if (json['clinicName'] != null) {
-      clinicName = <ClinicName>[];
-      json['clinicName'].forEach((v) {
-        clinicName!.add(ClinicName.fromJson(v));
-      });
+    try {
+      id = json['id'];
+      qualificationInfo = json['qualificationInfo'] != null
+              ? QualificationInfo.fromJson(json['qualificationInfo'])
+              : null;
+      medicalCouncilInfo = json['medicalCouncilInfo'] != null
+              ? MedicalCouncilInfo.fromJson(json['medicalCouncilInfo'])
+              : null;
+      specialty = json['specialty'] != null
+              ? MedicalCouncilInfo.fromJson(json['specialty'])
+              : null;
+      if (json['clinicName'] != null) {
+            clinicName = <ClinicName>[];
+            json['clinicName'].forEach((v) {
+              clinicName!.add(ClinicName.fromJson(v));
+            });
+          }
+      aboutMe = json['aboutMe'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
-    aboutMe = json['aboutMe'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
   }
 
   Map<String, dynamic> toJson() {
@@ -74,17 +80,21 @@ class QualificationInfo {
   QualificationInfo({this.degree, this.university});
 
   QualificationInfo.fromJson(Map<String, dynamic> json) {
-    if (json['degree'] != null) {
-      degree = <Degree>[];
-      json['degree'].forEach((v) {
-        degree!.add(Degree.fromJson(v));
-      });
-    }
-    if (json['university'] != null) {
-      university = <Degree>[];
-      json['university'].forEach((v) {
-        university!.add(Degree.fromJson(v));
-      });
+    try {
+      if (json['degree'] != null) {
+            degree = <Degree>[];
+            json['degree'].forEach((v) {
+              degree!.add(Degree.fromJson(v));
+            });
+          }
+      if (json['university'] != null) {
+            university = <Degree>[];
+            json['university'].forEach((v) {
+              university!.add(Degree.fromJson(v));
+            });
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -108,9 +118,13 @@ class Degree {
   Degree({this.id, this.name, this.isActive});
 
   Degree.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    isActive = json['isActive'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      isActive = json['isActive'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -139,12 +153,16 @@ class MedicalCouncilInfo {
         this.lastModifiedOn});
 
   MedicalCouncilInfo.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    description = json['description'];
-    lastModifiedOn = json['lastModifiedOn'];
+    try {
+      id = json['id'];
+      name = json['name'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      description = json['description'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -165,7 +183,11 @@ class ClinicName {
   ClinicName({this.name});
 
   ClinicName.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
+    try {
+      name = json['name'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

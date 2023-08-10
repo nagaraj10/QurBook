@@ -142,7 +142,7 @@ class _MyControllersState extends State<MyControllers> {
                                     .setData({
                                   "PatientRequestForVideoCall": "accept"
                                 });
-                              } catch (e) {}
+                              } catch (e,stackTrace) {}
                               Provider?.of<HideProvider>(context, listen: false)
                                   ?.swithToVideo();
                               Provider.of<AudioCallProvider>(context,
@@ -160,7 +160,7 @@ class _MyControllersState extends State<MyControllers> {
                                     .setData({
                                   "PatientRequestForVideoCall": "decline"
                                 });
-                              } catch (e) {}
+                              } catch (e,stackTrace) {}
                               Navigator.of(context).pop(false);
                             }),
                       ],
@@ -421,7 +421,8 @@ class _MyControllersState extends State<MyControllers> {
           .collection('call_log')
           .doc(widget.channelName ?? "")
           .delete();
-    } catch (e) {
+    } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       if (kDebugMode) {
         print(e);
       }
@@ -569,6 +570,8 @@ class _MyControllersState extends State<MyControllers> {
         ),
         barrierDismissible: false,
       );
-    } catch (e) {}
+    } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 }

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -90,7 +89,9 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
               mimeType: variable.strtexthtml,
               encoding: Encoding.getByName(variable.strUtf))
           .toString());
-    } catch (e) {
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       print(e);
       if (selectedUrl.isNotEmpty) {
         await _controller.loadUrl(Uri.dataFromString(selectedUrl,

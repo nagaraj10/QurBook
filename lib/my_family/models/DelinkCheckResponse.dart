@@ -1,4 +1,6 @@
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 class DelinkCheckResponse {
   bool? isSuccess;
   String? message;
@@ -6,8 +8,12 @@ class DelinkCheckResponse {
   DelinkCheckResponse({this.isSuccess, this.message});
 
   DelinkCheckResponse.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {

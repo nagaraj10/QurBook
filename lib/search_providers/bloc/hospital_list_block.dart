@@ -1,6 +1,8 @@
 
 import 'dart:async';
 
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/variable_constant.dart' as variable;
 import '../models/hospital_list_response.dart';
 import '../models/hospital_list_response_new.dart';
@@ -45,7 +47,9 @@ class HospitalListBlock implements BaseBloc {
       var hospitalListResponse =
           await _hospitalListRepository.getHospitalFromSearch(param);
       hospitalListSink.add(ApiResponse.completed(hospitalListResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       hospitalListSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -56,7 +60,9 @@ class HospitalListBlock implements BaseBloc {
       var hospitalListResponse =
           await _hospitalListRepository.getHospitalFromSearchNew(param);
       hospitalListNewSink.add(ApiResponse.completed(hospitalListResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       hospitalListNewSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -69,7 +75,9 @@ class HospitalListBlock implements BaseBloc {
       hospitalListResponse =
           await _hospitalListRepository.gethopitalFromId(hospitalId);
       hospitalListSink.add(ApiResponse.completed(hospitalListResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       hospitalListSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -82,7 +90,9 @@ class HospitalListBlock implements BaseBloc {
       final hospitalListResponse = await _hospitalListRepository
           .getExistingHospitalFromSearchNew(hospitalId);
       hospitalListNewSink.add(ApiResponse.completed(hospitalListResponse));
-    } catch (e) {
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
       hospitalListNewSink.add(ApiResponse.error(e.toString()));
     }
   }

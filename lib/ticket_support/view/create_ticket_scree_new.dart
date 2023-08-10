@@ -160,8 +160,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       healthConditions =
           Provider.of<PlanWizardViewModel>(context, listen: false)
               .getHealthConditions() as Future<Map<String?, List<MenuItem>>>?;
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
 
     setBooleanValues();
@@ -409,8 +411,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           isFirstTym = false;
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
     return Column(children: widgetForColumn);
   }
@@ -433,7 +437,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           doctorsData = json.decode(results[tckConstants.keyDoctor]);
           try {
             setValueToDoctorDropdown(doctorsData, setState);
-          } catch (e) {}
+          } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+          }
         } else if (results.containsKey(tckConstants.keyHospital)) {
           hospitalData = json.decode(results[tckConstants.keyHospital]);
         } else if (results.containsKey(tckConstants.keyLab)) {
@@ -844,8 +851,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           }
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
     return SizedBoxWithChild(
       height: 50,
@@ -894,7 +903,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                 controller.selPrefLabId.value =
                     CommonUtil().validString(currLab.id);
                 setState(() {});
-              } catch (e) {}
+              } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+              }
             },
           ),
         ),
@@ -913,8 +925,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           }
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
     }
     return SizedBoxWithChild(
       height: 50,
@@ -963,7 +977,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                 controller.selPrefDoctorId.value =
                     CommonUtil().validString(currDoc.id);
                 setState(() {});
-              } catch (e) {}
+              } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
+              }
             },
           ),
         ),
@@ -1706,7 +1723,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
-    } on FetchException catch (e) {}
+    } on FetchException catch (e,stackTrace) {}
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
@@ -2040,7 +2057,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           print("file.path" + file.path);
           filePathist.add(file.path);
         });
-      } catch (e) {
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+
         //print('$e exception thrown');
       }
     }

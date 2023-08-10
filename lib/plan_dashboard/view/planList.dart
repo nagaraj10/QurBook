@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -87,9 +86,12 @@ class _MyPlanState extends State<PlanList> {
             Duration(milliseconds: 1000),
             () => isFirst
                 ? null
-                : ShowCaseWidget.of(_myContext)!.startShowCase([_subscribeKey]));
+                : ShowCaseWidget.of(_myContext)!
+                    .startShowCase([_subscribeKey]));
       });
-    } catch (e) {}
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   @override
@@ -397,7 +399,8 @@ class _MyPlanState extends State<PlanList> {
                               visible: planList[i].price!.isNotEmpty &&
                                   planList[i].price != '0',
                               child: TextWidget(
-                                  text: CommonUtil.CURRENCY + planList[i].price!,
+                                  text:
+                                      CommonUtil.CURRENCY + planList[i].price!,
                                   fontsize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Color(
@@ -505,39 +508,42 @@ class _MyPlanState extends State<PlanList> {
                                           padding: EdgeInsets.all(
                                             8.0.sp,
                                           ),
-                                          onPressed: planList[i]
-                                                          .catselecttype ==
-                                                      '1' &&
-                                                  planList[i].isSubscribed ==
-                                                      '0' &&
-                                                  isSelected
-                                              ? null
-                                              : () async {
-                                                  if (planList[i]
-                                                          .isSubscribed ==
-                                                      '0') {
-                                                    CommonUtil().profileValidationCheck(
-                                                        context,
-                                                        packageId: planList[i]
-                                                            .packageid,
-                                                        isSubscribed:
-                                                            planList[i]
-                                                                .isSubscribed,
-                                                        providerId:
-                                                            planList[i].plinkid,
-                                                        isFrom:
-                                                            strIsFromSubscibe,
-                                                        feeZero: planList[i]
-                                                                    .price ==
-                                                                '' ||
-                                                            planList[i]
-                                                                    .price ==
-                                                                '0',
-                                                        refresh: () {
-                                                      setState(() {});
-                                                    });
-                                                  }
-                                                  /*else {
+                                          onPressed:
+                                              planList[i].catselecttype ==
+                                                          '1' &&
+                                                      planList[i]
+                                                              .isSubscribed ==
+                                                          '0' &&
+                                                      isSelected
+                                                  ? null
+                                                  : () async {
+                                                      if (planList[i]
+                                                              .isSubscribed ==
+                                                          '0') {
+                                                        CommonUtil().profileValidationCheck(
+                                                            context,
+                                                            packageId:
+                                                                planList[i]
+                                                                    .packageid,
+                                                            isSubscribed:
+                                                                planList[i]
+                                                                    .isSubscribed,
+                                                            providerId:
+                                                                planList[i]
+                                                                    .plinkid,
+                                                            isFrom:
+                                                                strIsFromSubscibe,
+                                                            feeZero: planList[i]
+                                                                        .price ==
+                                                                    '' ||
+                                                                planList[i]
+                                                                        .price ==
+                                                                    '0',
+                                                            refresh: () {
+                                                          setState(() {});
+                                                        });
+                                                      }
+                                                      /*else {
                                           CommonUtil().unSubcribeAlertDialog(
                                               context,
                                               packageId: planList[i].packageid,
@@ -545,7 +551,7 @@ class _MyPlanState extends State<PlanList> {
                                             setState(() {});
                                           });
                                         }*/
-                                                },
+                                                    },
                                           child: TextWidget(
                                             text:
                                                 planList[i].isSubscribed == '0'
