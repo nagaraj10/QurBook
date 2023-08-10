@@ -29,8 +29,8 @@ class CustomImageNetwork extends StatelessWidget {
                   return defaultWidget ?? SizedBox.shrink();
                 },
               );
-      } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         return defaultWidget ?? SizedBox.shrink();
       }

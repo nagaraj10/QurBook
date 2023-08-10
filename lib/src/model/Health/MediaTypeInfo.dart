@@ -65,8 +65,8 @@ class MediaTypeInfo {
       logo = json[parameters.strLogo];
       name = json[parameters.strName];
       url = json[parameters.strurl];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

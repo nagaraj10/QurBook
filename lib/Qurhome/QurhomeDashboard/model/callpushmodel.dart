@@ -23,8 +23,8 @@ class CallPushNSModel {
               : null;
       transportMedium = json[c_transportMedium].cast<String>();
       saveMessage = json[c_saveMessage];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

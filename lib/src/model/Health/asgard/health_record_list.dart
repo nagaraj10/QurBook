@@ -17,8 +17,8 @@ class HealthRecordList {
               result!.add(HealthResult.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -95,8 +95,8 @@ class HealthResult {
               dateTimeValue = DateTime.parse(createdOn!);
             }
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -200,13 +200,13 @@ class Metadata {
                   ? Laboratory.fromJson(json['laboratory'])
                   : null;
             }
-          } catch (e) {
-                        CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
             print(e);
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -275,8 +275,8 @@ class HealthRecordCategory {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -327,8 +327,8 @@ class HealthRecordType {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -389,8 +389,8 @@ class Doctor {
       profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
       isTelehealthEnabled = json['isTelehealthEnabled'];
       isMciVerified = json['isMciVerified'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -457,8 +457,8 @@ class Hospital {
       phoneNumber = json['phoneNumber'];
       phoneNumberTypeId = json['phoneNumberTypeId'];
       phoneNumberTypeName = json['phoneNumberTypeName'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -526,8 +526,8 @@ class Laboratory {
       phoneNumberTypeId = json['phoneNumberTypeId'];
       phoneNumberTypeName = json['phoneNumberTypeName'];
       healthOrganizationReferenceId = json['healthOrganizationReferenceId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -562,8 +562,8 @@ class DeviceReadings {
       parameter = json['parameter'];
       value = json['value'];
       unit = json['unit'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

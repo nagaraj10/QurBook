@@ -36,8 +36,8 @@ class Doctor {
       name = json[parameters.strName];
       specialization = json[parameters.strSpecilization];
       state = json[parameters.strState];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

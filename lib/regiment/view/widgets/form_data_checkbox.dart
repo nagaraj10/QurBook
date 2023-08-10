@@ -45,8 +45,8 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
           }
         }
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -115,8 +115,8 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
         return true;
       else
         return false;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }

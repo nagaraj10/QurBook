@@ -18,8 +18,8 @@ class MakePaymentResponse {
       if (json.containsKey('message')) {
             message = json['message'];
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -60,8 +60,8 @@ class Result {
       paymentGatewayDetail = json['paymentGatewayDetail'] != null
               ? new PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -106,8 +106,8 @@ class SubscribeResponse {
       packageid = json['packageid'];
       price = json['price'];
       docid = json['docid'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -192,8 +192,8 @@ class Payment {
       lastModifiedOn = json['lastModifiedOn'];
       isDiscount = json['isDiscount'];
       discountDetails = json['discountDetails'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -268,8 +268,8 @@ class PaymentStatus {
       referenceData = json['referenceData'] != null
               ? new ReferenceData.fromJson(json['referenceData'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -321,8 +321,8 @@ class ReferenceData {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -348,8 +348,8 @@ class Metadata {
   Metadata.fromJson(Map<String, dynamic> json) {
     try {
       paymentGateway = json['paymentGateway'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -368,8 +368,8 @@ class Cart {
   Cart.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -415,8 +415,8 @@ class PaymentGatewayDetail {
       paymentGatewayRequestId = json['paymentGatewayRequestId'];
       lastModifiedOn = json['lastModifiedOn'];
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -506,8 +506,8 @@ class ResponseInfo {
       createdAt = json['created_at'];
       modifiedAt = json['modified_at'];
       paymentGateWay = json['payment_gateway'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

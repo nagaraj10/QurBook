@@ -67,8 +67,8 @@ class Hospital {
           } else {
             zipcode = json[parameters.strZipcode].toString();
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

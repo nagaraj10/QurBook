@@ -52,8 +52,8 @@ class HubListViewController extends GetxController {
       }
       hubListResponse = HubListResponse.fromJson(json.decode(response.body));
       loadingData.value = false;
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       hubListResponse = null;
       print(e.toString());
@@ -86,8 +86,8 @@ class HubListViewController extends GetxController {
         );
         return false;
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       FlutterToast().getToast(
         CommonUtil().validString(
@@ -156,8 +156,8 @@ class HubListViewController extends GetxController {
           }
         },
       );
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       printError(info: e.toString());
       searchingBleDevice.value = false;
@@ -174,8 +174,8 @@ class HubListViewController extends GetxController {
       loadingData.value = false;
       await Future.delayed(Duration(microseconds: 10));
       getHubList();
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       printError(info: e.toString());
       loadingData.value = false;

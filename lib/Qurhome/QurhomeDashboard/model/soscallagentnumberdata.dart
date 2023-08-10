@@ -13,8 +13,8 @@ class SOSCallAgentNumberData {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -25,9 +25,9 @@ class SOSCallAgentNumberData {
       if (this.result != null) {
         data['result'] = this.result!.toJson();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-      CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return data;
@@ -44,8 +44,8 @@ class Result {
     try {
       exoPhoneNumber = json['exoPhoneNumber'];
       verificationPin = json['verificationPin'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -54,8 +54,8 @@ class Result {
     try {
       data['exoPhoneNumber'] = this.exoPhoneNumber;
       data['verificationPin'] = this.verificationPin;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return data;
   }

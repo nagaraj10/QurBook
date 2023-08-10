@@ -78,7 +78,7 @@ class _FeedbacksState extends State<Feedbacks> {
           selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
-    } on FetchException catch (e) {}
+    } on FetchException catch (e,stackTrace) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

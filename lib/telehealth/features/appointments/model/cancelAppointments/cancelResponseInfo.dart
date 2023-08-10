@@ -14,8 +14,8 @@ class CancelResponseInfo {
       result =
           json[parameters.dataResult] != null ? new ResponseInfoResult.fromJson(json[parameters.dataResult]) : null;
       isSuccess = json[parameters.strIsSuccess];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

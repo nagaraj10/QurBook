@@ -15,8 +15,8 @@ class CityListModel {
               result!.add(new CityListData.fromJson(v));
             });
           }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -28,8 +28,8 @@ class CityListModel {
       if (this.result != null) {
             data['result'] = this.result!.map((v) => v.toJson()).toList();
           }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return data;
   }
@@ -59,8 +59,8 @@ class CityListData {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       state = json['state'] != null ? new State.fromJson(json['state']) : null;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -76,8 +76,8 @@ class CityListData {
       if (this.state != null) {
             data['state'] = this.state!.toJson();
           }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;
@@ -108,8 +108,8 @@ class State {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -123,8 +123,8 @@ class State {
       data['isActive'] = this.isActive;
       data['createdOn'] = this.createdOn;
       data['lastModifiedOn'] = this.lastModifiedOn;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return data;
   }

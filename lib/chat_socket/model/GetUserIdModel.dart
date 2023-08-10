@@ -14,8 +14,8 @@ class GetUserIdModel {
       message = json['message'];
       result =
               json['result'] != null ? new UserIdResult.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -69,8 +69,8 @@ class UserIdResult {
       lastModifiedOn = json['lastModifiedOn'];
       isResident = json['isResident'];
       user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -108,8 +108,8 @@ class Documents {
       documentId = json['documentId'];
       documentName = json['documentName'];
       documentTypeId = json['documentTypeId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -133,8 +133,8 @@ class Specialty {
     try {
       id = json['id'];
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -155,8 +155,8 @@ class User {
   User.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

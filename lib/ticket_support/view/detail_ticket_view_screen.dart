@@ -87,9 +87,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       _controller = TabController(vsync: this, length: 3);
       _controller.addListener(_handleTabSelection);
     
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     // _getHistoryData(widget.ticketUid);
   }
@@ -267,9 +267,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       final strText = value['name'] as String?;
                       widgetForColumn.add(commonWidgetForDropDownValue(
                           displayName, CommonUtil().validString(strText)));
-                    } catch (e) {
+                    } catch (e,stackTrace) {
                       //print(e);
-                            CommonUtil().appLogs(message: e.toString());
+                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                     }
                     break;
                   } else {
@@ -284,8 +284,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           }
         }
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       if(kDebugMode){
         print(e);
       }
@@ -1166,8 +1166,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         print('Comment ticket exception in catch error: ${e.toString()}');
         return null;
       });
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print('Comment ticket exception : ${e.toString()}');
       return null;
     }
@@ -1191,9 +1191,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         print('Attachment ticket exception in catch error: ${e.toString()}');
         return null;
       });
-    } catch (e) {
+    } catch (e,stackTrace) {
       print('Attachment ticket exception : ${e.toString()}');
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       return null;
     }
   }

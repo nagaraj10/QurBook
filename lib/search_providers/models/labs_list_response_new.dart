@@ -16,8 +16,8 @@ class LabsSearchListResponse {
               result!.add(LabListResult.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -76,8 +76,8 @@ class LabListResult {
       phoneNumberTypeId = json['phoneNumberTypeId'];
       phoneNumberTypeName = json['phoneNumberTypeName'];
       healthOrganizationReferenceId = json['healthOrganizationReferenceId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

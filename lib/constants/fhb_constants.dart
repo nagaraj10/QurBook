@@ -897,8 +897,8 @@ Future<void> fbaLog({String? eveName, eveParams}) async {
               'navigationPage': 'Appointment page',
               'ns_type': 'appointment_list'
             });
-  } catch (e) {
+  } catch (e,stackTrace) {
     print(e);
-    CommonUtil().appLogs(message: e.toString());
+    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
   }
 }

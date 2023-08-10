@@ -13,8 +13,8 @@ class AppointmentDetailModel {
       result = json['result'] != null
               ? new AppointmentResult.fromJson(json['result'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -62,8 +62,8 @@ class AppointmentResult {
               ? new DoctorOrCarecoordinatorInfo.fromJson(
                   json['doctorOrCarecoordinatorInfo'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -147,8 +147,8 @@ class Upcoming {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     //sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'];
   }
@@ -234,8 +234,8 @@ class Past {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     /*sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'] != null
         ? new SharedHealthRecordMetadata.fromJson(
@@ -310,8 +310,8 @@ class SharedHealthRecordMetadata {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -351,8 +351,8 @@ class Metadata {
               ? new CategoryInfo.fromJson(json['categoryInfo'])
               : null;
       healthRecordsReference = json['healthRecordsReference'].cast<String>();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -402,8 +402,8 @@ class MediaTypeInfo {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -452,8 +452,8 @@ class CategoryInfo {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -487,8 +487,8 @@ class DeviceToken {
       parentMember = json['parentMember'] != null
               ? new Doctor.fromJson(json['parentMember'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -522,8 +522,8 @@ class Doctor {
               payload!.add(new Payload.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -561,8 +561,8 @@ class Payload {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -632,8 +632,8 @@ class ChatList {
     try {
       isDisable = json['isDisable'] != null ? json['isDisable'] : false;
       deliveredOn = json['deliveredOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     //isMuted = json['isMuted'];
@@ -686,8 +686,8 @@ class DoctorOrCarecoordinatorInfo {
               json['carecoordinatorProfilePicThumbnailUrl'];
       isCareCoordinator =
               json['isCareCoordinator'] != null ? json['isCareCoordinator'] : false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

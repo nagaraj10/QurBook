@@ -153,8 +153,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 : ShowCaseWidget.of(_myContext)!
                     .startShowCase([_DailyKey, _cardKey, _SymptomsKey]));
       });
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -245,8 +245,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
             cardColor = Color(CommonUtil().getMyPrimaryColor());
         }
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       cardColor = Color(CommonUtil().getMyPrimaryColor());
     }
@@ -281,8 +281,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       } else {
         return getDefaultIcon(activityname, uformName, iconSize);
       }
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return getDefaultIcon(activityname, uformName, iconSize);
     }
@@ -862,8 +862,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       } else {
         colors = Color(CommonUtil().getMyPrimaryColor());
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return colors = Color(CommonUtil().getMyPrimaryColor());
     }
@@ -875,8 +875,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       if (sheelBadgeController.sheelaIconBadgeCount.value > 0) {
         sheelBadgeController.getSheelaBadgeCount();
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }

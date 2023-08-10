@@ -312,8 +312,8 @@ class _DiseasesList extends State<DiseasesList> {
               }
             });
           }
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           Navigator.push(
             context,

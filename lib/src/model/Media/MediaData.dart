@@ -54,8 +54,8 @@ class MediaData {
       isDelete = json[parameters.strIsDelete];
       isManualTranscription = json[parameters.strisManualTranscription];
       isAITranscription = json[parameters.strisAITranscription];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

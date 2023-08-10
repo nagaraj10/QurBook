@@ -465,8 +465,8 @@ class CommonUtil {
             mediaMetaInfoObj.add(mediaMetaInfo);
           }
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
     }
 
@@ -544,8 +544,8 @@ class CommonUtil {
     late MediaResult selectedMediaData;
     try {
       selectedMediaData = PreferenceUtil.getMediaData(Constants.KEY_MEDIADATA);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     for (var mediaData in mediaDataList) {
@@ -718,8 +718,8 @@ class CommonUtil {
           }
         }
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList : [];
@@ -802,8 +802,8 @@ class CommonUtil {
         // }
         moveToLoginPage();
       });
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       // if (Platform.isIOS) {
       //   _firebaseMessaging.deleteInstanceID();
       // }
@@ -923,7 +923,7 @@ class CommonUtil {
           PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
         }
       });
-    } catch (e) {}*/
+    } catch (e,stackTrace) {}*/
     callBackToRefresh!();
   }
 
@@ -1365,8 +1365,8 @@ class CommonUtil {
               Constants.keyFamily, relationShip?.relationShipAry);
         });
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       _familyListBloc.getCustomRoles().then((relationShip) {
         PreferenceUtil.saveRelationshipArray(
             Constants.keyFamily, relationShip.relationShipAry);
@@ -1420,8 +1420,8 @@ class CommonUtil {
               PreferenceUtil.saveProfileData(
                   Constants.KEY_PROFILE, profileData);
             }
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
           }
 
@@ -1450,8 +1450,8 @@ class CommonUtil {
               PreferenceUtil.saveProfileData(
                   Constants.KEY_PROFILE_MAIN, profileData);
             }
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             PreferenceUtil.saveProfileData(
                 Constants.KEY_PROFILE_MAIN, profileData);
           }
@@ -1553,8 +1553,8 @@ class CommonUtil {
             .getMediTypesList()
             .then((value) {} as FutureOr Function(MediaDataList?));
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       await _mediaTypeBlock.getMediTypesList().then((value) {});
     }
   }
@@ -1706,8 +1706,8 @@ class CommonUtil {
 
         return df.format(now);
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       DateFormat format = DateFormat(
           CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
@@ -1947,7 +1947,7 @@ class CommonUtil {
       );
       print("value:${value}");
       return value;
-    } on PlatformException catch (e) {
+    } on PlatformException catch (e,stackTrace) {
       if (e.code == auth_error.notAvailable) {
         print(e.message);
         return false;
@@ -1986,8 +1986,8 @@ class CommonUtil {
         token,
         true,
       );
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -2023,8 +2023,8 @@ class CommonUtil {
     String? token = '';
     try {
       token = await _firebaseMessaging.getToken();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     await PreferenceUtil.saveString(
         Constants.STR_PUSH_TOKEN, token ?? 'not available');
@@ -2088,8 +2088,8 @@ class CommonUtil {
       var file = File('$dir/${imageName}$extension');
       await file.writeAsBytes(bytes);
       return file;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print('$e exception thrown');
     }
@@ -2148,8 +2148,8 @@ class CommonUtil {
           }
         }
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList : [];
@@ -2296,8 +2296,8 @@ class CommonUtil {
       hideLoadingDialog(context);
 
       showDialogPatientList(response?.result, myProfile, context, selectedUser);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       hideLoadingDialog(context);
 
@@ -2467,8 +2467,8 @@ class CommonUtil {
                     qurhomeDashboardController.updateBLETimer(Enable: false);
 
                     navigateToNotificationScreen(isFromQurday);
-                  } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+                  } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                     print(e);
                   }
@@ -2525,8 +2525,8 @@ class CommonUtil {
                 onTap: () {
                   try {
                     navigateToNotificationScreen(isFromQurday);
-                  } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+                  } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                     print(e);
                   }
@@ -2543,15 +2543,15 @@ class CommonUtil {
               );
             }
           });
-    } catch (e) {
+    } catch (e,stackTrace) {
       return GestureDetector(
         onTap: () {
           try {
             navigateToNotificationScreen(isFromQurday);
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
             print(e);
           }
@@ -2574,8 +2574,8 @@ class CommonUtil {
       Get.to(
         NotificationMain(isFromQurday: isFromQurday),
       );
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -2624,11 +2624,11 @@ class CommonUtil {
       if (newVersion > currentVersion) {
         _showVersionDialog(context, isForceUpdate);
       }
-    } on FirebaseException catch (exception) {
+    } on FirebaseException catch (exception,stackTrace) {
       // Fetch throttled.
-      CommonUtil().appLogs(message: exception.toString());
-    } catch (exception) {
-      CommonUtil().appLogs(message: exception.toString());
+      CommonUtil().appLogs(message: exception,stackTrace:stackTrace);
+    } catch (exception,stackTrace) {
+      CommonUtil().appLogs(message: exception,stackTrace:stackTrace);
       print('Unable to fetch remote config. Cached or default values will be '
           'used');
     }
@@ -2909,8 +2909,8 @@ class CommonUtil {
           ),
         );
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
     }
@@ -2950,8 +2950,8 @@ class CommonUtil {
         } else {
           return position;
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print(e.toString());
       }
@@ -3922,8 +3922,8 @@ class CommonUtil {
                                     FetchNotificationService()
                                         .updateNsOnTapAction(nsBody);
                                   });
-                                } catch (e) {
-                                  CommonUtil().appLogs(message: e.toString());
+                                } catch (e,stackTrace) {
+                                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                                 }
                               }
 
@@ -4341,8 +4341,8 @@ class CommonUtil {
       if (cacheDir.existsSync()) {
         cacheDir.deleteSync(recursive: true);
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print("Failed to delete the Temp dir : ${e.toString()}");
     }
@@ -4354,8 +4354,8 @@ class CommonUtil {
       if (appDir.existsSync()) {
         appDir.deleteSync(recursive: true);
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print("Failed to delete the support dir : ${e.toString()}");
     }
@@ -4420,8 +4420,8 @@ class CommonUtil {
       } else {
         return ResultFromResponse(false, 'Requested file not found');
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
       return ResultFromResponse(false, 'Failed to download the file');
@@ -5066,8 +5066,8 @@ class CommonUtil {
           }
         },
       );
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
       return Text('Failed to load');
@@ -5355,8 +5355,8 @@ class CommonUtil {
         return "";
       else
         return strText.trim();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return "";
   }
@@ -5365,8 +5365,8 @@ class CommonUtil {
     try {
       const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -5374,8 +5374,8 @@ class CommonUtil {
     try {
       const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -5383,8 +5383,8 @@ class CommonUtil {
     try {
       const platform = MethodChannel(strCloseSheelaDialog);
       platform.invokeMethod(strCloseSheelaDialog);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -5479,8 +5479,8 @@ class CommonUtil {
         strName = CommonUtil().titleCase(strName.toLowerCase());
       }
       return strName;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return strName;
   }
@@ -5676,8 +5676,8 @@ class CommonUtil {
     try {
       await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp]);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -5691,8 +5691,8 @@ class CommonUtil {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown
       ]);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -5704,8 +5704,8 @@ class CommonUtil {
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,
       ]);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -5726,8 +5726,8 @@ class CommonUtil {
               : '';
 
       return userName;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       //debugPrint(e.toString());
       return userName;
@@ -5745,8 +5745,8 @@ class CommonUtil {
         serviceEnabled = await Geolocator.isLocationServiceEnabled();
       }
       return serviceEnabled!;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }
@@ -5757,8 +5757,8 @@ class CommonUtil {
       const platform = MethodChannel(IS_BP_ENABLE_CHECK);
       bool? isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
       return isBluetoothEnable;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }
@@ -5947,8 +5947,8 @@ class CommonUtil {
           () => PDFViewController(),
         );
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) print(e.toString());
     }
@@ -6013,8 +6013,8 @@ class CommonUtil {
         } else {
           new CommonUtil().commonMethodToSetPreference();
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         new CommonUtil().commonMethodToSetPreference();
       }
@@ -6102,8 +6102,8 @@ class CommonUtil {
         value = false;
       }
       return value;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }
@@ -6125,8 +6125,8 @@ class CommonUtil {
           : strName1.trim().isNotEmpty
               ? strName1[0].toUpperCase()
               : "";
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -6203,8 +6203,8 @@ class CommonUtil {
         if (docPic.isNotEmpty) {
           try {
             docPic = json.decode(navRoute.split('&')[3]);
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           }
         } else {
           docPic = '';
@@ -6212,14 +6212,14 @@ class CommonUtil {
         if (patPic.isNotEmpty) {
           try {
             patPic = json.decode(navRoute.split('&')[7]);
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           }
         } else {
           patPic = '';
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -6246,8 +6246,8 @@ class CommonUtil {
         patientPicUrl: patPic,
         isWeb: isWeb,
       ));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) print(e.toString());
     }
@@ -6275,8 +6275,8 @@ class CommonUtil {
       formattedDate =
           DateFormat(format).format(DateTime.parse(strDate).toLocal());
       return formattedDate;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return '';
     }
@@ -6308,8 +6308,8 @@ class CommonUtil {
     if (type == 'Vitals') {
       try {
         return name;
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         return name;
       }
@@ -6320,14 +6320,14 @@ class CommonUtil {
         first = title.substring(title.indexOf("{") + 1, title.indexOf("}"));
         try {
           second = title.substring(title.indexOf("[") + 1, title.indexOf("]"));
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           return first;
         }
         return first + ' ' + second;
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         return title;
       }
@@ -6412,7 +6412,7 @@ class CommonUtil {
       } else {
         return DateTime.now();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       return DateTime.now();
     }
   }
@@ -6470,9 +6470,10 @@ class CommonUtil {
         fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2);
   }
 
-  appLogs({String message = '', String userName = ""}) async {
+  appLogs({var message, var stackTrace, String userName = ""}) async {
     try {
       String userId = '';
+      String messageTemp = '';
       userId = CommonUtil().validString(userName ?? "");
       if (userId.trim().isEmpty) {
         userId = PreferenceUtil.getStringValue(KEY_USERID) ?? "";
@@ -6481,6 +6482,13 @@ class CommonUtil {
         var regController = CommonUtil().onInitQurhomeRegimenController();
         String version = '';
         String oSVersion = '';
+        if (stackTrace != null) {
+          messageTemp = (message != null
+              ? (message.toString() + "\n" + stackTrace.toString())
+              : (stackTrace.toString()));
+        } else {
+          messageTemp = (message != null ? message.toString() : "");
+        }
         bool isProd = false;
         if ((BASE_URL == prodINURL) ||
             (BASE_URL == prodUSURL) ||
@@ -6503,7 +6511,7 @@ class CommonUtil {
           final apiResponse = QurHomeApiProvider();
           await apiResponse.saveAppLogs(
               userId: userId,
-              message: message,
+              message: messageTemp,
               userName: userName,
               version: version,
               oSVersion: oSVersion);
@@ -6511,15 +6519,14 @@ class CommonUtil {
           String strRandomId = getMyMeetingID().toString();
           ErrorAppLogDataModel errorAppLogDataModel = ErrorAppLogDataModel(
               itemId: strRandomId,
-              message: message,
+              message: messageTemp,
               appVersion: version,
               osVersion: oSVersion);
           regController.errorAppLogList?.add(errorAppLogDataModel);
-
           showErrorAppLogDialog(0);
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -6554,11 +6561,32 @@ class CommonUtil {
                     ),
                   ),
                 ),
+                InkWell(
+                  onTap: () {
+                    try {
+                      var regController =
+                          CommonUtil().onInitQurhomeRegimenController();
+                      regController.isErrorAppLogDialogShowing.value = false;
+                      regController.errorAppLogList?.clear();
+                      regController.errorAppLogList = [];
+                      Get.back();
+                    } catch (e, stackTrace) {
+                      if (kDebugMode) {
+                        printError(info: e.toString());
+                      }
+                    }
+                  },
+                  child: Icon(
+                    Icons.clear_all,
+                    color: Colors.white,
+                    //size: 20.0.sp,
+                  ),
+                ),
                 IconButton(
                   icon: Icon(
                     Icons.close,
                     color: Colors.white,
-                    size: 20.0.sp,
+                    //size: 20.0.sp,
                   ),
                   onPressed: () {
                     try {
@@ -6572,7 +6600,7 @@ class CommonUtil {
                           ((regController.errorAppLogList?.length ?? 0) > 0)) {
                         showErrorAppLogDialog(1);
                       }
-                    } catch (e) {
+                    } catch (e, stackTrace) {
                       if (kDebugMode) {
                         printError(info: e.toString());
                       }
@@ -6680,7 +6708,7 @@ class CommonUtil {
 
         showErrorLogPopUp(regController.errorAppLogList![0]);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -6844,8 +6872,8 @@ class VideoCallCommonUtils {
       }
 
       //return isCallSent;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         print(e);
@@ -6883,8 +6911,8 @@ class VideoCallCommonUtils {
     try {
       var parsedDate = DateTime.parse(patientDOB);
       age = calculateAge(parsedDate);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     //await handleCameraAndMic();
 
@@ -7070,8 +7098,8 @@ class VideoCallCommonUtils {
           if (!isFromAppointment!) {
             callApiToUpdateNonAppointment();
           }
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         }
         final call_start_time =
             DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
@@ -7425,8 +7453,8 @@ class VideoCallCommonUtils {
                   if (!isFromAppointment!) {
                     callApiToUpdateNonAppointment();
                   }
-                } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+                } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                 }
                 final call_start_time =
                     DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
@@ -7485,20 +7513,20 @@ class VideoCallCommonUtils {
 
     /*try {
       mtTitle = await prefs.getValueBasedOnKey("display_name");
-    } catch (e) {}
+    } catch (e,stackTrace) {}
     try {
       specialityName = await prefs.getValueBasedOnKey("speciality");
-    } catch (e) {}
+    } catch (e,stackTrace) {}
     try {
       doctor_id = await prefs.getValueBasedOnKey("doctor_id");
-    } catch (e) {}*/
+    } catch (e,stackTrace) {}*/
     try {
       final SharedPreferences sharedPrefs =
           await SharedPreferences.getInstance();
       userIdForNotify = await sharedPrefs.getString('userID');
       userIdForNotify = json.decode(userIdForNotify!);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -7523,8 +7551,8 @@ class VideoCallCommonUtils {
           print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
         }
       });
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -7624,8 +7652,8 @@ class VideoCallCommonUtils {
           .collection("call_log")
           .doc("$id")
           .set({"call_status": "call_ended_by_user"});
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     try {
       CommonUtil.isCallStarted = false;
@@ -7638,8 +7666,8 @@ class VideoCallCommonUtils {
         var sheelaAIController = Get.find<SheelaAIController>();
         sheelaAIController.updateTimer(enable: true);
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -7670,8 +7698,8 @@ class VideoCallCommonUtils {
           patienInfo: patienInfo,
           isFromAppointment: isFromAppointment,
           isDoctor: isDoctor);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -7709,10 +7737,10 @@ class VideoCallCommonUtils {
                     .doc("$cid")
                     .set({"call_status": "call_ended_by_user"});
                 regController.meetingId.value = "";
-              } catch (e) {}
+              } catch (e,stackTrace) {}
               Navigator.pop(context!);
-            } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+            } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
               print(e);
             }
@@ -7819,8 +7847,8 @@ class VideoCallCommonUtils {
           });
         }
       }).onError((e) {});
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -7890,8 +7918,8 @@ class VideoCallCommonUtils {
       CommonUtil.isCallStarted = false;
       CommonUtil.bookedForId = null;
       regController.meetingId.value = "";
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -7915,8 +7943,8 @@ class VideoCallCommonUtils {
             request: getCallLogModel(callStartTime, "", "Started", true));
         await apiResponse.startRecordSOSCall();
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -7942,8 +7970,8 @@ class VideoCallCommonUtils {
         };
         await apiResponse.callMissedCallNsAlertAPI(isFromSheelaRequest: body);
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -8005,8 +8033,8 @@ class VideoCallCommonUtils {
       sheelaAIController.isCallStartFromSheela = false;
       sheelaAIController.updateTimer(enable: true);
       sheelaAIController.getAIAPIResponseFor(strCallMyCC, null);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 }

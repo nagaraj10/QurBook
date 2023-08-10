@@ -12,8 +12,8 @@ class CreateSubscribeModel {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? PaymentResult.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -40,8 +40,8 @@ class PaymentResult {
       paymentGatewayDetail = json['paymentGatewayDetail'] != null
               ? PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -89,8 +89,8 @@ class Payment {
       purpose = json['purpose'];
       subscriptionid = json['subscriptionid'];
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -118,8 +118,8 @@ class Metadata {
   Metadata.fromJson(Map<String, dynamic> json) {
     try {
       paymentGateway = json['paymentGateway'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -145,8 +145,8 @@ class PaymentGatewayDetail {
               ? PaymentMetadata.fromJson(json['metadata'])
               : null;
       paymentgatewayrequestid = json['paymentgatewayrequestid'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -224,8 +224,8 @@ class PaymentMetadata {
       createdAt = json['created_at'];
       modifiedAt = json['modified_at'];
       paymentGateWay = json['payment_gateway'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

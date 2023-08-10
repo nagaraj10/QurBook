@@ -34,8 +34,8 @@ class GlobalSearchBloc implements BaseBloc {
       var globalSearch =
           await _globalSearchrepository.getSearchedMediaType(param);
       globalSearchSink.add(ApiResponse.completed(globalSearch));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       globalSearchSink.add(ApiResponse.error(e.toString()));
     }

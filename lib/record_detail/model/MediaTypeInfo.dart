@@ -59,8 +59,8 @@ class MediaTypeInfo {
       lastModifiedOn = json[parameters.strLastModifiedOn];
       logo = json[parameters.strLogo];
       name = json[parameters.strName];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

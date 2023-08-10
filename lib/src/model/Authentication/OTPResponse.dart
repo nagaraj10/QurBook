@@ -19,8 +19,8 @@ class OTPResponse {
      response = json[parameters.strResponse] != null
              ? Response.fromJson(json[parameters.strResponse])
              : null;
-   } catch (e) {
-     CommonUtil().appLogs(message: e.toString());
+   } catch (e,stackTrace) {
+     CommonUtil().appLogs(message: e,stackTrace:stackTrace);
    }
   }
 
@@ -57,8 +57,8 @@ class Response {
       phoneNumber = json[parameters.strPhoneNumber];
       lastLoggedIn = json[parameters.strLastLoggedIn];
       authToken = json[parameters.strAuthToken];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

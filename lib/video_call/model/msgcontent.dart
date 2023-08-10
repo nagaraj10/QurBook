@@ -12,8 +12,8 @@ class Content {
     try {
       messageTitle = json[c_messageTitle];
       messageBody = json[c_messageBody];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

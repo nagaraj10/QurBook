@@ -96,8 +96,8 @@ class AppointmentDetailsController extends GetxController {
         try {
           endTimeForTransportation = DateTime.parse(
               appointmentDetailsModel?.result?.plannedStartDateTime ?? "");
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         }
         if (appointmentType.value.toLowerCase() != strTransportation) {
@@ -277,8 +277,8 @@ class AppointmentDetailsController extends GetxController {
       }
 
       loadingData.value = false;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: "error in try: " + e.toString());
@@ -306,8 +306,8 @@ class AppointmentDetailsController extends GetxController {
       addressLine2 = "";
       city = "";
       state = "";
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -321,8 +321,8 @@ class AppointmentDetailsController extends GetxController {
           appointmentDetailsModel!.result?.additionalInfo!.title ?? "";
       description.value =
           appointmentDetailsModel!.result?.additionalInfo!.description ?? "";
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -347,8 +347,8 @@ class AppointmentDetailsController extends GetxController {
 
       locationUrl =
           appointmentDetailsModel!.result?.additionalInfo?.locationUrl ?? "";
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -387,8 +387,8 @@ class AppointmentDetailsController extends GetxController {
         return "--";
       else
         return strText.trim();
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());

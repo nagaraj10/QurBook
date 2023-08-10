@@ -10,8 +10,8 @@ class SendMailTo {
   SendMailTo.fromJson(dynamic json) {
     try{
     _id = json['id'];
-    }catch(e){
-      CommonUtil().appLogs(message: e.toString());
+    }catch(e,stackTrace){
+      CommonUtil().appLogs(message: e.toString(),stackTrace:stackTrace.toString());
     }
   }
   dynamic _id;

@@ -148,8 +148,8 @@ class DoctorIds {
       gender = json[parameters.strGender];
       specialization = json[parameters.strSpecilization];
       profilePicThumbnailURL = json[parameters.strprofilePicThumbnailURL];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -74,8 +74,8 @@ class QurHomeApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -115,8 +115,8 @@ class QurHomeApiProvider {
       // }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -142,8 +142,8 @@ class QurHomeApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -164,15 +164,15 @@ class QurHomeApiProvider {
         return responseJson;
       } else {
         regController.careCoordinatorIdEmptyMsg.value =
-            CommonUtil().validString(json.decode(responseJson.body));
-        return null;
+            CommonUtil().validString((responseJson.body)??"");
+        return responseJson;
       }
     } on SocketException {
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(e.toString());
@@ -211,7 +211,7 @@ class QurHomeApiProvider {
         }
         isCallSent = false;
       }
-    } on Exception catch (e) {
+    } on Exception catch (e,stackTrace) {
       isCallSent = false;
     }
     return isCallSent;
@@ -241,8 +241,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -264,8 +264,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -298,8 +298,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -321,8 +321,8 @@ class QurHomeApiProvider {
       } else {
         return authService.createErrorJsonString(response);
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       //print(e);
     }
@@ -352,8 +352,8 @@ class QurHomeApiProvider {
         responseJson = authService.createErrorJsonString(response);
         return responseJson;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       //print(e);
     }
@@ -379,7 +379,7 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {}
+    } catch (e,stackTrace) {}
   }*/
 
   Future<dynamic> startRecordSOSCall() async {
@@ -411,8 +411,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -441,8 +441,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -470,8 +470,8 @@ class QurHomeApiProvider {
       regController.SOSAgentNumberEmptyMsg.value =
           CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       regController.SOSAgentNumberEmptyMsg.value =
           CommonUtil().validString(e.toString());
@@ -527,8 +527,8 @@ class QurHomeApiProvider {
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(e.toString());
@@ -555,8 +555,8 @@ class QurHomeApiProvider {
       } else {
         return false;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }
@@ -637,8 +637,8 @@ class QurHomeApiProvider {
       } else {
         return false;
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }
@@ -666,9 +666,9 @@ class QurHomeApiProvider {
     } on SocketException {
       regController.isShowSOSButton.value = false;
       throw FetchDataException(strNoInternet);
-    } catch (e) {
+    } catch (e,stackTrace) {
       regController.isShowSOSButton.value = false;
-      CommonUtil().appLogs(message: e.toString());
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       return null;
     }
   }
@@ -702,7 +702,7 @@ class QurHomeApiProvider {
       } else {
         //Failure
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       if (kDebugMode) {
         printError(info: e.toString());
       }

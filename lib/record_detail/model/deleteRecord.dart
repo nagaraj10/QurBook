@@ -13,8 +13,8 @@ class DeleteRecord {
     try {
       mediaMetaIds = json[parameters.strMediaMetaIds].cast<String>();
       mediaMasterIds=json[parameters.strmediaMasterIds].cast<String>();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

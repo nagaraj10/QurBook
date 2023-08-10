@@ -18,8 +18,8 @@ class CareCoordinatorData {
           result!.add(new Result.fromJson(v));
         });
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -31,8 +31,8 @@ class CareCoordinatorData {
       if (this.result != null) {
         data['result'] = this.result!.map((v) => v.toJson()).toList();
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
     return data;
@@ -53,8 +53,8 @@ class Result {
       userId = json['userId'];
       userType = json['userType'];
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -65,8 +65,8 @@ class Result {
       data['userId'] = this.userId;
       data['userType'] = this.userType;
       data['name'] = this.name;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -88,8 +88,8 @@ class CallMessagingErrorResponse {
       diagnostics = json['diagnostics'] != null
               ? new Diagnostics.fromJson(json['diagnostics'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -118,8 +118,8 @@ class Diagnostics {
               ? new ErrorData.fromJson(json['errorData'])
               : null;
       includeErrorDataInResponse = json['includeErrorDataInResponse'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -144,8 +144,8 @@ class ErrorData {
     try {
       code = json['code'];
       message = json['message'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

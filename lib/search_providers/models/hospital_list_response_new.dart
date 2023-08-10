@@ -23,8 +23,8 @@ class HospitalsSearchListResponse {
                 ? Diagnostics.fromJson(json['diagnostics'])
                 : null;
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
   }
@@ -83,8 +83,8 @@ class HospitalsListResult {
       healthOrganizationName = json['healthOrganizationName'];
       try {
             name = json['name'];
-          } catch (e) {
-                        CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           }
       addressLine1 = json['addressLine1'];
@@ -99,8 +99,8 @@ class HospitalsListResult {
       phoneNumberTypeId = json['phoneNumberTypeId'];
       phoneNumberTypeName = json['phoneNumberTypeName'];
       specialization = json['specialization'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

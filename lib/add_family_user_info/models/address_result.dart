@@ -17,8 +17,8 @@ class AddressResult {
       id = json[CommonConstants.strId];
       code = json[CommonConstants.strCode];
       name = json[CommonConstants.strName];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

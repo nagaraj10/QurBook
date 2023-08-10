@@ -45,8 +45,8 @@ class CategoryData {
       isRead = json[parameters.strIsRead];
       isEdit = json[parameters.strIsEdit];
       isDelete = json[parameters.strIsDelete];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

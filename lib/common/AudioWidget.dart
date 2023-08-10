@@ -384,9 +384,9 @@ class AudioWidgetState extends State<AudioWidget> {
         },
       );
       //TODO: Check for audio
-    } catch (err) {
+    } catch (err,stackTrace) {
       print(err.toString());
-      CommonUtil().appLogs(message: err.toString());
+      CommonUtil().appLogs(message: err.toString(),stackTrace:stackTrace.toString());
     }
 
     setState(
@@ -413,8 +413,8 @@ class AudioWidgetState extends State<AudioWidget> {
       final contents = await file.readAsBytes();
 
       return contents;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       return null;
     }
   }
@@ -447,8 +447,8 @@ class AudioWidgetState extends State<AudioWidget> {
 
         isPlaying = false;
       }
-    } catch (err) {
-      CommonUtil().appLogs(message: err.toString());
+    } catch (err,stackTrace) {
+      CommonUtil().appLogs(message: err.toString(),stackTrace:stackTrace.toString());
     }
 
     setState(() {});
@@ -475,8 +475,8 @@ class AudioWidgetState extends State<AudioWidget> {
       sliderCurrentPosition = 0.0;
       _playerTxt = '00:00';
       isPlaying = false;
-    } catch (err) {
-      CommonUtil().appLogs(message: err.toString());
+    } catch (err,stackTrace) {
+      CommonUtil().appLogs(message: err.toString(),stackTrace:stackTrace.toString());
     }
     setState(() {});
   }

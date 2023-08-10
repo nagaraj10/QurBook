@@ -29,9 +29,9 @@ class PatientLogIn {
       diagnostics = json['diagnostics'] != null
               ? DiagnosticsLogin.fromJson(json['diagnostics'])
               : null;
-    } catch (e) {
+    } catch (e,stackTrace) {
       CommonUtil()
-          .appLogs(message: e.toString(), userName: (json[struserName] ?? ""));
+          .appLogs(message: e,stackTrace:stackTrace, userName: (json[struserName] ?? ""));
     }
   }
 
@@ -61,8 +61,8 @@ class DiagnosticsLogin {
               ? ErrorDataLogin.fromJson(json['errorData'])
               : null;
       includeErrorDataInResponse = json['includeErrorDataInResponse'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -88,8 +88,8 @@ class ErrorDataLogin {
       userId = json['userId'];
       userName = json['userName'];
       source = json['source'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

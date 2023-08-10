@@ -25,8 +25,8 @@ class PlanViewModel extends ChangeNotifier {
         myPLanListResult = myPlanListModel.result;
       }
       return myPlanListModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -83,8 +83,8 @@ class PlanViewModel extends ChangeNotifier {
     try {
       var searchListModel = await searchListService.getSearchList(title);
       return searchListModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -93,8 +93,8 @@ class PlanViewModel extends ChangeNotifier {
       final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
       var searchListModel = await searchListService.getUserProviderList(userid);
       return searchListModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -125,8 +125,8 @@ class PlanViewModel extends ChangeNotifier {
         var planListModel =
             await myPlanService.getPlanDetailById(userid, packageId!);
         return planListModel;
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
     }
   }

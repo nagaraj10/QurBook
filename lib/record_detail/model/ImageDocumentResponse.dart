@@ -19,8 +19,8 @@ class ImageDocumentResponse {
       response = json['response'] != null
               ? Response.fromJson(json['response'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -46,8 +46,8 @@ class Response {
     try {
       count = json['count'];
       data = json['data'] != null ? Data.fromJson(json['data']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -71,8 +71,8 @@ class Data {
     try {
       fileContent = json['fileContent'];
       fileType = json['fileType'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

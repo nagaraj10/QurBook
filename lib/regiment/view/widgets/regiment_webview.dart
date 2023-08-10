@@ -45,43 +45,42 @@ class _RegimentWebViewState extends State<RegimentWebView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 24.0.sp,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+      appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 24.0.sp,
           ),
-          title: Text(widget.title!),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        body: Stack(
-          children: <Widget>[
-            Html(
-              data: Platform.isIOS
-                  ? widget.selectedUrl?.replaceAll(
-                        'src="//',
-                        'src="https://',
-                      ) ??
-                      ''
-                  : widget.selectedUrl?.replaceAll(
-                        'src="//',
-                        'src="',
-                      ) ??
-                      '',
-              onLinkTap: (linkUrl, context, attributes, element) {
-                CommonUtil().openWebViewNew(
-                  widget.title,
-                  linkUrl,
-                  false,
-                );
-                print(linkUrl);
-              },
-            ),
-          ],
-        ));
+        title: Text(widget.title!),
+      ),
+      body: SingleChildScrollView(
+        child: Html(
+          data: Platform.isIOS
+              ? widget.selectedUrl?.replaceAll(
+                    'src="//',
+                    'src="https://',
+                  ) ??
+                  ''
+              : widget.selectedUrl?.replaceAll(
+                    'src="//',
+                    'src="',
+                  ) ??
+                  '',
+          onLinkTap: (linkUrl, context, attributes, element) {
+            CommonUtil().openWebViewNew(
+              widget.title,
+              linkUrl,
+              false,
+            );
+            
+          },
+        ),
+      ),
+    );
   }
 }

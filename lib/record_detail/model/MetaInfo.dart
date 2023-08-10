@@ -62,8 +62,8 @@ class MetaInfo {
       hospital = json[parameters.strhospital] != null
               ? Hospital.fromJson(json[parameters.strhospital])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -17,8 +17,8 @@ class DoctorListFromHospitalModel {
               result!.add(new ResultFromHospital.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -77,8 +77,8 @@ class ResultFromHospital {
       healthOrganization = json['healthOrganization'] != null
               ? new HealthOrganization.fromJson(json['healthOrganization'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -163,8 +163,8 @@ class DoctorFromHos {
             });
           }
       isResident = json['isResident'] ?? false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -301,8 +301,8 @@ class UserResponse {
               userContactCollection3!.add(new UserContactCollection3.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -374,8 +374,8 @@ class UserContactCollection3 {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       email = json['email'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -415,8 +415,8 @@ class DoctorLanguageCollection {
       language = json['language'] != null
               ? new Language.fromJson(json['language'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -466,8 +466,8 @@ class Language {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -533,8 +533,8 @@ class DoctorProfessionalDetailCollection {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -581,8 +581,8 @@ class QualificationInfo {
               university!.add(new Degree.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -608,8 +608,8 @@ class Degree {
     try {
       id = json['id'];
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -631,8 +631,8 @@ class MedicalCouncilInfo {
     try {
       id = json['id'];
       mciNumber = json['mciNumber'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -654,8 +654,8 @@ class ClinicName {
     try {
       id = json['id'];
       name = json['name'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -704,8 +704,8 @@ class DoctorFeeCollection {
       lastModifiedOn = json['lastModifiedOn'];
       feeType =
               json['feeType'] != null ? new FeeType.fromJson(json['feeType']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -760,8 +760,8 @@ class FeeType {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -804,8 +804,8 @@ class HealthOrganization {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       domainUrl = json['domainUrl'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -857,8 +857,8 @@ class UserAddressCollectionForHospital {
       lastModifiedOn = json['lastModifiedOn'];
       city = json['city'] != null ? new City.fromJson(json['city']) : null;
       state = json['state'] != null ? new State.fromJson(json['state']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

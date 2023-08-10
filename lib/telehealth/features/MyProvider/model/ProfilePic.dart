@@ -11,8 +11,8 @@ class ProfilePic {
     try {
       type = json['type'];
       data = json['data'].cast<int>();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

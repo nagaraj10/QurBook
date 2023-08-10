@@ -21,8 +21,8 @@ class UserHealthResponseList {
        response = json[parameters.strResponse] != null
                ? Response.fromJson(json[parameters.strResponse])
                : null;
-     } catch (e) {
-       CommonUtil().appLogs(message: e.toString());
+     } catch (e,stackTrace) {
+       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
      }
   }
 
@@ -49,8 +49,8 @@ class Response {
       count = json[parameters.strCount];
       data =
               json[parameters.strData] != null ? CompleteData.fromJson(json[parameters.strData]) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

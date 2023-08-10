@@ -28,8 +28,8 @@ class RegimentQurHubResponseModel {
     try {
       isSuccess = json['isSuccess'];
       result = json['result'] != null ? new Result.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -61,8 +61,8 @@ class Result {
               upcomingActivities!.add(new RegimentDataModel.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -14,8 +14,8 @@ class AddToCartModel {
       message = json['message'];
       if(json.containsKey('result'))
           result = json['result'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

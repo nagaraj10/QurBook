@@ -15,8 +15,8 @@ class SpeechModelAPIResponse {
       isSuccess = json['isSuccess'] ?? false;
       result =
               json['result'] != null ? SheelaResponse.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -155,8 +155,8 @@ class SheelaResponse {
             });
             buttons = buttonsList;
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -229,8 +229,8 @@ class Buttons {
       sayText = (json['saytext'] ?? '');
       skipTts = (json['skip_tts'] ?? false);
       relationshipIdNotRequired = (json['relationshipIdNotRequired'] ?? false);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -259,8 +259,8 @@ class VideoLinks {
       title = json['title'];
       thumbnail = json['thumbnail'];
       url = json['url'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

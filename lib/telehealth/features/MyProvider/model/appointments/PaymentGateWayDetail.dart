@@ -33,8 +33,8 @@ class PaymentGatewayDetail {
       paymentGatewayRequestId = json['paymentGatewayRequestId'];
       lastModifiedOn = json['lastModifiedOn'];
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -122,8 +122,8 @@ class ResponseInfo {
       createdAt = json['created_at'];
       modifiedAt = json['modified_at'];
       paymentGateWay = json['payment_gateway'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -166,8 +166,8 @@ class PaymentRequestResult {
       paymentRequest = json['payment_request'] != null
               ? new PaymentRequestModel.fromJson(json['payment_request'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
