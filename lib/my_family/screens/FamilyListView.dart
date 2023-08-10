@@ -88,14 +88,28 @@ class FamilyListView {
         LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     try {
+      String? name = "";
+      try {
+        if (((myProfile?.result?.firstName != null) &&
+            (myProfile?.result?.firstName != ""))) {
+          name = '${myProfile?.result?.firstName?.capitalizeFirstofEach} ';
+        }
+        if (((myProfile?.result?.lastName != null) &&
+            (myProfile?.result?.lastName != ""))) {
+          name += '${myProfile?.result?.lastName?.capitalizeFirstofEach}';
+        }
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      }
       sharedByMeList!.insert(
           0,
           SharedByUsers(
               id: myProfile!.result!.id,
               nickName: 'Self',
+              nickNameSelf: name,
               relationship: RelationsShipModel(name: 'Self')));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     /* if (sharedByMeList == null) {
@@ -138,10 +152,14 @@ class FamilyListView {
                         size: 24.0.sp,
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(_keyLoader.currentContext!,
-                                rootNavigator: true)
-                            .pop();
+                        try {
+                          Navigator.of(context).pop();
+                          Navigator.of(_keyLoader.currentContext!,
+                                  rootNavigator: true)
+                              .pop();
+                        } catch (e,stackTrace) {
+                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                        }
                       },
                     )
                   ],
@@ -290,12 +308,14 @@ class FamilyListView {
                                             ? sharedByMe[index].child != null
                                                 ? getName(
                                                     sharedByMe[index].child!)!
-                                                : 'Self'
+                                                : '${(sharedByMe[index].nickNameSelf?.capitalizeFirstofEach)}'
                                             : (sharedByMe[index].nickName !=
                                                     null
-                                                ? sharedByMe[index]
+                                                ? (sharedByMe[index]?.nickName?.toLowerCase() ==
+                                            variable.Self.toLowerCase())?'${(sharedByMe[index].nickNameSelf?.capitalizeFirstofEach)}':
+                                        (sharedByMe[index]
                                                     .nickName
-                                                    ?.capitalizeFirstofEach
+                                                    ?.capitalizeFirstofEach)
                                                 /* toBeginningOfSentenceCase(
                                                     sharedByMe[index]
                                                         .nickName
