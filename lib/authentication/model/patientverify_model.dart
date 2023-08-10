@@ -27,9 +27,9 @@ class PatientSignupOtp {
       userId = json[strUserId];
       message = json[strmessage];
       isSuccess = json[strIsSuccess];
-    } catch (e) {
+    } catch (e,stackTrace) {
       CommonUtil()
-          .appLogs(message: e.toString(), userName: (json[struserName] ?? ""));
+          .appLogs(message: e,stackTrace:stackTrace, userName: (json[struserName] ?? ""));
     }
   }
 

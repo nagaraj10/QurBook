@@ -34,8 +34,8 @@ class Status {
       createdBy = json['createdBy']!=null?json['createdBy']:"";
       createdOn = json['createdOn']!=null?json['createdOn']:"";
       lastModifiedOn = json['lastModifiedOn']!=null?json['lastModifiedOn']:"";
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

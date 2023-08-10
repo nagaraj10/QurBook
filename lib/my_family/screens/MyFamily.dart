@@ -328,8 +328,8 @@ class _MyFamilyState extends State<MyFamily> {
       fulName = myProfile.result != null
           ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
           : '';
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       fulName = myProfile.result != null
           ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
@@ -664,8 +664,8 @@ class _MyFamilyState extends State<MyFamily> {
           CommonUtil().getUserProfileData();
         });
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -775,9 +775,9 @@ class _MyFamilyState extends State<MyFamily> {
                                           }
 
                                           isPrimaryNoSelected = true;
-                                        } catch (e) {
+                                        } catch (e,stackTrace) {
                                           CommonUtil()
-                                              .appLogs(message: e.toString());
+                                              .appLogs(message: e,stackTrace:stackTrace);
 
                                           isPrimaryNoSelected = false;
                                         }

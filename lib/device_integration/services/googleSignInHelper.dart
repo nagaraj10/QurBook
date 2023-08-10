@@ -79,8 +79,8 @@ class GoogleSignInHelper {
         await _googleSignIn.disconnect();
       }
       return true;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return false;
     }

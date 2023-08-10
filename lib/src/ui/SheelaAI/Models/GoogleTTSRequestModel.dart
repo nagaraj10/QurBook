@@ -26,8 +26,8 @@ class GoogleTTSRequestModel {
       audioConfig = (json[straudioConfig] ?? '').isEmpty
               ? AudioConfig()
               : AudioConfig.fromJson(json[straudioConfig]);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -49,8 +49,8 @@ class InputTTS {
   InputTTS.fromJson(Map<String, dynamic> json) {
     try {
       text = json[strtext] ?? '';
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -68,8 +68,8 @@ class Voice {
   Voice.fromJson(Map<String, dynamic> json) {
     try {
       languageCode = json[strlanguageCode];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -87,8 +87,8 @@ class AudioConfig {
   AudioConfig.fromJson(Map<String, dynamic> json) {
     try {
       audioEncodingType = json[audioEncoding];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

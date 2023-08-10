@@ -19,8 +19,8 @@ class CityModel {
               result!.add(City.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -58,8 +58,8 @@ class CityResult {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       state = json['state'] != null ? State.fromJson(json['state']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

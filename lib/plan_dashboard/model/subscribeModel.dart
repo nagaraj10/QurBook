@@ -12,8 +12,8 @@ class SubscribeModel {
       isSuccess = json['isSuccess'];
       result =
           json['result'] != null ? SubscibeResult.fromJson(json['result']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -37,8 +37,8 @@ class SubscibeResult {
     try {
       result = json['Result'];
       message = json['Message'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

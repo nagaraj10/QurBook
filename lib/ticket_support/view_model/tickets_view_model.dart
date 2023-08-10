@@ -41,8 +41,8 @@ class TicketViewModel extends ChangeNotifier {
       try {
         var userTicketModel = await userTicketService.getTicketList();
         return userTicketModel;
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         print('Exception in getting list of Ticket VM Model : ${e.toString()}');
       }
     }
@@ -54,8 +54,8 @@ class TicketViewModel extends ChangeNotifier {
       try {
         var userTicketModel = await userTicketService.getTicketDetails(sId);
         return userTicketModel;
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print('Exception in getting list of Ticket VM Model : ${e.toString()}');
       }
@@ -69,8 +69,8 @@ class TicketViewModel extends ChangeNotifier {
       try {
         var userTicketTypesModel = await userTicketService.getTicketTypesList();
         return userTicketTypesModel;
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print(
             'Exception in Get ticket category Ticket VM Model : ${e.toString()}');
@@ -85,8 +85,8 @@ class TicketViewModel extends ChangeNotifier {
     if (userid != null) {
       try {
         createTicketModel = await userTicketService.createTicket();
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print('Exception in Craete Ticket VM Model : ${e.toString()}');
       }
@@ -102,8 +102,8 @@ class TicketViewModel extends ChangeNotifier {
       try {
         var commentTicketModel = await userTicketService.commentTicket();
         return commentTicketModel;
-      } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print('Exception in Comment Ticket VM Model : ${e.toString()}');
       }

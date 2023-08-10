@@ -27,8 +27,8 @@ class DoctorsSearchListResponse {
                 ? Diagnostics.fromJson(json['diagnostics'])
                 : null;
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -101,8 +101,8 @@ class DoctorsListResult {
       isTelehealthEnabled = json['isTelehealthEnabled'];
       isMciVerified = json['isMciVerified'];
       patientAssociationRequest = json['patientAssociationRequest'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -140,8 +140,8 @@ class Diagnostics {
               ? DoctorsListResult.fromJson(json['errorData'])
               : null;
       includeErrorDataInResponse = json['includeErrorDataInResponse'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -34,8 +34,8 @@ class AdditionalInfo {
       _uhidNumber = json['uhidNumber'];
       _visitReason = json['visitReason'];
       _patientHistory = json['patientHistory'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   int? _age;

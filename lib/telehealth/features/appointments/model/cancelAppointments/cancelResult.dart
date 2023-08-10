@@ -17,8 +17,8 @@ class CancelResult {
               ? new RefundInfo.fromJson(json[parameters.strRefundInfo])
               : null;
       status = json[parameters.strStatus];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

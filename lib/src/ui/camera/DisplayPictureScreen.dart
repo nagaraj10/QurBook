@@ -221,8 +221,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     try {
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
       setFileName();
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
 

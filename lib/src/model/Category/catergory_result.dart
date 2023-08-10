@@ -53,8 +53,8 @@ class CategoryResult {
       if (json.containsKey(parameters.strIsDelete)) {
             isDelete = json[parameters.strIsDelete];
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

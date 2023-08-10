@@ -12,8 +12,8 @@ class GoogleTTSResponseModel {
       isSuccess = json['isSuccess'];
       payload =
               json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -35,8 +35,8 @@ class Payload {
   Payload.fromJson(Map<String, dynamic> json) {
     try {
       audioContent = json['audioContent'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

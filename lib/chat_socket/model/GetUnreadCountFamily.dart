@@ -16,8 +16,8 @@ class GetUnreadCountFamily {
               result!.add(new Result.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -39,8 +39,8 @@ class Result {
   Result.fromJson(Map<String, dynamic> json) {
     try {
       count = json['count'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

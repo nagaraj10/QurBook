@@ -13,8 +13,8 @@ class SignInAndSignUpResponse {
     try {
       createdTimeString = parsedJson[parameters.strCreationTime];
       expiryTimeString = parsedJson[parameters.strExpirationTime];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   Map<String, dynamic> toJson() {

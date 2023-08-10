@@ -50,8 +50,8 @@ class DoctorsListBlock implements BaseBloc {
       var userHealthResponseList =
           await _doctorsListRepository.getDoctorsListFromSearch(param);
       doctorsListSink.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       doctorsListSink.add(ApiResponse.error(e.toString()));
     }
@@ -65,8 +65,8 @@ class DoctorsListBlock implements BaseBloc {
       userHealthResponseList = await _doctorsListRepository
           .getDoctorsListFromSearchNew(param, isSkipUnknown);
       doctorsListNewSink.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       doctorsListNewSink.add(ApiResponse.error(e.toString()));
     }
@@ -80,8 +80,8 @@ class DoctorsListBlock implements BaseBloc {
       doctorsListResponse =
           await _doctorsListRepository.getDoctorUsingId(doctorsId);
       doctorsListSink.add(ApiResponse.completed(doctorsListResponse));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       doctorsListSink.add(ApiResponse.error(e.toString()));
     }
@@ -97,8 +97,8 @@ class DoctorsListBlock implements BaseBloc {
       userHealthResponseList = await _doctorsListRepository
           .getExistingDoctorsListFromSearchNew(limit);
       doctorsListNewSink.add(ApiResponse.completed(userHealthResponseList));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       doctorsListNewSink.add(ApiResponse.error(e.toString()));
     }

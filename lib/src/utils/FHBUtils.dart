@@ -125,8 +125,8 @@ class FHBUtils {
     try {
       formattedDate =
           DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate).toLocal());
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       formattedDate = strDate;
     }
@@ -158,7 +158,7 @@ class FHBUtils {
         formattedDate =
             DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate));
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       formattedDate = strDate;
     }
     return formattedDate;
@@ -177,8 +177,8 @@ class FHBUtils {
         formattedDate =
             DateFormat('yyyy').format(DateTime.parse(strDate!).toLocal());
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       formattedDate = strDate;
     }
@@ -198,8 +198,8 @@ class FHBUtils {
         formattedDate =
             DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate).toLocal());
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       formattedDate = strDate;
     }
@@ -342,8 +342,8 @@ class FHBUtils {
           : appDocDir![0].path + '/$fileType';
       print(path);
       return path;
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       debugPrint(e.toString());
       return "";

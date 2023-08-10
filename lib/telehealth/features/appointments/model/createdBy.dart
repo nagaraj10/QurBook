@@ -10,8 +10,8 @@ class CreatedBy {
   CreatedBy.fromJson(Map<String, dynamic> json) {
     try {
       id = json[parameters.strId];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

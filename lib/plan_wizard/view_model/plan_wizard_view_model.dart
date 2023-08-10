@@ -191,8 +191,8 @@ class PlanWizardViewModel extends ChangeNotifier {
         freePlanListResult = [];
       }
       return myPlanListModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -210,8 +210,8 @@ class PlanWizardViewModel extends ChangeNotifier {
         freeDietPlanListResult = [];
       }
       return myPlanListModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -226,8 +226,8 @@ class PlanWizardViewModel extends ChangeNotifier {
         dietPlanList = [];
       }
       return myPlanListModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -253,8 +253,8 @@ class PlanWizardViewModel extends ChangeNotifier {
       }
       notifyListeners();
       return healthConditions;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -638,8 +638,8 @@ class PlanWizardViewModel extends ChangeNotifier {
       }
 
       return addToCartModel;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -669,8 +669,8 @@ class PlanWizardViewModel extends ChangeNotifier {
         updateSingleSelectionFreeDiet('');
         updateProviderId('');
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

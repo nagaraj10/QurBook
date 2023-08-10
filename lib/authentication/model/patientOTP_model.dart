@@ -15,8 +15,8 @@ class PatientOtpModel {
     try {
       verificationCode = json[strverificationCode];
       source = json[strsource];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

@@ -47,8 +47,8 @@ class PaymentGatewayDetail {
       lastModifiedOn = json[parameters.strLastModifiedOn];
       isActive = json[parameters.strIsActive];
       id = json[parameters.strId];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

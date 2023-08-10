@@ -16,8 +16,8 @@ class CaregiverPatientChatModel {
               result!.add(new Result.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -75,8 +75,8 @@ class Result {
       chatListItem = json['chatListItem'] != null
               ? new ChatListItem.fromJson(json['chatListItem'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -135,8 +135,8 @@ class ChatListItem {
       unReadNotificationCount = json['unReadNotificationCount'];
       lastModifiedOn = json['lastModifiedOn'];
       deliveredOn = json['deliveredOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

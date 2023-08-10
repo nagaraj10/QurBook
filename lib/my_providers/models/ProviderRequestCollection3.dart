@@ -30,8 +30,8 @@ class ProviderRequestCollection3 {
       patientInfo = json['patientInfo'];
       doctor =
               json['doctor'] != null ? new Doctors.fromJson(json['doctor']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

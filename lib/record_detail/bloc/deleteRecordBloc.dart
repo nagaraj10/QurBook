@@ -37,8 +37,8 @@ class DeleteRecordBloc with Validators implements BaseBloc {
     try {
       deleteRecordResponse =
           await _deleteRecordRepository.deleteRecordForIds(metaId);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       delteRecordSink.add(ApiResponse.error(e.toString()));
     }
@@ -54,8 +54,8 @@ class DeleteRecordBloc with Validators implements BaseBloc {
     try {
       deleteRecordResponse =
           await _deleteRecordRepository.deleteRecordForMediaMasterIds(metaId);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       delteRecordSink.add(ApiResponse.error(e.toString()));
     }

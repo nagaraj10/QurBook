@@ -25,8 +25,8 @@ class FetchingCartItemsModel {
                 ? new Diagnostics.fromJson(json['diagnostics'])
                 : null;
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -56,8 +56,8 @@ class Result {
       productsCount = json['productsCount'];
       totalCartAmount = json['totalCartAmount'];
       cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -91,8 +91,8 @@ class Cart {
               productList!.add(new ProductList.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -138,8 +138,8 @@ class ProductList {
       if (json.containsKey("paidAmount")) {
             paidAmount = json["paidAmount"];
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -180,8 +180,8 @@ class ProductDetail {
       planSubscriptionFee = json['planSubscriptionFee'];
       packageDuration = json['packageDuration'];
       healthOrganizationName = json['healthOrganizationName'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -210,8 +210,8 @@ class Diagnostics {
               ? new ErrorData.fromJson(json['errorData'])
               : null;
       includeErrorDataInResponse = json['includeErrorDataInResponse'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -234,8 +234,8 @@ class ErrorData {
   ErrorData.fromJson(Map<String, dynamic> json) {
     try {
       productsCount = json['productsCount'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -281,8 +281,8 @@ class AdditionalInfo {
       if (json.containsKey("PlanType")) planType = json['PlanType'];
       if (json.containsKey("isMembershipAvail"))
             isMembershipAvail = json['isMembershipAvail'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

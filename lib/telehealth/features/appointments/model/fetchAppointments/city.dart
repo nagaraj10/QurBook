@@ -35,8 +35,8 @@ class City {
             healthOrganizationAddressCollection = <HealthOrganizationAddressCollection>[];
             json['healthOrganizationAddressCollection'].forEach((v) { healthOrganizationAddressCollection!.add(new HealthOrganizationAddressCollection.fromJson(v)); });
           }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -53,8 +53,8 @@ class City {
       if (this.healthOrganizationAddressCollection != null) {
             data['healthOrganizationAddressCollection'] = this.healthOrganizationAddressCollection!.map((v) => v.toJson()).toList();
           }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;
@@ -91,9 +91,9 @@ class HealthOrganizationAddressCollection {
           : null;
       city =
           json['city'] != null ? new CityDetails.fromJson(json['city']) : null;
-    } catch (e) {
+    } catch (e,stackTrace) {
 
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -115,9 +115,9 @@ class HealthOrganizationAddressCollection {
       if (this.city != null) {
         data['city'] = this.city!.toJson();
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;
@@ -143,8 +143,8 @@ class StateDetails {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -158,9 +158,9 @@ class StateDetails {
       data['isActive'] = this.isActive;
       data['createdOn'] = this.createdOn;
       data['lastModifiedOn'] = this.lastModifiedOn;
-    } catch (e) {
+    } catch (e,stackTrace) {
       //print(e);
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;
@@ -183,8 +183,8 @@ class CityDetails {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -197,9 +197,9 @@ class CityDetails {
       data['isActive'] = this.isActive;
       data['createdOn'] = this.createdOn;
       data['lastModifiedOn'] = this.lastModifiedOn;
-    } catch (e) {
+    } catch (e,stackTrace) {
 
-                  CommonUtil().appLogs(message: e.toString());
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     return data;

@@ -70,8 +70,8 @@ class AddDeviceViewController extends GetxController {
           Colors.red,
         );
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       loadingData(false);
       printError(info: e.toString());

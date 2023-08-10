@@ -21,8 +21,8 @@ class PatientAlertListModel {
                   ? new Diagnostics.fromJson(json['diagnostics'])
                   : null
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

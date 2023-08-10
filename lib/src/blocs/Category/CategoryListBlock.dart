@@ -51,8 +51,8 @@ class CategoryListBlock implements BaseBloc {
       categoryResponseList =
           await _categoryResponseListRepository.getCategoryList();
       categoryListSink.add(ApiResponse.completed(categoryResponseList));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       categoryListSink.add(ApiResponse.error(e.toString()));
     }
@@ -70,8 +70,8 @@ class CategoryListBlock implements BaseBloc {
           Constants.KEY_CATEGORYLIST, categoryDataList.result!);
 
       categoryListSinks.add(ApiResponse.completed(categoryDataList));
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       categoryListSinks.add(ApiResponse.error(e.toString()));
     }

@@ -18,8 +18,8 @@ class GlucoseValues {
               result!.add(GVResult.fromJson(glucosevalue));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -64,8 +64,8 @@ class GVResult {
       bgUnit = json[strParamBGUnit];
       mealContext = json[strParamBGMealContext];
       mealType = json[strParamBGMealType];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

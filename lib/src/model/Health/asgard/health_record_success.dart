@@ -18,8 +18,8 @@ class HealthRecordSuccess {
               result!.add(Result.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -82,8 +82,8 @@ class Result {
               healthRecordCollection!.add(HealthRecordCollection.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -158,12 +158,12 @@ class Metadata {
             hospital = json['hospital'] != null
                 ? Hospital.fromJson(json['hospital'])
                 : null;
-          } catch (e) {
-                        CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -222,8 +222,8 @@ class HealthRecordCategory {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -274,8 +274,8 @@ class HealthRecordType {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -336,8 +336,8 @@ class Doctor {
       profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
       isTelehealthEnabled = json['isTelehealthEnabled'];
       isMciVerified = json['isMciVerified'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -408,8 +408,8 @@ class Hospital {
       createdBy = json['createdBy'] != null
               ? CreatedBy.fromJson(json['createdBy'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -469,8 +469,8 @@ class HealthOrganizationType {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -576,8 +576,8 @@ class CreatedBy {
       createdOn = json['createdOn'];
       lastModifiedBy = json['lastModifiedBy'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

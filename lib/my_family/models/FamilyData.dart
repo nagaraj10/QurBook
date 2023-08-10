@@ -30,8 +30,8 @@ class FamilyData {
       virtualUserParent = json[parameters.strvirtualUserParent] != null
               ? VirtualUserParent.fromJson(json[parameters.strvirtualUserParent])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

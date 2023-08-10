@@ -410,8 +410,8 @@ class RegimentDataCard extends StatelessWidget {
                   double.tryParse(vitalData.value)! >=
                       double.tryParse(vitalData.amin)!)
               : true;
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
           //print(e);
         }
@@ -421,31 +421,28 @@ class RegimentDataCard extends StatelessWidget {
         fieldWidgets.add(
           Padding(
             padding: EdgeInsets.all(5.0.sp),
-            child: Row(
-              children: [
-                Text(
-                  //TODO: Replace with actual value from API
-                  '${CommonUtil().showDescTextRegimenList(vitalData)} : ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                    fontSize: 14.0.sp,
-                  ),
-                  maxLines: 2,
-                  softWrap: true,
+            child: RichText(
+              textAlign: TextAlign.left,
+              text: TextSpan(
+                //TODO: Replace with actual value from API
+                text: '${CommonUtil().showDescTextRegimenList(vitalData)} : ',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0.sp,
                 ),
-                Flexible(
-                  child: Text(
+                children: [
+                  TextSpan(
                     //TODO: Replace with actual value from API
-                    vitalData.display ?? '',
+                    text: vitalData.display ?? '',
                     style: TextStyle(
                       color: isNormal ? color : Colors.red,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.0.sp,
+                      fontSize: 17.0.sp,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -782,8 +779,8 @@ class RegimentDataCard extends StatelessWidget {
           Colors.black,
         );
       }
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       LoaderClass.hideLoadingDialog(Get.context!);
     }

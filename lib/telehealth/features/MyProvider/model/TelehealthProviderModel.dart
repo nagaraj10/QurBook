@@ -19,8 +19,8 @@ class TelehealthProviderModel {
       response = json['response'] != null
               ? new Response.fromJson(json['response'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -46,8 +46,8 @@ class Response {
     try {
       count = json['count'];
       data = json['data'] != null ? new MyProvidersData.fromJson(json['data']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -71,8 +71,8 @@ class MyProvidersData {
       medicalPreferences = json['medicalPreferences'] != null
               ? new MedicalPreferences.fromJson(json['medicalPreferences'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -95,8 +95,8 @@ class MedicalPreferences {
       preferences = json['preferences'] != null
               ? new Preferences.fromJson(json['preferences'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -136,8 +136,8 @@ class Preferences {
               laboratoryIds!.add(new LaboratoryIds.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -269,8 +269,8 @@ class DoctorIds {
       isMCIVerified = json['isMCIVerified'];
       isDefault = json['isDefault'];
       doctorPatientMappingId = json['doctorPatientMappingId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -404,8 +404,8 @@ class HospitalsIds {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       isDefault = json['isDefault'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -537,8 +537,8 @@ class LaboratoryIds {
       goFhbCode = json['goFhbCode'];
       isDefault = json['isDefault'];
       labPatientMappingId = json['labPatientMappingId'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

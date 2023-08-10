@@ -223,8 +223,8 @@ class VitalDetailController extends GetxController {
       bpList.value = finalResult;
 
       loadingData.value = false;
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       loadingData.value = false;
       bpList.value = [];
@@ -290,8 +290,8 @@ class VitalDetailController extends GetxController {
       gulList.value = finalResult;
 
       loadingData.value = false;
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       gulList.value = [];
       loadingData.value = false;
@@ -363,8 +363,8 @@ class VitalDetailController extends GetxController {
       oxyList.value = finalResult;
 
       loadingData.value = false;
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       oxyList.value = [];
       loadingData.value = false;
@@ -425,8 +425,8 @@ class VitalDetailController extends GetxController {
       tempList.value = finalResult;
 
       loadingData.value = false;
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       tempList.value = [];
       loadingData.value = false;
@@ -489,8 +489,8 @@ class VitalDetailController extends GetxController {
       weightList.value = finalResult;
 
       loadingData.value = false;
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       weightList.value = [];
       loadingData.value = false;
@@ -500,9 +500,9 @@ class VitalDetailController extends GetxController {
   updateTimerValue(double value) async {
     try {
       timerProgress.value = value;
-    } catch (e) {
+    } catch (e,stackTrace) {
       print(e);
-            CommonUtil().appLogs(message: e.toString());
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }

@@ -97,11 +97,12 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached) {
       controller.canSpeak = false;
+      controller.stopTTS();
       if (controller.bleController != null) {
         controller.bleController!.stopTTS();
         controller.bleController = null;
+        Get.back();
       }
-      controller.stopTTS();
       if ((controller.arguments!.audioMessage ?? '').isNotEmpty) {
         controller.isSheelaScreenActive = false;
         Get.back();

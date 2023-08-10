@@ -76,8 +76,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       sheelBadgeController.isQueueDialogShowing.value = false;
 
       onInit();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -129,8 +129,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -158,8 +158,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       MyFHB.routeObserver.unsubscribe(this);
       controller.clear();
       super.dispose();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -822,8 +822,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         qurHomeRegimenController.getSOSButtonStatus();
       }
       //setState(() {});
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e);
     }
@@ -846,8 +846,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       sheelBadgeController.getSheelaBadgeCount(
           isNeedSheelaDialog:
               controller.estart.value.trim().isEmpty ? true : false);
-    } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       if (kDebugMode) {
         print(e);

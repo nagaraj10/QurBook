@@ -73,8 +73,8 @@ class AddProvidersBloc implements BaseBloc {
       final addDoctorsProvidersId =
           await addProvidersRepository.addDoctors(doctorsJsonString);
       doctorsSink.add(ApiResponse.completed(addDoctorsProvidersId));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       doctorsSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -87,8 +87,8 @@ class AddProvidersBloc implements BaseBloc {
       var addHospitalsProvidersId =
           await addProvidersRepository.addHospitals(hospitalsJsonString);
       hospitalsSink.add(ApiResponse.completed(addHospitalsProvidersId));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       hospitalsSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -101,8 +101,8 @@ class AddProvidersBloc implements BaseBloc {
       var addLabProvidersId =
           await addProvidersRepository.addLabs(labsJsonString);
       labsSink.add(ApiResponse.completed(addLabProvidersId));
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       labsSink.add(ApiResponse.error(e.toString()));
     }
   }

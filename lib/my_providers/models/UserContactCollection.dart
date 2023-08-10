@@ -35,8 +35,8 @@ class UserContactCollection3 {
       phoneNumberType = json['phoneNumberType'] != null
               ? PhoneNumberType.fromJson(json['phoneNumberType'])
               : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

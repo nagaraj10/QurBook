@@ -39,8 +39,8 @@ class Result {
       _patient = json['patient'] != null ? Patient.fromJson(json['patient']) : null;
       _reminderFor = json['reminderFor'] != null ? ReminderFor.fromJson(json['reminderFor']) : null;
       _reminderSettingLevel = json['reminderSettingLevel'] != null ? ReminderSettingLevel.fromJson(json['reminderSettingLevel']) : null;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
   String? _id;

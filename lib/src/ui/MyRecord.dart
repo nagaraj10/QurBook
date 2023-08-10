@@ -153,8 +153,8 @@ class _MyRecordsState extends State<MyRecords> {
                 : ShowCaseWidget.of(_myContext)!
                     .startShowCase([_cameraKey, _voiceKey]));
       });
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -414,8 +414,8 @@ class _MyRecordsState extends State<MyRecords> {
             PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID!)
                 .then((value) {});
           });
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         }
       },
@@ -431,8 +431,8 @@ class _MyRecordsState extends State<MyRecords> {
             PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID!)
                 .then((value) {});
           });
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         }
       },
@@ -1498,8 +1498,8 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
           categoryName =
               categoryDataList.elementAt(_currentPosition!).categoryName;
           categoryID = categoryDataList.elementAt(_currentPosition!).id;
-        } catch (e) {
-                      CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         }
       }
@@ -1518,8 +1518,8 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
             .categoryName;
         categoryID =
             categoryDataList.elementAt(controller!.animation!.value.toInt()).id;
-      } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       }
     }

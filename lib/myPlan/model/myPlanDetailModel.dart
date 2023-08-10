@@ -16,8 +16,8 @@ class MyPlanDetailModel {
               result!.add(MyPlanDetailResult.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -157,8 +157,8 @@ class MyPlanDetailResult {
       providername = json['providername'];
       titletext = json['titletext'];
       repeattext = json['repeattext'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

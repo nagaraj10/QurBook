@@ -45,8 +45,8 @@ class CategoryInfo {
       url = json[parameters.strurl] ?? '';
       localid = json[parameters.strlocalid] ?? 0;
       isActive = json[parameters.strIsActive]!=null?json[parameters.strurl]:false;
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

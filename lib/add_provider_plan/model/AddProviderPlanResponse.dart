@@ -16,8 +16,8 @@ class AddProviderPlanResponse {
               result!.add(new AddProviderPlanResponseResult.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -82,8 +82,8 @@ class AddProviderPlanResponseResult {
       lastModifiedOn = json['lastModifiedOn'];
       id = json['id'];
       isActive = json['isActive'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -120,8 +120,8 @@ class CreatedBy {
   CreatedBy.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

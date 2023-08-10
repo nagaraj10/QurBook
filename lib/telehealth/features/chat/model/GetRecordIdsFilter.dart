@@ -17,8 +17,8 @@ class GetRecordIdsFilter {
               result!.add(new Result.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -84,8 +84,8 @@ class Result {
               healthRecordCollection!.add(new HealthRecordCollection.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -153,8 +153,8 @@ class Metadata {
       memoTextRaw = json['memoTextRaw'];
       idType = json['idType'];
       fileName = json['fileName'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -220,8 +220,8 @@ class HealthRecordCategory {
       isRead = json['isRead'];
       isEdit = json['isEdit'];
       isDelete = json['isDelete'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -294,8 +294,8 @@ class HealthRecordType {
       isDelete = json['isDelete'];
       isManualTranscription = json['isManualTranscription'];
       isAITranscription = json['isAITranscription'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

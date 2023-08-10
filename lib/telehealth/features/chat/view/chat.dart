@@ -335,8 +335,8 @@ class ChatScreenState extends State<ChatScreen> {
           });
         }
       });
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       setState(() {
         isChatDisable = false;
@@ -496,8 +496,8 @@ class ChatScreenState extends State<ChatScreen> {
       //     onSendMessage(imageUrl, 3);
       //   });
       // });
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       setState(() {
         isLoading = false;
@@ -657,8 +657,8 @@ class ChatScreenState extends State<ChatScreen> {
           groupChatId,
           doctorDeviceToken);
       textValue = '';
-    } catch (e) {
-                  CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
   }
@@ -803,8 +803,8 @@ class ChatScreenState extends State<ChatScreen> {
             ),
           ));
         }
-      } catch (e) {
-                    CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       }
     }
@@ -2348,8 +2348,8 @@ class ChatScreenState extends State<ChatScreen> {
                             onSendMessage(removedBrackets.toString(), 0);
                           }
                         }
-                      } catch (e) {
-                                    CommonUtil().appLogs(message: e.toString());
+                      } catch (e,stackTrace) {
+                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                         print(e);
                       }

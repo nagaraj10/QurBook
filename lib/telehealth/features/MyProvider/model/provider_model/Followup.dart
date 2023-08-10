@@ -19,8 +19,8 @@ class Followup {
               : null;
       followupValue = json[parameters.strfollowupValue];
       followupType = json[parameters.strfollowupType];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

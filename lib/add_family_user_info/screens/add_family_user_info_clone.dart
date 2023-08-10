@@ -1491,8 +1491,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void setValuesInEditText() async {
     try {
       languageModelList = await languageBlock.getLanguage();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     //* set the user data from input
     _addressList = await doctorPersonalViewModel.getAddressTypeList();
@@ -1511,8 +1511,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     .userContactCollection3![0].email ??
                 '';
           }
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           mobileNoController.text = '';
           emailController.text = '';
         }
@@ -1528,8 +1528,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       .userContactCollection3![0]!.email ??
                   '';
             }
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             mobileNoController.text = '';
             emailController.text = '';
           }
@@ -1561,8 +1561,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 }
               }
             }
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             if (widget.arguments!.myProfileResult!.userContactCollection3 !=
                     null &&
                 widget.arguments!.myProfileResult!.userContactCollection3!
@@ -1637,8 +1637,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               _addressResult = _addressList[0];
             });
             print('after try');
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           }
         }
 
@@ -1732,8 +1732,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       myProf.result!.userContactCollection3![0]!.email ?? '';
                 }
               }
-            } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+            } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
               setMobileAndEmail();
             }
 
@@ -1748,8 +1748,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
                 if (preferredMesurement != null) {}
               }
-            } catch (e) {
-              CommonUtil().appLogs(message: e.toString());
+            } catch (e,stackTrace) {
+              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             }
           } else {
             //! this must be loook
@@ -1766,8 +1766,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               emailController.text = '';
             }
           }
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           mobileNoController.text = '';
           emailController.text = '';
         }
@@ -1880,8 +1880,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             setState(() {
               _addressResult = _addressList[0];
             });
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           }
         }
 
@@ -1915,8 +1915,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 myProf!.result!.userContactCollection3![0]!.phoneNumber ?? '';
             emailController.text =
                 myProf.result!.userContactCollection3![0]!.email ?? '';
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             setMobileAndEmail();
           }
         } else {
@@ -1977,8 +1977,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           setState(() {
             _addressResult = _addressList[0];
           });
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         }
         if (commonUtil.checkIfStringisNull(value.result!.bloodGroup)) {
           currentselectedBloodGroup = value.result!.bloodGroup!.split(' ')[0];
@@ -2258,8 +2258,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       /*profileResult.userProfileSettingCollection3 =
           userProfileSettingCollectionClone;*/
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     /*  }*/
 
@@ -3101,8 +3101,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             getUnitFromPreferredMeasurement(profileSetting);
           }
         }
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         var profileModel =
             await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
         if (profileModel!.result!.userProfileSettingCollection3 != null &&
@@ -3122,8 +3122,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             heightUnit = preferredMeasurment.height?.unitCode;
             weightUnit = preferredMeasurment.weight?.unitCode;
             setHeightAndWeightUnit();
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
             setUnitBasedOnRegion();
           }
         }
@@ -3371,8 +3371,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         weightUnit =
             await profileSetting?.preferredMeasurement?.weight?.unitCode ?? '';
         setHeightAndWeightUnit();
-      } catch (e) {
-        CommonUtil().appLogs(message: e.toString());
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         setUnitBasedOnRegion();
       }
     } else {

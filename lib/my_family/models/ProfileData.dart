@@ -67,8 +67,8 @@ class ProfileData {
             profilePicThumbnail = json['profilePicThumbnail'] != null
                 ? ProfilePicThumbnail.fromJson(json['profilePicThumbnail'])
                 : null;
-          } catch (e) {
-            CommonUtil().appLogs(message: e.toString());
+          } catch (e,stackTrace) {
+            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           }
       /*qualifiedFullName = json[parameters.strqualifiedFullName] != null
               ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
@@ -80,8 +80,8 @@ class ProfileData {
       isEmailVerified = json[parameters.strisEmailVerified];
       status = json[parameters.strStatus];
       profilePicThumbnailURL = json[parameters.strprofilePicThumbnailURL];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

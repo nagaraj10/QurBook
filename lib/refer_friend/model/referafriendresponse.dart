@@ -16,8 +16,8 @@ class ReferAFriendResponse {
               result!.add(Result.fromJson(v));
             });
           }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -45,8 +45,8 @@ class Result {
       name = json['name'];
       isExistingUser = json['isExistingUser'];
       message = json['message'];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

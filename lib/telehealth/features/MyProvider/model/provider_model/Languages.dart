@@ -12,8 +12,8 @@ class Languages {
     try {
       languageId = json[parameters.strlanguageId];
       name = json[parameters.strName];
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 

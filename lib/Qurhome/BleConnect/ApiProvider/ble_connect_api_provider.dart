@@ -40,8 +40,8 @@ class BleConnectApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -64,8 +64,8 @@ class BleConnectApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -86,8 +86,8 @@ class BleConnectApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return null;
     }
@@ -110,8 +110,8 @@ class BleConnectApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       printError(info: e.toString());
     }

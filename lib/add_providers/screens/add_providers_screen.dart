@@ -191,8 +191,8 @@ class AddProvidersState extends State<AddProviders> {
       }
 
       buildUI();
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
   }
@@ -509,8 +509,8 @@ class AddProvidersState extends State<AddProviders> {
               CameraPosition(target: center, zoom: 12, bearing: 45, tilt: 45)));
         }
       });
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -583,8 +583,8 @@ class AddProvidersState extends State<AddProviders> {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       primaryUserProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
     return InkWell(
         onTap: () {
@@ -830,8 +830,8 @@ class AddProvidersState extends State<AddProviders> {
       onTap: () {
         try {
           labBookAppointmentBtnTapped();
-        } catch (e) {
-          CommonUtil().appLogs(message: e.toString());
+        } catch (e,stackTrace) {
+          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
           print(e);
         }
       },
@@ -894,8 +894,8 @@ class AddProvidersState extends State<AddProviders> {
             '${CommonUtil().validString(strNoTicketTypesAvaliable)}',
             Colors.red);
       }
-    } catch (e) {
-      CommonUtil().appLogs(message: e.toString());
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       print(e);
     }
   }
