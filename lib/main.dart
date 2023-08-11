@@ -1242,6 +1242,9 @@ class _MyFHBState extends State<MyFHB> {
             theme: ThemeData(
               fontFamily: variable.font_poppins,
               primaryColor: Color(myPrimaryColor),
+              progressIndicatorTheme: ProgressIndicatorThemeData(
+                color: Color(myPrimaryColor)
+              ),
               accentColor: Colors.white,
               appBarTheme: Theme.of(context).appBarTheme.copyWith(
                     brightness: Brightness.dark,
