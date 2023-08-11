@@ -928,13 +928,10 @@ class CommonUtil {
     return PreferenceUtil.getSavedTheme(Constants.keyTheme) ?? 0xff0a72e8;
   }
 
-  int getMyPrimaryColor() {
-    return PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
-  }
+  int getMyPrimaryColor() => isUSRegion() ? getQurhomePrimaryColor() : PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
 
-  int getMyGredientColor() {
-    return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea;
-  }
+
+  int getMyGredientColor()=> isUSRegion() ?getQurhomeGredientColor(): PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??  0xff9929ea;
 
   int getQurhomePrimaryColor() {
     return 0xFFFB5422;
@@ -5072,30 +5069,34 @@ class CommonUtil {
   }
 
   updateSocketFamily() {
-    String? userId = PreferenceUtil.getStringValue(KEY_USERID);
+    try {
+      String? userId = PreferenceUtil.getStringValue(KEY_USERID);
 
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket!
-        .disconnect();
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .initSocket()
-        .then((value) {
-      //update common count
       Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-          .socket!
-          .emitWithAck(getChatTotalCountEmit, {
-        'userId': userId,
-      }, ack: (countResponseEmit) {
-        if (countResponseEmit != null) {
-          TotalCountModel totalCountModel =
-              TotalCountModel.fromJson(countResponseEmit);
-          if (totalCountModel != null) {
+              .socket!
+              .disconnect();
+      Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+              .initSocket()
+              .then((value) {
+            //update common count
             Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-                .updateChatTotalCount(totalCountModel);
-          }
-        }
-      });
-    });
+                .socket!
+                .emitWithAck(getChatTotalCountEmit, {
+              'userId': userId,
+            }, ack: (countResponseEmit) {
+              if (countResponseEmit != null) {
+                TotalCountModel totalCountModel =
+                    TotalCountModel.fromJson(countResponseEmit);
+                if (totalCountModel != null) {
+                  Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+                      .updateChatTotalCount(totalCountModel);
+                }
+              }
+            });
+          });
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static commonDialogBox(String msg) async {
