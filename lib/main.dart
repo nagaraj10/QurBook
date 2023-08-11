@@ -426,7 +426,7 @@ class _MyFHBState extends State<MyFHB> {
         }
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
-        if (sheelaAIController.isSheelaScreenActive) {
+        /*if (sheelaAIController.isSheelaScreenActive) {
           if (((passedValArr[3].toString()).isNotEmpty) &&
               (passedValArr[3] != 'null')) {
             var reqJsonAudio = {
@@ -441,7 +441,7 @@ class _MyFHBState extends State<MyFHB> {
             };
             CommonUtil().callQueueNotificationPostApi(reqJsonText);
           }
-        } else {
+        } else {*/
           if (((passedValArr[3].toString()).isNotEmpty) &&
               (passedValArr[3] != 'null')) {
             if (sheelaAIController.isQueueDialogShowing.value) {
@@ -465,7 +465,7 @@ class _MyFHBState extends State<MyFHB> {
                 getToSheelaNavigate(passedValArr);
               });
             }
-          }
+          //}
         }
       }
       if (passedValArr[0] == 'ack') {

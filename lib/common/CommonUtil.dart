@@ -5072,30 +5072,34 @@ class CommonUtil {
   }
 
   updateSocketFamily() {
-    String? userId = PreferenceUtil.getStringValue(KEY_USERID);
+    try {
+      String? userId = PreferenceUtil.getStringValue(KEY_USERID);
 
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket!
-        .disconnect();
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .initSocket()
-        .then((value) {
-      //update common count
       Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-          .socket!
-          .emitWithAck(getChatTotalCountEmit, {
-        'userId': userId,
-      }, ack: (countResponseEmit) {
-        if (countResponseEmit != null) {
-          TotalCountModel totalCountModel =
-              TotalCountModel.fromJson(countResponseEmit);
-          if (totalCountModel != null) {
+              .socket!
+              .disconnect();
+      Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+              .initSocket()
+              .then((value) {
+            //update common count
             Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-                .updateChatTotalCount(totalCountModel);
-          }
-        }
-      });
-    });
+                .socket!
+                .emitWithAck(getChatTotalCountEmit, {
+              'userId': userId,
+            }, ack: (countResponseEmit) {
+              if (countResponseEmit != null) {
+                TotalCountModel totalCountModel =
+                    TotalCountModel.fromJson(countResponseEmit);
+                if (totalCountModel != null) {
+                  Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+                      .updateChatTotalCount(totalCountModel);
+                }
+              }
+            });
+          });
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static commonDialogBox(String msg) async {
