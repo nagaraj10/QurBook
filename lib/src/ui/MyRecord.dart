@@ -534,7 +534,7 @@ class _MyRecordsState extends State<MyRecords> {
           ),
           new CommonUtil().getNotificationIcon(context),
           new SwitchProfile()
-              .buildActions(context, _keyLoader, callBackToRefresh, false),
+              .buildActions(context, _keyLoader, callBackToRefresh, false,changeWhiteBg: true),
         ],
       ),
     );

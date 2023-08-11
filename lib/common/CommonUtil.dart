@@ -928,13 +928,10 @@ class CommonUtil {
     return PreferenceUtil.getSavedTheme(Constants.keyTheme) ?? 0xff0a72e8;
   }
 
-  int getMyPrimaryColor() {
-    return PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
-  }
+  int getMyPrimaryColor() => isUSRegion() ? getQurhomePrimaryColor() : PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
 
-  int getMyGredientColor() {
-    return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea;
-  }
+
+  int getMyGredientColor()=> isUSRegion() ?getQurhomeGredientColor(): PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??  0xff9929ea;
 
   int getQurhomePrimaryColor() {
     return 0xFFFB5422;

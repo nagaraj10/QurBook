@@ -298,7 +298,7 @@ class FHBBasicWidget {
           );
   }
 
-  Widget getProfilePicWidgeUsingUrl(MyProfileModel? myProfile) {
+  Widget getProfilePicWidgeUsingUrl(MyProfileModel? myProfile,{bool? changeWhiteBg}) {
     if (myProfile != null && myProfile.result != null) {
       if (myProfile.result!.profilePicThumbnailUrl != '') {
         return Image.network(
@@ -321,11 +321,11 @@ class FHBBasicWidget {
               width: CommonUtil().isTablet!
                   ? imageProfileTabHeader
                   : imageProfileMobileHeader,
-              color: PreferenceUtil.getIfQurhomeisAcive()
+              color:changeWhiteBg==true?Colors.white: PreferenceUtil.getIfQurhomeisAcive()
                   ? Color(CommonUtil().getQurhomeGredientColor())
                   : Color(CommonUtil().getMyPrimaryColor()),
               child: Center(
-                child: getFirstLastNameText(myProfile),
+                child: getFirstLastNameText(myProfile,changeWhiteBg: changeWhiteBg),
               ),
             );
           },
@@ -1213,7 +1213,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
   }
 }
 
-Widget getFirstLastNameText(MyProfileModel myProfile) {
+Widget getFirstLastNameText(MyProfileModel myProfile,{bool? changeWhiteBg}) {
   if (myProfile.result != null &&
       myProfile.result!.firstName != null &&
       myProfile.result!.lastName != null) {
@@ -1223,7 +1223,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
               ? myProfile.result!.lastName![0].toUpperCase()
               : ''),
       style: TextStyle(
-        color: Colors.white,
+        color: changeWhiteBg==true?Color(CommonUtil().getMyPrimaryColor()):Colors.white,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w400,
       ),
@@ -1232,7 +1232,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
     return Text(
       myProfile.result!.firstName![0].toUpperCase(),
       style: TextStyle(
-        color: Colors.white,
+        color: changeWhiteBg==true?Color(CommonUtil().getMyPrimaryColor()):Colors.white,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w400,
       ),
@@ -1241,7 +1241,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
     return Text(
       '',
       style: TextStyle(
-        color: Colors.white,
+        color: changeWhiteBg==true?Color(CommonUtil().getMyPrimaryColor()):Colors.white,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w200,
       ),
