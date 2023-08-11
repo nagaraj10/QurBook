@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -76,8 +77,8 @@ class _MyPlanState extends State<MyPlanList> {
                 ? null
                 : ShowCaseWidget.of(_myContext)!.startShowCase([_PlanCardKey]));
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -87,9 +88,8 @@ class _MyPlanState extends State<MyPlanList> {
         await PreferenceUtil.getUnSubscribeValue();
     print('addplanbtn: ' + addplanbutton.toString());
     setState(() {
-      this.addplanbutton = addplanbutton ?? false; // FUcrash add ?? false
-      this.showRenewOrSubscribeButton =
-          showRenewOrSubscribeButton ?? false; // FUcrash add ?? false;
+      this.addplanbutton = addplanbutton ?? false;
+      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton ?? false;
     });
   }
 
@@ -483,24 +483,31 @@ class _MyPlanState extends State<MyPlanList> {
                                         ),
                                         onPressed: () async {
                                           if (planList[i].isexpired == '1') {
-                                            await CommonUtil().renewAlertDialog(
-                                                context,
-                                                packageId:
-                                                    planList[i].packageid,
-                                                price: planList[i].price,
-                                                startDate:
-                                                    planList[i].startdate,
-                                                endDate: planList[i].enddate,
-                                                isExpired: true,
-                                                packageDuration:
-                                                    planList[i].duration,
-                                                IsExtendable:
-                                                    planList[i].isExtendable ==
-                                                            '1'
-                                                        ? true
-                                                        : false, refresh: () {
-                                              setState(() {});
-                                            });
+                                            if (planList[i].ispublic == '0') {
+                                              FlutterToast().getToast(
+                                                "Please contact your care coordinator for renewal",
+                                                Colors.red,
+                                              );
+                                            } else {
+                                              await CommonUtil().renewAlertDialog(
+                                                  context,
+                                                  packageId:
+                                                      planList[i].packageid,
+                                                  price: planList[i].price,
+                                                  startDate:
+                                                      planList[i].startdate,
+                                                  endDate: planList[i].enddate,
+                                                  isExpired: true,
+                                                  packageDuration:
+                                                      planList[i].duration,
+                                                  IsExtendable: planList[i]
+                                                              .isExtendable ==
+                                                          '1'
+                                                      ? true
+                                                      : false, refresh: () {
+                                                setState(() {});
+                                              });
+                                            }
                                           } else {
                                             if (planList[i].price == '0') {
                                               await CommonUtil()
@@ -525,7 +532,9 @@ class _MyPlanState extends State<MyPlanList> {
                                         },
                                         child: TextWidget(
                                           text: planList[i].isexpired == '1'
-                                              ? strIsRenew
+                                              ? (planList[i].ispublic == '0'
+                                                  ? strExpired
+                                                  : strIsRenew)
                                               : strUnSubscribe,
                                           fontsize: 12.0.sp,
                                         ),

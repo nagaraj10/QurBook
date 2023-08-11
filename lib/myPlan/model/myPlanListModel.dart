@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:myfhb/common/CommonUtil.dart';
@@ -17,13 +16,13 @@ class MyPlanListModel {
     try {
       isSuccess = json['isSuccess'];
       if (json['result'] != null) {
-            result = <MyPlanListResult>[];
-            json['result'].forEach((v) {
-              result!.add(MyPlanListResult.fromJson(v));
-            });
-          }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        result = <MyPlanListResult>[];
+        json['result'].forEach((v) {
+          result!.add(MyPlanListResult.fromJson(v));
+        });
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -55,6 +54,7 @@ class MyPlanListResult {
   String? enddate;
   String? isexpired;
   String? isExtendable;
+  String? ispublic;
   MetaDataForURL? metadata;
   MetaDataForURL? catmetadata;
   ProviderMetaModel? providermetadata;
@@ -78,7 +78,9 @@ class MyPlanListResult {
       this.isexpired,
       this.metadata,
       this.isExtendable,
-      this.catmetadata,this.providermetadata});
+      this.ispublic,
+      this.catmetadata,
+      this.providermetadata});
 
   factory MyPlanListResult.fromJson(Map<String, dynamic> json) {
     return MyPlanListResult(
@@ -99,6 +101,7 @@ class MyPlanListResult {
         enddate: json['enddate'],
         isexpired: json['isexpired'],
         isExtendable: json['IsExtendable'],
+        ispublic: json['ispublic'],
         metadata:
             json['metadata'] != null && json['metadata'].toString().isNotEmpty
                 ? MetaDataForURL.fromJson(jsonDecode(json['metadata'] ?? '{}'))
@@ -107,10 +110,11 @@ class MyPlanListResult {
                 json['catmetadata'].toString().isNotEmpty
             ? MetaDataForURL.fromJson(jsonDecode(json['catmetadata'] ?? '{}'))
             : null,
-    providermetadata: json['providermetadata'] != null &&
-        json['providermetadata'].toString().isNotEmpty
-        ? ProviderMetaModel.fromJson(jsonDecode(json['providermetadata'] ?? '{}'))
-        : null);
+        providermetadata: json['providermetadata'] != null &&
+                json['providermetadata'].toString().isNotEmpty
+            ? ProviderMetaModel.fromJson(
+                jsonDecode(json['providermetadata'] ?? '{}'))
+            : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -135,6 +139,7 @@ class MyPlanListResult {
     data['catmetadata'] = this.catmetadata;
     data['providermetadata'] = this.providermetadata;
     data['IsExtendable'] = this.isExtendable;
+    data['ispublic'] = this.ispublic;
     return data;
   }
 }

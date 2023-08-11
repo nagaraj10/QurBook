@@ -1,8 +1,8 @@
-
 import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -80,6 +80,7 @@ class PlanDetail extends State<MyPlanDetail> {
   String descriptionURL = '';
   String price = '';
   String isExtendable = '';
+  String isPlublic = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   bool showRenewOrSubscribeButton = false;
@@ -91,7 +92,8 @@ class PlanDetail extends State<MyPlanDetail> {
     mInitialTime = DateTime.now();
     //setValues();
     getConfiguration();
-    planListFetch = myPlanViewModel.getMyPlanListDetail(widget.packageId) as Future<MyPlanListModel?>;
+    planListFetch = myPlanViewModel.getMyPlanListDetail(widget.packageId)
+        as Future<MyPlanListModel?>;
   }
 
   Future<void> getConfiguration() async {
@@ -129,6 +131,7 @@ class PlanDetail extends State<MyPlanDetail> {
     descriptionURL = planList.metadata?.descriptionURL ?? '';
     price = planList.price ?? '';
     isExtendable = planList.isExtendable ?? '';
+    isPlublic = planList.ispublic ?? '';
     packageDuration = planList.duration;
   }
 
@@ -141,7 +144,7 @@ class PlanDetail extends State<MyPlanDetail> {
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Icon(
-            Icons.arrow_back_ios, // add custom icons also
+            Icons.arrow_back_ios,
             size: 24.0.sp,
           ),
         ),
@@ -153,7 +156,7 @@ class PlanDetail extends State<MyPlanDetail> {
           ),
         ),
       ),
-      body: FutureBuilder<MyPlanListModel?>( //FUcrash add ?
+      body: FutureBuilder<MyPlanListModel?>(
         future: planListFetch,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -356,16 +359,23 @@ class PlanDetail extends State<MyPlanDetail> {
                   OutlineButton(
                     onPressed: () async {
                       if (isExpired == '1') {
-                        await CommonUtil().renewAlertDialog(context,
-                            packageId: packageId,
-                            price: price,
-                            startDate: startDate,
-                            endDate: endDate,
-                            isExpired: isExpired == '1' ? true : false,
-                            IsExtendable: isExtendable == '1' ? true : false,
-                            packageDuration: packageDuration, refresh: () {
-                          Navigator.pop(context);
-                        });
+                        if (isPlublic == '0') {
+                          FlutterToast().getToast(
+                            "Please contact your care coordinator for renewal",
+                            Colors.red,
+                          );
+                        } else {
+                          await CommonUtil().renewAlertDialog(context,
+                              packageId: packageId,
+                              price: price,
+                              startDate: startDate,
+                              endDate: endDate,
+                              isExpired: isExpired == '1' ? true : false,
+                              IsExtendable: isExtendable == '1' ? true : false,
+                              packageDuration: packageDuration, refresh: () {
+                            Navigator.pop(context);
+                          });
+                        }
                       } else {
                         if (price == '0') {
                           await CommonUtil().unSubcribeAlertDialog(
@@ -389,7 +399,9 @@ class PlanDetail extends State<MyPlanDetail> {
                     ),
                     child: Text(
                       isExpired == '1'
-                          ? strIsRenew.toUpperCase()
+                          ? (isPlublic == '0'
+                              ? strExpired.toUpperCase()
+                              : strIsRenew.toUpperCase())
                           : strUnSubscribe.toUpperCase(),
                       style: TextStyle(
                         color: isExpired == '1'
