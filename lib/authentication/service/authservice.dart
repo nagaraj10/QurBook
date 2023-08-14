@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:myfhb/authentication/model/patientlogin_model.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 
 import '../constants/constants.dart';
@@ -405,5 +406,23 @@ class AuthService {
       return spocketException();
     }
     return responseJson;
+  }
+
+  Future<SignInValidationModel> loginPatientWithMobNo(String mobNo) async {
+    try {
+      var response = await ApiServices.get(
+        (Constants.BASE_URL + strSignInValidationEndpoint + mobNo.trim()),
+        headers: <String, String>{c_content_type_key: c_content_type_val},
+      );
+      if (response?.statusCode == 200) {
+        return SignInValidationModel.fromJson(
+            json.decode(response?.body ?? ""), mobNo);
+      } else {
+        return SignInValidationModel.fromJson(
+            json.decode(response?.body ?? ""), mobNo);
+      }
+    } on SocketException {
+      return spocketException();
+    }
   }
 }

@@ -186,11 +186,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   counterText: "",
                                   prefixIcon: Container(
                                     constraints: BoxConstraints(
-                                      maxWidth: 50.0.w,
-                                      minWidth: 50.0.w,
+                                      maxWidth: 75.0.w,
+                                      minWidth: 75.0.w,
                                     ),
                                     child: CountryCodePickerPage(
                                       selectedCountry: _selectedDialogCountry,
+                                      isFromAuthenticationScreen: true,
                                       onValuePicked: (country) => setState(
                                         () => _selectedDialogCountry = country,
                                       ),
