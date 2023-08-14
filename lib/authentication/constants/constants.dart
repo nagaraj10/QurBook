@@ -94,7 +94,8 @@ const String strForgotTxt = 'Forgot Password ?';
 const String strPassCantEmpty = 'Please Enter Valid Password';
 const String strSignUpTxt = 'SignUp';
 const String strPhoneCantEmpty = 'Please Enter Valid Phone Number';
-const String strPhoneandPass = 'Sign in with your phone number and password';
+//const String strPhoneandPass = 'Sign in with your phone number and password';
+const String strPhoneandPass = 'Sign in with your phone number';
 const String strEmailCantEmpty = 'Please Enter Valid Email';
 const String strPhoneValidText = 'Please Enter Valid Phone Number';
 const String strUserNameCantEmpty = 'Please Enter Valid User Name';
@@ -265,6 +266,13 @@ const String CODE_VITAL = 'VITALS';
 const String CODE_MEDI = 'MEDICATION';
 const String CODE_RULE = 'RULEALERT';
 const String CODE_SYM = 'SYMPTOM';
+
+//login and signup refinement
+const String strProceed = 'Proceed';
+const String strSignInValidationEndpoint = 'user/login/validation?phoneNumber=';
+const String strEnterPass = 'Enter your password';
+const String strCreateAccount = 'Create Account';
+const String strCheckValidNumber = 'Please check the number or create a new account';
 
 
 

@@ -95,4 +95,9 @@ class AuthViewModel extends ChangeNotifier {
     var response = AddFamilyOTPResponse.fromJson(otpResponse);
     return response;
   }
+
+  Future<SignInValidationModel> loginPatientWithMobNo(String mobNo) async {
+    final signInValidationModel = await _authService.loginPatientWithMobNo(mobNo);
+    return signInValidationModel;
+  }
 }
