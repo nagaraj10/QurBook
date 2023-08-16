@@ -18,11 +18,6 @@ class AppTheme{
     textSelectionTheme: TextSelectionThemeData(
         cursorColor:Color(CommonUtil().getMyPrimaryColor()),
     ),
-    /*inputDecorationTheme: InputDecorationTheme(
-      floatingLabelStyle:TextStyle(
-        color:myPrimaryColor, // Change the label color
-      ) ,
-    ),*/
     appBarTheme: AppBarTheme().copyWith(
       brightness: Brightness.dark,
     ),
