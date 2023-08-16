@@ -30,6 +30,7 @@ import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart' as parameters;
+import '../../main.dart';
 import '../../my_family/bloc/FamilyListBloc.dart';
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../src/model/Health/asgard/health_record_collection.dart';
@@ -464,7 +465,15 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         context: context,
         initialDate: isActiveMemberShipSelected! ? dateTime : endDate,
         firstDate: startDate,
-        lastDate: isActiveMemberShipSelected! ? dateTime : endDate);
+        lastDate: isActiveMemberShipSelected! ? dateTime : endDate,
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),);
 
     if (picked != null) {
       dateTime = picked;

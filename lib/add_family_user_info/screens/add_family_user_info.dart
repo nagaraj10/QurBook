@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1848,7 +1849,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(1940),
-        lastDate: DateTime.now());
+        lastDate: DateTime.now(),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getQurhomePrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),
+    );
 
     if (picked != null) {
       setState(() {
