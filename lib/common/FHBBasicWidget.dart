@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
+import '../main.dart';
 import 'errors_widget.dart';
 import '../my_providers/models/Doctors.dart';
 import '../src/model/user/MyProfileModel.dart';
@@ -228,7 +229,15 @@ class FHBBasicWidget {
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+        lastDate: DateTime(2101),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),);
 
     if (picked != null && picked != dateTime) {
       dateTime = picked;
@@ -322,7 +331,7 @@ class FHBBasicWidget {
                   ? imageProfileTabHeader
                   : imageProfileMobileHeader,
               color:changeWhiteBg==true?Colors.white: PreferenceUtil.getIfQurhomeisAcive()
-                  ? Color(CommonUtil().getQurhomeGredientColor())
+                  ? CommonUtil.isUSRegion()?Color(CommonUtil().getMyPrimaryColor()):Color(CommonUtil().getQurhomeGredientColor())
                   : Color(CommonUtil().getMyPrimaryColor()),
               child: Center(
                 child: getFirstLastNameText(myProfile,changeWhiteBg: changeWhiteBg),

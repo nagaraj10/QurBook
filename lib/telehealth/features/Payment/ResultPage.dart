@@ -109,7 +109,6 @@ class _ResultPage extends State<ResultPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       body: Container(
-        color: Color(new CommonUtil().getMyPrimaryColor()),
         child: Center(
           child: Container(
             child: SingleChildScrollView(
@@ -120,12 +119,12 @@ class _ResultPage extends State<ResultPage> {
                         status ? PAYMENT_SUCCESS_PNG : PAYMENT_FAILURE_PNG,
                         width: 120.0.h,
                         height: 120.0.h,
-                        color: status ? Colors.white : Colors.red),
+                        color: status ? Color(CommonUtil().getMyPrimaryColor()) : Colors.red),
                     SizedBox(height: 15.0.h),
                     Text(status ? PAYMENT_SUCCESS_MSG : PAYMENT_FAILURE_MSG,
                         style: TextStyle(
                             fontSize: 22.0.sp,
-                            color: Colors.white,
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             fontWeight: FontWeight.bold)),
                     SizedBox(height: 10.0.h),
                     Padding(
@@ -138,7 +137,7 @@ class _ResultPage extends State<ResultPage> {
                                 : PAYMENT_FAILURE_CONTENT,
                         style: TextStyle(
                             fontSize: 12.0.sp,
-                            color: Colors.white,
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -150,7 +149,7 @@ class _ResultPage extends State<ResultPage> {
                                 : '',
                             style: TextStyle(
                                 fontSize: 16.0.sp,
-                                color: Colors.white,
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 fontWeight: FontWeight.bold))
                         : SizedBox(),
                     SizedBox(height: 30.0.h),

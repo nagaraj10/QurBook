@@ -26,6 +26,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -999,7 +1000,7 @@ class ChatState extends State<ChatDetail> {
                       clearSearchData();
                       showSearch();
                     },
-                    icon: Icon(Icons.clear, size: 20),
+                    icon: Icon(Icons.clear, size: 20,color: Color(CommonUtil().getMyPrimaryColor()),),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
@@ -1011,7 +1012,7 @@ class ChatState extends State<ChatDetail> {
                     color: Colors.grey[800],
                     fontSize: 16.0.sp,
                   ),
-                  fillColor: Colors.white70),
+                  fillColor: Colors.white),
               onChanged: _onSearch,
             ),
           ),

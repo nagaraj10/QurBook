@@ -7,6 +7,7 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -815,8 +816,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               enabled: true,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
+                labelStyle: TextStyle(
+                    fontSize: 15.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
                 ),
                 labelText: CommonConstants.addr_line_1,
               ),
@@ -835,8 +842,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               enabled: true,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
+                labelStyle: TextStyle(
+                    fontSize: 15.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
                 ),
                 labelText: CommonConstants.addr_line_2,
               ),
@@ -851,8 +864,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     hintText: 'City*',
                     labelText: 'City*',
                     border: InputBorder.none,
+                    labelStyle: TextStyle(
+                        fontSize: 15.0.sp,
+                        fontWeight: FontWeight.w400,
+                        color: ColorUtils.myFamilyGreyColor),
                     hintStyle: TextStyle(
                       fontSize: 16.0.sp,
+                      color: ColorUtils.myFamilyGreyColor,
+                      fontWeight: FontWeight.w400,
                     ),
                   )),
               suggestionsCallback: (pattern) async {
@@ -914,8 +933,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   hintText: 'State',
                   labelText: 'State',
                   border: InputBorder.none,
+                  labelStyle: TextStyle(
+                      fontSize: 15.0.sp,
+                      fontWeight: FontWeight.w400,
+                      color: ColorUtils.myFamilyGreyColor),
                   hintStyle: TextStyle(
                     fontSize: 16.0.sp,
+                    color: ColorUtils.myFamilyGreyColor,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 onChanged: (value) {
@@ -982,8 +1007,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               maxLength: CommonUtil.REGION_CODE == 'IN' ? 6 : 5,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
+                labelStyle: TextStyle(
+                    fontSize: 15.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
                 ),
                 labelText: CommonUtil.REGION_CODE == 'IN'
                     ? CommonConstants.addr_pin
@@ -3126,7 +3157,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             padding: EdgeInsets.only(left: 20, right: 20, top: 5),
             child: IconButton(
               icon: Icon(Icons.add),
-              color: Colors.blue,
+              color:Color(CommonUtil().getMyPrimaryColor()),
               onPressed: () {
                 showTagDialog(context);
               },
