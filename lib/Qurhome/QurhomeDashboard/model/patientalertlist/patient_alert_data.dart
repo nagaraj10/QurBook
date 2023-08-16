@@ -29,8 +29,8 @@ class PatientAlertData {
     try {
       id = json['id'];
       additionalInfo = json['additionalInfo'] != null
-              ? new AdditionalInfo.fromJson(json['additionalInfo'])
-              : null;
+          ? new AdditionalInfo.fromJson(json['additionalInfo'])
+          : null;
       statusId = json['statusId'];
       statusName = json['statusName'];
       typeId = json['typeId'];
@@ -40,8 +40,8 @@ class PatientAlertData {
       createdOn = DateTime.tryParse(json['createdOn'] ?? '');
       isEscalated = json['isEscalated'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 

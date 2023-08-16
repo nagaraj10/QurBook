@@ -36,6 +36,7 @@ class AdditionalInfo {
   dynamic? escalationReceived;
   int? risklevel;
   dynamic? escalatedComment;
+  dynamic? cgNotes;
 
   AdditionalInfo(
       {this.ack,
@@ -78,60 +79,67 @@ class AdditionalInfo {
       ackLocal = json.containsKey('ack_local') ? json['ack_local'] : '';
       issymptom = json.containsKey('issymptom') ? json['issymptom'] : false;
       try {
-            if (json['uformdata'] != null) getDynamicFieldList(json['uformdata']);
-          } catch (e,stackTrace) {
-            print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        if (json['uformdata'] is String) {
+          getDynamicFieldList(jsonDecode(json['uformdata']));
+        } else if (json['uformdata'] != null)
+          getDynamicFieldList(json['uformdata']);
+      } catch (e, stackTrace) {
+        print(e);
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-            dynamicFieldModel = [];
-          }
+        dynamicFieldModel = [];
+      }
 
       try {
-            if (json['uform'] != null)
-              getDynamicFieldListFromUfrom(jsonDecode(json['uform']));
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        if (json['uform'] != null)
+          getDynamicFieldListFromUfrom(jsonDecode(json['uform']));
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-            print(e);
+        print(e);
 
-            dynamicFieldModelfromUForm = [];
-          }
+        dynamicFieldModelfromUForm = [];
+      }
       uformname = json.containsKey('uformname') ? json['uformname'] : '';
       endDateTime =
-              json.containsKey('end_date_time') ? json['end_date_time'] : '';
+          json.containsKey('end_date_time') ? json['end_date_time'] : '';
       startDateTime =
-              json.containsKey('start_date_time') ? json['start_date_time'] : '';
+          json.containsKey('start_date_time') ? json['start_date_time'] : '';
       cptCodeDetails =
-              json.containsKey('cpt_code_details') ? json['cpt_code_details'] : '';
+          json.containsKey('cpt_code_details') ? json['cpt_code_details'] : '';
       uid = json.containsKey('uid') ? json['uid'] : '';
       title = json.containsKey('title') ? json['title'] : '';
       linkid = json.containsKey('linkid') ? json['linkid'] : '';
-      activityname = json.containsKey('activityname') ? json['activityname'] : '';
+      activityname =
+          json.containsKey('activityname') ? json['activityname'] : '';
       activityType =
-              json.containsKey('activity_type') ? json['activity_type'] : '';
+          json.containsKey('activity_type') ? json['activity_type'] : '';
       comment = json.containsKey('comment') ? json['comment'] : '';
       category = json.containsKey('category') ? json['category'] : '';
       actionId = json.containsKey('action_id') ? json['action_id'] : '';
       escalatedTime =
-              json.containsKey('escalated_time') ? json['escalated_time'] : '';
+          json.containsKey('escalated_time') ? json['escalated_time'] : '';
       escalatedById =
-              json.containsKey('escalated_by_id') ? json['escalated_by_id'] : '';
+          json.containsKey('escalated_by_id') ? json['escalated_by_id'] : '';
       escalatedToId =
-              json.containsKey('escalated_to_id') ? json['escalated_to_id'] : '';
+          json.containsKey('escalated_to_id') ? json['escalated_to_id'] : '';
       resolveComment =
-              json.containsKey('resolve_comment') ? json['resolve_comment'] : '';
-      escalatedByName =
-              json.containsKey('escalated_by_name') ? json['escalated_by_name'] : '';
-      escalatedToName =
-              json.containsKey('escalated_to_name') ? json['escalated_to_name'] : '';
+          json.containsKey('resolve_comment') ? json['resolve_comment'] : '';
+      escalatedByName = json.containsKey('escalated_by_name')
+          ? json['escalated_by_name']
+          : '';
+      escalatedToName = json.containsKey('escalated_to_name')
+          ? json['escalated_to_name']
+          : '';
       escalationReceived = json.containsKey('escalation_received')
-              ? json['escalation_received']
-              : '';
+          ? json['escalation_received']
+          : '';
       risklevel = json.containsKey('risklevel') ? json['risklevel'] : 0;
-      escalatedComment =
-              json.containsKey('escalated_comment') ? json['escalated_comment'] : '';
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      escalatedComment = json.containsKey('escalated_comment')
+          ? json['escalated_comment']
+          : '';
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -144,10 +152,18 @@ class AdditionalInfo {
     data['ack_local'] = this.ackLocal;
     data['issymptom'] = this.issymptom;
     if (this.uformdata != null) {
-      data['uformdata'] = this.uformdata!.toJson();
+      if (this.uformdata is String) {
+        data['uformdata'] = this.uformdata;
+      } else {
+        data['uformdata'] = this.uformdata!.toJson();
+      }
     }
-    if (this.uformdata != null) {
-      data['uform'] = this.uform!.toJson();
+    if (this.uform != null) {
+      if (this.uform is String) {
+        data['uform'] = this.uform;
+      } else {
+        data['uform'] = this.uform!.toJson();
+      }
     }
     data['uformname'] = this.uformname;
     data['end_date_time'] = this.endDateTime;
@@ -170,6 +186,8 @@ class AdditionalInfo {
     data['escalation_received'] = this.escalationReceived;
     data['risklevel'] = this.risklevel;
     data['escalated_comment'] = this.escalatedComment;
+    data['cgNotes'] = this.cgNotes;
+
     return data;
   }
 
@@ -180,8 +198,8 @@ class AdditionalInfo {
             : DynamicFieldModel()));
     try {
       dynamicFieldModelfromUForm?.sort((a, b) => a?.seq.compareTo(b?.seq));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -223,8 +241,8 @@ class AdditionalInfo {
     }
     try {
       dynamicFieldModel?.sort((a, b) => a?.seq.compareTo(b?.seq));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
