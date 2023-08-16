@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
+import '../main.dart';
 import '../src/model/ReminderModel.dart';
 import '../src/utils/FHBUtils.dart';
 import '../widgets/GradientAppBar.dart';
@@ -273,7 +274,15 @@ class _AddReminderState extends State<AddReminder> {
         context: context,
         initialDate: selectedDate!,
         firstDate: DateTime.now().subtract(Duration(days: 1)),
-        lastDate: DateTime(2100));
+        lastDate: DateTime(2100),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),);
 
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
