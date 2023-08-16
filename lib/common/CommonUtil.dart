@@ -78,6 +78,7 @@ import '../constants/variable_constant.dart' as variable;
 import '../device_integration/view/screens/Device_Data.dart';
 import '../device_integration/viewModel/deviceDataHelper.dart';
 import '../global_search/model/Data.dart';
+import '../main.dart';
 import '../my_family/bloc/FamilyListBloc.dart';
 import '../my_family/models/LinkedData.dart';
 import '../my_family/models/ProfileData.dart';
@@ -928,7 +929,7 @@ class CommonUtil {
     return PreferenceUtil.getSavedTheme(Constants.keyTheme) ?? 0xff0a72e8;
   }
 
-  int getMyPrimaryColor() => isUSRegion() ? getQurhomePrimaryColor() : PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
+   int getMyPrimaryColor() => isUSRegion() ? getQurhomePrimaryColor() : PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
 
 
   int getMyGredientColor()=> isUSRegion() ?getQurhomeGredientColor(): PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??  0xff9929ea;
@@ -3778,6 +3779,14 @@ class CommonUtil {
       initialDate: _date,
       firstDate: firstDate,
       lastDate: DateTime(2040),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),
     );
 
     if (picked != null) {

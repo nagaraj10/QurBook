@@ -8,6 +8,7 @@ import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -88,14 +89,14 @@ class _ResultPage extends State<PaymentResultPage> {
         Text(status! ? PAYMENT_SUCCESS_MSG : PAYMENT_FAILURE_MSG,
             style: TextStyle(
                 fontSize: 22.0.sp,
-                color: Colors.white,
+                color:Color(CommonUtil().getMyPrimaryColor()),
                 fontWeight: FontWeight.bold)),
         SizedBox(height: 10.0.h),
         status!
             ? Text(PLAN_CONFIRM,
                 style: TextStyle(
                     fontSize: 16.0.sp,
-                    color: Colors.white,
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                     fontWeight: FontWeight.bold))
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -103,7 +104,7 @@ class _ResultPage extends State<PaymentResultPage> {
                   PAYMENT_FAILURE_CONTENT, // TODO this need to confirm with Bussiness
                   style: TextStyle(
                       fontSize: 12.0.sp,
-                      color: Colors.white,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
@@ -118,7 +119,6 @@ class _ResultPage extends State<PaymentResultPage> {
       onWillPop: () async => false,
       child: new Scaffold(
         body: Container(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
           child: Center(
             child: Container(
               child: SingleChildScrollView(
@@ -129,7 +129,7 @@ class _ResultPage extends State<PaymentResultPage> {
                           status! ? PAYMENT_SUCCESS_PNG : PAYMENT_FAILURE_PNG,
                           width: 120.0.h,
                           height: 120.0.h,
-                          color: status! ? Colors.white : Colors.red),
+                          color: status! ? Color(CommonUtil().getMyPrimaryColor()) : Colors.red),
                       SizedBox(height: 15.0.h),
                       (widget.isFreePlan)
                           ? Text(
@@ -139,7 +139,7 @@ class _ResultPage extends State<PaymentResultPage> {
                               // TODO this need to confirm with bussinees
                               style: TextStyle(
                                   fontSize: 18.0.sp,
-                                  color: Colors.white,
+                                  color:Color(CommonUtil().getMyPrimaryColor()),
                                   fontWeight: FontWeight.bold))
                           : paidPlanContent(),
                       //status
@@ -147,7 +147,7 @@ class _ResultPage extends State<PaymentResultPage> {
                           ? Text('Order ID : ' + widget.refNo!,
                               style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: Colors.white,
+                                  color: Color(CommonUtil().getMyPrimaryColor()),
                                   fontWeight: FontWeight.bold))
                           : SizedBox(),
                       SizedBox(height: 30.0.h),
@@ -158,7 +158,7 @@ class _ResultPage extends State<PaymentResultPage> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                                 side: BorderSide(color: Colors.white)),
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             textColor: Colors.white,
                             padding: EdgeInsets.all(12.0),
                             onPressed: () {
