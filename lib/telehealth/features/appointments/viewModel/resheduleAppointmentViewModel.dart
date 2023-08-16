@@ -13,7 +13,7 @@ class ResheduleAppointmentViewModel extends ChangeNotifier {
       String slotNumber, String resheduleDate, String doctorSessionId) async {
     try {
       ResheduleModel resheduleAp = await _resheduleAppointmentsService.resheduleAppointment(
-          bookingId as List<String>, slotNumber, resheduleDate, doctorSessionId);
+          bookingId, slotNumber, resheduleDate, doctorSessionId);
       resheduleAppointmentModel = resheduleAp;
       return resheduleAppointmentModel;
     } catch (e,stackTrace) {
