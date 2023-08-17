@@ -631,8 +631,8 @@ class ChatState extends State<ChatDetail> {
               }
             }
           });
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
 
         textValue = '';
@@ -1000,7 +1000,11 @@ class ChatState extends State<ChatDetail> {
                       clearSearchData();
                       showSearch();
                     },
-                    icon: Icon(Icons.clear, size: 20,color: Color(CommonUtil().getMyPrimaryColor()),),
+                    icon: Icon(
+                      Icons.clear,
+                      size: 20,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                    ),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
@@ -1071,7 +1075,9 @@ class ChatState extends State<ChatDetail> {
                             fontSize: 16.0.sp,
                             color: Colors.white)),
                     getTopBookingDetail(),
-                    lastReceived != null && lastReceived != 'null'
+                    lastReceived != null &&
+                            lastReceived != 'null' &&
+                            lastReceived != ""
                         ? getWidgetTextForLastReceivedDate(
                             LAST_RECEIVED + lastReceived!)
                         : getLastReceivedDateWidget()
@@ -1953,8 +1959,9 @@ class ChatState extends State<ChatDetail> {
                                       true);
                                 }
                               }
-                            } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                            } catch (e, stackTrace) {
+                              CommonUtil()
+                                  .appLogs(message: e, stackTrace: stackTrace);
                             }
                           }
                         });
@@ -2051,8 +2058,8 @@ class ChatState extends State<ChatDetail> {
       }
 
       return value;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       return value;
     }
   }
@@ -2064,8 +2071,8 @@ class ChatState extends State<ChatDetail> {
       int end = content.indexOf(")", start);
       value = content.substring(start, end);
       return value;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       return value;
     }
   }
@@ -2372,8 +2379,8 @@ class ChatState extends State<ChatDetail> {
             _scaffoldKey.currentState!.showSnackBar(snackBar);
           }
         });
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
   }
@@ -2402,8 +2409,8 @@ class ChatState extends State<ChatDetail> {
           FlutterToast().getToast(upload_failed, Colors.red);
         }
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       setState(() {
         isLoading = false;
       });
@@ -2516,6 +2523,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   Future<String> getLastReceivedDate() async {
+    lastReceived = '';
     var familyListModel = await controller.getFamilyMappingList();
     if (familyListModel != null) {
       if (familyListModel?.result != null) {
