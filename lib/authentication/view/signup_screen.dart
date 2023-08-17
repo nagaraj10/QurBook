@@ -1,16 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/model/Country.dart';
+import 'package:myfhb/authentication/model/patientlogin_model.dart';
 import '../model/patientsignup_model.dart';
 import '../constants/constants.dart';
 import 'authentication_validator.dart';
 import 'login_screen.dart';
 import 'verifypatient_screen.dart';
 import '../view_model/patientauth_view_model.dart';
-import '../model/patientsignup_model.dart' as signuplModel;
 import '../../constants/fhb_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../widgets/country_code_picker.dart';
@@ -21,6 +23,21 @@ import '../../constants/variable_constant.dart' as variable;
 import '../../src/ui/loader_class.dart';
 
 class PatientSignUpScreen extends StatefulWidget {
+
+  PatientSignUpScreen({
+    this.flag = 0,
+    this.signInValidationModel,
+    this.selDialogCountry,
+    this.mobNo
+  });
+
+
+  final int flag;
+  final SignInValidationModel? signInValidationModel;
+  final Country? selDialogCountry;
+  final String? mobNo;
+
+
   @override
   _PatientSignUpScreenState createState() => _PatientSignUpScreenState();
 }
@@ -31,6 +48,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   final mobileNoController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   var isLoading = false;
   bool _autoValidateBool = false;
   FlutterToast toast = FlutterToast();
@@ -41,6 +59,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
 
   bool _isHidden = true;
+  bool _isConfirmPwdHidden = true;
 
   @override
   void initState() {
@@ -49,6 +68,23 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
     authViewModel = AuthViewModel();
     userCollection = [];
+    onInit();
+  }
+
+  onInit() {
+    try {
+      _selectedDialogCountry =
+          (widget.selDialogCountry ?? Country.fromCode(CommonUtil.REGION_CODE));
+      mobileNoController.text = CommonUtil().validString(widget.mobNo ?? "");
+      if (widget.flag == 1) {
+        firstNameController.text = CommonUtil()
+            .validString(widget.signInValidationModel?.result?.firstName ?? "");
+        lastNamController.text = CommonUtil()
+            .validString(widget.signInValidationModel?.result?.lastName ?? "");
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
   @override
@@ -94,135 +130,174 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                         SizedBox(
                           height: 10.0.h,
                         ),
+                        if (widget.flag == 1) ...{
+                          Text(
+                            widget.signInValidationModel?.result != null &&
+                                widget.signInValidationModel?.result
+                                    ?.firstName !=
+                                    null &&
+                                widget.signInValidationModel?.result
+                                    ?.firstName !=
+                                    ''
+                                ? 'Hey, ${toBeginningOfSentenceCase((widget.signInValidationModel?.result?.firstName ?? ""))}'
+                                : '',
+                            style: TextStyle(
+                              fontSize: CommonUtil().isTablet!
+                                  ? Constants.tabFontTitle
+                                  : Constants.mobileFontTitle,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          SizedBox(
+                            height: 10.0.h,
+                          ),
+                        },
                         Text(
-                          strSignUpText,
+                          widget.flag == 0
+                              ? strSignUpText
+                              : strSignUpFinishText,
                           style: TextStyle(
                             fontSize: 14.0.sp,
                           ),
                         ),
+                        SizedBox(
+                          height: 5.0.h,
+                        ),
                         Column(
                           children: [
-                            _signupTextFields(
-                              TextFormField(
-                                textCapitalization:
-                                    TextCapitalization.sentences,
-                                decoration: InputDecoration(
-                                  hintText: strFirstNameHint,
-                                  labelText: strFirstNameHint,
-                                  focusedBorder: OutlineInputBorder(
+                            if (widget.flag == 0) ...{
+                              _signupTextFields(
+                                TextFormField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  decoration: InputDecoration(
+                                    hintText: strFirstNameHint,
+                                    labelText: strFirstNameHint,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        )),
+                                    border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
-                                      )),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    ),
-                                  ),
-                                ),
-                                style: TextStyle(
-                                  fontSize: 16.0.sp,
-                                ),
-                                controller: firstNameController,
-                                autovalidate: _autoValidateBool,
-                                validator: (value) {
-                                  return AuthenticationValidator()
-                                      .charValidation(value!, patternChar as String,
-                                          strEnterFirstname);
-                                },
-                                onSaved: (value) {},
-                              ),
-                            ),
-                            SizedBox(height: 10.0.h),
-                            _signupTextFields(
-                              TextFormField(
-                                textCapitalization:
-                                    TextCapitalization.sentences,
-                                style: TextStyle(
-                                  fontSize: 16.0.sp,
-                                ),
-                                autovalidate: _autoValidateBool,
-                                decoration: InputDecoration(
-                                  hintText: strLastNameHint,
-                                  labelText: strLastNameHint,
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                      )),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    ),
-                                  ),
-                                ),
-                                controller: lastNamController,
-                                validator: (value) {
-                                  return AuthenticationValidator()
-                                      .charValidation(value!, patternChar as String,
-                                          strEnterLastNamee);
-                                },
-                                onSaved: (value) {},
-                              ),
-                            ),
-                            SizedBox(height: 10.0.h),
-                            _signupTextFields(
-                              TextFormField(
-                                textCapitalization:
-                                    TextCapitalization.sentences,
-                                style: TextStyle(
-                                  fontSize: 16.0.sp,
-                                ),
-                                autovalidate: _autoValidateBool,
-                                decoration: InputDecoration(
-                                  hintText: strNewPhoneHint,
-                                  labelText: strNumberHint,
-                                  counterText: "",
-                                  prefixIcon: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: 75.0.w,
-                                      minWidth: 75.0.w,
-                                    ),
-                                    child: CountryCodePickerPage(
-                                      selectedCountry: _selectedDialogCountry,
-                                      isFromAuthenticationScreen: true,
-                                      onValuePicked: (country) => setState(
-                                        () => _selectedDialogCountry = country,
                                       ),
                                     ),
                                   ),
-                                  focusedBorder: OutlineInputBorder(
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                  ),
+                                  controller: firstNameController,
+                                  autovalidate: _autoValidateBool,
+                                  validator: (value) {
+                                    return AuthenticationValidator()
+                                        .charValidation(
+                                            value!,
+                                            patternChar as String,
+                                        strPleaseEnterFirstname);
+                                  },
+                                  onSaved: (value) {},
+                                ),
+                              ),
+                              SizedBox(height: 10.0.h),
+                              _signupTextFields(
+                                TextFormField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                  ),
+                                  autovalidate: _autoValidateBool,
+                                  decoration: InputDecoration(
+                                    hintText: strLastNameHint,
+                                    labelText: strLastNameHint,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        )),
+                                    border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
-                                      )),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      ),
                                     ),
                                   ),
+                                  controller: lastNamController,
+                                  validator: (value) {
+                                    return AuthenticationValidator()
+                                        .charValidation(
+                                            value!,
+                                            patternChar as String,
+                                            strEnterLastNamee);
+                                  },
+                                  onSaved: (value) {},
                                 ),
-                                validator: (value) {
-                                  return AuthenticationValidator()
-                                      .phoneValidation(value!, patternPhoneNew as String,
-                                          strPhoneCantEmpty);
-                                },
-                                controller: mobileNoController,
-                                maxLength: 10,
-                                onSaved: (value) {},
-                                keyboardType: TextInputType.number,
                               ),
-                            ),
-                            SizedBox(height: 10.0.h),
+                              SizedBox(height: 10.0.h),
+                              _signupTextFields(
+                                TextFormField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  style: TextStyle(
+                                      fontSize: 16.0.sp,
+                                  ),
+                                  autovalidate: _autoValidateBool,
+                                  decoration: InputDecoration(
+                                    hintText: strNewPhoneHint,
+                                    labelText: strNumberHint,
+                                    counterText: "",
+                                    prefixIcon: Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: 75.0.w,
+                                        minWidth: 75.0.w,
+                                      ),
+                                      child: CountryCodePickerPage(
+                                        selectedCountry: _selectedDialogCountry,
+                                        isFromAuthenticationScreen: true,
+                                        onValuePicked: (country) => setState(
+                                          () =>
+                                              _selectedDialogCountry = country,
+                                        ),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        )),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      ),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    return AuthenticationValidator()
+                                        .phoneValidation(
+                                            value!,
+                                            patternPhoneNew as String,
+                                            strPhoneCantEmpty);
+                                  },
+                                  controller: mobileNoController,
+                                  maxLength: 10,
+                                  onSaved: (value) {},
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                              SizedBox(height: 10.0.h),
+                            },
                             _signupTextFields(
                               TextFormField(
                                 textCapitalization:
@@ -232,7 +307,13 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 ),
                                 autovalidate: _autoValidateBool,
                                 decoration: InputDecoration(
-                                  hintText: strEmailHintText,
+                                  hintText: CommonUtil.isUSRegion()
+                                      ? strUSEmailHintText
+                                      : strEmailHintText,
+                                  hintStyle: TextStyle(
+                                      color: CommonUtil.isUSRegion()
+                                          ? Colors.grey
+                                          : null),
                                   labelText: strEmailHint,
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -268,8 +349,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 autovalidate: _autoValidateBool,
                                 obscureText: _isHidden,
                                 decoration: InputDecoration(
-                                  hintText: strPassword,
-                                  labelText: strPassword,
+                                  hintText: strNewPasswordHintTxt,
+                                  labelText: strNewPasswordHintTxt,
                                   suffix: InkWell(
                                     onTap: _togglePasswordView,
                                     child: Icon(
@@ -302,6 +383,58 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 },
                               ),
                             ),
+                            SizedBox(height: 10.0.h),
+                            _signupTextFields(
+                              TextFormField(
+                                textCapitalization:
+                                TextCapitalization.sentences,
+                                style: TextStyle(
+                                  fontSize: 16.0.sp,
+                                ),
+                                autovalidate: _autoValidateBool,
+                                obscureText: _isConfirmPwdHidden,
+                                decoration: InputDecoration(
+                                  hintText: strConfirmationPassword,
+                                  labelText: strConfirmationPassword,
+                                  suffix: InkWell(
+                                    onTap: _toggleConfirmPasswordView,
+                                    child: Icon(
+                                      _isConfirmPwdHidden
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      )),
+                                  errorMaxLines: 2,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    ),
+                                  ),
+                                ),
+                                controller: confirmPasswordController,
+                                validator: (value) {
+                                  if ((value != null) &&
+                                      ((value ?? "").trim().isEmpty)) {
+                                    return strPassCantEmpty;
+                                  } else if (value !=
+                                      passwordController.text
+                                          .toString()
+                                          .trim()) {
+                                    return strConfirmPasswordCheck;
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
                           ],
                         ),
                         SizedBox(
@@ -328,6 +461,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   void _togglePasswordView() {
     setState(() {
       _isHidden = !_isHidden;
+    });
+  }
+
+  void _toggleConfirmPasswordView() {
+    setState(() {
+      _isConfirmPwdHidden = !_isConfirmPwdHidden;
     });
   }
 
