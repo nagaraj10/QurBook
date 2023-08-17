@@ -219,7 +219,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Colors.blue,
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
                                     )
                                   : SizedBox(),
                             ),
@@ -280,7 +280,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Colors.blue,
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
                                     )
                                   : SizedBox(),
                             ),
@@ -303,7 +303,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                     ? Icon(
                                         Icons.check,
                                         size: 30.0,
-                                        color: Colors.blue,
+                                        color:Color(CommonUtil().getMyPrimaryColor()),
                                       )
                                     : SizedBox(),
                               ),
@@ -365,7 +365,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Colors.blue,
+                                      color:Color(CommonUtil().getMyPrimaryColor()),
                                     )
                                   : SizedBox(),
                             ),
@@ -388,7 +388,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Colors.blue,
+                                      color:Color(CommonUtil().getMyPrimaryColor()),
                                     )
                                   : SizedBox(),
                             ),
