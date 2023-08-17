@@ -268,11 +268,16 @@ const String CODE_RULE = 'RULEALERT';
 const String CODE_SYM = 'SYMPTOM';
 
 //login and signup refinement
-const String strProceed = 'Proceed';
+const String strNext = 'Next';
 const String strSignInValidationEndpoint = 'user/login/validation?phoneNumber=';
 const String strEnterPass = 'Enter your password';
 const String strCreateAccount = 'Create Account';
-const String strCheckValidNumber = 'Please check the number or create a new account';
+const String strCheckValidNumber = 'This phone number may be incorrect. Make sure you typed it correctly. Otherwise, create a new account';
+const String strConfirmationPassword = 'Confirm Password';
+const String strConfirmPasswordCheck = 'Password does not match';
+const String strUSEmailHintText = 'name@host.com (optional)';
+const String strSignUpFinishText = 'Please finish setting up your account';
+const String strPleaseEnterFirstname = 'Please Enter First Name';
 
 
 
