@@ -81,10 +81,6 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
             .validString(widget.signInValidationModel?.result?.firstName ?? "");
         lastNamController.text = CommonUtil()
             .validString(widget.signInValidationModel?.result?.lastName ?? "");
-        if (kDebugMode) {
-          print("firstName ${firstNameController.text.toString().trim()}");
-          print("lastName ${lastNamController.text.toString().trim()}");
-        }
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
