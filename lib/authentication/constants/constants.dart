@@ -271,7 +271,7 @@ const String CODE_SYM = 'SYMPTOM';
 const String strNext = 'Next';
 const String strSignInValidationEndpoint = 'user/login/validation?phoneNumber=';
 const String strEnterPass = 'Enter your password';
-const String strCreateAccount = 'Create Account';
+const String strCreateAccount = 'Create New Account';
 const String strCheckValidNumber = 'This phone number may be incorrect. Make sure you typed it correctly. Otherwise, create a new account';
 const String strConfirmationPassword = 'Confirm Password';
 const String strConfirmPasswordCheck = 'Password does not match';
