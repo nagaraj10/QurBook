@@ -279,6 +279,10 @@ const String strUSEmailHintText = 'name@host.com (optional)';
 const String strSignUpFinishText = 'Please finish setting up your account';
 const String strPleaseEnterFirstname = 'Please Enter First Name';
 
+const String strBack = 'Back';
+
+const String strPreviewScreen = 'preview_screen';
+
 
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {

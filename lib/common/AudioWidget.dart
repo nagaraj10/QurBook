@@ -317,8 +317,8 @@ class AudioWidgetState extends State<AudioWidget> {
               whenFinished: () {
                 stopPlayer();
               },
-            ) as FutureOr<Duration>);
-            maxDuration = DuarationOfFile.inSeconds.toDouble();
+            ));
+            maxDuration = DuarationOfFile!.inSeconds.toDouble();
           }
         }
       } else {
@@ -327,8 +327,8 @@ class AudioWidgetState extends State<AudioWidget> {
           whenFinished: () {
             stopPlayer();
           },
-        ) as FutureOr<Duration>);
-        maxDuration = DuarationOfFile.inSeconds.toDouble();
+        ));
+        maxDuration = DuarationOfFile!.inSeconds.toDouble();
       }
       // if (_media == t_MEDIA.ASSET) {
       //   var buffer = (await rootBundle.load(variable.assetSample[_codec.index]))

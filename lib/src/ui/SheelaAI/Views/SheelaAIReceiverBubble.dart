@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 
@@ -13,6 +14,7 @@ import '../../../utils/screenutils/size_extensions.dart';
 import '../../imageSlider.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
+import 'AttachmentListSheela.dart';
 import 'CommonUitls.dart';
 import 'youtube_player.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
@@ -301,22 +303,35 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         (chat.isActionDone != null && chat.isActionDone!))
                     ? null
                     : () {
-                        if (controller.isLoading.isTrue) {
-                          return;
+                        if (chat.redirectTo == strPreviewScreen) {
+                          if (chat.buttons?.last.chatAttachments != null &&
+                              (chat.buttons?.last.chatAttachments?.length ??
+                                      0) >
+                                  0) {
+                            Get.to(
+                              AttachmentListSheela(
+                                  chatAttachments:
+                                      chat.buttons?.last.chatAttachments ?? []),
+                            );
+                          }
+                        } else {
+                          if (controller.isLoading.isTrue) {
+                            return;
+                          }
+                          if (chat.singleuse != null &&
+                              chat.singleuse! &&
+                              chat.isActionDone != null) {
+                            chat.isActionDone = true;
+                          }
+                          buttonData.isSelected = true;
+                          controller.startSheelaFromButton(
+                              buttonText: buttonData.title,
+                              payload: buttonData.payload,
+                              buttons: buttonData);
+                          Future.delayed(const Duration(seconds: 3), () {
+                            buttonData.isSelected = false;
+                          });
                         }
-                        if (chat.singleuse != null &&
-                            chat.singleuse! &&
-                            chat.isActionDone != null) {
-                          chat.isActionDone = true;
-                        }
-                        buttonData.isSelected = true;
-                        controller.startSheelaFromButton(
-                            buttonText: buttonData.title,
-                            payload: buttonData.payload,
-                            buttons: buttonData);
-                        Future.delayed(const Duration(seconds: 3), () {
-                          buttonData.isSelected = false;
-                        });
                       },
                 child: Card(
                   color: (buttonData.isSelected ?? false)
@@ -405,9 +420,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     try {
       if ((chat.imageURL ?? []).isNotEmpty)
         return getImageFromUrl(chat.imageURL);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     try {
@@ -430,8 +444,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       } else {
         return SizedBox.shrink();
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return SizedBox.shrink();
     }
