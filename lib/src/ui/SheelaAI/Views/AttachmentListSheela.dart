@@ -14,6 +14,8 @@ import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/attachments.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
+import 'AudioScreenPreviewSheela.dart';
+
 class AttachmentListSheela extends StatefulWidget {
   const AttachmentListSheela({Key? key, required this.chatAttachments})
       : super(key: key);
@@ -37,21 +39,20 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: GradientAppBar(),
-          elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          title: Text(
-            'Attachments - 5',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.0.sp,
-            ),
+      appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Attachments - 5',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18.0.sp,
           ),
         ),
-        body: listView(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      ),
+      body: listView(),
+      /*floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Container(
           width: 180.w,
           child: OutlinedButton(
@@ -70,7 +71,8 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
                 side:
                     BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
           ),
-        ));
+        )*/
+    );
   }
 
   Widget listView() {
@@ -126,7 +128,8 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
                   children: [
                     Text(
                       (listItem.documentId ?? '') +
-                          getExtension(listItem.messages?.type ?? 0),
+                          CommonUtil().getExtensionSheelaPreview(
+                              listItem.messages?.type ?? 0),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 18.0.sp,
@@ -152,44 +155,37 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
     );
   }
 
-  String getExtension(int type) {
-    switch (type) {
-      case 0:
-        return "";
-      case 1:
-        return ".jpg";
-      case 2:
-        return ".pdf";
-      case 3:
-        return ".mp3";
-      default:
-        return "";
-    }
-  }
-
   goToPreviewScreens(ChatAttachments attachments) {
+    String title = (attachments.documentId ?? '') +
+        CommonUtil().getExtensionSheelaPreview(attachments.messages?.type ?? 0);
     switch (attachments.messages?.type ?? 0) {
       case 0:
         return;
       case 1:
-        Get.to(FullPhoto(url: attachments.messages?.content ?? ''));
+        Get.to(FullPhoto(
+          url: attachments.messages?.content ?? '',
+          titleSheelaPreview: title,
+        ));
         return;
       case 2:
-        goToPDFViewBasedonURL(attachments.messages?.content ?? '');
+        goToPDFViewBasedonURL(attachments.messages?.content ?? '', title);
         return;
       case 3:
+        Get.to(AudioScreenPreviewSheela(
+            audioUrl: attachments.messages?.content ?? '', title: title ?? ''));
         return;
       default:
         return;
     }
   }
 
-  goToPDFViewBasedonURL(String? url) {
+  goToPDFViewBasedonURL(String? url, String? title) {
     try {
       final controller = Get.find<PDFViewController>();
       final data = OpenPDF(type: PDFLocation.URL, path: url);
       controller.data = data;
-      Get.to(() => PDFView());
+      Get.to(
+          () => PDFView(isFromSheelaPreview: true, sheelaPreviewTitle: title));
     } catch (e) {}
   }
 }

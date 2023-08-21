@@ -2,11 +2,19 @@ import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
 class PDFView extends StatefulWidget {
+  const PDFView(
+      {Key? key, this.isFromSheelaPreview = false, this.sheelaPreviewTitle})
+      : super(key: key);
+
+  final bool isFromSheelaPreview;
+  final String? sheelaPreviewTitle;
+
   @override
   _PDFViewState createState() => _PDFViewState();
 }
@@ -25,10 +33,16 @@ class _PDFViewState extends State<PDFView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          controller.data.title ?? "PDF Viewer",
+          widget.isFromSheelaPreview
+              ? (widget.sheelaPreviewTitle ?? '')
+              : controller.data.title ?? "PDF Viewer",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18.0.sp,
+          ),
         ),
         elevation: 0,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: widget.isFromSheelaPreview ? true : false,
         flexibleSpace: GradientAppBar(),
         leading: IconButton(
           icon: Icon(

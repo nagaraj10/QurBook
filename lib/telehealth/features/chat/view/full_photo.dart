@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,8 +10,11 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 class FullPhoto extends StatelessWidget {
   final String? url;
   final String? filePath;
+  final String? titleSheelaPreview;
 
-  FullPhoto({Key? key, required this.url, this.filePath}) : super(key: key);
+  FullPhoto(
+      {Key? key, required this.url, this.filePath, this.titleSheelaPreview})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class FullPhoto extends StatelessWidget {
           },
         ),
         title: Text(
-          'Attachment',
+          titleSheelaPreview ?? 'Attachment',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.0.sp,
@@ -83,7 +85,8 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
     if (widget.filePath == null) {
       return Container(child: PhotoView(imageProvider: NetworkImage(url!)));
     } else {
-      return Container(child: Center(child: Image.file(File(widget.filePath!))));
+      return Container(
+          child: Center(child: Image.file(File(widget.filePath!))));
     }
   }
 }
