@@ -189,4 +189,4 @@ const String strCallDirect =
 const String primaryNumber = 'Primary Number';
 const String alternateNumber = 'Alternate Number';
 const String strMicAlertMsg =
-    'The Mic is currently in use by another app. Please try later';
+    'The Mic is currently in use. Please try later';

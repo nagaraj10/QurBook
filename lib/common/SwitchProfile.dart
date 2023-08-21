@@ -68,7 +68,7 @@ class SwitchProfile {
 
   Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
       Function _callBackToRefresh, bool isFromDashborad,
-      {GlobalKey<ScaffoldState>? scaffold_state}) {
+      {GlobalKey<ScaffoldState>? scaffold_state, bool? changeWhiteBg}) {
     context = _context;
     keyLoader = _keyLoader;
     callBackToRefresh = _callBackToRefresh;
@@ -97,7 +97,7 @@ class SwitchProfile {
               checkInternet(_keyLoader, scaffold_state);
             },
             child: isFromDashborad
-                ? getCirleAvatarWithBorderIcon(myProfile)
+                ? getCirleAvatarWithBorderIcon(myProfile,changeWhiteBg: changeWhiteBg)
                 : CircleAvatar(
                     radius: CommonUtil().isTablet! ? 18 : 15,
                     child: ClipOval(
@@ -106,7 +106,7 @@ class SwitchProfile {
                                 ? myProfile.result!.profilePicThumbnailUrl !=
                                         null
                                     ? FHBBasicWidget()
-                                        .getProfilePicWidgeUsingUrl(myProfile)
+                                        .getProfilePicWidgeUsingUrl(myProfile,changeWhiteBg: changeWhiteBg)
                                     : Container(
                                         height: CommonUtil().isTablet!
                                             ? imageTabHeader
@@ -254,7 +254,7 @@ class SwitchProfile {
     });
   }
 
-  Widget getCirleAvatarWithBorderIcon(MyProfileModel? myProfile) {
+  Widget getCirleAvatarWithBorderIcon(MyProfileModel? myProfile,{bool? changeWhiteBg}) {
     return Stack(
       children: [
         CircleAvatar(
@@ -264,7 +264,7 @@ class SwitchProfile {
                   ? myProfile.result != null
                       ? myProfile.result!.profilePicThumbnailUrl != null
                           ? FHBBasicWidget()
-                              .getProfilePicWidgeUsingUrl(myProfile)
+                              .getProfilePicWidgeUsingUrl(myProfile,changeWhiteBg: changeWhiteBg)
                           : Container(
                               height: 50,
                               width: 50,
@@ -289,7 +289,8 @@ class SwitchProfile {
                       height: 50,
                       width: 50,
                       color: Color(fhbColors.bgColorContainer),
-                    )),
+                    ),
+          ),
         ),
         _getPlusIcon(),
       ],

@@ -12,6 +12,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -194,7 +195,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                     ? Icon(
                                         Icons.check,
                                         size: 30.0,
-                                        color: Colors.blue,
+                                        color:Color(CommonUtil().getMyPrimaryColor()),
                                       )
                                     : SizedBox(),
                               ),
@@ -218,7 +219,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Colors.blue,
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
                                     )
                                   : SizedBox(),
                             ),
@@ -279,7 +280,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Colors.blue,
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
                                     )
                                   : SizedBox(),
                             ),
@@ -302,7 +303,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                     ? Icon(
                                         Icons.check,
                                         size: 30.0,
-                                        color: Colors.blue,
+                                        color:Color(CommonUtil().getMyPrimaryColor()),
                                       )
                                     : SizedBox(),
                               ),
@@ -364,7 +365,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Colors.blue,
+                                      color:Color(CommonUtil().getMyPrimaryColor()),
                                     )
                                   : SizedBox(),
                             ),
@@ -387,7 +388,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Colors.blue,
+                                      color:Color(CommonUtil().getMyPrimaryColor()),
                                     )
                                   : SizedBox(),
                             ),

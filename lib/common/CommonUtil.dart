@@ -78,6 +78,7 @@ import '../constants/variable_constant.dart' as variable;
 import '../device_integration/view/screens/Device_Data.dart';
 import '../device_integration/viewModel/deviceDataHelper.dart';
 import '../global_search/model/Data.dart';
+import '../main.dart';
 import '../my_family/bloc/FamilyListBloc.dart';
 import '../my_family/models/LinkedData.dart';
 import '../my_family/models/ProfileData.dart';
@@ -928,13 +929,10 @@ class CommonUtil {
     return PreferenceUtil.getSavedTheme(Constants.keyTheme) ?? 0xff0a72e8;
   }
 
-  int getMyPrimaryColor() {
-    return PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
-  }
+   int getMyPrimaryColor() => isUSRegion() ? getQurhomePrimaryColor() : PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
 
-  int getMyGredientColor() {
-    return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea;
-  }
+
+  int getMyGredientColor()=> isUSRegion() ?getQurhomeGredientColor(): PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??  0xff9929ea;
 
   int getQurhomePrimaryColor() {
     return 0xFFFB5422;
@@ -3781,6 +3779,14 @@ class CommonUtil {
       initialDate: _date,
       firstDate: firstDate,
       lastDate: DateTime(2040),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),
     );
 
     if (picked != null) {
@@ -5072,30 +5078,34 @@ class CommonUtil {
   }
 
   updateSocketFamily() {
-    String? userId = PreferenceUtil.getStringValue(KEY_USERID);
+    try {
+      String? userId = PreferenceUtil.getStringValue(KEY_USERID);
 
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket!
-        .disconnect();
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .initSocket()
-        .then((value) {
-      //update common count
       Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-          .socket!
-          .emitWithAck(getChatTotalCountEmit, {
-        'userId': userId,
-      }, ack: (countResponseEmit) {
-        if (countResponseEmit != null) {
-          TotalCountModel totalCountModel =
-              TotalCountModel.fromJson(countResponseEmit);
-          if (totalCountModel != null) {
+              .socket!
+              .disconnect();
+      Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+              .initSocket()
+              .then((value) {
+            //update common count
             Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-                .updateChatTotalCount(totalCountModel);
-          }
-        }
-      });
-    });
+                .socket!
+                .emitWithAck(getChatTotalCountEmit, {
+              'userId': userId,
+            }, ack: (countResponseEmit) {
+              if (countResponseEmit != null) {
+                TotalCountModel totalCountModel =
+                    TotalCountModel.fromJson(countResponseEmit);
+                if (totalCountModel != null) {
+                  Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+                      .updateChatTotalCount(totalCountModel);
+                }
+              }
+            });
+          });
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
   }
 
   static commonDialogBox(String msg) async {

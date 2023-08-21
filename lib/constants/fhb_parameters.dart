@@ -804,6 +804,7 @@ const String strPatientReferralAcceptToPatient =
     'patientReferralAcceptToPatient';
 const String strNotificationChat = 'chat';
 const String strChoosePrefDate = 'apptChoosePreferredDate';
+const String strMissedCallFromCCToPatient ='missedCallFromCCToPatient';
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
 const String strDoctorSession = 'doctorSession';

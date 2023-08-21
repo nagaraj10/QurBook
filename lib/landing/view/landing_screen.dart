@@ -130,7 +130,11 @@ class _LandingScreenState extends State<LandingScreen> {
       // dbInitialize();
       userId = PreferenceUtil.getStringValue(KEY_USERID);
       // QurPlanReminders.getTheRemindersFromAPI();
-      Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
+      try {
+        Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
+      } catch (e,stackTrace) {
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      }
       await callImportantsMethod();
       moveToQurhome();
       callGetFamiltMappingCaregiver();

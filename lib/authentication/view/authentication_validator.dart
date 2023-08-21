@@ -7,9 +7,9 @@ class AuthenticationValidator {
   String? charValidation(String name, String pattern, String validText) {
     var regexName = RegExp(pattern);
     if (name.isEmpty) {
-      return strUserNameCantEmpty;
+      return validText;
     } else if (!regexName.hasMatch(name)) {
-      return strUserNameCantEmpty;
+      return validText;
     }
     return null;
   }
