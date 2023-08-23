@@ -234,8 +234,8 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
         );
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //print(e);
     }
@@ -348,6 +348,7 @@ class _NotificationScreen extends State<NotificationScreen> {
     //                     (notificationData.pagingController.itemList.length > 0)
     //                 ? listView(notificationData.pagingController.itemList)
     //                 : emptyNotification()
+
     //             : emptyNotification()
     //         : emptyNotification();
     //   case LoadingStatus.empty:
@@ -557,6 +558,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                               parameters.strNotificationChat) {
                             if (payload?.templateName ==
                                 parameters.strChoosePrefDate) {
+                              notificationOnTapActions(
+                                notification,
+                                payload?.templateName,
+                              );
+                            } else if (payload?.templateName ==
+                                parameters.strMissedCallFromCCToPatient) {
                               notificationOnTapActions(
                                 notification,
                                 payload?.templateName,
@@ -804,7 +811,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                     doc: Past(
                                                         doctor: Doctor(
                                                             id: notification
-                                                                .result[
+                                                                 .result[
                                                                     index]
                                                                 .messageDetails
                                                                 .payload
@@ -1339,6 +1346,38 @@ class _NotificationScreen extends State<NotificationScreen> {
           readUnreadAction(result);
         }
         break;
+      case strMissedCallFromCCToPatient:
+        if (result?.messageDetails?.payload?.careCoordinatorUserId != null &&
+            result?.messageDetails?.payload?.careCoordinatorUserId != '') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatDetail(
+                      peerId: result
+                          ?.messageDetails?.payload?.careCoordinatorUserId,
+                      peerAvatar:
+                          result?.messageDetails?.payload?.senderProfilePic,
+                      peerName: result?.messageDetails?.payload?.senderName,
+                      patientId: '',
+                      patientName: '',
+                      patientPicture: '',
+                      isFromVideoCall: false,
+                      isFromCareCoordinator: result
+                              ?.messageDetails?.payload?.isFromCareCoordinator
+                              .toLowerCase() ==
+                          'true',
+                      carecoordinatorId: result
+                          ?.messageDetails?.payload?.careCoordinatorUserId,
+                      isCareGiver: result?.messageDetails?.payload?.isCareGiver
+                              .toLowerCase() ==
+                          'true',
+                      groupId: '',
+                    )),
+          ).then((value) {});
+          readUnreadAction(result);
+        }
+        break;
+
       default:
         readUnreadAction(result);
         break;
@@ -1364,9 +1403,8 @@ class _NotificationScreen extends State<NotificationScreen> {
   void getProfileData() async {
     try {
       await new CommonUtil().getUserProfileData();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -2088,7 +2126,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         } else {
           return true;
         }
-      } catch (e,stackTrace) {
+      } catch (e, stackTrace) {
         return false;
       }
     } else {

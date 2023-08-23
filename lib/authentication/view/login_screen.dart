@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/model/Country.dart';
+import 'package:myfhb/authentication/view/signup_screen.dart';
 import '../model/patientlogin_model.dart';
 import '../constants/constants.dart';
 import 'authentication_validator.dart';
@@ -27,6 +28,9 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   bool _autoValidateBool = false;
   late AuthViewModel authViewModel;
   FlutterToast toast = FlutterToast();
+
+  bool isSignInScreen = true;
+  SignInValidationModel? signInValidationModel;
 
   @override
   void initState() {
@@ -75,71 +79,142 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                           height: 120.0.h,
                           width: 120.0.h,
                         ),
-                        SizedBox(height: 20.0.h),
-                        Text(
-                          strPhoneandPass,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
+                        if (isSignInScreen) ...{
+                          SizedBox(height: 20.0.h),
+                          Text(
+                            ENTER_MOB_NUM,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20.0.h),
-                        Column(
-                          children: [
-                            _loginTextFields(
-                              TextFormField(
-                                textCapitalization:
-                                TextCapitalization.sentences,
-                                style: TextStyle(
-                                  fontSize: 16.0.sp,
-                                ),
-                                autovalidate: _autoValidateBool,
-                                maxLength: 10,
-                                decoration: InputDecoration(
-                                  counterText: "",
-                                  prefixIcon: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: 75.0.w,
-                                      minWidth: 75.0.w,
-                                    ),
-                                    child: CountryCodePickerPage(
-                                      isFromAuthenticationScreen: true,
-                                      selectedCountry: _selectedDialogCountry,
-                                      onValuePicked: (country) => setState(
-                                            () => _selectedDialogCountry = country,
+                          SizedBox(height: 20.0.h),
+                          Column(
+                            children: [
+                              _loginTextFields(
+                                TextFormField(
+                                  textCapitalization:
+                                  TextCapitalization.sentences,
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                  ),
+                                  autovalidate: _autoValidateBool,
+                                  maxLength: 10,
+                                  decoration: InputDecoration(
+                                    counterText: "",
+                                    prefixIcon: Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: 75.0.w,
+                                        minWidth: 75.0.w,
+                                      ),
+                                      child: CountryCodePickerPage(
+                                        isFromAuthenticationScreen: true,
+                                        selectedCountry: _selectedDialogCountry,
+                                        onValuePicked: (country) => setState(
+                                              () => _selectedDialogCountry = country,
+                                        ),
                                       ),
                                     ),
+                                    hintText: strNewPhoneHint,
+                                    labelText: strNumberHint,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        )),
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        )),
                                   ),
-                                  hintText: strNewPhoneHint,
-                                  labelText: strNumberHint,
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                      )),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                      )),
+                                  validator: (value) {
+                                    return AuthenticationValidator()
+                                        .phoneValidation(value!, patternPhoneNew as String,
+                                        strPhoneCantEmpty);
+                                  },
+                                  controller: numberController,
+                                  onSaved: (value) {},
+                                  keyboardType: TextInputType.number,
                                 ),
-                                validator: (value) {
-                                  return AuthenticationValidator()
-                                      .phoneValidation(value!, patternPhoneNew as String,
-                                      strPhoneCantEmpty);
-                                },
-                                controller: numberController,
-                                onSaved: (value) {},
-                                keyboardType: TextInputType.number,
                               ),
+                            ],
+                          ),
+                          SizedBox(height: 20.0.h),
+                          _loginsavebutton(),
+                          SizedBox(height: 20.0.h),
+                        }else ...{
+                          Text(
+                            strCheckValidNumber,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16.0.sp,
+                                color: Colors.red
                             ),
-                          ],
-                        ),
-                        SizedBox(height: 20.0.h),
-                        _loginsavebutton(),
-                        SizedBox(height: 20.0.h),
+                          ),
+                          SizedBox(height: 20.0.h),
+                          _loginTextFields(
+                            TextFormField(
+                              textCapitalization:
+                              TextCapitalization.sentences,
+                              readOnly: true,
+                              enableInteractiveSelection: false,
+                              style: TextStyle(
+                                  fontSize: 16.0.sp,
+                              ),
+                              autovalidate: _autoValidateBool,
+                              maxLength: 10,
+                              decoration: InputDecoration(
+                                counterText: "",
+                                prefixIcon: Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth: 75.0.w,
+                                    minWidth: 75.0.w,
+                                  ),
+                                  child: CountryCodePickerPage(
+                                      selectedCountry: _selectedDialogCountry,
+                                      isFromAuthenticationScreen: true,
+                                      onValuePicked: (country) =>
+                                          setState(
+                                                () =>
+                                            _selectedDialogCountry = country,
+                                          ),
+                                      isEnabled:false
+                                  ),
+                                ),
+                                hintText: strNewPhoneHint,
+                                labelText: strNumberHint,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
+                              ),
+                              validator: (value) {
+                                return AuthenticationValidator()
+                                    .phoneValidation(
+                                    value!, patternPhoneNew as String,
+                                    strPhoneCantEmpty);
+                              },
+                              controller: numberController,
+                              onSaved: (value) {},
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          SizedBox(height: 10.0.h),
+                          retryButton(),
+                          SizedBox(height: 20.0.h),
+                          createAccountButton(),
+                        },
                       ],
                     ),
                   ),
@@ -176,6 +251,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
             });
           },
           child: Container(
+            width: 260.0.w,
             padding:
             EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
             alignment: Alignment.center,
@@ -189,14 +265,12 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
                   Color(CommonUtil().getMyPrimaryColor()),
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
               //strSignInText,
-              strProceed,
+              strNext,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
             ),
           ),
@@ -217,18 +291,29 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
           password: "",
           source: strSource,
         );
-        SignInValidationModel response = await authViewModel
+        signInValidationModel = await authViewModel
             .loginPatientWithMobNo((logInModel.userName ?? ""));
         LoaderClass.hideLoadingDialog(context);
-        if ((response != null) && (response?.isSuccess ?? false)) {
-          if ((response.result != null) &&
-              (response.result?.isRegistered ?? false)) {
-            goToPatientSignInValidationScreen(0, response);
+        if ((signInValidationModel != null) &&
+            (signInValidationModel?.isSuccess ?? false)) {
+          if ((signInValidationModel?.result != null) &&
+              (signInValidationModel?.result?.isRegistered ?? false)) {
+            Get.to(PatientSignInValidationScreen(
+              flag: 0,
+              signInValidationModel: signInValidationModel,
+              selDialogCountry: _selectedDialogCountry,
+              mobNo: numberController.text.trim(),
+            ));
           } else {
-            //TODO SignUp
+            Get.to(PatientSignUpScreen(
+              flag: 1,
+              signInValidationModel: signInValidationModel,
+              selDialogCountry: _selectedDialogCountry,
+              mobNo: numberController.text.trim(),
+            ));
           }
         } else {
-          goToPatientSignInValidationScreen(1, response);
+          onChangeScreen(false);
         }
       } else {
         setState(() {
@@ -240,10 +325,84 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
     }
   }
 
-  goToPatientSignInValidationScreen(
-      int flag, SignInValidationModel response) async {
+  onChangeScreen(bool signInScreen) {
+    setState(() {
+      isSignInScreen = signInScreen;
+    });
+  }
+
+  Widget retryButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        InkWell(
+          onTap: () {
+            onChangeScreen(true);
+          },
+          child: Container(
+            width: 260.0.w,
+            padding:
+                EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey.shade200,
+                      offset: Offset(2, 4),
+                      blurRadius: 5,
+                      spreadRadius: 2)
+                ],
+                gradient: LinearGradient(end: Alignment.centerRight, colors: [
+//                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor())
+                ])),
+            child: Text(
+              strNext,
+              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget createAccountButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        InkWell(
+          onTap: () {
+            SignInValidationModel signInValidationModel =
+                SignInValidationModel();
+            goToPatientSignUpScreen(0, signInValidationModel);
+          },
+          child: Container(
+            width: 260.0.w,
+            padding:
+                EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                border:
+                    Border.all(color: Color(CommonUtil().getMyPrimaryColor()))),
+            child: Text(
+              strCreateAccount,
+              style: TextStyle(
+                  fontSize: 16.0.sp,
+                  color: Color(CommonUtil().getMyPrimaryColor())),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  goToPatientSignUpScreen(int flag, SignInValidationModel response) async {
     try {
-      Get.to(PatientSignInValidationScreen(
+      Get.to(PatientSignUpScreen(
         flag: flag,
         signInValidationModel: response,
         selDialogCountry: _selectedDialogCountry,
