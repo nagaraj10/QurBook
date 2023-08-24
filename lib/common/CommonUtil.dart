@@ -2017,6 +2017,9 @@ class CommonUtil {
     final apiBaseHelper = ApiBaseHelper();
     String? token = '';
     try {
+      if (Platform.isAndroid && !(await Permission.notification.isGranted)) {
+        await Permission.notification.request();
+      }
       token = await _firebaseMessaging.getToken();
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);

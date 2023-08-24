@@ -163,6 +163,7 @@ Future<void> main() async {
       );
       await Permission.storage.request();
       await Permission.manageExternalStorage.request();
+      await Permission.notification.request();
     }
 
     // check if the app install on first time
