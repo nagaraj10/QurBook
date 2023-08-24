@@ -111,6 +111,9 @@ class QurhomeRegimenController extends GetxController {
                   strText.trim().toLowerCase()));
       bool allActivitiesCompleted = true;
 
+      statusText.value =
+          "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
+
       for (int i = 0;
           i < qurHomeRegimenResponseModel!.regimentsList!.length;
           i++) {
@@ -527,8 +530,9 @@ class QurhomeRegimenController extends GetxController {
             startTimer();
           } else if (seconds < 11) {
             if (!isTodaySelected.value) {
+              // statusText.value = '${strRegimenRedirection} ${seconds.toString()}';
               statusText.value =
-                  '${strRegimenRedirection} ${seconds.toString()}';
+                  "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
               update(["refershStatusText"]);
             }
             duration = Duration(seconds: seconds);
@@ -537,12 +541,16 @@ class QurhomeRegimenController extends GetxController {
               if (CommonUtil().calculateDifference(selectedDate.value) < 0) {
                 //past
                 isTodaySelected.value = false;
-                statusText.value = strViewPastDateRegimen;
+                // statusText.value = strViewPastDateRegimen;
+                statusText.value =
+                    "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
               } else if (CommonUtil().calculateDifference(selectedDate.value) >
                   0) {
                 //future
                 isTodaySelected.value = false;
-                statusText.value = strViewFutureDateRegimen;
+                // statusText.value = strViewFutureDateRegimen;
+                statusText.value =
+                    "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
               }
               update(["refershStatusText"]);
             }
@@ -597,19 +605,25 @@ class QurhomeRegimenController extends GetxController {
     String prefix = '';
     if (CommonUtil().calculateDifference(now) == 0) {
       //today
-      isTodaySelected.value = true;
-      statusText.value = '';
+      isTodaySelected.value = false;
+      // statusText.value = '';
+      statusText.value =
+          "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
       prefix = 'Today, ';
     } else if (CommonUtil().calculateDifference(now) < 0) {
       //past
       isTodaySelected.value = false;
-      statusText.value = strViewPastDateRegimen;
+      // statusText.value = strViewPastDateRegimen;
+      statusText.value =
+          "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
       String formattedDate = DateFormat('EEEE').format(now);
       prefix = formattedDate + ', ';
     } else if (CommonUtil().calculateDifference(now) > 0) {
       //future
       isTodaySelected.value = false;
-      statusText.value = strViewFutureDateRegimen;
+      // statusText.value = strViewFutureDateRegimen;
+      statusText.value =
+          "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
       String formattedDate = DateFormat('EEEE').format(now);
       prefix = formattedDate + ', ';
     } else {

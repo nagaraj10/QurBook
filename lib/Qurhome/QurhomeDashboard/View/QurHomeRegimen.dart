@@ -352,7 +352,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 5),
                                             child: Card(
-                                              color: Colors.grey,
+                                              color: Color(
+                                                CommonUtil()
+                                                    .getQurhomePrimaryColor(),
+                                              ),
                                               child: Padding(
                                                 padding: EdgeInsets.all(5),
                                                 child: Text(
