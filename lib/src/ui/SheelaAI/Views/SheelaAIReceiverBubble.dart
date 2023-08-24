@@ -157,13 +157,32 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }),
                 ),
               ),
-              Text(
-                chat.timeStamp,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2!
-                    .apply(color: Colors.grey),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!controller.isProd)
+                    Text(
+                      chat.conversationFlag ?? 'Rasa',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2!
+                          .apply(color: Colors.grey),
+                    ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  if (!PreferenceUtil.getIfQurhomeisAcive())
+                    Text(
+                      chat.timeStamp,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2!
+                          .apply(color: Colors.grey),
+                    ),
+                ],
               ),
+
               //need to add the video links here
               if ((chat.videoLinks ?? []).isNotEmpty) videoWidgets(),
             ],

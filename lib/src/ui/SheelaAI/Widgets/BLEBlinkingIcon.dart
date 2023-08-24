@@ -32,7 +32,8 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
           opacity: _animationController,
           child: IconButton(
               onPressed: () {
-                _sheelaAIController.resetBLE();
+                if (!_sheelaAIController.isSheelaScreenActive)
+                  _sheelaAIController.resetBLE();
               },
               icon: Icon(Icons.bluetooth),
               color: Color(
