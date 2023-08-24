@@ -1585,9 +1585,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   Future<bool> downloadFile(
       HealthRecordCollection? audioMediaId, String fileType) async {
     try {
+      var fileName = widget.data.metadata!.fileName!.replaceAll(" ", "_") +
+          (audioMediaId?.fileType ?? "");
       await FHBUtils.createDir(
         variable.stAudioPath,
-        widget.data.metadata!.fileName,
+        fileName,
         isTempDir: true,
       ).then((filePath) async {
         var file = File('$filePath' /*+ fileType*/);
@@ -1603,7 +1605,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         await file.writeAsBytes(bytes);
 
         setState(() {
-          if (fileType == '.mp3') {
+          if (['.mp3', '.aac'].contains(audioMediaId.fileType)) {
             //await path.writeAsBytes(bytes);
 
             containsAudio = true;
