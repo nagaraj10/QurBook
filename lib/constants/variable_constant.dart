@@ -636,7 +636,8 @@ const String strImgNtClear = 'Image not clear';
 const String strRegimenRedirection = 'Redirecting to current date regimen in';
 const String strViewPastDateRegimen = 'You are viewing past date regimen';
 const String strViewFutureDateRegimen = 'You are viewing future date regimen';
-
+const String stringViewTotalNumberOfActivites =
+    'Total Number of activitie(s) :';
 //for device screen
 const String strGlucUnit = 'mgdl';
 const String strbfood = 'Before Food';
