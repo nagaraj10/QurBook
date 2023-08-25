@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
+import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
@@ -16,6 +17,7 @@ import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -38,6 +40,8 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
+
+enum BLEStatus { Searching, Connected, Disabled }
 
 class SheelaAIController extends GetxController {
   MyProfileModel? profile;
@@ -76,7 +80,7 @@ class SheelaAIController extends GetxController {
   Rx<bool> isDiscardDialogShown = false.obs;
 
   Rx<bool> isQueueDialogShowing = false.obs;
-
+  Rx<BLEStatus> isBLEStatus = BLEStatus.Disabled.obs;
   bool isCallStartFromSheela = false;
 
   @override
@@ -206,6 +210,12 @@ class SheelaAIController extends GetxController {
         curve: Curves.easeInOut,
       ),
     );
+  }
+
+  resetBLE() async {
+    Get.find<SheelaBLEController>().stopScanning();
+    await Future.delayed(const Duration(seconds: 2));
+    Get.find<SheelaBLEController>().setupListenerForReadings();
   }
 
   startSheelaFromButton({
@@ -999,6 +1009,7 @@ class SheelaAIController extends GetxController {
                   isQueueDialogShowing.value = true;
                   CommonUtil().dialogForSheelaQueueStable(
                       Get.context!, value.result?.queueCount ?? 0,
+                      unReadMsgCount:Provider.of<ChatSocketViewModel>(Get.context!,listen: false).chatTotalCount,
                       onTapSheela: () {
                     isQueueDialogShowing.value = false;
                     Get.back();

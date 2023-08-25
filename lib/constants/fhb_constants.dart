@@ -851,6 +851,10 @@ const String strFeatureNotEnable =
 const String sheela_hdn_btn_yes = 'yes';
 const String activity_removed_regimen =
     'Activity has been removed from your regimen';
+const String pleaseTurnOnYourBluetoothAndTryAgain =
+    'Please turn on your Bluetooth and try again';
+const String SearchingForDevices = 'Searching for devices';
+const String deviceConnected = 'Device connected';
 
 const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
 
