@@ -463,8 +463,8 @@ class CommonUtil {
             mediaMetaInfoObj.add(mediaMetaInfo);
           }
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
 
@@ -542,8 +542,8 @@ class CommonUtil {
     late MediaResult selectedMediaData;
     try {
       selectedMediaData = PreferenceUtil.getMediaData(Constants.KEY_MEDIADATA);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     for (var mediaData in mediaDataList) {
@@ -716,8 +716,8 @@ class CommonUtil {
           }
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList : [];
@@ -800,8 +800,8 @@ class CommonUtil {
         // }
         moveToLoginPage();
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       // if (Platform.isIOS) {
       //   _firebaseMessaging.deleteInstanceID();
       // }
@@ -929,10 +929,13 @@ class CommonUtil {
     return PreferenceUtil.getSavedTheme(Constants.keyTheme) ?? 0xff0a72e8;
   }
 
-   int getMyPrimaryColor() => isUSRegion() ? getQurhomePrimaryColor() : PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
+  int getMyPrimaryColor() => isUSRegion()
+      ? getQurhomePrimaryColor()
+      : PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
 
-
-  int getMyGredientColor()=> isUSRegion() ?getQurhomeGredientColor(): PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??  0xff9929ea;
+  int getMyGredientColor() => isUSRegion()
+      ? getQurhomeGredientColor()
+      : PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea;
 
   int getQurhomePrimaryColor() {
     return 0xFFFB5422;
@@ -1360,8 +1363,8 @@ class CommonUtil {
               Constants.keyFamily, relationShip?.relationShipAry);
         });
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       _familyListBloc.getCustomRoles().then((relationShip) {
         PreferenceUtil.saveRelationshipArray(
             Constants.keyFamily, relationShip.relationShipAry);
@@ -1415,8 +1418,8 @@ class CommonUtil {
               PreferenceUtil.saveProfileData(
                   Constants.KEY_PROFILE, profileData);
             }
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
           }
 
@@ -1445,8 +1448,8 @@ class CommonUtil {
               PreferenceUtil.saveProfileData(
                   Constants.KEY_PROFILE_MAIN, profileData);
             }
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             PreferenceUtil.saveProfileData(
                 Constants.KEY_PROFILE_MAIN, profileData);
           }
@@ -1548,8 +1551,8 @@ class CommonUtil {
             .getMediTypesList()
             .then((value) {} as FutureOr Function(MediaDataList?));
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       await _mediaTypeBlock.getMediTypesList().then((value) {});
     }
   }
@@ -1701,8 +1704,8 @@ class CommonUtil {
 
         return df.format(now);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       DateFormat format = DateFormat(
           CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
@@ -1942,7 +1945,7 @@ class CommonUtil {
       );
       print("value:${value}");
       return value;
-    } on PlatformException catch (e,stackTrace) {
+    } on PlatformException catch (e, stackTrace) {
       if (e.code == auth_error.notAvailable) {
         print(e.message);
         return false;
@@ -1981,8 +1984,8 @@ class CommonUtil {
         token,
         true,
       );
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -2019,8 +2022,8 @@ class CommonUtil {
     try {
       await askPermissionForNotification();
       token = await _firebaseMessaging.getToken();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     await PreferenceUtil.saveString(
         Constants.STR_PUSH_TOKEN, token ?? 'not available');
@@ -2084,8 +2087,8 @@ class CommonUtil {
       var file = File('$dir/${imageName}$extension');
       await file.writeAsBytes(bytes);
       return file;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print('$e exception thrown');
     }
@@ -2144,8 +2147,8 @@ class CommonUtil {
           }
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList : [];
@@ -2292,8 +2295,8 @@ class CommonUtil {
       hideLoadingDialog(context);
 
       showDialogPatientList(response?.result, myProfile, context, selectedUser);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       hideLoadingDialog(context);
 
@@ -2463,8 +2466,8 @@ class CommonUtil {
                     qurhomeDashboardController.updateBLETimer(Enable: false);
 
                     navigateToNotificationScreen(isFromQurday);
-                  } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                  } catch (e, stackTrace) {
+                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
                     print(e);
                   }
@@ -2521,8 +2524,8 @@ class CommonUtil {
                 onTap: () {
                   try {
                     navigateToNotificationScreen(isFromQurday);
-                  } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                  } catch (e, stackTrace) {
+                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
                     print(e);
                   }
@@ -2539,15 +2542,15 @@ class CommonUtil {
               );
             }
           });
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       return GestureDetector(
         onTap: () {
           try {
             navigateToNotificationScreen(isFromQurday);
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
             print(e);
           }
@@ -2570,8 +2573,8 @@ class CommonUtil {
       Get.to(
         NotificationMain(isFromQurday: isFromQurday),
       );
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -2620,11 +2623,11 @@ class CommonUtil {
       if (newVersion > currentVersion) {
         _showVersionDialog(context, isForceUpdate);
       }
-    } on FirebaseException catch (exception,stackTrace) {
+    } on FirebaseException catch (exception, stackTrace) {
       // Fetch throttled.
-      CommonUtil().appLogs(message: exception,stackTrace:stackTrace);
-    } catch (exception,stackTrace) {
-      CommonUtil().appLogs(message: exception,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
+    } catch (exception, stackTrace) {
+      CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
       print('Unable to fetch remote config. Cached or default values will be '
           'used');
     }
@@ -2905,8 +2908,8 @@ class CommonUtil {
           ),
         );
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
     }
@@ -2946,8 +2949,8 @@ class CommonUtil {
         } else {
           return position;
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         print(e.toString());
       }
@@ -3780,10 +3783,10 @@ class CommonUtil {
       initialDate: _date,
       firstDate: firstDate,
       lastDate: DateTime(2040),
-      builder: (context,child) => Theme(
+      builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getMyPrimaryColor()),
+            primary: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         child: child!,
@@ -3926,8 +3929,9 @@ class CommonUtil {
                                     FetchNotificationService()
                                         .updateNsOnTapAction(nsBody);
                                   });
-                                } catch (e,stackTrace) {
-                                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                } catch (e, stackTrace) {
+                                  CommonUtil().appLogs(
+                                      message: e, stackTrace: stackTrace);
                                 }
                               }
 
@@ -4345,8 +4349,8 @@ class CommonUtil {
       if (cacheDir.existsSync()) {
         cacheDir.deleteSync(recursive: true);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print("Failed to delete the Temp dir : ${e.toString()}");
     }
@@ -4358,8 +4362,8 @@ class CommonUtil {
       if (appDir.existsSync()) {
         appDir.deleteSync(recursive: true);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print("Failed to delete the support dir : ${e.toString()}");
     }
@@ -4424,8 +4428,8 @@ class CommonUtil {
       } else {
         return ResultFromResponse(false, 'Requested file not found');
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
       return ResultFromResponse(false, 'Failed to download the file');
@@ -5070,8 +5074,8 @@ class CommonUtil {
           }
         },
       );
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
       return Text('Failed to load');
@@ -5083,29 +5087,29 @@ class CommonUtil {
       String? userId = PreferenceUtil.getStringValue(KEY_USERID);
 
       Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              .socket!
-              .disconnect();
+          .socket!
+          .disconnect();
       Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              .initSocket()
-              .then((value) {
-            //update common count
-            Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-                .socket!
-                .emitWithAck(getChatTotalCountEmit, {
-              'userId': userId,
-            }, ack: (countResponseEmit) {
-              if (countResponseEmit != null) {
-                TotalCountModel totalCountModel =
-                    TotalCountModel.fromJson(countResponseEmit);
-                if (totalCountModel != null) {
-                  Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-                      .updateChatTotalCount(totalCountModel);
-                }
-              }
-            });
-          });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          .initSocket()
+          .then((value) {
+        //update common count
+        Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+            .socket!
+            .emitWithAck(getChatTotalCountEmit, {
+          'userId': userId,
+        }, ack: (countResponseEmit) {
+          if (countResponseEmit != null) {
+            TotalCountModel totalCountModel =
+                TotalCountModel.fromJson(countResponseEmit);
+            if (totalCountModel != null) {
+              Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+                  .updateChatTotalCount(totalCountModel);
+            }
+          }
+        });
+      });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -5363,8 +5367,8 @@ class CommonUtil {
         return "";
       else
         return strText.trim();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return "";
   }
@@ -5373,8 +5377,8 @@ class CommonUtil {
     try {
       const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -5382,8 +5386,8 @@ class CommonUtil {
     try {
       const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -5391,8 +5395,8 @@ class CommonUtil {
     try {
       const platform = MethodChannel(strCloseSheelaDialog);
       platform.invokeMethod(strCloseSheelaDialog);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -5487,8 +5491,8 @@ class CommonUtil {
         strName = CommonUtil().titleCase(strName.toLowerCase());
       }
       return strName;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return strName;
   }
@@ -5684,8 +5688,8 @@ class CommonUtil {
     try {
       await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp]);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -5699,8 +5703,8 @@ class CommonUtil {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown
       ]);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -5712,8 +5716,8 @@ class CommonUtil {
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,
       ]);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -5734,8 +5738,8 @@ class CommonUtil {
               : '';
 
       return userName;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //debugPrint(e.toString());
       return userName;
@@ -5753,8 +5757,8 @@ class CommonUtil {
         serviceEnabled = await Geolocator.isLocationServiceEnabled();
       }
       return serviceEnabled!;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -5765,8 +5769,8 @@ class CommonUtil {
       const platform = MethodChannel(IS_BP_ENABLE_CHECK);
       bool? isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
       return isBluetoothEnable;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -5955,8 +5959,8 @@ class CommonUtil {
           () => PDFViewController(),
         );
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) print(e.toString());
     }
@@ -6021,8 +6025,8 @@ class CommonUtil {
         } else {
           new CommonUtil().commonMethodToSetPreference();
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         new CommonUtil().commonMethodToSetPreference();
       }
@@ -6085,8 +6089,8 @@ class CommonUtil {
         value = false;
       }
       return value;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -6108,8 +6112,8 @@ class CommonUtil {
           : strName1.trim().isNotEmpty
               ? strName1[0].toUpperCase()
               : "";
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -6186,8 +6190,8 @@ class CommonUtil {
         if (docPic.isNotEmpty) {
           try {
             docPic = json.decode(navRoute.split('&')[3]);
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           }
         } else {
           docPic = '';
@@ -6195,14 +6199,14 @@ class CommonUtil {
         if (patPic.isNotEmpty) {
           try {
             patPic = json.decode(navRoute.split('&')[7]);
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           }
         } else {
           patPic = '';
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -6229,8 +6233,8 @@ class CommonUtil {
         patientPicUrl: patPic,
         isWeb: isWeb,
       ));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) print(e.toString());
     }
@@ -6258,8 +6262,8 @@ class CommonUtil {
       formattedDate =
           DateFormat(format).format(DateTime.parse(strDate).toLocal());
       return formattedDate;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return '';
     }
@@ -6291,8 +6295,8 @@ class CommonUtil {
     if (type == 'Vitals') {
       try {
         return name;
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         return name;
       }
@@ -6303,14 +6307,14 @@ class CommonUtil {
         first = title.substring(title.indexOf("{") + 1, title.indexOf("}"));
         try {
           second = title.substring(title.indexOf("[") + 1, title.indexOf("]"));
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           return first;
         }
         return first + ' ' + second;
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         return title;
       }
@@ -6350,26 +6354,26 @@ class CommonUtil {
       DateTime selectedDate, RegimentDataModel regimen, BuildContext context) {
     var canEdit = false;
     try {
-      if (regimen?.doseMealString == Constants.doseValueless ||
+      if (regimen?.ack != null) {
+        canEdit = true;
+      } else if (regimen?.doseMealString == Constants.doseValueless ||
           regimen?.doseMealString == Constants.doseValueHigh) {
-        DateTime selectedDateTime = CommonUtil.getDateBasedOnOnceInAPlan(
-            selectedDate, regimen!);
+        DateTime selectedDateTime =
+            CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
 
         canEdit =
             selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
-                Provider
-                    .of<RegimentViewModel>(context!, listen: false)
-                    .regimentMode ==
+                Provider.of<RegimentViewModel>(context!, listen: false)
+                        .regimentMode ==
                     RegimentMode.Schedule;
       } else {
         canEdit = regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-            Provider
-                .of<RegimentViewModel>(context!, listen: false)
-                .regimentMode ==
+            Provider.of<RegimentViewModel>(context!, listen: false)
+                    .regimentMode ==
                 RegimentMode.Schedule;
       }
-    }catch(e){
-      canEdit=false;
+    } catch (e) {
+      canEdit = false;
     }
     return canEdit;
   }
@@ -6395,7 +6399,7 @@ class CommonUtil {
       } else {
         return DateTime.now();
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       return DateTime.now();
     }
   }
@@ -6448,7 +6452,7 @@ class CommonUtil {
     );
   }
 
-  TextStyle getDefaultStyle(){
+  TextStyle getDefaultStyle() {
     return TextStyle(
         fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2);
   }
@@ -6889,8 +6893,8 @@ class VideoCallCommonUtils {
       }
 
       //return isCallSent;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         print(e);
@@ -6928,8 +6932,8 @@ class VideoCallCommonUtils {
     try {
       var parsedDate = DateTime.parse(patientDOB);
       age = calculateAge(parsedDate);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     //await handleCameraAndMic();
 
@@ -7115,8 +7119,8 @@ class VideoCallCommonUtils {
           if (!isFromAppointment!) {
             callApiToUpdateNonAppointment();
           }
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
         final call_start_time =
             DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
@@ -7470,8 +7474,8 @@ class VideoCallCommonUtils {
                   if (!isFromAppointment!) {
                     callApiToUpdateNonAppointment();
                   }
-                } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                } catch (e, stackTrace) {
+                  CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                 }
                 final call_start_time =
                     DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
@@ -7542,8 +7546,8 @@ class VideoCallCommonUtils {
           await SharedPreferences.getInstance();
       userIdForNotify = await sharedPrefs.getString('userID');
       userIdForNotify = json.decode(userIdForNotify!);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -7568,8 +7572,8 @@ class VideoCallCommonUtils {
           print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
         }
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -7669,8 +7673,8 @@ class VideoCallCommonUtils {
           .collection("call_log")
           .doc("$id")
           .set({"call_status": "call_ended_by_user"});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     try {
       CommonUtil.isCallStarted = false;
@@ -7683,8 +7687,8 @@ class VideoCallCommonUtils {
         var sheelaAIController = Get.find<SheelaAIController>();
         sheelaAIController.updateTimer(enable: true);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -7715,8 +7719,8 @@ class VideoCallCommonUtils {
           patienInfo: patienInfo,
           isFromAppointment: isFromAppointment,
           isDoctor: isDoctor);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -7754,10 +7758,10 @@ class VideoCallCommonUtils {
                     .doc("$cid")
                     .set({"call_status": "call_ended_by_user"});
                 regController.meetingId.value = "";
-              } catch (e,stackTrace) {}
+              } catch (e, stackTrace) {}
               Navigator.pop(context!);
-            } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
               print(e);
             }
@@ -7864,8 +7868,8 @@ class VideoCallCommonUtils {
           });
         }
       }).onError((e) {});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -7935,8 +7939,8 @@ class VideoCallCommonUtils {
       CommonUtil.isCallStarted = false;
       CommonUtil.bookedForId = null;
       regController.meetingId.value = "";
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -7960,8 +7964,8 @@ class VideoCallCommonUtils {
             request: getCallLogModel(callStartTime, "", "Started", true));
         await apiResponse.startRecordSOSCall();
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -7987,8 +7991,8 @@ class VideoCallCommonUtils {
         };
         await apiResponse.callMissedCallNsAlertAPI(isFromSheelaRequest: body);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -8050,8 +8054,8 @@ class VideoCallCommonUtils {
       sheelaAIController.isCallStartFromSheela = false;
       sheelaAIController.updateTimer(enable: true);
       sheelaAIController.getAIAPIResponseFor(strCallMyCC, null);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
