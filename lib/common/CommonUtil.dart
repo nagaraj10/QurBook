@@ -6775,6 +6775,22 @@ class CommonUtil {
 
     return name;
   }
+
+  askPermissionForNotification() async {
+    try {
+      if (Platform.isAndroid) {
+        const platform = MethodChannel(IS_NOTIFICATION_PERMISSION_CHECK);
+        await (platform.invokeMethod(IS_NOTIFICATION_PERMISSION_CHECK));
+      } else {
+        await Permission.notification.request();
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
+  }
 }
 
 extension CapExtension on String {

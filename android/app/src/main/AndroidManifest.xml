@@ -38,6 +38,7 @@
     <queries><intent><action android:name="android.speech.RecognitionService" /></intent></queries>
 
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:name="com.ventechsolutions.myFHB.MyApp"

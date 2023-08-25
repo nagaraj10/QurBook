@@ -150,6 +150,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
     private val LOCATION_SERVICE_CHECK = Constants.LOCATION_SERVICE_CHECK
+    private val IS_NOTIFICATION_PERMISSION_CHECK = Constants.IS_NOTIFICATION_PERMISSION_CHECK
     private val ENABLE_BACKGROUND_NOTIFICATION = Constants.ENABLE_BACKGROUND_NOTIFICATION
     private val DISABLE_BACKGROUND_NOTIFICATION = Constants.DISABLE_BACKGROUND_NOTIFICATION
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
@@ -239,6 +240,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
     private val REQUEST_CODE_OPEN_GPS = 1
     private val REQUEST_CODE_PERMISSION_LOCATION = 2
+    private val REQUEST_CODE_PERMISSION_NOTIFICATION = 3
 
     private val DEVICE_SPO2 = 1
     private val DEVICE_TEMP = 2
@@ -1031,6 +1033,28 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+
+    private fun checkNotificationPermission() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                        REQUEST_CODE_PERMISSION_NOTIFICATION
+                    )
+                }
+            }
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -2619,6 +2643,20 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     } else {
                         result.success(true)
                     }
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            IS_NOTIFICATION_PERMISSION_CHECK
+        ).setMethodCallHandler { call, result ->
+            if (call.method == IS_NOTIFICATION_PERMISSION_CHECK) {
+                Log.d("IS_NOTIFICATION_PERMISSION_CHECK", "IS_NOTIFICATION_PERMISSION_CHECK")
+                try {
+                    checkNotificationPermission()
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
                 }
