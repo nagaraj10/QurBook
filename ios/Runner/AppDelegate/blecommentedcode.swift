@@ -15,20 +15,20 @@
 //    func centralManagerDidUpdateState(_ central: CBCentralManager) {
 //        switch central.state {
 //        case .unknown:
-//            eventSink?("enablebluetooth|please enable bluetooth")
+//            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
 //        case .resetting:
-//            eventSink?("enablebluetooth|please enable bluetooth")
+//            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
 //        case .unsupported:
-//            eventSink?("enablebluetooth|please enable bluetooth")
+//            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
 //        case .unauthorized:
 //            eventSink?("permissiondenied|no permission granted")
 //        case .poweredOff:
-//            eventSink?("enablebluetooth|please enable bluetooth")
+//            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
 //        case .poweredOn:
 //            eventSink?("scanstarted|connection started")
 //            centralManager.scanForPeripherals(withServices: [])
 //        default:
-//            eventSink?("enablebluetooth|please enable bluetooth")
+//            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
 //        }
 //    }
 //    
