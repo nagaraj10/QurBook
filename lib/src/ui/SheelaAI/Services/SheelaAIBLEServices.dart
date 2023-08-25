@@ -132,10 +132,14 @@ class SheelaBLEController extends GetxController {
           switch (receivedValues!.first) {
             case "scanstarted":
               SheelaController.isBLEStatus.value = BLEStatus.Searching;
+              FlutterToast().getToast(
+                SearchingForDevices,
+                Colors.green,
+              );
               break;
             case "enablebluetooth":
               FlutterToast().getToast(
-                receivedValues.last ?? 'Please enable the Bluetooth and re-try',
+                receivedValues.last ?? pleaseTurnOnYourBluetoothAndTryAgain,
                 Colors.red,
               );
               if (addingDevicesInHublist)
@@ -190,6 +194,10 @@ class SheelaBLEController extends GetxController {
                     deviceType == "weight" ||
                     deviceType == "bgl") {
                   SheelaController.isBLEStatus.value = BLEStatus.Connected;
+                  FlutterToast().getToast(
+                    deviceConnected,
+                    Colors.green,
+                  );
                   if (isFromVitals || isFromRegiment) {
                     Get.back();
                   }
@@ -366,7 +374,7 @@ class SheelaBLEController extends GetxController {
         isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
         if (!isBluetoothEnable!) {
           FlutterToast().getToast(
-              'Please turn on your bluetooth and try again', Colors.red);
+              pleaseTurnOnYourBluetoothAndTryAgain, Colors.red);
           return false;
         } else if (!serviceEnabled) {
           FlutterToast().getToast(

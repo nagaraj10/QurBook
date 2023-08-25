@@ -932,9 +932,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (!bluetoothAdapter.isEnabled) {
             if (::BLEEventChannel.isInitialized) {
-                BLEEventChannel.success("enablebluetooth|Please turn on your bluetooth")
+                BLEEventChannel.success("enablebluetooth|Please turn on your Bluetooth and try again")
             }
-            //bluetoothFlutterResult.success("enablebluetooth|please enable bluetooth")
+            //bluetoothFlutterResult.success("enablebluetooth|Please turn on your Bluetooth and try again")
             //Toast.makeText(this@MainActivity, "Please turn on Bluetooth first", Toast.LENGTH_LONG).show()
             return
         }
@@ -945,9 +945,9 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
             if (!bluetoothAdapter.isEnabled) {
                 if (::BLEEventChannel.isInitialized) {
-                    BLEEventChannel.success("enablebluetooth|Please turn on your bluetooth")
+                    BLEEventChannel.success("enablebluetooth|Please turn on your Bluetooth and try again")
                 }
-                //bluetoothFlutterResult.success("enablebluetooth|please enable bluetooth")
+                //bluetoothFlutterResult.success("enablebluetooth|Please turn on your Bluetooth and try again")
                 //Toast.makeText(this@MainActivity, "Please turn on Bluetooth first", Toast.LENGTH_LONG).show()
                 return
             }
