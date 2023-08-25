@@ -852,6 +852,8 @@ const String sheela_hdn_btn_yes = 'yes';
 const String activity_removed_regimen =
     'Activity has been removed from your regimen';
 
+const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
+
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
 const String StrUndoAll = 'Undo all';

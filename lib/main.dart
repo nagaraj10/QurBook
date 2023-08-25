@@ -164,7 +164,6 @@ Future<void> main() async {
       await Permission.storage.request();
       await Permission.manageExternalStorage.request();
     }
-    await CommonUtil().askPermissionForNotification();
 
     // check if the app install on first time
     try {
@@ -321,7 +320,9 @@ class _MyFHBState extends State<MyFHB> {
     chatViewModel.setCurrentChatRoomID('none');
     super.initState();
     CommonUtil.askPermissionForCameraAndMic().then((value) {
-      CommonUtil.askPermissionForLocation();
+      CommonUtil.askPermissionForLocation().then((value) {
+        CommonUtil().askPermissionForNotification();
+      });
     });
     getMyRoute();
     _enableTimer();

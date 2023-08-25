@@ -6718,7 +6718,12 @@ class CommonUtil {
 
   askPermissionForNotification() async {
     try {
-      await Permission.notification.request();
+      if (Platform.isAndroid) {
+        const platform = MethodChannel(IS_NOTIFICATION_PERMISSION_CHECK);
+        await (platform.invokeMethod(IS_NOTIFICATION_PERMISSION_CHECK));
+      } else {
+        await Permission.notification.request();
+      }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       if (kDebugMode) {
