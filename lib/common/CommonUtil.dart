@@ -5625,7 +5625,7 @@ class CommonUtil {
   }
 
   void dialogForSheelaQueueStable(BuildContext context, int count,
-      {Function()? onTapSheela}) async {
+      {int? unReadMsgCount,Function()? onTapSheela}) async {
     showGeneralDialog(
         context: context,
         barrierColor: Colors.black38,
@@ -5653,6 +5653,13 @@ class CommonUtil {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text(strRemainders,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white
+                          ),
+                          ),
                           BadgeIconBig(
                             badgeCount: count,
                             badgeColor: ColorUtils.badgeQueue,
@@ -5666,7 +5673,57 @@ class CommonUtil {
                                 width: 250.w,
                               ),
                             ),
-                          )
+                          ),
+                         Visibility(
+                           visible:unReadMsgCount!>0,
+                           child: Column(
+                             children: [
+                               Container(
+                                 height: 2.h,
+                                 width: 0.2.sw,
+                                 margin: EdgeInsets.only(top:20.h),
+                                 decoration: BoxDecoration(
+                                     color: Color(getMyPrimaryColor()),
+                                     borderRadius: BorderRadius.circular(5)
+                                 ),
+                               ),
+                               SizedBox(height: 20.h,),
+                               Text(
+                                 variable.strUnReadMessage,
+                                 style: TextStyle(
+                                     color: Colors.white,
+                                     fontSize: 16.0.sp,
+                                     fontWeight: FontWeight.w600),
+                               ),
+                               SizedBox(height: 15.h,),
+                               BadgeIconBig(
+                                 badgeCount: unReadMsgCount??0,
+                                 badgeColor: ColorUtils.badgeQueue,
+                                 right: 5,
+                                 top: 5,
+                                 boxConstraints: BoxConstraints(minHeight: 35.h,minWidth: 35.h),
+                                 badgeTextSize: 18.sp,
+                                 icon: Container(
+                                   height: 100.h,
+                                   width: 100.h,
+                                   margin: EdgeInsets.all(10),
+                                   padding: EdgeInsets.all(20),
+                                   decoration: BoxDecoration(
+                                     color: Colors.white,
+                                     shape: BoxShape.circle,
+                                     border: Border.all(color: Color(getMyPrimaryColor()),width: 5.w),
+                                   ),
+                                   child:Image.asset(icon_unread_chat,
+                                     height: 30.h,
+                                     width: 30.w,
+                                     color: Color(getMyPrimaryColor()),),
+                                 ),
+                               ),
+                             ],
+                           ),
+                         )
+
+
                         ],
                       ),
                     ),

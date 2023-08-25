@@ -521,6 +521,9 @@ const String strGetHospitalById = 'Getting Hospital by Id';
 const String strGetLabList = 'Getting Laboratory List';
 const String strGetLabById = 'Getting laboratoty by Id';
 
+
+ const String strUnReadMessage ='Unread Messages';
+
 const String strSearch = 'Search';
 const String strSearchByHosLoc = 'Search by Hospital/Location';
 const String strNoLoadtabls = 'Unable To load Tabs';
@@ -847,6 +850,7 @@ const String strAppointmentRegimen = 'Appointment';
 const String strSelfRegimen = 'Self';
 
 //chat
+const String icon_unread_chat ='assets/icons/ic_unread_chat.png';
 
 const String strNoMessage = 'No Messages';
 
