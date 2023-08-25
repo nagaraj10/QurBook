@@ -76,8 +76,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       sheelBadgeController.isQueueDialogShowing.value = false;
 
       onInit();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -129,8 +129,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -158,8 +158,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       MyFHB.routeObserver.unsubscribe(this);
       controller.clear();
       super.dispose();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -332,7 +332,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                           TextSpan(text: 'Hello '),
                                         },
                                         TextSpan(
-                                          text: controller.appBarTitle.value,
+                                          text: CommonUtil.getTitleName(
+                                              controller.appBarTitle.value),
                                           style: (controller
                                                       .forPatientList.value ??
                                                   false)
@@ -822,8 +823,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         qurHomeRegimenController.getSOSButtonStatus();
       }
       //setState(() {});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -846,8 +847,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       sheelBadgeController.getSheelaBadgeCount(
           isNeedSheelaDialog:
               controller.estart.value.trim().isEmpty ? true : false);
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         print(e);
