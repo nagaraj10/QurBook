@@ -312,7 +312,7 @@ class AudioWidgetState extends State<AudioWidget> {
         if (await fileExists(widget.audioFile!)) {
           var buffer = await makeBuffer(widget.audioFile!);
           if (buffer != null) {
-            final DuarationOfFile = await (flutterSound!.startPlayer(
+            Duration? DuarationOfFile = await (flutterSound!.startPlayer(
               fromDataBuffer: buffer,
               whenFinished: () {
                 stopPlayer();
@@ -322,8 +322,9 @@ class AudioWidgetState extends State<AudioWidget> {
           }
         }
       } else {
-        final DuarationOfFile = await (flutterSound!.startPlayer(
+        Duration? DuarationOfFile = await (flutterSound!.startPlayer(
           fromURI: path,
+          codec: Codec.aacMP4,
           whenFinished: () {
             stopPlayer();
           },

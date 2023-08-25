@@ -6697,6 +6697,24 @@ class CommonUtil {
     }
   }
 
+  static getTitleName(String? firstName) {
+    MyProfileModel myProfile;
+    String? name = "";
+    var phoneNumber = "";
+
+    try {
+      myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
+      if (myProfile.result?.firstName != null &&
+          myProfile.result?.firstName != "") {
+        name = '${myProfile.result?.firstName?.capitalizeFirstofEach} ';
+      }
+    } catch (e, stackTraceError) {
+      name = firstName ?? "";
+    }
+
+    return name;
+  }
+
   String getExtensionSheelaPreview(int type) {
     switch (type) {
       case 0:
