@@ -2020,7 +2020,6 @@ class CommonUtil {
     final apiBaseHelper = ApiBaseHelper();
     String? token = '';
     try {
-      await askPermissionForNotification();
       token = await _firebaseMessaging.getToken();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
