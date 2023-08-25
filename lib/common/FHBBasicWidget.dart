@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
+import '../main.dart';
 import 'errors_widget.dart';
 import '../my_providers/models/Doctors.dart';
 import '../src/model/user/MyProfileModel.dart';
@@ -228,7 +229,15 @@ class FHBBasicWidget {
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+        lastDate: DateTime(2101),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),);
 
     if (picked != null && picked != dateTime) {
       dateTime = picked;
@@ -298,7 +307,7 @@ class FHBBasicWidget {
           );
   }
 
-  Widget getProfilePicWidgeUsingUrl(MyProfileModel? myProfile) {
+  Widget getProfilePicWidgeUsingUrl(MyProfileModel? myProfile,{bool? changeWhiteBg}) {
     if (myProfile != null && myProfile.result != null) {
       if (myProfile.result!.profilePicThumbnailUrl != '') {
         return Image.network(
@@ -321,11 +330,11 @@ class FHBBasicWidget {
               width: CommonUtil().isTablet!
                   ? imageProfileTabHeader
                   : imageProfileMobileHeader,
-              color: PreferenceUtil.getIfQurhomeisAcive()
-                  ? Color(CommonUtil().getQurhomeGredientColor())
+              color:changeWhiteBg==true?Colors.white: PreferenceUtil.getIfQurhomeisAcive()
+                  ? CommonUtil.isUSRegion()?Color(CommonUtil().getMyPrimaryColor()):Color(CommonUtil().getQurhomeGredientColor())
                   : Color(CommonUtil().getMyPrimaryColor()),
               child: Center(
-                child: getFirstLastNameText(myProfile),
+                child: getFirstLastNameText(myProfile,changeWhiteBg: changeWhiteBg),
               ),
             );
           },
@@ -1213,7 +1222,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
   }
 }
 
-Widget getFirstLastNameText(MyProfileModel myProfile) {
+Widget getFirstLastNameText(MyProfileModel myProfile,{bool? changeWhiteBg}) {
   if (myProfile.result != null &&
       myProfile.result!.firstName != null &&
       myProfile.result!.lastName != null) {
@@ -1223,7 +1232,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
               ? myProfile.result!.lastName![0].toUpperCase()
               : ''),
       style: TextStyle(
-        color: Colors.white,
+        color: changeWhiteBg==true?Color(CommonUtil().getMyPrimaryColor()):Colors.white,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w400,
       ),
@@ -1232,7 +1241,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
     return Text(
       myProfile.result!.firstName![0].toUpperCase(),
       style: TextStyle(
-        color: Colors.white,
+        color: changeWhiteBg==true?Color(CommonUtil().getMyPrimaryColor()):Colors.white,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w400,
       ),
@@ -1241,7 +1250,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
     return Text(
       '',
       style: TextStyle(
-        color: Colors.white,
+        color: changeWhiteBg==true?Color(CommonUtil().getMyPrimaryColor()):Colors.white,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w200,
       ),

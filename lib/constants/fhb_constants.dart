@@ -8,7 +8,7 @@ import '../common/CommonUtil.dart';
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
 const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
-const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1";
+const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String APP_NAME = 'QurBook';
 const String MOB_NUM = 'Mobile number';

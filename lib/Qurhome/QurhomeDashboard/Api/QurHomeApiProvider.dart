@@ -31,7 +31,7 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import '../../../constants/variable_constant.dart' as variable;
-import 'package:myfhb/authentication/constants/constants.dart'as constants;
+import 'package:myfhb/authentication/constants/constants.dart' as constants;
 
 class QurHomeApiProvider {
   //DateTime selectedRegimenDate = DateTime.now();
@@ -74,8 +74,8 @@ class QurHomeApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return null;
     }
@@ -115,8 +115,8 @@ class QurHomeApiProvider {
       // }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return null;
     }
@@ -142,8 +142,8 @@ class QurHomeApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return null;
     }
@@ -164,15 +164,15 @@ class QurHomeApiProvider {
         return responseJson;
       } else {
         regController.careCoordinatorIdEmptyMsg.value =
-            CommonUtil().validString((responseJson.body)??"");
+            CommonUtil().validString((responseJson.body) ?? "");
         return responseJson;
       }
     } on SocketException {
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(e.toString());
@@ -211,7 +211,7 @@ class QurHomeApiProvider {
         }
         isCallSent = false;
       }
-    } on Exception catch (e,stackTrace) {
+    } on Exception catch (e, stackTrace) {
       isCallSent = false;
     }
     return isCallSent;
@@ -241,8 +241,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -264,8 +264,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -298,8 +298,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -321,8 +321,8 @@ class QurHomeApiProvider {
       } else {
         return authService.createErrorJsonString(response);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //print(e);
     }
@@ -352,8 +352,8 @@ class QurHomeApiProvider {
         responseJson = authService.createErrorJsonString(response);
         return responseJson;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //print(e);
     }
@@ -411,8 +411,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -441,8 +441,8 @@ class QurHomeApiProvider {
             CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
         return error.isSuccess;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -470,8 +470,8 @@ class QurHomeApiProvider {
       regController.SOSAgentNumberEmptyMsg.value =
           CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       regController.SOSAgentNumberEmptyMsg.value =
           CommonUtil().validString(e.toString());
@@ -527,8 +527,8 @@ class QurHomeApiProvider {
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       regController.careCoordinatorIdEmptyMsg.value =
           CommonUtil().validString(e.toString());
@@ -555,8 +555,8 @@ class QurHomeApiProvider {
       } else {
         return false;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -580,6 +580,7 @@ class QurHomeApiProvider {
       String fullName = (myProf?.result?.firstName ?? ' ') +
           " " +
           (myProf?.result?.lastName ?? ' ');
+      patientAlertData?.additionalInfo?.cgNotes = notes;
 
       postMediaData['caregiverName'] = fullName;
       postMediaData['id'] = patientAlertData?.id;
@@ -601,44 +602,14 @@ class QurHomeApiProvider {
         body: params,
       ))!;
 
-      var commentsData = Map<String, dynamic>();
-      commentsData['patientId'] = careGiverPatientListResult?.childId;
-      commentsData['screen']="QurHomeAlert";
-      commentsData['time']= "00:00:00";
-      commentsData['healthOrganizationId']=healthOrganizationId;
-      commentsData['additionalInfo']={
-        "incidentAlertId":patientAlertData?.id,
-        "eid":patientAlertData?.additionalInfo?.eid,
-        "title":patientAlertData?.additionalInfo?.uformname,
-        "activityTime":DateFormat('HH:mm a').format(DateTime.parse(patientAlertData?.additionalInfo?.startDateTime)).toString(),
-        "uform":patientAlertData?.additionalInfo?.uform,
-        "uformdata":patientAlertData?.additionalInfo?.uformdata,
-        "startDateTime":patientAlertData?.additionalInfo?.startDateTime,
-        "endDateTime":patientAlertData?.additionalInfo?.endDateTime,
-        "issymptom":patientAlertData?.additionalInfo?.issymptom,
-        "dosemeal":patientAlertData?.additionalInfo?.dosemeal,
-        "action":{
-          "id": null,
-          "name": null,
-          "code": null,
-          "comment": notes
-        }
-      };
-      final commentsParams = json.encode(commentsData);
-
-      http.Response reso = (await ApiServices.post(
-        Constants.BASE_URL + escalate_add_comments,
-        headers: header,
-        body: commentsParams,
-      ))!;
       if (res.statusCode == 200) {
         var _response = SuccessModel.fromJson(convert.json.decode(res.body));
         return _response.isSuccess ?? false;
       } else {
         return false;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -656,7 +627,8 @@ class QurHomeApiProvider {
         headers: header,
       ))!;
       if (responseJson.statusCode == 200) {
-        var _response = SuccessModel.fromJson(convert.json.decode(responseJson.body));
+        var _response =
+            SuccessModel.fromJson(convert.json.decode(responseJson.body));
         regController.isShowSOSButton.value = (_response.isSuccess ?? false);
         return responseJson;
       } else {
@@ -666,19 +638,19 @@ class QurHomeApiProvider {
     } on SocketException {
       regController.isShowSOSButton.value = false;
       throw FetchDataException(strNoInternet);
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       regController.isShowSOSButton.value = false;
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       return null;
     }
   }
 
   saveAppLogs(
       {String userId = '',
-        String message = '',
-        String userName = '',
-        String version = '',
-        String oSVersion = ''}) async {
+      String message = '',
+      String userName = '',
+      String version = '',
+      String oSVersion = ''}) async {
     try {
       String deviceName = '';
 
@@ -702,7 +674,7 @@ class QurHomeApiProvider {
       } else {
         //Failure
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
         printError(info: e.toString());
       }

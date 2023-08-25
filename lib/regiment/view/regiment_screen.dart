@@ -52,6 +52,7 @@ class RegimentScreen extends StatelessWidget {
               (context as Element).markNeedsBuild();
             },
             true,
+            changeWhiteBg: true
           ),
         ],
       ),

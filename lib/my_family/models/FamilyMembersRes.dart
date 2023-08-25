@@ -100,6 +100,7 @@ class SharedByUsers {
   String? remainderMins;
   String? nonAdheranceId;
   ChatListItem? chatListItem;
+  String? nickNameSelf;
   SharedByUsers(
       {this.id,
       this.status,
@@ -116,7 +117,7 @@ class SharedByUsers {
       this.remainderMins,
       this.nonAdheranceId,
       this.remainderForId,
-      this.chatListItem});
+      this.chatListItem,this.nickNameSelf});
 
   SharedByUsers.fromJson(Map<String, dynamic> json) {
     try {
@@ -136,6 +137,7 @@ class SharedByUsers {
       chatListItem = json['chatListItem'] != null
               ? new ChatListItem.fromJson(json['chatListItem'])
               : null;
+      nickNameSelf = '';
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -159,6 +161,7 @@ class SharedByUsers {
     if (this.chatListItem != null) {
       data['chatListItem'] = this.chatListItem!.toJson();
     }
+    data['nickNameSelf'] = nickNameSelf;
     return data;
   }
 }

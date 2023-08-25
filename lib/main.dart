@@ -15,6 +15,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/app_theme.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'IntroScreens/IntroductionScreen.dart';
@@ -80,7 +81,7 @@ import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'telehealth/features/Notifications/services/notification_services.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/doctor.dart'
-    as doc;
+as doc;
 import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'telehealth/features/appointments/view/resheduleMain.dart';
 import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
@@ -105,7 +106,7 @@ late var routes;
 
 Future<void> main() async {
   var reminderMethodChannelAndroid =
-      const MethodChannel('android/notification');
+  const MethodChannel('android/notification');
 
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -159,7 +160,7 @@ Future<void> main() async {
     if (Platform.isAndroid) {
       await FlutterDownloader.initialize(
           debug: true // optional: set false to disable printing logs to console
-          );
+      );
       await Permission.storage.request();
       await Permission.manageExternalStorage.request();
     }
@@ -168,7 +169,7 @@ Future<void> main() async {
     try {
       var isFirstTime = await CommonUtil().isFirstTime();
       var tokenForLogin =
-          await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
       if (!isFirstTime && (tokenForLogin ?? '').isNotEmpty) {
         CategoryListBlock().getCategoryLists();
       }
@@ -229,10 +230,10 @@ void saveToPreference() async {
         PreferenceUtil.saveString(Constants.MOB_NUM, Constants.mobileNumber)
             .then((onValue) {
           PreferenceUtil.saveString(
-                  Constants.COUNTRY_CODE, Constants.countryCode)
+              Constants.COUNTRY_CODE, Constants.countryCode)
               .then((onValue) {
             PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
-                    int.parse(Constants.countryCode))
+                int.parse(Constants.countryCode))
                 .then((value) {});
           });
         });
@@ -271,18 +272,19 @@ Widget buildError(BuildContext context, FlutterErrorDetails error) {
   );
 }
 
+
 class MyFHB extends StatefulWidget {
   static final RouteObserver<PageRoute> routeObserver =
-      RouteObserver<PageRoute>();
+  RouteObserver<PageRoute>();
 
   @override
   _MyFHBState createState() => _MyFHBState();
 }
 
+
 class _MyFHBState extends State<MyFHB> {
   final SheelaAIController sheelaAIController = Get.put(SheelaAIController());
   var sheelaMethodChannelAndroid = const MethodChannel('sheela.channel');
-  int myPrimaryColor = CommonUtil().getMyPrimaryColor();
   static const platform = variable.version_platform;
   String? _responseFromNative = variable.strWaitLoading;
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -297,7 +299,7 @@ class _MyFHBState extends State<MyFHB> {
 
   /// event channel for listening ns
   static const stream =
-      EventChannel('com.example.agoraflutterquickstart/stream');
+  EventChannel('com.example.agoraflutterquickstart/stream');
   StreamSubscription? _timerSubscription;
   final String _msg = 'waiting for message';
   final ValueNotifier<String> _msgListener = ValueNotifier('');
@@ -336,10 +338,10 @@ class _MyFHBState extends State<MyFHB> {
       HubListViewController(),
     );
     Get.lazyPut(
-      () => SheelaAIController(),
+          () => SheelaAIController(),
     );
     Get.lazyPut(
-      () => SheelaBLEController(),
+          () => SheelaBLEController(),
     );
 
     //initConnectivity();
@@ -425,7 +427,7 @@ class _MyFHBState extends State<MyFHB> {
         }
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
-        if (sheelaAIController.isSheelaScreenActive) {
+        /*if (sheelaAIController.isSheelaScreenActive) {
           if (((passedValArr[3].toString()).isNotEmpty) &&
               (passedValArr[3] != 'null')) {
             var reqJsonAudio = {
@@ -440,31 +442,31 @@ class _MyFHBState extends State<MyFHB> {
             };
             CommonUtil().callQueueNotificationPostApi(reqJsonText);
           }
-        } else {
-          if (((passedValArr[3].toString()).isNotEmpty) &&
-              (passedValArr[3] != 'null')) {
-            if (sheelaAIController.isQueueDialogShowing.value) {
-              Get.back();
-              Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr, isFromAudio: true);
-              });
-            } else {
-              Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr, isFromAudio: true);
-              });
-            }
+        } else {*/
+        if (((passedValArr[3].toString()).isNotEmpty) &&
+            (passedValArr[3] != 'null')) {
+          if (sheelaAIController.isQueueDialogShowing.value) {
+            Get.back();
+            Future.delayed(Duration(milliseconds: 500), () async {
+              getToSheelaNavigate(passedValArr, isFromAudio: true);
+            });
           } else {
-            if (sheelaAIController.isQueueDialogShowing.value) {
-              Get.back();
-              Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr);
-              });
-            } else {
-              Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr);
-              });
-            }
+            Future.delayed(Duration(milliseconds: 500), () async {
+              getToSheelaNavigate(passedValArr, isFromAudio: true);
+            });
           }
+        } else {
+          if (sheelaAIController.isQueueDialogShowing.value) {
+            Get.back();
+            Future.delayed(Duration(milliseconds: 500), () async {
+              getToSheelaNavigate(passedValArr);
+            });
+          } else {
+            Future.delayed(Duration(milliseconds: 500), () async {
+              getToSheelaNavigate(passedValArr);
+            });
+          }
+          //}
         }
       }
       if (passedValArr[0] == 'ack') {
@@ -548,7 +550,7 @@ class _MyFHBState extends State<MyFHB> {
           nsBody['contextId'] = passedValArr[3];
           FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
             FetchNotificationService().updateNsOnTapAction(nsBody).then(
-                (value) => Get.to(BookingConfirmation(
+                    (value) => Get.to(BookingConfirmation(
                     isFromPaymentNotification: true,
                     appointmentId: passedValArr[2])));
           });
@@ -557,7 +559,7 @@ class _MyFHBState extends State<MyFHB> {
           Get.to(
             MyFamilyDetailScreen(
               arguments:
-                  MyFamilyDetailArguments(caregiverRequestor: passedValArr[2]),
+              MyFamilyDetailArguments(caregiverRequestor: passedValArr[2]),
             ),
           );
           // Navigator.pushNamed(
@@ -629,7 +631,7 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'User Profile page',
           });
           Get.toNamed(router.rt_UserAccounts,
-                  arguments: UserAccountsArguments(selectedIndex: 0))!
+              arguments: UserAccountsArguments(selectedIndex: 0))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'googlefit') {
           fbaLog(eveParams: {
@@ -646,7 +648,7 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Tele Health Provider',
           });
           Get.toNamed(router.rt_TelehealthProvider,
-                  arguments: HomeScreenArguments(selectedIndex: 1))!
+              arguments: HomeScreenArguments(selectedIndex: 1))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'my_record' ||
             passedValArr[1] == 'prescription_list' ||
@@ -658,7 +660,7 @@ class _MyFHBState extends State<MyFHB> {
           });
           getProfileData();
           Get.toNamed(router.rt_HomeScreen,
-                  arguments: HomeScreenArguments(selectedIndex: 1))!
+              arguments: HomeScreenArguments(selectedIndex: 1))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'regiment_screen') {
           //this need to be navigte to Regiment screen
@@ -674,7 +676,7 @@ class _MyFHBState extends State<MyFHB> {
               (passedValArr[3] != 'null')) {
             var regController = CommonUtil().onInitQurhomeRegimenController();
             var qurhomeDashboardController =
-                CommonUtil().onInitQurhomeDashboardController();
+            CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = passedValArr[2];
             qurhomeDashboardController.estart.value = passedValArr[3];
             qurhomeDashboardController.updateTabIndex(0);
@@ -783,7 +785,7 @@ class _MyFHBState extends State<MyFHB> {
             arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
           )!
               .then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
+              PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'bills') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -795,7 +797,7 @@ class _MyFHBState extends State<MyFHB> {
             arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
           )!
               .then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
+              PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'chat') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -803,18 +805,18 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Chat Screen',
           });
           Get.to(() => ChatDetail(
-                    peerId: passedValArr[2],
-                    peerName: passedValArr[3],
-                    peerAvatar: passedValArr[4],
-                    groupId: passedValArr[5],
-                    patientId: '',
-                    patientName: '',
-                    patientPicture: '',
-                    isFromVideoCall: false,
-                    isCareGiver: false,
-                  ))!
+            peerId: passedValArr[2],
+            peerName: passedValArr[3],
+            peerAvatar: passedValArr[4],
+            groupId: passedValArr[5],
+            patientId: '',
+            patientName: '',
+            patientPicture: '',
+            isFromVideoCall: false,
+            isCareGiver: false,
+          ))!
               .then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
+              PageNavigator.goToPermanent(context, router.rt_Landing));
           ;
         } else if (passedValArr[1] == 'mycart') {
           fbaLog(eveParams: {
@@ -827,16 +829,16 @@ class _MyFHBState extends State<MyFHB> {
           nsBody['contextId'] = passedValArr[4];
           FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
             FetchNotificationService().updateNsOnTapAction(nsBody).then(
-                (value) => Get.to(CheckoutPage(
-                      isFromNotification: true,
-                      cartUserId: passedValArr[2],
-                      bookingId: passedValArr[4],
-                      notificationListId: passedValArr[3],
-                      cartId: passedValArr[4],
-                      patientName: passedValArr[6],
-                    ))!
-                        .then((value) => PageNavigator.goToPermanent(
-                            context, router.rt_Landing)));
+                    (value) => Get.to(CheckoutPage(
+                  isFromNotification: true,
+                  cartUserId: passedValArr[2],
+                  bookingId: passedValArr[4],
+                  notificationListId: passedValArr[3],
+                  cartId: passedValArr[4],
+                  patientName: passedValArr[6],
+                ))!
+                    .then((value) => PageNavigator.goToPermanent(
+                    context, router.rt_Landing)));
           });
         } else if (passedValArr[1] == 'familyProfile') {
           CommonUtil()
@@ -865,7 +867,7 @@ class _MyFHBState extends State<MyFHB> {
                     passedValArr[4].toString().contains("accept"));
               } else {
                 AppointmentDetailsController appointmentDetailsController =
-                    CommonUtil().onInitAppointmentDetailsController();
+                CommonUtil().onInitAppointmentDetailsController();
                 appointmentDetailsController
                     .getAppointmentDetail(passedValArr[2]);
                 Get.to(() => AppointmentDetailScreen());
@@ -873,7 +875,7 @@ class _MyFHBState extends State<MyFHB> {
             } catch (e,stackTrace) {
               CommonUtil().appLogs(message: e,stackTrace:stackTrace);
               AppointmentDetailsController appointmentDetailsController =
-                  CommonUtil().onInitAppointmentDetailsController();
+              CommonUtil().onInitAppointmentDetailsController();
               appointmentDetailsController
                   .getAppointmentDetail(passedValArr[2]);
               Get.to(() => AppointmentDetailScreen());
@@ -1051,8 +1053,8 @@ class _MyFHBState extends State<MyFHB> {
             var isWeb = passedValArr[9] == null
                 ? false
                 : passedValArr[9] == 'true'
-                    ? true
-                    : false;
+                ? true
+                : false;
             if (doctorPic.isNotEmpty) {
               try {
                 doctorPic = json.decode(doctorPic);
@@ -1131,8 +1133,8 @@ class _MyFHBState extends State<MyFHB> {
           arguments: SheelaArgument(
             isSheelaFollowup: true,
             textSpeechSheela: (passedValArr[2] != null &&
-                    passedValArr[2] != 'null' &&
-                    passedValArr[2] != '')
+                passedValArr[2] != 'null' &&
+                passedValArr[2] != '')
                 ? passedValArr[2]
                 : passedValArr[1],
             audioMessage: '',
@@ -1173,7 +1175,7 @@ class _MyFHBState extends State<MyFHB> {
   @override
   Widget build(BuildContext context) {
     final nsSettingsForAndroid =
-        AndroidInitializationSettings(variable.strLauncher);
+    AndroidInitializationSettings(variable.strLauncher);
     final nsSettingsForIOS = IOSInitializationSettings();
     final platform = InitializationSettings(
         android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
@@ -1241,14 +1243,7 @@ class _MyFHBState extends State<MyFHB> {
           return GetMaterialApp(
             title: Constants.APP_NAME,
             themeMode: ThemeMode.light,
-            theme: ThemeData(
-              fontFamily: variable.font_poppins,
-              primaryColor: Color(myPrimaryColor),
-              accentColor: Colors.white,
-              appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                    brightness: Brightness.dark,
-                  ),
-            ),
+            theme:AppTheme().themeData,
             //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
             home: findHomeWidget(navRoute),
             navigatorObservers: [MyFHB.routeObserver],
@@ -1256,7 +1251,7 @@ class _MyFHBState extends State<MyFHB> {
             debugShowCheckedModeBanner: false,
             navigatorKey: Get.key,
             supportedLocales:
-                Languages.languages.map((e) => Locale(e.code)).toList(),
+            Languages.languages.map((e) => Locale(e.code)).toList(),
             locale: Provider.of<LanguageProvider>(context).locale,
             localizationsDelegates: [
               AppLocalizations.delegate,
@@ -1649,7 +1644,7 @@ class _MyFHBState extends State<MyFHB> {
         });
         break;
       case ConnectivityResult.none:
-        //await Get.to(NetworkScreen());
+      //await Get.to(NetworkScreen());
         setState(() {
           _internetconnection = false;
           toast.getToast(no_internet_conn, Colors.red);
@@ -1682,6 +1677,6 @@ class _MyFHBState extends State<MyFHB> {
   void navigateToMyRecordsCategory(
       categoryType, List<String> hrmId, bool isTerminate) async {
     await CommonUtil().getCategoryListPos(categoryType).then(
-        (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate));
+            (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate));
   }
 }
