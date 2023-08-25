@@ -41,6 +41,8 @@ import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
 
+enum BLEStatus { Searching, Connected, Disabled }
+
 class SheelaAIController extends GetxController {
   MyProfileModel? profile;
   String? authToken;
@@ -78,7 +80,7 @@ class SheelaAIController extends GetxController {
   Rx<bool> isDiscardDialogShown = false.obs;
 
   Rx<bool> isQueueDialogShowing = false.obs;
-
+  Rx<BLEStatus> isBLEStatus = BLEStatus.Disabled.obs;
   bool isCallStartFromSheela = false;
 
   @override
@@ -208,6 +210,12 @@ class SheelaAIController extends GetxController {
         curve: Curves.easeInOut,
       ),
     );
+  }
+
+  resetBLE() async {
+    Get.find<SheelaBLEController>().stopScanning();
+    await Future.delayed(const Duration(seconds: 2));
+    Get.find<SheelaBLEController>().setupListenerForReadings();
   }
 
   startSheelaFromButton({

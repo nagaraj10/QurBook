@@ -116,7 +116,7 @@ class HubListViewController extends GetxController {
         isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
         if (!(isBluetoothEnable ?? false)) {
           FlutterToast().getToast(
-            'Please turn on your bluetooth and try again',
+            pleaseTurnOnYourBluetoothAndTryAgain,
             Colors.red,
           );
           return;

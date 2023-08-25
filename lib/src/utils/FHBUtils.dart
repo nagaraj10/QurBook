@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -85,11 +84,14 @@ class FHBUtils {
     return formattedDate;
   }
 
-  String getFormattedDateString(String? strDate) {
+  String getFormattedDateString(String? strDate, {bool newFormate = false}) {
     String formattedDate = '';
 
     if (strDate != null && strDate != '') {
-      if (CURRENT_DATE_CODE == 'MDY') {
+      if (newFormate) {
+        formattedDate = DateFormat('dd/MMM/yyyy HH:mm:ss.SSS aa')
+            .format(DateTime.parse(strDate).toLocal());
+      } else if (CURRENT_DATE_CODE == 'MDY') {
         formattedDate = DateFormat('MMM dd yyyy, hh:mm aa')
             .format(DateTime.parse(strDate).toLocal());
       } else if (CURRENT_DATE_CODE == 'YMD') {
