@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 
 import '../../constants/fhb_constants.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -1460,7 +1461,15 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+        lastDate: DateTime(2101),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),);
 
     if (picked != null) {
       setState(() {

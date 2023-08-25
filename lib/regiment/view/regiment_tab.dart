@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/regiment/view/widgets/filter_widget.dart';
@@ -389,6 +390,14 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             firstDate: DateTime(2015, 8),
                             lastDate: DateTime(2101),
                             initialDate: _regimentViewModel.selectedRegimenDate,
+                            builder: (context,child) => Theme(
+                              data: ThemeData.light().copyWith(
+                                colorScheme: ColorScheme.light().copyWith(
+                                  primary:Color(CommonUtil().getMyPrimaryColor()),
+                                ),
+                              ),
+                              child: child!,
+                              ),
                           );
                           if (selectedDate != null) {
                             _regimentViewModel.handleSearchField();

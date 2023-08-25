@@ -47,6 +47,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as tckConstants;
+import '../../main.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'my_tickets_screen.dart';
@@ -152,7 +153,16 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         context: context,
         initialDate: dateTime,
         firstDate: DateTime.now(),
-        lastDate: DateTime(2100));
+        lastDate: DateTime(2100),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),
+    );
 
     if (picked != null) {
       setState(() {

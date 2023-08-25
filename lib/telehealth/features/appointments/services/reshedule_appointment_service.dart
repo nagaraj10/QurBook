@@ -21,7 +21,7 @@ class ResheduleAppointmentsService {
 
   HeaderRequest headerRequest = new HeaderRequest();
 
-  Future<ResheduleModel> resheduleAppointment(List<String> doctorIds,
+  Future<ResheduleModel> resheduleAppointment(List<String?> doctorIds,
       String slotNumber, String resheduleDate, String doctorSessionId) async {
     var inputBody = {};
     inputBody[BOOKING_IDS] = doctorIds;

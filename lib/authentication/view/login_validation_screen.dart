@@ -1,7 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -10,12 +9,10 @@ import '../model/patientlogin_model.dart';
 import '../constants/constants.dart';
 import 'authentication_validator.dart';
 import 'forgotpassword_screen.dart';
-import 'signup_screen.dart';
 import 'verifypatient_screen.dart';
 import '../view_model/patientauth_view_model.dart';
 import '../../constants/fhb_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
-import '../widgets/country_code_picker.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
@@ -146,73 +143,7 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
                         },
                         Column(
                           children: [
-                            if (widget.flag == 1) ...{
-                              Text(
-                                strCheckValidNumber,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16.0.sp,
-                                  color: Colors.red
-                                ),
-                              ),
-                              SizedBox(height: 20.0.h),
-                              _loginTextFields(
-                                TextFormField(
-                                  textCapitalization:
-                                  TextCapitalization.sentences,
-                                  readOnly: true,
-                                  enableInteractiveSelection: false,
-                                  style: TextStyle(
-                                    fontSize: 16.0.sp,
-                                  ),
-                                  autovalidate: _autoValidateBool,
-                                  maxLength: 10,
-                                  decoration: InputDecoration(
-                                    counterText: "",
-                                    prefixIcon: Container(
-                                      constraints: BoxConstraints(
-                                        maxWidth: 75.0.w,
-                                        minWidth: 75.0.w,
-                                      ),
-                                      child: CountryCodePickerPage(
-                                        selectedCountry: _selectedDialogCountry,
-                                          isFromAuthenticationScreen: true,
-                                        onValuePicked: (country) =>
-                                            setState(
-                                                  () =>
-                                              _selectedDialogCountry = country,
-                                            ),
-                                          isEnabled:false
-                                      ),
-                                    ),
-                                    hintText: strNewPhoneHint,
-                                    labelText: strNumberHint,
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                        )),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                        )),
-                                  ),
-                                  validator: (value) {
-                                    return AuthenticationValidator()
-                                        .phoneValidation(
-                                        value!, patternPhoneNew as String,
-                                        strPhoneCantEmpty);
-                                  },
-                                  controller: numberController,
-                                  onSaved: (value) {},
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                              SizedBox(height: 10.0.h),
-                            }else ...{
+                            if (widget.flag == 0) ...{
                               _loginTextFields(
                                 TextFormField(
                                   textCapitalization:
@@ -282,21 +213,14 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
                                 ),
                               ),
                             },
-
                           ],
                         ),
 
                         SizedBox(height: 20.0.h),
                         if (widget.flag == 0) ...{
                           _loginsavebutton(),
-                        } else
-                          ...{
-                            retryButton(),
-                            SizedBox(height: 20.0.h),
-                            createAccountButton(),
-                          },
+                        },
                         SizedBox(height: 20.0.h),
-                        //_gotoregistertap(),
                       ],
                     ),
                   ),
@@ -317,40 +241,6 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
     setState(() {
       _isHidden = !_isHidden;
     });
-  }
-
-  Widget _gotoregistertap() {
-    return Container(
-      padding: EdgeInsets.all(15.0.sp),
-      alignment: Alignment.bottomCenter,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            strNeedAcoount,
-            style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            width: 10.0.w,
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PatientSignUpScreen()));
-            },
-            child: Text(
-              strSignUpTxt,
-              style: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  fontSize: 15.0.sp,
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   _savepatientdetails() async {
@@ -529,70 +419,7 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
     }
   }
 
-  Widget retryButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: () {
-            Get.back();
-          },
-          child: Container(
-            width: CommonUtil().isTablet! ? 400.w : 260.0.w,
-            padding:
-            EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.shade200,
-                      offset: Offset(2, 4),
-                      blurRadius: 5,
-                      spreadRadius: 2)
-                ],
-                gradient: LinearGradient(end: Alignment.centerRight, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
-                  Color(CommonUtil().getMyPrimaryColor()),
-                  Color(CommonUtil().getMyGredientColor())
-                ])),
-            child: Text(
-              STR_RETRY,
-              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
-  Widget createAccountButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => PatientSignUpScreen()));
-          },
-          child: Container(
-            width: CommonUtil().isTablet! ? 400.w : 260.0.w,
-            padding:
-            EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                border: Border.all(color: Color(CommonUtil().getMyPrimaryColor()))),
-            child: Text(
-              strCreateAccount,
-              style: TextStyle(fontSize: 16.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+
+
 }

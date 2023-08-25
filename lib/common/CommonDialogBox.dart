@@ -8,6 +8,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/unit/choose_unit.dart';
+import '../main.dart';
 import 'CommonConstants.dart';
 import 'CommonUtil.dart';
 import 'FHBBasicWidget.dart';
@@ -1795,7 +1796,15 @@ class CommonDialogBox {
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime.now());
+        lastDate: DateTime.now(),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),);
 
     if (picked != null) {
       dateTime = picked;
@@ -1811,7 +1820,15 @@ class CommonDialogBox {
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime.now(),
-        lastDate: DateTime(2100));
+        lastDate: DateTime(2100),
+      builder: (context,child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary:Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),);
 
     if (picked != null) {
       dateTime = picked;
