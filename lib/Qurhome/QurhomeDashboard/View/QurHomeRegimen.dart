@@ -1592,7 +1592,43 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             trimmedTitle,
           )) {
         if (checkCanEdit(regimen)) {
-          redirectToSheelaScreen(regimen);
+          if (canEditMain || fromView) {
+            openFormDataDialog(
+                context, regimen, canEdit, eventId, fieldsResponseModel,
+                eventIdReturn: eventIdReturn,
+                followEventContext: followEventContext,
+                activityName: activityName,
+                uid: uid,
+                aid: aid,
+                formId: formId,
+                formName: formName,
+                canEditMain: canEditMain,
+                fromView: fromView);
+            return;
+          }
+          hubController.eid = regimen.eid;
+          hubController.uid = regimen.uid;
+          CommonUtil().dialogForScanDevices(
+            Get.context!,
+            onPressManual: () {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
+              redirectToSheelaScreen(regimen);
+            },
+            onPressCancel: () async {
+              Get.back();
+              hubController.eid = null;
+              hubController.uid = null;
+              _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
+            },
+            title: strConnectBGL,
+            isFromVital: false,
+          );
+          _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.filteredDeviceType = 'bgl';
+          _sheelaBLEController.setupListenerForReadings();
         } else {
           onErrorMessage();
         }
