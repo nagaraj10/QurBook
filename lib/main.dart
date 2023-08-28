@@ -320,7 +320,9 @@ class _MyFHBState extends State<MyFHB> {
     chatViewModel.setCurrentChatRoomID('none');
     super.initState();
     CommonUtil.askPermissionForCameraAndMic().then((value) {
-      CommonUtil.askPermissionForLocation();
+      CommonUtil.askPermissionForLocation().then((value) {
+        CommonUtil().askPermissionForNotification();
+      });
     });
     getMyRoute();
     _enableTimer();

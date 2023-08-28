@@ -20,6 +20,7 @@ import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:provider/provider.dart';
@@ -75,8 +76,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       sheelBadgeController.isQueueDialogShowing.value = false;
 
       onInit();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -128,8 +129,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -157,8 +158,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       MyFHB.routeObserver.unsubscribe(this);
       controller.clear();
       super.dispose();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -213,6 +214,14 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
                 elevation: 0,
                 centerTitle: true,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 16,
+                    ),
+                    child: MyBlinkingBLEIcon(),
+                  )
+                ],
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: (CommonUtil.isUSRegion())
@@ -323,7 +332,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                           TextSpan(text: 'Hello '),
                                         },
                                         TextSpan(
-                                          text: controller.appBarTitle.value,
+                                          text: CommonUtil.getTitleName(
+                                              controller.appBarTitle.value),
                                           style: (controller
                                                       .forPatientList.value ??
                                                   false)
@@ -813,8 +823,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         qurHomeRegimenController.getSOSButtonStatus();
       }
       //setState(() {});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -837,8 +847,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       sheelBadgeController.getSheelaBadgeCount(
           isNeedSheelaDialog:
               controller.estart.value.trim().isEmpty ? true : false);
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         print(e);

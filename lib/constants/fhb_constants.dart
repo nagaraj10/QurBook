@@ -8,7 +8,7 @@ import '../common/CommonUtil.dart';
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
 const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
-const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1";
+const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String APP_NAME = 'QurBook';
 const String MOB_NUM = 'Mobile number';
@@ -851,6 +851,12 @@ const String strFeatureNotEnable =
 const String sheela_hdn_btn_yes = 'yes';
 const String activity_removed_regimen =
     'Activity has been removed from your regimen';
+const String pleaseTurnOnYourBluetoothAndTryAgain =
+    'Please turn on your Bluetooth and try again';
+const String SearchingForDevices = 'Searching for devices';
+const String deviceConnected = 'Device connected';
+
+const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
 
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
