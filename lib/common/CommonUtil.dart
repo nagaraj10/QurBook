@@ -5675,7 +5675,7 @@ class CommonUtil {
                             ),
                           ),
                          Visibility(
-                           visible:unReadMsgCount!>0,
+                           visible:false,
                            child: Column(
                              children: [
                                Container(
