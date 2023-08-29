@@ -991,20 +991,27 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  getSheelaBadgeCount({bool isNeedSheelaDialog = false}) async {
-    sheelaIconBadgeCount.value = 0;
+  getSheelaBadgeCount({bool isNeedSheelaDialog = false,bool isFromQurHomeRegimen = false}) async {
+    if (!(sheelaIconBadgeCount.value > 0)) {
+      sheelaIconBadgeCount.value = 0;
+    }
     try {
       sheelaBadgeServices.getSheelaBadgeCount().then((value) {
         if (value != null) {
           if (value.isSuccess!) {
             if (value.result != null) {
               sheelaIconBadgeCount.value = value.result?.queueCount ?? 0;
+              if (isFromQurHomeRegimen && (isQueueDialogShowing.value)) {
+                Get.back();
+                isQueueDialogShowing.value = false;
+                isNeedSheelaDialog = true;
+              }
               if (isNeedSheelaDialog) {
                 if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
                   isQueueDialogShowing.value = true;
                   CommonUtil().dialogForSheelaQueueStable(
-                      Get.context!, value.result?.queueCount ?? 0,
+                      Get.context!,
                       unReadMsgCount:Provider.of<ChatSocketViewModel>(Get.context!,listen: false).chatTotalCount,
                       onTapSheela: () {
                     isQueueDialogShowing.value = false;
