@@ -642,13 +642,23 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       if ((CommonUtil.isUSRegion()) &&
                           (passedValArr[3] != null) &&
-                          (passedValArr[3] != 'null')) {
+                          (passedValArr[3] != 'null')&&
+                          (passedValArr[4] != null) &&
+                          (passedValArr[4] != 'null')) {
                         var qurhomeDashboardController =
                             CommonUtil().onInitQurhomeDashboardController();
                         qurhomeDashboardController.eventId.value =
                             passedValArr[2];
                         qurhomeDashboardController.estart.value =
                             passedValArr[3];
+                        if (passedValArr[4] == Constants.doseValueless ||
+                            passedValArr[4] == Constants.doseValueHigh) {
+                          qurhomeDashboardController
+                              .isOnceInAPlanActivity.value = true;
+                        } else {
+                          qurhomeDashboardController
+                              .isOnceInAPlanActivity.value = false;
+                        }
                         qurhomeDashboardController.updateTabIndex(0);
                         PageNavigator.goToPermanent(context, router.rt_Landing);
                       } else {

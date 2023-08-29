@@ -178,15 +178,23 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 await Future.delayed(Duration(milliseconds: 2000));
                 qurhomeDashboardController.eventId.value = "";
                 qurhomeDashboardController.estart.value = "";
+                qurhomeDashboardController.isOnceInAPlanActivity.value = false;
               }
               break;
             }
           }
           if (currRegimen == null) {
-            FlutterToast().getToast(
-              activity_removed_regimen,
-              Colors.red,
-            );
+            if (qurhomeDashboardController.isOnceInAPlanActivity.value) {
+              FlutterToast().getToast(
+                activity_completed_regimen,
+                Colors.green,
+              );
+            } else {
+              FlutterToast().getToast(
+                activity_removed_regimen,
+                Colors.red,
+              );
+            }
           }
         }
       }
@@ -1063,6 +1071,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 .toString();
                             reminder.remindin = regimen.remindin.toString();
                             reminder.remindbefore = regimen.remindin.toString();
+                            reminder.dosemeal = regimen.doseMealString.toString();
                             List<Reminder> data = [reminder];
                             String snoozedText =
                                 "Snoozed for ${int.parse(time[0]).toString()} minutes";

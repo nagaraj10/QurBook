@@ -53,6 +53,7 @@ class QurhomeDashboardController extends GetxController {
 
   int nextAlertPosition = 0;
   int currentIndex = 0;
+  var isOnceInAPlanActivity = false.obs;
 
 
 
