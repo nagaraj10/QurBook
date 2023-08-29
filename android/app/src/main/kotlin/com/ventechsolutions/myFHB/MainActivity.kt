@@ -3131,6 +3131,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         val eventType = intent.getStringExtra(Constants.EVENT_TYPE)
         val others = intent.getStringExtra(Constants.OTHERS)
         val estart = intent.getStringExtra(Constants.PROP_ESTART)
+        val dosemeal = intent.getStringExtra(Constants.PROP_DOSEMEAL)
 
 
 
