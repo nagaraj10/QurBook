@@ -108,6 +108,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       controller.isFirstTime.value = true;
       Future.delayed(Duration.zero, () async {
         onInit();
+        controller.initRemainderQueue();
       });
       chatGetXController!.getUnreadCountFamily().then(
         (value) {
@@ -2244,7 +2245,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       WidgetsBinding.instance!.removeObserver(this);
       super.dispose();
     } catch (e,stackTrace) {
-      print(e);
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -2422,6 +2423,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogClosed);
     } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       if (kDebugMode) {
         print(e);
       }
