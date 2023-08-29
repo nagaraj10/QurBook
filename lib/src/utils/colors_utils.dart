@@ -13,6 +13,7 @@ class ColorUtils {
   static Color lightPrimaryColor = HexColor("9e76ed");
   static Color countColor = HexColor("F19B10");
   static Color badgeQueue = HexColor("ff3333");
+  static Color white = HexColor("ffffff");
 }
 
 class HexColor extends Color {
