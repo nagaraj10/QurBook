@@ -5298,8 +5298,11 @@ class CommonUtil {
         if (value.result != null) {
           if (value.result!.queueCount != null &&
               value.result!.queueCount! > 0) {
+            var sheelaAIController = Get.find<SheelaAIController>();
+            sheelaAIController.sheelaIconBadgeCount.value =
+                (value.result?.queueCount ?? 0);
             CommonUtil().dialogForSheelaQueue(
-                Get.context!, value.result?.queueCount ?? 0);
+                Get.context!);
           }
         }
       }
@@ -5583,7 +5586,8 @@ class CommonUtil {
     );
   }
 
-  void dialogForSheelaQueue(BuildContext context, int count) async {
+  void dialogForSheelaQueue(BuildContext context) async {
+    var sheelaAIController = Get.find<SheelaAIController>();
     bool isFirstTime = true;
     showGeneralDialog(
         context: context,
@@ -5607,7 +5611,7 @@ class CommonUtil {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       BadgeIconBig(
-                        badgeCount: count,
+                        badgeCount: sheelaAIController.sheelaIconBadgeCount.value,
                         badgeColor: ColorUtils.badgeQueue,
                         icon: AssetImageWidget(
                           icon: icon_sheela_queue,
@@ -5624,8 +5628,9 @@ class CommonUtil {
         });
   }
 
-  void dialogForSheelaQueueStable(BuildContext context, int count,
+  void dialogForSheelaQueueStable(BuildContext context,
       {int? unReadMsgCount,Function()? onTapSheela}) async {
+    var sheelaAIController = Get.find<SheelaAIController>();
     showGeneralDialog(
         context: context,
         barrierColor: Colors.black38,
@@ -5661,7 +5666,7 @@ class CommonUtil {
                           ),
                           ),
                           BadgeIconBig(
-                            badgeCount: count,
+                            badgeCount: sheelaAIController.sheelaIconBadgeCount.value,
                             badgeColor: ColorUtils.badgeQueue,
                             icon: GestureDetector(
                               onTap: () {
@@ -5675,7 +5680,7 @@ class CommonUtil {
                             ),
                           ),
                          Visibility(
-                           visible:unReadMsgCount!>0,
+                           visible:false,
                            child: Column(
                              children: [
                                Container(
