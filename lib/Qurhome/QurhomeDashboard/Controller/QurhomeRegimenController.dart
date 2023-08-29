@@ -25,6 +25,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/fhb_constants.dart' as constants;
@@ -89,6 +90,7 @@ class QurhomeRegimenController extends GetxController {
 
   Rx<bool> isErrorAppLogDialogShowing = false.obs;
   List<ErrorAppLogDataModel>? errorAppLogList = [];
+  Timer? remainderQueueTimer;
 
   getRegimenList(
       {bool isLoading = true, String? date, String? patientId}) async {
@@ -244,6 +246,7 @@ class QurhomeRegimenController extends GetxController {
   void onClose() {
     try {
       timer?.cancel();
+      remainderQueueTimer?.cancel();
       super.onClose();
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -659,6 +662,20 @@ class QurhomeRegimenController extends GetxController {
       if (kDebugMode) {
         print(e);
       }
+    }
+  }
+
+  initRemainderQueue() {
+    try {
+      remainderQueueTimer = Timer.periodic(
+        Duration(minutes: 2),
+        (Timer timer) {
+          var sheelaAIController = Get.find<SheelaAIController>();
+          sheelaAIController.getSheelaBadgeCount(isFromQurHomeRegimen: true);
+        },
+      );
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
