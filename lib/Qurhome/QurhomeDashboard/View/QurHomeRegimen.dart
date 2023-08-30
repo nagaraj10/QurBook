@@ -146,7 +146,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           .validString(qurhomeDashboardController.eventId.value ?? "");
       String strEStart = CommonUtil()
           .validString(qurhomeDashboardController.estart.value ?? "");
-      if (CommonUtil.isUSRegion() && strEStart.trim().isNotEmpty) {
+      if (CommonUtil.isUSRegion() &&
+          strEStart.trim().isNotEmpty &&
+          !(qurhomeDashboardController.isOnceInAPlanActivity.value)) {
         controller.restartTimer();
         await controller.getRegimenList(isLoading: true, date: strEStart);
       } else {
@@ -189,6 +191,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 activity_completed_regimen,
                 Colors.green,
               );
+              qurhomeDashboardController.isOnceInAPlanActivity.value = false;
             } else {
               FlutterToast().getToast(
                 activity_removed_regimen,
