@@ -29,6 +29,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
@@ -1387,7 +1388,7 @@ class CommonUtil {
     }
   }
 
-   moveToLoginPage() {
+  moveToLoginPage() {
     PreferenceUtil.clearAllData().then((value) {
       // PageNavigator.goToPermanent(context,router.rt_SignIn);
       Navigator.pushAndRemoveUntil(
@@ -2626,11 +2627,11 @@ class CommonUtil {
       }
     } on FirebaseException catch (exception, stackTrace) {
       // Fetch throttled.
-              isVersionLatest = false;
+      isVersionLatest = false;
 
       CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
     } catch (exception, stackTrace) {
-              isVersionLatest = false;
+      isVersionLatest = false;
 
       CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
       print('Unable to fetch remote config. Cached or default values will be '
@@ -6831,6 +6832,15 @@ class CommonUtil {
         ],
       ),
     );
+  }
+
+  HubListViewController onInitHubListViewController() {
+    HubListViewController hubListViewController;
+    if (!Get.isRegistered<HubListViewController>()) {
+      Get.put(HubListViewController());
+    }
+    hubListViewController = Get.find();
+    return hubListViewController;
   }
 }
 
