@@ -29,6 +29,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
@@ -6796,6 +6797,16 @@ class CommonUtil {
       }
     }
   }
+
+  HubListViewController onInitHubListViewController() {
+    HubListViewController hubListViewController;
+    if (!Get.isRegistered<HubListViewController>()) {
+      Get.put(HubListViewController());
+    }
+    hubListViewController = Get.find();
+    return hubListViewController;
+  }
+
 }
 
 extension CapExtension on String {
