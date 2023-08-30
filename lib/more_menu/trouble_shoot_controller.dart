@@ -118,7 +118,7 @@ class TroubleShootController extends GetxController {
         if (result.isPermanentlyDenied ||
             storagePermission == PermissionStatus.denied ||
             storagePermission == PermissionStatus.permanentlyDenied) {
-          await moveToOpenSettings(storagePermission);
+          await moveToOpenSettings(result);
         }
       }
     }
@@ -127,7 +127,8 @@ class TroubleShootController extends GetxController {
   moveToOpenSettings(var status) async {
     if (Platform.isAndroid) {
       if (status == PermissionStatus.permanentlyDenied ||
-          status.permanentlyDenied) {
+          status == LocationPermission.deniedForever ||
+          status.isPermanentlyDenied) {
         await openAppSettings();
       }
     } else {
@@ -160,7 +161,7 @@ class TroubleShootController extends GetxController {
         if (result.isPermanentlyDenied ||
             cameraStatus == PermissionStatus.denied ||
             cameraStatus == PermissionStatus.permanentlyDenied) {
-           await moveToOpenSettings(cameraStatus);
+          await moveToOpenSettings(result);
         }
       }
     }
@@ -190,7 +191,7 @@ class TroubleShootController extends GetxController {
         if (result.isPermanentlyDenied ||
             microPhoneStatus == PermissionStatus.denied ||
             microPhoneStatus == PermissionStatus.permanentlyDenied) {
-           await moveToOpenSettings(microPhoneStatus);
+          await moveToOpenSettings(result);
         }
       }
     }
@@ -220,7 +221,7 @@ class TroubleShootController extends GetxController {
         if (status == LocationPermission.deniedForever ||
             locationStatus == PermissionStatus.denied ||
             locationStatus == PermissionStatus.permanentlyDenied) {
-           await moveToOpenSettings(locationStatus);
+          await moveToOpenSettings(status);
         }
       }
     }
