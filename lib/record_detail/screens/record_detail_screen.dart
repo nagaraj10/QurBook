@@ -110,6 +110,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   String? authToken;
 
   var pdfFile;
+  var fileNetworkUrl;
+  var fileTypeCommon;
   String? jpefFile;
 
   List<HealthRecordCollection> mediMasterId = [];
@@ -563,8 +565,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           ),
         );
       } else {
-        await ImageGallerySaver.saveFile(pdfFile).then(
-          (res) {
+        CommonUtil.downloadFile(fileNetworkUrl, fileTypeCommon)
+            .then((res) async {
             setState(() {
               downloadStatus = true;
             });
@@ -595,54 +597,53 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       } else {
         _currentImage = imagesPathMain[0];
         try {
-          await downloadImageFile(
-              _currentImage.fileType, _currentImage.healthRecordUrl!);
-          //final file = await CommonUtil.downloadFile(fileUrl, fileType);
-          imageList.add(jpefFile);
           if (Platform.isAndroid) {
-            Scaffold.of(contxt).showSnackBar(
-              SnackBar(
-                content: Text(
-                  variable.strFileDownloaded,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                  ),
-                ),
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                action: SnackBarAction(
-                  label: 'Open',
-                  onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ShowImage(
-                          filePathList: imageList,
-                        ),
+           /* await downloadImageFile(
+                _currentImage.fileType, _currentImage.healthRecordUrl!);
+            imageList.add(jpefFile);*/
+            CommonUtil.downloadFile(_currentImage.healthRecordUrl ?? '',
+                    _currentImage.fileType ?? '')
+                .then(
+              (res) async {
+                setState(() {
+                  downloadStatus = true;
+                  jpefFile = res?.path;
+                });
+                imageList.add(jpefFile);
+                Scaffold.of(contxt).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      variable.strFileDownloaded,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
+                    backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                    action: SnackBarAction(
+                      label: 'Open',
+                      onPressed: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShowImage(
+                              filePathList: imageList,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
             );
+          } else {
+            await downloadImageFile(
+                _currentImage.fileType, _currentImage.healthRecordUrl!);
+            //final file = await CommonUtil.downloadFile(fileUrl, fileType);
+            imageList.add(jpefFile);
           }
-
-          /* GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
-                .then((value) {
-              if (value) {
-                Scaffold.of(contxt).showSnackBar(SnackBar(
-                  content: const Text(variable.strFilesView),
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ));
-              } else {
-                Scaffold.of(contxt).showSnackBar(SnackBar(
-                  content: const Text(variable.strFilesErrorDownload),
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ));
-              }
-            });*/
-
-        } catch (e,stackTrace) {
-                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           print('$e exception thrown');
         }
       }
@@ -1585,8 +1586,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   Future<bool> downloadFile(
       HealthRecordCollection? audioMediaId, String fileType) async {
     try {
-      var fileName = widget.data.metadata!.fileName!.replaceAll(" ", "_") +
-          (audioMediaId?.fileType ?? "");
+      /*var fileName = widget.data.metadata!.fileName!.replaceAll(" ", "_") +
+          (audioMediaId?.fileType ?? "");*/
+      var fileName = widget.data.metadata!.fileName!.replaceAll(" ", "_");
+      if (!fileName.endsWith(".pdf")) {
+        fileName += (audioMediaId?.fileType ?? "");
+      }
       await FHBUtils.createDir(
         variable.stAudioPath,
         fileName,
@@ -1613,6 +1618,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             isAudioDownload = true;
           } else {
             pdfFile = file.path;
+            fileNetworkUrl = audioMediaId.healthRecordUrl??'';
+            fileTypeCommon = audioMediaId.fileType??'';
           }
         });
       });

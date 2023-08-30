@@ -711,7 +711,8 @@ class CommonUtil {
         for (final mediaMasterIds in data.healthRecordCollection!) {
           if (mediaMasterIds.fileType == '.jpg' ||
               mediaMasterIds.fileType == '.png' ||
-              mediaMasterIds.fileType == '.jpeg') {
+              mediaMasterIds.fileType == '.jpeg' ||
+              mediaMasterIds.fileType == '.aac') {
             mediaMasterIdsList.add(mediaMasterIds);
           }
         }
@@ -2077,7 +2078,7 @@ class CommonUtil {
       final bytes = req!.bodyBytes;
       final dir = Platform.isIOS
           ? await FHBUtils.createFolderInAppDocDirForIOS('images')
-          : await FHBUtils.createFolderInAppDocDir('images');
+          : await FHBUtils.createFolderInAppDocDir();
 
       String? imageName;
       if (url.contains('/')) {
@@ -2098,7 +2099,7 @@ class CommonUtil {
       try {
         final _currentImage =
             '${currentImage.response.data.fileContent}${currentImage.response.data.fileType}';
-        final dir = await FHBUtils.createFolderInAppDocDir('images');
+        final dir = await FHBUtils.createFolderInAppDocDir();
         final response = await Dio().get(currentImage.response.data.fileContent,
             options: Options(responseType: ResponseType.bytes));
         var file = File('$dir/${basename(_currentImage)}');
