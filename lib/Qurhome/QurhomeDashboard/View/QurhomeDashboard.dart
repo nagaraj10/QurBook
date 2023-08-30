@@ -215,12 +215,14 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 elevation: 0,
                 centerTitle: true,
                 actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      right: 16,
-                    ),
-                    child: MyBlinkingBLEIcon(),
-                  )
+                  (!(CommonUtil.isUSRegion())&&CommonUtil().userHasParedDevice())
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                            right: 16,
+                          ),
+                          child: MyBlinkingBLEIcon(),
+                        )
+                      : SizedBox.shrink(),
                 ],
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -390,20 +392,29 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 ),
                 leading: controller.currentSelectedIndex == 0
                     ? (CommonUtil.isUSRegion())
-                        ? Material(
-                            color: Colors.transparent,
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.menu_rounded,
+                        ? Row(
+                            children: [
+                              Material(
+                                color: Colors.transparent,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.menu_rounded,
+                                  ),
+                                  color: Color(
+                                      CommonUtil().getQurhomePrimaryColor()),
+                                  iconSize: CommonUtil().isTablet!
+                                      ? 34.0.sp
+                                      : 24.0.sp,
+                                  onPressed: () {
+                                    _scaffoldKey.currentState?.openDrawer();
+                                  },
+                                ),
                               ),
-                              color:
-                                  Color(CommonUtil().getQurhomePrimaryColor()),
-                              iconSize:
-                                  CommonUtil().isTablet! ? 34.0.sp : 24.0.sp,
-                              onPressed: () {
-                                _scaffoldKey.currentState?.openDrawer();
-                              },
-                            ),
+                              if (CommonUtil().userHasParedDevice()) ...{
+                                SizedBox(width: 2.w),
+                                Expanded(child: MyBlinkingBLEIcon())
+                              }
+                            ],
                           )
                         : IconWidget(
                             icon: Icons.arrow_back_ios,

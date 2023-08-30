@@ -29,6 +29,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
@@ -6794,6 +6795,25 @@ class CommonUtil {
       if (kDebugMode) {
         printError(info: e.toString());
       }
+    }
+  }
+
+  bool userHasParedDevice() {
+    try {
+      HubListViewController hublistController;
+      if (!Get.isRegistered<HubListViewController>()) {
+        Get.put(HubListViewController());
+      }
+      hublistController = Get.find();
+      final devicesList =
+      (hublistController.hubListResponse!.result!.userDeviceCollection ??
+          []);
+
+      return devicesList.isNotEmpty;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      printError(info: e.toString());
+      return false;
     }
   }
 }

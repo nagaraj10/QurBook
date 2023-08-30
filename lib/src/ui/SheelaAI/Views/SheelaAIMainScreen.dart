@@ -319,12 +319,14 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       centerTitle: true,
       elevation: 0,
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(
-            right: 16,
-          ),
-          child: MyBlinkingBLEIcon(),
-        )
+        CommonUtil().userHasParedDevice()
+            ? Padding(
+                padding: const EdgeInsets.only(
+                  right: 16,
+                ),
+                child: MyBlinkingBLEIcon(),
+              )
+            : SizedBox.shrink(),
       ],
       title: CommonUtil().isTablet!
           ? Row(
