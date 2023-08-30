@@ -880,6 +880,10 @@ const double mobileHeader4= 11.0;
 const double imageTabHeader = 70.0;
 const double imageMobileHeader = 40.0;
 
+const double imageTabIcon = 70.0;
+const double imageMobileIcon = 60.0;
+
+
 const double imageProfileTabHeader = 65.0;
 const double imageProfileMobileHeader = 40.0;
 
