@@ -6798,24 +6798,15 @@ class CommonUtil {
     }
   }
 
-  bool userHasParedDevice() {
-    try {
-      HubListViewController hublistController;
-      if (!Get.isRegistered<HubListViewController>()) {
-        Get.put(HubListViewController());
-      }
-      hublistController = Get.find();
-      final devicesList =
-      (hublistController.hubListResponse!.result!.userDeviceCollection ??
-          []);
-
-      return devicesList.isNotEmpty;
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-      printError(info: e.toString());
-      return false;
+  HubListViewController onInitHubListViewController() {
+    HubListViewController hubListViewController;
+    if (!Get.isRegistered<HubListViewController>()) {
+      Get.put(HubListViewController());
     }
+    hubListViewController = Get.find();
+    return hubListViewController;
   }
+
 }
 
 extension CapExtension on String {

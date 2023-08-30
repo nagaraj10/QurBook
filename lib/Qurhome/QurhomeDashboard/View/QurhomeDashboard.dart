@@ -68,6 +68,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final hubListViewController =
+  CommonUtil().onInitHubListViewController();
+
   @override
   void initState() {
     try {
@@ -215,7 +218,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 elevation: 0,
                 centerTitle: true,
                 actions: [
-                  (!(CommonUtil.isUSRegion())&&CommonUtil().userHasParedDevice())
+                  (!(CommonUtil.isUSRegion())&&hubListViewController.isUserHasParedDevice.value)
                       ? Padding(
                           padding: const EdgeInsets.only(
                             right: 16,
@@ -410,7 +413,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                   },
                                 ),
                               ),
-                              if (CommonUtil().userHasParedDevice()) ...{
+                              if (hubListViewController.isUserHasParedDevice.value) ...{
                                 SizedBox(width: 2.w),
                                 Expanded(child: MyBlinkingBLEIcon())
                               }
