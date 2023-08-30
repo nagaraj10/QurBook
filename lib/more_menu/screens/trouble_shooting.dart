@@ -14,8 +14,6 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 
 class TroubleShooting extends StatefulWidget {
