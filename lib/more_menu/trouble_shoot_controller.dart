@@ -100,7 +100,7 @@ class TroubleShootController extends GetxController {
     final storagePermission = await Platform.isAndroid
         ? await Permission.storage.status
         : await Permission.photos.status;
-    if (storagePermission.isDenied || storagePermission.isRestricted)
+    if (!storagePermission.isGranted)
       isStoragePermission = false;
     else
       isStoragePermission = true;
@@ -110,30 +110,35 @@ class TroubleShootController extends GetxController {
       isStorageAdded = true;
       increaseProgressValue(addValue);
     } else {
-      if (storagePermission.isPermanentlyDenied ||
-          storagePermission.isDenied ||
-          storagePermission.isRestricted) {
+      if (!storagePermission.isGranted) {
         final result = Platform.isAndroid
             ? await Permission.storage.request()
             : await Permission.photos.request();
 
-        if (result.isPermanentlyDenied) {
-          await openAppSettings();
-        }
-      } else {
-        if (storagePermission == PermissionStatus.denied ||
+        if (result.isPermanentlyDenied ||
+            storagePermission == PermissionStatus.denied ||
             storagePermission == PermissionStatus.permanentlyDenied) {
-          await openAppSettings();
+          await moveToOpenSettings(storagePermission);
         }
       }
+    }
+  }
+
+  moveToOpenSettings(var status) async {
+    if (Platform.isAndroid) {
+      if (status == PermissionStatus.permanentlyDenied ||
+          status.permanentlyDenied) {
+        await openAppSettings();
+      }
+    } else {
+      await openAppSettings();
     }
   }
 
   checkCameraStatus({bool progressalue = true}) async {
     var cameraStatus = await Permission.camera.status;
 
-    if (cameraStatus == PermissionStatus.denied ||
-        cameraStatus == PermissionStatus.permanentlyDenied) {
+    if (!cameraStatus.isGranted) {
       isCameraPermission = false;
     } else {
       isCameraPermission = true;
@@ -149,18 +154,13 @@ class TroubleShootController extends GetxController {
       isCameraAdded = true;
       increaseProgressValue(addValue);
     } else {
-      if (cameraStatus.isPermanentlyDenied ||
-          cameraStatus.isDenied ||
-          cameraStatus.isRestricted) {
+      if (!cameraStatus.isGranted) {
         var result = await Permission.camera.request();
 
-        if (result.isPermanentlyDenied) {
-          await openAppSettings();
-        }
-      } else {
-        if (cameraStatus == PermissionStatus.denied ||
+        if (result.isPermanentlyDenied ||
+            cameraStatus == PermissionStatus.denied ||
             cameraStatus == PermissionStatus.permanentlyDenied) {
-          await openAppSettings();
+           await moveToOpenSettings(cameraStatus);
         }
       }
     }
@@ -169,7 +169,7 @@ class TroubleShootController extends GetxController {
   checkMicrophoneStatus({bool progressalue = true}) async {
     var microPhoneStatus = await Permission.microphone.status;
 
-    if (microPhoneStatus.isDenied || microPhoneStatus.isRestricted) {
+    if (!microPhoneStatus.isGranted) {
       isMicrophone = false;
     } else {
       isMicrophone = true;
@@ -185,17 +185,12 @@ class TroubleShootController extends GetxController {
       isMicrophoneAdded = false;
       increaseProgressValue(addValue);
     } else {
-      if (microPhoneStatus.isPermanentlyDenied ||
-          microPhoneStatus.isDenied ||
-          microPhoneStatus.isRestricted) {
+      if (!microPhoneStatus.isGranted) {
         var result = await Permission.microphone.request();
-        if (result.isPermanentlyDenied) {
-          await openAppSettings();
-        }
-      } else {
-        if (microPhoneStatus == PermissionStatus.denied ||
+        if (result.isPermanentlyDenied ||
+            microPhoneStatus == PermissionStatus.denied ||
             microPhoneStatus == PermissionStatus.permanentlyDenied) {
-          await openAppSettings();
+           await moveToOpenSettings(microPhoneStatus);
         }
       }
     }
@@ -204,7 +199,7 @@ class TroubleShootController extends GetxController {
   checkLocationStatus({bool progressalue = true}) async {
     var locationStatus = await Permission.location.status;
 
-    if (locationStatus.isDenied || locationStatus.isRestricted) {
+    if (!locationStatus.isGranted) {
       isLocation = false;
     } else {
       isLocation = true;
@@ -220,17 +215,12 @@ class TroubleShootController extends GetxController {
       isLocationAdded = false;
       increaseProgressValue(addValue);
     } else {
-      if (locationStatus.isPermanentlyDenied ||
-          locationStatus.isDenied ||
-          locationStatus.isRestricted) {
+      if (!locationStatus.isGranted) {
         final status = await Geolocator.requestPermission();
-        if (status == LocationPermission.deniedForever) {
-          await openAppSettings();
-        }
-      } else {
-        if (locationStatus == PermissionStatus.denied ||
+        if (status == LocationPermission.deniedForever ||
+            locationStatus == PermissionStatus.denied ||
             locationStatus == PermissionStatus.permanentlyDenied) {
-          await openAppSettings();
+           await moveToOpenSettings(locationStatus);
         }
       }
     }
