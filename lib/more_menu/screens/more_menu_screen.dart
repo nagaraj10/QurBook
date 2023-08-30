@@ -19,11 +19,13 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/more_menu/screens/trouble_shooting.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -133,7 +135,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   var qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
-
+  bool isProd = false;
   @override
   void initState() {
     qurhomeDashboardController.getModuleAccess();
@@ -149,6 +151,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     selectedList = [];
     _deviceModel = new DevicesViewModel();
     authViewModel = AuthViewModel();
+
+    if ((BASE_URL == prodINURL) ||
+        (BASE_URL == prodUSURL) ||
+        (BASE_URL == demoINURL) ||
+        (BASE_URL == demoUSURL)) {
+      isProd = true;
+    } else {
+      isProd = false;
+    }
   }
 
   @override
@@ -221,6 +232,40 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               //       });
               //     })
             ]),
+        floatingActionButton: !isProd
+            ? Align(
+                alignment: Alignment.bottomCenter,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TroubleShooting(),
+                      ),
+                    ).then((value) {
+                      if (value) {
+                        setState(() {});
+                      }
+                    });
+                  },
+                  child: Container(
+                    width: 200,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                    ),
+                    child: Center(
+                      child: Text(strTroubleShooting,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16.0.sp,
+                            color: ColorUtils.white,
+                          )),
+                    ),
+                  ),
+                ))
+            : SizedBox(),
         body: getValuesFromSharedPrefernce());
   }
 
@@ -1595,8 +1640,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           },
                         ),
                       );
-                    } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                    } catch (e, stackTrace) {
+                      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                     }
                   },
                   title: Text(variable.strConnectedDevices,
@@ -1646,7 +1691,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                   appLockStatus: value,
                                 );
                               });
-                            } on PlatformException catch (e,stackTrace) {
+                            } on PlatformException catch (e, stackTrace) {
                               msg = "Error while opening pattern/pin/passcode";
                               if (kDebugMode) {
                                 printError(info: msg.toString());
