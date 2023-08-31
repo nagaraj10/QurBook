@@ -25,32 +25,25 @@ class DownloadMultipleImages {
     List<String?> filePathist = [];
     for (final _currentImage in image_list) {
       try {
-        await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,
-                _currentImage.healthRecordUrl!.split('/').last)
-            .then((filePath) async {
-          var file;
-          if (_currentImage.fileType == '.pdf') {
-            file = File('$filePath');
-          } else {
-            file = File('$filePath');
-          }
-          final request = await ApiServices.get(
-            _currentImage.healthRecordUrl!,
-            headers: {
-              HttpHeaders.authorizationHeader: authToken!,
-              Constants.KEY_OffSet: CommonUtil().setTimeZone()
-            },
-          );
-          final bytes = request!.bodyBytes; //close();
-          await file.writeAsBytes(bytes);
+        var url = _currentImage.healthRecordUrl ?? '';
+        var extension = _currentImage.fileType ?? '';
+        final req = await ApiServices.get(url);
+        final bytes = req!.bodyBytes;
+        final dir = Platform.isIOS
+            ? await FHBUtils.createFolderInAppDocDirForIOS('images')
+            : await FHBUtils.createFolderInAppDocDir();
 
-          print("file.path" + file.path);
-          filePathist.add(file.path);
-        });
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        String? imageName;
+        if (url.contains('/')) {
+          imageName = url.split('/').last;
+        }
+        var file = File('$dir/${imageName}$extension');
+        await file.writeAsBytes(bytes);
 
-        //print('$e exception thrown');
+        print("file.path" + file.path ?? '');
+        filePathist.add(file.path ?? '');
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
     if (filePathist.length == image_list.length) {
