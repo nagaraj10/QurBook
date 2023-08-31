@@ -857,6 +857,7 @@ const String SearchingForDevices = 'Searching for devices';
 const String deviceConnected = 'Device connected';
 
 const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
+const String activity_completed_regimen = 'The activity has been already completed';
 
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
@@ -879,6 +880,10 @@ const double mobileHeader4= 11.0;
 
 const double imageTabHeader = 70.0;
 const double imageMobileHeader = 40.0;
+
+const double imageTabIcon = 70.0;
+const double imageMobileIcon = 60.0;
+
 
 const double imageProfileTabHeader = 65.0;
 const double imageProfileMobileHeader = 40.0;
