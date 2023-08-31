@@ -146,7 +146,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           .validString(qurhomeDashboardController.eventId.value ?? "");
       String strEStart = CommonUtil()
           .validString(qurhomeDashboardController.estart.value ?? "");
-      if (CommonUtil.isUSRegion() && strEStart.trim().isNotEmpty) {
+      if (CommonUtil.isUSRegion() &&
+          strEStart.trim().isNotEmpty &&
+          !(qurhomeDashboardController.isOnceInAPlanActivity.value)) {
         controller.restartTimer();
         await controller.getRegimenList(isLoading: true, date: strEStart);
       } else {
@@ -178,15 +180,24 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 await Future.delayed(Duration(milliseconds: 2000));
                 qurhomeDashboardController.eventId.value = "";
                 qurhomeDashboardController.estart.value = "";
+                qurhomeDashboardController.isOnceInAPlanActivity.value = false;
               }
               break;
             }
           }
           if (currRegimen == null) {
-            FlutterToast().getToast(
-              activity_removed_regimen,
-              Colors.red,
-            );
+            if (qurhomeDashboardController.isOnceInAPlanActivity.value) {
+              FlutterToast().getToast(
+                activity_completed_regimen,
+                Colors.green,
+              );
+              qurhomeDashboardController.isOnceInAPlanActivity.value = false;
+            } else {
+              FlutterToast().getToast(
+                activity_removed_regimen,
+                Colors.red,
+              );
+            }
           }
         }
       }
@@ -1063,6 +1074,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 .toString();
                             reminder.remindin = regimen.remindin.toString();
                             reminder.remindbefore = regimen.remindin.toString();
+                            reminder.dosemeal = regimen.doseMealString.toString();
                             List<Reminder> data = [reminder];
                             String snoozedText =
                                 "Snoozed for ${int.parse(time[0]).toString()} minutes";

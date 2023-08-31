@@ -35,6 +35,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   AnimationController? animationController;
   Animation<double>? _animation;
 
+  final hubListViewController =
+  CommonUtil().onInitHubListViewController();
+
   @override
   void initState() {
     super.initState();
@@ -319,12 +322,14 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       centerTitle: true,
       elevation: 0,
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(
-            right: 16,
-          ),
-          child: MyBlinkingBLEIcon(),
-        )
+        hubListViewController.isUserHasParedDevice.value
+            ? Padding(
+                padding: const EdgeInsets.only(
+                  right: 16,
+                ),
+                child: MyBlinkingBLEIcon(),
+              )
+            : SizedBox.shrink(),
       ],
       title: CommonUtil().isTablet!
           ? Row(
