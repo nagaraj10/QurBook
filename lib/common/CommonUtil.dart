@@ -4408,22 +4408,18 @@ class CommonUtil {
       var response = await ApiServices.get(url);
       if (response?.statusCode == 200) {
         var responseJson = response!.bodyBytes;
-        var directory = await getApplicationDocumentsDirectory();
-        if (Platform.isAndroid &&
-            !(await Permission.manageExternalStorage.isGranted)) {
-          await Permission.manageExternalStorage.request();
-        }
 
-        var path = Platform.isIOS
-            ? directory.path
-            : await FHBUtils.createFolderInAppDocDirClone(
-                variable.stAudioPath, fileName);
-        var file = File('$path');
+        final dir = Platform.isIOS
+            ? await FHBUtils.createFolderInAppDocDirForIOS('images')
+            : await FHBUtils.createFolderInAppDocDir();
+        String? imageName = fileName;
+        if (imageName == null) {
+          if (url.contains('/')) {
+            imageName = url.split('/').last;
+          }
+        }
+        var file = File('$dir/${imageName}.pdf');
         await file.writeAsBytes(responseJson);
-        path = file.path;
-        await ImageGallerySaver.saveFile(file.path).then(
-          (res) {},
-        );
         return ResultFromResponse(true, file.path);
       } else {
         return ResultFromResponse(false, 'Requested file not found');
@@ -4448,12 +4444,7 @@ class CommonUtil {
             onPressed: () async {
               await OpenFilex.open(
                 response.result,
-              ); //FU2.5
-              final controller = Get.find<PDFViewController>();
-              final data =
-                  OpenPDF(type: PDFLocation.Path, path: response.result);
-              controller.data = data;
-              Get.to(() => PDFView());
+              );
             },
           ),
         ),

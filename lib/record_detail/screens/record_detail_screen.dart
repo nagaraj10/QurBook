@@ -597,51 +597,41 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       } else {
         _currentImage = imagesPathMain[0];
         try {
-          if (Platform.isAndroid) {
-           /* await downloadImageFile(
-                _currentImage.fileType, _currentImage.healthRecordUrl!);
-            imageList.add(jpefFile);*/
-            CommonUtil.downloadFile(_currentImage.healthRecordUrl ?? '',
-                    _currentImage.fileType ?? '')
-                .then(
-              (res) async {
-                setState(() {
-                  downloadStatus = true;
-                  jpefFile = res?.path;
-                });
-                imageList.add(jpefFile);
-                Scaffold.of(contxt).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      variable.strFileDownloaded,
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                      ),
-                    ),
-                    backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    action: SnackBarAction(
-                      label: 'Open',
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ShowImage(
-                              filePathList: imageList,
-                            ),
-                          ),
-                        );
-                      },
+          CommonUtil.downloadFile(_currentImage.healthRecordUrl ?? '',
+                  _currentImage.fileType ?? '')
+              .then(
+            (res) async {
+              setState(() {
+                downloadStatus = true;
+                jpefFile = res?.path;
+              });
+              imageList.add(jpefFile);
+              Scaffold.of(contxt).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    variable.strFileDownloaded,
+                    style: TextStyle(
+                      fontSize: 16.0.sp,
                     ),
                   ),
-                );
-              },
-            );
-          } else {
-            await downloadImageFile(
-                _currentImage.fileType, _currentImage.healthRecordUrl!);
-            //final file = await CommonUtil.downloadFile(fileUrl, fileType);
-            imageList.add(jpefFile);
-          }
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  action: SnackBarAction(
+                    label: 'Open',
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ShowImage(
+                            filePathList: imageList,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+          );
         } catch (e, stackTrace) {
           CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           print('$e exception thrown');
