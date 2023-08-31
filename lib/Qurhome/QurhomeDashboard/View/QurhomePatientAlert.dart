@@ -67,7 +67,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                 },
                 controller: PageController(
                     initialPage: 1,
-                    viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
+                    viewportFraction: 1 / (isPortrait == true ? 4 : 3)),
                 itemBuilder: (BuildContext context, int itemIndex) {
                   if (itemIndex == (val.patientAlert!.result!.data!.length)) {
                     return SizedBox();
@@ -166,93 +166,135 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
   _buildCarouselItem(BuildContext context, int itemIndex,
       PatientAlertData patientAlertData, int nextAlertPosition, isPortrait) {
     return InkWell(
-      onTap: () {
+      onTap: (){
         showRegimenDialog(patientAlertData, itemIndex);
       },
-      child: Transform.scale(
-        scale: getCurrentRatio(itemIndex),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal:
-                  isPortrait ? 25.0 : MediaQuery.of(context).size.width / 5,
-              vertical: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: getCardBackgroundColor(itemIndex, nextAlertPosition),
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      child: Wrap(
+        children: [
+          Transform.scale(
+            scale: getCurrentRatio(itemIndex),
+            child: Container(
+              margin:EdgeInsets.symmetric(vertical: 8.0,horizontal: isPortrait ? 25.0 : MediaQuery.of(context).size.width / 5),
               child: Stack(
                 children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: [
-                        Text(
-                          patientAlertData.createdOn != null
-                              ? DateFormat('hh:mm a')
-                                  .format(patientAlertData.createdOn!.toLocal())
-                              : '',
-                          style: TextStyle(
-                              color: getTextAndIconColor(
-                                  itemIndex, nextAlertPosition),
-                              fontSize: 15.h,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: Center(
-                          child: Text(
-                            CommonUtil().capitalizeFirstofEach(
-                                CommonUtil().getFormattedString(
-                              patientAlertData.additionalInfo?.title ?? '',
-                              patientAlertData?.typeName ?? '',
-                              patientAlertData?.additionalInfo?.uformname ?? '',
-                              12,
-                              forDetails: false,
-                            )),
-                            maxLines: 2,
-                            style: TextStyle(
-                                color: getTextAndIconColor(
-                                    itemIndex, nextAlertPosition),
-                                fontSize: 16.h,
-                                fontWeight: FontWeight.w600),
+                  Visibility(
+                    visible: patientAlertData.interaction?.isNotEmpty==true,
+                    child: Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            alignment: Alignment.bottomCenter,
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(
+                                  10,
+                                ),
+                                bottomRight: Radius.circular(
+                                  10,
+                                ),
+                              ),
+                            ),
                           ),
                         )),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        IconButton(
-                          icon: ImageIcon(
-                              getIcons(patientAlertData.typeCode ?? ''),
-                              size: 30,
-                              color: getTextAndIconColor(
-                                  itemIndex, nextAlertPosition)),
-                          onPressed: () async {},
-                        ),
-                      ],
-                    ),
                   ),
+                  Column(
+                    children: [
+                      Container(
+                          decoration: BoxDecoration(
+                            color: getCardBackgroundColor(itemIndex, nextAlertPosition),
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0),topRight: Radius.circular(10.0),bottomLeft: Radius.circular(12.0),
+                                bottomRight: Radius.circular(12.0)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Container(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  patientAlertData.createdOn != null
+                                      ? DateFormat('hh:mm a')
+                                      .format(patientAlertData.createdOn!.toLocal())
+                                      : '',
+                                  style: TextStyle(
+                                      color: getTextAndIconColor(
+                                          itemIndex, nextAlertPosition),
+                                      fontSize: 15.h,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                    child: Text(
+                                      CommonUtil().capitalizeFirstofEach(
+                                          CommonUtil().getFormattedString(
+                                            patientAlertData.additionalInfo?.title ?? '',
+                                            patientAlertData?.typeName ?? '',
+                                            patientAlertData?.additionalInfo?.uformname ?? '',
+                                            12,
+                                            forDetails: false,
+                                          )),
+                                      maxLines: 2,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: getTextAndIconColor(
+                                              itemIndex, nextAlertPosition),
+                                          fontSize: 16.h,
+                                          fontWeight: FontWeight.w600),
+                                    )),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                IconButton(
+                                  icon: ImageIcon(
+                                      getIcons(patientAlertData.typeCode ?? ''),
+                                      size: 30,
+                                      color: getTextAndIconColor(
+                                          itemIndex, nextAlertPosition)),
+                                  onPressed: () async {},
+                                ),
+                              ],
+                            ),
+                          )
+                      ),
+                      Visibility(
+                        visible: patientAlertData.interaction?.isNotEmpty==true,
+                        child: Text(
+                          escalated,
+                          style: TextStyle(
+                              color: Colors.white,
+                            fontWeight: FontWeight.w500
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+
                 ],
               ),
             ),
-          ),
-        ),
+          )
+        ],
       ),
     );
   }
+
+
 
   Color getTextAndIconColor(int itemIndex, int nextRegimenPosition) {
     if (controller.currentIndex == itemIndex) {
@@ -425,6 +467,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
       Navigator.pop(context);
       CommonUtil().hideLoadingDialog(context);
       FlutterToast().getToast(strEscalateAlertMsg, Colors.green);
+      controller.getPatientAlertList();
     } else {
       CommonUtil().hideLoadingDialog(context);
 
