@@ -17,7 +17,7 @@ import 'package:sqflite/sqflite.dart';
 
 class FHBUtils {
   static String CURRENT_DATE_CODE = 'DMY';
-  static final String ANDROID_FILE_PATH = '/storage/emulated/0/Qurbook/';
+  static final String ANDROID_FILE_PATH = '/storage/emulated/0/Download/';
   List<String> YMDList = [
     'sq_AL',
     'en_AU',
@@ -301,7 +301,7 @@ class FHBUtils {
     );
   }
 
-  static Future<String> createFolderInAppDocDir(String folderName) async {
+  static Future<String> createFolderInAppDocDir() async {
     Directory _appDocDirFolder;
     //Create Directory with app name
     if (Platform.isAndroid) {
