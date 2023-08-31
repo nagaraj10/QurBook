@@ -2106,7 +2106,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       additionalInfo.patientHistory = '';
       additionalInfo.visitReason = '';
       additionalInfo.uhidNumber = '';
-      additionalInfo.language = [];
+      additionalInfo.language = '';
     }
 
     profileResult.additionalInfo = additionalInfo;
