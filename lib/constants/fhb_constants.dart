@@ -829,6 +829,9 @@ const String primary_chat = '(Primary)';
 
 const String primary_provider = 'Primary';
 
+//patientAlert
+const String escalated ='Escalated';
+
 const String STR_PROVIDERDOCUMENTS = 'Provider Documents';
 const String STR_PRESCRIPTION = 'Prescription';
 const String STR_ALL = 'ALL';
