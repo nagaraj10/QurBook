@@ -21,6 +21,7 @@ class Reminder {
   String? importance;
   String? ack;
   String? ack_local;
+  String? dosemeal;
 
   Reminder(
       {this.eid,
@@ -40,7 +41,7 @@ class Reminder {
       this.evDisabled = false,
       this.importance = "0",
       this.ack = "",
-      this.ack_local = ""});
+      this.ack_local = "",this.dosemeal});
 
   Reminder copyWith(
       {String? eid,
@@ -60,7 +61,7 @@ class Reminder {
       bool? evDisabled,
       int? importance,
       String? ack,
-      String? ack_local}) {
+      String? ack_local,String? dosemeal}) {
     return Reminder(
       eid: eid ?? this.eid,
       title: title ?? this.title,
@@ -80,6 +81,7 @@ class Reminder {
       importance: importance as String? ?? this.importance,
       ack: ack ?? this.ack,
       ack_local: ack_local ?? this.ack_local,
+      dosemeal: dosemeal ?? this.dosemeal,
     );
   }
 
@@ -104,6 +106,7 @@ class Reminder {
       'importance': importance,
       'ack': ack,
       'ack_local': ack_local,
+      'dosemeal': dosemeal,
     };
   }
 
@@ -127,6 +130,7 @@ class Reminder {
       evDisabled: (map['ev_disabled'] ?? '0') == '1',
       ack: map['ack'],
       ack_local: map['ack_local'],
+      dosemeal: map['dosemeal'],
     );
   }
 
@@ -137,7 +141,7 @@ class Reminder {
 
   @override
   String toString() {
-    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername, evDisabled: $evDisabled,ack: $ack,ack_local: $ack_local,)';
+    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername, evDisabled: $evDisabled,ack: $ack,ack_local: $ack_local,dosemeal: $dosemeal)';
   }
 
   @override
@@ -162,7 +166,8 @@ class Reminder {
         other.evDisabled == evDisabled &&
         other.importance == importance &&
         other.ack == ack &&
-        other.ack_local == ack_local;
+        other.ack_local == ack_local&&
+        other.dosemeal == dosemeal;
   }
 
   @override
@@ -182,6 +187,7 @@ class Reminder {
         importance.hashCode ^
         ack.hashCode ^
         ack_local.hashCode ^
+        dosemeal.hashCode ^
         evDisabled.hashCode;
   }
 }

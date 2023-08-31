@@ -12,6 +12,7 @@ class PatientAlertData {
   DateTime? createdOn;
   bool? isEscalated;
   String? lastModifiedOn;
+  List<String>? interaction;
 
   PatientAlertData(
       {this.id,
@@ -23,7 +24,8 @@ class PatientAlertData {
       this.typeCode,
       this.createdOn,
       this.isEscalated,
-      this.lastModifiedOn});
+      this.lastModifiedOn,
+      this.interaction});
 
   PatientAlertData.fromJson(Map<String, dynamic> json) {
     try {
@@ -40,6 +42,7 @@ class PatientAlertData {
       createdOn = DateTime.tryParse(json['createdOn'] ?? '');
       isEscalated = json['isEscalated'];
       lastModifiedOn = json['lastModifiedOn'];
+      interaction = json['interaction']!=null?List<String>.from(json['interaction']):[];
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -59,6 +62,7 @@ class PatientAlertData {
     data['createdOn'] = this.createdOn?.toIso8601String();
     data['isEscalated'] = this.isEscalated;
     data['lastModifiedOn'] = this.lastModifiedOn;
+    data['interaction'] = this.interaction;
     return data;
   }
 }
