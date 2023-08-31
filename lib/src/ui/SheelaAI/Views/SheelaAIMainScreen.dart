@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
+import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
@@ -33,6 +34,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   SheelaQueueServices servicesQueue = SheelaQueueServices();
   AnimationController? animationController;
   Animation<double>? _animation;
+
+  final hubListViewController =
+  CommonUtil().onInitHubListViewController();
 
   @override
   void initState() {
@@ -317,6 +321,16 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
       centerTitle: true,
       elevation: 0,
+      actions: [
+        hubListViewController.isUserHasParedDevice.value
+            ? Padding(
+                padding: const EdgeInsets.only(
+                  right: 16,
+                ),
+                child: MyBlinkingBLEIcon(),
+              )
+            : SizedBox.shrink(),
+      ],
       title: CommonUtil().isTablet!
           ? Row(
               mainAxisAlignment: MainAxisAlignment.end,

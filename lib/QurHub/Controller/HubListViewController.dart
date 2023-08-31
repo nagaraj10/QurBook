@@ -28,6 +28,7 @@ class HubListViewController extends GetxController {
   String? manufacturer = "";
   String? eid;
   String? uid;
+  RxBool isUserHasParedDevice = false.obs;
 
   @override
   onInit() {
@@ -48,14 +49,22 @@ class HubListViewController extends GetxController {
       http.Response response = await (_apiProvider.getHubList());
       if (response.statusCode != 200 || (response.body).isEmpty) {
         hubListResponse = null;
+        isUserHasParedDevice.value = false;
         return;
       }
       hubListResponse = HubListResponse.fromJson(json.decode(response.body));
+      final devicesList = (hubListResponse?.result?.userDeviceCollection ?? []);
+      if (devicesList.isNotEmpty) {
+        isUserHasParedDevice.value = true;
+      } else {
+        isUserHasParedDevice.value = false;
+      }
       loadingData.value = false;
     } catch (e,stackTrace) {
             CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       hubListResponse = null;
+      isUserHasParedDevice.value = false;
       print(e.toString());
       loadingData.value = false;
     }
@@ -116,7 +125,7 @@ class HubListViewController extends GetxController {
         isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
         if (!(isBluetoothEnable ?? false)) {
           FlutterToast().getToast(
-            'Please turn on your bluetooth and try again',
+            pleaseTurnOnYourBluetoothAndTryAgain,
             Colors.red,
           );
           return;

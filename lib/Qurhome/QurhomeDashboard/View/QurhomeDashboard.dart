@@ -20,6 +20,7 @@ import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:provider/provider.dart';
@@ -66,6 +67,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       AddFamilyUserInfoRepository();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final hubListViewController =
+  CommonUtil().onInitHubListViewController();
 
   @override
   void initState() {
@@ -213,6 +217,16 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
                 elevation: 0,
                 centerTitle: true,
+                actions: [
+                  (!(CommonUtil.isUSRegion())&&hubListViewController.isUserHasParedDevice.value)
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                            right: 16,
+                          ),
+                          child: MyBlinkingBLEIcon(),
+                        )
+                      : SizedBox.shrink(),
+                ],
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: (CommonUtil.isUSRegion())
@@ -381,20 +395,29 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 ),
                 leading: controller.currentSelectedIndex == 0
                     ? (CommonUtil.isUSRegion())
-                        ? Material(
-                            color: Colors.transparent,
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.menu_rounded,
+                        ? Row(
+                            children: [
+                              Material(
+                                color: Colors.transparent,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.menu_rounded,
+                                  ),
+                                  color: Color(
+                                      CommonUtil().getQurhomePrimaryColor()),
+                                  iconSize: CommonUtil().isTablet!
+                                      ? 34.0.sp
+                                      : 24.0.sp,
+                                  onPressed: () {
+                                    _scaffoldKey.currentState?.openDrawer();
+                                  },
+                                ),
                               ),
-                              color:
-                                  Color(CommonUtil().getQurhomePrimaryColor()),
-                              iconSize:
-                                  CommonUtil().isTablet! ? 34.0.sp : 24.0.sp,
-                              onPressed: () {
-                                _scaffoldKey.currentState?.openDrawer();
-                              },
-                            ),
+                              if (hubListViewController.isUserHasParedDevice.value) ...{
+                                SizedBox(width: 2.w),
+                                Expanded(child: MyBlinkingBLEIcon())
+                              }
+                            ],
                           )
                         : IconWidget(
                             icon: Icons.arrow_back_ios,

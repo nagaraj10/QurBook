@@ -207,8 +207,8 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
                                   child: Text(strForgotTxt,
                                       style: TextStyle(
                                           fontSize: 14.0.sp,
-                                          decoration: TextDecoration.underline,
-                                          decorationColor: Color(CommonUtil().getMyPrimaryColor()),
+                                          /*decoration: TextDecoration.underline,
+                                          decorationColor: Color(CommonUtil().getMyPrimaryColor()),*/
                                           fontWeight: FontWeight.w500)),
                                 ),
                               ),

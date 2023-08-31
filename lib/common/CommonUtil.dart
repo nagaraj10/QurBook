@@ -29,6 +29,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
@@ -230,6 +231,7 @@ class CommonUtil {
 
   static String? bookedForId = null;
   static bool isCallStarted = false;
+  static bool isVersionLatest = true;
 
   var commonConstants = CommonConstants();
 
@@ -1389,7 +1391,7 @@ class CommonUtil {
     }
   }
 
-  void moveToLoginPage() {
+  moveToLoginPage() {
     PreferenceUtil.clearAllData().then((value) {
       // PageNavigator.goToPermanent(context,router.rt_SignIn);
       Navigator.pushAndRemoveUntil(
@@ -2580,7 +2582,7 @@ class CommonUtil {
     }
   }
 
-  versionCheck(context) async {
+  versionCheck(context, {bool showDialog = true}) async {
     //Get Current installed version of app
     final info = await PackageInfo.fromPlatform();
     var currentVersion = double.parse(info.version.trim().replaceAll('.', ''));
@@ -2623,12 +2625,17 @@ class CommonUtil {
       //     .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
 
       if (newVersion > currentVersion) {
-        _showVersionDialog(context, isForceUpdate);
+        isVersionLatest = false;
+        if (showDialog) _showVersionDialog(context, isForceUpdate);
       }
     } on FirebaseException catch (exception, stackTrace) {
       // Fetch throttled.
+      isVersionLatest = false;
+
       CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
     } catch (exception, stackTrace) {
+      isVersionLatest = false;
+
       CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
       print('Unable to fetch remote config. Cached or default values will be '
           'used');
@@ -5301,8 +5308,10 @@ class CommonUtil {
         if (value.result != null) {
           if (value.result!.queueCount != null &&
               value.result!.queueCount! > 0) {
-            CommonUtil().dialogForSheelaQueue(
-                Get.context!, value.result?.queueCount ?? 0);
+            var sheelaAIController = Get.find<SheelaAIController>();
+            sheelaAIController.sheelaIconBadgeCount.value =
+                (value.result?.queueCount ?? 0);
+            CommonUtil().dialogForSheelaQueue(Get.context!);
           }
         }
       }
@@ -5586,7 +5595,8 @@ class CommonUtil {
     );
   }
 
-  void dialogForSheelaQueue(BuildContext context, int count) async {
+  void dialogForSheelaQueue(BuildContext context) async {
+    var sheelaAIController = Get.find<SheelaAIController>();
     bool isFirstTime = true;
     showGeneralDialog(
         context: context,
@@ -5610,7 +5620,8 @@ class CommonUtil {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       BadgeIconBig(
-                        badgeCount: count,
+                        badgeCount:
+                            sheelaAIController.sheelaIconBadgeCount.value,
                         badgeColor: ColorUtils.badgeQueue,
                         icon: AssetImageWidget(
                           icon: icon_sheela_queue,
@@ -5627,8 +5638,9 @@ class CommonUtil {
         });
   }
 
-  void dialogForSheelaQueueStable(BuildContext context, int count,
-      {Function()? onTapSheela}) async {
+  void dialogForSheelaQueueStable(BuildContext context,
+      {int? unReadMsgCount, Function()? onTapSheela}) async {
+    var sheelaAIController = Get.find<SheelaAIController>();
     showGeneralDialog(
         context: context,
         barrierColor: Colors.black38,
@@ -5656,8 +5668,16 @@ class CommonUtil {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text(
+                            strRemainders,
+                            style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
+                          ),
                           BadgeIconBig(
-                            badgeCount: count,
+                            badgeCount:
+                                sheelaAIController.sheelaIconBadgeCount.value,
                             badgeColor: ColorUtils.badgeQueue,
                             icon: GestureDetector(
                               onTap: () {
@@ -5668,6 +5688,62 @@ class CommonUtil {
                                 height: 250.h,
                                 width: 250.w,
                               ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: false,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 2.h,
+                                  width: 0.2.sw,
+                                  margin: EdgeInsets.only(top: 20.h),
+                                  decoration: BoxDecoration(
+                                      color: Color(getMyPrimaryColor()),
+                                      borderRadius: BorderRadius.circular(5)),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Text(
+                                  variable.strUnReadMessage,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0.sp,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(
+                                  height: 15.h,
+                                ),
+                                BadgeIconBig(
+                                  badgeCount: unReadMsgCount ?? 0,
+                                  badgeColor: ColorUtils.badgeQueue,
+                                  right: 5,
+                                  top: 5,
+                                  boxConstraints: BoxConstraints(
+                                      minHeight: 35.h, minWidth: 35.h),
+                                  badgeTextSize: 18.sp,
+                                  icon: Container(
+                                    height: 100.h,
+                                    width: 100.h,
+                                    margin: EdgeInsets.all(10),
+                                    padding: EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: Color(getMyPrimaryColor()),
+                                          width: 5.w),
+                                    ),
+                                    child: Image.asset(
+                                      icon_unread_chat,
+                                      height: 30.h,
+                                      width: 30.w,
+                                      color: Color(getMyPrimaryColor()),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           )
                         ],
@@ -6745,6 +6821,54 @@ class CommonUtil {
     }
 
     return name;
+  }
+
+  askPermissionForNotification() async {
+    try {
+      if (Platform.isAndroid) {
+        const platform = MethodChannel(IS_NOTIFICATION_PERMISSION_CHECK);
+        await (platform.invokeMethod(IS_NOTIFICATION_PERMISSION_CHECK));
+      } else {
+        await Permission.notification.request();
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
+  }
+
+  showAlertDialogWithTextAndButton(
+      String title, String msg, String buttonText, Function() onPressed) {
+    showDialog(
+      context: Get.context!,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(msg),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              onPressed();
+            },
+            child: Container(
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              padding: const EdgeInsets.all(14),
+              child: Text(buttonText, style: TextStyle(color: Colors.white)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  HubListViewController onInitHubListViewController() {
+    HubListViewController hubListViewController;
+    if (!Get.isRegistered<HubListViewController>()) {
+      Get.put(HubListViewController());
+    }
+    hubListViewController = Get.find();
+    return hubListViewController;
   }
 }
 
