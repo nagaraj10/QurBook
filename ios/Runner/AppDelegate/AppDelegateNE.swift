@@ -411,7 +411,8 @@ extension AppDelegate: MessagingDelegate {
                     var newData :NSDictionary
                     newData  = [
                         "eid" : data["eid"],
-                        "estart" : data["estart"]
+                        "estart" : data["estart"],
+                        "dosemeal": data["dosemeal"]
                     ]
                     
                     if(ReminderMethodChannel == nil){

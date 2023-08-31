@@ -3131,6 +3131,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         val eventType = intent.getStringExtra(Constants.EVENT_TYPE)
         val others = intent.getStringExtra(Constants.OTHERS)
         val estart = intent.getStringExtra(Constants.PROP_ESTART)
+        val dosemeal = intent.getStringExtra(Constants.PROP_DOSEMEAL)
 
 
 
@@ -3201,7 +3202,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 sharedValue = "ack&${redirect_to}&${appointmentID}"
             }
         } else if (redirect_to == "regiment_screen") {
-            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${EVEId}&${estart}"
+            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${EVEId}&${estart}&${dosemeal}"
         } else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
@@ -3884,6 +3885,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         val alarmDate = date.split("-")[2].toInt()
         val alarmMonth = date.split("-")[1].toInt()
         val alarmYear = date.split("-")[0].toInt()
+        val strDosemeal: String = data["dosemeal"] as String
         val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
         reminderBroadcaster.putExtra("title", title)
         reminderBroadcaster.putExtra("body", body)
@@ -3925,7 +3927,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     false,
                     channelId,
                     eventId.toString(),
-                    strEStart
+                    strEStart,strDosemeal
                 )
             }
         }
@@ -3955,7 +3957,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 true,
                 channelId,
                 eventId.toString(),
-                strEStart
+                strEStart,strDosemeal
             )
         }
 
@@ -3988,7 +3990,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     false,
                     channelId,
                     eventId.toString(),
-                    strEStart
+                    strEStart,strDosemeal
                 )
             }
         }
@@ -4047,7 +4049,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         isButtonShown: Boolean,
         channelId: String,
         eventId: String,
-        eStart: String
+        eStart: String,
+        dosemeal: String
     ) {
         try {
             val _sound: Uri =
@@ -4079,6 +4082,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             snoozeIntent.putExtra(this.getString(R.string.body), body)
             snoozeIntent.putExtra(Constants.PROP_EVEID, eventId)
             snoozeIntent.putExtra(Constants.PROP_ESTART, eStart)
+            snoozeIntent.putExtra(Constants.PROP_DOSEMEAL, dosemeal)
             val snoozePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getBroadcast(
                     this,
@@ -4106,6 +4110,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             onTapNS.putExtra(Constants.PROP_HRMID, "")
             onTapNS.putExtra(Constants.PROP_EVEID, eventId)
             onTapNS.putExtra(Constants.PROP_ESTART, eStart)
+            onTapNS.putExtra(Constants.PROP_DOSEMEAL, dosemeal)
             val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_IMMUTABLE)
 
@@ -4156,6 +4161,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
             notificationIntent.putExtra(Constants.PROP_EVEID, eventId)
             notificationIntent.putExtra(Constants.PROP_ESTART, eStart)
+            notificationIntent.putExtra(Constants.PROP_DOSEMEAL, dosemeal)
             val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getBroadcast(
                     this,

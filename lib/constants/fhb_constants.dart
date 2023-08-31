@@ -858,6 +858,7 @@ const String SearchingForDevices = 'Searching for devices';
 const String deviceConnected = 'Device connected';
 
 const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
+const String activity_completed_regimen = 'The activity has been already completed';
 
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
