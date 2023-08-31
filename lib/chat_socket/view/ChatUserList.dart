@@ -374,7 +374,9 @@ class _ChatUserListState extends State<ChatUserList> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChatDetail(
-                          peerId: data.id,
+                          peerId: (data.isCarecoordinator ?? false)
+                              ? data.carecoordinatorId
+                              : data.id,
                           peerAvatar: data.profilePicThumbnailUrl,
                           peerName: getFamilyName(data),
                           patientId: '',

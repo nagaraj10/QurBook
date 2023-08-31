@@ -264,7 +264,7 @@ class SheelaAIController extends GetxController {
         msg = KIOSK_SHEELA;
         getAIAPIResponseFor(msg, null);
       } else if (arguments?.sheelReminder ?? false) {
-        msg = KIOSK_SHEELA_UNREAD_MESSAGE;
+        msg = KIOSK_SHEELA;
         getAIAPIResponseFor(msg, null);
       } else if ((arguments?.audioMessage ?? '').isNotEmpty) {
         isLoading(true);
@@ -353,10 +353,10 @@ class SheelaAIController extends GetxController {
         arguments?.eventType = null;
       } else if (arguments?.sheelReminder ?? false) {
         reqJson = {
-          KIOSK_task: KIOSK_AUTO_READ,
+          KIOSK_task: KIOSK_messages,
           KIOSK_chatId: arguments!.chatMessageIdSocket
         };
-        sheelaRequest.message = KIOSK_SHEELA_UNREAD_MESSAGE;
+        sheelaRequest.message = KIOSK_SHEELA;
         arguments!.sheelReminder = false;
       }
       if (reqJson != null) {

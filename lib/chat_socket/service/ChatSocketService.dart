@@ -26,7 +26,10 @@ class ChatSocketService {
       body = {
         "userId": "${userId}",
         "peerId": isCareCoordinator ? careCoordiantorId : peerId,
-        "familyUserId": isCareCoordinator ? peerId : null
+        "familyUserId":
+            (isCareCoordinator && (familyUserId != null && familyUserId != ''))
+                ? familyUserId
+                : null
       };
     } else {
       body = {
