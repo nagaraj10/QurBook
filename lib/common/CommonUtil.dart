@@ -25,7 +25,6 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:html_unescape/html_unescape.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
@@ -33,6 +32,7 @@ import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
+import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 import 'package:open_filex/open_filex.dart';
@@ -79,7 +79,6 @@ import '../constants/variable_constant.dart' as variable;
 import '../device_integration/view/screens/Device_Data.dart';
 import '../device_integration/viewModel/deviceDataHelper.dart';
 import '../global_search/model/Data.dart';
-import '../main.dart';
 import '../my_family/bloc/FamilyListBloc.dart';
 import '../my_family/models/LinkedData.dart';
 import '../my_family/models/ProfileData.dart';
@@ -139,8 +138,6 @@ import '../telehealth/features/appointments/controller/AppointmentDetailsControl
 import '../telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import '../telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import '../telehealth/features/chat/view/BadgeIcon.dart';
-import '../telehealth/features/chat/view/PDFModel.dart';
-import '../telehealth/features/chat/view/PDFView.dart';
 import '../telehealth/features/chat/view/PDFViewerController.dart';
 import '../video_call/model/UpdatedInfo.dart';
 import '../video_call/model/messagedetails.dart';
@@ -6834,6 +6831,16 @@ class CommonUtil {
     hubListViewController = Get.find();
     return hubListViewController;
   }
+
+  LandingScreenController onInitLandingScreenController() {
+    LandingScreenController landingScreenController;
+    if (!Get.isRegistered<LandingScreenController>()) {
+      Get.put(LandingScreenController());
+    }
+    landingScreenController = Get.find();
+    return landingScreenController;
+  }
+
 }
 
 extension CapExtension on String {

@@ -104,6 +104,9 @@ class _LandingScreenState extends State<LandingScreen> {
 
   double selSheelaOption = 36.0;
 
+  var landingScreenController =
+  CommonUtil().onInitLandingScreenController();
+
   @override
   void initState() {
     try {
@@ -224,7 +227,7 @@ class _LandingScreenState extends State<LandingScreen> {
       await PreferenceUtil.removeNotificationData();
 
       if (notificationData.redirect == 'appointmentList') {
-        landingViewModel!.updateTabIndex(3);
+        landingScreenController.updateTabIndex(3);
       } else if (notificationData.redirect == chat) {
         if ((notificationData.doctorId ?? '').isNotEmpty &&
             (notificationData.doctorName ?? '').isNotEmpty &&
@@ -282,8 +285,8 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Future<bool> _onBackPressed() {
-    if (landingViewModel!.currentTabIndex != 0) {
-      landingViewModel!.updateTabIndex(0);
+    if (landingScreenController!.currentTabIndex.value != 0) {
+      landingScreenController!.updateTabIndex(0);
       return Future.value(false);
     } else {
       return showDialog(
@@ -327,7 +330,7 @@ class _LandingScreenState extends State<LandingScreen> {
     return FutureBuilder<MyProfileModel?>(
       future: profileData?.then((value) => value as MyProfileModel?),
       builder: (context, snapshot) {
-        return Scaffold(
+        return Obx(() =>Scaffold(
           key: _scaffoldKey,
           backgroundColor: const Color(bgColorContainer),
           body: WillPopScope(
@@ -338,7 +341,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 Column(
                   children: [
                     Visibility(
-                      visible: !landingViewModel!.isSearchVisible,
+                      visible: !landingScreenController!.isSearchVisible.value,
                       child: Container(
                         //height: CommonUtil().isTablet ? 90.00 : null,
                         decoration: BoxDecoration(
@@ -384,7 +387,7 @@ class _LandingScreenState extends State<LandingScreen> {
                               //   ),
 
                               Visibility(
-                                visible: landingViewModel!.currentTabIndex == 4,
+                                visible: landingScreenController!.currentTabIndex.value == 4,
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                     right: 5.0.w,
@@ -396,7 +399,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                         ? 33.0.sp
                                         : 30.0.sp,
                                     onTap: () {
-                                      landingViewModel?.changeSearchBar(
+                                      landingScreenController?.changeSearchBar(
                                         isEnabled: true,
                                       );
                                     },
@@ -472,7 +475,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 ],
               ),
               child: BottomNavigationBar(
-                currentIndex: landingViewModel!.currentTabIndex,
+                currentIndex: landingScreenController!.currentTabIndex.value,
                 //type: BottomNavigationBarType.fixed,
                 type: BottomNavigationBarType.shifting,
                 selectedFontSize: 12.sp,
@@ -499,14 +502,14 @@ class _LandingScreenState extends State<LandingScreen> {
                       ),
                       size: CommonUtil().isTablet!
                           ? 33.0.sp
-                          : landingViewModel!.currentTabIndex == 0
+                          : landingScreenController!.currentTabIndex.value == 0
                               ? selOption
                               : unSelOption,
                     ),
                     title: Text(
                       variable.strhome,
                       style: TextStyle(
-                        color: landingViewModel!.currentTabIndex == 0
+                        color: landingScreenController!.currentTabIndex.value == 0
                             ? Color(
                                 CommonUtil().getMyPrimaryColor(),
                               )
@@ -519,7 +522,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     title: Text(
                       variable.strChat,
                       style: TextStyle(
-                        color: landingViewModel!.currentTabIndex == 1
+                        color: landingScreenController!.currentTabIndex.value == 1
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54,
                       ),
@@ -530,7 +533,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     title: Text(
                       variable.strMaya,
                       style: TextStyle(
-                        color: landingViewModel!.currentTabIndex == 2
+                        color: landingScreenController!.currentTabIndex.value == 2
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54,
                       ),
@@ -541,14 +544,14 @@ class _LandingScreenState extends State<LandingScreen> {
                       AssetImage(variable.icon_th),
                       size: CommonUtil().isTablet!
                           ? 33.0.sp
-                          : landingViewModel!.currentTabIndex == 3
+                          : landingScreenController!.currentTabIndex.value == 3
                               ? selOption
                               : unSelOption,
                     ),
                     title: Text(
                       constants.strAppointment,
                       style: TextStyle(
-                        color: landingViewModel!.currentTabIndex == 3
+                        color: landingScreenController!.currentTabIndex.value == 3
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54,
                       ),
@@ -559,14 +562,14 @@ class _LandingScreenState extends State<LandingScreen> {
                       AssetImage(variable.icon_records),
                       size: CommonUtil().isTablet!
                           ? 33.0.sp
-                          : landingViewModel!.currentTabIndex == 4
+                          : landingScreenController!.currentTabIndex.value == 4
                               ? selOption
                               : unSelOption,
                     ),
                     title: Text(
                       variable.strMyRecords,
                       style: TextStyle(
-                        color: landingViewModel!.currentTabIndex == 4
+                        color: landingScreenController!.currentTabIndex.value == 4
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54,
                       ),
@@ -575,12 +578,12 @@ class _LandingScreenState extends State<LandingScreen> {
                 ],
                 //backgroundColor: Colors.grey[200],
                 onTap: (index) {
-                  landingViewModel!.updateTabIndex(index);
+                  landingScreenController!.updateTabIndex(index);
                 },
               ),
             ),
           ),
-        );
+        ));
       },
     );
   }
@@ -608,7 +611,7 @@ class _LandingScreenState extends State<LandingScreen> {
             icon: GestureDetector(
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
-                color: landingViewModel!.currentTabIndex == 1
+                color: landingScreenController!.currentTabIndex.value == 1
                     ? Color(CommonUtil().getMyPrimaryColor())
                     : Colors.black54,
               ),
@@ -621,7 +624,7 @@ class _LandingScreenState extends State<LandingScreen> {
             icon: GestureDetector(
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
-                color: landingViewModel!.currentTabIndex == 1
+                color: landingScreenController!.currentTabIndex.value == 1
                     ? Color(CommonUtil().getMyPrimaryColor())
                     : Colors.black54,
               ),
@@ -636,10 +639,10 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Widget getCurrentTab() {
     final Function onBackPressed = () {
-      landingViewModel!.updateTabIndex(0);
+      landingScreenController!.updateTabIndex(0);
     };
     Widget landingTab;
-    switch (landingViewModel!.currentTabIndex) {
+    switch (landingScreenController!.currentTabIndex.value) {
       case 1:
         landingTab = ChatUserList(
           isHome: true,
@@ -734,10 +737,10 @@ class _LandingScreenState extends State<LandingScreen> {
           const AssetImage(variable.icon_chat),
           size: CommonUtil().isTablet!
               ? 33.0.sp
-              : landingViewModel!.currentTabIndex == 1
+              : landingScreenController!.currentTabIndex.value == 1
                   ? selOption
                   : unSelOption,
-          color: landingViewModel!.currentTabIndex == 1
+          color: landingScreenController!.currentTabIndex.value == 1
               ? Color(CommonUtil().getMyPrimaryColor())
               : Colors.black54,
         ),
@@ -753,12 +756,12 @@ class _LandingScreenState extends State<LandingScreen> {
         variable.icon_mayaMain,
         height: CommonUtil().isTablet!
             ? 33.0.sp
-            : landingViewModel!.currentTabIndex == 2
+            : landingScreenController!.currentTabIndex.value == 2
                 ? selSheelaOption
                 : unSelOption,
         width: CommonUtil().isTablet!
             ? 33.0.sp
-            : landingViewModel!.currentTabIndex == 2
+            : landingScreenController!.currentTabIndex.value == 2
                 ? selSheelaOption
                 : unSelOption,
       ),
