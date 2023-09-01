@@ -344,8 +344,7 @@ class SheelaAIController extends GetxController {
         sheelaRequest.message = KIOSK_SHEELA;
         arguments!.scheduleAppointment = false;
       } else if (arguments?.showUnreadMessage ?? false) {
-        reqJson = {"task": "messages"};
-        sheelaRequest.message = KIOSK_SHEELA;
+        sheelaRequest.message = KIOSK_SHEELA_UNREAD_MSG;
         arguments!.showUnreadMessage = false;
       } else if (arguments?.eventType != null &&
           arguments?.eventType == strWrapperCall) {

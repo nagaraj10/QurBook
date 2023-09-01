@@ -127,7 +127,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
         },
       );
-      initSocketCountUnread();
+      //initSocketCountUnread();
       WidgetsBinding.instance?.addObserver(this);
       controller.timer?.cancel();
       controller.timer = null;
@@ -210,7 +210,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-  initSocketCountUnread() {
+
+  // commented due to sheela auto read common
+  /*initSocketCountUnread() {
     if (qurhomeDashboardController.estart.value.trim().isNotEmpty) return;
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket!
@@ -233,7 +235,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       }
     });
-  }
+  }*/
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -2267,7 +2269,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       arguments: SheelaArgument(showUnreadMessage: true),
     )!
         .then((value) {
-      initSocketCountUnread();
+      //initSocketCountUnread();
     });
   }
 
