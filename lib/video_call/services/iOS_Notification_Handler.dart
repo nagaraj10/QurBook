@@ -286,6 +286,7 @@ class IosNotificationHandler {
             rt_Sheela,
             arguments: SheelaArgument(
               textSpeechSheela: model.rawBody,
+              eventIdViaSheela: model.eventId
             ),
           );
         //}
@@ -295,6 +296,7 @@ class IosNotificationHandler {
           arguments: SheelaArgument(
             isSheelaFollowup: true,
             message: model.message,
+            eventIdViaSheela: model.eventId
           ),
         );
       } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
@@ -312,6 +314,7 @@ class IosNotificationHandler {
             router.rt_Sheela,
             arguments: SheelaArgument(
               audioMessage: model.sheelaAudioMsgUrl,
+              eventIdViaSheela: model.eventId
             ),
           );
         //}

@@ -3350,7 +3350,8 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 val message = data.getStringExtra("message")
                 val rawMessage = data.getStringExtra("rawMessage")
                 val sheelaAudioMsgUrl = data.getStringExtra("sheelaAudioMsgUrl")
-                mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}&${sheelaAudioMsgUrl}")
+                val eventId = data.getStringExtra("eventId")
+                mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}&${sheelaAudioMsgUrl}&${eventId}")
             } else if (redirectTo != null && redirectTo.equals("sheela")) {
                 val redirect_to = data.getStringExtra(Constants.PROP_REDIRECT_TO)
                 val eventType = data.getStringExtra(Constants.EVENT_TYPE)
