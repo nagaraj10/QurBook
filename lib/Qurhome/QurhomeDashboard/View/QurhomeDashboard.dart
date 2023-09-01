@@ -218,7 +218,22 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 elevation: 0,
                 centerTitle: true,
                 actions: [
-                  (!(CommonUtil.isUSRegion())&&hubListViewController.isUserHasParedDevice.value)
+                  (!(CommonUtil.isUSRegion()) &&
+                          hubListViewController.isUserHasParedDevice.value &&
+                          (controller.currentSelectedIndex != 3))
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                            right: 16,
+                          ),
+                          child: MyBlinkingBLEIcon(),
+                        )
+                      : SizedBox.shrink(),
+
+                  ((CommonUtil.isUSRegion()) &&
+                          hubListViewController.isUserHasParedDevice.value &&
+                          (controller.currentSelectedIndex != 0) &&
+                          (controller.currentSelectedIndex != 1) &&
+                          (controller.currentSelectedIndex != 3))
                       ? Padding(
                           padding: const EdgeInsets.only(
                             right: 16,
