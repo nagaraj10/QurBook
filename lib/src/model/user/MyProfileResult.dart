@@ -215,7 +215,7 @@ class AdditionalInfo {
   int? age;
   String? height;
   String? weight;
-  List<String>? language;
+  dynamic? language;
   String? mrdNumber;
   String? uhidNumber;
   String? visitReason;
@@ -258,7 +258,7 @@ class AdditionalInfo {
       //height = json['height'];
       weight = json['weight'];
       if (json.containsKey('language') && json['language'] != null) {
-        language = json['language'].cast<String>();
+        language = json['language'];
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
