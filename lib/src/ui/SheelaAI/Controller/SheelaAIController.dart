@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
+import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -83,6 +84,8 @@ class SheelaAIController extends GetxController {
   Rx<BLEStatus> isBLEStatus = BLEStatus.Disabled.obs;
   bool isCallStartFromSheela = false;
 
+  ChatSocketService _chatSocketService = new ChatSocketService();
+
   @override
   void onInit() {
     super.onInit();
@@ -107,6 +110,11 @@ class SheelaAIController extends GetxController {
     additionalInfo = {};
     player = AudioPlayer();
     listnerForAudioPlayer();
+    if (arguments?.eventIdViaSheela != null &&
+        arguments?.eventIdViaSheela != '') {
+      _chatSocketService
+          .getUnreadChatWithMsgId(arguments?.eventIdViaSheela ?? '');
+    }
   }
 
   listnerForAudioPlayer() {
@@ -255,6 +263,9 @@ class SheelaAIController extends GetxController {
           (arguments?.showUnreadMessage ?? false)) {
         msg = KIOSK_SHEELA;
         getAIAPIResponseFor(msg, null);
+      } else if (arguments?.sheelReminder ?? false) {
+        msg = KIOSK_SHEELA;
+        getAIAPIResponseFor(msg, null);
       } else if ((arguments?.audioMessage ?? '').isNotEmpty) {
         isLoading(true);
         SheelaResponse audioResponse = SheelaResponse();
@@ -333,13 +344,19 @@ class SheelaAIController extends GetxController {
         sheelaRequest.message = KIOSK_SHEELA;
         arguments!.scheduleAppointment = false;
       } else if (arguments?.showUnreadMessage ?? false) {
-        reqJson = {"task": "messages"};
-        sheelaRequest.message = KIOSK_SHEELA;
+        sheelaRequest.message = KIOSK_SHEELA_UNREAD_MSG;
         arguments!.showUnreadMessage = false;
       } else if (arguments?.eventType != null &&
           arguments?.eventType == strWrapperCall) {
         sheelaRequest.additionalInfo = arguments?.others ?? "";
         arguments?.eventType = null;
+      } else if (arguments?.sheelReminder ?? false) {
+        reqJson = {
+          KIOSK_task: KIOSK_messages,
+          KIOSK_chatId: arguments!.chatMessageIdSocket
+        };
+        sheelaRequest.message = KIOSK_SHEELA;
+        arguments!.sheelReminder = false;
       }
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;

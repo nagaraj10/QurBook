@@ -489,6 +489,7 @@ const String STR_HEALTHORG_LABID = '34c16c83-2ae6-40e4-9643-5d929eb135e4';
 
 const String SHEELA_LANG = 'sheela_lang';
 const String KIOSK_SHEELA = 'kiosk to sheela communication';
+const String KIOSK_SHEELA_UNREAD_MSG = 'Unread messages';
 
 const String STR_FAMILY_ADD_MSG =
     'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
