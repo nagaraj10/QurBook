@@ -33,6 +33,9 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
+import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
+import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 import 'package:open_filex/open_filex.dart';
@@ -6117,6 +6120,10 @@ class CommonUtil {
 
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket!
+        .off(getReminderSheelaRedirect);
+
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+        .socket!
         .emitWithAck(getChatTotalCountEmit, {
       'userId': userId,
     }, ack: (countResponseEmit) {
@@ -6139,6 +6146,27 @@ class CommonUtil {
         if (totalCountModelOn != null) {
           Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
               .updateChatTotalCount(totalCountModelOn);
+        }
+      }
+    });
+
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+        .socket!
+        .on(getReminderSheelaRedirect, (chatListresponse) {
+      if (PreferenceUtil.getIfQurhomeisAcive()) {
+        if (chatListresponse != null) {
+          SheelaReminderResponse chatList =
+          SheelaReminderResponse.fromJson(chatListresponse);
+          if (chatList != null) {
+            var chatMessageId = chatList.chatMessageId ?? '';
+            if (chatMessageId != null && chatMessageId != '') {
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                    sheelReminder: true, chatMessageIdSocket: chatMessageId),
+              );
+            }
+          }
         }
       }
     });

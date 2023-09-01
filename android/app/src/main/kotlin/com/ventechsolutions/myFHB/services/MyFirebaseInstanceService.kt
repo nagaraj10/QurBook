@@ -396,6 +396,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 intent.putExtra("message", data[getString(R.string.pro_ns_body)])
                 intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
                 intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
+                intent.putExtra("eventId", data[getString(R.string.eventId)])
             }
             this.sendBroadcast(intent)
         }

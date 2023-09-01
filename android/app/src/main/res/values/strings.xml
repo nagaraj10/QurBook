@@ -52,6 +52,7 @@
     <string name="pro_ns_body">body</string>
     <string name="pro_ns_raw">rawBody</string>
         <string name="pro_ns_audioURL">sheelaAudioMsgUrl</string>
+        <string name="eventId">eventId</string>
 
     <string name="pro_data">data</string>
     <string name="channel_incoming_desc">This is channel is for incoming call</string>

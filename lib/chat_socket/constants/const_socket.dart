@@ -9,3 +9,4 @@ const String careCoordiantorId = '&careCoordinatorId=';
 const String isNormalChatList = '&isChatList=';
 const String getChatTotalCountEmit = 'getUnreadMessageCount';
 const String getChatTotalCountOn = 'setUnreadMessageCount';
+const String getReminderSheelaRedirect = 'sheelaReminder';
