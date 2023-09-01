@@ -109,7 +109,7 @@ class SheelaBLEController extends GetxController {
   void _enableTimer() {
     if (!addingDevicesInHublist) {
       final devicesList =
-          (hublistController.hubListResponse!.result!.userDeviceCollection ??
+          (hublistController.hubListResponse?.result?.userDeviceCollection ??
               []);
       if (devicesList.isEmpty) {
         return;
@@ -291,7 +291,7 @@ class SheelaBLEController extends GetxController {
       bleMethodChannel.invokeListMethod('scanAll');
     } else {
       final devicesList =
-          (hublistController.hubListResponse!.result!.userDeviceCollection ??
+          (hublistController.hubListResponse?.result?.userDeviceCollection ??
               []);
       List pairedDevices = [];
       for (var device in devicesList) {
@@ -340,7 +340,7 @@ class SheelaBLEController extends GetxController {
   bool checkForParedDevice() {
     try {
       final devicesList =
-          (hublistController.hubListResponse!.result!.userDeviceCollection ??
+          (hublistController.hubListResponse?.result?.userDeviceCollection ??
               []);
       if (devicesList.isEmpty) {
         return false;

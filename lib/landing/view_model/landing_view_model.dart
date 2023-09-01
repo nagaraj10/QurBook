@@ -13,9 +13,9 @@ enum LandingScreenStatus { Loading, Loaded }
 
 class LandingViewModel extends ChangeNotifier {
   Color primaryColor = Color(CommonUtil().getMyPrimaryColor());
-  int currentTabIndex = 0;
+  /*int currentTabIndex = 0;
   var appBarTitle = constants.strMyDashboard;
-  bool isSearchVisible = false;
+  bool isSearchVisible = false;*/
   LandingScreenStatus landingScreenStatus = LandingScreenStatus.Loaded;
   LandingScreenStatus widgetScreenStatus = LandingScreenStatus.Loaded;
   DashboardModel? dashboardData;
@@ -24,7 +24,7 @@ class LandingViewModel extends ChangeNotifier {
   bool isURLCome = false;
   bool isUserMainId = true;
 
-  void changeSearchBar({bool isEnabled = false, bool needNotify = true}) {
+  /*void changeSearchBar({bool isEnabled = false, bool needNotify = true}) {
     isSearchVisible = isEnabled;
     if (needNotify) {
       notifyListeners();
@@ -52,7 +52,7 @@ class LandingViewModel extends ChangeNotifier {
         break;
     }
     notifyListeners();
-  }
+  }*/
 
   void updatePrimaryColor() {
     primaryColor = Color(CommonUtil().getMyPrimaryColor());
