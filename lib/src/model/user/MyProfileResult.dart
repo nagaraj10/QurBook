@@ -214,7 +214,7 @@ class AdditionalInfo {
   int? age;
   String? height;
   String? weight;
-  String? language;
+  dynamic? language;
   String? mrdNumber;
   String? uhidNumber;
   String? visitReason;
