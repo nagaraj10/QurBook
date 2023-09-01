@@ -30,28 +30,21 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
       if (_sheelaAIController.isBLEStatus.value == BLEStatus.Searching) {
         return FadeTransition(
           opacity: _animationController,
-          child: IconButton(
-              onPressed: () {
-                if (!_sheelaAIController.isSheelaScreenActive)
-                  _sheelaAIController.resetBLE();
-              },
-              icon: Icon(Icons.bluetooth),
-              color: Color(
-                CommonUtil().getQurhomeGredientColor(),
-              )),
+          child: Icon(
+            Icons.bluetooth,
+            color: Color(
+              CommonUtil().getQurhomeGredientColor(),
+            ),
+          ),
         );
       } else {
-        return IconButton(
-          onPressed: () {
-            _sheelaAIController.resetBLE();
-          },
-          icon: _sheelaAIController.isBLEStatus.value == BLEStatus.Disabled
-              ? Icon(Icons.bluetooth_disabled)
-              : Icon(Icons.bluetooth_connected),
-          color: _sheelaAIController.isBLEStatus.value == BLEStatus.Disabled
-              ? Colors.grey
-              : Colors.green,
-        );
+        return Icon(
+            _sheelaAIController.isBLEStatus.value == BLEStatus.Disabled
+                ? Icons.bluetooth_disabled
+                : Icons.bluetooth_connected,
+            color: _sheelaAIController.isBLEStatus.value == BLEStatus.Disabled
+                ? Colors.grey
+                : Colors.green);
       }
     });
   }
