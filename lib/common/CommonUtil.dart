@@ -716,7 +716,8 @@ class CommonUtil {
         for (final mediaMasterIds in data.healthRecordCollection!) {
           if (mediaMasterIds.fileType == '.jpg' ||
               mediaMasterIds.fileType == '.png' ||
-              mediaMasterIds.fileType == '.jpeg') {
+              mediaMasterIds.fileType == '.jpeg' ||
+              mediaMasterIds.fileType == '.aac') {
             mediaMasterIdsList.add(mediaMasterIds);
           }
         }
@@ -2082,7 +2083,7 @@ class CommonUtil {
       final bytes = req!.bodyBytes;
       final dir = Platform.isIOS
           ? await FHBUtils.createFolderInAppDocDirForIOS('images')
-          : await FHBUtils.createFolderInAppDocDir('images');
+          : await FHBUtils.createFolderInAppDocDir();
 
       String? imageName;
       if (url.contains('/')) {
@@ -2103,7 +2104,7 @@ class CommonUtil {
       try {
         final _currentImage =
             '${currentImage.response.data.fileContent}${currentImage.response.data.fileType}';
-        final dir = await FHBUtils.createFolderInAppDocDir('images');
+        final dir = await FHBUtils.createFolderInAppDocDir();
         final response = await Dio().get(currentImage.response.data.fileContent,
             options: Options(responseType: ResponseType.bytes));
         var file = File('$dir/${basename(_currentImage)}');
@@ -4417,22 +4418,18 @@ class CommonUtil {
       var response = await ApiServices.get(url);
       if (response?.statusCode == 200) {
         var responseJson = response!.bodyBytes;
-        var directory = await getApplicationDocumentsDirectory();
-        if (Platform.isAndroid &&
-            !(await Permission.manageExternalStorage.isGranted)) {
-          await Permission.manageExternalStorage.request();
-        }
 
-        var path = Platform.isIOS
-            ? directory.path
-            : await FHBUtils.createFolderInAppDocDirClone(
-                variable.stAudioPath, fileName);
-        var file = File('$path');
+        final dir = Platform.isIOS
+            ? await FHBUtils.createFolderInAppDocDirForIOS('images')
+            : await FHBUtils.createFolderInAppDocDir();
+        String? imageName = fileName;
+        if (imageName == null) {
+          if (url.contains('/')) {
+            imageName = url.split('/').last;
+          }
+        }
+        var file = File('$dir/${imageName}.pdf');
         await file.writeAsBytes(responseJson);
-        path = file.path;
-        await ImageGallerySaver.saveFile(file.path).then(
-          (res) {},
-        );
         return ResultFromResponse(true, file.path);
       } else {
         return ResultFromResponse(false, 'Requested file not found');
@@ -4457,12 +4454,7 @@ class CommonUtil {
             onPressed: () async {
               await OpenFilex.open(
                 response.result,
-              ); //FU2.5
-              final controller = Get.find<PDFViewController>();
-              final data =
-                  OpenPDF(type: PDFLocation.Path, path: response.result);
-              controller.data = data;
-              Get.to(() => PDFView());
+              );
             },
           ),
         ),

@@ -829,6 +829,9 @@ const String primary_chat = '(Primary)';
 
 const String primary_provider = 'Primary';
 
+//patientAlert
+const String escalated ='Escalated';
+
 const String STR_PROVIDERDOCUMENTS = 'Provider Documents';
 const String STR_PRESCRIPTION = 'Prescription';
 const String STR_ALL = 'ALL';
@@ -857,6 +860,7 @@ const String SearchingForDevices = 'Searching for devices';
 const String deviceConnected = 'Device connected';
 
 const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
+const String activity_completed_regimen = 'The activity has been already completed';
 
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
