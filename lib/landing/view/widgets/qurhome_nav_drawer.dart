@@ -126,6 +126,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         icon: variable.icon_profile,
                         onPressed: () async {
                           try {
+                            setQurhomeDashboardFalse();
                             Get.back();
                             if (Get.isRegistered<QurhomeDashboardController>())
                               Get.find<QurhomeDashboardController>()
@@ -147,6 +148,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         icon: variable.icon_th,
                         onPressed: () async {
                           try {
+                            setQurhomeDashboardFalse();
                             clearControllerValues();
                             Get.back();
                             Get.to(AppointmentsMain(isFromQurday: true));
@@ -162,6 +164,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         icon: variable.icon_records,
                         onPressed: () async {
                           try {
+                            setQurhomeDashboardFalse();
                             Get.back();
                             if (Get.isRegistered<QurhomeDashboardController>())
                               Get.find<QurhomeDashboardController>()
@@ -289,6 +292,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           ),
                           onPressed: () {
                             try {
+                              setQurhomeDashboardFalse();
                               Get.back();
                               if (Get.isRegistered<
                                   QurhomeDashboardController>())
@@ -311,6 +315,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           color: Colors.black54,
                         ),
                         onPressed: () {
+                          setQurhomeDashboardFalse();
                           try {
                             clearControllerValues();
                             if (Get.isRegistered<QurhomeDashboardController>())
@@ -335,6 +340,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () {
                           try {
+                            setQurhomeDashboardFalse();
                             clearControllerValues();
 
                             Get.back();
@@ -360,6 +366,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           height: 24.sp,
                         ),
                         onPressed: () {
+                          setQurhomeDashboardFalse();
                           /*try {
                             Get.back();
                             CommonUtil().accessContactsDialog();
@@ -375,6 +382,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           color: Colors.black54,
                         ),
                         onPressed: () async {
+                          setQurhomeDashboardFalse();
                           clearControllerValues();
 
                           Get.back();
@@ -400,6 +408,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           ),
                           onPressed: () {
                             try {
+                              setQurhomeDashboardFalse();
                               Get.back();
                               if (Get.isRegistered<
                                   QurhomeDashboardController>())
@@ -428,6 +437,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             ),
                             onPressed: () {
                               try {
+                                setQurhomeDashboardFalse();
                                 Get.back();
                                 if (Get.isRegistered<
                                     QurhomeDashboardController>())
@@ -559,4 +569,11 @@ class QurHomeNavigationDrawer extends StatelessWidget {
       },
     );
   }
+
+  void setQurhomeDashboardFalse() {
+    if (Get.isRegistered<QurhomeDashboardController>())
+      Get.find<QurhomeDashboardController>()
+          .setActiveQurhomeDashboardToChat(status: false);
+  }
+
 }

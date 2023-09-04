@@ -80,6 +80,12 @@ class QurhomeDashboardController extends GetxController {
     );
   }
 
+  setActiveQurhomeDashboardToChat({required bool status}) {
+    PreferenceUtil.saveIfQurhomeDashboardActiveChat(
+      qurhomeStatus: status,
+    );
+  }
+
   @override
   void onClose() {
     // _disableTimer();
