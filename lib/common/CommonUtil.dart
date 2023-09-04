@@ -6869,6 +6869,21 @@ class CommonUtil {
     return landingScreenController;
   }
 
+  String getExtensionSheelaPreview(int type) {
+    switch (type) {
+      case 0:
+        return "";
+      case 1:
+        return ".jpg";
+      case 2:
+        return ".pdf";
+      case 3:
+        return ".mp3";
+      default:
+        return "";
+    }
+  }
+
 }
 
 extension CapExtension on String {
