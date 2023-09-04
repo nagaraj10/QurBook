@@ -7,11 +7,12 @@ import 'AudioWidgetSheelaPreview.dart';
 
 class AudioScreenPreviewSheela extends StatefulWidget {
   const AudioScreenPreviewSheela(
-      {Key? key, @required this.audioUrl, this.title})
+      {Key? key, @required this.audioUrl, this.title, this.chatMessageId})
       : super(key: key);
 
   final String? audioUrl;
   final String? title;
+  final String? chatMessageId;
 
   @override
   State<AudioScreenPreviewSheela> createState() =>
@@ -35,12 +36,12 @@ class _AudioScreenPreviewSheelaState extends State<AudioScreenPreviewSheela> {
         ),
       ),
       body: Container(
-          color: Colors.grey[400],
-          child: getAudioWidget(widget.audioUrl)),
+          color: Colors.grey[400], child: getAudioWidget(widget.audioUrl)),
     );
   }
 
   Widget getAudioWidget(String? audioPathMain) {
-    return AudioWidgetSheelaPreview(audioPathMain, null);
+    return AudioWidgetSheelaPreview(audioPathMain, null,
+        chatMessageId: widget.chatMessageId);
   }
 }

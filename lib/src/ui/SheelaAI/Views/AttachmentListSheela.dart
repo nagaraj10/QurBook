@@ -165,27 +165,33 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
         Get.to(FullPhoto(
           url: attachments.messages?.content ?? '',
           titleSheelaPreview: title,
+          chatMessageId: attachments.messages?.chatMessageId ?? '',
         ));
         return;
       case 2:
-        goToPDFViewBasedonURL(attachments.messages?.content ?? '', title);
+        goToPDFViewBasedonURL(attachments.messages?.content ?? '', title,
+            attachments.messages?.chatMessageId ?? '');
         return;
       case 3:
         Get.to(AudioScreenPreviewSheela(
-            audioUrl: attachments.messages?.content ?? '', title: title ?? ''));
+            audioUrl: attachments.messages?.content ?? '',
+            title: title ?? '',
+            chatMessageId: attachments.messages?.chatMessageId ?? ''));
         return;
       default:
         return;
     }
   }
 
-  goToPDFViewBasedonURL(String? url, String? title) {
+  goToPDFViewBasedonURL(String? url, String? title, String? chatMessageId) {
     try {
       final controller = Get.find<PDFViewController>();
       final data = OpenPDF(type: PDFLocation.URL, path: url);
       controller.data = data;
-      Get.to(
-          () => PDFView(isFromSheelaPreview: true, sheelaPreviewTitle: title));
+      Get.to(() => PDFView(
+          isFromSheelaPreview: true,
+          sheelaPreviewTitle: title,
+          chatMessageId: chatMessageId));
     } catch (e) {}
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -26,6 +27,7 @@ class AudioWidgetSheelaPreview extends StatefulWidget {
   bool isFromChat;
   bool isFromSheela;
   bool isPlayAudioUrl;
+  String? chatMessageId;
 
   Function(bool, String?)? deleteAudioFile;
 
@@ -35,6 +37,7 @@ class AudioWidgetSheelaPreview extends StatefulWidget {
     this.isFromChat = false,
     this.isFromSheela = false,
     this.isPlayAudioUrl = false,
+    this.chatMessageId,
   });
 
   @override
@@ -64,6 +67,8 @@ class AudioWidgetSheelaPreviewState extends State<AudioWidgetSheelaPreview> {
 
   String? audioUrl = '';
 
+  ChatSocketService _chatSocketService = new ChatSocketService();
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +85,14 @@ class AudioWidgetSheelaPreviewState extends State<AudioWidgetSheelaPreview> {
     } else {
       _sheelaAIController = Get.find();
     }
+
+    if (widget.chatMessageId != null && widget.chatMessageId != '') {
+      callChatunreadMessageApi();
+    }
+  }
+
+  callChatunreadMessageApi() {
+    _chatSocketService.getUnreadChatWithMsgId(widget.chatMessageId ?? '');
   }
 
   set_up_audios() async {

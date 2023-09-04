@@ -1,6 +1,7 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
@@ -9,11 +10,15 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 
 class PDFView extends StatefulWidget {
   const PDFView(
-      {Key? key, this.isFromSheelaPreview = false, this.sheelaPreviewTitle})
+      {Key? key,
+      this.isFromSheelaPreview = false,
+      this.sheelaPreviewTitle,
+      this.chatMessageId})
       : super(key: key);
 
   final bool isFromSheelaPreview;
   final String? sheelaPreviewTitle;
+  final String? chatMessageId;
 
   @override
   _PDFViewState createState() => _PDFViewState();
@@ -22,10 +27,19 @@ class PDFView extends StatefulWidget {
 class _PDFViewState extends State<PDFView> {
   final controller = Get.find<PDFViewController>();
 
+  ChatSocketService _chatSocketService = new ChatSocketService();
+
   @override
   void initState() {
     controller.loadingPDF();
     super.initState();
+    if (widget.chatMessageId != null && widget.chatMessageId != '') {
+      callChatunreadMessageApi();
+    }
+  }
+
+  callChatunreadMessageApi() {
+    _chatSocketService.getUnreadChatWithMsgId(widget.chatMessageId ?? '');
   }
 
   @override

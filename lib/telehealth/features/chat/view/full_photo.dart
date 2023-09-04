@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -11,9 +12,14 @@ class FullPhoto extends StatelessWidget {
   final String? url;
   final String? filePath;
   final String? titleSheelaPreview;
+  final String? chatMessageId;
 
   FullPhoto(
-      {Key? key, required this.url, this.filePath, this.titleSheelaPreview})
+      {Key? key,
+      required this.url,
+      this.filePath,
+      this.titleSheelaPreview,
+      this.chatMessageId})
       : super(key: key);
 
   @override
@@ -42,6 +48,7 @@ class FullPhoto extends StatelessWidget {
       body: FullPhotoScreen(
         url: url,
         filePath: filePath,
+        chatMessageId: chatMessageId,
       ),
     );
   }
@@ -50,8 +57,10 @@ class FullPhoto extends StatelessWidget {
 class FullPhotoScreen extends StatefulWidget {
   final String? url;
   final String? filePath;
+  final String? chatMessageId;
 
-  FullPhotoScreen({Key? key, required this.url, this.filePath})
+  FullPhotoScreen(
+      {Key? key, required this.url, this.filePath, this.chatMessageId})
       : super(key: key);
 
   @override
@@ -63,10 +72,19 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
 
   FullPhotoScreenState({Key? key, required this.url});
 
+  ChatSocketService _chatSocketService = new ChatSocketService();
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
+    if (widget.chatMessageId != null && widget.chatMessageId != '') {
+      callChatunreadMessageApi();
+    }
+  }
+
+  callChatunreadMessageApi() {
+    _chatSocketService.getUnreadChatWithMsgId(widget.chatMessageId ?? '');
   }
 
   @override
