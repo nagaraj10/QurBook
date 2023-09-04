@@ -571,9 +571,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
   }
 
   void setQurhomeDashboardFalse() {
-    if (Get.isRegistered<QurhomeDashboardController>())
-      Get.find<QurhomeDashboardController>()
-          .setActiveQurhomeDashboardToChat(status: false);
+    CommonUtil()
+        .onInitQurhomeDashboardController()
+        .setActiveQurhomeDashboardToChat(status: false);
   }
-
 }

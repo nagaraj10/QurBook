@@ -81,14 +81,15 @@ class _ChatUserListState extends State<ChatUserList> {
 
   final controller = Get.put(ChatUserListController());
 
-  final qurhomeController = Get.put(QurhomeDashboardController());
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
 
   @override
   initState() {
     //FUcrash Future<void> initState()async{
     super.initState();
 
-    qurhomeController.setActiveQurhomeDashboardToChat(
+    qurhomeDashboardController.setActiveQurhomeDashboardToChat(
       status: false,
     );
 
