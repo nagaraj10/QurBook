@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -18,7 +17,7 @@ import 'package:sqflite/sqflite.dart';
 
 class FHBUtils {
   static String CURRENT_DATE_CODE = 'DMY';
-  static final String ANDROID_FILE_PATH = '/storage/emulated/0/Qurbook/';
+  static final String ANDROID_FILE_PATH = '/storage/emulated/0/Download/';
   List<String> YMDList = [
     'sq_AL',
     'en_AU',
@@ -85,11 +84,14 @@ class FHBUtils {
     return formattedDate;
   }
 
-  String getFormattedDateString(String? strDate) {
+  String getFormattedDateString(String? strDate, {bool newFormate = false}) {
     String formattedDate = '';
 
     if (strDate != null && strDate != '') {
-      if (CURRENT_DATE_CODE == 'MDY') {
+      if (newFormate) {
+        formattedDate = DateFormat('dd/MMM/yyyy HH:mm:ss.SSS aa')
+            .format(DateTime.parse(strDate).toLocal());
+      } else if (CURRENT_DATE_CODE == 'MDY') {
         formattedDate = DateFormat('MMM dd yyyy, hh:mm aa')
             .format(DateTime.parse(strDate).toLocal());
       } else if (CURRENT_DATE_CODE == 'YMD') {
@@ -299,7 +301,7 @@ class FHBUtils {
     );
   }
 
-  static Future<String> createFolderInAppDocDir(String folderName) async {
+  static Future<String> createFolderInAppDocDir() async {
     Directory _appDocDirFolder;
     //Create Directory with app name
     if (Platform.isAndroid) {

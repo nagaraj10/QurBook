@@ -130,12 +130,19 @@ class IosNotificationHandler {
         if (data != null) {
           var eventId = data['eid'];
           var estart = data['estart'];
+          var dosemeal = data['dosemeal'];
 
           if (CommonUtil.isUSRegion() && estart != null) {
             var qurhomeDashboardController =
                 CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = eventId;
             qurhomeDashboardController.estart.value = estart;
+            if (dosemeal == doseValueless ||
+                dosemeal == doseValueHigh) {
+              qurhomeDashboardController.isOnceInAPlanActivity.value = true;
+            } else {
+              qurhomeDashboardController.isOnceInAPlanActivity.value = false;
+            }
             qurhomeDashboardController.updateTabIndex(0);
             PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
             // await Get.to(() => QurhomeDashboard())?.then((value) =>
@@ -279,6 +286,7 @@ class IosNotificationHandler {
             rt_Sheela,
             arguments: SheelaArgument(
               textSpeechSheela: model.rawBody,
+              eventIdViaSheela: model.eventId
             ),
           );
         //}
@@ -288,6 +296,7 @@ class IosNotificationHandler {
           arguments: SheelaArgument(
             isSheelaFollowup: true,
             message: model.message,
+            eventIdViaSheela: model.eventId
           ),
         );
       } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
@@ -305,6 +314,7 @@ class IosNotificationHandler {
             router.rt_Sheela,
             arguments: SheelaArgument(
               audioMessage: model.sheelaAudioMsgUrl,
+              eventIdViaSheela: model.eventId
             ),
           );
         //}

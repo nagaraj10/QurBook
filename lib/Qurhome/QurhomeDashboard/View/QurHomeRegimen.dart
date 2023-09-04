@@ -108,6 +108,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       controller.isFirstTime.value = true;
       Future.delayed(Duration.zero, () async {
         onInit();
+        controller.initRemainderQueue();
       });
       chatGetXController!.getUnreadCountFamily().then(
         (value) {
@@ -126,7 +127,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
         },
       );
-      initSocketCountUnread();
+      //initSocketCountUnread();
       WidgetsBinding.instance?.addObserver(this);
       controller.timer?.cancel();
       controller.timer = null;
@@ -145,7 +146,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           .validString(qurhomeDashboardController.eventId.value ?? "");
       String strEStart = CommonUtil()
           .validString(qurhomeDashboardController.estart.value ?? "");
-      if (CommonUtil.isUSRegion() && strEStart.trim().isNotEmpty) {
+      if (CommonUtil.isUSRegion() &&
+          strEStart.trim().isNotEmpty &&
+          !(qurhomeDashboardController.isOnceInAPlanActivity.value)) {
         controller.restartTimer();
         await controller.getRegimenList(isLoading: true, date: strEStart);
       } else {
@@ -177,15 +180,24 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 await Future.delayed(Duration(milliseconds: 2000));
                 qurhomeDashboardController.eventId.value = "";
                 qurhomeDashboardController.estart.value = "";
+                qurhomeDashboardController.isOnceInAPlanActivity.value = false;
               }
               break;
             }
           }
           if (currRegimen == null) {
-            FlutterToast().getToast(
-              activity_removed_regimen,
-              Colors.red,
-            );
+            if (qurhomeDashboardController.isOnceInAPlanActivity.value) {
+              FlutterToast().getToast(
+                activity_completed_regimen,
+                Colors.green,
+              );
+              qurhomeDashboardController.isOnceInAPlanActivity.value = false;
+            } else {
+              FlutterToast().getToast(
+                activity_removed_regimen,
+                Colors.red,
+              );
+            }
           }
         }
       }
@@ -198,7 +210,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-  initSocketCountUnread() {
+
+  // commented due to sheela auto read common
+  /*initSocketCountUnread() {
     if (qurhomeDashboardController.estart.value.trim().isNotEmpty) return;
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket!
@@ -221,7 +235,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       }
     });
-  }
+  }*/
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -1062,6 +1076,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 .toString();
                             reminder.remindin = regimen.remindin.toString();
                             reminder.remindbefore = regimen.remindin.toString();
+                            reminder.dosemeal = regimen.doseMealString.toString();
                             List<Reminder> data = [reminder];
                             String snoozedText =
                                 "Snoozed for ${int.parse(time[0]).toString()} minutes";
@@ -1592,7 +1607,43 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             trimmedTitle,
           )) {
         if (checkCanEdit(regimen)) {
-          redirectToSheelaScreen(regimen);
+          if (canEditMain || fromView) {
+            openFormDataDialog(
+                context, regimen, canEdit, eventId, fieldsResponseModel,
+                eventIdReturn: eventIdReturn,
+                followEventContext: followEventContext,
+                activityName: activityName,
+                uid: uid,
+                aid: aid,
+                formId: formId,
+                formName: formName,
+                canEditMain: canEditMain,
+                fromView: fromView);
+            return;
+          }
+          hubController.eid = regimen.eid;
+          hubController.uid = regimen.uid;
+          CommonUtil().dialogForScanDevices(
+            Get.context!,
+            onPressManual: () {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
+              redirectToSheelaScreen(regimen);
+            },
+            onPressCancel: () async {
+              Get.back();
+              hubController.eid = null;
+              hubController.uid = null;
+              _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
+            },
+            title: strConnectBGL,
+            isFromVital: false,
+          );
+          _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.filteredDeviceType = 'bgl';
+          _sheelaBLEController.setupListenerForReadings();
         } else {
           onErrorMessage();
         }
@@ -2208,7 +2259,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       WidgetsBinding.instance!.removeObserver(this);
       super.dispose();
     } catch (e,stackTrace) {
-      print(e);
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
@@ -2218,7 +2269,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       arguments: SheelaArgument(showUnreadMessage: true),
     )!
         .then((value) {
-      initSocketCountUnread();
+      //initSocketCountUnread();
     });
   }
 
@@ -2386,6 +2437,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogClosed);
     } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       if (kDebugMode) {
         print(e);
       }

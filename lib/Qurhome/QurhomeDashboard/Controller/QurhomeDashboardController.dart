@@ -53,6 +53,7 @@ class QurhomeDashboardController extends GetxController {
 
   int nextAlertPosition = 0;
   int currentIndex = 0;
+  var isOnceInAPlanActivity = false.obs;
 
 
 
@@ -93,14 +94,15 @@ class QurhomeDashboardController extends GetxController {
       _bleTimer = Timer.periodic(
           const Duration(
             seconds: 20,
-          ), (time) {
+          ), (time) async {
         if (Get.find<SheelaAIController>().isSheelaScreenActive) {
           return;
         }
+        _sheelaBLEController.stopScanning();
+        await Future.delayed(const Duration(seconds: 2));
         _sheelaBLEController.setupListenerForReadings();
       });
     } else {
-      _sheelaBLEController.stopScanning();
       _sheelaBLEController.stopTTS();
       _bleTimer?.cancel();
       _bleTimer = null;
@@ -110,7 +112,6 @@ class QurhomeDashboardController extends GetxController {
   getHubDetails() async {
     hubController = Get.find<HubListViewController>();
     await hubController.getHubList();
-    // _sheelaBLEController.setupListenerForReadings();
   }
 
   void updateTabIndex(int newIndex) {

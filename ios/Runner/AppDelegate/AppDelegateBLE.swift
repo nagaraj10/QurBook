@@ -211,20 +211,20 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .unknown:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         case .resetting:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         case .unsupported:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         case .unauthorized:
             eventSink?("permissiondenied|no permission granted")
         case .poweredOff:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         case .poweredOn:
             eventSink?("scanstarted|connection started")
             startBLEScan()
         default:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         }
     }
 }
@@ -392,20 +392,20 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
     func systemDidBluetoothStatusChange(_ bleState: CBManagerState) {
         switch bleState {
         case .unknown:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         case .resetting:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         case .unsupported:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         case .unauthorized:
             eventSink?("permissiondenied|no permission granted")
         case .poweredOff:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         case .poweredOn:
             eventSink?("scanstarted|connection started")
             searchForTransteckBLEDevices()
         default:
-            eventSink?("enablebluetooth|please enable bluetooth")
+            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
         }
     }
     //bloodGlucoseMeter "TeleBGM GenlBLE"

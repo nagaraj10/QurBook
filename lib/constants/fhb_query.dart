@@ -400,6 +400,9 @@ const String qr_chat_family_mapping =
 const String qr_unread_family_chat =
     'chat/get-unread-notification-count-by-user';
 
+const String qr_unread_chat_count_msg_id =
+    'chat/update-individual-chat-message-read-flag';
+
 const String qr_chat_socket_init_chat_doc_pat =
     'chat/initiate-doctor-patient-chat';
 

@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
+import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
+import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
@@ -16,6 +18,7 @@ import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -38,6 +41,8 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
+
+enum BLEStatus { Searching, Connected, Disabled }
 
 class SheelaAIController extends GetxController {
   MyProfileModel? profile;
@@ -76,8 +81,10 @@ class SheelaAIController extends GetxController {
   Rx<bool> isDiscardDialogShown = false.obs;
 
   Rx<bool> isQueueDialogShowing = false.obs;
-
+  Rx<BLEStatus> isBLEStatus = BLEStatus.Disabled.obs;
   bool isCallStartFromSheela = false;
+
+  ChatSocketService _chatSocketService = new ChatSocketService();
 
   @override
   void onInit() {
@@ -103,6 +110,11 @@ class SheelaAIController extends GetxController {
     additionalInfo = {};
     player = AudioPlayer();
     listnerForAudioPlayer();
+    if (arguments?.eventIdViaSheela != null &&
+        arguments?.eventIdViaSheela != '') {
+      _chatSocketService
+          .getUnreadChatWithMsgId(arguments?.eventIdViaSheela ?? '');
+    }
   }
 
   listnerForAudioPlayer() {
@@ -208,6 +220,12 @@ class SheelaAIController extends GetxController {
     );
   }
 
+  resetBLE() async {
+    Get.find<SheelaBLEController>().stopScanning();
+    await Future.delayed(const Duration(seconds: 2));
+    Get.find<SheelaBLEController>().setupListenerForReadings();
+  }
+
   startSheelaFromButton({
     String? buttonText,
     String? payload,
@@ -243,6 +261,9 @@ class SheelaAIController extends GetxController {
       } else if ((arguments?.eId ?? '').isNotEmpty ||
           (arguments?.scheduleAppointment ?? false) ||
           (arguments?.showUnreadMessage ?? false)) {
+        msg = KIOSK_SHEELA;
+        getAIAPIResponseFor(msg, null);
+      } else if (arguments?.sheelReminder ?? false) {
         msg = KIOSK_SHEELA;
         getAIAPIResponseFor(msg, null);
       } else if ((arguments?.audioMessage ?? '').isNotEmpty) {
@@ -323,13 +344,19 @@ class SheelaAIController extends GetxController {
         sheelaRequest.message = KIOSK_SHEELA;
         arguments!.scheduleAppointment = false;
       } else if (arguments?.showUnreadMessage ?? false) {
-        reqJson = {"task": "messages"};
-        sheelaRequest.message = KIOSK_SHEELA;
+        sheelaRequest.message = KIOSK_SHEELA_UNREAD_MSG;
         arguments!.showUnreadMessage = false;
       } else if (arguments?.eventType != null &&
           arguments?.eventType == strWrapperCall) {
         sheelaRequest.additionalInfo = arguments?.others ?? "";
         arguments?.eventType = null;
+      } else if (arguments?.sheelReminder ?? false) {
+        reqJson = {
+          KIOSK_task: KIOSK_messages,
+          KIOSK_chatId: arguments!.chatMessageIdSocket
+        };
+        sheelaRequest.message = KIOSK_SHEELA;
+        arguments!.sheelReminder = false;
       }
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;
@@ -985,20 +1012,28 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  getSheelaBadgeCount({bool isNeedSheelaDialog = false}) async {
-    sheelaIconBadgeCount.value = 0;
+  getSheelaBadgeCount({bool isNeedSheelaDialog = false,bool isFromQurHomeRegimen = false}) async {
+    if (!(sheelaIconBadgeCount.value > 0)) {
+      sheelaIconBadgeCount.value = 0;
+    }
     try {
       sheelaBadgeServices.getSheelaBadgeCount().then((value) {
         if (value != null) {
           if (value.isSuccess!) {
             if (value.result != null) {
               sheelaIconBadgeCount.value = value.result?.queueCount ?? 0;
+              if (isFromQurHomeRegimen && (isQueueDialogShowing.value)) {
+                Get.back();
+                isQueueDialogShowing.value = false;
+                isNeedSheelaDialog = true;
+              }
               if (isNeedSheelaDialog) {
                 if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
                   isQueueDialogShowing.value = true;
                   CommonUtil().dialogForSheelaQueueStable(
-                      Get.context!, value.result?.queueCount ?? 0,
+                      Get.context!,
+                      unReadMsgCount:Provider.of<ChatSocketViewModel>(Get.context!,listen: false).chatTotalCount,
                       onTapSheela: () {
                     isQueueDialogShowing.value = false;
                     Get.back();

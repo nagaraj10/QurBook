@@ -219,7 +219,7 @@ const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
 const String icon_true_desk = 'assets/dashboard/truedesk_icon.svg';
 const String icon_my_family = 'assets/dashboard/my-family.svg';
 const String icon_qurhub = 'assets/dashboard/qurhub.svg';
-const String icon_connected_device = 'assets/dashboard/connected_device.svg';
+const String icon_connected_device = 'assets/icons/connected_device.svg';
 const String icon_qr_code = 'assets/icons/qr_code.png';
 const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
 const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
@@ -239,6 +239,35 @@ const String icon_language = 'assets/icons/language.png';
 const String icon_claim = 'assets/icons/claim.svg';
 const String icon_IndianFlag = 'assets/icons/India_flag.png';
 const String icon_USAFlag = 'assets/icons/USA_flag.png';
+
+//icons for troubleshooting
+const String icon_tsFail = 'assets/icons/icon_ts_fail.png';
+const String icon_tsSuccess = 'assets/icons/icon_ts_success.png';
+const String icon_tsUncheck = 'assets/icons/icon_ts_uncheck.png';
+const String icon_tsCheck = 'assets/icons/icon_ts_check.png';
+const String icon_network = 'assets/icons/icon_network.png';
+const String icon_location = 'assets/icons/icon_location.png';
+const String icon_validity = 'assets/icons/icon_validity.png';
+const String icon_compatibilty = 'assets/icons/icon_compatibility.png';
+const String icon_camera = 'assets/devices/camera.png';
+
+//string for troubleshooting
+const String strAppCompatibilty = 'App compatibility';
+const String strSDKCompatibilty = 'SDK compatibility';
+const String strStorage = 'Storage';
+
+const String strBluetooth = 'Bluetooth';
+const String strCamera = 'Camera';
+const String strMicrophone = 'Microphone';
+const String strLocation = 'Location';
+const String strCommunication = 'Communication And Network';
+const String strConfirmUserValidity = 'Confirm User Validity';
+const String strReloginMsg = 'Token Expired or Invalid.Please Relogin';
+const String strRelogin = 'ReLogin';
+const String strTroubleShooting = 'TroubleShooting';
+const String strStartTest = 'Start Test';
+const String strTestAgain = 'Test Again';
+
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';
 const String strUnderstood = 'Understood';
@@ -520,6 +549,8 @@ const String strGetHospitalById = 'Getting Hospital by Id';
 
 const String strGetLabList = 'Getting Laboratory List';
 const String strGetLabById = 'Getting laboratoty by Id';
+
+const String strUnReadMessage = 'Unread Messages';
 
 const String strSearch = 'Search';
 const String strSearchByHosLoc = 'Search by Hospital/Location';
@@ -847,6 +878,7 @@ const String strAppointmentRegimen = 'Appointment';
 const String strSelfRegimen = 'Self';
 
 //chat
+const String icon_unread_chat = 'assets/icons/ic_unread_chat.png';
 
 const String strNoMessage = 'No Messages';
 

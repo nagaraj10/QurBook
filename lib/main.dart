@@ -320,7 +320,9 @@ class _MyFHBState extends State<MyFHB> {
     chatViewModel.setCurrentChatRoomID('none');
     super.initState();
     CommonUtil.askPermissionForCameraAndMic().then((value) {
-      CommonUtil.askPermissionForLocation();
+      CommonUtil.askPermissionForLocation().then((value) {
+        CommonUtil().askPermissionForNotification();
+      });
     });
     getMyRoute();
     _enableTimer();
@@ -673,12 +675,19 @@ class _MyFHBState extends State<MyFHB> {
           });
           if ((CommonUtil.isUSRegion()) &&
               (passedValArr[3] != null) &&
-              (passedValArr[3] != 'null')) {
-            var regController = CommonUtil().onInitQurhomeRegimenController();
+              (passedValArr[3] != 'null')&&
+              (passedValArr[4] != null) &&
+              (passedValArr[4] != 'null')) {
             var qurhomeDashboardController =
             CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = passedValArr[2];
             qurhomeDashboardController.estart.value = passedValArr[3];
+            if (passedValArr[4] == Constants.doseValueless ||
+                passedValArr[4] == Constants.doseValueHigh) {
+              qurhomeDashboardController.isOnceInAPlanActivity.value = true;
+            } else {
+              qurhomeDashboardController.isOnceInAPlanActivity.value = false;
+            }
             qurhomeDashboardController.updateTabIndex(0);
 
             if (!CommonUtil.isCallStarted) {
@@ -1113,6 +1122,7 @@ class _MyFHBState extends State<MyFHB> {
         router.rt_Sheela,
         arguments: SheelaArgument(
           audioMessage: passedValArr[3].toString(),
+          eventIdViaSheela: passedValArr[4].toString(),
         ),
       )!
           .then((value) {
@@ -1137,6 +1147,7 @@ class _MyFHBState extends State<MyFHB> {
                 ? passedValArr[2]
                 : passedValArr[1],
             audioMessage: '',
+            eventIdViaSheela: passedValArr[4]
           ),
         )!
             .then((value) {

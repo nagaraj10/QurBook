@@ -489,6 +489,7 @@ const String STR_HEALTHORG_LABID = '34c16c83-2ae6-40e4-9643-5d929eb135e4';
 
 const String SHEELA_LANG = 'sheela_lang';
 const String KIOSK_SHEELA = 'kiosk to sheela communication';
+const String KIOSK_SHEELA_UNREAD_MSG = 'Unread messages';
 
 const String STR_FAMILY_ADD_MSG =
     'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
@@ -829,6 +830,9 @@ const String primary_chat = '(Primary)';
 
 const String primary_provider = 'Primary';
 
+//patientAlert
+const String escalated ='Escalated';
+
 const String STR_PROVIDERDOCUMENTS = 'Provider Documents';
 const String STR_PRESCRIPTION = 'Prescription';
 const String STR_ALL = 'ALL';
@@ -851,6 +855,13 @@ const String strFeatureNotEnable =
 const String sheela_hdn_btn_yes = 'yes';
 const String activity_removed_regimen =
     'Activity has been removed from your regimen';
+const String pleaseTurnOnYourBluetoothAndTryAgain =
+    'Please turn on your Bluetooth and try again';
+const String SearchingForDevices = 'Searching for devices';
+const String deviceConnected = 'Device connected';
+
+const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
+const String activity_completed_regimen = 'The activity has been already completed';
 
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
@@ -873,6 +884,10 @@ const double mobileHeader4= 11.0;
 
 const double imageTabHeader = 70.0;
 const double imageMobileHeader = 40.0;
+
+const double imageTabIcon = 70.0;
+const double imageMobileIcon = 60.0;
+
 
 const double imageProfileTabHeader = 65.0;
 const double imageProfileMobileHeader = 40.0;
