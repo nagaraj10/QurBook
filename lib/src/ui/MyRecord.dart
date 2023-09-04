@@ -188,7 +188,7 @@ class _MyRecordsState extends State<MyRecords> {
             Constants.KEY_SHOWCASE_HOMESCREEN, variable.strtrue);
       }, builder: Builder(builder: (context) {
         _myContext = context;
-        return Obx(() =>getCompleteWidgets());
+        return getCompleteWidgets();
       })),
     );
   }
