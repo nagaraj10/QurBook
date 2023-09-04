@@ -35,6 +35,7 @@ const String KEY_CART_PLAN = 'cartPlan';
 const String KEY_UN_SUBCRIBE_BTN = 'unSubscribeBtn';
 const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
+const String KEY_IS_Active_Chat_Qurhome = 'isactiveQurhomeChat';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
 const String IsAppLockChecked = "IsAppLockChecked";
 const String ScanningForDevices = 'Scanning for devices...';

@@ -515,6 +515,23 @@ class PreferenceUtil {
     );
   }
 
+  static bool getIfQurhomeDashboardActiveChat() {
+    return _prefsInstance!.getBool(
+      Constants.KEY_IS_Active_Chat_Qurhome,
+    ) ??
+        false;
+  }
+
+  static Future<bool> saveIfQurhomeDashboardActiveChat({
+    bool qurhomeStatus = false,
+  }) async {
+    final instance = await _prefs!;
+    return instance.setBool(
+      Constants.KEY_IS_Active_Chat_Qurhome,
+      qurhomeStatus,
+    );
+  }
+
   static Future<bool> saveEnableAppLock({
     bool appLockStatus = false,
   }) async {
