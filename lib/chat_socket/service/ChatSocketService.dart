@@ -72,12 +72,12 @@ class ChatSocketService {
   }
 
   Future<InitChatFamilyModel> initNewFamilyChat(String userId, String peerId,
-      String familyName, bool isCareCoordinator, String careCooId) async {
+      String familyName, bool isCareCoordinator, String careCooId,String familyUserId) async {
     var body = {
       "caregiverId": "${userId}",
       "caregiverName": "${familyName}",
       "userId": isCareCoordinator ? careCooId : peerId,
-      "familyUserId": isCareCoordinator ? peerId : null
+      "familyUserId": isCareCoordinator ? familyUserId : null
     };
     var jsonString = convert.jsonEncode(body);
     final response = await _helper.initNewChat(
