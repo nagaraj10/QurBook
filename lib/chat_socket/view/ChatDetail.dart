@@ -313,8 +313,12 @@ class ChatState extends State<ChatDetail> {
     if (groupId == '' || groupId == null) {
       if (isFromFamilyListChat) {
         Provider.of<ChatSocketViewModel>(context, listen: false)
-            .initNewFamilyChat(chatPeerId ?? '', peerName ?? '',
-                isFromCareCoordinator ?? false, carecoordinatorId ?? '')
+            .initNewFamilyChat(
+                chatPeerId ?? '',
+                peerName ?? '',
+                isFromCareCoordinator ?? false,
+                carecoordinatorId ?? '',
+                familyUserId ?? '')
             .then((value) {
           if (value != null) {
             if (value.result != null) {
