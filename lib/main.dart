@@ -162,7 +162,7 @@ Future<void> main() async {
           debug: true // optional: set false to disable printing logs to console
       );
       await Permission.storage.request();
-      await Permission.manageExternalStorage.request();
+   //   await Permission.manageExternalStorage.request();
     }
 
     // check if the app install on first time
