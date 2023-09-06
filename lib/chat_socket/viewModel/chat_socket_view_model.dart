@@ -176,13 +176,13 @@ class ChatSocketViewModel extends ChangeNotifier {
   }
 
   Future<InitChatFamilyModel?> initNewFamilyChat(String peerId,
-      String familyName, bool isCareCoordinator, String careCooId) async {
+      String familyName, bool isCareCoordinator, String careCooId,String familyUserId) async {
     try {
       var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN)!;
 
       InitChatFamilyModel chatHistoryModel = await chocketService!
           .initNewFamilyChat(
-              userId, peerId, familyName, isCareCoordinator, careCooId);
+              userId, peerId, familyName, isCareCoordinator, careCooId,familyUserId);
 
       return chatHistoryModel;
     } catch (e,stackTrace) {

@@ -1,7 +1,5 @@
 
 import 'dart:convert';
-import 'dart:math';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
@@ -31,22 +29,17 @@ import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
-import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/TabModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/health/BillsList.dart';
 import 'package:myfhb/src/ui/health/DeviceListScreen.dart';
 import 'package:myfhb/src/ui/health/HealthReportListScreen.dart';
@@ -57,7 +50,6 @@ import 'package:myfhb/src/ui/health/MedicalReportListScreen.dart';
 import 'package:myfhb/src/ui/health/NotesScreen.dart';
 import 'package:myfhb/src/ui/health/OtherDocsList.dart';
 import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -124,6 +116,8 @@ class _MyRecordsState extends State<MyRecords> {
  late BuildContext context;
   var qurhomeDashboardController =
   CommonUtil().onInitQurhomeDashboardController();
+  var landingScreenController =
+  CommonUtil().onInitLandingScreenController();
 
   @override
   void initState() {
@@ -178,8 +172,8 @@ class _MyRecordsState extends State<MyRecords> {
     return WillPopScope(
       onWillPop: () {
         if (widget.isHome) {
-          if (landingViewModel?.isSearchVisible ?? false) {
-            landingViewModel?.changeSearchBar(
+          if (landingScreenController?.isSearchVisible.value ?? false) {
+            landingScreenController?.changeSearchBar(
               isEnabled: false,
               needNotify: true,
             );
@@ -202,7 +196,7 @@ class _MyRecordsState extends State<MyRecords> {
   Widget getCompleteWidgets() {
     return Scaffold(
       key: scaffold_state,
-      appBar: widget.isHome && !(landingViewModel?.isSearchVisible ?? false)
+      appBar: widget.isHome && !(landingScreenController?.isSearchVisible.value ?? false)
           ? null
           : AppBar(
               elevation: 0,
@@ -214,9 +208,9 @@ class _MyRecordsState extends State<MyRecords> {
                 size: 24.0.sp,
                 onTap: () {
                   if (widget.isHome) {
-                    if (landingViewModel?.isSearchVisible ?? false) {
+                    if (landingScreenController?.isSearchVisible.value ?? false) {
                       _searchQueryController.clear();
-                      landingViewModel?.changeSearchBar(
+                      landingScreenController?.changeSearchBar(
                         isEnabled: false,
                         needNotify: true,
                       );

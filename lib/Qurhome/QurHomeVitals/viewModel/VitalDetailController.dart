@@ -136,7 +136,7 @@ class VitalDetailController extends GetxController {
     _hubController = Get.find();
     _sheelaBLEController = Get.find();
     await _hubController.getHubList();
-    if ((_hubController.hubListResponse!.result!.userDeviceCollection ?? [])
+    if ((_hubController.hubListResponse?.result?.userDeviceCollection ?? [])
             .length >
         0) {
       _sheelaBLEController.isFromVitals = true;

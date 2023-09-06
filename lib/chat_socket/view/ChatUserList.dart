@@ -9,6 +9,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
@@ -80,10 +81,17 @@ class _ChatUserListState extends State<ChatUserList> {
 
   final controller = Get.put(ChatUserListController());
 
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
+
   @override
   initState() {
     //FUcrash Future<void> initState()async{
     super.initState();
+
+    qurhomeDashboardController.setActiveQurhomeDashboardToChat(
+      status: false,
+    );
 
     token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -374,7 +382,9 @@ class _ChatUserListState extends State<ChatUserList> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChatDetail(
-                          peerId: data.id,
+                          peerId: (data.isCarecoordinator ?? false)
+                              ? data.carecoordinatorId
+                              : data.id,
                           peerAvatar: data.profilePicThumbnailUrl,
                           peerName: getFamilyName(data),
                           patientId: '',

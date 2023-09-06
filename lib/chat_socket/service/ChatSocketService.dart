@@ -1,4 +1,7 @@
 import 'dart:convert' as convert;
+import 'package:myfhb/chat_socket/model/UnreadChatCountWithMsgId.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+
 import '../model/CaregiverPatientChatModel.dart';
 import '../model/ChatHistoryModel.dart';
 import '../model/GetUnreadCountFamily.dart';
@@ -23,7 +26,10 @@ class ChatSocketService {
       body = {
         "userId": "${userId}",
         "peerId": isCareCoordinator ? careCoordiantorId : peerId,
-        "familyUserId": isCareCoordinator ? peerId : null
+        "familyUserId":
+            (isCareCoordinator && (familyUserId != null && familyUserId != ''))
+                ? familyUserId
+                : null
       };
     } else {
       body = {
@@ -66,12 +72,12 @@ class ChatSocketService {
   }
 
   Future<InitChatFamilyModel> initNewFamilyChat(String userId, String peerId,
-      String familyName, bool isCareCoordinator, String careCooId) async {
+      String familyName, bool isCareCoordinator, String careCooId,String familyUserId) async {
     var body = {
       "caregiverId": "${userId}",
       "caregiverName": "${familyName}",
       "userId": isCareCoordinator ? careCooId : peerId,
-      "familyUserId": isCareCoordinator ? peerId : null
+      "familyUserId": isCareCoordinator ? familyUserId : null
     };
     var jsonString = convert.jsonEncode(body);
     final response = await _helper.initNewChat(
@@ -105,5 +111,14 @@ class ChatSocketService {
     final response =
         await _helper.getChatHistory(qr_unread_family_chat, jsonString);
     return GetUnreadCountFamily.fromJson(response);
+  }
+
+  Future<UnreadChatCountWithMsgId> getUnreadChatWithMsgId(String chatMsgId) async {
+    var body = {
+      strId: "${chatMsgId}",
+    };
+    var jsonString = convert.jsonEncode(body);
+    final response = await _helper.getChatHistory(qr_unread_chat_count_msg_id, jsonString);
+    return UnreadChatCountWithMsgId.fromJson(response);
   }
 }
