@@ -330,16 +330,16 @@ class FHBUtils {
   static Future<String> createDir(String folderName, String? fileType,
       {bool isTempDir = false}) async {
     try {
-      List<Directory>? appDocDir = Platform.isAndroid
-          ? await getExternalCacheDirectories()
+      Directory appDocDir = Platform.isAndroid
+          ? await getApplicationDocumentsDirectory()
           : isTempDir
-              ? [await getTemporaryDirectory()]
-              : [await getApplicationDocumentsDirectory()];
+              ? await getTemporaryDirectory()
+              : await getApplicationDocumentsDirectory();
 
       print(appDocDir);
       String path = Platform.isIOS
-          ? appDocDir![0].path + '/$fileType'
-          : appDocDir![0].path + '/$fileType';
+          ? appDocDir.path + '/$fileType'
+          : appDocDir.path + '/$fileType';
       print(path);
       return path;
     } catch (e,stackTrace) {
