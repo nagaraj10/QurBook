@@ -327,59 +327,40 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
   }
 
   Widget _loginsavebutton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: () {
-            AuthenticationValidator().checkNetwork().then((intenet) {
-              if (intenet != null && intenet) {
-                _savepatientdetails();
-              } else {
-                toast.getToast(strNetworkIssue, Colors.red);
-              }
-            });
-          },
-          child: Container(
-            padding:
-            EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.shade200,
-                      offset: Offset(2, 4),
-                      blurRadius: 5,
-                      spreadRadius: 2)
-                ],
-                gradient: LinearGradient(end: Alignment.centerRight, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
-                  Color(CommonUtil().getMyPrimaryColor()),
-                  Color(CommonUtil().getMyGredientColor())
-                ])),
-            child: Text(
-              strSignInText,
-              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
-            ),
-          ),
-        ),
-      ],
+    return commonLoginButton(
+      strSignInText,
+      () {
+        AuthenticationValidator().checkNetwork().then((intenet) {
+          if (intenet != null && intenet) {
+            _savepatientdetails();
+          } else {
+            toast.getToast(strNetworkIssue, Colors.red);
+          }
+        });
+      },
     );
   }
 
   Widget _loginBackButton() {
+    return commonLoginButton(
+      strBackText,
+      () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget commonLoginButton(String textString, Function()? onTap) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
+          onTap: onTap,
           child: Container(
-            padding:
-            EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
+            padding: EdgeInsets.symmetric(
+              vertical: 15.0.sp,
+              horizontal: 15.0.sp,
+            ),
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -395,7 +376,7 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
-              strBackText,
+              textString,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
             ),
           ),
