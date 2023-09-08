@@ -391,8 +391,6 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
                   Color(CommonUtil().getMyPrimaryColor()),
                   Color(CommonUtil().getMyGredientColor())
                 ])),
