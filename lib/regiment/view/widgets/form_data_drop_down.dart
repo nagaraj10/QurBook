@@ -100,15 +100,17 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
           //TODO: Need to update the items based on the API
           value: comboValue,
           items: comboItems,
-          onChanged: (value) {
-            if (widget.canEdit) {
-              setState(() {
-                comboValue = value;
-              });
-              setValuesInMap(value);
-              widget.isChanged(true);
-            }
-          },
+          onChanged: (widget.canEdit)
+              ? (value) {
+                  {
+                    setState(() {
+                      comboValue = value;
+                    });
+                    setValuesInMap(value);
+                    widget.isChanged(true);
+                  }
+                }
+              : null,
         ),
       ],
     );
