@@ -53,7 +53,7 @@ class HubListViewController extends GetxController {
         return;
       }
       hubListResponse = HubListResponse.fromJson(json.decode(response.body));
-      final devicesList = (hubListResponse?.result?.userDeviceCollection ?? []);
+      final devicesList = (hubListResponse?.result ?? []);
       if (devicesList.isNotEmpty) {
         isUserHasParedDevice.value = true;
       } else {
