@@ -128,6 +128,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         status: true,
       );
 
+      controller.setActiveQurhomeDashboardToChat(
+        status: true,
+      );
+
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
@@ -156,6 +160,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
           status: false,
         );
       }
+      controller.setActiveQurhomeDashboardToChat(
+        status: false,
+      );
       CommonUtil().initPortraitMode();
       controller.updateBLETimer(Enable: false);
       MyFHB.routeObserver.unsubscribe(this);
@@ -174,6 +181,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     if (controller.currentSelectedIndex.value == 0) {
       controller.updateBLETimer();
     }
+    controller.setActiveQurhomeDashboardToChat(
+      status: true,
+    );
   }
 
   Widget badge(int count) => Positioned(

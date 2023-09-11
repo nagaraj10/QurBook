@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -72,8 +73,15 @@ class _NotificationScreen extends State<NotificationScreen> {
   late CancelAppointmentViewModel cancelAppointmentViewModel;
   FetchNotificationViewModel? notificationData;
 
+  final qurhomeController = Get.put(QurhomeDashboardController());
+
   @override
   void initState() {
+
+    qurhomeController.setActiveQurhomeDashboardToChat(
+      status: false,
+    );
+
     mInitialTime = DateTime.now();
     // Provider.of<FetchNotificationViewModel>(context, listen: false)
     //     .fetchNotifications();

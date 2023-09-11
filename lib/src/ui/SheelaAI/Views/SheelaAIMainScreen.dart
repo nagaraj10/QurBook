@@ -42,37 +42,40 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    CommonUtil().handleCameraAndMic(onlyMic: true);
-    controller.arguments = widget.arguments;
-    controller.setDefaultValues();
-    controller.bleController = null;
-    //controller.bleController = CommonUtil().onInitSheelaBLEController();
+    ///Surrendered with addPostFrameCallback for widget building issue///
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      CommonUtil().handleCameraAndMic(onlyMic: true);
+      controller.arguments = widget.arguments;
+      controller.setDefaultValues();
+      controller.bleController = null;
+      //controller.bleController = CommonUtil().onInitSheelaBLEController();
 
-    controller.startSheelaConversation();
-    controller.isSheelaScreenActive = true;
-    controller.isDiscardDialogShown.value = false;
-    controller.isCallStartFromSheela = false;
-    animationController = AnimationController(
-        duration: const Duration(
-          milliseconds: 600,
-        ),
-        vsync: this,
-        value: 0.0);
-    _animation =
-        Tween<double>(begin: 0.0, end: 15.0).animate(animationController!)
-          ..addStatusListener(
-            (status) {
-              if (status == AnimationStatus.completed) {
-                animationController!.reverse();
-              } else if (status == AnimationStatus.dismissed) {
-                animationController!.forward();
-              }
-            },
-          );
+      controller.startSheelaConversation();
+      controller.isSheelaScreenActive = true;
+      controller.isDiscardDialogShown.value = false;
+      controller.isCallStartFromSheela = false;
+      animationController = AnimationController(
+          duration: const Duration(
+            milliseconds: 600,
+          ),
+          vsync: this,
+          value: 0.0);
+      _animation =
+      Tween<double>(begin: 0.0, end: 15.0).animate(animationController!)
+        ..addStatusListener(
+              (status) {
+            if (status == AnimationStatus.completed) {
+              animationController!.reverse();
+            } else if (status == AnimationStatus.dismissed) {
+              animationController!.forward();
+            }
+          },
+        );
 
-    if (CommonUtil.isUSRegion()) {
-      controller.isMuted.value = false;
-    }
+      if (CommonUtil.isUSRegion()) {
+        controller.isMuted.value = false;
+      }
+    });
   }
 
   @override

@@ -328,8 +328,8 @@ class _MyFamilyState extends State<MyFamily> {
       fulName = myProfile.result != null
           ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
           : '';
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       fulName = myProfile.result != null
           ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
@@ -664,8 +664,8 @@ class _MyFamilyState extends State<MyFamily> {
           CommonUtil().getUserProfileData();
         });
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -766,18 +766,25 @@ class _MyFamilyState extends State<MyFamily> {
                                               mobileNumber.substring(0, 2);
 
                                           if (subMobile[1] == "9") {
+                                            _selectedDialogCountry =
+                                                Country.fromCode("IN");
+
                                             mobileNoController.text =
                                                 mobileNumber.substring(3, 13);
                                           } else if (subMobile[1] == "1" ||
                                               subMobile[1] == "+1") {
+                                            _selectedDialogCountry =
+                                                Country.fromCode("US");
+
                                             mobileNoController.text =
                                                 mobileNumber.substring(2, 12);
                                           }
 
                                           isPrimaryNoSelected = true;
-                                        } catch (e,stackTrace) {
-                                          CommonUtil()
-                                              .appLogs(message: e,stackTrace:stackTrace);
+                                        } catch (e, stackTrace) {
+                                          CommonUtil().appLogs(
+                                              message: e,
+                                              stackTrace: stackTrace);
 
                                           isPrimaryNoSelected = false;
                                         }
