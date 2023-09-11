@@ -306,22 +306,35 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                     (chat.isActionDone != null && chat.isActionDone!))
                 ? null
                 : () {
-                    if (controller.isLoading.isTrue) {
-                      return;
-                    }
-                    if (chat.singleuse != null &&
-                        chat.singleuse! &&
-                        chat.isActionDone != null) {
-                      chat.isActionDone = true;
-                    }
-                    buttonData?.isSelected = true;
-                    controller.startSheelaFromButton(
-                        buttonText: buttonData?.title,
-                        payload: buttonData?.payload,
-                        buttons: buttonData);
-                    Future.delayed(const Duration(seconds: 3), () {
-                      buttonData?.isSelected = false;
-                    });
+              if (buttonData?.btnRedirectTo == strPreviewScreen) {
+                if (buttonData?.chatAttachments != null &&
+                    (buttonData?.chatAttachments?.length ??
+                        0) >
+                        0) {
+                  Get.to(
+                    AttachmentListSheela(
+                        chatAttachments:
+                        buttonData?.chatAttachments ?? []),
+                  );
+                }
+              } else {
+                if (controller.isLoading.isTrue) {
+                  return;
+                }
+                if (chat.singleuse != null &&
+                    chat.singleuse! &&
+                    chat.isActionDone != null) {
+                  chat.isActionDone = true;
+                }
+                buttonData?.isSelected = true;
+                controller.startSheelaFromButton(
+                    buttonText: buttonData?.title,
+                    payload: buttonData?.payload,
+                    buttons: buttonData);
+                Future.delayed(const Duration(seconds: 3), () {
+                  buttonData?.isSelected = false;
+                });
+              }
                   },
             child: Card(
               color: (buttonData?.isSelected ?? false)
