@@ -4,6 +4,8 @@ import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/SheelaResponse.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -40,11 +42,13 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: GradientAppBar(),
+        flexibleSpace: (PreferenceUtil.getIfQurhomeisAcive())
+            ? GradientAppBarQurhome()
+            : GradientAppBar(),
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         title: Text(
-          'Attachments - 5',
+          ATTACH_TITLE,
           style: TextStyle(
             color: Colors.white,
             fontSize: 18.0.sp,

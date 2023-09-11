@@ -303,15 +303,15 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         (chat.isActionDone != null && chat.isActionDone!))
                     ? null
                     : () {
-                        if (chat.redirectTo == strPreviewScreen) {
-                          if (chat.buttons?.last.chatAttachments != null &&
-                              (chat.buttons?.last.chatAttachments?.length ??
+                        if (buttonData.btnRedirectTo == strPreviewScreen) {
+                          if (buttonData.chatAttachments != null &&
+                              (buttonData.chatAttachments?.length ??
                                       0) >
                                   0) {
                             Get.to(
                               AttachmentListSheela(
                                   chatAttachments:
-                                      chat.buttons?.last.chatAttachments ?? []),
+                                  buttonData.chatAttachments ?? []),
                             );
                           }
                         } else {

@@ -209,6 +209,7 @@ class Buttons {
   Rx<bool> isPlaying = false.obs;
   bool isSelected = false;
   List<ChatAttachments>? chatAttachments;
+  String? btnRedirectTo;
 
   Buttons({
     this.payload,
@@ -219,6 +220,7 @@ class Buttons {
     this.skipTts,
     this.relationshipIdNotRequired = false,
     this.ttsResponse,
+    this.btnRedirectTo,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -236,6 +238,7 @@ class Buttons {
           chatAttachments!.add(new ChatAttachments.fromJson(v));
         });
       }
+      btnRedirectTo = (json['redirectTo'] ?? '');
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -254,6 +257,7 @@ class Buttons {
       data['chatAttachments'] =
           this.chatAttachments!.map((v) => v.toJson()).toList();
     }
+    data['redirectTo'] = this.btnRedirectTo;
     return data;
   }
 }
