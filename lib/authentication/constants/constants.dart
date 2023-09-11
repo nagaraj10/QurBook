@@ -87,6 +87,7 @@ const String strOtpShowText =
 
 //Strings used in SignInScreen
 const String strSignInText = 'Sign In';
+const String strBackText = 'Back';
 const String strReviewPay = 'Review & Pay';
 const String strRetryPay = 'Retry Payment';
 const String strFreePlan = 'Confirm Subscription';

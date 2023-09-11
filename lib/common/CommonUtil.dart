@@ -5628,7 +5628,7 @@ class CommonUtil {
   }
 
   void dialogForSheelaQueueStable(BuildContext context,
-      {int? unReadMsgCount, Function()? onTapSheela}) async {
+      {int? unReadMsgCount, Function(bool)? onTapSheelaRemainders}) async {
     var sheelaAIController = Get.find<SheelaAIController>();
     showGeneralDialog(
         context: context,
@@ -5670,7 +5670,7 @@ class CommonUtil {
                             badgeColor: ColorUtils.badgeQueue,
                             icon: GestureDetector(
                               onTap: () {
-                                onTapSheela!();
+                                onTapSheelaRemainders?.call(true);
                               },
                               child: AssetImageWidget(
                                 icon: icon_sheela_queue,
@@ -5680,7 +5680,7 @@ class CommonUtil {
                             ),
                           ),
                           Visibility(
-                            visible: false,
+                            visible: (unReadMsgCount??0)>0,
                             child: Column(
                               children: [
                                 Container(
@@ -5712,23 +5712,28 @@ class CommonUtil {
                                   boxConstraints: BoxConstraints(
                                       minHeight: 35.h, minWidth: 35.h),
                                   badgeTextSize: 18.sp,
-                                  icon: Container(
-                                    height: 100.h,
-                                    width: 100.h,
-                                    margin: EdgeInsets.all(10),
-                                    padding: EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: Color(getMyPrimaryColor()),
-                                          width: 5.w),
-                                    ),
-                                    child: Image.asset(
-                                      icon_unread_chat,
-                                      height: 30.h,
-                                      width: 30.w,
-                                      color: Color(getMyPrimaryColor()),
+                                  icon: InkWell(
+                                    onTap: (){
+                                      onTapSheelaRemainders?.call(false);
+                                    },
+                                    child: Container(
+                                      height: 100.h,
+                                      width: 100.h,
+                                      margin: EdgeInsets.all(10),
+                                      padding: EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: Color(getMyPrimaryColor()),
+                                            width: 5.w),
+                                      ),
+                                      child: Image.asset(
+                                        icon_unread_chat,
+                                        height: 30.h,
+                                        width: 30.w,
+                                        color: Color(getMyPrimaryColor()),
+                                      ),
                                     ),
                                   ),
                                 ),

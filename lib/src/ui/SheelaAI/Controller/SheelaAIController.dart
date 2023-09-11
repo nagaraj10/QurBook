@@ -1034,16 +1034,18 @@ class SheelaAIController extends GetxController {
                   CommonUtil().dialogForSheelaQueueStable(
                       Get.context!,
                       unReadMsgCount:Provider.of<ChatSocketViewModel>(Get.context!,listen: false).chatTotalCount,
-                      onTapSheela: () {
+                      onTapSheelaRemainders: (value) {
                     isQueueDialogShowing.value = false;
                     Get.back();
                     Get.toNamed(
                       rt_Sheela,
-                      arguments: SheelaArgument(
+                      arguments: value?SheelaArgument(
                         rawMessage: sheelaQueueShowRemind,
+                      ):SheelaArgument(
+                        showUnreadMessage: true
                       ),
-                    )!
-                        .then((value) {
+                    )?.then((value) {
+                      ///Update Sheela remainder count
                       getSheelaBadgeCount(isNeedSheelaDialog: true);
                     });
                   });
