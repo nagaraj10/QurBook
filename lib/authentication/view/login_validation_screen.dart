@@ -90,7 +90,7 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
 
   @override
   Widget build(BuildContext context) {
-    var height = 1.sh;
+    final height = 1.sh;
     return Scaffold(
       body: Form(
         key: _loginKey,
@@ -138,6 +138,26 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
+                          ),
+                          SizedBox(height: 10.0.h),
+                          Text(
+                            widget.signInValidationModel?.result != null &&
+                                    widget.signInValidationModel?.result
+                                            ?.firstName !=
+                                        null &&
+                                    widget.signInValidationModel?.result
+                                            ?.firstName !=
+                                        ''
+                                ? '${_selectedDialogCountry.phoneCode} ${numberController.text}'
+                                : '',
+                            style: TextStyle(
+                              fontSize: CommonUtil().isTablet!
+                                  ? Constants.tabHeader2
+                                  : Constants.mobileHeader2,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                           SizedBox(height: 30.0.h),
                         },
@@ -220,6 +240,8 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
                         if (widget.flag == 0) ...{
                           _loginsavebutton(),
                         },
+                        SizedBox(height: 20.0.h),
+                        _loginBackButton(),
                         SizedBox(height: 20.0.h),
                       ],
                     ),
@@ -305,22 +327,40 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
   }
 
   Widget _loginsavebutton() {
+    return commonLoginButton(
+      strSignInText,
+      () {
+        AuthenticationValidator().checkNetwork().then((intenet) {
+          if (intenet != null && intenet) {
+            _savepatientdetails();
+          } else {
+            toast.getToast(strNetworkIssue, Colors.red);
+          }
+        });
+      },
+    );
+  }
+
+  Widget _loginBackButton() {
+    return commonLoginButton(
+      strBackText,
+      () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget commonLoginButton(String textString, Function()? onTap) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
-          onTap: () {
-            AuthenticationValidator().checkNetwork().then((intenet) {
-              if (intenet != null && intenet) {
-                _savepatientdetails();
-              } else {
-                toast.getToast(strNetworkIssue, Colors.red);
-              }
-            });
-          },
+          onTap: onTap,
           child: Container(
-            padding:
-            EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
+            padding: EdgeInsets.symmetric(
+              vertical: 15.0.sp,
+              horizontal: 15.0.sp,
+            ),
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -332,13 +372,11 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
                   Color(CommonUtil().getMyPrimaryColor()),
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
-              strSignInText,
+              textString,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
             ),
           ),
