@@ -35,7 +35,7 @@ class Result {
   String? lastModifiedOn;
   String? hubId;
   String? userId;
-  Hub? hub;
+  //Hub? hub;
   List<UserDeviceCollection>? userDeviceCollection;
 
   Result(
@@ -47,7 +47,7 @@ class Result {
       this.lastModifiedOn,
       this.hubId,
       this.userId,
-      this.hub,
+      //this.hub,
       this.userDeviceCollection});
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -57,7 +57,7 @@ class Result {
       createdOn = json['createdOn'];
       hubId = json['hubId'];
       userId = json['userId'];
-      hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
+      //hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
 
       if (json['userDeviceCollection'] != null) {
             userDeviceCollection = <UserDeviceCollection>[];

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import '../Controller/AddDeviceViewController.dart';
-import 'AddDeviceView.dart';
 import '../Controller/HubListViewController.dart';
 import '../../constants/fhb_constants.dart';
 
@@ -61,14 +59,12 @@ class HubListView extends GetView<HubListViewController> {
         ),
       );
     }
-    if ((controller.hubListResponse!.result?.hub == null) ||
-        ((controller.hubListResponse?.result?.userDeviceCollection ?? [])
+    if (((controller.hubListResponse?.result?.userDeviceCollection ?? [])
             .isEmpty)) {
       return pairNewVirtualHubBtn();
     }
     if (((controller.hubListResponse?.result?.userDeviceCollection?.length??0) >
-            0) &&
-        (controller.hubListResponse?.result?.hub?.additionalDetails != null)) {
+            0)) {
       return listContent();
     }
     return Container();
