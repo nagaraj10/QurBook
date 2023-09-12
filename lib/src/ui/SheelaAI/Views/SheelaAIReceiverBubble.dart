@@ -311,6 +311,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                     (buttonData?.chatAttachments?.length ??
                         0) >
                         0) {
+                  CommonUtil()
+                      .onInitQurhomeDashboardController()
+                      .setActiveQurhomeDashboardToChat(status: false);
                   Get.to(
                     AttachmentListSheela(
                         chatAttachments:
