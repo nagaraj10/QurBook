@@ -398,6 +398,14 @@ class CheckoutPageProvider extends ChangeNotifier {
                 int amtToPay = int.parse(product.additionalInfo!.actualFee);
                 totalProductCount = totalProductCount + amtToPay;
               }
+            } else if ((product.paidAmount ?? "").isNotEmpty) {
+              var amtToPay = 0;
+              if (product.paidAmount!.contains(".")) {
+                amtToPay = double.parse(product.paidAmount!).toInt();
+              } else {
+                amtToPay = int.parse(product.paidAmount!);
+              }
+              totalProductCount = totalProductCount + amtToPay;
             }
           }
         }
