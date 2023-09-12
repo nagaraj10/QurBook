@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import '../Controller/AddDeviceViewController.dart';
-import 'AddDeviceView.dart';
 import '../Controller/HubListViewController.dart';
 import '../../constants/fhb_constants.dart';
 
@@ -61,21 +59,19 @@ class HubListView extends GetView<HubListViewController> {
         ),
       );
     }
-    if ((controller.hubListResponse!.result?.hub == null) ||
-        ((controller.hubListResponse?.result?.userDeviceCollection ?? [])
+    if (((controller.hubListResponse?.result ?? [])
             .isEmpty)) {
       return pairNewVirtualHubBtn();
     }
-    if (((controller.hubListResponse?.result?.userDeviceCollection?.length??0) >
-            0) &&
-        (controller.hubListResponse?.result?.hub?.additionalDetails != null)) {
+    if (((controller.hubListResponse?.result?.length??0) >
+            0)) {
       return listContent();
     }
     return Container();
   }
 
   Widget addNewDevice() {
-    if ((controller.hubListResponse?.result?.userDeviceCollection ?? [])
+    if ((controller.hubListResponse?.result ?? [])
             .length ==
         0) {
       return Container();
@@ -253,7 +249,7 @@ class HubListView extends GetView<HubListViewController> {
   Widget listContent() {
     return ListView.builder(
       itemCount:
-          (controller.hubListResponse?.result?.userDeviceCollection?.length??0),
+          (controller.hubListResponse?.result?.length??0),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return Padding(
@@ -267,7 +263,7 @@ class HubListView extends GetView<HubListViewController> {
                     width: 10,
                   ),
                   getDeviceImage(
-                    controller.hubListResponse?.result?.userDeviceCollection![index].device?.deviceType?.code??"",
+                    controller.hubListResponse?.result![index].device?.deviceType?.code??"",
                   ),
                   const SizedBox(
                     width: 10,
@@ -278,7 +274,7 @@ class HubListView extends GetView<HubListViewController> {
                       children: [
                         Text(
                           CommonUtil().validString(
-                            controller.hubListResponse?.result?.userDeviceCollection![index].user?.firstName??"",
+                            controller.hubListResponse?.result![index].user?.firstName??"",
                           ),
                           style: TextStyle(
                               color: Colors.black,
@@ -302,8 +298,7 @@ class HubListView extends GetView<HubListViewController> {
                                 CommonUtil().validString(
                                   controller
                                       .hubListResponse!
-                                      .result!
-                                      .userDeviceCollection![index]
+                                      .result![index]
                                       .device!
                                       .deviceType!
                                       .name,
@@ -335,8 +330,7 @@ class HubListView extends GetView<HubListViewController> {
                                 CommonUtil().validString(
                                   controller
                                       .hubListResponse!
-                                      .result!
-                                      .userDeviceCollection![index]
+                                      .result![index]
                                       .device!
                                       .serialNumber,
                                 ),
@@ -364,7 +358,7 @@ class HubListView extends GetView<HubListViewController> {
                             ),
                             Expanded(
                               child: Text(
-                                "${changeDateFormat(CommonUtil().validString(controller.hubListResponse?.result?.userDeviceCollection![index].createdOn??""))}",
+                                "${changeDateFormat(CommonUtil().validString(controller.hubListResponse?.result![index].createdOn??""))}",
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: Colors.black,
@@ -382,7 +376,7 @@ class HubListView extends GetView<HubListViewController> {
                     onTap: () {
                       unPairDialog(
                         type: 'device',
-                        deviceId: controller.hubListResponse?.result?.userDeviceCollection![index].id??"",
+                        deviceId: controller.hubListResponse?.result![index].id??"",
                         idName: "Device",
                       );
                     },

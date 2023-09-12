@@ -40,7 +40,7 @@ class AddDeviceViewController extends GetxController {
       final data = {
         DEVICE_ID: listController.bleMacId,
         DEVICE_TYPE: listController.bleDeviceType!.toUpperCase(),
-        USER_HUB_ID: listController.hubListResponse?.result?.id,
+        //USER_HUB_ID: listController.hubListResponse?.result?.id,
         USER_ID: selectedId,
         DEVICE_NAME: " ",
         ADDITION_DETAILS: {"manufacturer": listController.manufacturer}

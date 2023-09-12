@@ -53,7 +53,7 @@ class HubListViewController extends GetxController {
         return;
       }
       hubListResponse = HubListResponse.fromJson(json.decode(response.body));
-      final devicesList = (hubListResponse?.result?.userDeviceCollection ?? []);
+      final devicesList = (hubListResponse?.result ?? []);
       if (devicesList.isNotEmpty) {
         isUserHasParedDevice.value = true;
       } else {
@@ -136,7 +136,7 @@ class HubListViewController extends GetxController {
       searchingBleDevice.value = true;
       _bleController.setupListenerForReadings();
 
-      if (hubListResponse?.result?.hub == null) {
+      /*if (hubListResponse?.result?.hub == null) {
         loadingData.value = true;
         bool response = await callCreateVirtualHub();
         loadingData.value = false;
@@ -144,7 +144,7 @@ class HubListViewController extends GetxController {
           return;
         }
         await getHubList();
-      }
+      }*/
 
       Future.delayed(
         const Duration(
