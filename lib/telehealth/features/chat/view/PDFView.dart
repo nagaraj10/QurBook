@@ -1,8 +1,10 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -57,7 +59,9 @@ class _PDFViewState extends State<PDFView> {
         ),
         elevation: 0,
         automaticallyImplyLeading: widget.isFromSheelaPreview ? true : false,
-        flexibleSpace: GradientAppBar(),
+        flexibleSpace: (PreferenceUtil.getIfQurhomeisAcive())
+            ? GradientAppBarQurhome()
+            : GradientAppBar(),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,

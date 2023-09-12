@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/common/AudioWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
@@ -24,7 +26,9 @@ class _AudioScreenPreviewSheelaState extends State<AudioScreenPreviewSheela> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: GradientAppBar(),
+        flexibleSpace: (PreferenceUtil.getIfQurhomeisAcive())
+            ? GradientAppBarQurhome()
+            : GradientAppBar(),
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         title: Text(
@@ -36,7 +40,7 @@ class _AudioScreenPreviewSheelaState extends State<AudioScreenPreviewSheela> {
         ),
       ),
       body: Container(
-          color: Colors.grey[400], child: getAudioWidget(widget.audioUrl)),
+          child: getAudioWidget(widget.audioUrl)),
     );
   }
 

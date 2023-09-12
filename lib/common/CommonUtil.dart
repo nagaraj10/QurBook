@@ -6255,6 +6255,15 @@ class CommonUtil {
     return qurhomeDashboardController;
   }
 
+  PDFViewController onInitPDFViewController() {
+    PDFViewController pdfViewController;
+    if (!Get.isRegistered<PDFViewController>()) {
+      Get.put(PDFViewController());
+    }
+    pdfViewController = Get.find();
+    return pdfViewController;
+  }
+
   ChatUserListController onInitChatUserListController() {
     ChatUserListController chatUserListController;
     if (!Get.isRegistered<ChatUserListController>()) {

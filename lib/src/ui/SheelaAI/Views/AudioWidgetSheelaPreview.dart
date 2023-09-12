@@ -10,6 +10,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:path/path.dart';
@@ -127,61 +128,71 @@ class AudioWidgetSheelaPreviewState extends State<AudioWidgetSheelaPreview> {
         Expanded(
             child: Icon(
           Icons.mic,
-          size: 84.sp,
+          size: 92.sp,
         )),
-        SizedBox(height: 40.h),
-        IconButton(
-          iconSize: 42.sp,
-          color: Color(CommonUtil().getMyPrimaryColor()),
-          onPressed: () {
-            isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
-          },
-          icon: !isPlaying
-              ? Icon(
-                  Icons.play_circle,
-                )
-              : Icon(
-                  Icons.pause_circle,
-                ),
-        ),
-        SizedBox(height: 4.h),
         Container(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  height: 30.0.h,
-                  child: Slider(
-                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
-                    inactiveColor: Colors.grey,
-                    value: sliderCurrentPosition,
-                    min: 0,
-                    max: maxDuration,
-                    onChanged: (value) async {
-                      await flutterSound!.seekToPlayer(
-                        Duration(
-                          seconds: value.round(),
+          margin: EdgeInsets.only(bottom: 40),
+          child: Column(
+            children: [
+              IconButton(
+                iconSize: 62.sp,
+                color: (PreferenceUtil.getIfQurhomeisAcive())
+                    ? Color(CommonUtil().getQurhomePrimaryColor())
+                    : Color(CommonUtil().getMyPrimaryColor()),
+                onPressed: () {
+                  isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
+                },
+                icon: !isPlaying
+                    ? Icon(
+                        Icons.play_circle,
+                      )
+                    : Icon(
+                        Icons.pause_circle,
+                      ),
+              ),
+              SizedBox(height: 2.h),
+              Container(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        height: 30.0.h,
+                        child: Slider(
+                          activeColor: (PreferenceUtil.getIfQurhomeisAcive())
+                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              : Color(CommonUtil().getMyPrimaryColor()),
+                          inactiveColor: Colors.grey,
+                          value: sliderCurrentPosition,
+                          min: 0,
+                          max: maxDuration,
+                          onChanged: (value) async {
+                            await flutterSound!.seekToPlayer(
+                              Duration(
+                                seconds: value.round(),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ),
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                ),
+              ),
+              SizedBox(height: 2.h),
+              Center(
+                child: Text(
+                  _playerTxt,
+                  style: TextStyle(
+                    fontSize: 18.0.sp,
+                    color: Colors.black,
                   ),
                 ),
               ),
             ],
-            mainAxisAlignment: MainAxisAlignment.center,
           ),
         ),
-        Center(
-          child: Text(
-            _playerTxt,
-            style: TextStyle(
-              fontSize: 14.0.sp,
-              color: Colors.black,
-            ),
-          ),
-        ),
-        SizedBox(height: 20.h)
       ],
     );
   }
