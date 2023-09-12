@@ -783,7 +783,6 @@ class CommonUtil {
 
     //loginBloc.logout().then((signOutResponse) {
     // moveToLoginPage(signOutResponse);
-    QurPlanReminders.deleteAllLocalReminders();
     // FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     // final token = await _firebaseMessaging.getToken();
     try {
@@ -797,10 +796,11 @@ class CommonUtil {
               profileResult.userContactCollection3![0]!.phoneNumber,
               token,
               false)
-          .then((value) {
+          .then((value) async {
         // if (Platform.isIOS) {
         //   _firebaseMessaging.deleteInstanceID();
         // }
+        await QurPlanReminders.deleteAllLocalReminders();
         moveToLoginPage();
       });
     } catch (e, stackTrace) {
