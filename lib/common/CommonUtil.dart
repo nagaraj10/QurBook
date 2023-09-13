@@ -7049,6 +7049,8 @@ class VideoCallCommonUtils {
           .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
           .join(' ');
     } catch (e, stacktrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stacktrace);
+
       return data;
     }
   }
