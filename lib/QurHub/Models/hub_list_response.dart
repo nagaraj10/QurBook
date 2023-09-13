@@ -2,15 +2,19 @@ import 'package:myfhb/common/CommonUtil.dart';
 
 class HubListResponse {
   bool? isSuccess;
-  Result? result;
+  List<UserDeviceCollection>? result;
 
   HubListResponse({this.isSuccess, this.result});
 
   HubListResponse.fromJson(Map<String, dynamic> json) {
     try {
       isSuccess = json['isSuccess'];
-      result =
-              json['result'] != null ? new Result.fromJson(json['result']) : null;
+      if (json['result'] != null) {
+        result = <UserDeviceCollection>[];
+        json['result'].forEach((v) {
+          result!.add(new UserDeviceCollection.fromJson(v));
+        });
+      }
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -20,7 +24,8 @@ class HubListResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result!.toJson();
+      data['result'] =
+          this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -35,7 +40,7 @@ class Result {
   String? lastModifiedOn;
   String? hubId;
   String? userId;
-  Hub? hub;
+  //Hub? hub;
   List<UserDeviceCollection>? userDeviceCollection;
 
   Result(
@@ -47,7 +52,7 @@ class Result {
       this.lastModifiedOn,
       this.hubId,
       this.userId,
-      this.hub,
+      //this.hub,
       this.userDeviceCollection});
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -57,7 +62,7 @@ class Result {
       createdOn = json['createdOn'];
       hubId = json['hubId'];
       userId = json['userId'];
-      hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
+      //hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
 
       if (json['userDeviceCollection'] != null) {
             userDeviceCollection = <UserDeviceCollection>[];
