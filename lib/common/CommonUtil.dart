@@ -5680,7 +5680,7 @@ class CommonUtil {
                             ),
                           ),
                           Visibility(
-                            visible: (unReadMsgCount??0)>0,
+                            visible: (unReadMsgCount ?? 0) > 0,
                             child: Column(
                               children: [
                                 Container(
@@ -5713,7 +5713,7 @@ class CommonUtil {
                                       minHeight: 35.h, minWidth: 35.h),
                                   badgeTextSize: 18.sp,
                                   icon: InkWell(
-                                    onTap: (){
+                                    onTap: () {
                                       onTapSheelaRemainders?.call(false);
                                     },
                                     child: Container(
@@ -6186,7 +6186,7 @@ class CommonUtil {
       if (PreferenceUtil.getIfQurhomeDashboardActiveChat()) {
         if (chatListresponse != null) {
           SheelaReminderResponse chatList =
-          SheelaReminderResponse.fromJson(chatListresponse);
+              SheelaReminderResponse.fromJson(chatListresponse);
           if (chatList != null) {
             var chatMessageId = chatList.chatMessageId ?? '';
             if (chatMessageId != null && chatMessageId != '') {
@@ -6898,7 +6898,6 @@ class CommonUtil {
     landingScreenController = Get.find();
     return landingScreenController;
   }
-
 }
 
 extension CapExtension on String {
@@ -7067,12 +7066,18 @@ class VideoCallCommonUtils {
   }
 
   String capitalizeFirstofEach(String data) {
-    return data
-        .trim()
-        .toLowerCase()
-        .split(' ')
-        .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
-        .join(' ');
+    try {
+      return data
+          .trim()
+          .toLowerCase()
+          .split(' ')
+          .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
+          .join(' ');
+    } catch (e, stacktrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stacktrace);
+
+      return data;
+    }
   }
 
   void startTheCall(
@@ -7109,7 +7114,7 @@ class VideoCallCommonUtils {
     await initialize(
       context: context,
       channelName: channelName as String?,
-      patName: capitalizeFirstofEach(patName),
+      patName: capitalizeFirstofEach(patName) ?? '',
       patId: patId,
       isFromAppointment: isFromAppointment,
       bookId: bookId,
@@ -7123,7 +7128,7 @@ class VideoCallCommonUtils {
         channelName: channelName as String?,
         role: ClientRole.Broadcaster,
         appointmentId: appointmentId,
-        patName: capitalizeFirstofEach(patName),
+        patName: capitalizeFirstofEach(patName) ?? patName,
         patId: patId,
         bookId: bookId,
         patDOB: isFromAppointment ? age.toString() : patientDOB,
