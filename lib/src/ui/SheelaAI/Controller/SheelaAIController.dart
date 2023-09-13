@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -72,6 +73,7 @@ class SheelaAIController extends GetxController {
   bool lastMsgIsOfButtons = false;
   Timer? _popTimer;
   Timer? _exitAutoTimer;
+  Timer? _sessionTimeout;
   var sheelaIconBadgeCount = 0.obs;
   bool isUnAvailableCC = false;
   bool isProd = false;
@@ -175,14 +177,13 @@ class SheelaAIController extends GetxController {
             strHomeScreen.toLowerCase()) {
           startTimer();
         }
-      } catch (e,stackTrace) {
+      } catch (e, stackTrace) {
         //gettingReposnseFromNative();
         if (kDebugMode)
           printError(
             info: e.toString(),
           );
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
   }
@@ -381,6 +382,7 @@ class SheelaAIController extends GetxController {
               (await getGoogleTTSForConversation(currentResponse))!;
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
+          clearTimerForSessionExpiry();
           /*if ((currentResponse.buttons ?? []).length > 0) {
             currentResponse.endOfConv = false;
             lastMsgIsOfButtons = true;
@@ -415,6 +417,14 @@ class SheelaAIController extends GetxController {
             sessionToken = const Uuid().v1();
             relationshipId = userId;
           }
+          if (currentResponse.additionalInfoSheelaResponse?.sessionTimeoutMin !=
+                  null &&
+              currentResponse.additionalInfoSheelaResponse?.sessionTimeoutMin !=
+                  '') {
+            startTimerForSessionExpiry(currentResponse
+                    .additionalInfoSheelaResponse?.sessionTimeoutMin ??
+                0);
+          }
           if (CommonUtil.isUSRegion()) {
             if (!isMuted.value) {
               playTTS();
@@ -440,9 +450,9 @@ class SheelaAIController extends GetxController {
             Colors.black54);
       }
       isLoading.value = false;
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //need to handle errors
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       isLoading.value = false;
       conversations.removeLast();
@@ -465,9 +475,9 @@ class SheelaAIController extends GetxController {
         },
       );
       return true;
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //failed to play in the local tts
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -513,17 +523,15 @@ class SheelaAIController extends GetxController {
                   Get.toNamed(rt_Regimen);
                 }
               }
-            } catch (e,stackTrace) {
+            } catch (e, stackTrace) {
               //gettingReposnseFromNative();
-                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
           }
         }
-      } catch (e,stackTrace) {
+      } catch (e, stackTrace) {
         //failed to play in local tts
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     } else {
       String? textForPlaying;
@@ -555,8 +563,8 @@ class SheelaAIController extends GetxController {
             } else {
               result = await getGoogleTTSForText(currentButton.title);
             }
-          } catch (e,stackTrace) {
-                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
             result = await getGoogleTTSForText(currentButton.title);
           }
@@ -608,8 +616,8 @@ class SheelaAIController extends GetxController {
               await player!.play(path, isLocal: true);
             }
           }
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           //failed play the audio
           print(e.toString());
@@ -668,8 +676,8 @@ class SheelaAIController extends GetxController {
       }
       final result = await Future.wait(apis);
       return conversation;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //Failed to get tts in conversation
       FlutterToast()
@@ -683,8 +691,8 @@ class SheelaAIController extends GetxController {
       final result = await getGoogleTTSForText(conversation.text);
       conversation.ttsResponse = result;
       return true;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -701,8 +709,8 @@ class SheelaAIController extends GetxController {
       final result = await getGoogleTTSForText(toSpeech);
       button.ttsResponse = result;
       return true;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -732,10 +740,9 @@ class SheelaAIController extends GetxController {
             'There is some issue with sheela,\n Please try after some time',
             Colors.black54);
       }
-    } catch (e,stackTrace) {
- 
-             CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-     print(e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      print(e.toString());
       //need to handle failure in the api call for tts
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
@@ -831,8 +838,8 @@ class SheelaAIController extends GetxController {
                     conversations.add(newConversation);
                     getAIAPIResponseFor(response, button);
                   }
-                } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                } catch (e, stackTrace) {
+                  CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
                   lastMsgIsOfButtons = false;
                   conversations.add(newConversation);
@@ -859,8 +866,8 @@ class SheelaAIController extends GetxController {
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
       FlutterToast().getToast(
@@ -881,8 +888,8 @@ class SheelaAIController extends GetxController {
         currentLang = 'undef';
       }
       return currentLang;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return 'undef';
     }
@@ -892,8 +899,8 @@ class SheelaAIController extends GetxController {
     try {
       final data = await HealthReportListForUserBlock().getHelthReportLists();
       await PreferenceUtil.saveCompleteData(KEY_COMPLETE_DATA, data);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
     }
@@ -954,8 +961,8 @@ class SheelaAIController extends GetxController {
               currentDeviceStatus.allowVitalNotification,
               currentDeviceStatus.allowSymptomsNotification);
       return data;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
     }
@@ -1012,7 +1019,9 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  getSheelaBadgeCount({bool isNeedSheelaDialog = false,bool isFromQurHomeRegimen = false}) async {
+  getSheelaBadgeCount(
+      {bool isNeedSheelaDialog = false,
+      bool isFromQurHomeRegimen = false}) async {
     if (!(sheelaIconBadgeCount.value > 0)) {
       sheelaIconBadgeCount.value = 0;
     }
@@ -1031,19 +1040,20 @@ class SheelaAIController extends GetxController {
                 if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
                   isQueueDialogShowing.value = true;
-                  CommonUtil().dialogForSheelaQueueStable(
-                      Get.context!,
-                      unReadMsgCount:Provider.of<ChatSocketViewModel>(Get.context!,listen: false).chatTotalCount,
-                      onTapSheelaRemainders: (value) {
+                  CommonUtil().dialogForSheelaQueueStable(Get.context!,
+                      unReadMsgCount: Provider.of<ChatSocketViewModel>(
+                              Get.context!,
+                              listen: false)
+                          .chatTotalCount, onTapSheelaRemainders: (value) {
                     isQueueDialogShowing.value = false;
                     Get.back();
                     Get.toNamed(
                       rt_Sheela,
-                      arguments: value?SheelaArgument(
-                        rawMessage: sheelaQueueShowRemind,
-                      ):SheelaArgument(
-                        showUnreadMessage: true
-                      ),
+                      arguments: value
+                          ? SheelaArgument(
+                              rawMessage: sheelaQueueShowRemind,
+                            )
+                          : SheelaArgument(showUnreadMessage: true),
                     )?.then((value) {
                       ///Update Sheela remainder count
                       getSheelaBadgeCount(isNeedSheelaDialog: true);
@@ -1061,8 +1071,8 @@ class SheelaAIController extends GetxController {
           sheelaIconBadgeCount.value = 0;
         }
       });
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       sheelaIconBadgeCount.value = 0;
     }
@@ -1087,8 +1097,8 @@ class SheelaAIController extends GetxController {
           }
         });
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       printError(info: e.toString());
     }
@@ -1122,6 +1132,24 @@ class SheelaAIController extends GetxController {
       isCallStartFromSheela = true;
       updateTimer(enable: false);
       regController.callSOSEmergencyServices(1);
+    }
+  }
+
+  void startTimerForSessionExpiry(int minutes) {
+    if ((minutes != null) && (minutes != '') && (minutes != 0)) {
+      print('timer for session expiry');
+      _sessionTimeout = Timer(Duration(seconds: (15)), () {
+        if(PreferenceUtil.getIfSheelaAttachmentPreviewisActive()){
+          FlutterToast().getToastForLongTime(strSessionTimeoutAlert, Colors.black);
+        }
+      });
+    }
+  }
+
+  clearTimerForSessionExpiry() {
+    if (_sessionTimeout != null && _sessionTimeout!.isActive) {
+      _sessionTimeout!.cancel();
+      _sessionTimeout = null;
     }
   }
 }

@@ -36,6 +36,18 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
     super.initState();
 
     _chatAttachments = widget.chatAttachments;
+
+    PreferenceUtil.saveIfSheelaAttachmentPreviewisActive(
+      qurhomeStatus: true,
+    );
+  }
+
+  @override
+  void dispose() {
+    PreferenceUtil.saveIfSheelaAttachmentPreviewisActive(
+      qurhomeStatus: false,
+    );
+    super.dispose();
   }
 
   @override
