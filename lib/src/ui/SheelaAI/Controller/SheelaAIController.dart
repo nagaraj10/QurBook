@@ -331,7 +331,12 @@ class SheelaAIController extends GetxController {
         arguments!.isSheelaFollowup = false;
       } else if (arguments?.eId != '' && arguments?.eId != null) {
         if (arguments?.isSurvey ?? false) {
-          reqJson = {KIOSK_task: KIOSK_survey, KIOSK_eid: arguments!.eId};
+          reqJson = {
+            KIOSK_task: (arguments?.isRetakeSurvey ?? false)
+                ? KIOSK_retakeSurvey
+                : KIOSK_survey,
+            KIOSK_eid: arguments!.eId
+          };
           sheelaRequest.message = KIOSK_SHEELA;
           arguments!.eId = null;
         } else {

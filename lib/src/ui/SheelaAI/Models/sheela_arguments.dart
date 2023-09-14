@@ -25,6 +25,7 @@ class SheelaArgument {
   String? others;
   String? chatMessageIdSocket;
   String? eventIdViaSheela;
+  bool isRetakeSurvey = false;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -52,5 +53,6 @@ class SheelaArgument {
     this.others,
     this.chatMessageIdSocket,
     this.eventIdViaSheela,
+    this.isRetakeSurvey = false,
   });
 }
