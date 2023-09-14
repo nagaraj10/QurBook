@@ -58,7 +58,6 @@ const String mobileNumber = "'s mobile number ";
 
 //Strings used in VerifyPatient
 const String strAccount = 'Already have an account ?';
-const String strSignIn = 'Sign in';
 const String strPhoneType = 'df61aa82-6bbf-4f09-a48a-b535ae579960';
 const String strSignup = 'Sign up';
 const String strPassword = 'Password';
@@ -86,7 +85,7 @@ const String strOtpShowText =
     'Enter the registered mobile number to change the password';
 
 //Strings used in SignInScreen
-const String strSignInText = 'Sign In';
+const String strLoginText = 'Login';
 const String strBackText = 'Back';
 const String strReviewPay = 'Review & Pay';
 const String strRetryPay = 'Retry Payment';
