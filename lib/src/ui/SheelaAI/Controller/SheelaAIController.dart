@@ -1137,7 +1137,6 @@ class SheelaAIController extends GetxController {
 
   void startTimerForSessionExpiry(int minutes) {
     if ((minutes != null) && (minutes != '') && (minutes != 0)) {
-      print('timer for session expiry');
       _sessionTimeout = Timer(Duration(seconds: (15)), () {
         if(PreferenceUtil.getIfSheelaAttachmentPreviewisActive()){
           FlutterToast().getToastForLongTime(strSessionTimeoutAlert, Colors.black);

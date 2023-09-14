@@ -306,12 +306,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                     (chat.isActionDone != null && chat.isActionDone!))
                 ? null
                 : () {
-              Get.to(
-                AttachmentListSheela(
-                    chatAttachments:
-                    buttonData?.chatAttachments ?? []),
-              );
-              /*if (buttonData?.btnRedirectTo == strPreviewScreen) {
+              if (buttonData?.btnRedirectTo == strPreviewScreen) {
                 if (buttonData?.chatAttachments != null &&
                     (buttonData?.chatAttachments?.length ??
                         0) >
@@ -319,7 +314,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                   CommonUtil()
                       .onInitQurhomeDashboardController()
                       .setActiveQurhomeDashboardToChat(status: false);
-                      controller.updateTimer(enable: false);
                   Get.to(
                     AttachmentListSheela(
                         chatAttachments:
@@ -343,7 +337,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                 Future.delayed(const Duration(seconds: 3), () {
                   buttonData?.isSelected = false;
                 });
-              }*/
+              }
                   },
             child: Card(
               color: (buttonData?.isSelected ?? false)
