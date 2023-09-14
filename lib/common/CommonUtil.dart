@@ -2626,10 +2626,13 @@ class CommonUtil {
 
       if (newVersion > currentVersion) {
         isVersionLatest = false;
-        controller.isLatestVersion = false;
 
         if (showDialog) _showVersionDialog(context, isForceUpdate);
-      } else if (newVersion == currentVersion) {
+      }
+
+      if (newVersion > currentVersion) {
+        controller.isLatestVersion = false;
+      } else if (newVersion <= currentVersion) {
         controller.isLatestVersion = true;
       }
     } on FirebaseException catch (exception, stackTrace) {
