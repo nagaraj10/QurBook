@@ -5863,6 +5863,10 @@ class CommonUtil {
     }
     bleController.troubleShootTimerSubscription = null;
     print(bleController.troubleShootStatus);
+    var result = false;
+    if ([stringBluetoothScanstarted].contains(bleController.troubleShootStatus)) {
+      result = true;
+    }
     //unknown
 //unsupported
 //unauthorized
@@ -5870,7 +5874,7 @@ class CommonUtil {
 //scanstarted
     bleController.stopScanning();
     onInitHubListViewController().getHubList();
-    return false;
+    return result;
   }
 
   String get _getDeviceType {
