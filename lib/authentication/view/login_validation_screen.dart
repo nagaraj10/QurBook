@@ -328,7 +328,7 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
 
   Widget _loginsavebutton() {
     return commonLoginButton(
-      strSignInText,
+      strLoginText,
       () {
         AuthenticationValidator().checkNetwork().then((intenet) {
           if (intenet != null && intenet) {

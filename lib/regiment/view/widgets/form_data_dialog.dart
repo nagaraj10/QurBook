@@ -709,35 +709,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                 return RaisedButton(
                     onPressed: val == false
                         ? () async {
-                            if (widget.fromView!) {
-                            } else if (widget.canEdit) {
-                              if (_formKey.currentState!.validate()) {
-                                if (actvityStatus == UnSubscribed ||
-                                    actvityStatus == Expired) {
-                                  var message = (actvityStatus == UnSubscribed)
-                                      ? UnSubscribed
-                                      : Expired;
-                                  CommonUtil().showDialogForActivityStatus(
-                                      'Plan $message, $msgData', context,
-                                      pressOk: () {
-                                    Get.back();
-                                    clickSaveButton();
-                                  });
-                                } else {
-                                  clickSaveButton();
-                                }
-                              }
-                            } else {
-                              FlutterToast().getToast(
-                                (Provider.of<RegimentViewModel>(context,
-                                                listen: false)
-                                            .regimentMode ==
-                                        RegimentMode.Symptoms)
-                                    ? symptomsError
-                                    : activitiesError,
-                                Colors.red,
-                              );
-                            }
+                            commonSaveMethod();
                           }
                         : null,
                     color: widget.fromView!
@@ -1213,7 +1185,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           FlatButton(
             onPressed: () {
               isUpdatePressed = true;
-              clickSaveButton();
+              commonSaveMethod();
             },
             child: Text(strYES),
           ),
@@ -1232,8 +1204,8 @@ class FormDataDialogState extends State<FormDataDialog> {
       for (VitalsData? vitalsDataObj in vitalsData!) {
         if (vitalsDataObj?.vitalName == fieldModel.title) return vitalsDataObj;
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return null;
     }
@@ -1307,5 +1279,32 @@ class FormDataDialogState extends State<FormDataDialog> {
         },
       ),
     );
+  }
+
+  void commonSaveMethod() {
+    if (widget.fromView!) {
+    } else if (widget.canEdit) {
+      if (_formKey.currentState!.validate()) {
+        if (actvityStatus == UnSubscribed || actvityStatus == Expired) {
+          var message =
+              (actvityStatus == UnSubscribed) ? UnSubscribed : Expired;
+          CommonUtil().showDialogForActivityStatus(
+              'Plan $message, $msgData', context, pressOk: () {
+            Get.back();
+            clickSaveButton();
+          });
+        } else {
+          clickSaveButton();
+        }
+      }
+    } else {
+      FlutterToast().getToast(
+        (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                RegimentMode.Symptoms)
+            ? symptomsError
+            : activitiesError,
+        Colors.red,
+      );
+    }
   }
 }

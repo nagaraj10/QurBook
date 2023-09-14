@@ -597,7 +597,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                       builder: (context) => PatientSignInScreen()));
             },
             child: Text(
-              strSignIn,
+              strLoginText,
               style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                   fontSize: 15.0.sp,
