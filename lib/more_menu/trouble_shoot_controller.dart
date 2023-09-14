@@ -24,7 +24,7 @@ class TroubleShootController extends GetxController {
   var isFirstTym = true.obs;
   double progressValue = 0.0;
   double addValue = 0.12;
-  bool isLatestVersion = false;
+  bool isLatestVersion = true;
   bool isStoragePermission = false;
   bool isMicrophone = false;
   bool isLocation = false;
@@ -44,6 +44,7 @@ class TroubleShootController extends GetxController {
   bool isCameraAdded = false;
   bool isInternetAdded = false;
   bool isAuthTokenAdded = false;
+  bool isVersionLatest = false;
 
   List<TroubleShootingModel> troubleShootingList = [];
 
@@ -78,7 +79,7 @@ class TroubleShootController extends GetxController {
     print("App latest");
 
     await CommonUtil().versionCheck(Get.context, showDialog: false);
-    if (CommonUtil.isVersionLatest == true) {
+    if (isLatestVersion == true) {
       isLatestVersion = true;
     } else {
       isLatestVersion = false;
