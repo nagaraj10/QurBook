@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -17,10 +16,6 @@ class QurPlanReminders {
   static const reminderLocalFile = 'notificationList.json';
 
   static getTheRemindersFromAPI() async {
-    //final fileName = 'assets/tempData.json';
-
-    //final dataString = await rootBundle.loadString(fileName);
-
     final headerRequest = HeaderRequest();
     var headers = await headerRequest.getRequestHeadersAuthContents();
     var now = DateTime.now();
@@ -45,23 +40,39 @@ class QurPlanReminders {
           _baseUrl + 'plan-package-master/wrapperApi',
           headers: headers,
           body: params);
-
       var dataArray = await json.decode(responseFromApi!.body);
       final List<dynamic> data = dataArray['result'];
       var reminders = <Reminder>[];
-      data.forEach((element) {
-        var newData = Reminder.fromMap(element);
-        if (!newData.evDisabled) {
-          if (newData.ack_local == '' || newData.ack_local == null)
-            reminders.add(newData);
-        }
-      });
-      print(reminders.toString());
-
+      if (Platform.isIOS) {
+        deleteAllLocalReminders();
+        var notificationsCount = 0;
+        data.forEach((element) {
+          var newData = Reminder.fromMap(element);
+          if (!newData.evDisabled) {
+            if (newData.ack_local == '' ||
+                newData.ack_local ==
+                    null) if ((newData.estart ?? '').isNotEmpty) {
+              DateTime estartAsDateTime = DateTime.parse(newData.estart!);
+              if (estartAsDateTime.isAfter(DateTime.now()) &&
+                  notificationsCount < 64) {
+                notificationsCount = notificationsCount + 1;
+                reminders.add(newData);
+              }
+            }
+          }
+        });
+      } else {
+        data.forEach((element) {
+          var newData = Reminder.fromMap(element);
+          if (!newData.evDisabled) {
+            if (newData.ack_local == '' || newData.ack_local == null)
+              reminders.add(newData);
+          }
+        });
+      }
       await updateReminderswithLocal(reminders);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e.toString());
     }
   }
@@ -90,8 +101,8 @@ class QurPlanReminders {
       var dataToJson = json.encode(dataToSave);
       await file.writeAsString(dataToJson);
       return true;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
       return false;
@@ -315,8 +326,8 @@ class QurPlanReminders {
         notifications.add(val);
       }
       return notifications;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
       return [];

@@ -5332,7 +5332,10 @@ class CommonUtil {
   String showDescriptionTextForm(FieldModel fieldModel) {
     String? desc = '';
 
-    if (fieldModel.description != null && fieldModel.description != '') {
+    if ((fieldModel?.isSurvey ?? false) &&
+        (fieldModel.strTitleDesc ?? "").trim().isNotEmpty) {
+      desc = fieldModel.strTitleDesc;
+    } else if (fieldModel.description != null && fieldModel.description != '') {
       desc = fieldModel.description;
     } else if (fieldModel.title != null && fieldModel.title != '') {
       desc = fieldModel.title;

@@ -269,7 +269,6 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
-              //strSignInText,
               strNext,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
             ),
