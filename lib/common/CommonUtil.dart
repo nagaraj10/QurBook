@@ -35,6 +35,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/more_menu/models/available_devices/TroubleShootingModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
@@ -161,6 +162,7 @@ import 'PreferenceUtil.dart';
 import 'ShowPDFFromFile.dart';
 import 'common_circular_indicator.dart';
 import 'keysofmodel.dart' as keysConstant;
+import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -2584,7 +2586,7 @@ class CommonUtil {
     //Get Current installed version of app
     final info = await PackageInfo.fromPlatform();
     var currentVersion = double.parse(info.version.trim().replaceAll('.', ''));
-
+    var controller = Get.put(TroubleShootController());
     try {
       // Using default duration to force fetching from remote server.
       var apiBaseHelper = ApiBaseHelper();
@@ -2624,15 +2626,24 @@ class CommonUtil {
 
       if (newVersion > currentVersion) {
         isVersionLatest = false;
+
         if (showDialog) _showVersionDialog(context, isForceUpdate);
+      }
+
+      if (newVersion > currentVersion) {
+        controller.isLatestVersion = false;
+      } else if (newVersion <= currentVersion) {
+        controller.isLatestVersion = true;
       }
     } on FirebaseException catch (exception, stackTrace) {
       // Fetch throttled.
       isVersionLatest = false;
+      controller.isLatestVersion = false;
 
       CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
     } catch (exception, stackTrace) {
       isVersionLatest = false;
+      controller.isLatestVersion = false;
 
       CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
       print('Unable to fetch remote config. Cached or default values will be '
@@ -5841,14 +5852,43 @@ class CommonUtil {
 
   Future<bool?> checkBluetoothIsOn() async {
     try {
-      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
-      bool? isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+      bool? isBluetoothEnable;
+      if (Platform.isIOS) {
+        isBluetoothEnable = await checkForBluetoothIsOnForIOS();
+      } else {
+        const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+        isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+      }
       return isBluetoothEnable;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
+  }
+
+  Future<bool> checkForBluetoothIsOnForIOS() async {
+    onInitHubListViewController().hubListResponse = null;
+    final bleController = onInitSheelaBLEController();
+    bleController.troubleShootTheBluetooth();
+    await Future.delayed(const Duration(seconds: 4));
+    if (bleController.troubleShootTimerSubscription != null) {
+      bleController.troubleShootTimerSubscription!.cancel();
+    }
+    bleController.troubleShootTimerSubscription = null;
+    print(bleController.troubleShootStatus);
+    var result = false;
+    if ([stringBluetoothScanstarted].contains(bleController.troubleShootStatus)) {
+      result = true;
+    }
+    //unknown
+//unsupported
+//unauthorized
+//poweredOff
+//scanstarted
+    bleController.stopScanning();
+    onInitHubListViewController().getHubList();
+    return result;
   }
 
   String get _getDeviceType {

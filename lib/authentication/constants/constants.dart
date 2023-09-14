@@ -278,8 +278,11 @@ const String strConfirmPasswordCheck = 'Password does not match';
 const String strUSEmailHintText = 'name@host.com (optional)';
 const String strSignUpFinishText = 'Please finish setting up your account';
 const String strPleaseEnterFirstname = 'Please Enter First Name';
-
-
+const String stringBluetoothUnknown = 'unknown';
+const String stringBluetoothUnsupported = 'unsupported';
+const String stringBluetoothUnauthorized = 'unauthorized';
+const String stringBluetoothPoweredOff = 'poweredOff';
+const String stringBluetoothScanstarted = 'scanstarted';
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(

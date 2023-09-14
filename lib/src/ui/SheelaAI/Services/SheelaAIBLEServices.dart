@@ -31,6 +31,7 @@ class SheelaBLEController extends GetxController {
   MethodChannel bleMethodChannel = const MethodChannel('QurbookBLE/method');
   late Stream stream;
   StreamSubscription? timerSubscription;
+  StreamSubscription? troubleShootTimerSubscription;
 
   Timer? timeOutTimer;
   final String conversationType = "BLESheelaConversations";
@@ -45,6 +46,7 @@ class SheelaBLEController extends GetxController {
   int randomNum = 0;
   String weightUnit = "";
   String filteredDeviceType = '';
+  String troubleShootStatus = '';
 
   @override
   void onInit() {
@@ -108,9 +110,7 @@ class SheelaBLEController extends GetxController {
 
   void _enableTimer() {
     if (!addingDevicesInHublist) {
-      final devicesList =
-          (hublistController.hubListResponse?.result ??
-              []);
+      final devicesList = (hublistController.hubListResponse?.result ?? []);
       if (devicesList.isEmpty) {
         return;
       }
@@ -274,11 +274,9 @@ class SheelaBLEController extends GetxController {
               showFailure();
               break;
             case "connectionfailed":
-              print("Connection failed");
               _disableTimer();
               showFailure();
               await Future.delayed(const Duration(seconds: 2));
-              //setupListenerForReadings();
               break;
 
             default:
@@ -290,9 +288,7 @@ class SheelaBLEController extends GetxController {
     if (addingDevicesInHublist) {
       bleMethodChannel.invokeListMethod('scanAll');
     } else {
-      final devicesList =
-          (hublistController.hubListResponse?.result ??
-              []);
+      final devicesList = (hublistController.hubListResponse?.result ?? []);
       List pairedDevices = [];
       for (var device in devicesList) {
         var deviceManufacturer = device.manufacturer;
@@ -311,6 +307,21 @@ class SheelaBLEController extends GetxController {
       }
       bleMethodChannel.invokeListMethod('scanSingle', pairedDevices);
     }
+  }
+
+  void troubleShootTheBluetooth() {
+    troubleShootTimerSubscription = stream.listen(
+      (event) {
+        if (event == null || event == "") {
+          return;
+        }
+        final List<String>? receivedValues = event.split('|');
+        if ((receivedValues ?? []).isNotEmpty) {
+          troubleShootStatus = receivedValues!.first;
+        }
+      },
+    );
+    bleMethodChannel.invokeListMethod('scanAll');
   }
 
   String getDeviceCode(String? deviceCode) {
@@ -339,9 +350,7 @@ class SheelaBLEController extends GetxController {
 
   bool checkForParedDevice() {
     try {
-      final devicesList =
-          (hublistController.hubListResponse?.result ??
-              []);
+      final devicesList = (hublistController.hubListResponse?.result ?? []);
       if (devicesList.isEmpty) {
         return false;
       }
@@ -373,8 +382,8 @@ class SheelaBLEController extends GetxController {
         bool? isBluetoothEnable = false;
         isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
         if (!isBluetoothEnable!) {
-          FlutterToast().getToast(
-              pleaseTurnOnYourBluetoothAndTryAgain, Colors.red);
+          FlutterToast()
+              .getToast(pleaseTurnOnYourBluetoothAndTryAgain, Colors.red);
           return false;
         } else if (!serviceEnabled) {
           FlutterToast().getToast(
