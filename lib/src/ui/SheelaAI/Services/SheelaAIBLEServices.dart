@@ -551,7 +551,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye!.",
+                    "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -582,7 +582,7 @@ class SheelaBLEController extends GetxController {
                 recipientId: conversationType,
                 text: "Thank you. Your BP systolic ${model.data!.systolic} "
                     ", Diastolic ${model.data!.diastolic} "
-                    "and Pulse ${model.data!.pulse} are successfully recorded. Bye!.",
+                    "and Pulse ${model.data!.pulse} are successfully recorded. Bye.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -596,7 +596,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye!.",
+                    "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
