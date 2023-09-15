@@ -154,11 +154,24 @@ class _TroubleShootingState extends State<TroubleShooting> {
                                   ],
                                 ),
                               )
-                            : getButtonWidget(strTestAgain, () {
-                                controller.progressText.value = "0 %";
-                                controller.progressValue = 0.0;
-                                controller.troubleShootingApp();
-                              }),
+                            : Column(
+                                children: [
+                                  getButtonWidget(strTestAgain, () {
+                                    controller.progressText.value = "0 %";
+                                    controller.progressValue = 0.0;
+                                    controller.troubleShootingApp();
+                                  }),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  !controller.testSuccess.value
+                                      ? getButtonWidget(strRestart, () {
+                                          CommonUtil().logout(
+                                              CommonUtil().moveToLoginPage());
+                                        })
+                                      : SizedBox()
+                                ],
+                              ),
                         controller.isTroubleShootCompleted.value
                             ? SizedBox(
                                 height: 50,
