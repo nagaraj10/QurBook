@@ -132,10 +132,10 @@ class SheelaBLEController extends GetxController {
           switch (receivedValues!.first) {
             case "scanstarted":
               SheelaController.isBLEStatus.value = BLEStatus.Searching;
-              FlutterToast().getToast(
+              /*FlutterToast().getToast(
                 SearchingForDevices,
                 Colors.green,
-              );
+              );*/
               break;
             case "enablebluetooth":
               FlutterToast().getToast(
