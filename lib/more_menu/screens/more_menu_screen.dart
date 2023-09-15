@@ -233,9 +233,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               //     })
             ]),
         floatingActionButton: !isProd
-            ? Align(
-                alignment: Alignment.bottomCenter,
-                child: GestureDetector(
+            ? GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
@@ -256,7 +254,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       color: Color(CommonUtil().getMyPrimaryColor()),
                     ),
                     child: Center(
-                      child: Text(strTroubleShooting,
+                      child: Text(strTroubleShoot,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
@@ -264,8 +262,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           )),
                     ),
                   ),
-                ))
+                )
             : SizedBox(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: getValuesFromSharedPrefernce());
   }
 

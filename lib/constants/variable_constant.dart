@@ -265,6 +265,7 @@ const String strConfirmUserValidity = 'Confirm User Validity';
 const String strReloginMsg = 'Token Expired or Invalid.Please Relogin';
 const String strRelogin = 'ReLogin';
 const String strTroubleShooting = 'TroubleShooting';
+const String strTroubleShoot = 'Troubleshoot';
 const String strStartTest = 'Start Test';
 const String strTestAgain = 'Test Again';
 const String strRestart = 'Re-Login';
