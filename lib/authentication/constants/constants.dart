@@ -251,7 +251,7 @@ const String strNoPlansCheckFree =
 const String strCallMyCC = 'Call my CC';
 
 const String strSurvey = 'Survey';
-
+const String strVideoTitle = "Video Instructions";
 //show icons for alerts
 
 const String MISSED_MAND_ACTIVITES = 'assets/icons/missed_mad_activities.png';
@@ -283,6 +283,8 @@ const String stringBluetoothUnsupported = 'unsupported';
 const String stringBluetoothUnauthorized = 'unauthorized';
 const String stringBluetoothPoweredOff = 'poweredOff';
 const String stringBluetoothScanstarted = 'scanstarted';
+
+const String strRedirectToHelpPreview = 'media_help_screen';
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(
