@@ -479,6 +479,7 @@ class TroubleShootController extends GetxController {
 
         break;
       case strBluetooth:
+        checkingBluetoothEnable = false;
         checkBluetoothStatus(progressalue: false);
 
         break;
