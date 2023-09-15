@@ -231,9 +231,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               //     })
             ]),
         floatingActionButton: !isProd
-            ? Align(
-                alignment: Alignment.bottomCenter,
-                child: GestureDetector(
+            ? GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
@@ -262,8 +260,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           )),
                     ),
                   ),
-                ))
+                )
             : SizedBox(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: getValuesFromSharedPrefernce());
   }
 
