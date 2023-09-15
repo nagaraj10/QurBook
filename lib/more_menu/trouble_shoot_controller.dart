@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -45,6 +46,7 @@ class TroubleShootController extends GetxController {
   bool isInternetAdded = false;
   bool isAuthTokenAdded = false;
   bool isVersionLatest = false;
+  bool checkingBluetoothEnable = false;
 
   List<TroubleShootingModel> troubleShootingList = [];
 
@@ -61,11 +63,12 @@ class TroubleShootController extends GetxController {
       isLocationAdded = true;
       isInternetAdded = false;
       isBluetoothAdded = false;
+      checkingBluetoothEnable = false;
 
       troubleShootingList.clear();
       troubleShootingList = [];
     }
-    new Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
+    new Timer.periodic(Duration(milliseconds: 1500), (Timer timer) {
       if (progressValue >= 0.96) {
         timer.cancel();
         if (!isTroubleShootCompleted.value) switchCaseMethod();
@@ -229,26 +232,52 @@ class TroubleShootController extends GetxController {
   }
 
   checkBluetoothStatus({bool progressalue = true}) async {
-    var isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
-    if (!isBluetoothEnable!) {
-      isBluetoothEnabled = false;
+    if (Platform.isIOS) {
+      if (checkingBluetoothEnable) {
+        return;
+      }
+      checkingBluetoothEnable = true;
+      final statusBluetoothEnable =
+          await CommonUtil().checkForBluetoothIsOnForIOS();
+      switch (statusBluetoothEnable) {
+        case stringBluetoothScanstarted:
+          isBluetoothEnabled = true;
+          break;
+        case stringBluetoothUnauthorized:
+          isBluetoothEnabled = false;
+          if (!progressalue && !isBluetoothEnabled) {
+            CommonUtil().showAlertDialogWithTextAndButton(
+                strAlert, pleaseTurnOnYourBluetoothAndTryAgain, okButton, () {
+              Navigator.pop(Get.context!);
+            });
+          }
+          break;
+        default:
+        isBluetoothEnabled = false;
+      }
     } else {
-      isBluetoothEnabled = true;
+      var isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
+      if (!isBluetoothEnable!) {
+        isBluetoothEnabled = false;
+      } else {
+        isBluetoothEnabled = true;
+      }
+
+      if (!progressalue && !isBluetoothEnabled) {
+        CommonUtil().showAlertDialogWithTextAndButton(
+            strAlert, pleaseTurnOnYourBluetoothAndTryAgain, okButton, () {
+          Navigator.pop(Get.context!);
+        });
+      }
     }
     if (progressalue && !isBluetoothAdded) {
-      troubleShootingList.add(new TroubleShootingModel(
+      troubleShootingList.add(TroubleShootingModel(
         strBluetooth,
         isBluetoothEnabled,
         Icon(Icons.bluetooth),
       ));
       isBluetoothAdded = true;
       increaseProgressValue(addValue);
-    }
-    if (!progressalue && !isBluetoothEnabled) {
-      CommonUtil().showAlertDialogWithTextAndButton(
-          strAlert, pleaseTurnOnYourBluetoothAndTryAgain, okButton, () {
-        Navigator.pop(Get.context!);
-      });
     }
   }
 
