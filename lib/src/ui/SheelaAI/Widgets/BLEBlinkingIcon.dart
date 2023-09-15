@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../common/CommonUtil.dart';
 import '../Controller/SheelaAIController.dart';
 import 'package:get/get.dart';
+import '../../../utils/screenutils/size_extensions.dart';
 
 class MyBlinkingBLEIcon extends StatefulWidget {
   @override
@@ -32,6 +33,7 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
           opacity: _animationController,
           child: Icon(
             Icons.bluetooth,
+              size: 32.sp,
             color: Color(
               CommonUtil().getQurhomeGredientColor(),
             ),
@@ -42,6 +44,7 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
             _sheelaAIController.isBLEStatus.value == BLEStatus.Disabled
                 ? Icons.bluetooth_disabled
                 : Icons.bluetooth_connected,
+            size: 32.sp,
             color: _sheelaAIController.isBLEStatus.value == BLEStatus.Disabled
                 ? Colors.grey
                 : Colors.green);

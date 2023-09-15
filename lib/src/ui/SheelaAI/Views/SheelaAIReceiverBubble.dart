@@ -250,7 +250,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                 IconButton(
                                   icon: const Icon(
                                       Icons.play_circle_fill_rounded),
-                                  color: Colors.black54,
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                   iconSize: 75,
                                   onPressed: () {
                                     playYoutube(currentVideoLink.url);
