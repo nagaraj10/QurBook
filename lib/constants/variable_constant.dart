@@ -267,6 +267,7 @@ const String strRelogin = 'ReLogin';
 const String strTroubleShooting = 'TroubleShooting';
 const String strStartTest = 'Start Test';
 const String strTestAgain = 'Test Again';
+const String strRestart = 'Re-Login';
 
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';
@@ -667,8 +668,7 @@ const String strImgNtClear = 'Image not clear';
 const String strRegimenRedirection = 'Redirecting to current date regimen in';
 const String strViewPastDateRegimen = 'You are viewing past date regimen';
 const String strViewFutureDateRegimen = 'You are viewing future date regimen';
-const String stringViewTotalNumberOfActivites =
-    'Total Number of activities :';
+const String stringViewTotalNumberOfActivites = 'Total Number of activities :';
 //for device screen
 const String strGlucUnit = 'mgdl';
 const String strbfood = 'Before Food';
