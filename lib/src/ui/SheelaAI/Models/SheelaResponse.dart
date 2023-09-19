@@ -208,6 +208,10 @@ class Buttons {
   GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
   bool isSelected = false;
+  String? btnRedirectTo;
+  String? imageUrl;
+  String? videoUrl;
+  String? audioUrl;
 
   Buttons({
     this.payload,
@@ -218,6 +222,10 @@ class Buttons {
     this.skipTts,
     this.relationshipIdNotRequired = false,
     this.ttsResponse,
+    this.btnRedirectTo,
+    this.imageUrl,
+    this.videoUrl,
+    this.audioUrl,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -229,6 +237,10 @@ class Buttons {
       sayText = (json['saytext'] ?? '');
       skipTts = (json['skip_tts'] ?? false);
       relationshipIdNotRequired = (json['relationshipIdNotRequired'] ?? false);
+      btnRedirectTo = (json['redirectTo'] ?? '');
+      imageUrl = (json['imageUrl'] ?? '');
+      videoUrl = (json['videoUrl'] ?? '');
+      audioUrl = (json['audioUrl'] ?? '');
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -243,6 +255,10 @@ class Buttons {
     data['saytext'] = this.sayText;
     data['skip_tts'] = this.skipTts;
     data['relationshipIdNotRequired'] = this.relationshipIdNotRequired;
+    data['redirectTo'] = this.btnRedirectTo;
+    data['imageUrl'] = this.imageUrl;
+    data['videoUrl'] = this.videoUrl;
+    data['audioUrl'] = this.audioUrl;
     return data;
   }
 }
