@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import com.ventechsolutions.myFHB.R
 import com.ventechsolutions.myFHB.constants.Constants
@@ -102,8 +103,6 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.APPOINTMENTID,appointmentId)
         launchIntent?.putExtra(Constants.PROP_ESTART,estart)
         launchIntent?.putExtra(Constants.PROP_DOSEMEAL,dosemeal)
-
-
         p0.startActivity(launchIntent)
     }
 }

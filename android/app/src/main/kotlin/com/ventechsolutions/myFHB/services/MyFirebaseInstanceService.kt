@@ -1399,6 +1399,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     }
 
     private fun createNotification4Chat(data: Map<String, String> = HashMap()) {
+        Log.d("121212","inside Chat")
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = System.currentTimeMillis().toInt()
         val MEETING_ID = data[getString(R.string.meetid)]
@@ -1424,34 +1425,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             channelAck.setSound(ack_sound, attributes)
             manager.createNotificationChannel(channelAck)
         }
-
-        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
-        onTapNS.putExtra(getString(R.string.nsid), NS_ID)
-        onTapNS.putExtra(getString(R.string.meetid), "chat")
-        onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
-        onTapNS.putExtra(getString(R.string.senderId), "$SENDER_ID")
-        onTapNS.putExtra(getString(R.string.senderName), "$SENDER_NAME")
-        onTapNS.putExtra(getString(R.string.senderProfilePic), "$SENDER_PROFILE")
-        onTapNS.putExtra(getString(R.string.chatListId), "$GROUP_ID")
-        val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-
-        }
-
-
+        val onTapNS = Intent(this,MainActivity::class.java)
+        onTapNS?.action = Intent.ACTION_SEND
+        onTapNS?.type=Constants.TXT_PLAIN
+        onTapNS?.putExtra(Intent.EXTRA_TEXT,"chat")
+        onTapNS?.putExtra(getString(R.string.username),"$USER_NAME")
+        onTapNS?.putExtra(getString(R.string.senderId),"$SENDER_ID")
+        onTapNS?.putExtra(getString(R.string.senderName), "$SENDER_NAME")
+        onTapNS?.putExtra(getString(R.string.senderProfilePic), "$SENDER_PROFILE")
+        onTapNS?.putExtra(getString(R.string.chatListId), "$GROUP_ID")
+        val onTapPendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         var notification = NotificationCompat.Builder(this, CHANNEL_ACK)
                 .setSmallIcon(R.mipmap.app_ns_icon)
