@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -16,10 +17,12 @@ import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
@@ -825,12 +828,28 @@ class SheelaAIController extends GetxController {
                       }
                     }
                   }
-
                   if (button != null) {
-                    startSheelaFromButton(
-                        buttonText: button.title,
-                        payload: button.payload,
-                        buttons: button);
+                    if (button?.btnRedirectTo == strRedirectToHelpPreview) {
+                      if (button?.videoUrl != null &&
+                          button?.videoUrl != '') {
+                        if (isLoading.isTrue) {
+                          return;
+                        }
+                        stopTTS();
+                        String? videoId;
+                        videoId = youtube.YoutubePlayer.convertUrlToId(button?.videoUrl);
+                        Get.to(
+                          MyYoutubePlayer(
+                            videoId: videoId,
+                          ),
+                        );
+                      }
+                    }else{
+                      startSheelaFromButton(
+                          buttonText: button.title,
+                          payload: button.payload,
+                          buttons: button);
+                    }
                   } else {
                     lastMsgIsOfButtons = false;
                     conversations.add(newConversation);
