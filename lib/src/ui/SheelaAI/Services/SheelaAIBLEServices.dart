@@ -194,10 +194,10 @@ class SheelaBLEController extends GetxController {
                     deviceType == "weight" ||
                     deviceType == "bgl") {
                   SheelaController.isBLEStatus.value = BLEStatus.Connected;
-                  FlutterToast().getToast(
+/*                  FlutterToast().getToast(
                     deviceConnected,
                     Colors.green,
-                  );
+                  );*/
                   if (isFromVitals || isFromRegiment) {
                     Get.back();
                   }
