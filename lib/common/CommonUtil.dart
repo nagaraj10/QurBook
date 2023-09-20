@@ -5852,13 +5852,8 @@ class CommonUtil {
 
   Future<bool?> checkBluetoothIsOn() async {
     try {
-      bool? isBluetoothEnable;
-      if (Platform.isIOS) {
-        isBluetoothEnable = await checkForBluetoothIsOnForIOS();
-      } else {
-        const platform = MethodChannel(IS_BP_ENABLE_CHECK);
-        isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
-      }
+      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+      bool? isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
       return isBluetoothEnable;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -5867,7 +5862,7 @@ class CommonUtil {
     }
   }
 
-  Future<bool> checkForBluetoothIsOnForIOS() async {
+  Future<String> checkForBluetoothIsOnForIOS() async {
     onInitHubListViewController().hubListResponse = null;
     final bleController = onInitSheelaBLEController();
     bleController.troubleShootTheBluetooth();
@@ -5877,10 +5872,6 @@ class CommonUtil {
     }
     bleController.troubleShootTimerSubscription = null;
     print(bleController.troubleShootStatus);
-    var result = false;
-    if ([stringBluetoothScanstarted].contains(bleController.troubleShootStatus)) {
-      result = true;
-    }
     //unknown
 //unsupported
 //unauthorized
@@ -5888,7 +5879,7 @@ class CommonUtil {
 //scanstarted
     bleController.stopScanning();
     onInitHubListViewController().getHubList();
-    return result;
+    return bleController.troubleShootStatus;
   }
 
   String get _getDeviceType {
