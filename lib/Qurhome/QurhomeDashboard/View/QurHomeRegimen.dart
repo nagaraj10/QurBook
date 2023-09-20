@@ -157,13 +157,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       controller.getSOSButtonStatus();
       await Future.delayed(Duration(milliseconds: 100));
 
-      if (CommonUtil.isUSRegion()) {
-        if (strEventId.trim().isNotEmpty &&
-            controller.qurHomeRegimenResponseModel?.regimentsList != null &&
+      if (CommonUtil.isUSRegion() && strEventId.trim().isNotEmpty) {
+        RegimentDataModel? currRegimen = null;
+
+        if (controller.qurHomeRegimenResponseModel?.regimentsList != null &&
             (controller.qurHomeRegimenResponseModel?.regimentsList?.length ??
                     0) >
                 0) {
-          RegimentDataModel? currRegimen = null;
           for (int i = 0;
               i < controller.qurHomeRegimenResponseModel!.regimentsList!.length;
               i++) {
@@ -182,19 +182,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               break;
             }
           }
-          if (currRegimen == null) {
-            if (qurhomeDashboardController.isOnceInAPlanActivity.value) {
-              FlutterToast().getToast(
-                activity_completed_regimen,
-                Colors.green,
-              );
-              qurhomeDashboardController.isOnceInAPlanActivity.value = false;
-            } else {
-              FlutterToast().getToast(
-                activity_removed_regimen,
-                Colors.red,
-              );
-            }
+        }
+
+        if (currRegimen == null) {
+          if (qurhomeDashboardController.isOnceInAPlanActivity.value) {
+            FlutterToast().getToast(
+              activity_completed_regimen,
+              Colors.green,
+            );
+            qurhomeDashboardController.isOnceInAPlanActivity.value = false;
+          } else {
+            FlutterToast().getToast(
+              activity_removed_regimen,
+              Colors.red,
+            );
           }
         }
       }
