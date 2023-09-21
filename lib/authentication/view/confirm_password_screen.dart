@@ -256,6 +256,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                       height: 20.0.h,
                     ),
                     _changePassword(),
+                    SizedBox(
+                      height: 20.0.h,
+                    ),
+                    _backbutton(),
                     SizedBox(height: 10.0.h),
                     Visibility(
                       visible: CommonUtil.REGION_CODE == 'IN',
@@ -350,14 +354,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     });
   }
 
-  Widget _changePassword() {
+  
+  Widget _backbutton() {
+    return _commonConfirmPasswordButton(
+      strBackText,
+      () {
+        FocusScope.of(context).unfocus();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _commonConfirmPasswordButton(String textString, Function()? onTap) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
-          onTap: () {
-            _verifyDetails();
-          },
+          onTap: onTap,
           child: Container(
             padding: EdgeInsets.symmetric(
               vertical: 15.0.sp,
@@ -374,19 +387,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
                   Color(CommonUtil().getMyPrimaryColor()),
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
-              strChangeButtonText,
+              textString,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
             ),
           ),
         ),
       ],
     );
+  }
+
+  Widget _changePassword() {
+    return _commonConfirmPasswordButton(strChangeButtonText, () {
+      _verifyDetails();
+    });
   }
 
   _verifyDetails({String? otpCode}) async {
