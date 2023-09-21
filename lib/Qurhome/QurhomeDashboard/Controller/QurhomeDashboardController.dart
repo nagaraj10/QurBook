@@ -55,8 +55,6 @@ class QurhomeDashboardController extends GetxController {
   int currentIndex = 0;
   var isOnceInAPlanActivity = false.obs;
 
-
-
   @override
   void onInit() {
     if (!Get.isRegistered<SheelaAIController>()) {
@@ -129,8 +127,8 @@ class QurhomeDashboardController extends GetxController {
       firstName = myProfile.result != null
           ? myProfile.result!.firstName!.capitalizeFirstofEach
           : '';
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     switch (currentSelectedIndex.value) {
@@ -194,8 +192,8 @@ class QurhomeDashboardController extends GetxController {
                 KIOSK_say_text: data[sayText_sheela] ?? ''.toString(),
               };
               CommonUtil().callQueueNotificationPostApi(reqJson);
-            } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
           } else if (PreferenceUtil.getIfQurhomeisAcive()) {
             redirectToSheelaScheduleAppointment();
@@ -249,8 +247,8 @@ class QurhomeDashboardController extends GetxController {
           }
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -293,8 +291,8 @@ class QurhomeDashboardController extends GetxController {
             (b?.createdOn?.compareTo(a?.createdOn ?? DateTime.now()) ?? 0));
 
         update(["newUpdate"]);
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         return;
       }
@@ -328,23 +326,29 @@ class QurhomeDashboardController extends GetxController {
           careGiverPatientListResult, patientAlertData);
       loadingPatientData.value = false;
       return responseBool;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
   }
 
-  Future<bool> caregiverEscalateAction(
-      PatientAlertData patientAlertData, String activityName,{String? notes}) async {
+  Future<bool> caregiverEscalateAction(PatientAlertData patientAlertData,
+      String activityName, bool escalateValue,
+      {String? notes}) async {
     try {
       loadingPatientData.value = true;
       var responseBool = await _apiProvider.careGiverEscalateAction(
-          patientAlertData, careGiverPatientListResult, activityName,patientAlert?.result?.healthOrganizationId??'',notes: notes);
+          patientAlertData,
+          careGiverPatientListResult,
+          activityName,
+          patientAlert?.result?.healthOrganizationId ?? '',
+          escalateValue,
+          notes: notes);
       loadingPatientData.value = false;
       return responseBool;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
