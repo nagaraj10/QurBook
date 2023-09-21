@@ -403,7 +403,10 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           child: Text(
                             COMMENTS,
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0),
+                                fontWeight: FontWeight.bold,
+                                fontSize: CommonUtil().isTablet!
+                                    ? tabFontTitle
+                                    : mobileFontTitle),
                           ),
                         ),
                         Spacer(),
@@ -454,7 +457,10 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                           padding: const EdgeInsets.only(left: 10.0),
                           child: Text(
                             strEmergency,
-                            style: TextStyle(fontSize: 16.0),
+                            style: TextStyle(
+                                fontSize: CommonUtil().isTablet!
+                                    ? tabHeader1
+                                    : mobileHeader1),
                           ),
                         ),
                         Switch(
