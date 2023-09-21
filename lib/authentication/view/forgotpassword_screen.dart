@@ -97,6 +97,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                         SizedBox(height: 10.0.h),
                         _resetbutton(),
+                        SizedBox(height: 10.0.h),
+                        _backbutton(),
                         SizedBox(height: height * .015),
                         Text(
                           CommonUtil.isUSRegion()?strUSsupportEmail:strINsupportEmail,
@@ -219,31 +221,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Widget _resetbutton() {
+  Widget _commonForgotPasswordButton(String textString, Function()? onTap) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
-          onTap: () async {
-            FocusScope.of(context).unfocus();
-            if (_ForgetPassKey.currentState!.validate()) {
-              _ForgetPassKey.currentState!.save();
-              LoaderClass.showLoadingDialog(context);
-              var logInModel = PatientForgotPasswordModel(
-                //userName: mobileController.text,
-                userName:
-                    '${_selectedDialogCountry.phoneCode}${mobileController.text}',
-                source: strSource,
-              );
-              final map = logInModel.toJson();
-              final response = await authViewModel.resetPassword(map);
-              _checkResponse(response);
-            } else {
-              setState(() {
-                _autoValidateBool = true;
-              });
-            }
-          },
+          onTap: onTap,
           child: Container(
             padding: EdgeInsets.symmetric(
               vertical: 15.0.sp,
@@ -260,18 +243,52 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
                   Color(CommonUtil().getMyPrimaryColor()),
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
-              strResetButton,
+              textString,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _backbutton() {
+    return _commonForgotPasswordButton(
+      strBackText,
+      () {
+        FocusScope.of(context).unfocus();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _resetbutton() {
+    return _commonForgotPasswordButton(
+      strResetButton,
+      () async {
+        FocusScope.of(context).unfocus();
+        if (_ForgetPassKey.currentState!.validate()) {
+          _ForgetPassKey.currentState!.save();
+          LoaderClass.showLoadingDialog(context);
+          var logInModel = PatientForgotPasswordModel(
+            //userName: mobileController.text,
+            userName:
+                '${_selectedDialogCountry.phoneCode}${mobileController.text}',
+            source: strSource,
+          );
+          final map = logInModel.toJson();
+          final response = await authViewModel.resetPassword(map);
+          _checkResponse(response);
+        } else {
+          setState(() {
+            _autoValidateBool = true;
+          });
+        }
+      },
     );
   }
 
