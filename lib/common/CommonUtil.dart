@@ -2058,6 +2058,19 @@ class CommonUtil {
       jsonData['deviceTypeCode'] = 'ANDROID';
     }
 
+    var additionalInfo = Map<String, dynamic>();
+    final packageInfo = await PackageInfo.fromPlatform();
+    additionalInfo["appVersion"] =
+        packageInfo.version + " + " + packageInfo.buildNumber;
+    if (packageInfo.packageName == appQurbookBundleId) {
+      additionalInfo['appType'] = 'Qurbook';
+    } else if (packageInfo.packageName == appQurhomeBundleId) {
+      additionalInfo['appType'] = 'Qurhome';
+    } else if (packageInfo.packageName == appQurdayBundleId) {
+      additionalInfo['appType'] = 'Qurday';
+    }
+    jsonData['additionalInfo'] = additionalInfo;
+
     final params = json.encode(jsonData);
 
     print('DEVICE TOKEN INPUT: $params');

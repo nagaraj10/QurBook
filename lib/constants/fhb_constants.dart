@@ -10,6 +10,10 @@ const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
 const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
+const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
+const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
+const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
+
 const String APP_NAME = 'QurBook';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
