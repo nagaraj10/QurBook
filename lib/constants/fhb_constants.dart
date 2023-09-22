@@ -427,6 +427,8 @@ const String strEscalateAlertMsg = "Alert escalated successfully";
 const String strDiscardMsg = 'Alert discarded successfully';
 const String PLEASE_ADD_COMMENTS = 'Please add comments';
 const String COMMENTS = 'Comments';
+const String strEmergency = 'Escalate this as emergency';
+
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
