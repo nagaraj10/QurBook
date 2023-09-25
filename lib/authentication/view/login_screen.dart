@@ -79,7 +79,6 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                           height: 120.0.h,
                           width: 120.0.h,
                         ),
-                        if (isSignInScreen) ...{
                           SizedBox(height: 20.0.h),
                           Text(
                             ENTER_MOB_NUM,
@@ -89,80 +88,14 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                             ),
                           ),
                           SizedBox(height: 20.0.h),
-                          Column(
-                            children: [
-                              _loginTextFields(
-                                TextFormField(
-                                  textCapitalization:
-                                  TextCapitalization.sentences,
-                                  style: TextStyle(
-                                    fontSize: 16.0.sp,
-                                  ),
-                                  autovalidate: _autoValidateBool,
-                                  maxLength: 10,
-                                  decoration: InputDecoration(
-                                    counterText: "",
-                                    prefixIcon: Container(
-                                      constraints: BoxConstraints(
-                                        maxWidth: 75.0.w,
-                                        minWidth: 75.0.w,
-                                      ),
-                                      child: CountryCodePickerPage(
-                                        isFromAuthenticationScreen: true,
-                                        selectedCountry: _selectedDialogCountry,
-                                        onValuePicked: (country) => setState(
-                                              () => _selectedDialogCountry = country,
-                                        ),
-                                      ),
-                                    ),
-                                    hintText: strNewPhoneHint,
-                                    labelText: strNumberHint,
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                        )),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                        )),
-                                  ),
-                                  validator: (value) {
-                                    return AuthenticationValidator()
-                                        .phoneValidation(value!, patternPhoneNew as String,
-                                        strPhoneCantEmpty);
-                                  },
-                                  controller: numberController,
-                                  onSaved: (value) {},
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20.0.h),
-                          _loginsavebutton(),
-                          SizedBox(height: 20.0.h),
-                        }else ...{
-                          Text(
-                            strCheckValidNumber,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 16.0.sp,
-                                color: Colors.red
-                            ),
-                          ),
-                          SizedBox(height: 20.0.h),
                           _loginTextFields(
                             TextFormField(
                               textCapitalization:
                               TextCapitalization.sentences,
-                              readOnly: true,
+                              readOnly:isSignInScreen?false:true,
                               enableInteractiveSelection: false,
                               style: TextStyle(
-                                  fontSize: 16.0.sp,
+                                fontSize: 16.0.sp,
                               ),
                               autovalidate: _autoValidateBool,
                               maxLength: 10,
@@ -181,7 +114,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                                 () =>
                                             _selectedDialogCountry = country,
                                           ),
-                                      isEnabled:false
+                                      isEnabled:isSignInScreen?true:false
                                   ),
                                 ),
                                 hintText: strNewPhoneHint,
@@ -210,11 +143,16 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                               keyboardType: TextInputType.number,
                             ),
                           ),
+                        if (isSignInScreen) ...{
+                          SizedBox(height: 20.0.h),
+                          _loginsavebutton(),
+                          SizedBox(height: 20.0.h),
+                        }else...{
                           SizedBox(height: 10.0.h),
                           retryButton(),
                           SizedBox(height: 20.0.h),
                           createAccountButton(),
-                        },
+                        }
                       ],
                     ),
                   ),
@@ -312,6 +250,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
             ));
           }
         } else {
+          CommonUtil.showCommonMsgDialog(msg: strCheckValidNumber);
           onChangeScreen(false);
         }
       } else {
