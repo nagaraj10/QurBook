@@ -452,7 +452,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         );
       } else {
         controller.isPlayPauseView.value = false;
-        controller.isFullScreenVideoPlayer.value = false;
+        controller.isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
         Get.to(
           VideoPlayerScreen(
             videoURL: (currentVideoLinkUrl??""),

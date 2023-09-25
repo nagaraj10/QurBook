@@ -850,7 +850,7 @@ class SheelaAIController extends GetxController {
                           );
                         } else {
                           isPlayPauseView.value = false;
-                          isFullScreenVideoPlayer.value = false;
+                          isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
                           Get.to(
                             VideoPlayerScreen(
                               videoURL: (button?.videoUrl??""),
