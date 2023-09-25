@@ -2060,16 +2060,16 @@ class CommonUtil {
 
     var additionalInfo = Map<String, dynamic>();
     final packageInfo = await PackageInfo.fromPlatform();
-    additionalInfo["appVersion"] =
+    additionalInfo[stringAppVersion] =
         packageInfo.version + " + " + packageInfo.buildNumber;
     if (packageInfo.packageName == appQurbookBundleId) {
-      additionalInfo['appType'] = 'Qurbook';
+      additionalInfo[strAppType] = strAppTypeQurbook;
     } else if (packageInfo.packageName == appQurhomeBundleId) {
-      additionalInfo['appType'] = 'Qurhome';
+      additionalInfo[strAppType] = strAppTypeQurhome;
     } else if (packageInfo.packageName == appQurdayBundleId) {
-      additionalInfo['appType'] = 'Qurday';
+      additionalInfo[strAppType] = strAppTypeQurday;
     }
-    jsonData['additionalInfo'] = additionalInfo;
+    jsonData[strAdditionalInfo] = additionalInfo;
 
     final params = json.encode(jsonData);
 

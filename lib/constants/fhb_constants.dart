@@ -13,6 +13,12 @@ const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
 const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
 const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
+const String strAdditionalInfo = 'additionalInfo';
+const String stringAppVersion = 'appVersion';
+const String strAppType = 'appType';
+const String strAppTypeQurbook = 'Qurbook';
+const String strAppTypeQurhome = 'Qurhome';
+const String strAppTypeQurday = 'Qurday';
 
 const String APP_NAME = 'QurBook';
 const String MOB_NUM = 'Mobile number';
