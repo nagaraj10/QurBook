@@ -17,6 +17,7 @@ import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:path_provider/path_provider.dart';
@@ -88,6 +89,9 @@ class SheelaAIController extends GetxController {
   bool isCallStartFromSheela = false;
 
   ChatSocketService _chatSocketService = new ChatSocketService();
+
+  Rx<bool> isFullScreenVideoPlayer = false.obs;
+  Rx<bool> isPlayPauseView = false.obs;
 
   @override
   void onInit() {
@@ -838,11 +842,21 @@ class SheelaAIController extends GetxController {
                         stopTTS();
                         String? videoId;
                         videoId = youtube.YoutubePlayer.convertUrlToId(button?.videoUrl);
-                        Get.to(
-                          MyYoutubePlayer(
-                            videoId: videoId,
-                          ),
-                        );
+                        if (videoId != null) {
+                          Get.to(
+                            MyYoutubePlayer(
+                              videoId: videoId,
+                            ),
+                          );
+                        } else {
+                          isPlayPauseView.value = false;
+                          isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
+                          Get.to(
+                            VideoPlayerScreen(
+                              videoURL: (button?.videoUrl??""),
+                            ),
+                          );
+                        }
                       }
                     }else{
                       startSheelaFromButton(
