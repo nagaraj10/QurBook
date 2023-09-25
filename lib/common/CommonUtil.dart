@@ -6907,6 +6907,63 @@ class CommonUtil {
     landingScreenController = Get.find();
     return landingScreenController;
   }
+
+  bool validYouTubeUrl(String content) {
+    RegExp regExp = RegExp(
+        r'((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?'
+    );
+    String? matches = regExp.stringMatch(content);
+    if (matches == null) {
+      return false; // Always returns here while the video URL is in the content paramter
+    }
+    final String youTubeUrl = matches;
+    return youTubeUrl.trim().isNotEmpty?true:false;
+  }
+
+
+  String durationFormatter(int milliSeconds) {
+    var seconds = milliSeconds ~/ 1000;
+    final hours = seconds ~/ 3600;
+    seconds = seconds % 3600;
+    var minutes = seconds ~/ 60;
+    seconds = seconds % 60;
+    final hoursString = hours >= 10
+        ? '$hours'
+        : hours == 0
+        ? '00'
+        : '0$hours';
+    final minutesString = minutes >= 10
+        ? '$minutes'
+        : minutes == 0
+        ? '00'
+        : '0$minutes';
+    final secondsString = seconds >= 10
+        ? '$seconds'
+        : seconds == 0
+        ? '00'
+        : '0$seconds';
+    final formattedTime =
+        '${hoursString == '00' ? '' : '$hoursString:'}$minutesString:$secondsString';
+    return formattedTime;
+  }
+
+  onBackVideoPlayerScreen() {
+    try {
+      if (CommonUtil().isTablet == true) {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight
+        ]);
+      } else {
+        SystemChrome.setPreferredOrientations(
+            [DeviceOrientation.portraitUp]);
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+
 }
 
 extension CapExtension on String {
