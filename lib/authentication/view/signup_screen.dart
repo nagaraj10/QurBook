@@ -155,6 +155,37 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                             height: 10.0.h,
                           ),
                         },
+                        if (widget.flag == 1) ...{
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontSize: 17.0.sp,
+                              color: Colors.black,
+                            ),
+                            children: [
+                              const TextSpan(
+                                text: '$strSignUpYourProvider ',
+                              ),
+                              TextSpan(
+                                text: '${widget.signInValidationModel?.result
+                                        ?.providerName ?? ''
+                                    } ',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextSpan(
+                                  text:
+                                      '$strSignUpProviderHasInvitedYouto ${CommonUtil.isUSRegion() ? 'OurBook' : 'OurHome'}',
+                                ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                            height: 25.0.h,
+                          ),
+                        },
                         Text(
                           widget.flag == 0
                               ? strSignUpText
