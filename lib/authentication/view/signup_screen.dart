@@ -177,7 +177,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               ),
                               TextSpan(
                                   text:
-                                      '$strSignUpProviderHasInvitedYouto ${CommonUtil.isUSRegion() ? 'OurBook' : 'OurHome'}',
+                                      '$strSignUpProviderHasInvitedYouto ${CommonUtil.isUSRegion() ? strQurHome : strAPP_NAME }',
                                 ),
                             ],
                           ),
