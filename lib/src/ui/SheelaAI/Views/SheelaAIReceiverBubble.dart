@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/AudioWidget.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -436,16 +437,30 @@ class SheelaAIReceiverBubble extends StatelessWidget {
   }
 
   playYoutube(var currentVideoLinkUrl) {
-    if (controller.isLoading.isTrue) {
-      return;
+    try {
+      if (controller.isLoading.isTrue) {
+        return;
+      }
+      controller.stopTTS();
+      String? videoId;
+      videoId = YoutubePlayer.convertUrlToId(currentVideoLinkUrl);
+      if (videoId != null) {
+        Get.to(
+          MyYoutubePlayer(
+            videoId: videoId,
+          ),
+        );
+      } else {
+        controller.isPlayPauseView.value = false;
+        controller.isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
+        Get.to(
+          VideoPlayerScreen(
+            videoURL: (currentVideoLinkUrl??""),
+          ),
+        );
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
-    controller.stopTTS();
-    String? videoId;
-    videoId = YoutubePlayer.convertUrlToId(currentVideoLinkUrl);
-    Get.to(
-      MyYoutubePlayer(
-        videoId: videoId,
-      ),
-    );
   }
 }
