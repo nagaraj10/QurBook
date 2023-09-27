@@ -144,11 +144,13 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
                           fontSize: 16.0.sp,
                         ),
                       ),
+                      if (widget.isEnabled ?? true)...{
                       Icon(
                         Icons.arrow_drop_down,
                         color: Colors.black54,
                         size: 18.0.sp,
                       ),
+                      },
                     ],
                   ),
                 )
