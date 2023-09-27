@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/AudioWidget.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -299,6 +300,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                       if (buttonData?.videoUrl != null &&
                           buttonData?.videoUrl != '') {
                         playYoutube(buttonData?.videoUrl);
+                      } else if (buttonData?.audioUrl != null &&
+                          buttonData?.audioUrl != '') {
+                        playAudioFile(buttonData?.audioUrl);
                       }
                     } else {
                       if (controller.isLoading.isTrue) {
@@ -441,15 +445,17 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       if (controller.isLoading.isTrue) {
         return;
       }
-      controller.stopTTS();
       String? videoId;
       videoId = YoutubePlayer.convertUrlToId(currentVideoLinkUrl);
+      controller.updateTimer(enable: false);
       if (videoId != null) {
         Get.to(
           MyYoutubePlayer(
             videoId: videoId,
           ),
-        );
+        )!.then((value) {
+          controller.updateTimer(enable: true);
+        });
       } else {
         controller.isPlayPauseView.value = false;
         controller.isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
@@ -457,8 +463,26 @@ class SheelaAIReceiverBubble extends StatelessWidget {
           VideoPlayerScreen(
             videoURL: (currentVideoLinkUrl??""),
           ),
-        );
+        )!.then((value) {
+          controller.updateTimer(enable: true);
+        });
       }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  playAudioFile(var audioURLLink) {
+    try {
+      if (controller.isLoading.isTrue) {
+        return;
+      }
+      controller.updateTimer(enable: false);
+      Get.to(AudioPlayerScreen(
+        audioUrl: (audioURLLink ?? ""),
+      ))!.then((value) {
+        controller.updateTimer(enable: true);
+      });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }

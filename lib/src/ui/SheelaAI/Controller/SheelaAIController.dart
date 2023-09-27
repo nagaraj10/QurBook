@@ -17,6 +17,7 @@ import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
@@ -92,6 +93,7 @@ class SheelaAIController extends GetxController {
 
   Rx<bool> isFullScreenVideoPlayer = false.obs;
   Rx<bool> isPlayPauseView = false.obs;
+  Rx<bool> isAudioScreenLoading = false.obs;
 
   @override
   void onInit() {
@@ -836,27 +838,10 @@ class SheelaAIController extends GetxController {
                     if (button?.btnRedirectTo == strRedirectToHelpPreview) {
                       if (button?.videoUrl != null &&
                           button?.videoUrl != '') {
-                        if (isLoading.isTrue) {
-                          return;
-                        }
-                        stopTTS();
-                        String? videoId;
-                        videoId = youtube.YoutubePlayer.convertUrlToId(button?.videoUrl);
-                        if (videoId != null) {
-                          Get.to(
-                            MyYoutubePlayer(
-                              videoId: videoId,
-                            ),
-                          );
-                        } else {
-                          isPlayPauseView.value = false;
-                          isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
-                          Get.to(
-                            VideoPlayerScreen(
-                              videoURL: (button?.videoUrl??""),
-                            ),
-                          );
-                        }
+                        playYoutube(button?.videoUrl);
+                      }else if (button?.audioUrl != null &&
+                          button?.audioUrl != '') {
+                        playAudioFile(button?.audioUrl);
                       }
                     }else{
                       startSheelaFromButton(
@@ -1160,6 +1145,63 @@ class SheelaAIController extends GetxController {
       isCallStartFromSheela = true;
       updateTimer(enable: false);
       regController.callSOSEmergencyServices(1);
+    }
+  }
+
+  playYoutube(var currentVideoLinkUrl) {
+    try {
+      if (isLoading.isTrue) {
+        return;
+      }
+      String? videoId;
+      videoId = youtube.YoutubePlayer.convertUrlToId(currentVideoLinkUrl);
+      updateTimer(enable: false);
+      if (videoId != null) {
+        Get.to(
+          MyYoutubePlayer(
+            videoId: videoId,
+          ),
+        )!.then((value) {
+          updateTimer(enable: true);
+        });
+      } else {
+        isPlayPauseView.value = false;
+        isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
+        Get.to(
+          VideoPlayerScreen(
+            videoURL: (currentVideoLinkUrl??""),
+          ),
+        )!.then((value) {
+          updateTimer(enable: true);
+        });
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  playAudioFile(var audioURLLink) {
+    try {
+      if (isLoading.isTrue) {
+        return;
+      }
+      updateTimer(enable: false);
+      Get.to(AudioPlayerScreen(
+        audioUrl: (audioURLLink ?? ""),
+      ))!.then((value) {
+        updateTimer(enable: true);
+      });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  onStopTTSWithDelay() async {
+    try {
+      await Future.delayed(Duration(milliseconds: 100));
+      stopTTS();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
