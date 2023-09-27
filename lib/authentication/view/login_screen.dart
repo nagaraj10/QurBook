@@ -114,7 +114,9 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                                 () =>
                                             _selectedDialogCountry = country,
                                           ),
-                                      isEnabled:isSignInScreen?true:false
+                                      isEnabled: isSignInScreen
+                                      ? (BASE_URL != prodUSURL)
+                                      : false,
                                   ),
                                 ),
                                 hintText: strNewPhoneHint,

@@ -298,6 +298,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                           () =>
                                               _selectedDialogCountry = country,
                                         ),
+                                        isEnabled: BASE_URL != prodUSURL,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
