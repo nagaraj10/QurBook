@@ -184,14 +184,13 @@ class SheelaAIController extends GetxController {
             strHomeScreen.toLowerCase()) {
           startTimer();
         }
-      } catch (e,stackTrace) {
+      } catch (e, stackTrace) {
         //gettingReposnseFromNative();
         if (kDebugMode)
           printError(
             info: e.toString(),
           );
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
   }
@@ -454,9 +453,9 @@ class SheelaAIController extends GetxController {
             Colors.black54);
       }
       isLoading.value = false;
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //need to handle errors
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       isLoading.value = false;
       conversations.removeLast();
@@ -479,9 +478,9 @@ class SheelaAIController extends GetxController {
         },
       );
       return true;
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //failed to play in the local tts
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -527,17 +526,15 @@ class SheelaAIController extends GetxController {
                   Get.toNamed(rt_Regimen);
                 }
               }
-            } catch (e,stackTrace) {
+            } catch (e, stackTrace) {
               //gettingReposnseFromNative();
-                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
           }
         }
-      } catch (e,stackTrace) {
+      } catch (e, stackTrace) {
         //failed to play in local tts
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     } else {
       String? textForPlaying;
@@ -569,8 +566,8 @@ class SheelaAIController extends GetxController {
             } else {
               result = await getGoogleTTSForText(currentButton.title);
             }
-          } catch (e,stackTrace) {
-                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
             result = await getGoogleTTSForText(currentButton.title);
           }
@@ -584,11 +581,11 @@ class SheelaAIController extends GetxController {
             .isNotEmpty) {
           textForPlaying =
               currentPlayingConversation!.ttsResponse!.payload!.audioContent;
-        } else if ((currentPlayingConversation!.text ?? '').isNotEmpty) {
+        } else if ((currentPlayingConversation?.text ?? '').isNotEmpty) {
           final result =
               await getGoogleTTSForText(currentPlayingConversation!.text);
-          if ((result!.payload!.audioContent ?? '').isNotEmpty) {
-            textForPlaying = result.payload!.audioContent;
+          if ((result?.payload?.audioContent ?? '').isNotEmpty) {
+            textForPlaying = result!.payload!.audioContent;
           }
         }
       }
@@ -622,8 +619,8 @@ class SheelaAIController extends GetxController {
               await player!.play(path, isLocal: true);
             }
           }
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           //failed play the audio
           print(e.toString());
@@ -682,8 +679,8 @@ class SheelaAIController extends GetxController {
       }
       final result = await Future.wait(apis);
       return conversation;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //Failed to get tts in conversation
       FlutterToast()
@@ -697,8 +694,8 @@ class SheelaAIController extends GetxController {
       final result = await getGoogleTTSForText(conversation.text);
       conversation.ttsResponse = result;
       return true;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -715,8 +712,8 @@ class SheelaAIController extends GetxController {
       final result = await getGoogleTTSForText(toSpeech);
       button.ttsResponse = result;
       return true;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -746,10 +743,9 @@ class SheelaAIController extends GetxController {
             'There is some issue with sheela,\n Please try after some time',
             Colors.black54);
       }
-    } catch (e,stackTrace) {
- 
-             CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-     print(e.toString());
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      print(e.toString());
       //need to handle failure in the api call for tts
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
@@ -1035,7 +1031,9 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  getSheelaBadgeCount({bool isNeedSheelaDialog = false,bool isFromQurHomeRegimen = false}) async {
+  getSheelaBadgeCount(
+      {bool isNeedSheelaDialog = false,
+      bool isFromQurHomeRegimen = false}) async {
     if (!(sheelaIconBadgeCount.value > 0)) {
       sheelaIconBadgeCount.value = 0;
     }
@@ -1054,19 +1052,20 @@ class SheelaAIController extends GetxController {
                 if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
                   isQueueDialogShowing.value = true;
-                  CommonUtil().dialogForSheelaQueueStable(
-                      Get.context!,
-                      unReadMsgCount:Provider.of<ChatSocketViewModel>(Get.context!,listen: false).chatTotalCount,
-                      onTapSheelaRemainders: (value) {
+                  CommonUtil().dialogForSheelaQueueStable(Get.context!,
+                      unReadMsgCount: Provider.of<ChatSocketViewModel>(
+                              Get.context!,
+                              listen: false)
+                          .chatTotalCount, onTapSheelaRemainders: (value) {
                     isQueueDialogShowing.value = false;
                     Get.back();
                     Get.toNamed(
                       rt_Sheela,
-                      arguments: value?SheelaArgument(
-                        rawMessage: sheelaQueueShowRemind,
-                      ):SheelaArgument(
-                        showUnreadMessage: true
-                      ),
+                      arguments: value
+                          ? SheelaArgument(
+                              rawMessage: sheelaQueueShowRemind,
+                            )
+                          : SheelaArgument(showUnreadMessage: true),
                     )?.then((value) {
                       ///Update Sheela remainder count
                       getSheelaBadgeCount(isNeedSheelaDialog: true);
@@ -1084,8 +1083,8 @@ class SheelaAIController extends GetxController {
           sheelaIconBadgeCount.value = 0;
         }
       });
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       sheelaIconBadgeCount.value = 0;
     }
@@ -1110,8 +1109,8 @@ class SheelaAIController extends GetxController {
           }
         });
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       printError(info: e.toString());
     }
