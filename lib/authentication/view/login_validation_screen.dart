@@ -336,7 +336,8 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
   }
 
 
-  Widget _loginBackButton() => AppPrimaryButton(text: strBackText, onTap:()=> Navigator.of(context).pop());
+  Widget _loginBackButton() => AppPrimaryButton(text: strBackText, onTap:()=> Navigator.of(context).pop(),
+  isSecondaryButton: true,);
 
   void _checkifItsGuest(PatientLogIn response) async {
     if (response.isSuccess!) {
