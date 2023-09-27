@@ -5,6 +5,7 @@ import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -30,11 +31,12 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
   bool _muted = false;
 
   bool _isPlayerReady = false;
+  SheelaAIController sheelaAIController = Get.find();
 
   @override
   void initState() {
     super.initState();
-
+    sheelaAIController.onStopTTSWithDelay();
     _controller = YoutubePlayerController(
       initialVideoId: widget.videoId!,
       flags: const YoutubePlayerFlags(
