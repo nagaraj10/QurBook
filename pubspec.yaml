@@ -40,7 +40,7 @@ dependencies:
   google_maps_flutter: ^2.0.6
   auto_size_text: ^3.0.0
   dio: ^4.0.0
-  flutter_sound: ^8.1.4
+  flutter_sound: ^8.3.9
   flutter_geocoder: ^0.2.2-nullsafety
   geolocator: ^7.2.0+1
   uuid: ^3.0.4
