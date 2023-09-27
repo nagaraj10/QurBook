@@ -165,6 +165,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   onValuePicked: (country) => setState(
                     () => _selectedDialogCountry = country,
                   ),
+                  isEnabled: BASE_URL != prodUSURL,
                 ),
               ),
               labelText: title,
