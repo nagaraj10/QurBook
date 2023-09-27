@@ -27,6 +27,7 @@ class _VideoPlayerState extends State<VideoPlayerScreen> {
   void initState() {
     try {
       super.initState();
+      sheelaAIController.onStopTTSWithDelay();
       videoPlayerController =
           VideoPlayerController.network((widget.videoURL ?? ""))
             ..addListener(() => setState(() {}))
