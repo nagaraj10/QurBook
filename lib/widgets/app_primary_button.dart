@@ -39,10 +39,11 @@ class AppPrimaryButton extends StatelessWidget {
         onTap:onTap,
         child: Container(
           height: height,
-          width:width?? 260.0.w,
+          constraints: BoxConstraints(
+            minWidth: width??260.0.w,
+          ),
           padding:padding??
           EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
-          alignment: Alignment.center,
           decoration:decoration??
           BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
