@@ -11,6 +11,7 @@ const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String APP_NAME = 'QurHome';
+const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
 const String SignInOtpText = 'We will send you an one time password';
@@ -425,7 +426,6 @@ const String PLEASE_ADD_COMMENTS = 'Please add comments';
 const String COMMENTS = 'Comments';
 const String strEmergency = 'Escalate this as emergency';
 
-
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
 const String CSR_DISCOUNT = 'CSR_DISCOUNT';
@@ -835,7 +835,7 @@ const String primary_chat = '(Primary)';
 const String primary_provider = 'Primary';
 
 //patientAlert
-const String escalated ='Escalated';
+const String escalated = 'Escalated';
 
 const String STR_PROVIDERDOCUMENTS = 'Provider Documents';
 const String STR_PRESCRIPTION = 'Prescription';
@@ -865,7 +865,8 @@ const String SearchingForDevices = 'Searching for devices';
 const String deviceConnected = 'Device connected';
 
 const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
-const String activity_completed_regimen = 'The activity has been already completed';
+const String activity_completed_regimen =
+    'The activity has been already completed';
 
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
@@ -884,14 +885,13 @@ const double tabHeader3 = 18.0;
 const double mobileHeader3 = 12.0;
 
 const double tabHeader4 = 16.0;
-const double mobileHeader4= 11.0;
+const double mobileHeader4 = 11.0;
 
 const double imageTabHeader = 70.0;
 const double imageMobileHeader = 40.0;
 
 const double imageTabIcon = 70.0;
 const double imageMobileIcon = 60.0;
-
 
 const double imageProfileTabHeader = 65.0;
 const double imageProfileMobileHeader = 40.0;
@@ -915,8 +915,8 @@ Future<void> fbaLog({String? eveName, eveParams}) async {
               'navigationPage': 'Appointment page',
               'ns_type': 'appointment_list'
             });
-  } catch (e,stackTrace) {
+  } catch (e, stackTrace) {
     print(e);
-    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
 }
