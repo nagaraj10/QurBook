@@ -42,15 +42,16 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
 
   setUpAudios() async {
     try {
-      flutterSound!.openAudioSession().then(
+      flutterSound?.openAudioSession().then(
         (value) {
-          flutterSound!.setSubscriptionDuration(
+          flutterSound?.setSubscriptionDuration(
             Duration(
               seconds: 1,
             ),
           );
         },
       );
+      onStartPlayerPressed();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -60,7 +61,7 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
   void dispose() {
     try {
       stopPlayer();
-      flutterSound!.closeAudioSession();
+      flutterSound?.closeAudioSession();
       flutterSound = null;
       sheelaAIController.isAudioScreenLoading.value = false;
       super.dispose();
@@ -157,7 +158,7 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
                           max: maxDuration,
                           onChanged: (value) async {
                             try {
-                              await flutterSound!.seekToPlayer(
+                              await flutterSound?.seekToPlayer(
                                 Duration(
                                   seconds: value.round(),
                                 ),
@@ -192,7 +193,7 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   onStartPlayerPressed() {
-    return flutterSound!.playerState == PlayerState.isPaused
+    return flutterSound?.playerState == PlayerState.isPaused
         ? pausePlayer()
         : startPlayer();
   }
@@ -201,16 +202,16 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
     sheelaAIController.isAudioScreenLoading.value = true;
     isPlaying = true;
     try {
-      final DuarationOfFile = await (flutterSound!.startPlayer(
+      final DuarationOfFile = await (flutterSound?.startPlayer(
         fromURI: (widget.audioUrl ?? ''),
         whenFinished: () {
           stopPlayer();
         },
       ));
       maxDuration = DuarationOfFile!.inSeconds.toDouble();
-      await flutterSound!.setVolume(1.0);
+      await flutterSound?.setVolume(1.0);
       sheelaAIController.isAudioScreenLoading.value = false;
-      _playerSubscription = flutterSound!.onProgress!.listen(
+      _playerSubscription = flutterSound?.onProgress!.listen(
         (e) {
           if (e != null) {
             setState(
@@ -244,19 +245,19 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   onPausePlayerPressed() {
-    return flutterSound!.playerState == PlayerState.isPlaying ||
-            flutterSound!.playerState == PlayerState.isPaused
+    return flutterSound?.playerState == PlayerState.isPlaying ||
+            flutterSound?.playerState == PlayerState.isPaused
         ? pausePlayer()
         : startPlayer();
   }
 
   void pausePlayer() async {
     try {
-      if (flutterSound!.playerState == PlayerState.isPaused) {
-        await flutterSound!.resumePlayer();
+      if (flutterSound?.playerState == PlayerState.isPaused) {
+        await flutterSound?.resumePlayer();
         isPlaying = true;
       } else {
-        await flutterSound!.pausePlayer();
+        await flutterSound?.pausePlayer();
         isPlaying = false;
       }
       setState(() {});
@@ -267,15 +268,15 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   onStopPlayerPressed() {
-    return flutterSound!.playerState == PlayerState.isPlaying ||
-            flutterSound!.playerState == PlayerState.isPaused
+    return flutterSound?.playerState == PlayerState.isPlaying ||
+            flutterSound?.playerState == PlayerState.isPaused
         ? stopPlayer()
         : null;
   }
 
   void stopPlayer() async {
     try {
-      await flutterSound!.stopPlayer();
+      await flutterSound?.stopPlayer();
       if (_playerSubscription != null) {
         await _playerSubscription!.cancel();
         _playerSubscription = null;
