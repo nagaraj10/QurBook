@@ -67,6 +67,7 @@ class SheelaResponse {
   String? audioFile;
   bool? playAudioInit = false;
   bool? isButtonNumber;
+  String? pronunciationText;
 
   SheelaResponse(
       {this.recipientId,
@@ -99,7 +100,8 @@ class SheelaResponse {
       this.imageURLS,
       this.audioFile,
       this.playAudioInit,
-      this.isButtonNumber});
+      this.isButtonNumber,
+      this.pronunciationText});
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     try {
@@ -155,6 +157,7 @@ class SheelaResponse {
             });
             buttons = buttonsList;
           }
+      pronunciationText = (json['pronunciationText'] ?? '');
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -193,6 +196,7 @@ class SheelaResponse {
     data['sessionId'] = this.sessionId;
     data['relationshipId'] = this.relationshipId;
     data['IsButtonNumber'] = this.isButtonNumber;
+    data['pronunciationText'] = this.pronunciationText;
     return data;
   }
 }

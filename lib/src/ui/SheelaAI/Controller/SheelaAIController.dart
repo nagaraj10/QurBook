@@ -497,7 +497,9 @@ class SheelaAIController extends GetxController {
         if ((currentPlayingConversation!.text ?? '').isNotEmpty) {
           currentPlayingConversation!.isPlaying.value = true;
           final status = await playUsingLocalTTSEngineFor(
-              currentPlayingConversation!.text);
+              (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                  ? getPronunciationText(currentPlayingConversation)
+                  : (currentPlayingConversation!.text)));
           if (status &&
               (currentPlayingConversation!.buttons ?? []).isNotEmpty) {
             for (final button in currentPlayingConversation!.buttons!) {
@@ -583,7 +585,9 @@ class SheelaAIController extends GetxController {
               currentPlayingConversation!.ttsResponse!.payload!.audioContent;
         } else if ((currentPlayingConversation?.text ?? '').isNotEmpty) {
           final result =
-              await getGoogleTTSForText(currentPlayingConversation!.text);
+              await getGoogleTTSForText((getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                  ? getPronunciationText(currentPlayingConversation)
+                  : (currentPlayingConversation!.text)));
           if ((result?.payload?.audioContent ?? '').isNotEmpty) {
             textForPlaying = result!.payload!.audioContent;
           }
@@ -691,7 +695,9 @@ class SheelaAIController extends GetxController {
   Future<bool> getGoogleTTSForConversationForMessage(
       SheelaResponse conversation) async {
     try {
-      final result = await getGoogleTTSForText(conversation.text);
+      final result = await getGoogleTTSForText((getPronunciationText(conversation).trim().isNotEmpty
+          ? getPronunciationText(conversation)
+          :(conversation.text)));
       conversation.ttsResponse = result;
       return true;
     } catch (e, stackTrace) {
@@ -1198,5 +1204,10 @@ class SheelaAIController extends GetxController {
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
+  }
+
+  String getPronunciationText(SheelaResponse? currentPlayingConversation) {
+    return CommonUtil()
+        .validString(currentPlayingConversation!.pronunciationText ?? '');
   }
 }
