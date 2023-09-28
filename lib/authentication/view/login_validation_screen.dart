@@ -5,6 +5,7 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/model/Country.dart';
+import 'package:myfhb/widgets/app_primary_button.dart';
 import '../model/patientlogin_model.dart';
 import '../constants/constants.dart';
 import 'authentication_validator.dart';
@@ -238,7 +239,15 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
 
                         SizedBox(height: 20.0.h),
                         if (widget.flag == 0) ...{
-                          _loginsavebutton(),
+                          AppPrimaryButton(text: strLoginText, onTap: () {
+                            AuthenticationValidator().checkNetwork().then((intenet) {
+                              if (intenet != null && intenet) {
+                                _savepatientdetails();
+                              } else {
+                                toast.getToast(strNetworkIssue, Colors.red);
+                              }
+                            });
+                          },)
                         },
                         SizedBox(height: 20.0.h),
                         _loginBackButton(),
@@ -326,64 +335,9 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
         margin: EdgeInsets.symmetric(vertical: 2), child: textFormField);
   }
 
-  Widget _loginsavebutton() {
-    return commonLoginButton(
-      strLoginText,
-      () {
-        AuthenticationValidator().checkNetwork().then((intenet) {
-          if (intenet != null && intenet) {
-            _savepatientdetails();
-          } else {
-            toast.getToast(strNetworkIssue, Colors.red);
-          }
-        });
-      },
-    );
-  }
 
-  Widget _loginBackButton() {
-    return commonLoginButton(
-      strBackText,
-      () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  Widget commonLoginButton(String textString, Function()? onTap) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: onTap,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 15.0.sp,
-              horizontal: 15.0.sp,
-            ),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.shade200,
-                      offset: Offset(2, 4),
-                      blurRadius: 5,
-                      spreadRadius: 2)
-                ],
-                gradient: LinearGradient(end: Alignment.centerRight, colors: [
-                  Color(CommonUtil().getMyPrimaryColor()),
-                  Color(CommonUtil().getMyGredientColor())
-                ])),
-            child: Text(
-              textString,
-              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  Widget _loginBackButton() => AppPrimaryButton(text: strBackText, onTap:()=> Navigator.of(context).pop(),
+  isSecondaryButton: true,);
 
   void _checkifItsGuest(PatientLogIn response) async {
     if (response.isSuccess!) {
