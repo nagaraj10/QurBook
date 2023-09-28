@@ -740,6 +740,7 @@ class _MyFamilyState extends State<MyFamily> {
                                   onValuePicked: (country) => setState(
                                     () => _selectedDialogCountry = country,
                                   ),
+                                  isEnabled: BASE_URL != prodUSURL,
                                 ),
                                 _ShowMobileNoTextField()
                               ],

@@ -178,7 +178,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               ),
                               TextSpan(
                                   text:
-                                      '$strSignUpProviderHasInvitedYouto ${CommonUtil.isUSRegion() ? 'OurBook' : 'OurHome'}',
+                                      '$strSignUpProviderHasInvitedYouto ${CommonUtil.isUSRegion() ? strQurHome : strAPP_NAME }',
                                 ),
                             ],
                           ),
@@ -299,6 +299,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                           () =>
                                               _selectedDialogCountry = country,
                                         ),
+                                        isEnabled: BASE_URL != prodUSURL,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(

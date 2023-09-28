@@ -385,6 +385,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
   void showEscalateNotes(
       PatientAlertData patientAlertData, String activityName) {
     TextEditingController controller = TextEditingController();
+    isEmergencyToggleEnabled = false;
     showDialog(
         context: context,
         builder: (__) {

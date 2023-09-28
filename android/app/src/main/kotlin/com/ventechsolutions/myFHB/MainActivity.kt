@@ -2623,6 +2623,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                 Log.d("CLOSE_SHEELA_DIALOG", "CLOSE_SHEELA_DIALOG")
                 try {
                     close.performClick()
+                    countDownTimerDialog.dismiss()
                     result.success("success")
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
