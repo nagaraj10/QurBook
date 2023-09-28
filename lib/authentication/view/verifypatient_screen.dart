@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/widgets/app_primary_button.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../constants/constants.dart';
@@ -249,9 +250,9 @@ class _VerifyPatientState extends State<VerifyPatient>
                       //         from == strFromVerifyFamilyMember)
                       //     ? _getResendForSignIN()
                       //     : Container(),
-                      SizedBox(height: 10.0.h),
-                      _resetButton(),
-                      SizedBox(height: 10.0.h),
+                      SizedBox(height: 20.0.h),
+                      _verifyButton(),
+                      SizedBox(height:20.0.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -284,40 +285,25 @@ class _VerifyPatientState extends State<VerifyPatient>
                       Visibility(
                         visible: otpViewModel!.timerSeconds == 0,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(height: 10.0.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                RaisedGradientButton(
-                                  gradient: LinearGradient(colors: [
-                                    Color(CommonUtil().getMyPrimaryColor()),
-                                    Color(CommonUtil().getMyGredientColor()),
-                                  ]),
-                                  width: 280.0.w,
-                                  onPressed: otpViewModel!.timerSeconds == 0
-                                      ? () {
-                                          otpViewModel?.stopOTPTimer();
-                                          otpViewModel?.startTimer();
-                                          if (from == strFromSignUp) {
-                                            _resendOtpDetails();
-                                          } else if (widget.dataForResendOtp !=
-                                                  null ||
-                                              from ==
-                                                  strFromVerifyFamilyMember) {
-                                            _startTimer();
-                                          }
-                                        }
-                                      : null,
-                                  child: Text(
-                                    strresendOtp,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.0.sp,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              ],
+                            AppPrimaryButton(text:strresendOtp, onTap:otpViewModel!.timerSeconds == 0
+                                ? () {
+                              otpViewModel?.stopOTPTimer();
+                              otpViewModel?.startTimer();
+                              if (from == strFromSignUp) {
+                                _resendOtpDetails();
+                              } else if (widget.dataForResendOtp !=
+                                  null ||
+                                  from ==
+                                      strFromVerifyFamilyMember) {
+                                _startTimer();
+                              }
+                            }
+                                :()=>{},
+                                textSize: 15.0.sp,
+                              isSecondaryButton: true,
                             ),
                             Visibility(
                               visible: from != strFromVerifyFamilyMember,
@@ -325,38 +311,26 @@ class _VerifyPatientState extends State<VerifyPatient>
                             ),
                             Visibility(
                               visible: from != strFromVerifyFamilyMember,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  RaisedGradientButton(
-                                    gradient: LinearGradient(colors: [
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                      Color(CommonUtil().getMyGredientColor()),
-                                    ]),
-                                    width: 280.0.w,
-                                    onPressed: otpViewModel!.timerSeconds == 0
-                                        ? () {
-                                            otpViewModel?.stopOTPTimer();
-                                            otpViewModel!.confirmViaCall(
-                                              phoneNumber:
-                                                  widget.PhoneNumber ?? '',
-                                              onOtpReceived: (otpCode) {
-                                                _verifyDetails(
-                                                  otpCode: otpCode,
-                                                );
-                                              },
-                                            );
-                                          }
-                                        : null,
-                                    child: Text(
-                                      strVerifyCall,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15.0.sp,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                ],
+                              child: Align(
+                                child: AppPrimaryButton(
+                                onTap: otpViewModel!.timerSeconds == 0
+                                    ? () {
+                                  otpViewModel?.stopOTPTimer();
+                                  otpViewModel!.confirmViaCall(
+                                    phoneNumber:
+                                    widget.PhoneNumber ?? '',
+                                    onOtpReceived: (otpCode) {
+                                      _verifyDetails(
+                                        otpCode: otpCode,
+                                      );
+                                    },
+                                  );
+                                }
+                                    : (){},
+                                    text:strVerifyCall,
+                                  isSecondaryButton: true,
+                                    textSize: 15.0.sp,
+                                ),
                               ),
                             ),
                           ],
@@ -506,42 +480,17 @@ class _VerifyPatientState extends State<VerifyPatient>
         ));
   }
 
-  Widget _resetButton() {
-    return InkWell(
-      onTap: () {
-        AuthenticationValidator().checkNetwork().then((intenet) {
-          if (intenet != null && intenet) {
-            _verifyDetails();
-          } else {
-            toast.getToast(strNetworkIssue, Colors.red);
-          }
-        });
-      },
-      child: Container(
-        width: 1.sw,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(begin: Alignment.centerLeft, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
-              Color(CommonUtil().getMyPrimaryColor()),
-              Color(CommonUtil().getMyGredientColor())
-            ])),
-        child: Text(
-          strVerify,
-          style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
-        ),
-      ),
-    );
+  Widget _verifyButton() {
+    return AppPrimaryButton(text:strVerify, onTap: (){
+      AuthenticationValidator().checkNetwork().then((intenet) {
+        if (intenet != null && intenet) {
+          _verifyDetails();
+        } else {
+          toast.getToast(strNetworkIssue, Colors.red);
+        }
+      });
+    });
+
   }
 
   _verifyDetails({String? otpCode}) async {

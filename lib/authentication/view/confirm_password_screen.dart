@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/widgets/app_primary_button.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../constants/constants.dart';
 import '../model/confirm_password_model.dart';
@@ -296,41 +297,26 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     SizedBox(height: 10.0.h),
                     Visibility(
                       visible: otpViewModel!.timerSeconds == 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RaisedGradientButton(
-                            gradient: LinearGradient(colors: [
-                              Color(CommonUtil().getMyPrimaryColor()),
-                              Color(CommonUtil().getMyGredientColor()),
-                            ]),
-                            width: 200.0.w,
-                            onPressed: otpViewModel!.timerSeconds == 0
-                                ? () {
-                                    if (_ChangePasswordKey.currentState!
-                                        .validate()) {
-                                      otpViewModel?.stopOTPTimer();
-                                      otpViewModel!.confirmViaCall(
-                                        phoneNumber: widget.userName ?? '',
-                                        onOtpReceived: (otpCode) {
-                                          _verifyDetails(
-                                            otpCode: otpCode,
-                                          );
-                                        },
-                                      );
-                                    }
-                                  }
-                                : null,
-                            child: Text(
-                              strVerifyCall,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.0.sp,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: AppPrimaryButton(
+                        text:strVerifyCall,
+                        isSecondaryButton: true,
+                        onTap:otpViewModel!.timerSeconds == 0
+                            ? () {
+                          if (_ChangePasswordKey.currentState!
+                              .validate()) {
+                            otpViewModel?.stopOTPTimer();
+                            otpViewModel!.confirmViaCall(
+                              phoneNumber: widget.userName ?? '',
+                              onOtpReceived: (otpCode) {
+                                _verifyDetails(
+                                  otpCode: otpCode,
+                                );
+                              },
+                            );
+                          }
+                        }
+                            :(){},
+                      )
                     ),
                   ],
                 ),
@@ -356,12 +342,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
 
   
   Widget _backbutton() {
-    return _commonConfirmPasswordButton(
-      strBackText,
-      () {
+    return AppPrimaryButton(
+      text:strBackText,
+      onTap: (){
         FocusScope.of(context).unfocus();
         Navigator.of(context).pop();
       },
+      isSecondaryButton: true,
     );
   }
 
@@ -401,9 +388,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   }
 
   Widget _changePassword() {
-    return _commonConfirmPasswordButton(strChangeButtonText, () {
+    return AppPrimaryButton(onTap:(){
       _verifyDetails();
-    });
+    },
+      text:strChangeButtonText ,
+    );
   }
 
   _verifyDetails({String? otpCode}) async {
