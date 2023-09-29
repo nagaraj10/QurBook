@@ -7036,6 +7036,83 @@ class CommonUtil {
     }
   }
 
+  static Future<bool> askPermissionForLocationBleScan() async {
+    final location = await Permission.location.request();
+    final bluetoothScan = await Permission.bluetoothScan.request();
+    if (location == PermissionStatus.granted &&
+        bluetoothScan == PermissionStatus.granted) {
+      return true;
+    } else {
+      _handleInvalidPermissionsLocationBleScan(
+          location, bluetoothScan);
+      return false;
+    }
+  }
+  static void _handleInvalidPermissionsLocationBleScan(
+      PermissionStatus locationStatus,
+      PermissionStatus bluetoothScanStatus,
+      ) {
+    if (locationStatus == PermissionStatus.denied &&
+        bluetoothScanStatus == PermissionStatus.denied) {
+      print("Access to location and ble scan denied");
+    } else if (locationStatus == PermissionStatus.permanentlyDenied &&
+        bluetoothScanStatus == PermissionStatus.permanentlyDenied) {
+      print("Access to location and ble scan denied permanently");
+    }
+  }
+
+  static Future<bool> askForStoragePermission() async {
+    PermissionStatus storage = await Permission.storage.request();
+    if (storage == PermissionStatus.granted) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> handleLocationBleScanConnect() async {
+    final status = await CommonUtil.askPermissionForLocationBleScan();
+    if (!status) {
+      FlutterToast toastToShow = FlutterToast();
+      toastToShow.getToast(
+        strLocationBlePermission,
+        Colors.red,
+      );
+    }
+  }
+
+  Future<void> askPermssionLocationBleScan() async {
+    try {
+      var location = await Permission.location.status;
+      var bluetoothScan = await Permission.bluetoothScan.status;
+      if (location.isDenied ||
+          bluetoothScan.isDenied) {
+        await CommonUtil().handleLocationBleScanConnect();
+      } else {}
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Future<void> askAllPermissions() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.bluetoothConnect,
+      Permission.bluetoothScan,
+      Permission.location,
+      Permission.microphone,
+      Permission.camera,
+      Permission.storage,
+      //Permission.notification, // integrated native permission for push notificaion
+    ].request();
+    /*if (statuses[Permission.bluetoothConnect]!.isGranted &&
+          statuses[Permission.bluetoothScan]!.isGranted &&
+          statuses[Permission.location]!.isGranted &&
+          statuses[Permission.microphone]!.isGranted &&
+          statuses[Permission.camera]!.isGranted &&
+          statuses[Permission.storage]!.isGranted &&
+          statuses[Permission.notification]!.isGranted) {}*/
+  }
+
 
 }
 

@@ -162,8 +162,16 @@ Future<void> main() async {
       await FlutterDownloader.initialize(
           debug: true // optional: set false to disable printing logs to console
       );
-      await Permission.storage.request();
+      //await Permission.storage.request();
    //   await Permission.manageExternalStorage.request();
+    }
+
+    try {
+      CommonUtil().askAllPermissions().then((value) {
+        CommonUtil().askPermissionForNotification();
+      });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     // check if the app install on first time
@@ -320,11 +328,11 @@ class _MyFHBState extends State<MyFHB> {
     CheckForShowingTheIntroScreens();
     chatViewModel.setCurrentChatRoomID('none');
     super.initState();
-    CommonUtil.askPermissionForCameraAndMic().then((value) {
+    /*CommonUtil.askPermissionForCameraAndMic().then((value) {
       CommonUtil.askPermissionForLocation().then((value) {
         CommonUtil().askPermissionForNotification();
       });
-    });
+    });*/
     getMyRoute();
     _enableTimer();
     final res = apiBaseHelper.updateLastVisited();
