@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -128,6 +129,9 @@ class _VitalsListState extends State<VitalsList> {
       FocusManager.instance.primaryFocus!.unfocus();
       mInitialTime = DateTime.now();
       //onInit();
+      if(Platform.isAndroid){
+        CommonUtil().askPermssionLocationBleScan();
+      }
       super.initState();
     } catch (e,stackTrace) {
             CommonUtil().appLogs(message: e,stackTrace:stackTrace);

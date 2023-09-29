@@ -62,7 +62,7 @@ import com.gsh.weightscale.api.WeightData
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure
 import com.ventechsolutions.myFHB.bloodpressure.controller.BluetoothPowerController
 import com.ventechsolutions.myFHB.bloodpressure.controller.ScanController
-import com.ventechsolutions.myFHB.bloodpressure.controller.SessionController
+/*import com.ventechsolutions.myFHB.bloodpressure.controller.SessionController*/
 import com.ventechsolutions.myFHB.bloodpressure.controller.util.AppLog
 import com.ventechsolutions.myFHB.bloodpressure.model.entity.DiscoveredDevice
 import com.ventechsolutions.myFHB.bloodpressure.model.entity.SessionData
@@ -89,9 +89,9 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import jp.co.ohq.androidcorebluetooth.CBConfig.CreateBondOption
 import jp.co.ohq.androidcorebluetooth.CBConfig.RemoveBondOption
 import jp.co.ohq.ble.OHQConfig
-import jp.co.ohq.ble.OHQDeviceManager
+/*import jp.co.ohq.ble.OHQDeviceManager
 import jp.co.ohq.ble.OHQDeviceManager.CompletionBlock
-import jp.co.ohq.ble.OHQDeviceManager.ScanObserverBlock
+import jp.co.ohq.ble.OHQDeviceManager.ScanObserverBlock*/
 import jp.co.ohq.ble.enumerate.*
 import jp.co.ohq.utility.Bundler
 import jp.co.ohq.utility.Types
@@ -116,7 +116,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import kotlin.collections.ArrayList
 
-class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
+class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     BluetoothPowerController.Listener {
     private var wowGoDeviceList: ArrayList<String>?=null
     private var wowGoFunctionIndex=0
@@ -258,7 +258,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
 
     var bleName: String? = null
 
-    private var mOHQDeviceManager: OHQDeviceManager? = null
+    //private var mOHQDeviceManager: OHQDeviceManager? = null
 
     private val ARG_MODE = "ARG_MODE"
     private val ARG_ADDRESS = "ARG_ADDRESS"
@@ -266,7 +266,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     private val ARG_PARTIAL_HISTORY_DATA = "ARG_PARTIAL_HISTORY_DATA"
 
     private val CONNECTION_WAIT_TIME: Long = 60000
-    private var mSessionController: SessionController? = null
+    //private var mSessionController: SessionController? = null
 
     private var mAddress = ""
 
@@ -311,7 +311,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setAutoInitEnabled(true)
-        OHQDeviceManager.init(applicationContext, this)
+        //OHQDeviceManager.init(applicationContext, this)
         registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 //            val alarmManager = ContextCompat.getSystemService(context, AlarmManager::class.java)
@@ -457,7 +457,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             mOption[OHQSessionOptionKey.AllowControlOfReadingPositionToMeasurementRecordsKey] = true
         }*/
 
-        mSessionController = SessionController(this, null)
+        //mSessionController = SessionController(this, null)
 
         stopCriticalAlertServices()
 
@@ -2509,7 +2509,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             }
         }
 
-        MethodChannel(
+        /*MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             BP_CONNECT_CANCEL
         ).setMethodCallHandler { call, result ->
@@ -2522,7 +2522,7 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
                     Log.d("Catch", "" + e.toString())
                 }
             }
-        }
+        }*/
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -2888,28 +2888,28 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
             AppLog.e("Already scanning.")
             return
         }*/
-        mOHQDeviceManager = OHQDeviceManager.sharedInstance()
+        //mOHQDeviceManager = OHQDeviceManager.sharedInstance()
         val scanFilter: MutableList<OHQDeviceCategory> = ArrayList()
         //if (null != filteringDeviceCategory) {
         //AppLog.d("filteringDeviceCategory:$filteringDeviceCategory")
         scanFilter.add(OHQDeviceCategory.BloodPressureMonitor)
         //}
-        mOHQDeviceManager!!.scanForDevicesWithCategories(
+        /*mOHQDeviceManager!!.scanForDevicesWithCategories(
             scanFilter,
             ScanObserverBlock { deviceInfo ->
-                /*mHandler.post(Runnable { _onScan(deviceInfo) })*/
+                *//*mHandler.post(Runnable { _onScan(deviceInfo) })*//*
                 mOHQDeviceManager!!.stopScan()
                 Log.e("Scan List response", "" + deviceInfo.toString())
 
                 parseScanListJson(deviceInfo)
 
             },
-            CompletionBlock { reason -> /*mHandler.post(Runnable { _onScanCompletion(reason) })*/
+            CompletionBlock { reason -> *//*mHandler.post(Runnable { _onScanCompletion(reason) })*//*
                 Log.e(
                     "reason: ",
                     "" + reason.toString()
                 )
-            })
+            })*/
         //mIsScanning = true
         //mDiscoveredDevices.clear()
         /*mHandler.postDelayed(
@@ -2977,10 +2977,10 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
     }
 
     private fun registerBpDevice() {
-        mSessionController!!.setConfig(getConfig(applicationContext))
+        /*mSessionController!!.setConfig(getConfig(applicationContext))
         mOption[OHQSessionOptionKey.ReadMeasurementRecordsKey] = true
         mOption[OHQSessionOptionKey.ConnectionWaitTimeKey] = CONNECTION_WAIT_TIME
-        mSessionController!!.startSession(mAddress, mOption)
+        mSessionController!!.startSession(mAddress, mOption)*/
     }
 
     /*private fun transferBpData() {
@@ -4395,12 +4395,12 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         )
     }
 
-    override fun onConnectionStateChanged(connectionState: OHQConnectionState) {
+    /*override fun onConnectionStateChanged(connectionState: OHQConnectionState) {
         AppLog.vMethodIn(connectionState.name)
         //mListener!!.onConnectionStateChanged(connectionState)
-    }
+    }*/
 
-    override fun onSessionComplete(sessionData: SessionData) {
+    /*override fun onSessionComplete(sessionData: SessionData) {
         AppLog.vMethodIn(sessionData.completionReason!!.name)
         mSessionAddress = null
         mSessionData = sessionData
@@ -4437,15 +4437,15 @@ class MainActivity : FlutterFragmentActivity(), SessionController.Listener,
         }
 
 
-        /*if (sessionData.completionReason!!.name == "Disconnected") {
+        *//*if (sessionData.completionReason!!.name == "Disconnected") {
             if (sessionData.measurementRecords!!.size > 0) {
 
             } else {
                 transferBpData()
             }
-        }*/
+        }*//*
         //mListener!!.onSessionComplete(mSessionData)
-    }
+    }*/
 
     /*override fun onDetailedStateChanged(newState: OHQDetailedState) {
         TODO("Not yet implemented")
