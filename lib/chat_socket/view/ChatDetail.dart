@@ -1668,10 +1668,16 @@ class ChatState extends State<ChatDetail> {
                                     bottomRight: Radius.circular(25),
                                   ),
                                 ),
-                                child: RichText(
-                                  text: TextSpan(
-                                      style: TextStyle(color: Colors.white),
-                                      children: textSpanList),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                          style: TextStyle(color: Colors.white),
+                                          children: textSpanList),
+                                    ),
+                                    isSentViaSheelaTextWidget(chatList,Colors.white),
+                                  ],
                                 ),
                               ),
                             )
@@ -1802,17 +1808,23 @@ class ChatState extends State<ChatDetail> {
                                             child: Container(
                                               padding: EdgeInsets.all(10.0),
                                               width: 1.sw / 1.5,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    child: fhbBasicWidget
-                                                        .getAudioWidgetForChat(
-                                                            chatList.messages
-                                                                ?.content),
-                                                  )
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Expanded(
+                                                        child: fhbBasicWidget
+                                                            .getAudioWidgetForChat(
+                                                                chatList.messages
+                                                                    ?.content),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  isSentViaSheelaTextWidget(chatList, Colors.black),
                                                 ],
                                               ),
                                             ),
@@ -2578,6 +2590,19 @@ class ChatState extends State<ChatDetail> {
           fontFamily: font_poppins, fontSize: 12.0.sp, color: Colors.white),
     );
   }
+
+  Widget isSentViaSheelaTextWidget(ChatHistoryResult chatList, Color color) =>
+      (chatList?.messages?.isSentViaSheela ?? false)
+          ? Container(
+        margin: EdgeInsets.only(top: 5.0),
+            child: Text(
+                strSentViaSheela,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                    color: color, fontSize: 14.0.sp, fontStyle: FontStyle.italic),
+              ),
+          )
+          : SizedBox.shrink();
 }
 
 class TextFieldColorizer extends TextEditingController {
@@ -2645,4 +2670,6 @@ class TextFieldColorizer extends TextEditingController {
 
     return TextSpan(style: style, children: children);
   }
+
+
 }
