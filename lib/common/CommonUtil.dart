@@ -2142,6 +2142,8 @@ class CommonUtil {
     } else if (packageInfo.packageName == appQurdayBundleId) {
       additionalInfo[strAppType] = strAppTypeQurday;
     }
+    additionalInfo[strDeviceType] =
+        (isTablet ?? false) ? strDeviceTypeTablet : strDeviceTypeMobile;
     jsonData[strAdditionalInfo] = additionalInfo;
 
     final params = json.encode(jsonData);

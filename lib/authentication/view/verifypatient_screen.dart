@@ -817,6 +817,9 @@ class _VerifyPatientState extends State<VerifyPatient>
     } else if (packageInfo.packageName == Constants.appQurdayBundleId) {
       additionalInfo[Constants.strAppType] = Constants.strAppTypeQurday;
     }
+    additionalInfo[Constants.strDeviceType] = (CommonUtil().isTablet ?? false)
+        ? Constants.strDeviceTypeTablet
+        : Constants.strDeviceTypeMobile;
     jsonData[Constants.strAdditionalInfo] = additionalInfo;
 
     print(jsonData.toString());

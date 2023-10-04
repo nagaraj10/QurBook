@@ -16,10 +16,13 @@ const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
 const String strAdditionalInfo = 'additionalInfo';
 const String stringAppVersion = 'appVersion';
 const String strAppType = 'appType';
+const String strDeviceType = 'deviceType';
 const String strAppTypeQurbook = 'QurBook';
 const String strAppTypeQurhome = 'QurHome';
 const String strAppTypeQurday = 'QurDay';
 const String strAppTypeAlwaysOnTablet = 'Always On Tablet';
+const String strDeviceTypeMobile = 'Mobile';
+const String strDeviceTypeTablet = 'Tablet';
 
 const String APP_NAME = 'QurBook';
 const String MOB_NUM = 'Mobile number';
