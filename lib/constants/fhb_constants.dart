@@ -10,6 +10,8 @@ const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
 const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
+const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
+
 const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
 const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
 const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
@@ -818,6 +820,7 @@ const String IND_REG = 'IN';
 
 String strMicPermission = 'Microphone permission is required';
 String strCameraPermission = 'Camera permission is required';
+String strLocationBlePermission = 'Location or Bluetooth scan permission is required';
 String strCallPermission = 'Camera or Microphone permission is required';
 
 double height = 0.0;

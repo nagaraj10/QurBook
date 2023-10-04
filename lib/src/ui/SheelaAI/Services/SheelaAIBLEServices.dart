@@ -631,7 +631,9 @@ class SheelaBLEController extends GetxController {
           SheelaController.isMicListening.toggle();
           isPlaying = true;
           final status = await SheelaController.playUsingLocalTTSEngineFor(
-              currentPlayingConversation.text);
+              (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                  ? getPronunciationText(currentPlayingConversation)
+                  :(currentPlayingConversation.text)));
           playConversations.removeAt(0);
           isPlaying = false;
           if (isCompleted) {
@@ -652,7 +654,9 @@ class SheelaBLEController extends GetxController {
       String? textForPlaying;
       if ((currentPlayingConversation.text ?? '').isNotEmpty) {
         final result = await SheelaController.getGoogleTTSForText(
-            currentPlayingConversation.text);
+            (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                ? getPronunciationText(currentPlayingConversation)
+                :(currentPlayingConversation?.text)));
         if ((result!.payload!.audioContent ?? '').isNotEmpty) {
           textForPlaying = result.payload!.audioContent;
         }
@@ -741,5 +745,10 @@ class SheelaBLEController extends GetxController {
     filteredDeviceType = '';
     removeTimeOutTimer();
     SheelaController.isBLEStatus.value = BLEStatus.Disabled;
+  }
+
+  String getPronunciationText(SheelaResponse? currentPlayingConversation) {
+    return CommonUtil()
+        .validString(currentPlayingConversation!.pronunciationText ?? '');
   }
 }

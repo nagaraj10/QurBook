@@ -35,13 +35,13 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   AnimationController? animationController;
   Animation<double>? _animation;
 
-  final hubListViewController =
-  CommonUtil().onInitHubListViewController();
+  final hubListViewController = CommonUtil().onInitHubListViewController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
+
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       CommonUtil().handleCameraAndMic(onlyMic: true);
@@ -60,17 +60,18 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           ),
           vsync: this,
           value: 0.0);
+
       _animation =
-      Tween<double>(begin: 0.0, end: 15.0).animate(animationController!)
-        ..addStatusListener(
+          Tween<double>(begin: 0.0, end: 15.0).animate(animationController!)
+            ..addStatusListener(
               (status) {
-            if (status == AnimationStatus.completed) {
-              animationController!.reverse();
-            } else if (status == AnimationStatus.dismissed) {
-              animationController!.forward();
-            }
-          },
-        );
+                if (status == AnimationStatus.completed) {
+                  animationController!.reverse();
+                } else if (status == AnimationStatus.dismissed) {
+                  animationController!.forward();
+                }
+              },
+            );
 
       if (CommonUtil.isUSRegion()) {
         controller.isMuted.value = false;
@@ -257,59 +258,62 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 ),
               ],
             ),
-            floatingActionButton: Visibility(
-              visible: controller.bleController == null,
-              child: AnimatedBuilder(
-                animation: animationController!,
-                builder: (context, child) {
-                  return Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.transparent,
-                      shape: BoxShape.circle,
-                    ),
-                    padding: EdgeInsets.all(_animation?.value ?? 0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        shape: BoxShape.circle,
+            floatingActionButton: animationController == null
+                ? null
+                : Visibility(
+                    visible: controller.bleController == null,
+                    child: AnimatedBuilder(
+                      animation: animationController!,
+                      builder: (context, child) {
+                        return Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.transparent,
+                            shape: BoxShape.circle,
+                          ),
+                          padding: EdgeInsets.all(_animation?.value ?? 0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              shape: BoxShape.circle,
+                            ),
+                            padding:
+                                EdgeInsets.all(15.0 - (_animation?.value ?? 0)),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          controller.clearTimer();
+                          if (controller.isLoading.isFalse) {
+                            if (controller.currentPlayingConversation != null &&
+                                controller.currentPlayingConversation!.isPlaying
+                                    .value) {
+                              controller.stopTTS();
+                            } else {
+                              controller.gettingReposnseFromNative();
+                            }
+                          }
+                        },
+                        elevation: 0,
+                        backgroundColor: controller.isLoading.value
+                            ? Colors.black45
+                            : PreferenceUtil.getIfQurhomeisAcive()
+                                ? Color(CommonUtil().getQurhomeGredientColor())
+                                : Color(CommonUtil().getMyPrimaryColor()),
+                        child: Icon(
+                          (controller.currentPlayingConversation != null &&
+                                  controller.currentPlayingConversation!
+                                      .isPlaying.value)
+                              ? Icons.pause
+                              : controller.isLoading.isTrue
+                                  ? Icons.mic_off
+                                  : Icons.mic,
+                          color: Colors.white,
+                        ),
                       ),
-                      padding: EdgeInsets.all(15.0 - (_animation?.value ?? 0)),
-                      child: child,
                     ),
-                  );
-                },
-                child: FloatingActionButton(
-                  onPressed: () {
-                    controller.clearTimer();
-                    if (controller.isLoading.isFalse) {
-                      if (controller.currentPlayingConversation != null &&
-                          controller
-                              .currentPlayingConversation!.isPlaying.value) {
-                        controller.stopTTS();
-                      } else {
-                        controller.gettingReposnseFromNative();
-                      }
-                    }
-                  },
-                  elevation: 0,
-                  backgroundColor: controller.isLoading.value
-                      ? Colors.black45
-                      : PreferenceUtil.getIfQurhomeisAcive()
-                          ? Color(CommonUtil().getQurhomeGredientColor())
-                          : Color(CommonUtil().getMyPrimaryColor()),
-                  child: Icon(
-                    (controller.currentPlayingConversation != null &&
-                            controller
-                                .currentPlayingConversation!.isPlaying.value)
-                        ? Icons.pause
-                        : controller.isLoading.isTrue
-                            ? Icons.mic_off
-                            : Icons.mic,
-                    color: Colors.white,
                   ),
-                ),
-              ),
-            ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
           ),

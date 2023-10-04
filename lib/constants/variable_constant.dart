@@ -945,6 +945,8 @@ const String strTransportationRequestAccepted =
 const String strTransportationRequestDeclined =
     'Transportation request declined';
 
+const String strSentViaSheela = 'Sent via Sheela.';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');
