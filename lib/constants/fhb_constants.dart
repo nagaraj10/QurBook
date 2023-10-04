@@ -12,6 +12,19 @@ const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String APP_NAME = 'QurHome';
 const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
+const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
+const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
+const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
+const String strAdditionalInfo = 'additionalInfo';
+const String stringAppVersion = 'appVersion';
+const String strAppType = 'appType';
+const String strDeviceType = 'deviceType';
+const String strAppTypeQurbook = 'QurBook';
+const String strAppTypeQurhome = 'QurHome';
+const String strAppTypeQurday = 'QurDay';
+const String strAppTypeAlwaysOnTablet = 'Always On Tablet';
+const String strDeviceTypeMobile = 'Mobile';
+const String strDeviceTypeTablet = 'Tablet';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
 const String SignInOtpText = 'We will send you an one time password';
@@ -805,7 +818,8 @@ const String IND_REG = 'IN';
 
 String strMicPermission = 'Microphone permission is required';
 String strCameraPermission = 'Camera permission is required';
-String strLocationBlePermission = 'Location or Bluetooth scan permission is required';
+String strLocationBlePermission =
+    'Location or Bluetooth scan permission is required';
 String strCallPermission = 'Camera or Microphone permission is required';
 
 double height = 0.0;

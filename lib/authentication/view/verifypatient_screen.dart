@@ -4,10 +4,12 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:package_info/package_info.dart';
 import 'package:myfhb/widgets/app_primary_button.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../constants/constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 import '../model/patientverify_model.dart';
 import '../model/resend_otp_model.dart';
 import '../model/verifyotp_model.dart';
@@ -752,6 +754,23 @@ class _VerifyPatientState extends State<VerifyPatient>
     } else {
       jsonData[strPlatformCode] = strANDPLT;
     }
+
+    var additionalInfo = <String, dynamic>{};
+    final packageInfo = await PackageInfo.fromPlatform();
+    additionalInfo[Constants.stringAppVersion] =
+        '${packageInfo.version} + ${packageInfo.buildNumber}';
+    if (packageInfo.packageName == Constants.appQurbookBundleId) {
+      additionalInfo[Constants.strAppType] = Constants.strAppTypeQurbook;
+    } else if (packageInfo.packageName == Constants.appQurhomeBundleId) {
+      additionalInfo[Constants.strAppType] = Constants.strAppTypeQurhome;
+    } else if (packageInfo.packageName == Constants.appQurdayBundleId) {
+      additionalInfo[Constants.strAppType] = Constants.strAppTypeQurday;
+    }
+    additionalInfo[Constants.strDeviceType] = (CommonUtil().isTablet ?? false)
+        ? Constants.strDeviceTypeTablet
+        : Constants.strDeviceTypeMobile;
+    jsonData[Constants.strAdditionalInfo] = additionalInfo;
+
     print(jsonData.toString());
     final params = json.encode(jsonData);
     print(params.toString());
