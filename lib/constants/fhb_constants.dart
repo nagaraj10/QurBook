@@ -11,6 +11,21 @@ const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
+
+const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
+const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
+const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
+const String strAdditionalInfo = 'additionalInfo';
+const String stringAppVersion = 'appVersion';
+const String strAppType = 'appType';
+const String strDeviceType = 'deviceType';
+const String strAppTypeQurbook = 'QurBook';
+const String strAppTypeQurhome = 'QurHome';
+const String strAppTypeQurday = 'QurDay';
+const String strAppTypeAlwaysOnTablet = 'Always On Tablet';
+const String strDeviceTypeMobile = 'Mobile';
+const String strDeviceTypeTablet = 'Tablet';
+
 const String APP_NAME = 'QurBook';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
