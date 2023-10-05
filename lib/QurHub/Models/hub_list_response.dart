@@ -1,4 +1,5 @@
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 
 class HubListResponse {
   bool? isSuccess;
@@ -271,6 +272,7 @@ class DeviceType {
   String? createdBy;
   String? createdOn;
   String? lastModifiedOn;
+  AdditionalInfo? additionalInfo;
 
   DeviceType({
     this.id,
@@ -282,6 +284,7 @@ class DeviceType {
     this.createdBy,
     this.createdOn,
     this.lastModifiedOn,
+    this.additionalInfo
   });
 
   DeviceType.fromJson(Map<String, dynamic> json) {
@@ -295,6 +298,14 @@ class DeviceType {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
+      additionalInfo = json['additionalInfo'] != null
+          ? new AdditionalInfo.fromJson(json['additionalInfo'])
+          : null;
+      if (additionalInfo == null) {
+        AdditionalInfo additionalInfoTemp = AdditionalInfo();
+        additionalInfoTemp.connectivityType = strBluetooth;
+        additionalInfo = additionalInfoTemp;
+      }
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -452,6 +463,7 @@ class AdditionalInfo {
   String? uhidNumber;
   String? visitReason;
   String? patientHistory;
+  String? connectivityType;
 
   AdditionalInfo(
       {this.age,
@@ -462,7 +474,7 @@ class AdditionalInfo {
       this.mrdNumber,
       this.uhidNumber,
       this.visitReason,
-      this.patientHistory});
+      this.patientHistory,this.connectivityType});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     try {
@@ -480,7 +492,9 @@ class AdditionalInfo {
       uhidNumber = json['uhidNumber'];
       visitReason = json['visitReason'];
       patientHistory = json['patientHistory'];
+      initConnectivityType(json);
     } catch (e,stackTrace) {
+      initConnectivityType(json);
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
@@ -498,6 +512,18 @@ class AdditionalInfo {
     data['uhidNumber'] = this.uhidNumber;
     data['visitReason'] = this.visitReason;
     data['patientHistory'] = this.patientHistory;
+    data['connectivityType'] = this.connectivityType;
     return data;
+  }
+
+  initConnectivityType(Map<String, dynamic> json) {
+    try {
+      connectivityType = (json['connectivityType'] ?? '');
+      if ((connectivityType ?? '').trim().isEmpty) {
+        connectivityType = strBluetooth;
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 }
