@@ -104,8 +104,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   double selSheelaOption = 36.0;
 
-  var landingScreenController =
-  CommonUtil().onInitLandingScreenController();
+  var landingScreenController = CommonUtil().onInitLandingScreenController();
 
   @override
   void initState() {
@@ -115,14 +114,16 @@ class _LandingScreenState extends State<LandingScreen> {
         onInit();
       });
       SystemChannels.lifecycle.setMessageHandler((msg) {
-        if (msg == AppLifecycleState.resumed.toString()) {
-          imageCache!.clear();
-          imageCache!.clearLiveImages();
-          profileData = getMyProfile();
+        if (msg != null) {
+          if (msg == AppLifecycleState.resumed.toString()) {
+            imageCache!.clear();
+            imageCache!.clearLiveImages();
+            profileData = getMyProfile();
+          }
         }
       } as Future<String?> Function(String?)?);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -135,8 +136,8 @@ class _LandingScreenState extends State<LandingScreen> {
       // QurPlanReminders.getTheRemindersFromAPI();
       try {
         Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
       await callImportantsMethod();
       moveToQurhome();
@@ -169,8 +170,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
       CommonUtil().initSocket();
       sheelBadgeController.getSheelaBadgeCount();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -249,8 +250,8 @@ class _LandingScreenState extends State<LandingScreen> {
           Get.to(() => ChatUserList());
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //print(e.toString());
       await PreferenceUtil.removeNotificationData();
@@ -330,260 +331,283 @@ class _LandingScreenState extends State<LandingScreen> {
     return FutureBuilder<MyProfileModel?>(
       future: profileData?.then((value) => value as MyProfileModel?),
       builder: (context, snapshot) {
-        return Obx(() =>Scaffold(
-          key: _scaffoldKey,
-          backgroundColor: const Color(bgColorContainer),
-          body: WillPopScope(
-            onWillPop: _onBackPressed,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Column(
+        return Obx(() => Scaffold(
+              key: _scaffoldKey,
+              backgroundColor: const Color(bgColorContainer),
+              body: WillPopScope(
+                onWillPop: _onBackPressed,
+                child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Visibility(
-                      visible: !landingScreenController!.isSearchVisible.value,
-                      child: Container(
-                        //height: CommonUtil().isTablet ? 90.00 : null,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: <Color>[
-                              Color(CommonUtil().getMyPrimaryColor()),
-                              Color(CommonUtil().getMyGredientColor()),
-                            ],
-                            stops: [0.3, 1.0],
-                          ),
-                          // color: Colors.white,
-                        ),
-                        child: SafeArea(
-                          child: Row(
-                            children: <Widget>[
-                              Material(
-                                color: Colors.transparent,
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.menu_rounded,
+                    Column(
+                      children: [
+                        Visibility(
+                          visible:
+                              !landingScreenController!.isSearchVisible.value,
+                          child: Container(
+                            //height: CommonUtil().isTablet ? 90.00 : null,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: <Color>[
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyGredientColor()),
+                                ],
+                                stops: [0.3, 1.0],
+                              ),
+                              // color: Colors.white,
+                            ),
+                            child: SafeArea(
+                              child: Row(
+                                children: <Widget>[
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.menu_rounded,
+                                      ),
+                                      color: Colors.white,
+                                      iconSize: CommonUtil().isTablet!
+                                          ? 34.0.sp
+                                          : 24.0.sp,
+                                      onPressed: () {
+                                        _scaffoldKey.currentState!.openDrawer();
+                                      },
+                                    ),
                                   ),
-                                  color: Colors.white,
-                                  iconSize: CommonUtil().isTablet!
-                                      ? 34.0.sp
-                                      : 24.0.sp,
-                                  onPressed: () {
-                                    _scaffoldKey.currentState!.openDrawer();
-                                  },
-                                ),
-                              ),
-                              Expanded(
-                                child: getAppBarTitle(),
-                              ),
-                              //TODO: Delete this - Added for Test
-                              // if (kDebugMode)
-                              //   IconButton(
-                              //     icon: Icon(Icons.cloud_upload),
-                              //     onPressed: () {
-                              //       CommonUtil.sendLogToServer();
-                              //     },
-                              //   ),
+                                  Expanded(
+                                    child: getAppBarTitle(),
+                                  ),
+                                  //TODO: Delete this - Added for Test
+                                  // if (kDebugMode)
+                                  //   IconButton(
+                                  //     icon: Icon(Icons.cloud_upload),
+                                  //     onPressed: () {
+                                  //       CommonUtil.sendLogToServer();
+                                  //     },
+                                  //   ),
 
-                              Visibility(
-                                visible: landingScreenController!.currentTabIndex.value == 4,
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    right: 5.0.w,
+                                  Visibility(
+                                    visible: landingScreenController!
+                                            .currentTabIndex.value ==
+                                        4,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        right: 5.0.w,
+                                      ),
+                                      child: IconWidget(
+                                        icon: Icons.search,
+                                        colors: Colors.white,
+                                        size: CommonUtil().isTablet!
+                                            ? 33.0.sp
+                                            : 30.0.sp,
+                                        onTap: () {
+                                          landingScreenController
+                                              ?.changeSearchBar(
+                                            isEnabled: true,
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
-                                  child: IconWidget(
-                                    icon: Icons.search,
-                                    colors: Colors.white,
-                                    size: CommonUtil().isTablet!
-                                        ? 33.0.sp
-                                        : 30.0.sp,
-                                    onTap: () {
-                                      landingScreenController?.changeSearchBar(
-                                        isEnabled: true,
-                                      );
-                                    },
+                                  Center(
+                                    child: CommonUtil().getNotificationIcon(
+                                      context,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
+                                  getSwitchProfileWidget(),
+                                ],
                               ),
-                              Center(
-                                child: CommonUtil().getNotificationIcon(
-                                  context,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              getSwitchProfileWidget(),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child:
-                          (snapshot.connectionState == ConnectionState.waiting)
+                        Expanded(
+                          child: (snapshot.connectionState ==
+                                  ConnectionState.waiting)
                               ? CommonCircularIndicator()
                               : (snapshot.hasError)
                                   ? Center(
                                       child: ErrorsWidget(),
                                     )
                                   : getCurrentTab(),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          drawer: NavigationDrawer(
-            myProfile: myProfile,
-            moveToLoginPage: moveToLoginPage,
-            userChangedbool: landingViewModel!.isUserMainId,
-            refresh: (userChanged) => refresh(
-              userChanged: userChanged,
-            ),
-            showPatientList: () {
-              CommonUtil().showPatientListOfCaregiver(context, (user, result) {
-                if (user == "You") {
-                  refresh(
-                    userChanged: true,
-                  );
-                  Navigator.pop(context);
-                  qurhomeDashboardController.currentSelectedTab.value = 0;
-
-                  qurhomeDashboardController.forPatientList.value = false;
-                  qurhomeDashboardController.isPatientClicked.value = false;
-                  CommonUtil().navigateToQurhomeDasboard();
-                } else {
-                  qurhomeDashboardController.forPatientList.value = true;
-                  qurhomeDashboardController.careGiverPatientListResult = null;
-                  qurhomeDashboardController.careGiverPatientListResult =
-                      result;
-                  qurhomeDashboardController.currentSelectedTab.value = 0;
-                  qurhomeDashboardController.isPatientClicked.value = true;
-                  CommonUtil().navigateToQurhomePatientDasboard(result);
-                }
-              });
-            },
-          ),
-          bottomNavigationBar: Obx(
-            () => Container(
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black54,
-                    blurRadius: 1,
-                  ),
-                ],
               ),
-              child: BottomNavigationBar(
-                currentIndex: landingScreenController!.currentTabIndex.value,
-                //type: BottomNavigationBarType.fixed,
-                type: BottomNavigationBarType.shifting,
-                selectedFontSize: 12.sp,
-                unselectedFontSize: 10.sp,
-                selectedLabelStyle: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+              drawer: NavigationDrawer(
+                myProfile: myProfile,
+                moveToLoginPage: moveToLoginPage,
+                userChangedbool: landingViewModel!.isUserMainId,
+                refresh: (userChanged) => refresh(
+                  userChanged: userChanged,
                 ),
-                unselectedLabelStyle: const TextStyle(
-                  color: Colors.black54,
-                ),
-                selectedIconTheme: IconThemeData(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
-                ),
-                unselectedIconTheme: const IconThemeData(
-                  color: Colors.black54,
-                ),
-                items: [
-                  BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage(
-                        variable.icon_home,
-                      ),
-                      size: CommonUtil().isTablet!
-                          ? 33.0.sp
-                          : landingScreenController!.currentTabIndex.value == 0
-                              ? selOption
-                              : unSelOption,
-                    ),
-                    title: Text(
-                      variable.strhome,
-                      style: TextStyle(
-                        color: landingScreenController!.currentTabIndex.value == 0
-                            ? Color(
-                                CommonUtil().getMyPrimaryColor(),
-                              )
-                            : Colors.black54,
-                      ),
-                    ),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: getChatSocketIcon(),
-                    title: Text(
-                      variable.strChat,
-                      style: TextStyle(
-                        color: landingScreenController!.currentTabIndex.value == 1
-                            ? Color(CommonUtil().getMyPrimaryColor())
-                            : Colors.black54,
-                      ),
-                    ),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: getSheelaIcon(),
-                    title: Text(
-                      variable.strMaya,
-                      style: TextStyle(
-                        color: landingScreenController!.currentTabIndex.value == 2
-                            ? Color(CommonUtil().getMyPrimaryColor())
-                            : Colors.black54,
-                      ),
-                    ),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage(variable.icon_th),
-                      size: CommonUtil().isTablet!
-                          ? 33.0.sp
-                          : landingScreenController!.currentTabIndex.value == 3
-                              ? selOption
-                              : unSelOption,
-                    ),
-                    title: Text(
-                      constants.strAppointment,
-                      style: TextStyle(
-                        color: landingScreenController!.currentTabIndex.value == 3
-                            ? Color(CommonUtil().getMyPrimaryColor())
-                            : Colors.black54,
-                      ),
-                    ),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage(variable.icon_records),
-                      size: CommonUtil().isTablet!
-                          ? 33.0.sp
-                          : landingScreenController!.currentTabIndex.value == 4
-                              ? selOption
-                              : unSelOption,
-                    ),
-                    title: Text(
-                      variable.strMyRecords,
-                      style: TextStyle(
-                        color: landingScreenController!.currentTabIndex.value == 4
-                            ? Color(CommonUtil().getMyPrimaryColor())
-                            : Colors.black54,
-                      ),
-                    ),
-                  )
-                ],
-                //backgroundColor: Colors.grey[200],
-                onTap: (index) {
-                  landingScreenController!.updateTabIndex(index);
+                showPatientList: () {
+                  CommonUtil().showPatientListOfCaregiver(context,
+                      (user, result) {
+                    if (user == "You") {
+                      refresh(
+                        userChanged: true,
+                      );
+                      Navigator.pop(context);
+                      qurhomeDashboardController.currentSelectedTab.value = 0;
+
+                      qurhomeDashboardController.forPatientList.value = false;
+                      qurhomeDashboardController.isPatientClicked.value = false;
+                      CommonUtil().navigateToQurhomeDasboard();
+                    } else {
+                      qurhomeDashboardController.forPatientList.value = true;
+                      qurhomeDashboardController.careGiverPatientListResult =
+                          null;
+                      qurhomeDashboardController.careGiverPatientListResult =
+                          result;
+                      qurhomeDashboardController.currentSelectedTab.value = 0;
+                      qurhomeDashboardController.isPatientClicked.value = true;
+                      CommonUtil().navigateToQurhomePatientDasboard(result);
+                    }
+                  });
                 },
               ),
-            ),
-          ),
-        ));
+              bottomNavigationBar: Obx(
+                () => Container(
+                  decoration: const BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black54,
+                        blurRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: BottomNavigationBar(
+                    currentIndex:
+                        landingScreenController!.currentTabIndex.value,
+                    //type: BottomNavigationBarType.fixed,
+                    type: BottomNavigationBarType.shifting,
+                    selectedFontSize: 12.sp,
+                    unselectedFontSize: 10.sp,
+                    selectedLabelStyle: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                    ),
+                    unselectedLabelStyle: const TextStyle(
+                      color: Colors.black54,
+                    ),
+                    selectedIconTheme: IconThemeData(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
+                    ),
+                    unselectedIconTheme: const IconThemeData(
+                      color: Colors.black54,
+                    ),
+                    items: [
+                      BottomNavigationBarItem(
+                        icon: ImageIcon(
+                          AssetImage(
+                            variable.icon_home,
+                          ),
+                          size: CommonUtil().isTablet!
+                              ? 33.0.sp
+                              : landingScreenController!
+                                          .currentTabIndex.value ==
+                                      0
+                                  ? selOption
+                                  : unSelOption,
+                        ),
+                        title: Text(
+                          variable.strhome,
+                          style: TextStyle(
+                            color: landingScreenController!
+                                        .currentTabIndex.value ==
+                                    0
+                                ? Color(
+                                    CommonUtil().getMyPrimaryColor(),
+                                  )
+                                : Colors.black54,
+                          ),
+                        ),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: getChatSocketIcon(),
+                        title: Text(
+                          variable.strChat,
+                          style: TextStyle(
+                            color: landingScreenController!
+                                        .currentTabIndex.value ==
+                                    1
+                                ? Color(CommonUtil().getMyPrimaryColor())
+                                : Colors.black54,
+                          ),
+                        ),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: getSheelaIcon(),
+                        title: Text(
+                          variable.strMaya,
+                          style: TextStyle(
+                            color: landingScreenController!
+                                        .currentTabIndex.value ==
+                                    2
+                                ? Color(CommonUtil().getMyPrimaryColor())
+                                : Colors.black54,
+                          ),
+                        ),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: ImageIcon(
+                          AssetImage(variable.icon_th),
+                          size: CommonUtil().isTablet!
+                              ? 33.0.sp
+                              : landingScreenController!
+                                          .currentTabIndex.value ==
+                                      3
+                                  ? selOption
+                                  : unSelOption,
+                        ),
+                        title: Text(
+                          constants.strAppointment,
+                          style: TextStyle(
+                            color: landingScreenController!
+                                        .currentTabIndex.value ==
+                                    3
+                                ? Color(CommonUtil().getMyPrimaryColor())
+                                : Colors.black54,
+                          ),
+                        ),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: ImageIcon(
+                          AssetImage(variable.icon_records),
+                          size: CommonUtil().isTablet!
+                              ? 33.0.sp
+                              : landingScreenController!
+                                          .currentTabIndex.value ==
+                                      4
+                                  ? selOption
+                                  : unSelOption,
+                        ),
+                        title: Text(
+                          variable.strMyRecords,
+                          style: TextStyle(
+                            color: landingScreenController!
+                                        .currentTabIndex.value ==
+                                    4
+                                ? Color(CommonUtil().getMyPrimaryColor())
+                                : Colors.black54,
+                          ),
+                        ),
+                      )
+                    ],
+                    //backgroundColor: Colors.grey[200],
+                    onTap: (index) {
+                      landingScreenController!.updateTabIndex(index);
+                    },
+                  ),
+                ),
+              ),
+            ));
       },
     );
   }
@@ -783,8 +807,8 @@ class _LandingScreenState extends State<LandingScreen> {
     }
     try {
       await getDeviceSelectionValues().then((value) => {});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     if (userId != null && userId.isNotEmpty) {
       try {
@@ -821,8 +845,8 @@ class _LandingScreenState extends State<LandingScreen> {
         } else {
           new CommonUtil().commonMethodToSetPreference();
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         new CommonUtil().commonMethodToSetPreference();
       }
@@ -854,8 +878,8 @@ class _LandingScreenState extends State<LandingScreen> {
         profileData = getMyProfile();
       }
       setState(() {});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -901,8 +925,8 @@ class _LandingScreenState extends State<LandingScreen> {
     if (widget.landingArguments?.needFreshLoad ?? true) {
       try {
         commonUtil.versionCheck(context);
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
   }
@@ -924,19 +948,19 @@ class _LandingScreenState extends State<LandingScreen> {
 
     try {
       getFamilyRelationAndMediaType();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     try {
       getProfileData();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     try {
       await CommonUtil().getMedicalPreference();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     try {
@@ -944,28 +968,28 @@ class _LandingScreenState extends State<LandingScreen> {
         CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
         _categoryListBlock.getCategoryLists().then((value) {});
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
 
       getFamilyRelationAndMediaType();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     try {
       final addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
       await addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
     if (url.isNotEmpty) {
       try {
         Uri deepLink = Uri.parse(jsonDecode(url));
         DynamicLinks.processDynamicLink(deepLink);
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
     checkCpUser();
@@ -1068,13 +1092,13 @@ class _LandingScreenState extends State<LandingScreen> {
   void getFamilyRelationAndMediaType() async {
     try {
       await CommonUtil().getAllCustomRoles();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     try {
       await CommonUtil().getMediaTypes();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -1082,8 +1106,8 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       await CommonUtil().getUserProfileData();
       profileData = getMyProfile();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
