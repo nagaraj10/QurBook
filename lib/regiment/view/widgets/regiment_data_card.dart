@@ -109,7 +109,18 @@ class RegimentDataCard extends StatelessWidget {
                           : color,
                       child: InkWell(
                         onTap: () {
-                          if (regimentData.activityOrgin !=
+                          if (regimentData.activityOrgin == strSurvey) {
+                            var canEdit = false;
+                            canEdit = CommonUtil.canEditRegimen(
+                                selectedDate, regimentData!, context!);
+
+                            if (canEdit) {
+                              redirectToSheelaScreen(regimentData, context,
+                                  isSurvey: true);
+                            } else {
+                              onErrorMessage(context);
+                            }
+                          } else if (regimentData.activityOrgin !=
                               strAppointmentRegimen) {
                             onCardPressed(context,
                                 aid: aid,
