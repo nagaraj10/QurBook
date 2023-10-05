@@ -8,9 +8,12 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +56,7 @@ class FormDataDialog extends StatefulWidget {
     this.showEditIcon,
     this.fromView = false,
     this.appBarTitle,
+    this.regimen,
   });
 
   final List<FieldModel>? fieldsData;
@@ -73,6 +77,7 @@ class FormDataDialog extends StatefulWidget {
   final String introText;
   final UformData? uformData;
   final String? appBarTitle;
+  final RegimentDataModel? regimen;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
@@ -243,10 +248,21 @@ class FormDataDialogState extends State<FormDataDialog> {
                         ),
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              widget.canEdit = true;
-                              widget.fromView = false;
-                            });
+                            try {
+                              if (widget.regimen?.activityOrgin == strSurvey) {
+                                redirectToSheelaScreen(widget.regimen,
+                                    isSurvey: true, isRetakeSurvey: true);
+                                return;
+                              }
+
+                              setState(() {
+                                widget.canEdit = true;
+                                widget.fromView = false;
+                              });
+                            } catch (e, stackTrace) {
+                              CommonUtil()
+                                  .appLogs(message: e, stackTrace: stackTrace);
+                            }
                           },
                           child: Padding(
                             padding: EdgeInsets.only(
@@ -316,6 +332,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   getListView() {
+    int indexTemp = 0;
     return ListView(
       shrinkWrap: true,
       padding: EdgeInsets.only(bottom: widget.isFromQurHomeRegimen ? 100 : 0),
@@ -338,44 +355,32 @@ class FormDataDialogState extends State<FormDataDialog> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: fieldsData!.length,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: 10.0.h,
-                  ),
-                  child: FormFieldWidget(
-                    canEdit: widget.canEdit,
-                    fieldData: fieldsData![index],
-                    vitalsData: getVitalsData(
-                        widget.uformData?.vitalsData!, fieldsData![index]),
-                    isFromQurHomeRegimen: widget.isFromQurHomeRegimen,
-                    isFromQurHomeSymptom: widget.isFromQurHomeSymptom ||
-                        widget.isFromQurHomeRegimen,
-                    isChanged: (settings) {
-                      isSettingChanged = settings;
-                    },
-                    updateValue: (
-                      updatedFieldData, {
-                      isAdd,
-                      title,
-                    }) {
-                      if (isAdd == null || isAdd) {
-                        isAdd = isAdd ?? false;
-                        final oldValue = saveMap.putIfAbsent(
-                          isAdd ? 'pf_$title' : 'pf_${updatedFieldData.title}',
-                          () => updatedFieldData.value,
-                        );
-                        if (oldValue != null) {
-                          saveMap[isAdd
-                                  ? 'pf_$title'
-                                  : 'pf_${updatedFieldData.title}'] =
-                              updatedFieldData.value;
-                        }
-                      } else {
-                        saveMap.remove('pf_$title');
-                      }
-                    },
-                  ),
-                );
+                bool isVisible = false;
+                VitalsData? vitalsDataParam = getVitalsData(
+                    widget.uformData?.vitalsData!, fieldsData![index]);
+                if (((widget.regimen?.activityOrgin ?? "") == strSurvey) &&
+                    (vitalsDataParam != null) &&
+                    (CommonUtil()
+                        .validString(vitalsDataParam.value ?? "")
+                        .trim()
+                        .isNotEmpty)) {
+                  isVisible = true;
+                  FieldModel fieldData = fieldsData![index];
+                  String strTitle =
+                      CommonUtil().showDescriptionTextForm(fieldData);
+                  if (strTitle.contains(".")) {
+                    indexTemp++;
+                    String strTitleTemp = strTitle.split(".").last;
+                    strTitleTemp = "$indexTemp.$strTitleTemp";
+                    fieldData.strTitleDesc = strTitleTemp;
+                    fieldData.isSurvey = true;
+                  }
+                }
+                return ((widget.regimen?.activityOrgin ?? "") == strSurvey)
+                    ? isVisible
+                        ? getView(vitalsDataParam, index)
+                        : SizedBox.shrink()
+                    : getView(vitalsDataParam, index);
               },
             ),
           ),
@@ -704,35 +709,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                 return RaisedButton(
                     onPressed: val == false
                         ? () async {
-                            if (widget.fromView!) {
-                            } else if (widget.canEdit) {
-                              if (_formKey.currentState!.validate()) {
-                                if (actvityStatus == UnSubscribed ||
-                                    actvityStatus == Expired) {
-                                  var message = (actvityStatus == UnSubscribed)
-                                      ? UnSubscribed
-                                      : Expired;
-                                  CommonUtil().showDialogForActivityStatus(
-                                      'Plan $message, $msgData', context,
-                                      pressOk: () {
-                                    Get.back();
-                                    clickSaveButton();
-                                  });
-                                } else {
-                                  clickSaveButton();
-                                }
-                              }
-                            } else {
-                              FlutterToast().getToast(
-                                (Provider.of<RegimentViewModel>(context,
-                                                listen: false)
-                                            .regimentMode ==
-                                        RegimentMode.Symptoms)
-                                    ? symptomsError
-                                    : activitiesError,
-                                Colors.red,
-                              );
-                            }
+                            commonSaveMethod();
                           }
                         : null,
                     color: widget.fromView!
@@ -1208,7 +1185,7 @@ class FormDataDialogState extends State<FormDataDialog> {
           FlatButton(
             onPressed: () {
               isUpdatePressed = true;
-              clickSaveButton();
+              commonSaveMethod();
             },
             child: Text(strYES),
           ),
@@ -1227,8 +1204,8 @@ class FormDataDialogState extends State<FormDataDialog> {
       for (VitalsData? vitalsDataObj in vitalsData!) {
         if (vitalsDataObj?.vitalName == fieldModel.title) return vitalsDataObj;
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return null;
     }
@@ -1243,6 +1220,91 @@ class FormDataDialogState extends State<FormDataDialog> {
       } else {
         return true;
       }
+    }
+  }
+
+  redirectToSheelaScreen(RegimentDataModel? regimen,
+      {bool isSurvey = false, bool isRetakeSurvey = false}) {
+    try {
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(
+            eId: regimen?.eid ?? "",
+            isSurvey: isSurvey,
+            isRetakeSurvey: isRetakeSurvey),
+      )?.then((value) {
+        Get.back(result: true);
+        if (isUpdatePressed) Navigator.pop(context, true);
+      });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  getView(VitalsData? vitalsDataParam,int index) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: 10.0.h,
+      ),
+      child: FormFieldWidget(
+        canEdit: widget.canEdit,
+        fieldData: fieldsData![index],
+        vitalsData: vitalsDataParam,
+        isFromQurHomeRegimen: widget.isFromQurHomeRegimen,
+        isFromQurHomeSymptom: widget.isFromQurHomeSymptom ||
+            widget.isFromQurHomeRegimen,
+        isChanged: (settings) {
+          isSettingChanged = settings;
+        },
+        updateValue: (
+            updatedFieldData, {
+              isAdd,
+              title,
+            }) {
+          if (isAdd == null || isAdd) {
+            isAdd = isAdd ?? false;
+            final oldValue = saveMap.putIfAbsent(
+              isAdd ? 'pf_$title' : 'pf_${updatedFieldData.title}',
+                  () => updatedFieldData.value,
+            );
+            if (oldValue != null) {
+              saveMap[isAdd
+                  ? 'pf_$title'
+                  : 'pf_${updatedFieldData.title}'] =
+                  updatedFieldData.value;
+            }
+          } else {
+            saveMap.remove('pf_$title');
+          }
+        },
+      ),
+    );
+  }
+
+  void commonSaveMethod() {
+    if (widget.fromView!) {
+    } else if (widget.canEdit) {
+      if (_formKey.currentState!.validate()) {
+        if (actvityStatus == UnSubscribed || actvityStatus == Expired) {
+          var message =
+              (actvityStatus == UnSubscribed) ? UnSubscribed : Expired;
+          CommonUtil().showDialogForActivityStatus(
+              'Plan $message, $msgData', context, pressOk: () {
+            Get.back();
+            clickSaveButton();
+          });
+        } else {
+          clickSaveButton();
+        }
+      }
+    } else {
+      FlutterToast().getToast(
+        (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                RegimentMode.Symptoms)
+            ? symptomsError
+            : activitiesError,
+        Colors.red,
+      );
     }
   }
 }

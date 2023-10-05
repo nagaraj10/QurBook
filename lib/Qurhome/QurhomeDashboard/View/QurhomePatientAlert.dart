@@ -19,8 +19,10 @@ class QurhomePatientALert extends StatefulWidget {
 
 class _QurhomePatientALertState extends State<QurhomePatientALert> {
   final controller = Get.put(QurhomeDashboardController());
-  final qurhomeRegimenController = CommonUtil().onInitQurhomeRegimenController();
+  final qurhomeRegimenController =
+      CommonUtil().onInitQurhomeRegimenController();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  bool isEmergencyToggleEnabled = false;
 
   @override
   void initState() {
@@ -166,7 +168,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
   _buildCarouselItem(BuildContext context, int itemIndex,
       PatientAlertData patientAlertData, int nextAlertPosition, isPortrait) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         showRegimenDialog(patientAlertData, itemIndex);
       },
       child: Wrap(
@@ -174,61 +176,70 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
           Transform.scale(
             scale: getCurrentRatio(itemIndex),
             child: Container(
-              margin:EdgeInsets.symmetric(vertical: 8.0,horizontal: isPortrait ? 25.0 : MediaQuery.of(context).size.width / 5),
+              margin: EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: isPortrait
+                      ? 25.0
+                      : MediaQuery.of(context).size.width / 5),
               child: Stack(
                 children: [
                   Visibility(
-                    visible: patientAlertData.interaction?.isNotEmpty==true,
+                    visible: patientAlertData.interaction?.isNotEmpty == true,
                     child: Positioned.fill(
                         child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
-                            margin: EdgeInsets.only(top: 10),
-                            alignment: Alignment.bottomCenter,
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 2,
+                      alignment: Alignment.bottomLeft,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 10),
+                        alignment: Alignment.bottomCenter,
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(
+                              10,
                             ),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(
-                                  10,
-                                ),
-                                bottomRight: Radius.circular(
-                                  10,
-                                ),
-                              ),
+                            bottomRight: Radius.circular(
+                              10,
                             ),
                           ),
-                        )),
+                        ),
+                      ),
+                    )),
                   ),
                   Column(
                     children: [
                       Container(
                           decoration: BoxDecoration(
-                            color: getCardBackgroundColor(itemIndex, nextAlertPosition),
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0),topRight: Radius.circular(10.0),bottomLeft: Radius.circular(12.0),
+                            color: getCardBackgroundColor(
+                                itemIndex, nextAlertPosition),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10.0),
+                                topRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(12.0),
                                 bottomRight: Radius.circular(12.0)),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 5,
                                 blurRadius: 7,
-                                offset: Offset(0, 3), // changes position of shadow
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
                               ),
                             ],
                           ),
                           child: Container(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 8.0),
                             child: Row(
                               children: [
                                 Text(
                                   patientAlertData.createdOn != null
-                                      ? DateFormat('hh:mm a')
-                                      .format(patientAlertData.createdOn!.toLocal())
+                                      ? DateFormat('hh:mm a').format(
+                                          patientAlertData.createdOn!.toLocal())
                                       : '',
                                   style: TextStyle(
                                       color: getTextAndIconColor(
@@ -241,22 +252,25 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 ),
                                 Expanded(
                                     child: Text(
-                                      CommonUtil().capitalizeFirstofEach(
-                                          CommonUtil().getFormattedString(
-                                            patientAlertData.additionalInfo?.title ?? '',
-                                            patientAlertData?.typeName ?? '',
-                                            patientAlertData?.additionalInfo?.uformname ?? '',
-                                            12,
-                                            forDetails: false,
-                                          )),
-                                      maxLines: 2,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: getTextAndIconColor(
-                                              itemIndex, nextAlertPosition),
-                                          fontSize: 16.h,
-                                          fontWeight: FontWeight.w600),
-                                    )),
+                                  CommonUtil().capitalizeFirstofEach(
+                                      CommonUtil().getFormattedString(
+                                    patientAlertData.additionalInfo?.title ??
+                                        '',
+                                    patientAlertData?.typeName ?? '',
+                                    patientAlertData
+                                            ?.additionalInfo?.uformname ??
+                                        '',
+                                    12,
+                                    forDetails: false,
+                                  )),
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: getTextAndIconColor(
+                                          itemIndex, nextAlertPosition),
+                                      fontSize: 16.h,
+                                      fontWeight: FontWeight.w600),
+                                )),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -270,21 +284,18 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                 ),
                               ],
                             ),
-                          )
-                      ),
+                          )),
                       Visibility(
-                        visible: patientAlertData.interaction?.isNotEmpty==true,
+                        visible:
+                            patientAlertData.interaction?.isNotEmpty == true,
                         child: Text(
                           escalated,
                           style: TextStyle(
-                              color: Colors.white,
-                            fontWeight: FontWeight.w500
-                          ),
+                              color: Colors.white, fontWeight: FontWeight.w500),
                         ),
                       )
                     ],
                   )
-
                 ],
               ),
             ),
@@ -293,8 +304,6 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
       ),
     );
   }
-
-
 
   Color getTextAndIconColor(int itemIndex, int nextRegimenPosition) {
     if (controller.currentIndex == itemIndex) {
@@ -375,94 +384,131 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
 
   void showEscalateNotes(
       PatientAlertData patientAlertData, String activityName) {
-    TextEditingController controller=TextEditingController();
+    TextEditingController controller = TextEditingController();
+    isEmergencyToggleEnabled = false;
     showDialog(
         context: context,
         builder: (__) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.all(8),
-            content: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left:8.0),
-                        child: Text(COMMENTS,style: TextStyle(fontWeight: FontWeight.bold),),
-                      ),
-                      Spacer(),
-                      IconButton(
-                          padding: EdgeInsets.all(8.0),
-                          icon: Icon(
-                            Icons.close,
-                            size: CommonUtil().isTablet!
-                                ? imageCloseTab
-                                : imageCloseMobile,
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(8),
+              content: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            COMMENTS,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: CommonUtil().isTablet!
+                                    ? tabFontTitle
+                                    : mobileFontTitle),
                           ),
-                          onPressed: () {
-                            try {
-                              Navigator.pop(context);
-                            } catch (e,stackTrace) {
-                              print(e);
-                            }
-                          })
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: controller,
-                      decoration: InputDecoration(
-                        hintText: REASON_FOR_ESCALATION,
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color:
-                                  Color(CommonUtil().getQurhomePrimaryColor())),
                         ),
-                        border: OutlineInputBorder(
-                            // borderSide: new BorderSide(color: Colors.teal)
+                        Spacer(),
+                        IconButton(
+                            padding: EdgeInsets.all(8.0),
+                            icon: Icon(
+                              Icons.close,
+                              size: CommonUtil().isTablet!
+                                  ? imageCloseTab
+                                  : imageCloseMobile,
                             ),
-                      ),
-                      keyboardType: TextInputType.multiline,
-                      minLines: 5, //Normal textInputField will be displayed
-                      maxLines:
-                          6, // when user presses enter it will adapt to it
+                            onPressed: () {
+                              try {
+                                Navigator.pop(context);
+                              } catch (e, stackTrace) {
+                                print(e);
+                              }
+                            })
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary:
-                              Color(CommonUtil().getQurhomePrimaryColor())),
-                      onPressed: () {
-                        if(controller.text.isNotEmpty){
-                          callEscalateApi(patientAlertData,activityName,controller.text);
-                        }else{
-                          FlutterToast().getToast(PLEASE_ADD_COMMENTS, Colors.red);
-                        }
-                      },
-                      child: Text(
-                        SUBMIT,
-                        style: TextStyle(color: Colors.white),
-                      ))
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: controller,
+                        decoration: InputDecoration(
+                          hintText: REASON_FOR_ESCALATION,
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    CommonUtil().getQurhomePrimaryColor())),
+                          ),
+                          border: OutlineInputBorder(
+                              // borderSide: new BorderSide(color: Colors.teal)
+                              ),
+                        ),
+                        keyboardType: TextInputType.multiline,
+                        minLines: 5, //Normal textInputField will be displayed
+                        maxLines:
+                            6, // when user presses enter it will adapt to it
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            strEmergency,
+                            style: TextStyle(
+                                fontSize: CommonUtil().isTablet!
+                                    ? tabHeader1
+                                    : mobileHeader1),
+                          ),
+                        ),
+                        Switch(
+                          activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                          inactiveThumbColor: Colors.grey[200],
+                          inactiveTrackColor: Colors.grey[400],
+                          value: isEmergencyToggleEnabled,
+                          onChanged: (isEnabled) {
+                            setState(() {
+                              isEmergencyToggleEnabled =
+                                  !isEmergencyToggleEnabled;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary:
+                                Color(CommonUtil().getQurhomePrimaryColor())),
+                        onPressed: () {
+                          if (controller.text.isNotEmpty) {
+                            callEscalateApi(patientAlertData, activityName,
+                                controller.text);
+                          } else {
+                            FlutterToast()
+                                .getToast(PLEASE_ADD_COMMENTS, Colors.red);
+                          }
+                        },
+                        child: Text(
+                          SUBMIT,
+                          style: TextStyle(color: Colors.white),
+                        ))
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          });
         });
   }
 
-  Future<void> callEscalateApi(PatientAlertData patientAlertData, String activityName,String notes) async {
+  Future<void> callEscalateApi(PatientAlertData patientAlertData,
+      String activityName, String notes) async {
     CommonUtil().showSingleLoadingDialog(context);
     bool response = await controller.caregiverEscalateAction(
-      patientAlertData,
-      activityName,
-      notes: notes
-    );
+        patientAlertData, activityName, isEmergencyToggleEnabled,
+        notes: notes);
     if (response) {
       Navigator.pop(context);
       CommonUtil().hideLoadingDialog(context);
@@ -486,8 +532,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
         12,
         forDetails: false,
       ));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     showDialog(
         context: context,
@@ -513,9 +559,10 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                             onPressed: () {
                               try {
                                 Navigator.pop(context);
-                              } catch (e,stackTrace) {
+                              } catch (e, stackTrace) {
                                 print(e);
-                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                CommonUtil().appLogs(
+                                    message: e, stackTrace: stackTrace);
                               }
                             })
                       ],
@@ -796,8 +843,8 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
             }
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return "NA";
     }

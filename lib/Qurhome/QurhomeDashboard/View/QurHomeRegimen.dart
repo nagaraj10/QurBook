@@ -18,9 +18,6 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/CalendarMonth.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/chat_socket/constants/const_socket.dart';
-import 'package:myfhb/chat_socket/model/UnreadChatSocketNotify.dart';
-import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -160,13 +157,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       controller.getSOSButtonStatus();
       await Future.delayed(Duration(milliseconds: 100));
 
-      if (CommonUtil.isUSRegion()) {
-        if (strEventId.trim().isNotEmpty &&
-            controller.qurHomeRegimenResponseModel?.regimentsList != null &&
+      if (CommonUtil.isUSRegion() && strEventId.trim().isNotEmpty) {
+        RegimentDataModel? currRegimen = null;
+
+        if (controller.qurHomeRegimenResponseModel?.regimentsList != null &&
             (controller.qurHomeRegimenResponseModel?.regimentsList?.length ??
                     0) >
                 0) {
-          RegimentDataModel? currRegimen = null;
           for (int i = 0;
               i < controller.qurHomeRegimenResponseModel!.regimentsList!.length;
               i++) {
@@ -185,19 +182,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               break;
             }
           }
-          if (currRegimen == null) {
-            if (qurhomeDashboardController.isOnceInAPlanActivity.value) {
-              FlutterToast().getToast(
-                activity_completed_regimen,
-                Colors.green,
-              );
-              qurhomeDashboardController.isOnceInAPlanActivity.value = false;
-            } else {
-              FlutterToast().getToast(
-                activity_removed_regimen,
-                Colors.red,
-              );
-            }
+        }
+
+        if (currRegimen == null) {
+          if (qurhomeDashboardController.isOnceInAPlanActivity.value) {
+            FlutterToast().getToast(
+              activity_completed_regimen,
+              Colors.green,
+            );
+            qurhomeDashboardController.isOnceInAPlanActivity.value = false;
+          } else {
+            FlutterToast().getToast(
+              activity_removed_regimen,
+              Colors.red,
+            );
           }
         }
       }
@@ -1323,20 +1321,34 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 ),
                                 InkWell(
                                     onTap: () {
-                                      if (regimen.hasform!) {
-                                        Navigator.pop(context);
+                                      try {
+                                        if (regimen.activityOrgin ==
+                                            strSurvey) {
+                                          Navigator.pop(context);
+                                          redirectToSheelaScreen(regimen,
+                                              isSurvey: true,
+                                              isRetakeSurvey: true);
+                                          return;
+                                        }
 
-                                        onCardPressed(context, regimen,
-                                            aid: regimen.aid,
-                                            uid: regimen.uid,
-                                            formId: regimen.uformid,
-                                            formName: regimen.uformname,
-                                            canEditMain: true);
-                                      } else if (regimen?.hasform == false) {
-                                      } else {
-                                        Navigator.pop(context);
+                                        if (regimen.hasform!) {
+                                          Navigator.pop(context);
 
-                                        callLogApi(regimen);
+                                          onCardPressed(context, regimen,
+                                              aid: regimen.aid,
+                                              uid: regimen.uid,
+                                              formId: regimen.uformid,
+                                              formName: regimen.uformname,
+                                              canEditMain: true);
+                                        } else if (regimen?.hasform == false) {
+                                        } else {
+                                          Navigator.pop(context);
+
+                                          callLogApi(regimen);
+                                        }
+                                      } catch (e, stackTrace) {
+                                        CommonUtil().appLogs(
+                                            message: e, stackTrace: stackTrace);
                                       }
                                     },
                                     child: Column(
@@ -2296,10 +2308,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-  redirectToSheelaScreen(RegimentDataModel regimen, {bool isSurvey = false}) {
+  redirectToSheelaScreen(RegimentDataModel regimen, {bool isSurvey = false,bool isRetakeSurvey = false}) {
     Get.toNamed(
       rt_Sheela,
-      arguments: SheelaArgument(eId: regimen.eid ?? "", isSurvey: isSurvey),
+      arguments: SheelaArgument(eId: regimen.eid ?? "", isSurvey: isSurvey,isRetakeSurvey:isRetakeSurvey),
     )?.then((value) => {controller.showCurrLoggedRegimen(regimen)});
   }
 
@@ -2418,7 +2430,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         followEventContext: followEventContext,
         uformData: regimen.uformdata,
         isFollowEvent: eventIdReturn != null,
-        appBarTitle: getDialogTitle(context, regimen!, activityName, false),
+        appBarTitle: getDialogTitle(context, regimen!, activityName, false),regimen:regimen,
       ))?.then(
         (value) {
           if (value != null && (value ?? false)) {

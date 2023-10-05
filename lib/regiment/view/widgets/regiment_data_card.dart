@@ -3,10 +3,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/CommonUtil.dart';
@@ -79,8 +83,21 @@ class RegimentDataCard extends StatelessWidget {
                     CommonUtil().goToAppointmentDetailScreen(regimentData.eid);
                   }
                 } else {
-                  onCardPressed(context,
-                      aid: aid, uid: uid, formId: formId, formName: formName);
+                  if (regimentData.activityOrgin == strSurvey) {
+                    var canEdit = false;
+                    canEdit = CommonUtil.canEditRegimen(
+                        selectedDate, regimentData!, context!);
+
+                    if (canEdit) {
+                      redirectToSheelaScreen(regimentData, context,
+                          isSurvey: true);
+                    } else {
+                      onErrorMessage(context);
+                    }
+                  } else {
+                    onCardPressed(context,
+                        aid: aid, uid: uid, formId: formId, formName: formName);
+                  }
                 }
               },
               child: Row(
@@ -410,8 +427,8 @@ class RegimentDataCard extends StatelessWidget {
                   double.tryParse(vitalData.value)! >=
                       double.tryParse(vitalData.amin)!)
               : true;
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           //print(e);
         }
@@ -779,8 +796,8 @@ class RegimentDataCard extends StatelessWidget {
           Colors.black,
         );
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       LoaderClass.hideLoadingDialog(Get.context!);
     }
@@ -1059,5 +1076,71 @@ class RegimentDataCard extends StatelessWidget {
         : title?.trim();
 
     return name;
+  }
+
+  redirectToSheelaScreen(RegimentDataModel regimen, BuildContext context,
+      {bool isSurvey = false, bool isRetakeSurvey = false}) {
+    Get.toNamed(
+      rt_Sheela,
+      arguments: SheelaArgument(
+          eId: regimen.eid ?? "",
+          isSurvey: isSurvey,
+          isRetakeSurvey: isRetakeSurvey),
+    )?.then((value) async {
+      await Provider.of<RegimentViewModel>(context, listen: false)
+          .fetchRegimentData();
+    });
+  }
+
+  onErrorMessage(BuildContext context) {
+    if (((Provider.of<RegimentViewModel>(context!, listen: false)
+                    .regimentMode ==
+                RegimentMode.Symptoms)
+            ? symptomsError
+            : activitiesError)
+        .toLowerCase()
+        .contains('future activi')) {
+      _showErrorAlert(
+          (Provider.of<RegimentViewModel>(context!, listen: false)
+                      .regimentMode ==
+                  RegimentMode.Symptoms)
+              ? symptomsError
+              : activitiesError,
+          context);
+    } else {
+      FlutterToast().getToast(
+        (Provider.of<RegimentViewModel>(context!, listen: false).regimentMode ==
+                RegimentMode.Symptoms)
+            ? symptomsError
+            : activitiesError,
+        Colors.red,
+      );
+    }
+  }
+
+  Future<void> _showErrorAlert(String text, BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Info'),
+          content: Text(text),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Color(CommonUtil().getQurhomePrimaryColor())),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

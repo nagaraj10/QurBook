@@ -287,6 +287,27 @@ class _SplashScreenState extends State<SplashScreen> {
                 // } else {
                 if (authToken != null) {
                   if (deviceIfo) {
+                    FirebaseMessaging _firebaseMessaging =
+                        FirebaseMessaging.instance;
+
+                    _firebaseMessaging.getToken().then((token) {
+                      CommonUtil()
+                          .sendDeviceToken(
+                              PreferenceUtil.getStringValue(
+                                  Constants.KEY_USERID),
+                              PreferenceUtil.getStringValue(
+                                  Constants.KEY_EMAIL),
+                              PreferenceUtil.getStringValue(Constants.MOB_NUM),
+                              token,
+                              true)
+                          .then((value) {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'dashboard',
+                          'navigationPage': 'Dashboard',
+                        });
+                      });
+                    });
                     if (widget.nsRoute == 'DoctorRescheduling') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

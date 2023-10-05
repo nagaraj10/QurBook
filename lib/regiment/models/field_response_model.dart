@@ -71,6 +71,8 @@ class FieldModel {
     this.ts,
     this.deleted,
     this.value,
+    this.strTitleDesc,
+    this.isSurvey = false,
   });
 
   dynamic fieldid;
@@ -91,6 +93,8 @@ class FieldModel {
   DateTime? ts;
   dynamic deleted;
   String? value;
+  bool isSurvey = false;
+  String? strTitleDesc = "";
 
   factory FieldModel.fromJson(Map<String, dynamic> json) => FieldModel(
         fieldid: json['fieldid'],

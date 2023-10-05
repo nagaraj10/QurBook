@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/model/Country.dart';
+import 'package:myfhb/widgets/app_primary_button.dart';
 import '../constants/constants.dart';
 import '../model/forgot_password_model.dart';
 import 'authentication_validator.dart';
@@ -95,8 +96,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 strPhoneNumber, strPhoneHint, mobileController),
                           ],
                         ),
-                        SizedBox(height: 10.0.h),
+                        SizedBox(height: 20.0.h),
                         _resetbutton(),
+                        SizedBox(height: 20.0.h),
+                        _backbutton(),
                         SizedBox(height: height * .015),
                         Text(
                           CommonUtil.isUSRegion()?strUSsupportEmail:strINsupportEmail,
@@ -163,6 +166,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   onValuePicked: (country) => setState(
                     () => _selectedDialogCountry = country,
                   ),
+                  isEnabled: (BASE_URL != prodUSURL),
                 ),
               ),
               labelText: title,
@@ -207,7 +211,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               width: 10.0.w,
             ),
             Text(
-              strSignIn,
+              strLoginText,
               style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                   fontSize: 15.0.sp,
@@ -219,31 +223,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Widget _resetbutton() {
+  Widget _commonForgotPasswordButton(String textString, Function()? onTap) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
-          onTap: () async {
-            FocusScope.of(context).unfocus();
-            if (_ForgetPassKey.currentState!.validate()) {
-              _ForgetPassKey.currentState!.save();
-              LoaderClass.showLoadingDialog(context);
-              var logInModel = PatientForgotPasswordModel(
-                //userName: mobileController.text,
-                userName:
-                    '${_selectedDialogCountry.phoneCode}${mobileController.text}',
-                source: strSource,
-              );
-              final map = logInModel.toJson();
-              final response = await authViewModel.resetPassword(map);
-              _checkResponse(response);
-            } else {
-              setState(() {
-                _autoValidateBool = true;
-              });
-            }
-          },
+          onTap: onTap,
           child: Container(
             padding: EdgeInsets.symmetric(
               vertical: 15.0.sp,
@@ -260,19 +245,51 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
                   Color(CommonUtil().getMyPrimaryColor()),
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
-              strResetButton,
+              textString,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
             ),
           ),
         ),
       ],
     );
+  }
+
+  Widget _backbutton() {
+   return AppPrimaryButton(onTap: () {
+      FocusScope.of(context).unfocus();
+      Navigator.of(context).pop();
+    }, text:strBackText,
+      isSecondaryButton: true,
+
+    );
+  }
+
+  Widget _resetbutton() {
+   return AppPrimaryButton(text:strResetButton, onTap: () async {
+      FocusScope.of(context).unfocus();
+      if (_ForgetPassKey.currentState!.validate()) {
+        _ForgetPassKey.currentState!.save();
+        LoaderClass.showLoadingDialog(context);
+        var logInModel = PatientForgotPasswordModel(
+          //userName: mobileController.text,
+          userName:
+          '${_selectedDialogCountry.phoneCode}${mobileController.text}',
+          source: strSource,
+        );
+        final map = logInModel.toJson();
+        final response = await authViewModel.resetPassword(map);
+        _checkResponse(response);
+      } else {
+        setState(() {
+          _autoValidateBool = true;
+        });
+      }
+    },
+   );
   }
 
   _checkResponse(PatientForgotPasswordModel response) {

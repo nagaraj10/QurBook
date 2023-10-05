@@ -58,12 +58,13 @@ const String mobileNumber = "'s mobile number ";
 
 //Strings used in VerifyPatient
 const String strAccount = 'Already have an account ?';
-const String strSignIn = 'Sign in';
 const String strPhoneType = 'df61aa82-6bbf-4f09-a48a-b535ae579960';
 const String strSignup = 'Sign up';
 const String strPassword = 'Password';
 const String strEmailValidText = 'Please Enter Valid Email';
 const String strSignUpText = 'Sign up with a new account';
+const String strSignUpYourProvider = 'Your provider';
+const String strSignUpProviderHasInvitedYouto = 'has invited you to';
 const String strFirstNameHint = 'First Name';
 const String strEnterName = 'Please Enter Name';
 const String strLastNameHint = 'Last Name';
@@ -86,7 +87,7 @@ const String strOtpShowText =
     'Enter the registered mobile number to change the password';
 
 //Strings used in SignInScreen
-const String strSignInText = 'Sign In';
+const String strLoginText = 'Login';
 const String strBackText = 'Back';
 const String strReviewPay = 'Review & Pay';
 const String strRetryPay = 'Retry Payment';
@@ -252,7 +253,8 @@ const String strNoPlansCheckFree =
 const String strCallMyCC = 'Call my CC';
 
 const String strSurvey = 'Survey';
-
+const String strVideoTitle = "Video Instructions";
+const String strAudioTitle = "Audio Instructions";
 //show icons for alerts
 
 const String MISSED_MAND_ACTIVITES = 'assets/icons/missed_mad_activities.png';
@@ -279,7 +281,13 @@ const String strConfirmPasswordCheck = 'Password does not match';
 const String strUSEmailHintText = 'name@host.com (optional)';
 const String strSignUpFinishText = 'Please finish setting up your account';
 const String strPleaseEnterFirstname = 'Please Enter First Name';
+const String stringBluetoothUnknown = 'unknown';
+const String stringBluetoothUnsupported = 'unsupported';
+const String stringBluetoothUnauthorized = 'unauthorized';
+const String stringBluetoothPoweredOff = 'poweredOff';
+const String stringBluetoothScanstarted = 'scanstarted';
 
+const String strRedirectToHelpPreview = 'media_help_screen';
 const String strBack = 'Back';
 
 const String strPreviewScreen = 'preview_screen';

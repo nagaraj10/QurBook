@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -136,6 +138,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
+
+      if(Platform.isAndroid){
+        CommonUtil().askPermssionLocationBleScan();
+      }
+
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 

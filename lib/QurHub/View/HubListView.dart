@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../Controller/HubListViewController.dart';
 import '../../constants/fhb_constants.dart';
 
@@ -99,7 +102,11 @@ class HubListView extends GetView<HubListViewController> {
 
           return InkWell(
             onTap: () {
-              controller.checkForConnectedDevices();
+              if (Platform.isAndroid) {
+                askPermssionLocationBleScan();
+              } else {
+                controller.checkForConnectedDevices();
+              }
             },
             child: Card(
               shape: RoundedRectangleBorder(
@@ -154,7 +161,11 @@ class HubListView extends GetView<HubListViewController> {
 
           return InkWell(
             onTap: () async {
-              controller.checkForConnectedDevices();
+              if (Platform.isAndroid) {
+                askPermssionLocationBleScan();
+              } else {
+                controller.checkForConnectedDevices();
+              }
             },
             child: Container(
               width: CommonUtil().isTablet! ? 400.w : 260.0.w,
@@ -516,5 +527,21 @@ class HubListView extends GetView<HubListViewController> {
         );
       },
     );
+  }
+
+
+  Future<void> askPermssionLocationBleScan() async {
+    try {
+      var location = await Permission.location.status;
+      var bluetoothScan = await Permission.bluetoothScan.status;
+      if (location.isDenied ||
+          bluetoothScan.isDenied) {
+        await CommonUtil().handleLocationBleScanConnect();
+      } else {
+        controller.checkForConnectedDevices();
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 }

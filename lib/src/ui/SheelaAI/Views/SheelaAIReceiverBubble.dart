@@ -1,15 +1,21 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/AudioWidget.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/variable_constant.dart';
 import '../../../utils/screenutils/size_extensions.dart';
 import '../../imageSlider.dart';
@@ -18,8 +24,6 @@ import '../Models/SheelaResponse.dart';
 import 'AttachmentListSheela.dart';
 import 'CommonUitls.dart';
 import 'youtube_player.dart';
-import '../../../../constants/fhb_constants.dart' as Constants;
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SheelaAIReceiverBubble extends StatelessWidget {
   final SheelaResponse chat;
@@ -187,7 +191,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
               ),
 
               //need to add the video links here
-              if ((chat.videoLinks ?? []).isNotEmpty) videoWidgets(),
+              //if ((chat.videoLinks ?? []).isNotEmpty) videoWidgets(),
             ],
           ),
         ),
@@ -252,21 +256,11 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                 IconButton(
                                   icon: const Icon(
                                       Icons.play_circle_fill_rounded),
-                                  color: Colors.black54,
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                   iconSize: 75,
                                   onPressed: () {
-                                    if (controller.isLoading.isTrue) {
-                                      return;
-                                    }
-                                    controller.stopTTS();
-                                    String? videoId;
-                                    videoId = YoutubePlayer.convertUrlToId(
-                                        currentVideoLink.url!);
-                                    Get.to(
-                                      MyYoutubePlayer(
-                                        videoId: videoId,
-                                      ),
-                                    );
+                                    playYoutube(currentVideoLink.url);
                                   },
                                 ),
                               ],
@@ -306,38 +300,32 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                     (chat.isActionDone != null && chat.isActionDone!))
                 ? null
                 : () {
-              if (buttonData?.btnRedirectTo == strPreviewScreen) {
-                if (buttonData?.chatAttachments != null &&
-                    (buttonData?.chatAttachments?.length ??
-                        0) >
-                        0) {
-                  CommonUtil()
-                      .onInitQurhomeDashboardController()
-                      .setActiveQurhomeDashboardToChat(status: false);
-                  Get.to(
-                    AttachmentListSheela(
-                        chatAttachments:
-                        buttonData?.chatAttachments ?? []),
-                  );
-                }
-              } else {
-                if (controller.isLoading.isTrue) {
-                  return;
-                }
-                if (chat.singleuse != null &&
-                    chat.singleuse! &&
-                    chat.isActionDone != null) {
-                  chat.isActionDone = true;
-                }
-                buttonData?.isSelected = true;
-                controller.startSheelaFromButton(
-                    buttonText: buttonData?.title,
-                    payload: buttonData?.payload,
-                    buttons: buttonData);
-                Future.delayed(const Duration(seconds: 3), () {
-                  buttonData?.isSelected = false;
-                });
-              }
+                    if (buttonData?.btnRedirectTo == strRedirectToHelpPreview) {
+                      if (buttonData?.videoUrl != null &&
+                          buttonData?.videoUrl != '') {
+                        playYoutube(buttonData?.videoUrl);
+                      } else if (buttonData?.audioUrl != null &&
+                          buttonData?.audioUrl != '') {
+                        playAudioFile(buttonData?.audioUrl);
+                      }
+                    } else {
+                      if (controller.isLoading.isTrue) {
+                        return;
+                      }
+                      if (chat.singleuse != null &&
+                          chat.singleuse! &&
+                          chat.isActionDone != null) {
+                        chat.isActionDone = true;
+                      }
+                      buttonData?.isSelected = true;
+                      controller.startSheelaFromButton(
+                          buttonText: buttonData?.title,
+                          payload: buttonData?.payload,
+                          buttons: buttonData);
+                      Future.delayed(const Duration(seconds: 3), () {
+                        buttonData?.isSelected = false;
+                      });
+                    }
                   },
             child: Card(
               color: (buttonData?.isSelected ?? false)
@@ -453,6 +441,54 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return SizedBox.shrink();
+    }
+  }
+
+  playYoutube(var currentVideoLinkUrl) {
+    try {
+      if (controller.isLoading.isTrue) {
+        return;
+      }
+      String? videoId;
+      videoId = YoutubePlayer.convertUrlToId(currentVideoLinkUrl);
+      controller.updateTimer(enable: false);
+      if (videoId != null) {
+        Get.to(
+          MyYoutubePlayer(
+            videoId: videoId,
+          ),
+        )!.then((value) {
+          controller.updateTimer(enable: true);
+        });
+      } else {
+        controller.isPlayPauseView.value = false;
+        controller.isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
+        Get.to(
+          VideoPlayerScreen(
+            videoURL: (currentVideoLinkUrl??""),
+          ),
+        )!.then((value) {
+          controller.updateTimer(enable: true);
+        });
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  playAudioFile(var audioURLLink) {
+    try {
+      if (controller.isLoading.isTrue) {
+        return;
+      }
+      controller.updateTimer(enable: false);
+      Get.to(AudioPlayerScreen(
+        audioUrl: (audioURLLink ?? ""),
+      ))!.then((value) {
+        controller.updateTimer(enable: true);
+      });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
