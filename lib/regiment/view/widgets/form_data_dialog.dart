@@ -1201,8 +1201,11 @@ class FormDataDialogState extends State<FormDataDialog> {
 
   getVitalsData(List<VitalsData>? vitalsData, FieldModel fieldModel) {
     try {
-      for (VitalsData? vitalsDataObj in vitalsData!) {
-        if (vitalsDataObj?.vitalName == fieldModel.title) return vitalsDataObj;
+      if (vitalsData != null && vitalsData.length > 0) {
+        for (VitalsData? vitalsDataObj in vitalsData!) {
+          if (vitalsDataObj?.vitalName == fieldModel.title)
+            return vitalsDataObj;
+        }
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1241,7 +1244,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     }
   }
 
-  getView(VitalsData? vitalsDataParam,int index) {
+  getView(VitalsData? vitalsDataParam, int index) {
     return Padding(
       padding: EdgeInsets.only(
         bottom: 10.0.h,
@@ -1251,26 +1254,24 @@ class FormDataDialogState extends State<FormDataDialog> {
         fieldData: fieldsData![index],
         vitalsData: vitalsDataParam,
         isFromQurHomeRegimen: widget.isFromQurHomeRegimen,
-        isFromQurHomeSymptom: widget.isFromQurHomeSymptom ||
-            widget.isFromQurHomeRegimen,
+        isFromQurHomeSymptom:
+            widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen,
         isChanged: (settings) {
           isSettingChanged = settings;
         },
         updateValue: (
-            updatedFieldData, {
-              isAdd,
-              title,
-            }) {
+          updatedFieldData, {
+          isAdd,
+          title,
+        }) {
           if (isAdd == null || isAdd) {
             isAdd = isAdd ?? false;
             final oldValue = saveMap.putIfAbsent(
               isAdd ? 'pf_$title' : 'pf_${updatedFieldData.title}',
-                  () => updatedFieldData.value,
+              () => updatedFieldData.value,
             );
             if (oldValue != null) {
-              saveMap[isAdd
-                  ? 'pf_$title'
-                  : 'pf_${updatedFieldData.title}'] =
+              saveMap[isAdd ? 'pf_$title' : 'pf_${updatedFieldData.title}'] =
                   updatedFieldData.value;
             }
           } else {
