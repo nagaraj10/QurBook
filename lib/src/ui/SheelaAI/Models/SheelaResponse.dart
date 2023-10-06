@@ -231,7 +231,6 @@ class Buttons {
     this.imageUrl,
     this.videoUrl,
     this.audioUrl,
-    this.btnRedirectTo,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -301,6 +300,100 @@ class VideoLinks {
     data['title'] = this.title;
     data['thumbnail'] = this.thumbnail;
     data['url'] = this.url;
+    return data;
+  }
+}
+
+class ChatAttachments {
+  String? id;
+  String? chatListId;
+  String? deliveredDateTime;
+  bool? isRead;
+  int? messageType;
+  Messages? messages;
+  String? documentId;
+
+  ChatAttachments(
+      {this.id,
+        this.chatListId,
+        this.deliveredDateTime,
+        this.isRead,
+        this.messageType,
+        this.messages,
+        this.documentId});
+
+  ChatAttachments.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    chatListId = json['chatListId'];
+    deliveredDateTime = json['deliveredDateTime'];
+    isRead = json['isRead'];
+    messageType = json['messageType'];
+    messages = json['messages'] != null
+        ? new Messages.fromJson(json['messages'])
+        : null;
+    documentId = json['documentId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['chatListId'] = this.chatListId;
+    data['deliveredDateTime'] = this.deliveredDateTime;
+    data['isRead'] = this.isRead;
+    data['messageType'] = this.messageType;
+    if (this.messages != null) {
+      data['messages'] = this.messages!.toJson();
+    }
+    data['documentId'] = this.documentId;
+    return data;
+  }
+}
+
+class Messages {
+  String? id;
+  String? idTo;
+  int? type;
+  String? idFrom;
+  bool? isread;
+  String? content;
+  bool? isUpload;
+  bool? isPatient;
+  String? chatMessageId;
+
+  Messages(
+      {this.id,
+        this.idTo,
+        this.type,
+        this.idFrom,
+        this.isread,
+        this.content,
+        this.isUpload,
+        this.isPatient,
+        this.chatMessageId});
+
+  Messages.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    idTo = json['idTo'];
+    type = json['type'];
+    idFrom = json['idFrom'];
+    isread = json['isread'];
+    content = json['content'];
+    isUpload = json['isUpload'];
+    isPatient = json['isPatient'];
+    chatMessageId = json['chatMessageId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['idTo'] = this.idTo;
+    data['type'] = this.type;
+    data['idFrom'] = this.idFrom;
+    data['isread'] = this.isread;
+    data['content'] = this.content;
+    data['isUpload'] = this.isUpload;
+    data['isPatient'] = this.isPatient;
+    data['chatMessageId'] = this.chatMessageId;
     return data;
   }
 }

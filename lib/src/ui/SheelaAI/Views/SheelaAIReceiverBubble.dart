@@ -300,31 +300,52 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                     (chat.isActionDone != null && chat.isActionDone!))
                 ? null
                 : () {
-                    if (buttonData?.btnRedirectTo == strRedirectToHelpPreview) {
-                      if (buttonData?.videoUrl != null &&
-                          buttonData?.videoUrl != '') {
-                        playYoutube(buttonData?.videoUrl);
-                      } else if (buttonData?.audioUrl != null &&
-                          buttonData?.audioUrl != '') {
-                        playAudioFile(buttonData?.audioUrl);
+                    try {
+                      if (buttonData?.btnRedirectTo == strPreviewScreen) {
+                        if (buttonData?.chatAttachments != null &&
+                            (buttonData?.chatAttachments?.length ?? 0) > 0) {
+                          controller.stopTTS();
+                          controller.isSheelaScreenActive = false;
+                          CommonUtil()
+                              .onInitQurhomeDashboardController()
+                              .setActiveQurhomeDashboardToChat(status: false);
+                          Get.to(
+                            AttachmentListSheela(
+                                chatAttachments:
+                                    buttonData?.chatAttachments ?? []),
+                          )?.then((value) {
+                            controller.isSheelaScreenActive = true;
+                          });
+                        }
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectToHelpPreview) {
+                        if (buttonData?.videoUrl != null &&
+                            buttonData?.videoUrl != '') {
+                          playYoutube(buttonData?.videoUrl);
+                        } else if (buttonData?.audioUrl != null &&
+                            buttonData?.audioUrl != '') {
+                          playAudioFile(buttonData?.audioUrl);
+                        }
+                      } else {
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+                        if (chat.singleuse != null &&
+                            chat.singleuse! &&
+                            chat.isActionDone != null) {
+                          chat.isActionDone = true;
+                        }
+                        buttonData?.isSelected = true;
+                        controller.startSheelaFromButton(
+                            buttonText: buttonData?.title,
+                            payload: buttonData?.payload,
+                            buttons: buttonData);
+                        Future.delayed(const Duration(seconds: 3), () {
+                          buttonData?.isSelected = false;
+                        });
                       }
-                    } else {
-                      if (controller.isLoading.isTrue) {
-                        return;
-                      }
-                      if (chat.singleuse != null &&
-                          chat.singleuse! &&
-                          chat.isActionDone != null) {
-                        chat.isActionDone = true;
-                      }
-                      buttonData?.isSelected = true;
-                      controller.startSheelaFromButton(
-                          buttonText: buttonData?.title,
-                          payload: buttonData?.payload,
-                          buttons: buttonData);
-                      Future.delayed(const Duration(seconds: 3), () {
-                        buttonData?.isSelected = false;
-                      });
+                    } catch (e, stackTrace) {
+                      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                     }
                   },
             child: Card(
@@ -457,17 +478,20 @@ class SheelaAIReceiverBubble extends StatelessWidget {
           MyYoutubePlayer(
             videoId: videoId,
           ),
-        )!.then((value) {
+        )!
+            .then((value) {
           controller.updateTimer(enable: true);
         });
       } else {
         controller.isPlayPauseView.value = false;
-        controller.isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
+        controller.isFullScreenVideoPlayer.value =
+            (CommonUtil().isTablet ?? false) ? true : false;
         Get.to(
           VideoPlayerScreen(
-            videoURL: (currentVideoLinkUrl??""),
+            videoURL: (currentVideoLinkUrl ?? ""),
           ),
-        )!.then((value) {
+        )!
+            .then((value) {
           controller.updateTimer(enable: true);
         });
       }
@@ -484,7 +508,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       controller.updateTimer(enable: false);
       Get.to(AudioPlayerScreen(
         audioUrl: (audioURLLink ?? ""),
-      ))!.then((value) {
+      ))!
+          .then((value) {
         controller.updateTimer(enable: true);
       });
     } catch (e, stackTrace) {
