@@ -271,7 +271,7 @@ public class CBCentralManager extends CBManager {
         mPeripherals.clear();
         Set<BluetoothDevice> bondedDevices = null;
         Log.e("bluetooth", "_initPeripherals: "+"first" );
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getContext().checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    Activity#requestPermissions
@@ -285,7 +285,7 @@ public class CBCentralManager extends CBManager {
                 CheckForPermissions.checkForLocationPermissions(activity);
                 return;
             }
-        }
+        }*/
         Log.e("bluetooth", "_initPeripherals: "+"third" );
 
         bondedDevices = getAdapter().getBondedDevices();

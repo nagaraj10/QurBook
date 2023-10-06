@@ -15,8 +15,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/attachments.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-
-import 'AudioScreenPreviewSheela.dart';
+import 'audio_player_screen.dart';
 
 class AttachmentListSheela extends StatefulWidget {
   const AttachmentListSheela({Key? key, required this.chatAttachments})
@@ -30,11 +29,13 @@ class AttachmentListSheela extends StatefulWidget {
 
 class _AttachmentListSheelaState extends State<AttachmentListSheela> {
   List<ChatAttachments>? _chatAttachments;
+  var pdfViewController;
 
   @override
   void initState() {
     super.initState();
-
+    pdfViewController =
+    CommonUtil().onInitPDFViewController();
     _chatAttachments = widget.chatAttachments;
 
     PreferenceUtil.saveIfSheelaAttachmentPreviewisActive(
@@ -189,10 +190,11 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
             attachments.messages?.chatMessageId ?? '');
         return;
       case 3:
-        Get.to(AudioScreenPreviewSheela(
-            audioUrl: attachments.messages?.content ?? '',
-            title: title ?? '',
-            chatMessageId: attachments.messages?.chatMessageId ?? ''));
+        Get.to(AudioPlayerScreen(
+          audioUrl: (attachments.messages?.content ?? ''),
+          chatMessageId: (attachments.messages?.chatMessageId ?? ''),
+          titleAppBar: (title ?? ''),
+        ));
         return;
       default:
         return;
@@ -201,9 +203,8 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
 
   goToPDFViewBasedonURL(String? url, String? title, String? chatMessageId) {
     try {
-      final controller = Get.find<PDFViewController>();
       final data = OpenPDF(type: PDFLocation.URL, path: url);
-      controller.data = data;
+      pdfViewController.data = data;
       Get.to(() => PDFView(
           isFromSheelaPreview: true,
           sheelaPreviewTitle: title,

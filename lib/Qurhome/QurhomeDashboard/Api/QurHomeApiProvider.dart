@@ -567,6 +567,7 @@ class QurHomeApiProvider {
       CareGiverPatientListResult? careGiverPatientListResult,
       String? activityName,
       String? healthOrganizationId,
+      bool esclateValue,
       {String? notes}) async {
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
@@ -593,6 +594,7 @@ class QurHomeApiProvider {
           .getCategoryFromTypeName(patientAlertData?.typeCode ?? '');
       postMediaData['alertDateTime'] = CommonUtil().getFormattedDate(
           patientAlertData?.createdOn?.toString() ?? '', c_yMd_Hms);
+      postMediaData['isEmergencyContactRequest'] = esclateValue;
 
       final params = json.encode(postMediaData);
 

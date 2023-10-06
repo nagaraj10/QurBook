@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../Controller/HubListViewController.dart';
 import '../../constants/fhb_constants.dart';
 
@@ -99,7 +102,11 @@ class HubListView extends GetView<HubListViewController> {
 
           return InkWell(
             onTap: () {
-              controller.checkForConnectedDevices();
+              if (Platform.isAndroid) {
+                askPermssionLocationBleScan();
+              } else {
+                controller.checkForConnectedDevices();
+              }
             },
             child: Card(
               shape: RoundedRectangleBorder(
@@ -154,7 +161,11 @@ class HubListView extends GetView<HubListViewController> {
 
           return InkWell(
             onTap: () async {
-              controller.checkForConnectedDevices();
+              if (Platform.isAndroid) {
+                askPermssionLocationBleScan();
+              } else {
+                controller.checkForConnectedDevices();
+              }
             },
             child: Container(
               width: CommonUtil().isTablet! ? 400.w : 260.0.w,
@@ -282,93 +293,39 @@ class HubListView extends GetView<HubListViewController> {
                                   ? tabHeader1
                                   : mobileHeader1),
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              'Device Type - ',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: CommonUtil().isTablet!
-                                    ? tabHeader2
-                                    : mobileHeader2,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                CommonUtil().validString(
-                                  controller
-                                      .hubListResponse!
-                                      .result![index]
-                                      .device!
-                                      .deviceType!
-                                      .name,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: CommonUtil().isTablet!
-                                      ? tabHeader2
-                                      : mobileHeader2,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              'Device ID - ',
-                              style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: CommonUtil().isTablet!
-                                      ? tabHeader2
-                                      : mobileHeader2),
-                            ),
-                            Expanded(
-                              child: Text(
-                                CommonUtil().validString(
-                                  controller
-                                      .hubListResponse!
-                                      .result![index]
-                                      .device!
-                                      .serialNumber,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: CommonUtil().isTablet!
-                                      ? tabHeader2
-                                      : mobileHeader2,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              'Connected on - ',
-                              style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: CommonUtil().isTablet!
-                                      ? tabHeader2
-                                      : mobileHeader2),
-                            ),
-                            Expanded(
-                              child: Text(
-                                "${changeDateFormat(CommonUtil().validString(controller.hubListResponse?.result![index].createdOn??""))}",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: CommonUtil().isTablet!
-                                        ? tabHeader2
-                                        : mobileHeader2),
-                              ),
-                            ),
-                          ],
-                        ),
+                        commonWidgetForTitleValue(
+                            strDeviceTypeConnectedDeviceScreen,
+                            CommonUtil().validString(
+                              controller.hubListResponse!.result![index].device!
+                                  .deviceType!.name,
+                            )),
+                        commonWidgetForTitleValue(
+                            strDeviceID,
+                            CommonUtil().validString(
+                              controller.hubListResponse!.result![index].device!
+                                  .serialNumber,
+                            )),
+                        commonWidgetForTitleValue(strConnectedOn,
+                            "${changeDateFormat(CommonUtil().validString(controller.hubListResponse?.result![index].createdOn ?? ""))}"),
+                        //Paired mode
+                        commonWidgetForTitleValue(
+                            strPairingMode,
+                            CommonUtil()
+                                    .validString(
+                                      (controller
+                                              .hubListResponse
+                                              ?.result![index]
+                                              ?.device
+                                              ?.deviceType
+                                              ?.additionalInfo
+                                              ?.connectivityType ??
+                                          ''),
+                                    )
+                                    .trim()
+                                    .toLowerCase()
+                                    .contains(strBluetooth.toLowerCase())
+                                ? strBluetooth
+                                : strLTE),
                       ],
                     ),
                   ),
@@ -515,6 +472,46 @@ class HubListView extends GetView<HubListViewController> {
           ),
         );
       },
+    );
+  }
+
+
+  Future<void> askPermssionLocationBleScan() async {
+    try {
+      var location = await Permission.location.status;
+      var bluetoothScan = await Permission.bluetoothScan.status;
+      if (location.isDenied ||
+          bluetoothScan.isDenied) {
+        await CommonUtil().handleLocationBleScanConnect();
+      } else {
+        controller.checkForConnectedDevices();
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  commonWidgetForTitleValue(String title, String value) {
+    return Row(
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

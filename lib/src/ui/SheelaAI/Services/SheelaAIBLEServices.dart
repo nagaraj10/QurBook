@@ -31,6 +31,7 @@ class SheelaBLEController extends GetxController {
   MethodChannel bleMethodChannel = const MethodChannel('QurbookBLE/method');
   late Stream stream;
   StreamSubscription? timerSubscription;
+  StreamSubscription? troubleShootTimerSubscription;
 
   Timer? timeOutTimer;
   final String conversationType = "BLESheelaConversations";
@@ -45,6 +46,7 @@ class SheelaBLEController extends GetxController {
   int randomNum = 0;
   String weightUnit = "";
   String filteredDeviceType = '';
+  String troubleShootStatus = '';
 
   @override
   void onInit() {
@@ -108,9 +110,7 @@ class SheelaBLEController extends GetxController {
 
   void _enableTimer() {
     if (!addingDevicesInHublist) {
-      final devicesList =
-          (hublistController.hubListResponse?.result ??
-              []);
+      final devicesList = (hublistController.hubListResponse?.result ?? []);
       if (devicesList.isEmpty) {
         return;
       }
@@ -132,10 +132,10 @@ class SheelaBLEController extends GetxController {
           switch (receivedValues!.first) {
             case "scanstarted":
               SheelaController.isBLEStatus.value = BLEStatus.Searching;
-              FlutterToast().getToast(
+              /*FlutterToast().getToast(
                 SearchingForDevices,
                 Colors.green,
-              );
+              );*/
               break;
             case "enablebluetooth":
               FlutterToast().getToast(
@@ -194,10 +194,10 @@ class SheelaBLEController extends GetxController {
                     deviceType == "weight" ||
                     deviceType == "bgl") {
                   SheelaController.isBLEStatus.value = BLEStatus.Connected;
-                  FlutterToast().getToast(
+/*                  FlutterToast().getToast(
                     deviceConnected,
                     Colors.green,
-                  );
+                  );*/
                   if (isFromVitals || isFromRegiment) {
                     Get.back();
                   }
@@ -274,11 +274,9 @@ class SheelaBLEController extends GetxController {
               showFailure();
               break;
             case "connectionfailed":
-              print("Connection failed");
               _disableTimer();
               showFailure();
               await Future.delayed(const Duration(seconds: 2));
-              //setupListenerForReadings();
               break;
 
             default:
@@ -290,9 +288,7 @@ class SheelaBLEController extends GetxController {
     if (addingDevicesInHublist) {
       bleMethodChannel.invokeListMethod('scanAll');
     } else {
-      final devicesList =
-          (hublistController.hubListResponse?.result ??
-              []);
+      final devicesList = (hublistController.hubListResponse?.result ?? []);
       List pairedDevices = [];
       for (var device in devicesList) {
         var deviceManufacturer = device.manufacturer;
@@ -311,6 +307,21 @@ class SheelaBLEController extends GetxController {
       }
       bleMethodChannel.invokeListMethod('scanSingle', pairedDevices);
     }
+  }
+
+  void troubleShootTheBluetooth() {
+    troubleShootTimerSubscription = stream.listen(
+      (event) {
+        if (event == null || event == "") {
+          return;
+        }
+        final List<String>? receivedValues = event.split('|');
+        if ((receivedValues ?? []).isNotEmpty) {
+          troubleShootStatus = receivedValues!.first;
+        }
+      },
+    );
+    bleMethodChannel.invokeListMethod('scanAll');
   }
 
   String getDeviceCode(String? deviceCode) {
@@ -339,9 +350,7 @@ class SheelaBLEController extends GetxController {
 
   bool checkForParedDevice() {
     try {
-      final devicesList =
-          (hublistController.hubListResponse?.result ??
-              []);
+      final devicesList = (hublistController.hubListResponse?.result ?? []);
       if (devicesList.isEmpty) {
         return false;
       }
@@ -373,8 +382,8 @@ class SheelaBLEController extends GetxController {
         bool? isBluetoothEnable = false;
         isBluetoothEnable = await (CommonUtil().checkBluetoothIsOn());
         if (!isBluetoothEnable!) {
-          FlutterToast().getToast(
-              pleaseTurnOnYourBluetoothAndTryAgain, Colors.red);
+          FlutterToast()
+              .getToast(pleaseTurnOnYourBluetoothAndTryAgain, Colors.red);
           return false;
         } else if (!serviceEnabled) {
           FlutterToast().getToast(
@@ -542,7 +551,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye!.",
+                    "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -573,7 +582,7 @@ class SheelaBLEController extends GetxController {
                 recipientId: conversationType,
                 text: "Thank you. Your BP systolic ${model.data!.systolic} "
                     ", Diastolic ${model.data!.diastolic} "
-                    "and Pulse ${model.data!.pulse} are successfully recorded. Bye!.",
+                    "and Pulse ${model.data!.pulse} are successfully recorded. Bye.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -587,7 +596,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye!.",
+                    "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye.",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -622,7 +631,9 @@ class SheelaBLEController extends GetxController {
           SheelaController.isMicListening.toggle();
           isPlaying = true;
           final status = await SheelaController.playUsingLocalTTSEngineFor(
-              currentPlayingConversation.text);
+              (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                  ? getPronunciationText(currentPlayingConversation)
+                  :(currentPlayingConversation.text)));
           playConversations.removeAt(0);
           isPlaying = false;
           if (isCompleted) {
@@ -643,7 +654,9 @@ class SheelaBLEController extends GetxController {
       String? textForPlaying;
       if ((currentPlayingConversation.text ?? '').isNotEmpty) {
         final result = await SheelaController.getGoogleTTSForText(
-            currentPlayingConversation.text);
+            (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                ? getPronunciationText(currentPlayingConversation)
+                :(currentPlayingConversation?.text)));
         if ((result!.payload!.audioContent ?? '').isNotEmpty) {
           textForPlaying = result.payload!.audioContent;
         }
@@ -732,5 +745,10 @@ class SheelaBLEController extends GetxController {
     filteredDeviceType = '';
     removeTimeOutTimer();
     SheelaController.isBLEStatus.value = BLEStatus.Disabled;
+  }
+
+  String getPronunciationText(SheelaResponse? currentPlayingConversation) {
+    return CommonUtil()
+        .validString(currentPlayingConversation!.pronunciationText ?? '');
   }
 }

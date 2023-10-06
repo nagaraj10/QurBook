@@ -17,10 +17,14 @@ import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
@@ -87,6 +91,10 @@ class SheelaAIController extends GetxController {
   bool isCallStartFromSheela = false;
 
   ChatSocketService _chatSocketService = new ChatSocketService();
+
+  Rx<bool> isFullScreenVideoPlayer = false.obs;
+  Rx<bool> isPlayPauseView = false.obs;
+  Rx<bool> isAudioScreenLoading = false.obs;
 
   @override
   void onInit() {
@@ -332,7 +340,12 @@ class SheelaAIController extends GetxController {
         arguments!.isSheelaFollowup = false;
       } else if (arguments?.eId != '' && arguments?.eId != null) {
         if (arguments?.isSurvey ?? false) {
-          reqJson = {KIOSK_task: KIOSK_survey, KIOSK_eid: arguments!.eId};
+          reqJson = {
+            KIOSK_task: (arguments?.isRetakeSurvey ?? false)
+                ? KIOSK_retakeSurvey
+                : KIOSK_survey,
+            KIOSK_eid: arguments!.eId
+          };
           sheelaRequest.message = KIOSK_SHEELA;
           arguments!.eId = null;
         } else {
@@ -494,7 +507,9 @@ class SheelaAIController extends GetxController {
         if ((currentPlayingConversation!.text ?? '').isNotEmpty) {
           currentPlayingConversation!.isPlaying.value = true;
           final status = await playUsingLocalTTSEngineFor(
-              currentPlayingConversation!.text);
+              (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                  ? getPronunciationText(currentPlayingConversation)
+                  : (currentPlayingConversation!.text)));
           if (status &&
               (currentPlayingConversation!.buttons ?? []).isNotEmpty) {
             for (final button in currentPlayingConversation!.buttons!) {
@@ -578,11 +593,13 @@ class SheelaAIController extends GetxController {
             .isNotEmpty) {
           textForPlaying =
               currentPlayingConversation!.ttsResponse!.payload!.audioContent;
-        } else if ((currentPlayingConversation!.text ?? '').isNotEmpty) {
+        } else if ((currentPlayingConversation?.text ?? '').isNotEmpty) {
           final result =
-              await getGoogleTTSForText(currentPlayingConversation!.text);
-          if ((result!.payload!.audioContent ?? '').isNotEmpty) {
-            textForPlaying = result.payload!.audioContent;
+              await getGoogleTTSForText((getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                  ? getPronunciationText(currentPlayingConversation)
+                  : (currentPlayingConversation!.text)));
+          if ((result?.payload?.audioContent ?? '').isNotEmpty) {
+            textForPlaying = result!.payload!.audioContent;
           }
         }
       }
@@ -688,7 +705,9 @@ class SheelaAIController extends GetxController {
   Future<bool> getGoogleTTSForConversationForMessage(
       SheelaResponse conversation) async {
     try {
-      final result = await getGoogleTTSForText(conversation.text);
+      final result = await getGoogleTTSForText((getPronunciationText(conversation).trim().isNotEmpty
+          ? getPronunciationText(conversation)
+          :(conversation.text)));
       conversation.ttsResponse = result;
       return true;
     } catch (e, stackTrace) {
@@ -827,19 +846,28 @@ class SheelaAIController extends GetxController {
                       }
                     }
                   }
-
                   if (button != null) {
-                    startSheelaFromButton(
-                        buttonText: button.title,
-                        payload: button.payload,
-                        buttons: button);
+                    if (button?.btnRedirectTo == strRedirectToHelpPreview) {
+                      if (button?.videoUrl != null &&
+                          button?.videoUrl != '') {
+                        playYoutube(button?.videoUrl);
+                      }else if (button?.audioUrl != null &&
+                          button?.audioUrl != '') {
+                        playAudioFile(button?.audioUrl);
+                      }
+                    }else{
+                      startSheelaFromButton(
+                          buttonText: button.title,
+                          payload: button.payload,
+                          buttons: button);
+                    }
                   } else {
                     lastMsgIsOfButtons = false;
                     conversations.add(newConversation);
                     getAIAPIResponseFor(response, button);
                   }
-                } catch (e, stackTrace) {
-                  CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                } catch (e,stackTrace) {
+                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
                   lastMsgIsOfButtons = false;
                   conversations.add(newConversation);
@@ -866,8 +894,8 @@ class SheelaAIController extends GetxController {
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
       FlutterToast().getToast(
@@ -888,8 +916,8 @@ class SheelaAIController extends GetxController {
         currentLang = 'undef';
       }
       return currentLang;
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       return 'undef';
     }
@@ -899,8 +927,8 @@ class SheelaAIController extends GetxController {
     try {
       final data = await HealthReportListForUserBlock().getHelthReportLists();
       await PreferenceUtil.saveCompleteData(KEY_COMPLETE_DATA, data);
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
     }
@@ -961,8 +989,8 @@ class SheelaAIController extends GetxController {
               currentDeviceStatus.allowVitalNotification,
               currentDeviceStatus.allowSymptomsNotification);
       return data;
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    } catch (e,stackTrace) {
+                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
       print(e.toString());
     }
@@ -1133,6 +1161,68 @@ class SheelaAIController extends GetxController {
       updateTimer(enable: false);
       regController.callSOSEmergencyServices(1);
     }
+  }
+
+  playYoutube(var currentVideoLinkUrl) {
+    try {
+      if (isLoading.isTrue) {
+        return;
+      }
+      String? videoId;
+      videoId = youtube.YoutubePlayer.convertUrlToId(currentVideoLinkUrl);
+      updateTimer(enable: false);
+      if (videoId != null) {
+        Get.to(
+          MyYoutubePlayer(
+            videoId: videoId,
+          ),
+        )!.then((value) {
+          updateTimer(enable: true);
+        });
+      } else {
+        isPlayPauseView.value = false;
+        isFullScreenVideoPlayer.value = (CommonUtil().isTablet??false)?true:false;
+        Get.to(
+          VideoPlayerScreen(
+            videoURL: (currentVideoLinkUrl??""),
+          ),
+        )!.then((value) {
+          updateTimer(enable: true);
+        });
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  playAudioFile(var audioURLLink) {
+    try {
+      if (isLoading.isTrue) {
+        return;
+      }
+      updateTimer(enable: false);
+      Get.to(AudioPlayerScreen(
+        audioUrl: (audioURLLink ?? ""),
+      ))!.then((value) {
+        updateTimer(enable: true);
+      });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  onStopTTSWithDelay() async {
+    try {
+      await Future.delayed(Duration(milliseconds: 100));
+      stopTTS();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  String getPronunciationText(SheelaResponse? currentPlayingConversation) {
+    return CommonUtil()
+        .validString(currentPlayingConversation!.pronunciationText ?? '');
   }
 
   void startTimerForSessionExpiry(int minutes) {

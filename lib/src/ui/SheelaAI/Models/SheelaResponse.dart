@@ -68,6 +68,7 @@ class SheelaResponse {
   String? audioFile;
   bool? playAudioInit = false;
   bool? isButtonNumber;
+  String? pronunciationText;
 
   SheelaResponse(
       {this.recipientId,
@@ -101,7 +102,8 @@ class SheelaResponse {
       this.imageURLS,
       this.audioFile,
       this.playAudioInit,
-      this.isButtonNumber});
+      this.isButtonNumber,
+      this.pronunciationText});
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     try {
@@ -160,6 +162,7 @@ class SheelaResponse {
             });
             buttons = buttonsList;
           }
+      pronunciationText = (json['pronunciationText'] ?? '');
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -199,6 +202,7 @@ class SheelaResponse {
     data['sessionId'] = this.sessionId;
     data['relationshipId'] = this.relationshipId;
     data['IsButtonNumber'] = this.isButtonNumber;
+    data['pronunciationText'] = this.pronunciationText;
     return data;
   }
 }
@@ -214,8 +218,11 @@ class Buttons {
   GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
   bool isSelected = false;
-  List<ChatAttachments>? chatAttachments;
   String? btnRedirectTo;
+  String? imageUrl;
+  String? videoUrl;
+  String? audioUrl;
+  List<ChatAttachments>? chatAttachments;
 
   Buttons({
     this.payload,
@@ -227,6 +234,9 @@ class Buttons {
     this.relationshipIdNotRequired = false,
     this.ttsResponse,
     this.btnRedirectTo,
+    this.imageUrl,
+    this.videoUrl,
+    this.audioUrl,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -238,13 +248,16 @@ class Buttons {
       sayText = (json['saytext'] ?? '');
       skipTts = (json['skip_tts'] ?? false);
       relationshipIdNotRequired = (json['relationshipIdNotRequired'] ?? false);
+      btnRedirectTo = (json['redirectTo'] ?? '');
+      imageUrl = (json['imageUrl'] ?? '');
+      videoUrl = (json['videoUrl'] ?? '');
+      audioUrl = (json['audioUrl'] ?? '');
       if (json['chatAttachments'] != null) {
         chatAttachments = <ChatAttachments>[];
         json['chatAttachments'].forEach((v) {
           chatAttachments!.add(new ChatAttachments.fromJson(v));
         });
       }
-      btnRedirectTo = (json['redirectTo'] ?? '');
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -259,11 +272,40 @@ class Buttons {
     data['saytext'] = this.sayText;
     data['skip_tts'] = this.skipTts;
     data['relationshipIdNotRequired'] = this.relationshipIdNotRequired;
+    data['redirectTo'] = this.btnRedirectTo;
+    data['imageUrl'] = this.imageUrl;
+    data['videoUrl'] = this.videoUrl;
+    data['audioUrl'] = this.audioUrl;
     if (this.chatAttachments != null) {
       data['chatAttachments'] =
           this.chatAttachments!.map((v) => v.toJson()).toList();
     }
-    data['redirectTo'] = this.btnRedirectTo;
+    return data;
+  }
+}
+
+class VideoLinks {
+  String? title;
+  String? thumbnail;
+  String? url;
+
+  VideoLinks({this.title, this.thumbnail, this.url});
+
+  VideoLinks.fromJson(Map<String, dynamic> json) {
+    try {
+      title = json['title'];
+      thumbnail = json['thumbnail'];
+      url = json['url'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['title'] = this.title;
+    data['thumbnail'] = this.thumbnail;
+    data['url'] = this.url;
     return data;
   }
 }
@@ -378,32 +420,6 @@ class Messages {
     data['isUpload'] = this.isUpload;
     data['isPatient'] = this.isPatient;
     data['chatMessageId'] = this.chatMessageId;
-    return data;
-  }
-}
-
-class VideoLinks {
-  String? title;
-  String? thumbnail;
-  String? url;
-
-  VideoLinks({this.title, this.thumbnail, this.url});
-
-  VideoLinks.fromJson(Map<String, dynamic> json) {
-    try {
-      title = json['title'];
-      thumbnail = json['thumbnail'];
-      url = json['url'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['title'] = this.title;
-    data['thumbnail'] = this.thumbnail;
-    data['url'] = this.url;
     return data;
   }
 }
