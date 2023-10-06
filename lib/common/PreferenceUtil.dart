@@ -534,6 +534,24 @@ class PreferenceUtil {
     );
   }
 
+
+  static bool getIfSheelaAttachmentPreviewisActive() {
+    return _prefsInstance!.getBool(
+      Constants.KEY_IS_Active_Sheela_Preview,
+    ) ??
+        false;
+  }
+
+  static Future<bool> saveIfSheelaAttachmentPreviewisActive({
+    bool qurhomeStatus = false,
+  }) async {
+    final instance = await _prefs!;
+    return instance.setBool(
+      Constants.KEY_IS_Active_Sheela_Preview,
+      qurhomeStatus,
+    );
+  }
+
   static Future<bool> saveEnableAppLock({
     bool appLockStatus = false,
   }) async {

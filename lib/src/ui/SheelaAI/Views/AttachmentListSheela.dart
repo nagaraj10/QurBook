@@ -37,6 +37,18 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
     pdfViewController =
     CommonUtil().onInitPDFViewController();
     _chatAttachments = widget.chatAttachments;
+
+    PreferenceUtil.saveIfSheelaAttachmentPreviewisActive(
+      qurhomeStatus: true,
+    );
+  }
+
+  @override
+  void dispose() {
+    PreferenceUtil.saveIfSheelaAttachmentPreviewisActive(
+      qurhomeStatus: false,
+    );
+    super.dispose();
   }
 
   @override

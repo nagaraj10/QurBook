@@ -62,6 +62,7 @@ class SheelaResponse {
   bool? loading = false;
   String? conversationFlag;
   var additionalInfo;
+  AdditionalInfoSheela? additionalInfoSheelaResponse;
   String? sessionId;
   String? relationshipId;
   String? audioFile;
@@ -95,6 +96,7 @@ class SheelaResponse {
       this.loading,
       this.conversationFlag,
       this.additionalInfo,
+      this.additionalInfoSheelaResponse,
       this.sessionId,
       this.relationshipId,
       this.imageURLS,
@@ -144,6 +146,9 @@ class SheelaResponse {
       recipient = json['recipient'];
       conversationFlag = json['conversationFlag'];
       additionalInfo = json['additionalInfo'];
+      additionalInfoSheelaResponse =
+      json['additionalInfo'] != null ? AdditionalInfoSheela.fromJson(
+          json['additionalInfo']) : null;
       sessionId = json['sessionId'];
       relationshipId = json['relationshipId'];
       isButtonNumber = (json['IsButtonNumber'] ?? false);
@@ -193,6 +198,7 @@ class SheelaResponse {
     data['recipient'] = this.recipient;
     data['conversationFlag'] = this.conversationFlag;
     data['additionalInfo'] = this.additionalInfo;
+    data['additionalInfo'] = this.additionalInfoSheelaResponse;
     data['sessionId'] = this.sessionId;
     data['relationshipId'] = this.relationshipId;
     data['IsButtonNumber'] = this.isButtonNumber;
@@ -345,6 +351,26 @@ class ChatAttachments {
       data['messages'] = this.messages!.toJson();
     }
     data['documentId'] = this.documentId;
+    return data;
+  }
+}
+
+class AdditionalInfoSheela {
+  dynamic? sessionTimeoutMin;
+
+  AdditionalInfoSheela({this.sessionTimeoutMin});
+
+  AdditionalInfoSheela.fromJson(Map<String, dynamic> json) {
+    try {
+      sessionTimeoutMin = json['sessionTimeoutMin'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['sessionTimeoutMin'] = this.sessionTimeoutMin;
     return data;
   }
 }
