@@ -164,6 +164,8 @@ import 'common_circular_indicator.dart';
 import 'keysofmodel.dart' as keysConstant;
 import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 
+import 'widgets/CommonWidgets.dart';
+
 class CommonUtil {
   static String SHEELA_URL = '';
   static String FAQ_URL = '';
@@ -5781,11 +5783,13 @@ class CommonUtil {
                               onTap: () {
                                 onTapSheelaRemainders?.call(true);
                               },
-                              child: AssetImageWidget(
-                                icon: icon_sheela_queue,
-                                height: 250.h,
-                                width: 250.w,
-                              ),
+                              child: (isTablet ?? true)
+                                  ? SheelaQueueIcon(
+                                      size: 150,
+                                    )
+                                  : SheelaQueueIcon(
+                                      size: 250,
+                                    ),
                             ),
                           ),
                           Visibility(
@@ -5825,25 +5829,13 @@ class CommonUtil {
                                     onTap: () {
                                       onTapSheelaRemainders?.call(false);
                                     },
-                                    child: Container(
-                                      height: 100.h,
-                                      width: 100.h,
-                                      margin: EdgeInsets.all(10),
-                                      padding: EdgeInsets.all(20),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Color(getMyPrimaryColor()),
-                                            width: 5.w),
-                                      ),
-                                      child: Image.asset(
-                                        icon_unread_chat,
-                                        height: 30.h,
-                                        width: 30.w,
-                                        color: Color(getMyPrimaryColor()),
-                                      ),
-                                    ),
+                                    child: (isTablet ?? true)
+                                        ? UnreadMessagesIcon(
+                                            size: 80,
+                                          )
+                                        : UnreadMessagesIcon(
+                                            size: 100,
+                                          ),
                                   ),
                                 ),
                               ],
