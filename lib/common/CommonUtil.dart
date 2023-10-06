@@ -164,6 +164,8 @@ import 'common_circular_indicator.dart';
 import 'keysofmodel.dart' as keysConstant;
 import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 
+import 'widgets/CommonWidgets.dart';
+
 class CommonUtil {
   static String SHEELA_URL = '';
   static String FAQ_URL = '';
@@ -707,9 +709,8 @@ class CommonUtil {
         });
   }
 
-
   /// Common Message Dialog
-  static showCommonMsgDialog({required String msg}){
+  static showCommonMsgDialog({required String msg}) {
     showDialog(
         barrierDismissible: false,
         context: Get.context!,
@@ -718,39 +719,41 @@ class CommonUtil {
             onWillPop: () async {
               return false;
             },
-            child:AlertDialog(
+            child: AlertDialog(
               clipBehavior: Clip.antiAlias,
               insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
-              content:Container(
+              content: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(strAlert,
-                    style:TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600
-                    ),),
-                    SizedBox(height: 10.h,),
+                    Text(
+                      strAlert,
+                      style: TextStyle(
+                          fontSize: 18.sp, fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
                     Text(
                       msg,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 14.0.sp,
-                        fontWeight: FontWeight.w400
-                      ),
+                          fontSize: 14.0.sp, fontWeight: FontWeight.w400),
                     ),
-                    SizedBox(height: 20.h,),
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
                       },
                       child: Container(
                         width: 100.w,
-                        padding:
-                        EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.h, horizontal: 10.w),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -761,13 +764,16 @@ class CommonUtil {
                                   blurRadius: 5,
                                   spreadRadius: 2)
                             ],
-                            gradient: LinearGradient(end: Alignment.centerRight, colors: [
-                              Color(CommonUtil().getMyPrimaryColor()),
-                              Color(CommonUtil().getMyGredientColor())
-                            ])),
+                            gradient: LinearGradient(
+                                end: Alignment.centerRight,
+                                colors: [
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyGredientColor())
+                                ])),
                         child: Text(
                           strOK,
-                          style: TextStyle(fontSize: 14.0.sp, color: Colors.white),
+                          style:
+                              TextStyle(fontSize: 14.0.sp, color: Colors.white),
                         ),
                       ),
                     ),
@@ -777,7 +783,6 @@ class CommonUtil {
             ),
           );
         });
-
   }
 
   List<HealthRecordCollection> getMetaMasterIdList(HealthResult data) {
@@ -1437,15 +1442,19 @@ class CommonUtil {
       if (PreferenceUtil.getFamilyRelationship(Constants.keyFamily) != null) {
       } else {
         _familyListBloc.getCustomRoles().then((relationShip) {
-          PreferenceUtil.saveRelationshipArray(
-              Constants.keyFamily, relationShip?.relationShipAry);
+          if (relationShip != null) {
+            PreferenceUtil.saveRelationshipArray(
+                Constants.keyFamily, relationShip?.relationShipAry);
+          }
         });
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       _familyListBloc.getCustomRoles().then((relationShip) {
-        PreferenceUtil.saveRelationshipArray(
-            Constants.keyFamily, relationShip.relationShipAry);
+        if (relationShip != null) {
+          PreferenceUtil.saveRelationshipArray(
+              Constants.keyFamily, relationShip?.relationShipAry);
+        }
       });
     }
   }
@@ -5774,11 +5783,13 @@ class CommonUtil {
                               onTap: () {
                                 onTapSheelaRemainders?.call(true);
                               },
-                              child: AssetImageWidget(
-                                icon: icon_sheela_queue,
-                                height: 250.h,
-                                width: 250.w,
-                              ),
+                              child: (isTablet ?? true)
+                                  ? SheelaQueueIcon(
+                                      size: 150,
+                                    )
+                                  : SheelaQueueIcon(
+                                      size: 250,
+                                    ),
                             ),
                           ),
                           Visibility(
@@ -5818,25 +5829,13 @@ class CommonUtil {
                                     onTap: () {
                                       onTapSheelaRemainders?.call(false);
                                     },
-                                    child: Container(
-                                      height: 100.h,
-                                      width: 100.h,
-                                      margin: EdgeInsets.all(10),
-                                      padding: EdgeInsets.all(20),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Color(getMyPrimaryColor()),
-                                            width: 5.w),
-                                      ),
-                                      child: Image.asset(
-                                        icon_unread_chat,
-                                        height: 30.h,
-                                        width: 30.w,
-                                        color: Color(getMyPrimaryColor()),
-                                      ),
-                                    ),
+                                    child: (isTablet ?? true)
+                                        ? UnreadMessagesIcon(
+                                            size: 80,
+                                          )
+                                        : UnreadMessagesIcon(
+                                            size: 100,
+                                          ),
                                   ),
                                 ),
                               ],
@@ -7007,16 +7006,14 @@ class CommonUtil {
 
   bool validYouTubeUrl(String content) {
     RegExp regExp = RegExp(
-        r'((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?'
-    );
+        r'((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?');
     String? matches = regExp.stringMatch(content);
     if (matches == null) {
       return false; // Always returns here while the video URL is in the content paramter
     }
     final String youTubeUrl = matches;
-    return youTubeUrl.trim().isNotEmpty?true:false;
+    return youTubeUrl.trim().isNotEmpty ? true : false;
   }
-
 
   String durationFormatter(int milliSeconds) {
     var seconds = milliSeconds ~/ 1000;
@@ -7027,18 +7024,18 @@ class CommonUtil {
     final hoursString = hours >= 10
         ? '$hours'
         : hours == 0
-        ? '00'
-        : '0$hours';
+            ? '00'
+            : '0$hours';
     final minutesString = minutes >= 10
         ? '$minutes'
         : minutes == 0
-        ? '00'
-        : '0$minutes';
+            ? '00'
+            : '0$minutes';
     final secondsString = seconds >= 10
         ? '$seconds'
         : seconds == 0
-        ? '00'
-        : '0$seconds';
+            ? '00'
+            : '0$seconds';
     final formattedTime =
         '${hoursString == '00' ? '' : '$hoursString:'}$minutesString:$secondsString';
     return formattedTime;
@@ -7052,8 +7049,7 @@ class CommonUtil {
           DeviceOrientation.landscapeRight
         ]);
       } else {
-        SystemChrome.setPreferredOrientations(
-            [DeviceOrientation.portraitUp]);
+        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -7067,15 +7063,15 @@ class CommonUtil {
         bluetoothScan == PermissionStatus.granted) {
       return true;
     } else {
-      _handleInvalidPermissionsLocationBleScan(
-          location, bluetoothScan);
+      _handleInvalidPermissionsLocationBleScan(location, bluetoothScan);
       return false;
     }
   }
+
   static void _handleInvalidPermissionsLocationBleScan(
-      PermissionStatus locationStatus,
-      PermissionStatus bluetoothScanStatus,
-      ) {
+    PermissionStatus locationStatus,
+    PermissionStatus bluetoothScanStatus,
+  ) {
     if (locationStatus == PermissionStatus.denied &&
         bluetoothScanStatus == PermissionStatus.denied) {
       print("Access to location and ble scan denied");
@@ -7109,8 +7105,7 @@ class CommonUtil {
     try {
       var location = await Permission.location.status;
       var bluetoothScan = await Permission.bluetoothScan.status;
-      if (location.isDenied ||
-          bluetoothScan.isDenied) {
+      if (location.isDenied || bluetoothScan.isDenied) {
         await CommonUtil().handleLocationBleScanConnect();
       } else {}
     } catch (e, stackTrace) {

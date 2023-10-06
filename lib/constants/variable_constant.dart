@@ -948,6 +948,11 @@ const String strTransportationRequestDeclined =
     'Transportation request declined';
 
 const String strSentViaSheela = 'Sent via Sheela.';
+const String strPairingMode = 'Pairing mode - ';
+const String strConnectedOn = 'Connected on - ';
+const String strDeviceID = 'Device ID - ';
+const String strDeviceTypeConnectedDeviceScreen = 'Device Type - ';
+const String strLTE = '4G LTE';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
