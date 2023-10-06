@@ -5,6 +5,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
@@ -13,8 +14,10 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 
 class AudioPlayerScreen extends StatefulWidget {
   final String? audioUrl;
+  final String? chatMessageId;
+  final String? titleAppBar;
 
-  AudioPlayerScreen({this.audioUrl});
+  AudioPlayerScreen({this.audioUrl, this.chatMessageId, this.titleAppBar});
 
   @override
   AudioPlayerScreenState createState() => AudioPlayerScreenState();
@@ -29,12 +32,18 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
   bool isPlaying = false;
   SheelaAIController sheelaAIController = Get.find();
 
+  ChatSocketService _chatSocketService = new ChatSocketService();
+
   @override
   void initState() {
     try {
       super.initState();
       sheelaAIController.onStopTTSWithDelay();
       setUpAudios();
+
+      if (widget.chatMessageId != null && widget.chatMessageId != '') {
+        callChatunreadMessageApi();
+      }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -99,7 +108,9 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
                 title: Text(
-                  strAudioTitle,
+                  (widget.titleAppBar != null && widget.titleAppBar != '')
+                      ? widget.titleAppBar ?? ''
+                      : strAudioTitle,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0.sp,
@@ -224,9 +235,11 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
           }
         },
       );
-      setState(
-        () {},
-      );
+      if (this.mounted) {
+        setState(
+          () {},
+        );
+      }
     } catch (err, stackTrace) {
       CommonUtil()
           .appLogs(message: err.toString(), stackTrace: stackTrace.toString());
@@ -260,7 +273,11 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
         await flutterSound?.pausePlayer();
         isPlaying = false;
       }
-      setState(() {});
+      if (this.mounted) {
+        setState(
+          () {},
+        );
+      }
     } catch (err, stackTrace) {
       CommonUtil()
           .appLogs(message: err.toString(), stackTrace: stackTrace.toString());
@@ -284,10 +301,18 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
       sliderCurrentPosition = 0.0;
       _playerTxt = '00:00';
       isPlaying = false;
-      setState(() {});
+      if (this.mounted) {
+        setState(
+          () {},
+        );
+      }
     } catch (err, stackTrace) {
       CommonUtil()
           .appLogs(message: err.toString(), stackTrace: stackTrace.toString());
     }
+  }
+
+  callChatunreadMessageApi() {
+    _chatSocketService.getUnreadChatWithMsgId(widget.chatMessageId ?? '');
   }
 }
