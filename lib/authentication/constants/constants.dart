@@ -288,6 +288,12 @@ const String stringBluetoothPoweredOff = 'poweredOff';
 const String stringBluetoothScanstarted = 'scanstarted';
 
 const String strRedirectToHelpPreview = 'media_help_screen';
+const String strBack = 'Back';
+
+const String strPreviewScreen = 'preview_screen';
+const String strSessionTimeoutAlert = 'Your session will expire in 60 seconds. Please return to continue the conversation.';
+
+
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(

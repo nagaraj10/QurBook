@@ -1206,12 +1206,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     FlutterToast().getToast('Please wait', Colors.grey);
     String path = await downloadFileOpen(attachments, ticketUid);
     if (attachments.path!.split('.').last == 'pdf') {
-      final controller = Get.find<PDFViewController>();
       final data = OpenPDF(
           type: PDFLocation.Path,
           path: path,
           title: attachments.path!.split('/').last);
-      controller.data = data;
+      var pdfController =
+      CommonUtil().onInitPDFViewController();
+      pdfController.data = data;
       Get.to(() => PDFView());
     } else {
       Navigator.push(

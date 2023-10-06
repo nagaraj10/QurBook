@@ -883,6 +883,8 @@ const String icon_unread_chat = 'assets/icons/ic_unread_chat.png';
 
 const String strNoMessage = 'No Messages';
 
+const String strNoAttachments = 'No Attachments';
+
 //QurHub
 const String icon_qurhub_lock = 'assets/icons/lock.svg';
 const String icon_qurhub_switch = 'assets/icons/switch.svg';

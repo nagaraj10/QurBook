@@ -6376,6 +6376,15 @@ class CommonUtil {
     return qurhomeDashboardController;
   }
 
+  PDFViewController onInitPDFViewController() {
+    PDFViewController pdfViewController;
+    if (!Get.isRegistered<PDFViewController>()) {
+      Get.put(PDFViewController());
+    }
+    pdfViewController = Get.find();
+    return pdfViewController;
+  }
+
   ChatUserListController onInitChatUserListController() {
     ChatUserListController chatUserListController;
     if (!Get.isRegistered<ChatUserListController>()) {
@@ -7122,6 +7131,23 @@ class CommonUtil {
           statuses[Permission.storage]!.isGranted &&
           statuses[Permission.notification]!.isGranted) {}*/
   }
+
+
+  String getExtensionSheelaPreview(int type) {
+    switch (type) {
+      case 0:
+        return "";
+      case 1:
+        return ".jpg";
+      case 2:
+        return ".pdf";
+      case 3:
+        return ".mp3";
+      default:
+        return "";
+    }
+  }
+
 }
 
 extension CapExtension on String {

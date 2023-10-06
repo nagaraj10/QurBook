@@ -216,6 +216,8 @@ class ChatState extends State<ChatDetail> {
 
   String parsedReferenceText = '';
 
+  var pdfViewController;
+
   @override
   void initState() {
     super.initState();
@@ -226,6 +228,9 @@ class ChatState extends State<ChatDetail> {
         listen: false,
       ).updateChatHistoryList([], shouldUpdate: false);
     });
+
+    pdfViewController =
+        CommonUtil().onInitPDFViewController();
 
     peerId = widget.peerId;
     peerName = widget.peerName;
@@ -2264,9 +2269,8 @@ class ChatState extends State<ChatDetail> {
   }
 
   goToPDFViewBasedonURL(String? url) {
-    final controller = Get.find<PDFViewController>();
     final data = OpenPDF(type: PDFLocation.URL, path: url);
-    controller.data = data;
+    pdfViewController.data = data;
     Get.to(() => PDFView());
   }
 
@@ -2344,9 +2348,10 @@ class ChatState extends State<ChatDetail> {
               await OpenFilex.open(
                 file?.path,
               ); //FU2.5
-              final controller = Get.find<PDFViewController>();
               final data = OpenPDF(type: PDFLocation.Path, path: file?.path);
-              controller.data = data;
+              var pdfController =
+                  CommonUtil().onInitPDFViewController();
+              pdfController.data = data;
               Get.to(() => PDFView());
             },
           ),
@@ -2383,10 +2388,11 @@ class ChatState extends State<ChatDetail> {
                     filePath?.path,
                   ); //FU2.5
 
-                  final controller = Get.find<PDFViewController>();
                   final data =
                       OpenPDF(type: PDFLocation.Path, path: filePath?.path);
-                  controller.data = data;
+                  var pdfController =
+                  CommonUtil().onInitPDFViewController();
+                  pdfController.data = data;
                   Get.to(() => PDFView());
                 },
               ),

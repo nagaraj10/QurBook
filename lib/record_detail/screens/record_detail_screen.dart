@@ -553,12 +553,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 await OpenFilex.open(
                   path?.path,
                 ); //FU2.5
-                final controller = Get.find<PDFViewController>();
+                var pdfController =
+                CommonUtil().onInitPDFViewController();
                 final data = OpenPDF(
                     type: PDFLocation.Path,
                     path: path?.path,
                     title: widget.data.metadata?.fileName);
-                controller.data = data;
+                pdfController.data = data;
                 Get.to(() => PDFView());
               },
             ),
@@ -1713,12 +1714,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   moveToPDFViewer() {
-    final controller = Get.put(PDFViewController());
     final data = OpenPDF(
         type: PDFLocation.Path,
         path: pdfFile,
         title: widget.data.metadata!.fileName);
-    controller.data = data;
+    var pdfController =
+    CommonUtil().onInitPDFViewController();
+    pdfController.data = data;
     Get.to(() => PDFView());
   }
 }

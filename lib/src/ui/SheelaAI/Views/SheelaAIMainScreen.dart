@@ -54,6 +54,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       controller.isSheelaScreenActive = true;
       controller.isDiscardDialogShown.value = false;
       controller.isCallStartFromSheela = false;
+      PreferenceUtil.saveIfSheelaAttachmentPreviewisActive(
+        qurhomeStatus: false,
+      );
       animationController = AnimationController(
           duration: const Duration(
             milliseconds: 600,
@@ -83,6 +86,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   void dispose() {
     animationController?.dispose();
     controller.clearTimer();
+    controller.clearTimerForSessionExpiry();
     WidgetsBinding.instance!.removeObserver(this);
     controller.stopTTS();
     controller.isSheelaScreenActive = false;
@@ -478,6 +482,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.getSheelaBadgeCount();
     controller.updateTimer(enable: false);
     controller.clearTimer();
+    controller.clearTimerForSessionExpiry();
     Get.back();
   }
 
