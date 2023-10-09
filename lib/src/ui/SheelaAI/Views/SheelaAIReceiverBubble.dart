@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/firebase_analytics_service.dart';
+import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
@@ -325,6 +326,16 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         } else if (buttonData?.audioUrl != null &&
                             buttonData?.audioUrl != '') {
                           playAudioFile(buttonData?.audioUrl);
+                        } else if (buttonData?.imageUrl != null &&
+                            buttonData?.imageUrl != '') {
+                          controller.stopTTS();
+                          controller.isSheelaScreenActive = false;
+                          Get.to(FullPhoto(
+                            url: buttonData?.imageUrl ?? '',
+                            titleSheelaPreview: strImageTitle,
+                          ))?.then((value) {
+                            controller.isSheelaScreenActive = true;
+                          });
                         }
                       } else {
                         if (controller.isLoading.isTrue) {
