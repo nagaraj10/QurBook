@@ -255,6 +255,7 @@ const String strCallMyCC = 'Call my CC';
 const String strSurvey = 'Survey';
 const String strVideoTitle = "Video Instructions";
 const String strAudioTitle = "Audio Instructions";
+const String strImageTitle = "Image Instructions";
 //show icons for alerts
 
 const String MISSED_MAND_ACTIVITES = 'assets/icons/missed_mad_activities.png';
