@@ -106,6 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         onValuePicked: (country) => setState(
                           () => _selectedDialogCountry = country,
                         ),
+                        isEnabled: Constants.BASE_URL != Constants.prodUSURL,
                       ),
                       Container(
                         width: 1.0.w,

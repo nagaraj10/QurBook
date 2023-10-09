@@ -1,16 +1,21 @@
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 
 class HubListResponse {
   bool? isSuccess;
-  Result? result;
+  List<UserDeviceCollection>? result;
 
   HubListResponse({this.isSuccess, this.result});
 
   HubListResponse.fromJson(Map<String, dynamic> json) {
     try {
       isSuccess = json['isSuccess'];
-      result =
-              json['result'] != null ? new Result.fromJson(json['result']) : null;
+      if (json['result'] != null) {
+        result = <UserDeviceCollection>[];
+        json['result'].forEach((v) {
+          result!.add(new UserDeviceCollection.fromJson(v));
+        });
+      }
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -20,7 +25,8 @@ class HubListResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result!.toJson();
+      data['result'] =
+          this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -35,7 +41,7 @@ class Result {
   String? lastModifiedOn;
   String? hubId;
   String? userId;
-  Hub? hub;
+  //Hub? hub;
   List<UserDeviceCollection>? userDeviceCollection;
 
   Result(
@@ -47,7 +53,7 @@ class Result {
       this.lastModifiedOn,
       this.hubId,
       this.userId,
-      this.hub,
+      //this.hub,
       this.userDeviceCollection});
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -57,7 +63,7 @@ class Result {
       createdOn = json['createdOn'];
       hubId = json['hubId'];
       userId = json['userId'];
-      hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
+      //hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
 
       if (json['userDeviceCollection'] != null) {
             userDeviceCollection = <UserDeviceCollection>[];
@@ -266,6 +272,7 @@ class DeviceType {
   String? createdBy;
   String? createdOn;
   String? lastModifiedOn;
+  AdditionalInfo? additionalInfo;
 
   DeviceType({
     this.id,
@@ -277,6 +284,7 @@ class DeviceType {
     this.createdBy,
     this.createdOn,
     this.lastModifiedOn,
+    this.additionalInfo
   });
 
   DeviceType.fromJson(Map<String, dynamic> json) {
@@ -290,6 +298,14 @@ class DeviceType {
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
+      additionalInfo = json['additionalInfo'] != null
+          ? new AdditionalInfo.fromJson(json['additionalInfo'])
+          : null;
+      if (additionalInfo == null) {
+        AdditionalInfo additionalInfoTemp = AdditionalInfo();
+        additionalInfoTemp.connectivityType = strBluetooth;
+        additionalInfo = additionalInfoTemp;
+      }
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -447,6 +463,7 @@ class AdditionalInfo {
   String? uhidNumber;
   String? visitReason;
   String? patientHistory;
+  String? connectivityType;
 
   AdditionalInfo(
       {this.age,
@@ -457,7 +474,7 @@ class AdditionalInfo {
       this.mrdNumber,
       this.uhidNumber,
       this.visitReason,
-      this.patientHistory});
+      this.patientHistory,this.connectivityType});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     try {
@@ -475,7 +492,9 @@ class AdditionalInfo {
       uhidNumber = json['uhidNumber'];
       visitReason = json['visitReason'];
       patientHistory = json['patientHistory'];
+      initConnectivityType(json);
     } catch (e,stackTrace) {
+      initConnectivityType(json);
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
@@ -493,6 +512,18 @@ class AdditionalInfo {
     data['uhidNumber'] = this.uhidNumber;
     data['visitReason'] = this.visitReason;
     data['patientHistory'] = this.patientHistory;
+    data['connectivityType'] = this.connectivityType;
     return data;
+  }
+
+  initConnectivityType(Map<String, dynamic> json) {
+    try {
+      connectivityType = (json['connectivityType'] ?? '');
+      if ((connectivityType ?? '').trim().isEmpty) {
+        connectivityType = strBluetooth;
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 }

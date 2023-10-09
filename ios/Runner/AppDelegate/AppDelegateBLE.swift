@@ -211,15 +211,15 @@ extension AppDelegate : FlutterStreamHandler, CBCentralManagerDelegate, CBPeriph
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .unknown:
-            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
+            eventSink?("unknown|Please turn on your Bluetooth and try again")
         case .resetting:
-            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
+            eventSink?("resetting|Please turn on your Bluetooth and try again")
         case .unsupported:
-            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
+            eventSink?("unsupported|Please turn on your Bluetooth and try again")
         case .unauthorized:
-            eventSink?("permissiondenied|no permission granted")
+            eventSink?("unauthorized|no permission granted")
         case .poweredOff:
-            eventSink?("enablebluetooth|Please turn on your Bluetooth and try again")
+            eventSink?("poweredOff|Please turn on your Bluetooth and try again")
         case .poweredOn:
             eventSink?("scanstarted|connection started")
             startBLEScan()

@@ -216,6 +216,8 @@ class ChatState extends State<ChatDetail> {
 
   String parsedReferenceText = '';
 
+  var pdfViewController;
+
   @override
   void initState() {
     super.initState();
@@ -226,6 +228,9 @@ class ChatState extends State<ChatDetail> {
         listen: false,
       ).updateChatHistoryList([], shouldUpdate: false);
     });
+
+    pdfViewController =
+        CommonUtil().onInitPDFViewController();
 
     peerId = widget.peerId;
     peerName = widget.peerName;
@@ -1668,10 +1673,16 @@ class ChatState extends State<ChatDetail> {
                                     bottomRight: Radius.circular(25),
                                   ),
                                 ),
-                                child: RichText(
-                                  text: TextSpan(
-                                      style: TextStyle(color: Colors.white),
-                                      children: textSpanList),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                          style: TextStyle(color: Colors.white),
+                                          children: textSpanList),
+                                    ),
+                                    isSentViaSheelaTextWidget(chatList,Colors.white),
+                                  ],
                                 ),
                               ),
                             )
@@ -1802,17 +1813,23 @@ class ChatState extends State<ChatDetail> {
                                             child: Container(
                                               padding: EdgeInsets.all(10.0),
                                               width: 1.sw / 1.5,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    child: fhbBasicWidget
-                                                        .getAudioWidgetForChat(
-                                                            chatList.messages
-                                                                ?.content),
-                                                  )
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Expanded(
+                                                        child: fhbBasicWidget
+                                                            .getAudioWidgetForChat(
+                                                                chatList.messages
+                                                                    ?.content),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  isSentViaSheelaTextWidget(chatList, Colors.black),
                                                 ],
                                               ),
                                             ),
@@ -2252,9 +2269,8 @@ class ChatState extends State<ChatDetail> {
   }
 
   goToPDFViewBasedonURL(String? url) {
-    final controller = Get.find<PDFViewController>();
     final data = OpenPDF(type: PDFLocation.URL, path: url);
-    controller.data = data;
+    pdfViewController.data = data;
     Get.to(() => PDFView());
   }
 
@@ -2332,9 +2348,10 @@ class ChatState extends State<ChatDetail> {
               await OpenFilex.open(
                 file?.path,
               ); //FU2.5
-              final controller = Get.find<PDFViewController>();
               final data = OpenPDF(type: PDFLocation.Path, path: file?.path);
-              controller.data = data;
+              var pdfController =
+                  CommonUtil().onInitPDFViewController();
+              pdfController.data = data;
               Get.to(() => PDFView());
             },
           ),
@@ -2371,10 +2388,11 @@ class ChatState extends State<ChatDetail> {
                     filePath?.path,
                   ); //FU2.5
 
-                  final controller = Get.find<PDFViewController>();
                   final data =
                       OpenPDF(type: PDFLocation.Path, path: filePath?.path);
-                  controller.data = data;
+                  var pdfController =
+                  CommonUtil().onInitPDFViewController();
+                  pdfController.data = data;
                   Get.to(() => PDFView());
                 },
               ),
@@ -2578,6 +2596,19 @@ class ChatState extends State<ChatDetail> {
           fontFamily: font_poppins, fontSize: 12.0.sp, color: Colors.white),
     );
   }
+
+  Widget isSentViaSheelaTextWidget(ChatHistoryResult chatList, Color color) =>
+      (chatList?.messages?.isSentViaSheela ?? false)
+          ? Container(
+        margin: EdgeInsets.only(top: 5.0),
+            child: Text(
+                strSentViaSheela,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                    color: color, fontSize: 14.0.sp, fontStyle: FontStyle.italic),
+              ),
+          )
+          : SizedBox.shrink();
 }
 
 class TextFieldColorizer extends TextEditingController {
@@ -2645,4 +2676,6 @@ class TextFieldColorizer extends TextEditingController {
 
     return TextSpan(style: style, children: children);
   }
+
+
 }

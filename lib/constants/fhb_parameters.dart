@@ -131,6 +131,7 @@ const String strsingleuse = 'singleuse';
 const String strisActionDone = 'isActionDone';
 const String strRedirectTo = 'redirectTo';
 const String sheelaAudioMsgUrl = 'sheelaAudioMsgUrl';
+const String KIOSK_retakeSurvey = 'retake';
 
 // sheel lex
 const String strBotaliasid = 'botAliasId';

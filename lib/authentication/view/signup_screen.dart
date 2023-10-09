@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/authentication/model/patientlogin_model.dart';
+import 'package:myfhb/widgets/app_primary_button.dart';
 import '../model/patientsignup_model.dart';
 import '../constants/constants.dart';
 import 'authentication_validator.dart';
@@ -155,6 +156,37 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                             height: 10.0.h,
                           ),
                         },
+                        if (widget.flag == 1) ...{
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontSize: 17.0.sp,
+                              color: Colors.black,
+                            ),
+                            children: [
+                              const TextSpan(
+                                text: '$strSignUpYourProvider ',
+                              ),
+                              TextSpan(
+                                text: '${widget.signInValidationModel?.result
+                                        ?.providerName ?? ''
+                                    } ',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextSpan(
+                                  text:
+                                      '$strSignUpProviderHasInvitedYouto ${CommonUtil.isUSRegion() ? strQurHome : strAPP_NAME }',
+                                ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                            height: 25.0.h,
+                          ),
+                        },
                         Text(
                           widget.flag == 0
                               ? strSignUpText
@@ -267,6 +299,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                           () =>
                                               _selectedDialogCountry = country,
                                         ),
+                                        isEnabled: BASE_URL != prodUSURL,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -470,54 +503,23 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     });
   }
 
-  Widget _saveUser() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: () {
-            AuthenticationValidator().checkNetwork().then((intenet) {
-              if (intenet != null && intenet) {
-                checkedValue
-                    ? null
-                    : FlutterToast().getToast(
-                        'Please accept terms and conditions', Colors.black54);
-                _savePatientDetails();
-              } else {
-                toast.getToast(strNetworkIssue, Colors.red);
-              }
-            });
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 15.0.sp,
-              horizontal: 15.0.sp,
-            ),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.shade200,
-                      offset: Offset(2, 4),
-                      blurRadius: 5,
-                      spreadRadius: 2)
-                ],
-                gradient: LinearGradient(begin: Alignment.centerLeft, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
-                  Color(CommonUtil().getMyPrimaryColor()),
-                  Color(CommonUtil().getMyGredientColor())
-                ])),
-            child: Text(
-              strSignup,
-              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
-            ),
-          ),
-        ),
-      ],
+  Widget _saveUser() => Align(
+      child: AppPrimaryButton(
+        onTap: (){
+          AuthenticationValidator().checkNetwork().then((intenet) {
+            if (intenet != null && intenet) {
+              checkedValue
+                  ? null
+                  : FlutterToast().getToast(
+                  'Please accept terms and conditions', Colors.black54);
+              _savePatientDetails();
+            } else {
+              toast.getToast(strNetworkIssue, Colors.red);
+            }
+          });
+        }, text: strSignup,
+      ),
     );
-  }
 
   _savePatientDetails() async {
     FocusScope.of(context).unfocus();
@@ -597,7 +599,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                       builder: (context) => PatientSignInScreen()));
             },
             child: Text(
-              strSignIn,
+              strLoginText,
               style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                   fontSize: 15.0.sp,

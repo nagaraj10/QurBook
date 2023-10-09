@@ -178,8 +178,8 @@ class ApiBaseHelper {
         print(res);
         return false;
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
       return false;
@@ -216,9 +216,9 @@ class ApiBaseHelper {
         print(res);
         return false;
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       print(e.toString());
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -559,10 +559,9 @@ class ApiBaseHelper {
           body: jsonBody);
 
       responseJson = _returnResponse(response);
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return responseJson;
   }
@@ -645,8 +644,8 @@ class ApiBaseHelper {
             final responseJson = convert.jsonDecode(response.body.toString());
             return responseJson;
           }
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           final responseJson = convert.jsonDecode(response.body.toString());
           return responseJson;
@@ -1440,7 +1439,7 @@ class ApiBaseHelper {
       } else {
         return response;
       }
-    } on DioError catch (e,stackTrace) {
+    } on DioError catch (e, stackTrace) {
       print(e.toString());
       print(e);
       return response;
@@ -1507,7 +1506,7 @@ class ApiBaseHelper {
       } else {
         return response;
       }
-    } on DioError catch (e,stackTrace) {
+    } on DioError catch (e, stackTrace) {
       print(e.toString());
       print(e);
       return response;
@@ -1540,12 +1539,12 @@ class ApiBaseHelper {
       } else {
         return false;
       }
-    } on DioError catch (e,stackTrace) {
+    } on DioError catch (e, stackTrace) {
       print(e.toString());
       print(e);
       return false;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       return false;
@@ -1615,7 +1614,7 @@ class ApiBaseHelper {
       } else {
         return response;
       }
-    } on DioError catch (e,stackTrace) {
+    } on DioError catch (e, stackTrace) {
       print(e.toString());
       print(e);
       return response;
@@ -1690,7 +1689,7 @@ class ApiBaseHelper {
       } else {
         return response?.data;
       }
-    } on DioError catch (e,stackTrace) {
+    } on DioError catch (e, stackTrace) {
       print(e.toString());
       print(e);
       return response?.data;
@@ -1732,7 +1731,7 @@ class ApiBaseHelper {
       } else {
         return response.data['isSuccess'];
       }
-    } on DioError catch (e,stackTrace) {
+    } on DioError catch (e, stackTrace) {
       print("dio attachment error");
       print(e.toString());
       print(e);
@@ -1938,8 +1937,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuths(),
       );
       responseJson = _returnResponse(response);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2055,7 +2054,7 @@ class ApiBaseHelper {
     }
   }
 
-  Future<dynamic> getAppVersion(String endpoint) async {
+  Future<dynamic> getAppVersion(String? endpoint) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!;
     final response = (await ApiServices.get(
       _baseUrl + 'app-update?appName=$endpoint',
@@ -2063,10 +2062,10 @@ class ApiBaseHelper {
         HttpHeaders.authorizationHeader: authToken,
         Constants.KEY_OffSet: CommonUtil().setTimeZone()
       },
-    ))!;
-    if (response.statusCode == 200) {
-      var body = jsonDecode(response.body);
-      return body;
+    ));
+    if (response?.statusCode == 200) {
+      var body = jsonDecode(response?.body ?? '');
+      return body ?? '';
     } else {
       //throw Exception("Unable to perform request!");
       throw InnerException('No Data Found');
@@ -2122,9 +2121,8 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -2165,8 +2163,8 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print("**********************" + e.toString());
     }
@@ -2197,9 +2195,8 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -2228,9 +2225,8 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -2255,8 +2251,8 @@ class ApiBaseHelper {
         throw FetchDataException(variable.strNoInternet);
       }
       return responseJson;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
     }
@@ -2282,9 +2278,8 @@ class ApiBaseHelper {
         throw FetchDataException(variable.strNoInternet);
       }
       return responseJson;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -2338,9 +2333,8 @@ class ApiBaseHelper {
       }
       return responseJson;
       //}
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -2539,8 +2533,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuths(),
       );
       responseJson = _returnResponse(response);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2558,8 +2552,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuths(),
       );
       responseJson = _returnResponse(response);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2590,8 +2584,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuths(),
       );
       responseJson = _returnResponse(response);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2609,8 +2603,8 @@ class ApiBaseHelper {
         headers: await headerRequest.getAuthsClaimList(),
       );
       responseJson = _returnResponse(response);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw FetchDataException(variable.strNoInternet);
@@ -2668,7 +2662,7 @@ class ApiBaseHelper {
       } else {
         return response?.data;
       }
-    } on DioError catch (e,stackTrace) {
+    } on DioError catch (e, stackTrace) {
       print(e.toString());
 
       print(e);
@@ -2876,7 +2870,7 @@ class ApiBaseHelper {
           } else {
             responses.add(response);
           }
-        } on DioError catch (e,stackTrace) {
+        } on DioError catch (e, stackTrace) {
           print(e.toString());
           print(e);
           responses.add(response);

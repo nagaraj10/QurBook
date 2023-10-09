@@ -94,6 +94,7 @@ class Messages {
   bool? isread;
   String? content;
   Timestamp? timestamp;
+  bool? isSentViaSheela;
 
   Messages(
       {this.id,
@@ -102,7 +103,8 @@ class Messages {
       this.idFrom,
       this.isread,
       this.content,
-      this.timestamp});
+      this.timestamp,this.isSentViaSheela});
+
 
   Messages.fromJson(Map<String, dynamic> json) {
     try {
@@ -115,6 +117,7 @@ class Messages {
       timestamp = json['timestamp'] != null
               ? new Timestamp.fromJson(json['timestamp'])
               : null;
+      isSentViaSheela = (json['isSentViaSheela']??false);
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -131,6 +134,7 @@ class Messages {
     if (this.timestamp != null) {
       data['timestamp'] = this.timestamp!.toJson();
     }
+    data['isSentViaSheela'] = this.isSentViaSheela;
     return data;
   }
 }

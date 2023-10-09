@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/widgets/app_primary_button.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../constants/constants.dart';
 import '../model/confirm_password_model.dart';
@@ -256,6 +257,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                       height: 20.0.h,
                     ),
                     _changePassword(),
+                    SizedBox(
+                      height: 20.0.h,
+                    ),
+                    _backbutton(),
                     SizedBox(height: 10.0.h),
                     Visibility(
                       visible: CommonUtil.REGION_CODE == 'IN',
@@ -292,41 +297,26 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     SizedBox(height: 10.0.h),
                     Visibility(
                       visible: otpViewModel!.timerSeconds == 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RaisedGradientButton(
-                            gradient: LinearGradient(colors: [
-                              Color(CommonUtil().getMyPrimaryColor()),
-                              Color(CommonUtil().getMyGredientColor()),
-                            ]),
-                            width: 200.0.w,
-                            onPressed: otpViewModel!.timerSeconds == 0
-                                ? () {
-                                    if (_ChangePasswordKey.currentState!
-                                        .validate()) {
-                                      otpViewModel?.stopOTPTimer();
-                                      otpViewModel!.confirmViaCall(
-                                        phoneNumber: widget.userName ?? '',
-                                        onOtpReceived: (otpCode) {
-                                          _verifyDetails(
-                                            otpCode: otpCode,
-                                          );
-                                        },
-                                      );
-                                    }
-                                  }
-                                : null,
-                            child: Text(
-                              strVerifyCall,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.0.sp,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: AppPrimaryButton(
+                        text:strVerifyCall,
+                        isSecondaryButton: true,
+                        onTap:otpViewModel!.timerSeconds == 0
+                            ? () {
+                          if (_ChangePasswordKey.currentState!
+                              .validate()) {
+                            otpViewModel?.stopOTPTimer();
+                            otpViewModel!.confirmViaCall(
+                              phoneNumber: widget.userName ?? '',
+                              onOtpReceived: (otpCode) {
+                                _verifyDetails(
+                                  otpCode: otpCode,
+                                );
+                              },
+                            );
+                          }
+                        }
+                            :(){},
+                      )
                     ),
                   ],
                 ),
@@ -350,14 +340,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     });
   }
 
-  Widget _changePassword() {
+  
+  Widget _backbutton() {
+    return AppPrimaryButton(
+      text:strBackText,
+      onTap: (){
+        FocusScope.of(context).unfocus();
+        Navigator.of(context).pop();
+      },
+      isSecondaryButton: true,
+    );
+  }
+
+  Widget _commonConfirmPasswordButton(String textString, Function()? onTap) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
-          onTap: () {
-            _verifyDetails();
-          },
+          onTap: onTap,
           child: Container(
             padding: EdgeInsets.symmetric(
               vertical: 15.0.sp,
@@ -374,18 +374,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-//                  Color(0xff138fcf),
-//                  Color(0xff138fcf),
                   Color(CommonUtil().getMyPrimaryColor()),
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
-              strChangeButtonText,
+              textString,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _changePassword() {
+    return AppPrimaryButton(onTap:(){
+      _verifyDetails();
+    },
+      text:strChangeButtonText ,
     );
   }
 

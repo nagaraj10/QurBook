@@ -62,11 +62,13 @@ class SheelaResponse {
   bool? loading = false;
   String? conversationFlag;
   var additionalInfo;
+  AdditionalInfoSheela? additionalInfoSheelaResponse;
   String? sessionId;
   String? relationshipId;
   String? audioFile;
   bool? playAudioInit = false;
   bool? isButtonNumber;
+  String? pronunciationText;
 
   SheelaResponse(
       {this.recipientId,
@@ -94,12 +96,14 @@ class SheelaResponse {
       this.loading,
       this.conversationFlag,
       this.additionalInfo,
+      this.additionalInfoSheelaResponse,
       this.sessionId,
       this.relationshipId,
       this.imageURLS,
       this.audioFile,
       this.playAudioInit,
-      this.isButtonNumber});
+      this.isButtonNumber,
+      this.pronunciationText});
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     try {
@@ -142,6 +146,9 @@ class SheelaResponse {
       recipient = json['recipient'];
       conversationFlag = json['conversationFlag'];
       additionalInfo = json['additionalInfo'];
+      additionalInfoSheelaResponse =
+      json['additionalInfo'] != null ? AdditionalInfoSheela.fromJson(
+          json['additionalInfo']) : null;
       sessionId = json['sessionId'];
       relationshipId = json['relationshipId'];
       isButtonNumber = (json['IsButtonNumber'] ?? false);
@@ -155,6 +162,7 @@ class SheelaResponse {
             });
             buttons = buttonsList;
           }
+      pronunciationText = (json['pronunciationText'] ?? '');
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -190,9 +198,11 @@ class SheelaResponse {
     data['recipient'] = this.recipient;
     data['conversationFlag'] = this.conversationFlag;
     data['additionalInfo'] = this.additionalInfo;
+    data['additionalInfo'] = this.additionalInfoSheelaResponse;
     data['sessionId'] = this.sessionId;
     data['relationshipId'] = this.relationshipId;
     data['IsButtonNumber'] = this.isButtonNumber;
+    data['pronunciationText'] = this.pronunciationText;
     return data;
   }
 }
@@ -208,6 +218,11 @@ class Buttons {
   GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
   bool isSelected = false;
+  String? btnRedirectTo;
+  String? imageUrl;
+  String? videoUrl;
+  String? audioUrl;
+  List<ChatAttachments>? chatAttachments;
 
   Buttons({
     this.payload,
@@ -218,6 +233,10 @@ class Buttons {
     this.skipTts,
     this.relationshipIdNotRequired = false,
     this.ttsResponse,
+    this.btnRedirectTo,
+    this.imageUrl,
+    this.videoUrl,
+    this.audioUrl,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -229,6 +248,16 @@ class Buttons {
       sayText = (json['saytext'] ?? '');
       skipTts = (json['skip_tts'] ?? false);
       relationshipIdNotRequired = (json['relationshipIdNotRequired'] ?? false);
+      btnRedirectTo = (json['redirectTo'] ?? '');
+      imageUrl = (json['imageUrl'] ?? '');
+      videoUrl = (json['videoUrl'] ?? '');
+      audioUrl = (json['audioUrl'] ?? '');
+      if (json['chatAttachments'] != null) {
+        chatAttachments = <ChatAttachments>[];
+        json['chatAttachments'].forEach((v) {
+          chatAttachments!.add(new ChatAttachments.fromJson(v));
+        });
+      }
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -243,6 +272,14 @@ class Buttons {
     data['saytext'] = this.sayText;
     data['skip_tts'] = this.skipTts;
     data['relationshipIdNotRequired'] = this.relationshipIdNotRequired;
+    data['redirectTo'] = this.btnRedirectTo;
+    data['imageUrl'] = this.imageUrl;
+    data['videoUrl'] = this.videoUrl;
+    data['audioUrl'] = this.audioUrl;
+    if (this.chatAttachments != null) {
+      data['chatAttachments'] =
+          this.chatAttachments!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -269,6 +306,120 @@ class VideoLinks {
     data['title'] = this.title;
     data['thumbnail'] = this.thumbnail;
     data['url'] = this.url;
+    return data;
+  }
+}
+
+class ChatAttachments {
+  String? id;
+  String? chatListId;
+  String? deliveredDateTime;
+  bool? isRead;
+  int? messageType;
+  Messages? messages;
+  String? documentId;
+
+  ChatAttachments(
+      {this.id,
+        this.chatListId,
+        this.deliveredDateTime,
+        this.isRead,
+        this.messageType,
+        this.messages,
+        this.documentId});
+
+  ChatAttachments.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    chatListId = json['chatListId'];
+    deliveredDateTime = json['deliveredDateTime'];
+    isRead = json['isRead'];
+    messageType = json['messageType'];
+    messages = json['messages'] != null
+        ? new Messages.fromJson(json['messages'])
+        : null;
+    documentId = json['documentId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['chatListId'] = this.chatListId;
+    data['deliveredDateTime'] = this.deliveredDateTime;
+    data['isRead'] = this.isRead;
+    data['messageType'] = this.messageType;
+    if (this.messages != null) {
+      data['messages'] = this.messages!.toJson();
+    }
+    data['documentId'] = this.documentId;
+    return data;
+  }
+}
+
+class AdditionalInfoSheela {
+  dynamic? sessionTimeoutMin;
+
+  AdditionalInfoSheela({this.sessionTimeoutMin});
+
+  AdditionalInfoSheela.fromJson(Map<String, dynamic> json) {
+    try {
+      sessionTimeoutMin = json['sessionTimeoutMin'];
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['sessionTimeoutMin'] = this.sessionTimeoutMin;
+    return data;
+  }
+}
+
+class Messages {
+  String? id;
+  String? idTo;
+  int? type;
+  String? idFrom;
+  bool? isread;
+  String? content;
+  bool? isUpload;
+  bool? isPatient;
+  String? chatMessageId;
+
+  Messages(
+      {this.id,
+        this.idTo,
+        this.type,
+        this.idFrom,
+        this.isread,
+        this.content,
+        this.isUpload,
+        this.isPatient,
+        this.chatMessageId});
+
+  Messages.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    idTo = json['idTo'];
+    type = json['type'];
+    idFrom = json['idFrom'];
+    isread = json['isread'];
+    content = json['content'];
+    isUpload = json['isUpload'];
+    isPatient = json['isPatient'];
+    chatMessageId = json['chatMessageId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['idTo'] = this.idTo;
+    data['type'] = this.type;
+    data['idFrom'] = this.idFrom;
+    data['isread'] = this.isread;
+    data['content'] = this.content;
+    data['isUpload'] = this.isUpload;
+    data['isPatient'] = this.isPatient;
+    data['chatMessageId'] = this.chatMessageId;
     return data;
   }
 }

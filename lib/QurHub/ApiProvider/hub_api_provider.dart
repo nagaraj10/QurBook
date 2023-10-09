@@ -72,7 +72,7 @@ class HubApiProvider {
     final data = {
       DEVICE_ID: deviceId,
       DEVICE_TYPE: deviceType,
-      USER_HUB_ID: hubId,
+      //USER_HUB_ID: hubId,
       USER_ID: userId,
       DEVICE_NAME: nickName,
       ADDITION_DETAILS: {}

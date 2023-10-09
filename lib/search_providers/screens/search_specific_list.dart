@@ -1257,6 +1257,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   onValuePicked: (country) => setState(
                                     () => _selectedDialogCountry = country,
                                   ),
+                                  isEnabled: BASE_URL != prodUSURL,
                                 ),
                                 _ShowMobileNoTextField()
                               ],

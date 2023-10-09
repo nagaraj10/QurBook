@@ -133,14 +133,16 @@ class Result {
   bool? isRegistered;
   String? firstName;
   String? lastName;
+  String? providerName;
 
-  Result({this.isRegistered, this.firstName, this.lastName});
+  Result({this.isRegistered, this.firstName, this.lastName, this.providerName });
 
   Result.fromJson(Map<String, dynamic> json,String userName) {
     try {
       isRegistered = json['isRegistered'];
       firstName = json['firstName'];
       lastName = json['lastName'];
+      providerName = json['providerName'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(
           message: e, stackTrace: stackTrace, userName: (userName ?? ""));
@@ -152,6 +154,7 @@ class Result {
     data['isRegistered'] = this.isRegistered;
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
+    data['providerName'] = this.providerName;
     return data;
   }
 }

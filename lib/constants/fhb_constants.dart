@@ -10,6 +10,22 @@ const String prodINURL = "https://w1mygk3kis4ksmnjdk.vsolgmi.com/api/";
 const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
+const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
+
+const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
+const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
+const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
+const String strAdditionalInfo = 'additionalInfo';
+const String stringAppVersion = 'appVersion';
+const String strAppType = 'appType';
+const String strDeviceType = 'deviceType';
+const String strAppTypeQurbook = 'QurBook';
+const String strAppTypeQurhome = 'QurHome';
+const String strAppTypeQurday = 'QurDay';
+const String strAppTypeAlwaysOnTablet = 'Always On Tablet';
+const String strDeviceTypeMobile = 'Mobile';
+const String strDeviceTypeTablet = 'Tablet';
+
 const String APP_NAME = 'QurBook';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
@@ -36,6 +52,7 @@ const String KEY_UN_SUBCRIBE_BTN = 'unSubscribeBtn';
 const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String KEY_IS_Active_Chat_Qurhome = 'isactiveQurhomeChat';
+const String KEY_IS_Active_Sheela_Preview = 'isactiveSheelaAttachmentChat';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
 const String IsAppLockChecked = "IsAppLockChecked";
 const String ScanningForDevices = 'Scanning for devices...';
@@ -423,6 +440,8 @@ const String strEscalateAlertMsg = "Alert escalated successfully";
 const String strDiscardMsg = 'Alert discarded successfully';
 const String PLEASE_ADD_COMMENTS = 'Please add comments';
 const String COMMENTS = 'Comments';
+const String strEmergency = 'Escalate this as emergency';
+
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
@@ -802,6 +821,7 @@ const String IND_REG = 'IN';
 
 String strMicPermission = 'Microphone permission is required';
 String strCameraPermission = 'Camera permission is required';
+String strLocationBlePermission = 'Location or Bluetooth scan permission is required';
 String strCallPermission = 'Camera or Microphone permission is required';
 
 double height = 0.0;

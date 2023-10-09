@@ -35,6 +35,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/more_menu/models/available_devices/TroubleShootingModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
@@ -161,6 +162,9 @@ import 'PreferenceUtil.dart';
 import 'ShowPDFFromFile.dart';
 import 'common_circular_indicator.dart';
 import 'keysofmodel.dart' as keysConstant;
+import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
+
+import 'widgets/CommonWidgets.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -705,6 +709,82 @@ class CommonUtil {
         });
   }
 
+  /// Common Message Dialog
+  static showCommonMsgDialog({required String msg}) {
+    showDialog(
+        barrierDismissible: false,
+        context: Get.context!,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async {
+              return false;
+            },
+            child: AlertDialog(
+              clipBehavior: Clip.antiAlias,
+              insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
+              content: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      strAlert,
+                      style: TextStyle(
+                          fontSize: 18.sp, fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      msg,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14.0.sp, fontWeight: FontWeight.w400),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: 100.w,
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.h, horizontal: 10.w),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.grey.shade200,
+                                  offset: Offset(2, 4),
+                                  blurRadius: 5,
+                                  spreadRadius: 2)
+                            ],
+                            gradient: LinearGradient(
+                                end: Alignment.centerRight,
+                                colors: [
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyGredientColor())
+                                ])),
+                        child: Text(
+                          strOK,
+                          style:
+                              TextStyle(fontSize: 14.0.sp, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   List<HealthRecordCollection> getMetaMasterIdList(HealthResult data) {
     final List<HealthRecordCollection> mediaMasterIdsList = [];
     try {
@@ -783,7 +863,6 @@ class CommonUtil {
 
     //loginBloc.logout().then((signOutResponse) {
     // moveToLoginPage(signOutResponse);
-    QurPlanReminders.deleteAllLocalReminders();
     // FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     // final token = await _firebaseMessaging.getToken();
     try {
@@ -797,10 +876,11 @@ class CommonUtil {
               profileResult.userContactCollection3![0]!.phoneNumber,
               token,
               false)
-          .then((value) {
+          .then((value) async {
         // if (Platform.isIOS) {
         //   _firebaseMessaging.deleteInstanceID();
         // }
+        await QurPlanReminders.deleteAllLocalReminders();
         moveToLoginPage();
       });
     } catch (e, stackTrace) {
@@ -1362,15 +1442,19 @@ class CommonUtil {
       if (PreferenceUtil.getFamilyRelationship(Constants.keyFamily) != null) {
       } else {
         _familyListBloc.getCustomRoles().then((relationShip) {
-          PreferenceUtil.saveRelationshipArray(
-              Constants.keyFamily, relationShip?.relationShipAry);
+          if (relationShip != null) {
+            PreferenceUtil.saveRelationshipArray(
+                Constants.keyFamily, relationShip?.relationShipAry);
+          }
         });
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       _familyListBloc.getCustomRoles().then((relationShip) {
-        PreferenceUtil.saveRelationshipArray(
-            Constants.keyFamily, relationShip.relationShipAry);
+        if (relationShip != null) {
+          PreferenceUtil.saveRelationshipArray(
+              Constants.keyFamily, relationShip?.relationShipAry);
+        }
       });
     }
   }
@@ -2056,6 +2140,21 @@ class CommonUtil {
       jsonData['deviceTypeCode'] = 'ANDROID';
     }
 
+    var additionalInfo = Map<String, dynamic>();
+    final packageInfo = await PackageInfo.fromPlatform();
+    additionalInfo[stringAppVersion] =
+        packageInfo.version + " + " + packageInfo.buildNumber;
+    if (packageInfo.packageName == appQurbookBundleId) {
+      additionalInfo[strAppType] = strAppTypeQurbook;
+    } else if (packageInfo.packageName == appQurhomeBundleId) {
+      additionalInfo[strAppType] = strAppTypeQurhome;
+    } else if (packageInfo.packageName == appQurdayBundleId) {
+      additionalInfo[strAppType] = strAppTypeQurday;
+    }
+    additionalInfo[strDeviceType] =
+        (isTablet ?? false) ? strDeviceTypeTablet : strDeviceTypeMobile;
+    jsonData[strAdditionalInfo] = additionalInfo;
+
     final params = json.encode(jsonData);
 
     print('DEVICE TOKEN INPUT: $params');
@@ -2584,7 +2683,7 @@ class CommonUtil {
     //Get Current installed version of app
     final info = await PackageInfo.fromPlatform();
     var currentVersion = double.parse(info.version.trim().replaceAll('.', ''));
-
+    var controller = Get.put(TroubleShootController());
     try {
       // Using default duration to force fetching from remote server.
       var apiBaseHelper = ApiBaseHelper();
@@ -2624,15 +2723,24 @@ class CommonUtil {
 
       if (newVersion > currentVersion) {
         isVersionLatest = false;
+
         if (showDialog) _showVersionDialog(context, isForceUpdate);
+      }
+
+      if (newVersion > currentVersion) {
+        controller.isLatestVersion = false;
+      } else if (newVersion <= currentVersion) {
+        controller.isLatestVersion = true;
       }
     } on FirebaseException catch (exception, stackTrace) {
       // Fetch throttled.
       isVersionLatest = false;
+      controller.isLatestVersion = false;
 
       CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
     } catch (exception, stackTrace) {
       isVersionLatest = false;
+      controller.isLatestVersion = false;
 
       CommonUtil().appLogs(message: exception, stackTrace: stackTrace);
       print('Unable to fetch remote config. Cached or default values will be '
@@ -5321,7 +5429,10 @@ class CommonUtil {
   String showDescriptionTextForm(FieldModel fieldModel) {
     String? desc = '';
 
-    if (fieldModel.description != null && fieldModel.description != '') {
+    if ((fieldModel?.isSurvey ?? false) &&
+        (fieldModel.strTitleDesc ?? "").trim().isNotEmpty) {
+      desc = fieldModel.strTitleDesc;
+    } else if (fieldModel.description != null && fieldModel.description != '') {
       desc = fieldModel.description;
     } else if (fieldModel.title != null && fieldModel.title != '') {
       desc = fieldModel.title;
@@ -5672,15 +5783,17 @@ class CommonUtil {
                               onTap: () {
                                 onTapSheelaRemainders?.call(true);
                               },
-                              child: AssetImageWidget(
-                                icon: icon_sheela_queue,
-                                height: 250.h,
-                                width: 250.w,
-                              ),
+                              child: (isTablet ?? true)
+                                  ? SheelaQueueIcon(
+                                      size: 150,
+                                    )
+                                  : SheelaQueueIcon(
+                                      size: 250,
+                                    ),
                             ),
                           ),
                           Visibility(
-                            visible: (unReadMsgCount??0)>0,
+                            visible: (unReadMsgCount ?? 0) > 0,
                             child: Column(
                               children: [
                                 Container(
@@ -5713,28 +5826,16 @@ class CommonUtil {
                                       minHeight: 35.h, minWidth: 35.h),
                                   badgeTextSize: 18.sp,
                                   icon: InkWell(
-                                    onTap: (){
+                                    onTap: () {
                                       onTapSheelaRemainders?.call(false);
                                     },
-                                    child: Container(
-                                      height: 100.h,
-                                      width: 100.h,
-                                      margin: EdgeInsets.all(10),
-                                      padding: EdgeInsets.all(20),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Color(getMyPrimaryColor()),
-                                            width: 5.w),
-                                      ),
-                                      child: Image.asset(
-                                        icon_unread_chat,
-                                        height: 30.h,
-                                        width: 30.w,
-                                        color: Color(getMyPrimaryColor()),
-                                      ),
-                                    ),
+                                    child: (isTablet ?? true)
+                                        ? UnreadMessagesIcon(
+                                            size: 80,
+                                          )
+                                        : UnreadMessagesIcon(
+                                            size: 100,
+                                          ),
                                   ),
                                 ),
                               ],
@@ -5846,6 +5947,26 @@ class CommonUtil {
 
       return false;
     }
+  }
+
+  Future<String> checkForBluetoothIsOnForIOS() async {
+    onInitHubListViewController().hubListResponse = null;
+    final bleController = onInitSheelaBLEController();
+    bleController.troubleShootTheBluetooth();
+    await Future.delayed(const Duration(seconds: 4));
+    if (bleController.troubleShootTimerSubscription != null) {
+      bleController.troubleShootTimerSubscription!.cancel();
+    }
+    bleController.troubleShootTimerSubscription = null;
+    print(bleController.troubleShootStatus);
+    //unknown
+//unsupported
+//unauthorized
+//poweredOff
+//scanstarted
+    bleController.stopScanning();
+    onInitHubListViewController().getHubList();
+    return bleController.troubleShootStatus;
   }
 
   String get _getDeviceType {
@@ -6161,7 +6282,7 @@ class CommonUtil {
       if (PreferenceUtil.getIfQurhomeDashboardActiveChat()) {
         if (chatListresponse != null) {
           SheelaReminderResponse chatList =
-          SheelaReminderResponse.fromJson(chatListresponse);
+              SheelaReminderResponse.fromJson(chatListresponse);
           if (chatList != null) {
             var chatMessageId = chatList.chatMessageId ?? '';
             if (chatMessageId != null && chatMessageId != '') {
@@ -6253,6 +6374,15 @@ class CommonUtil {
     }
     qurhomeDashboardController = Get.find();
     return qurhomeDashboardController;
+  }
+
+  PDFViewController onInitPDFViewController() {
+    PDFViewController pdfViewController;
+    if (!Get.isRegistered<PDFViewController>()) {
+      Get.put(PDFViewController());
+    }
+    pdfViewController = Get.find();
+    return pdfViewController;
   }
 
   ChatUserListController onInitChatUserListController() {
@@ -6874,6 +7004,150 @@ class CommonUtil {
     return landingScreenController;
   }
 
+  bool validYouTubeUrl(String content) {
+    RegExp regExp = RegExp(
+        r'((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?');
+    String? matches = regExp.stringMatch(content);
+    if (matches == null) {
+      return false; // Always returns here while the video URL is in the content paramter
+    }
+    final String youTubeUrl = matches;
+    return youTubeUrl.trim().isNotEmpty ? true : false;
+  }
+
+  String durationFormatter(int milliSeconds) {
+    var seconds = milliSeconds ~/ 1000;
+    final hours = seconds ~/ 3600;
+    seconds = seconds % 3600;
+    var minutes = seconds ~/ 60;
+    seconds = seconds % 60;
+    final hoursString = hours >= 10
+        ? '$hours'
+        : hours == 0
+            ? '00'
+            : '0$hours';
+    final minutesString = minutes >= 10
+        ? '$minutes'
+        : minutes == 0
+            ? '00'
+            : '0$minutes';
+    final secondsString = seconds >= 10
+        ? '$seconds'
+        : seconds == 0
+            ? '00'
+            : '0$seconds';
+    final formattedTime =
+        '${hoursString == '00' ? '' : '$hoursString:'}$minutesString:$secondsString';
+    return formattedTime;
+  }
+
+  onBackVideoPlayerScreen() {
+    try {
+      if (CommonUtil().isTablet == true) {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight
+        ]);
+      } else {
+        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  static Future<bool> askPermissionForLocationBleScan() async {
+    final location = await Permission.location.request();
+    final bluetoothScan = await Permission.bluetoothScan.request();
+    if (location == PermissionStatus.granted &&
+        bluetoothScan == PermissionStatus.granted) {
+      return true;
+    } else {
+      _handleInvalidPermissionsLocationBleScan(location, bluetoothScan);
+      return false;
+    }
+  }
+
+  static void _handleInvalidPermissionsLocationBleScan(
+    PermissionStatus locationStatus,
+    PermissionStatus bluetoothScanStatus,
+  ) {
+    if (locationStatus == PermissionStatus.denied &&
+        bluetoothScanStatus == PermissionStatus.denied) {
+      print("Access to location and ble scan denied");
+    } else if (locationStatus == PermissionStatus.permanentlyDenied &&
+        bluetoothScanStatus == PermissionStatus.permanentlyDenied) {
+      print("Access to location and ble scan denied permanently");
+    }
+  }
+
+  static Future<bool> askForStoragePermission() async {
+    PermissionStatus storage = await Permission.storage.request();
+    if (storage == PermissionStatus.granted) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> handleLocationBleScanConnect() async {
+    final status = await CommonUtil.askPermissionForLocationBleScan();
+    if (!status) {
+      FlutterToast toastToShow = FlutterToast();
+      toastToShow.getToast(
+        strLocationBlePermission,
+        Colors.red,
+      );
+    }
+  }
+
+  Future<void> askPermssionLocationBleScan() async {
+    try {
+      var location = await Permission.location.status;
+      var bluetoothScan = await Permission.bluetoothScan.status;
+      if (location.isDenied || bluetoothScan.isDenied) {
+        await CommonUtil().handleLocationBleScanConnect();
+      } else {}
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Future<void> askAllPermissions() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.bluetoothConnect,
+      Permission.bluetoothScan,
+      Permission.location,
+      Permission.microphone,
+      Permission.camera,
+      Permission.storage,
+      //Permission.notification, // integrated native permission for push notificaion
+    ].request();
+    /*if (statuses[Permission.bluetoothConnect]!.isGranted &&
+          statuses[Permission.bluetoothScan]!.isGranted &&
+          statuses[Permission.location]!.isGranted &&
+          statuses[Permission.microphone]!.isGranted &&
+          statuses[Permission.camera]!.isGranted &&
+          statuses[Permission.storage]!.isGranted &&
+          statuses[Permission.notification]!.isGranted) {}*/
+  }
+
+
+  String getExtensionSheelaPreview(int type) {
+    switch (type) {
+      case 0:
+        return "";
+      case 1:
+        return ".jpg";
+      case 2:
+        return ".pdf";
+      case 3:
+        return ".mp3";
+      default:
+        return "";
+    }
+  }
+
 }
 
 extension CapExtension on String {
@@ -7042,12 +7316,18 @@ class VideoCallCommonUtils {
   }
 
   String capitalizeFirstofEach(String data) {
-    return data
-        .trim()
-        .toLowerCase()
-        .split(' ')
-        .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
-        .join(' ');
+    try {
+      return data
+          .trim()
+          .toLowerCase()
+          .split(' ')
+          .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
+          .join(' ');
+    } catch (e, stacktrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stacktrace);
+
+      return data;
+    }
   }
 
   void startTheCall(
@@ -7084,7 +7364,7 @@ class VideoCallCommonUtils {
     await initialize(
       context: context,
       channelName: channelName as String?,
-      patName: capitalizeFirstofEach(patName),
+      patName: capitalizeFirstofEach(patName) ?? '',
       patId: patId,
       isFromAppointment: isFromAppointment,
       bookId: bookId,
@@ -7098,7 +7378,7 @@ class VideoCallCommonUtils {
         channelName: channelName as String?,
         role: ClientRole.Broadcaster,
         appointmentId: appointmentId,
-        patName: capitalizeFirstofEach(patName),
+        patName: capitalizeFirstofEach(patName) ?? patName,
         patId: patId,
         bookId: bookId,
         patDOB: isFromAppointment ? age.toString() : patientDOB,
