@@ -1303,15 +1303,16 @@ class _MyFHBState extends State<MyFHB> {
         }
         if (parsedData != null && parsedData.length > 0) {
           if (parsedData[0] == 'isSheelaFollowup') {
-            if ((parsedData[3].toString()).isNotEmpty) {
+            if ((parsedData[3].toString()).isNotEmpty &&
+                parsedData[3] != 'null') {
               return SplashScreen(
                 nsRoute: 'isSheelaFollowup',
-                bundle: 'isSheelaFollowup' + '|' + parsedData[3],
+                bundle: 'isSheelaFollowup' + '|' + 'audio' + parsedData[3],
               );
             } else {
               return SplashScreen(
                 nsRoute: 'isSheelaFollowup',
-                bundle: parsedData[0] + '|' + parsedData[1],
+                bundle: parsedData[0] + '|' + parsedData[2],
               );
             }
           } else if (parsedData[1] == 'appointmentList' ||
