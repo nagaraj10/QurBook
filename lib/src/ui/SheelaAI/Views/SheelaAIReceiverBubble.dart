@@ -305,6 +305,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                       if (buttonData?.btnRedirectTo == strPreviewScreen) {
                         if (buttonData?.chatAttachments != null &&
                             (buttonData?.chatAttachments?.length ?? 0) > 0) {
+                          if (controller.isLoading.isTrue) {
+                            return;
+                          }
                           controller.stopTTS();
                           controller.isSheelaScreenActive = false;
                           CommonUtil()
