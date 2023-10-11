@@ -465,35 +465,28 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else if (widget.nsRoute == 'isSheelaFollowup') {
                       final temp = widget.bundle.split('|');
-                      if (temp[0] == 'isSheelaFollowup' &&
-                          temp[1].toString() == 'audio') {
-                        Get.toNamed(
-                          router.rt_Sheela,
-                          arguments: SheelaArgument(
-                            audioMessage: temp[2].toString(),
-                          ),
-                        )!
-                            .then((value) => PageNavigator.goToPermanent(
-                                context, router.rt_Landing));
-                      } else {
-                        /*Get.toNamed(
-                          rt_Sheela,
-                          arguments: SheelaArgument(
-                            isSheelaFollowup: true,
-                            message: temp[1],
-                          ),
-                        )!
-                            .then((value) => PageNavigator.goToPermanent(
-                                context, router.rt_Landing));*/
-                        Get.toNamed(
-                          rt_Sheela,
-                          arguments: SheelaArgument(
-                              isSheelaFollowup: true,
-                              textSpeechSheela: temp[1]),
-                        )?.then((value) {
-                          PageNavigator.goToPermanent(
-                              context, router.rt_Landing);
-                        });
+                      if (temp != null) {
+                        if (temp[0] == 'isSheelaFollowup' &&
+                            temp[1].toString() == 'audio') {
+                          Get.toNamed(
+                            router.rt_Sheela,
+                            arguments: SheelaArgument(
+                              audioMessage: temp[2].toString(),
+                            ),
+                          )!
+                              .then((value) => PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
+                        } else {
+                          Get.toNamed(
+                            rt_Sheela,
+                            arguments: SheelaArgument(
+                                isSheelaFollowup: true,
+                                textSpeechSheela: temp[1]),
+                          )?.then((value) {
+                            PageNavigator.goToPermanent(
+                                context, router.rt_Landing);
+                          });
+                        }
                       }
                     } else if (widget.nsRoute ==
                         'familyMemberCaregiverRequest') {
