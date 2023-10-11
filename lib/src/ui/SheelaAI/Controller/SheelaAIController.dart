@@ -864,6 +864,9 @@ class SheelaAIController extends GetxController {
                     if (button?.btnRedirectTo == strPreviewScreen) {
                       if (button?.chatAttachments != null &&
                           (button?.chatAttachments?.length ?? 0) > 0) {
+                        if (isLoading.isTrue) {
+                          return;
+                        }
                         stopTTS();
                         isSheelaScreenActive = false;
                         CommonUtil()

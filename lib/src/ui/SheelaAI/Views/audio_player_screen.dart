@@ -60,7 +60,9 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
           );
         },
       );
-      onStartPlayerPressed();
+      Future.delayed(Duration(milliseconds: 500), () {
+        onStartPlayerPressed();
+      });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
