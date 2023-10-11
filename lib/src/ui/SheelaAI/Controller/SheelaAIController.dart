@@ -289,12 +289,14 @@ class SheelaAIController extends GetxController {
         audioResponse.audioFile = arguments!.audioMessage;
         conversations.add(audioResponse);
       } else if ((arguments?.textSpeechSheela ?? '').isNotEmpty) {
+        conversations = [];
+        currentPlayingConversation = null;
+        isLoading.value = true;
         msg = arguments!.textSpeechSheela!;
-        SheelaResponse currentCon = SheelaResponse();
-        currentCon.text = msg;
-        currentCon.recipientId = sheelaRecepId;
+        var currentCon = SheelaResponse(text: msg, recipientId: sheelaRecepId);
         conversations.add(currentCon);
-        currentPlayingConversation = conversations.first;
+        currentPlayingConversation = currentCon;
+        isLoading.value = false;
         playTTS();
       } else {
         gettingReposnseFromNative();
