@@ -122,10 +122,15 @@ class SheelaAIController extends GetxController {
     additionalInfo = {};
     player = AudioPlayer();
     listnerForAudioPlayer();
-    if (arguments?.eventIdViaSheela != null &&
-        arguments?.eventIdViaSheela != '') {
-      _chatSocketService
-          .getUnreadChatWithMsgId(arguments?.eventIdViaSheela ?? '');
+    try {
+      if ((arguments?.eventIdViaSheela != null) &&
+          (arguments?.eventIdViaSheela != 'null') &&
+          (arguments?.eventIdViaSheela != '')) {
+        _chatSocketService
+            .getUnreadChatWithMsgId(arguments?.eventIdViaSheela ?? '');
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -285,9 +290,11 @@ class SheelaAIController extends GetxController {
         conversations.add(audioResponse);
       } else if ((arguments?.textSpeechSheela ?? '').isNotEmpty) {
         msg = arguments!.textSpeechSheela!;
-        var currentCon = SheelaResponse(text: msg, recipientId: sheelaRecepId);
+        SheelaResponse currentCon = SheelaResponse();
+        currentCon.text = msg;
+        currentCon.recipientId = sheelaRecepId;
         conversations.add(currentCon);
-        currentPlayingConversation = currentCon;
+        currentPlayingConversation = conversations.first;
         playTTS();
       } else {
         gettingReposnseFromNative();
