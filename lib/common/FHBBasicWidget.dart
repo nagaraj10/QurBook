@@ -311,7 +311,7 @@ class FHBBasicWidget {
     if (myProfile != null && myProfile.result != null) {
       if (myProfile.result!.profilePicThumbnailUrl != '') {
         return Image.network(
-          myProfile.result!.profilePicThumbnailUrl!,
+          myProfile.result?.profilePicThumbnailUrl??'',
           height: CommonUtil().isTablet!
               ? imageProfileTabHeader
               : imageProfileMobileHeader,
