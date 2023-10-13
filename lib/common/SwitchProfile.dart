@@ -110,8 +110,8 @@ class SwitchProfile {
                                         .getProfilePicWidgeUsingUrl(myProfile,
                                             changeWhiteBg: changeWhiteBg,
                                             textSize: CommonUtil().isTablet!
-                                                ? 28
-                                                : 32)
+                                                ? 32
+                                                : 28)
                                     : Container(
                                         height: CommonUtil().isTablet!
                                             ? imageTabHeader
@@ -271,7 +271,7 @@ class SwitchProfile {
                     ? myProfile.result!.profilePicThumbnailUrl != null
                         ? FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile,
                             changeWhiteBg: changeWhiteBg,
-                            textSize: CommonUtil().isTablet! ? 28 : 32)
+                            textSize: CommonUtil().isTablet! ? 32 : 28)
                         : Container(
                             height: 50,
                             width: 50,
@@ -396,8 +396,8 @@ class SwitchProfile {
                                     ? FHBBasicWidget()
                                         .getProfilePicWidgeUsingUrl(myProfile,
                                             textSize: CommonUtil().isTablet!
-                                                ? 28
-                                                : 32)
+                                                ? 32
+                                                : 28)
                                     : Container(
                                         height: 50.0.h,
                                         width: 50.0.h,
