@@ -191,8 +191,8 @@ class AddProvidersState extends State<AddProviders> {
       }
 
       buildUI();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e);
     }
   }
@@ -509,8 +509,8 @@ class AddProvidersState extends State<AddProviders> {
               CameraPosition(target: center, zoom: 12, bearing: 45, tilt: 45)));
         }
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -583,8 +583,8 @@ class AddProvidersState extends State<AddProviders> {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       primaryUserProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return InkWell(
         onTap: () {
@@ -650,8 +650,9 @@ class AddProvidersState extends State<AddProviders> {
                           ? myProfile?.result != null
                               ? myProfile?.result?.profilePicThumbnailUrl !=
                                       null
-                                  ? getProfilePicWidget(
-                                      myProfile!.result!.profilePicThumbnailUrl)
+                                  ? getProfilePicWidget(myProfile
+                                          ?.result?.profilePicThumbnailUrl ??
+                                      '')
                                   : Center(
                                       child: Text(
                                         (selectedFamilyMemberName == null
@@ -830,8 +831,8 @@ class AddProvidersState extends State<AddProviders> {
       onTap: () {
         try {
           labBookAppointmentBtnTapped();
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           print(e);
         }
       },
@@ -894,8 +895,8 @@ class AddProvidersState extends State<AddProviders> {
             '${CommonUtil().validString(strNoTicketTypesAvaliable)}',
             Colors.red);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e);
     }
   }
