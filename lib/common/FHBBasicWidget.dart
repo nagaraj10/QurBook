@@ -226,18 +226,19 @@ class FHBBasicWidget {
 
   _selectDate(BuildContext context, onDateSelected, DateTime dateTime) async {
     final picked = await showDatePicker(
-        context: context,
-        initialDate: dateTime,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101),
-      builder: (context,child) => Theme(
+      context: context,
+      initialDate: dateTime,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+      builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getMyPrimaryColor()),
+            primary: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         child: child!,
-      ),);
+      ),
+    );
 
     if (picked != null && picked != dateTime) {
       dateTime = picked;
@@ -307,11 +308,12 @@ class FHBBasicWidget {
           );
   }
 
-  Widget getProfilePicWidgeUsingUrl(MyProfileModel? myProfile,{bool? changeWhiteBg}) {
+  Widget getProfilePicWidgeUsingUrl(MyProfileModel? myProfile,
+      {bool? changeWhiteBg, double? textSize}) {
     if (myProfile != null && myProfile.result != null) {
       if (myProfile.result!.profilePicThumbnailUrl != '') {
         return Image.network(
-          myProfile.result?.profilePicThumbnailUrl??'',
+          myProfile.result?.profilePicThumbnailUrl ?? '',
           height: CommonUtil().isTablet!
               ? imageProfileTabHeader
               : imageProfileMobileHeader,
@@ -330,17 +332,26 @@ class FHBBasicWidget {
               width: CommonUtil().isTablet!
                   ? imageProfileTabHeader
                   : imageProfileMobileHeader,
-              color:changeWhiteBg==true?Colors.white: PreferenceUtil.getIfQurhomeisAcive()
-                  ? CommonUtil.isUSRegion()?Color(CommonUtil().getMyPrimaryColor()):Color(CommonUtil().getQurhomeGredientColor())
-                  : Color(CommonUtil().getMyPrimaryColor()),
+              color: changeWhiteBg == true
+                  ? Colors.white
+                  : PreferenceUtil.getIfQurhomeisAcive()
+                      ? CommonUtil.isUSRegion()
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Color(CommonUtil().getQurhomeGredientColor())
+                      : Color(CommonUtil().getMyPrimaryColor()),
               child: Center(
-                child: getFirstLastNameText(myProfile,changeWhiteBg: changeWhiteBg),
+                child: getFirstLastNameText(myProfile,
+                    changeWhiteBg: changeWhiteBg),
               ),
             );
           },
         );
       } else {
         return Container(
+          child: Center(
+            child: getFirstLastNameTextForProfile(myProfile!,
+                textColor: Color(CommonUtil().getMyPrimaryColor())),
+          ),
           color: Color(fhbColors.bgColorContainer),
           height: CommonUtil().isTablet!
               ? imageProfileTabHeader
@@ -1023,8 +1034,8 @@ class FHBBasicWidget {
                       onTextChanged(errorValue);
                     }
                   }
-                } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                } catch (e, stackTrace) {
+                  CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
                   onTextChanged('');
                 }
@@ -1178,8 +1189,8 @@ class FHBBasicWidget {
       } else {
         return false;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return false;
     }
@@ -1225,7 +1236,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
   }
 }
 
-Widget getFirstLastNameText(MyProfileModel myProfile,{bool? changeWhiteBg}) {
+Widget getFirstLastNameText(MyProfileModel myProfile, {bool? changeWhiteBg}) {
   if (myProfile.result != null &&
       myProfile.result!.firstName != null &&
       myProfile.result!.lastName != null) {
@@ -1235,7 +1246,9 @@ Widget getFirstLastNameText(MyProfileModel myProfile,{bool? changeWhiteBg}) {
               ? myProfile.result!.lastName![0].toUpperCase()
               : ''),
       style: TextStyle(
-        color: changeWhiteBg==true?Color(CommonUtil().getMyPrimaryColor()):Colors.white,
+        color: changeWhiteBg == true
+            ? Color(CommonUtil().getMyPrimaryColor())
+            : Colors.white,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w400,
       ),
@@ -1244,7 +1257,9 @@ Widget getFirstLastNameText(MyProfileModel myProfile,{bool? changeWhiteBg}) {
     return Text(
       myProfile.result!.firstName![0].toUpperCase(),
       style: TextStyle(
-        color: changeWhiteBg==true?Color(CommonUtil().getMyPrimaryColor()):Colors.white,
+        color: changeWhiteBg == true
+            ? Color(CommonUtil().getMyPrimaryColor())
+            : Colors.white,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w400,
       ),
@@ -1253,7 +1268,9 @@ Widget getFirstLastNameText(MyProfileModel myProfile,{bool? changeWhiteBg}) {
     return Text(
       '',
       style: TextStyle(
-        color: changeWhiteBg==true?Color(CommonUtil().getMyPrimaryColor()):Colors.white,
+        color: changeWhiteBg == true
+            ? Color(CommonUtil().getMyPrimaryColor())
+            : Colors.white,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
         fontWeight: FontWeight.w200,
       ),
@@ -1262,7 +1279,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile,{bool? changeWhiteBg}) {
 }
 
 Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
-    {Color? textColor}) {
+    {Color? textColor, double? textSize}) {
   if (myProfile.result != null &&
       myProfile.result!.firstName != null &&
       myProfile.result!.lastName != null) {
@@ -1273,7 +1290,7 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
               : ''),
       style: TextStyle(
         color: textColor ?? Colors.white,
-        fontSize: 28.0.sp,
+        fontSize: textSize ?? 18.0.sp,
         fontWeight: FontWeight.w500,
       ),
     );

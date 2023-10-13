@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'dart:io';
@@ -117,13 +116,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (userid != null) {
           languageModelList = await languageBlock.getLanguage();
         }
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
 
       return setValueLanguages(myProfile);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       String currentLanguage = '';
       final lan = CommonUtil.getCurrentLanCode();
@@ -260,7 +259,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3!.length > 0) {
-          mobile.text = data.userContactCollection3![0]!.phoneNumber??'';
+          mobile.text = data.userContactCollection3![0]!.phoneNumber ?? '';
         }
       }
       if (data != null) {
@@ -271,7 +270,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3!.length > 0) {
-          email.text = data.userContactCollection3![0]!.email??'';
+          email.text = data.userContactCollection3![0]!.email ?? '';
         }
       }
 
@@ -283,12 +282,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
               data.additionalInfo?.heightObj?.valueInches ?? '';
         } else {
           heightController.text = data.additionalInfo!.height != null
-              ? data.additionalInfo!.height??''
+              ? data.additionalInfo!.height ?? ''
               : '';
         }
 
         weightController.text = data.additionalInfo!.weight != null
-            ? data.additionalInfo!.weight??''
+            ? data.additionalInfo!.weight ?? ''
             : '';
       }
       if (data.gender != null) {
@@ -302,7 +301,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
       if (data.dateOfBirth != null) {
         if (CommonUtil.isUSRegion()) {
-          dob.text = new FHBUtils().getFormattedDateOnly(data.dateOfBirth??"");
+          dob.text =
+              new FHBUtils().getFormattedDateOnly(data.dateOfBirth ?? "");
         } else {
           dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth)!;
         }
@@ -323,16 +323,20 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
 
       if (data.userAddressCollection3 != null) {
-        if ((data.userAddressCollection3?.length??0) > 0) {
-          cntrlr_addr_one.text = data.userAddressCollection3![0].addressLine1??'';
-          cntrlr_addr_two.text = data.userAddressCollection3![0].addressLine2??'';
-          cntrlr_addr_zip.text = data.userAddressCollection3![0].pincode??'';
-          cntrlr_addr_city.text = data.userAddressCollection3![0].city!.name??'';
-          cntrlr_addr_state.text = data.userAddressCollection3![0].state!.name??'';
+        if ((data.userAddressCollection3?.length ?? 0) > 0) {
+          cntrlr_addr_one.text =
+              data.userAddressCollection3![0].addressLine1 ?? '';
+          cntrlr_addr_two.text =
+              data.userAddressCollection3![0].addressLine2 ?? '';
+          cntrlr_addr_zip.text = data.userAddressCollection3![0].pincode ?? '';
+          cntrlr_addr_city.text =
+              data.userAddressCollection3![0].city!.name ?? '';
+          cntrlr_addr_state.text =
+              data.userAddressCollection3![0].state!.name ?? '';
         }
       }
       if (data.membershipOfferedBy != null && data.membershipOfferedBy != '') {
-        cntrlr_corp_name.text = data.membershipOfferedBy??'';
+        cntrlr_corp_name.text = data.membershipOfferedBy ?? '';
       }
     }
     try {
@@ -342,9 +346,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (profileImageFile != null) {
           profileImage = File(profileImageFile);
         }
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
       return Container(
           color: Colors.white,
@@ -368,13 +371,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                   width: 1.5.w,
                                   color:
                                       (Provider.of<UserPlansViewModel>(context)
-                                                  .isGoldMember)
+                                              .isGoldMember)
                                           ? Colors.transparent
                                           : Color(new CommonUtil()
                                               .getMyPrimaryColor()))),
                         ),
                         child: data.profilePicThumbnailUrl != null
-                            ? UserProfileImage(myProfile)
+                            ? UserProfileImage(myProfile,
+                                textColor:
+                                    Color(CommonUtil().getMyPrimaryColor()))
                             : Container(),
                       ),
                     ),
@@ -681,9 +686,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     controller: dob,
                     enabled: false,
                     decoration: InputDecoration(
-                        hintText: CommonUtil.isUSRegion()?CommonConstants.date_of_birth:CommonConstants.year_of_birth,
+                        hintText: CommonUtil.isUSRegion()
+                            ? CommonConstants.date_of_birth
+                            : CommonConstants.year_of_birth,
                         hintStyle: TextStyle(fontSize: 16.0.sp),
-                        labelText: CommonUtil.isUSRegion()?CommonConstants.date_of_birthWithStar:CommonConstants.year_of_birth_with_star),
+                        labelText: CommonUtil.isUSRegion()
+                            ? CommonConstants.date_of_birthWithStar
+                            : CommonConstants.year_of_birth_with_star),
                   ),
                 ),
                 cntrlr_corp_name.text != ''
@@ -771,8 +780,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               ],
             ),
           ));
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return Container(
         child: Center(
@@ -869,8 +878,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
           } else {
             isKg = false;
           }
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           if (CommonUtil.REGION_CODE == 'IND') {
             isFeetOrInches = true;
@@ -892,15 +901,16 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
- Widget getDropDownWithTagsdrop() {
+  Widget getDropDownWithTagsdrop() {
     return FutureBuilder<TagsResult>(
         future: _healthReportListForUserRepository.getTags(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData ) {
+          if (!snapshot.hasData) {
             return CommonCircularIndicator();
           }
-        
-          final List<Tags>? tagslist = snapshot.data!.result; // snapshot.data.result to snapshot.data
+
+          final List<Tags>? tagslist =
+              snapshot.data!.result; // snapshot.data.result to snapshot.data
           //  final mediaResultFiltered = removeUnwantedCategories(tagslist);
           setTheValuesForDropdown(tagslist);
           return Taglist(

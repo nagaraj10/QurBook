@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -59,7 +58,7 @@ class UserProfileImage extends StatelessWidget {
                     child: (myProfile?.result != null &&
                             myProfile?.result?.profilePicThumbnailUrl != '')
                         ? Image.network(
-                            myProfile!.result!.profilePicThumbnailUrl!,
+                            myProfile?.result?.profilePicThumbnailUrl ?? '',
                             height: 50.0.h,
                             width: 50.0.h,
                             fit: BoxFit.cover,
@@ -85,6 +84,12 @@ class UserProfileImage extends StatelessWidget {
                             color: Color(bgColorContainer),
                             height: 50.0.h,
                             width: 50.0.h,
+                            child: Center(
+                              child: getFirstLastNameTextForProfile(
+                                myProfile!,
+                                textColor: textColor,
+                              ),
+                            ),
                           ),
                   ),
                 ),
