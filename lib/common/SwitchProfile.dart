@@ -78,8 +78,8 @@ class SwitchProfile {
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       profileImage = PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       myProfile = null;
     }
@@ -97,7 +97,8 @@ class SwitchProfile {
               checkInternet(_keyLoader, scaffold_state);
             },
             child: isFromDashborad
-                ? getCirleAvatarWithBorderIcon(myProfile,changeWhiteBg: changeWhiteBg)
+                ? getCirleAvatarWithBorderIcon(myProfile,
+                    changeWhiteBg: changeWhiteBg)
                 : CircleAvatar(
                     radius: CommonUtil().isTablet! ? 18 : 15,
                     child: ClipOval(
@@ -106,7 +107,11 @@ class SwitchProfile {
                                 ? myProfile.result!.profilePicThumbnailUrl !=
                                         null
                                     ? FHBBasicWidget()
-                                        .getProfilePicWidgeUsingUrl(myProfile,changeWhiteBg: changeWhiteBg)
+                                        .getProfilePicWidgeUsingUrl(myProfile,
+                                            changeWhiteBg: changeWhiteBg,
+                                            textSize: CommonUtil().isTablet!
+                                                ? 28
+                                                : 32)
                                     : Container(
                                         height: CommonUtil().isTablet!
                                             ? imageTabHeader
@@ -168,8 +173,8 @@ class SwitchProfile {
         try {
           ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
           var res = apiBaseHelper.updateLastVisited();
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
 
         getUserProfileData();
@@ -212,8 +217,8 @@ class SwitchProfile {
             qurhomeDashboardController.currentSelectedIndex.value);
         try {
           Get.find<QurhomeRegimenController>().getRegimenList();
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
       });
     });
@@ -254,42 +259,44 @@ class SwitchProfile {
     });
   }
 
-  Widget getCirleAvatarWithBorderIcon(MyProfileModel? myProfile,{bool? changeWhiteBg}) {
+  Widget getCirleAvatarWithBorderIcon(MyProfileModel? myProfile,
+      {bool? changeWhiteBg}) {
     return Stack(
       children: [
         CircleAvatar(
           radius: CommonUtil().isTablet! ? 25 : 18,
           child: ClipOval(
-              child: myProfile != null
-                  ? myProfile.result != null
-                      ? myProfile.result!.profilePicThumbnailUrl != null
-                          ? FHBBasicWidget()
-                              .getProfilePicWidgeUsingUrl(myProfile,changeWhiteBg: changeWhiteBg)
-                          : Container(
-                              height: 50,
-                              width: 50,
-                              color: Color(fhbColors.bgColorContainer),
-                              child: Center(
-                                child: Text(
-                                  myProfile.result!.firstName != null
-                                      ? myProfile.result!.firstName![0]
-                                          .toUpperCase()
-                                      : '',
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor())),
-                                ),
-                              ))
-                      : Container(
-                          height: 50,
-                          width: 50,
-                          color: Color(fhbColors.bgColorContainer),
-                        )
-                  : Container(
-                      height: 50,
-                      width: 50,
-                      color: Color(fhbColors.bgColorContainer),
-                    ),
+            child: myProfile != null
+                ? myProfile.result != null
+                    ? myProfile.result!.profilePicThumbnailUrl != null
+                        ? FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile,
+                            changeWhiteBg: changeWhiteBg,
+                            textSize: CommonUtil().isTablet! ? 28 : 32)
+                        : Container(
+                            height: 50,
+                            width: 50,
+                            color: Color(fhbColors.bgColorContainer),
+                            child: Center(
+                              child: Text(
+                                myProfile.result!.firstName != null
+                                    ? myProfile.result!.firstName![0]
+                                        .toUpperCase()
+                                    : '',
+                                style: TextStyle(
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            ))
+                    : Container(
+                        height: 50,
+                        width: 50,
+                        color: Color(fhbColors.bgColorContainer),
+                      )
+                : Container(
+                    height: 50,
+                    width: 50,
+                    color: Color(fhbColors.bgColorContainer),
+                  ),
           ),
         ),
         _getPlusIcon(),
@@ -359,8 +366,8 @@ class SwitchProfile {
       myProfileNew = await PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       profileImage =
           await PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       myProfileNew = null;
     }
@@ -387,7 +394,10 @@ class SwitchProfile {
                                 ? myProfile.result!.profilePicThumbnailUrl !=
                                         null
                                     ? FHBBasicWidget()
-                                        .getProfilePicWidgeUsingUrl(myProfile)
+                                        .getProfilePicWidgeUsingUrl(myProfile,
+                                            textSize: CommonUtil().isTablet!
+                                                ? 28
+                                                : 32)
                                     : Container(
                                         height: 50.0.h,
                                         width: 50.0.h,

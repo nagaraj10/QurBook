@@ -84,6 +84,12 @@ class UserProfileImage extends StatelessWidget {
                             color: Color(bgColorContainer),
                             height: 50.0.h,
                             width: 50.0.h,
+                            child: Center(
+                              child: getFirstLastNameTextForProfile(
+                                myProfile!,
+                                textColor: textColor,
+                              ),
+                            ),
                           ),
                   ),
                 ),
