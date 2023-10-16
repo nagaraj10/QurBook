@@ -17,10 +17,12 @@ import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/AttachmentListSheela.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
+import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -120,10 +122,15 @@ class SheelaAIController extends GetxController {
     additionalInfo = {};
     player = AudioPlayer();
     listnerForAudioPlayer();
-    if (arguments?.eventIdViaSheela != null &&
-        arguments?.eventIdViaSheela != '') {
-      _chatSocketService
-          .getUnreadChatWithMsgId(arguments?.eventIdViaSheela ?? '');
+    try {
+      if ((arguments?.eventIdViaSheela != null) &&
+          (arguments?.eventIdViaSheela != 'null') &&
+          (arguments?.eventIdViaSheela != '')) {
+        _chatSocketService
+            .getUnreadChatWithMsgId(arguments?.eventIdViaSheela ?? '');
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -282,10 +289,14 @@ class SheelaAIController extends GetxController {
         audioResponse.audioFile = arguments!.audioMessage;
         conversations.add(audioResponse);
       } else if ((arguments?.textSpeechSheela ?? '').isNotEmpty) {
+        conversations = [];
+        currentPlayingConversation = null;
+        isLoading.value = true;
         msg = arguments!.textSpeechSheela!;
         var currentCon = SheelaResponse(text: msg, recipientId: sheelaRecepId);
         conversations.add(currentCon);
         currentPlayingConversation = currentCon;
+        isLoading.value = false;
         playTTS();
       } else {
         gettingReposnseFromNative();
@@ -852,12 +863,40 @@ class SheelaAIController extends GetxController {
                     }
                   }
                   if (button != null) {
-                    if (button?.btnRedirectTo == strRedirectToHelpPreview) {
+                    if (button?.btnRedirectTo == strPreviewScreen) {
+                      if (button?.chatAttachments != null &&
+                          (button?.chatAttachments?.length ?? 0) > 0) {
+                        if (isLoading.isTrue) {
+                          return;
+                        }
+                        stopTTS();
+                        isSheelaScreenActive = false;
+                        CommonUtil()
+                            .onInitQurhomeDashboardController()
+                            .setActiveQurhomeDashboardToChat(status: false);
+                        Get.to(
+                          AttachmentListSheela(
+                              chatAttachments: button?.chatAttachments ?? []),
+                        )?.then((value) {
+                          isSheelaScreenActive = true;
+                        });
+                      }
+                    } else if (button?.btnRedirectTo ==
+                        strRedirectToHelpPreview) {
                       if (button?.videoUrl != null && button?.videoUrl != '') {
                         playYoutube(button?.videoUrl);
                       } else if (button?.audioUrl != null &&
                           button?.audioUrl != '') {
                         playAudioFile(button?.audioUrl);
+                      } else if (button?.imageUrl != null &&
+                          button?.imageUrl != '') {
+                        isSheelaScreenActive = false;
+                        Get.to(FullPhoto(
+                          url: button?.imageUrl ?? '',
+                          titleSheelaPreview: strImageTitle,
+                        ))?.then((value) {
+                          isSheelaScreenActive = true;
+                        });
                       }
                     } else {
                       startSheelaFromButton(

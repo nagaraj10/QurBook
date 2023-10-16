@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -14,7 +13,8 @@ import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
-import 'package:myfhb/search_providers/models/CityListModel.dart'as cityListModel;
+import 'package:myfhb/search_providers/models/CityListModel.dart'
+    as cityListModel;
 import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
@@ -149,16 +149,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               .getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
         } else if (widget.arguments!.searchWord == CommonConstants.labs ||
             widget.arguments!.searchWord == CommonConstants.lab) {
-          _labsListBlock!.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID,widget.isFromCreateTicket);
-        }
-        else if (widget.arguments!.searchWord == CommonConstants.keyCity) {
+          _labsListBlock!.getExistingLabsListNew(
+              Constants.STR_HEALTHORG_LABID, widget.isFromCreateTicket);
+        } else if (widget.arguments!.searchWord == CommonConstants.keyCity) {
           _labsListBlock!.getCityList('a');
         }
       }
       WidgetsBinding.instance!.addPostFrameCallback(
           (_) => _refreshIndicatorKey.currentState?.show());
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //print(e);
     }
@@ -228,16 +228,18 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   if (editedValue != '') {
                     value = editedValue;
                     widget.arguments!.searchWord == CommonConstants.doctors
-                        ? _doctorsListBlock!.getDoctorsListNew(
-                            value, widget.isSkipUnknown)
+                        ? _doctorsListBlock!
+                            .getDoctorsListNew(value, widget.isSkipUnknown)
                         : widget.arguments!.searchWord ==
                                 CommonConstants.hospitals
                             ? _hospitalListBlock!.getHospitalListNew(value)
                             : widget.arguments!.searchWord! ==
-                        CommonConstants.labs ||
-                        widget.arguments!.searchWord ==
-                            CommonConstants.lab
-                        ? _labsListBlock!.getLabsListNew(value!,widget.isFromCreateTicket):_labsListBlock!.getCityList(value!);
+                                        CommonConstants.labs ||
+                                    widget.arguments!.searchWord ==
+                                        CommonConstants.lab
+                                ? _labsListBlock!.getLabsListNew(
+                                    value!, widget.isFromCreateTicket)
+                                : _labsListBlock!.getCityList(value!);
                     setState(() {});
                   } else {
                     widget.arguments!.searchWord == CommonConstants.doctors
@@ -251,7 +253,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                     widget.arguments!.searchWord ==
                                         CommonConstants.lab
                                 ? _labsListBlock!.getExistingLabsListNew(
-                                    Constants.STR_HEALTHORG_LABID,widget.isFromCreateTicket)
+                                    Constants.STR_HEALTHORG_LABID,
+                                    widget.isFromCreateTicket)
                                 : _labsListBlock!.getCityList('a');
                     setState(() {});
                   }
@@ -281,17 +284,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     )*/
                   widget.arguments!.searchWord == CommonConstants.doctors
                       ? getResponseFromApiWidgetForDoctors()
-                      : widget.arguments!.searchWord == CommonConstants.hospitals
+                      : widget.arguments!.searchWord ==
+                              CommonConstants.hospitals
                           ? getResponseFromApiWidgetForHospital()
                           : widget.arguments!.searchWord ==
-                      CommonConstants.labs ||
+                                      CommonConstants.labs ||
                                   widget.arguments!.searchWord ==
                                       CommonConstants.lab
                               ? getResponseFromApiWidgetForLabs()
                               : getResponseFromApiWidgetForCity()
                   : widget.arguments!.searchWord == CommonConstants.doctors
                       ? getResponseFromApiWidgetForDoctors()
-                      : widget.arguments!.searchWord == CommonConstants.hospitals
+                      : widget.arguments!.searchWord ==
+                              CommonConstants.hospitals
                           ? getResponseFromApiWidgetForHospital()
                           : widget.arguments!.searchWord ==
                                       CommonConstants.labs ||
@@ -452,22 +457,23 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   )
                 : snapshot.data!.data!.result == null
                     ? Container(
-                    child: Center(
-                      child: Text(variable.strNodata),
-                    ),
-                  )
-                //getEmptyCard()
-                : snapshot.data!.data!.result!.isEmpty
-                    ? Container(
                         child: Center(
                           child: Text(variable.strNodata),
                         ),
                       )
                     //getEmptyCard()
-                    : Container(
-                        margin: EdgeInsets.all(5),
-                        child: getAllDatasInLabsList(snapshot.data!.data!.result),
-                      );
+                    : snapshot.data!.data!.result!.isEmpty
+                        ? Container(
+                            child: Center(
+                              child: Text(variable.strNodata),
+                            ),
+                          )
+                        //getEmptyCard()
+                        : Container(
+                            margin: EdgeInsets.all(5),
+                            child: getAllDatasInLabsList(
+                                snapshot.data!.data!.result),
+                          );
 
             break;
 
@@ -475,9 +481,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             break;
         }
         // }
-       return Container();
-    
-        
+        return Container();
       },
     );
   }
@@ -528,10 +532,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 CommonConstants.hospitals
                             ? saveHospitalDialog(context)
                             : widget.arguments!.searchWord ==
-                        CommonConstants.labs ||
-                        widget.arguments!.searchWord ==
-                            CommonConstants.lab
-                        ? passLaboratoryValue(null, context):passCityValue(null, context);
+                                        CommonConstants.labs ||
+                                    widget.arguments!.searchWord ==
+                                        CommonConstants.lab
+                                ? passLaboratoryValue(null, context)
+                                : passCityValue(null, context);
                   }
                 }, text: 'Click here to add', width: 150.w),
               ],
@@ -552,11 +557,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ? passDoctorsValue(diagnostics.errorData, context)
               : widget.arguments!.searchWord == CommonConstants.hospitals
                   ? passHospitalValue(null, context)
-                  : widget.arguments!.searchWord ==
-              CommonConstants.labs ||
-              widget.arguments!.searchWord ==
-                  CommonConstants.lab
-              ? passLaboratoryValue(null, context):passCityValue(null, context);
+                  : widget.arguments!.searchWord == CommonConstants.labs ||
+                          widget.arguments!.searchWord == CommonConstants.lab
+                      ? passLaboratoryValue(null, context)
+                      : passCityValue(null, context);
         }
       },
       child: Container(
@@ -646,11 +650,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                           (data.result![i].name != null &&
                                   data.result![i].name != '')
                               ? data.result![i].name!.capitalizeFirstofEach
-                              : data.result![i].firstName
-                                      !.capitalizeFirstofEach +
+                              : data.result![i].firstName!
+                                      .capitalizeFirstofEach +
                                   ' ' +
-                                  data.result![i].lastName
-                                      !.capitalizeFirstofEach,
+                                  data.result![i].lastName!
+                                      .capitalizeFirstofEach,
                           getDoctorsAddress(data.result![i]),
                           data.result![i].doctorId,
                           data.result![i].profilePicThumbnailUrl,
@@ -779,8 +783,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           data!.add(labListResult);
         }
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //print(e);
     }
@@ -853,7 +857,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       child: Padding(
                         padding: EdgeInsets.all(10),
                         child: getDataToView(
-                          widget.arguments!.searchWord == CommonConstants.doctors
+                          widget.arguments!.searchWord ==
+                                  CommonConstants.doctors
                               ? name
                               : widget.arguments!.searchWord ==
                                       CommonConstants.hospitals
@@ -877,8 +882,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     ? passHospitalValue(hospitalData, context)
                     : passLaboratoryValue(labData, context);
           } else {
-            passdataToNextScreen(data.name, context,
-                data, hospitalData, labData);
+            passdataToNextScreen(
+                data.name, context, data, hospitalData, labData);
           }
         });
   }
@@ -897,11 +902,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         .maybePop({Constants.keyHospital: json.encode(hospitaData)});
   }
 
-  void passLaboratoryValue(LabListResult? laboratoryData, BuildContext context) {
+  void passLaboratoryValue(
+      LabListResult? laboratoryData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
-  void passCityValue(cityListModel.CityListData? cityData, BuildContext context) {
+  void passCityValue(
+      cityListModel.CityListData? cityData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyCity: cityData});
   }
 
@@ -1138,11 +1145,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           ? passDoctorsValue(diagnostics.errorData, context)
           : widget.arguments!.searchWord == CommonConstants.hospitals
               ? passHospitalValue(null, context)
-              : widget.arguments!.searchWord ==
-          CommonConstants.labs ||
-          widget.arguments!.searchWord ==
-              CommonConstants.lab
-          ? passLaboratoryValue(null, context):passCityValue(null, context);
+              : widget.arguments!.searchWord == CommonConstants.labs ||
+                      widget.arguments!.searchWord == CommonConstants.lab
+                  ? passLaboratoryValue(null, context)
+                  : passCityValue(null, context);
     }
   }
 
@@ -2013,9 +2019,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       primaryUserProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return InkWell(
         onTap: () {
@@ -2071,7 +2076,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                               child: Text(
                                 (selectedFamilyMemberName == null
                                     ? myProfile!.result?.lastName!.toUpperCase()
-                                    : selectedFamilyMemberName![0].toUpperCase())!,
+                                    : selectedFamilyMemberName![0]
+                                        .toUpperCase())!,
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
                                     color: Color(
@@ -2082,8 +2088,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                           ? myProfile?.result != null
                               ? myProfile?.result?.profilePicThumbnailUrl !=
                                       null
-                                  ? getProfilePicWidget(
-                                      myProfile!.result!.profilePicThumbnailUrl)
+                                  ? getProfilePicWidget(myProfile
+                                          ?.result?.profilePicThumbnailUrl ??
+                                      '')
                                   : Center(
                                       child: Text(
                                         (selectedFamilyMemberName == null
@@ -2224,10 +2231,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return Center(
                 child: SizedBox(
-                  width: 30.0.h,
-                  height: 30.0.h,
-                  child: CommonCircularIndicator(),
-                ));
+              width: 30.0.h,
+              height: 30.0.h,
+              child: CommonCircularIndicator(),
+            ));
 
             break;
 
@@ -2242,22 +2249,23 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return snapshot.data!.data!.result == null
                 ? Container(
-              child: Center(
-                child: Text(variable.strNodata),
-              ),
-            )
-            //getEmptyCard()
+                    child: Center(
+                      child: Text(variable.strNodata),
+                    ),
+                  )
+                //getEmptyCard()
                 : snapshot.data!.data!.result!.isEmpty
-                ? Container(
-              child: Center(
-                child: Text(variable.strNodata),
-              ),
-            )
-            //getEmptyCard()
-                : Container(
-              margin: EdgeInsets.all(5),
-              child: getAllDatasInCityList(snapshot.data!.data!.result!),
-            );
+                    ? Container(
+                        child: Center(
+                          child: Text(variable.strNodata),
+                        ),
+                      )
+                    //getEmptyCard()
+                    : Container(
+                        margin: EdgeInsets.all(5),
+                        child:
+                            getAllDatasInCityList(snapshot.data!.data!.result!),
+                      );
 
             break;
 
@@ -2286,9 +2294,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         if (widget.toPreviousScreen!) {
                           passCityValue(data[index], context);
                         }
-                      } catch (e,stackTrace) {
-                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+                      } catch (e, stackTrace) {
+                        CommonUtil()
+                            .appLogs(message: e, stackTrace: stackTrace);
                       }
                     },
                     child: Card(

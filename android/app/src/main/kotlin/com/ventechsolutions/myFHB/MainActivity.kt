@@ -3145,7 +3145,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         } else if (redirect_to == "claimList") {
             sharedValue = "${redirect_to}&${message}&$rawBody"
         } else if (redirect_to == "sheela|pushMessage") {
-            sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL"
+            sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL&$EVEId"
         } else if (redirect_to == "isSheelaFollowup") {
             sharedValue = "${redirect_to}&${message}&$rawBody"
 

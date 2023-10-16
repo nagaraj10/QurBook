@@ -177,8 +177,8 @@ class _SplashScreenState extends State<SplashScreen> {
           _loaded = true;
         });
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) print(e.toString());
     }
@@ -465,26 +465,28 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else if (widget.nsRoute == 'isSheelaFollowup') {
                       final temp = widget.bundle.split('|');
-                      if (temp[0] == 'isSheelaFollowup' &&
-                          (temp[1].toString()).isNotEmpty) {
-                        Get.toNamed(
-                          router.rt_Sheela,
-                          arguments: SheelaArgument(
-                            audioMessage: temp[1].toString(),
-                          ),
-                        )!
-                            .then((value) => PageNavigator.goToPermanent(
-                                context, router.rt_Landing));
-                      } else {
-                        Get.toNamed(
-                          rt_Sheela,
-                          arguments: SheelaArgument(
-                            isSheelaFollowup: true,
-                            message: temp[1],
-                          ),
-                        )!
-                            .then((value) => PageNavigator.goToPermanent(
-                                context, router.rt_Landing));
+                      if (temp != null) {
+                        if (temp[0] == 'isSheelaFollowup' &&
+                            temp[1].toString() == 'audio') {
+                          Get.toNamed(
+                            router.rt_Sheela,
+                            arguments: SheelaArgument(
+                              audioMessage: temp[2].toString(),
+                            ),
+                          )!
+                              .then((value) => PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
+                        } else {
+                          Get.toNamed(
+                            rt_Sheela,
+                            arguments: SheelaArgument(
+                                isSheelaFollowup: true,
+                                textSpeechSheela: temp[1]),
+                          )?.then((value) {
+                            PageNavigator.goToPermanent(
+                                context, router.rt_Landing);
+                          });
+                        }
                       }
                     } else if (widget.nsRoute ==
                         'familyMemberCaregiverRequest') {
@@ -663,7 +665,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       if ((CommonUtil.isUSRegion()) &&
                           (passedValArr[3] != null) &&
-                          (passedValArr[3] != 'null')&&
+                          (passedValArr[3] != 'null') &&
                           (passedValArr[4] != null) &&
                           (passedValArr[4] != 'null')) {
                         var qurhomeDashboardController =
@@ -827,8 +829,9 @@ class _SplashScreenState extends State<SplashScreen> {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing);
                           }
-                        } catch (e,stackTrace) {
-                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                        } catch (e, stackTrace) {
+                          CommonUtil()
+                              .appLogs(message: e, stackTrace: stackTrace);
 
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing);
@@ -944,8 +947,9 @@ class _SplashScreenState extends State<SplashScreen> {
                                 (value) => PageNavigator.goToPermanent(
                                     context, router.rt_Landing));
                           }
-                        } catch (e,stackTrace) {
-                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                        } catch (e, stackTrace) {
+                          CommonUtil()
+                              .appLogs(message: e, stackTrace: stackTrace);
 
                           AppointmentDetailsController
                               appointmentDetailsController =
@@ -1036,9 +1040,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void getProfileData() async {
     try {
       await new CommonUtil().getUserProfileData();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }

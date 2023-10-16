@@ -405,7 +405,7 @@ class _MyFamilyState extends State<MyFamily> {
                             ),
                           )
                         : Image.network(
-                            data.child!.profilePicThumbnailUrl!,
+                            data.child?.profilePicThumbnailUrl ?? '',
                             fit: BoxFit.cover,
                             width: 60.0.h,
                             height: 60.0.h,
@@ -445,9 +445,13 @@ class _MyFamilyState extends State<MyFamily> {
                     //!add condition for login user data
                     : myProfile != null
                         ? myProfile.result != null
-                            ? myProfile.result!.profilePicThumbnailUrl != null
-                                ? FHBBasicWidget()
-                                    .getProfilePicWidgeUsingUrl(myProfile)
+                            ? myProfile.result?.profilePicThumbnailUrl != null
+                                ? Container(
+                                    width: 60.0.h,
+                                    height: 60.0.h,
+                                    color: Color(fhbColors.bgColorContainer),
+                                    child: FHBBasicWidget()
+                                        .getProfilePicWidgeUsingUrl(myProfile))
                                 : Container(
                                     width: CommonUtil().isTablet!
                                         ? imageProfileTabHeader
