@@ -3064,6 +3064,8 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     }
 
     fun handleSendText(intent: Intent) {
+        var  manager = this.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        manager.cancel(intent.getIntExtra(getString(R.string.nsid), 0))
         sharedValue = intent.getStringExtra(Intent.EXTRA_TEXT)
         username = intent.getStringExtra(getString(R.string.username))
         docId = intent.getStringExtra(Constants.PROP_docId)
@@ -3209,6 +3211,9 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                 externalLink = "http://" + externalLink
             sharedValue = "openurl&$externalLink"
         } else if (sharedValue != null && username != null && docId != null && docPic != null && callType != null && isWeb != null) {
+            MyApp.isMissedNSShown=false
+            MyApp().updateStatus(true)
+            MyApp.recordId = ""
             sharedValue =
                 "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}&${callType}&${isWeb}"
         } else if (sharedValue == Constants.PROP_DOC_RESCHDULE) {

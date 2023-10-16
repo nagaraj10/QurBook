@@ -151,9 +151,11 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 )
             }
 
-            val acceptIntent = Intent(applicationContext, AcceptReceiver::class.java)
+            val acceptIntent = Intent(applicationContext, MainActivity::class.java)
+            acceptIntent.action = Intent.ACTION_SEND
+            acceptIntent.type=Constants.TXT_PLAIN
             acceptIntent.putExtra(getString(R.string.nsid), NS_ID)
-            acceptIntent.putExtra(getString(R.string.meetid), "$MEETING_ID")
+            acceptIntent.putExtra(Intent.EXTRA_TEXT, "$MEETING_ID")
             acceptIntent.putExtra(getString(R.string.username), "$USER_NAME")
             acceptIntent.putExtra(getString(R.string.docId), "$DOC_ID")
             acceptIntent.putExtra(getString(R.string.docPic), "$DOC_PIC")
@@ -163,21 +165,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             acceptIntent.putExtra(getString(R.string.callType), "$CallType")
             acceptIntent.putExtra(getString(R.string.web), "$isWeb")
 
-            val acceptPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getBroadcast(
-                    applicationContext,
-                    0,
-                    acceptIntent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getBroadcast(
-                    applicationContext,
-                    0,
-                    acceptIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-                )
-            }
+            val acceptPendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                acceptIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
 
             val fullScreenIntent = Intent(this, NotificationActivity::class.java)
@@ -192,6 +185,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                     .putExtra(getString(R.string.callType), CallType)
                     .putExtra(getString(R.string.web), "$isWeb")
                     .putExtra(getString(R.string.pro_ns_body), data[getString(R.string.pro_ns_body)])
+
+
 
             val fullScreenPendingIntent =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getActivity(
@@ -449,7 +444,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelAck)
         }
 
-        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        val onTapNS = Intent(applicationContext, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type=Constants.TXT_PLAIN
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(getString(R.string.meetid), "$MEETING_ID")
         onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
@@ -462,7 +459,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_HRMID, data[Constants.PROP_HRMID])
         onTapNS.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
         onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
-        onTapNS.putExtra(Constants.PROP_MSG, data[getString(R.string.pro_ns_body)])
+        onTapNS.putExtra(getString(R.string.message), data[getString(R.string.pro_ns_body)].toString())
         onTapNS.putExtra(Constants.PROP_sheelaAudioMsgUrl, data[Constants.PROP_sheelaAudioMsgUrl])
         onTapNS.putExtra(Constants.PROP_ISSHEELA, data[Constants.PROP_ISSHEELA])
         onTapNS.putExtra(Constants.OTHERS, data[Constants.OTHERS])
@@ -471,23 +468,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)
-        
-        
-        val onTapPendingIntent =if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+
+        val onTapPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
@@ -536,55 +523,37 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelAck)
         }
 
-        val viewMemberIntent = Intent(applicationContext, ViewMemberReceiver::class.java)
+        val viewMemberIntent = Intent(applicationContext, MainActivity::class.java)
+        viewMemberIntent.action = Intent.ACTION_SEND
+        viewMemberIntent.type=Constants.TXT_PLAIN
         viewMemberIntent.putExtra(getString(R.string.nsid), NS_ID)
         viewMemberIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         viewMemberIntent.putExtra(Constants.PROP_REDIRECT_TO, "careGiverMemberProfile")
         viewMemberIntent.putExtra(Constants.PROP_CAREGIVER_REQUESTOR, data[Constants.PROP_CAREGIVER_REQUESTOR])
         viewMemberIntent.putExtra("type", "careGiverMemberProfile")
 
-        val viewMemberPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                viewMemberIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                viewMemberIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val viewMemberPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            viewMemberIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
-
-        val communicationSettingIntent = Intent(applicationContext, CommunicationSettingReceiver::class.java)
+        val communicationSettingIntent = Intent(applicationContext, MainActivity::class.java)
+        communicationSettingIntent.action = Intent.ACTION_SEND
+        communicationSettingIntent.type=Constants.TXT_PLAIN
         communicationSettingIntent.putExtra(getString(R.string.nsid), NS_ID)
         communicationSettingIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         communicationSettingIntent.putExtra(Constants.PROP_REDIRECT_TO, "communicationSetting")
         communicationSettingIntent.putExtra("type", "communicationSetting")
 
-        val communicationSettingPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                communicationSettingIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                communicationSettingIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
-
-
-
+        val communicationSettingPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            communicationSettingIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_CANCEL_APP)
@@ -684,35 +653,24 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val acceptCareGiverIntent = Intent(applicationContext, AcceptCareGiver::class.java)
+        val acceptCareGiverIntent = Intent(applicationContext, MainActivity::class.java)
+        acceptCareGiverIntent.action = Intent.ACTION_SEND
+        acceptCareGiverIntent.type= Constants.TXT_PLAIN
         acceptCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         acceptCareGiverIntent.putExtra("type", "accept")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data["templateName"])
         acceptCareGiverIntent.putExtra(Constants.PATIENT_PHONE_NUMBER, data[Constants.PATIENT_PHONE_NUMBER])
         acceptCareGiverIntent.putExtra(Constants.VERIFICATION_CODE, data[Constants.VERIFICATION_CODE])
-
-        val acceptCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-
-
-
-
-
-        val rejectCareGiverIntent = Intent(applicationContext, RejectCareGiver::class.java)
+        val acceptCareGiverPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            acceptCareGiverIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val rejectCareGiverIntent = Intent(applicationContext, MainActivity::class.java)
+        acceptCareGiverIntent.action = Intent.ACTION_SEND
+        acceptCareGiverIntent.type= Constants.TXT_PLAIN
         rejectCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
         rejectCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         rejectCareGiverIntent.putExtra("type", "reject")
@@ -721,24 +679,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         rejectCareGiverIntent.putExtra(Constants.VERIFICATION_CODE, data[Constants.VERIFICATION_CODE])
         rejectCareGiverIntent.putExtra(Constants.CAREGIVER_RECEIVER, data[Constants.CAREGIVER_RECEIVER])
         rejectCareGiverIntent.putExtra(Constants.CAREGIVER_REQUESTER, data[Constants.CAREGIVER_REQUESTER])
-        val rejectCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                rejectCareGiverIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                rejectCareGiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-
-
-
+        val rejectCareGiverPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            rejectCareGiverIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_CANCEL_APP)
@@ -795,7 +741,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val acceptCareGiverIntent = Intent(applicationContext, EscalateCareGiver::class.java)
+        val acceptCareGiverIntent = Intent(applicationContext, MainActivity::class.java)
+        acceptCareGiverIntent.action = Intent.ACTION_SEND
+        acceptCareGiverIntent.type= Constants.TXT_PLAIN
         acceptCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
@@ -808,22 +756,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(Constants.PATIENT_PHONE_NUMBER, data[Constants.PATIENT_PHONE_NUMBER])
         acceptCareGiverIntent.putExtra(Constants.UID, data[Constants.UID])
 
-
-        val acceptCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+        val acceptCareGiverPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            acceptCareGiverIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
@@ -877,7 +815,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val chatWithCcIntent = Intent(applicationContext, ChatwithCC::class.java)
+        val chatWithCcIntent = Intent(applicationContext, MainActivity::class.java)
+        chatWithCcIntent.action = Intent.ACTION_SEND
+        chatWithCcIntent.type= Constants.TXT_PLAIN
         chatWithCcIntent.putExtra(getString(R.string.nsid), NS_ID)
         chatWithCcIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         chatWithCcIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_TEMP_NAME])
@@ -890,47 +830,32 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         chatWithCcIntent.putExtra(Constants.SENDER_PROFILE_PIC, data[Constants.SENDER_PROFILE_PIC])
 
 
-        val onTapNS = Intent(this, OnTapNotification::class.java)
+        val onTapNS = Intent(this, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type=Constants.TXT_PLAIN
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(Intent.EXTRA_TEXT, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(Constants.PROP_PRESCRIPTION_ID, data[Constants.PROP_REDIRECT_TO]?.split("|")?.get(2))
         onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
         onTapNS.putExtra(Constants.PROB_PATIENT_NAME, data[Constants.PROB_PATIENT_NAME])
-        val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val onTapPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val chatWithCcPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            chatWithCcIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
 
-        val chatWithCcPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                chatWithCcIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                chatWithCcIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+
 
 
 
@@ -987,7 +912,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val acceptCareGiverIntent = Intent(applicationContext, AppointmentPaymentNotification::class.java)
+        val acceptCareGiverIntent = Intent(applicationContext, MainActivity::class.java)
+        acceptCareGiverIntent.action = Intent.ACTION_SEND
+        acceptCareGiverIntent.type= Constants.TXT_PLAIN
         acceptCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
@@ -996,22 +923,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(Constants.MEETINGID, data[Constants.MEETINGID])
         acceptCareGiverIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
 
+        val acceptCareGiverPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            acceptCareGiverIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        val acceptCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
 
 
 
@@ -1063,7 +981,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val acceptCareGiverIntent = Intent(applicationContext, PlanPaymentNotification::class.java)
+        val acceptCareGiverIntent = Intent(applicationContext, MainActivity::class.java)
+        acceptCareGiverIntent.action = Intent.ACTION_SEND
+        acceptCareGiverIntent.type= Constants.TXT_PLAIN
         acceptCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
@@ -1073,23 +993,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(Constants.PAYMENTLINKVIAPUSH, data[Constants.PAYMENTLINKVIAPUSH])
         acceptCareGiverIntent.putExtra(Constants.CARTID, data[Constants.BOOKINGID])
         acceptCareGiverIntent.putExtra(Constants.PROB_PATIENT_NAME, data[Constants.PROB_PATIENT_NAME])
+        val acceptCareGiverPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            acceptCareGiverIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-
-        val acceptCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
 
 
 
@@ -1141,30 +1051,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val acceptCareGiverIntent = Intent(applicationContext, FamilyAdditionNotification::class.java)
+        val acceptCareGiverIntent = Intent(applicationContext, MainActivity::class.java)
+        acceptCareGiverIntent.action = Intent.ACTION_SEND
+        acceptCareGiverIntent.type=Constants.TXT_PLAIN
         acceptCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         acceptCareGiverIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 
+        val acceptCareGiverPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            acceptCareGiverIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        val acceptCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-
-        }
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_CANCEL_APP)
@@ -1218,7 +1119,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val cancelAppointmentIntent = Intent(applicationContext, CancelAppointment::class.java)
+        val cancelAppointmentIntent = Intent(applicationContext, MainActivity::class.java)
+        cancelAppointmentIntent.action = Intent.ACTION_SEND
+        cancelAppointmentIntent.type=Constants.TXT_PLAIN
         cancelAppointmentIntent.putExtra(getString(R.string.nsid), NS_ID)
         cancelAppointmentIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_DOC_CANCELLATION)
         cancelAppointmentIntent.putExtra(Constants.PROP_BookingId, data[Constants.PROP_BookingId])
@@ -1227,26 +1130,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 data[Constants.PROP_PlannedStartTime]
         )
         cancelAppointmentIntent.putExtra(Constants.PROP_TEMP_NAME, TEMP_NAME)
-        val cancelAppointmentPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                cancelAppointmentIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                cancelAppointmentIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+
+        val cancelAppointmentPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            cancelAppointmentIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
 
-        val rescheduleIntent = Intent(applicationContext, RescheduleAppointment::class.java)
+
+        val rescheduleIntent = Intent(applicationContext, MainActivity::class.java)
+        rescheduleIntent.action = Intent.ACTION_SEND
+        rescheduleIntent.type=Constants.TXT_PLAIN
         rescheduleIntent.putExtra(getString(R.string.nsid), NS_ID)
         rescheduleIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_DOC_RESCHDULE)
         rescheduleIntent.putExtra(Constants.PROP_docSessionId, data[Constants.PROP_docSessionId])
@@ -1254,21 +1152,14 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         rescheduleIntent.putExtra(Constants.PROP_healthOrgId, data[Constants.PROP_healthOrgId])
         rescheduleIntent.putExtra(Constants.PROP_docId, data[Constants.PROP_docId])
         rescheduleIntent.putExtra(Constants.PROP_TEMP_NAME, TEMP_NAME)
-        val reschedulePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                rescheduleIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                rescheduleIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+
+        val reschedulePendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            rescheduleIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
 
 
 
@@ -1326,50 +1217,35 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val acceptIntent = Intent(applicationContext, Accept::class.java)
+        val acceptIntent = Intent(applicationContext, MainActivity::class.java)
+        acceptIntent.action = Intent.ACTION_SEND
+        acceptIntent.type=Constants.TXT_PLAIN
         acceptIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_ACCEPT)
         acceptIntent.putExtra(Constants.PROP_PROVIDER_REQID, data[Constants.PROP_PROVIDER_REQID])
-        val acceptPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val acceptPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            acceptIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
 
-        val declineIntent = Intent(applicationContext, Decline::class.java)
+
+        val declineIntent = Intent(applicationContext, MainActivity::class.java)
+        declineIntent.action = Intent.ACTION_SEND
+        declineIntent.type=Constants.TXT_PLAIN
         declineIntent.putExtra(getString(R.string.nsid), NS_ID)
         declineIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_DECLINE)
         declineIntent.putExtra(Constants.PROP_PROVIDER_REQID, data[Constants.PROP_PROVIDER_REQID])
-        val declinePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                declineIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                declineIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-
-        }
+        val declinePendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            declineIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
@@ -1399,7 +1275,6 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     }
 
     private fun createNotification4Chat(data: Map<String, String> = HashMap()) {
-        Log.d("121212","inside Chat")
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = System.currentTimeMillis().toInt()
         val MEETING_ID = data[getString(R.string.meetid)]
@@ -1436,7 +1311,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS?.putExtra(getString(R.string.chatListId), "$GROUP_ID")
         val onTapPendingIntent = PendingIntent.getActivity(
             this,
-            0,
+            NS_ID,
             onTapNS,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -1493,7 +1368,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelAck)
         }
 
-        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        val onTapNS = Intent(applicationContext, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type=Constants.TXT_PLAIN
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(getString(R.string.docId), _docId)
         onTapNS.putExtra(getString(R.string.docPic), _docPic)
@@ -1504,23 +1381,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(getString(R.string.message), _message)
         onTapNS.putExtra(Constants.PROP_DATA, template)
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, _redirectTo)
-        val onTapPendingIntent =if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
+        val onTapPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-
-        }
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_ACK)
@@ -1567,26 +1434,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelAck)
         }
 
-        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        val onTapNS = Intent(applicationContext, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type=Constants.TXT_PLAIN
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(Constants.PROP_DATA, template)
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(Constants.PROP_EVEID, data[Constants.PROP_EVEID])
-        val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val onTapPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+
 
 
 
@@ -1634,29 +1496,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val onTapNS = Intent(this, OnTapNotification::class.java)
+        val onTapNS = Intent(this, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type=Constants.TXT_PLAIN
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
-        onTapNS.putExtra(Intent.EXTRA_TEXT, data[Constants.PROP_REDIRECT_TO])
-        onTapNS.putExtra(Constants.PROP_PRESCRIPTION_ID, data[Constants.PROP_REDIRECT_TO]?.split("|")?.get(2))
+       // onTapNS.putExtra(Intent.EXTRA_TEXT, data[Constants.PROP_REDIRECT_TO])
+       // onTapNS.putExtra(Constants.PROP_PRESCRIPTION_ID, data[Constants.PROP_REDIRECT_TO]?.split("|")?.get(2))
         onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
         onTapNS.putExtra(Constants.PROB_PATIENT_NAME, data[Constants.PROB_PATIENT_NAME])
-        val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
-
+        val onTapPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_RENEW)
@@ -1705,28 +1559,22 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val onTapNS = Intent(this, OnTapNotification::class.java)
+        val onTapNS = Intent(this, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type=Constants.TXT_PLAIN
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(Intent.EXTRA_TEXT, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(Constants.PROP_CLAIM_ID, data[Constants.PROP_CLAIM_ID])
         onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 
-        val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val onTapPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
 
 
 
@@ -1776,7 +1624,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val onTapNS = Intent(this, OnTapNotification::class.java)
+        val onTapNS = Intent(this, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type=Constants.TXT_PLAIN
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(Intent.EXTRA_TEXT, Constants.MY_PLAN_DETAILS)
@@ -1784,21 +1634,14 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
         onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
         onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)
-        val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+
+        val onTapPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
 
 
 
@@ -1849,53 +1692,41 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val renewIntent = Intent(applicationContext, Renew::class.java)
+        val renewIntent = Intent(applicationContext, MainActivity::class.java)
+        renewIntent.action = Intent.ACTION_SEND
+        renewIntent.type=Constants.TXT_PLAIN
         renewIntent.putExtra(getString(R.string.nsid), NS_ID)
         renewIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_RENEW)
         renewIntent.putExtra(Constants.PROP_PLANID, data[Constants.PROP_PLANID])
         renewIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
         renewIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
         renewIntent.putExtra(getString(R.string.pat_name), PAT_NAME)
-        val renewPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                renewIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                renewIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val renewPendingIntent = PendingIntent.getActivity(
+            this,
+            NS_ID,
+            renewIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
-        val callBackIntent = Intent(applicationContext, Callback::class.java)
+
+        val callBackIntent = Intent(applicationContext, MainActivity::class.java)
+        callBackIntent.action = Intent.ACTION_SEND
+        callBackIntent.type=Constants.TXT_PLAIN
         callBackIntent.putExtra(getString(R.string.nsid), NS_ID)
         callBackIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_CALLBACK)
         callBackIntent.putExtra(Constants.PROP_PLANID, data[Constants.PROP_PLANID])
         callBackIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
         callBackIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
         callBackIntent.putExtra(getString(R.string.pat_name), PAT_NAME)
-        val callBackPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                callBackIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                callBackIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val callBackPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            callBackIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
 
 
 
@@ -1948,25 +1779,19 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelAck)
         }
 
-        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        val onTapNS = Intent(applicationContext, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type=Constants.TXT_PLAIN
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(Constants.PROB_EXTERNAL_LINK, data[Constants.PROB_EXTERNAL_LINK])
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
-        val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val onTapPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_ACK)
@@ -2012,23 +1837,17 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelAck)
         }
 
-        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        val onTapNS = Intent(applicationContext, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type=Constants.TXT_PLAIN
         onTapNS.putExtra(getString(R.string.ns_type_applog), getString(R.string.ns_type_applog))
-        val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val onTapPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
 
 
 
@@ -2076,28 +1895,24 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val acceptCareGiverIntent = Intent(applicationContext, PartnerServiceTicket::class.java)
+        val acceptCareGiverIntent = Intent(applicationContext, MainActivity::class.java)
+        acceptCareGiverIntent.action = Intent.ACTION_SEND
+        acceptCareGiverIntent.type=Constants.TXT_PLAIN
         acceptCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_TEMP_NAME])
-        acceptCareGiverIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        acceptCareGiverIntent.putExtra(Constants.PROP_UUID, data[Constants.PROB_USER_ID])
         acceptCareGiverIntent.putExtra(Constants.PROP_EVEID, data[Constants.PROP_EVEID])
 
-        val acceptCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+        val acceptCareGiverPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            acceptCareGiverIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+
+
 
 
 
@@ -2144,27 +1959,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val acceptCareGiverIntent = Intent(applicationContext, ReferrelPatientAccept::class.java)
+        val acceptCareGiverIntent = Intent(applicationContext, MainActivity::class.java)
+          acceptCareGiverIntent.action = Intent.ACTION_SEND
+          acceptCareGiverIntent.type= Constants.TXT_PLAIN
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         acceptCareGiverIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
 
 
-         val acceptCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                acceptCareGiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+          val acceptCareGiverPendingIntent = PendingIntent.getActivity(
+              applicationContext,
+              NS_ID,
+              acceptCareGiverIntent,
+              PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+          )
+
 
 
 
@@ -2213,78 +2022,58 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val renewIntent = Intent(applicationContext, AcceptTransportationAppointment::class.java)
+        val renewIntent = Intent(applicationContext, MainActivity::class.java)
+        renewIntent.action = Intent.ACTION_SEND
+        renewIntent.type= Constants.TXT_PLAIN
         renewIntent.putExtra(getString(R.string.nsid), NS_ID)
         renewIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_RENEW)
         renewIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         renewIntent.putExtra(Constants.PATIENT_ID, data[Constants.PATIENT_ID])
         renewIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
         renewIntent.putExtra(Constants.STATUS,"accept")
-        val renewPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                renewIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                renewIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val renewPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            renewIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
-        val callBackIntent = Intent(applicationContext, RejectTransportationAppointment::class.java)
+
+
+        val callBackIntent = Intent(applicationContext, MainActivity::class.java)
+        callBackIntent.action = Intent.ACTION_SEND
+        callBackIntent.type= Constants.TXT_PLAIN
         callBackIntent.putExtra(getString(R.string.nsid), NS_ID)
         callBackIntent.putExtra(Intent.EXTRA_TEXT, Constants.APPOINTMENT_DETAIL)
         callBackIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         callBackIntent.putExtra(Constants.PATIENT_ID, data[Constants.PATIENT_ID])
         callBackIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
         callBackIntent.putExtra(Constants.STATUS,"decline")
-        val callBackPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                callBackIntent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                callBackIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val callBackPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            callBackIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
-        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        val onTapNS = Intent(applicationContext, MainActivity::class.java)
+        onTapNS.action = Intent.ACTION_SEND
+        onTapNS.type= Constants.TXT_PLAIN
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
 
-
-        val onTapPendingIntent =if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(
-                applicationContext,
-                NS_ID,
-                onTapNS,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-        }
+        val onTapPendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
 
