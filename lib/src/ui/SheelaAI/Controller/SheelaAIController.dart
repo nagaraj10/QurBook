@@ -980,7 +980,8 @@ class SheelaAIController extends GetxController {
   DeviceStatus currentDeviceStatus = DeviceStatus();
   late CreateDeviceSelectionModel createDeviceSelectionModel;
 
-  setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
+  setValues(
+      GetDeviceSelectionModel getDeviceSelectionModel, bool savePrefLang) {
     final selection = getDeviceSelectionModel.result![0];
     final prof = selection.profileSetting!;
     currentDeviceStatus.preColor = prof.preColor;
@@ -1008,7 +1009,10 @@ class SheelaAIController extends GetxController {
     currentDeviceStatus.allowSymptomsNotification =
         prof.caregiverCommunicationSetting?.symptoms ?? true;
 
-    PreferenceUtil.saveString(SHEELA_LANG,prof.preferred_language??'en-IN');
+    if (savePrefLang) {
+      PreferenceUtil.saveString(
+          SHEELA_LANG, prof.preferred_language ?? 'en-IN');
+    }
   }
 
   Future<CreateDeviceSelectionModel?> createDeviceSel() async {
@@ -1041,12 +1045,13 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  Future getDeviceSelectionValues({String? preferredLanguage}) async {
+  Future getDeviceSelectionValues(
+      {String? preferredLanguage, bool savePrefLang = false}) async {
     final GetDeviceSelectionModel selectionResult =
         await HealthReportListForUserRepository().getDeviceSelection();
     if (selectionResult.isSuccess!) {
       if (selectionResult.result != null) {
-        setValues(selectionResult);
+        setValues(selectionResult, savePrefLang);
         currentDeviceStatus.userMappingId = selectionResult.result![0].id;
       } else {
         currentDeviceStatus = DeviceStatus();

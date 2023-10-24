@@ -87,7 +87,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         controller.isMuted.value = false;
       }
       getLanguagesFromApi().then((value) {
-        controller.getDeviceSelectionValues();
+        controller.getDeviceSelectionValues(savePrefLang: true);
       });
     });
   }
