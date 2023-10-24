@@ -25,6 +25,7 @@ import '../src/model/user/LaboratoryIds.dart';
 import '../src/model/user/MyProfileModel.dart';
 import '../video_call/model/NotificationModel.dart';
 import 'CommonConstants.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 
 class PreferenceUtil {
   static Future<SharedPreferences>? _prefs = SharedPreferences.getInstance();
@@ -163,6 +164,31 @@ class PreferenceUtil {
       var jsonData = _prefsInstance!.getString(keyProfile) ?? '';
       var data = json.decode(jsonData);
       return MyProfileModel.fromJson(data);
+    } catch (e, stackTrace) {
+      print(e);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+
+      return null;
+    }
+    // return MyProfileModel.fromJson(json.decode(_prefsInstance!.getString(keyProfile) ?? ''));
+  }
+
+  static Future<bool> saveCareGiver(String keyCareGiver,
+      CareGiverPatientListResult? careGiverPatientListResultasync) async {
+    final instance = await _prefs!;
+    var profile = json.encode(careGiverPatientListResultasync);
+    return instance.setString(keyCareGiver, profile);
+  }
+
+  static CareGiverPatientListResult? getCareGiver(String keyCareGiver) {
+    // FUcrash
+    // if (_prefsInstance == null) {}
+    try {
+      if (_prefsInstance == null) {}
+
+      var jsonData = _prefsInstance!.getString(keyCareGiver) ?? '';
+      var data = json.decode(jsonData);
+      return CareGiverPatientListResult.fromJson(data);
     } catch (e, stackTrace) {
       print(e);
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -534,11 +560,10 @@ class PreferenceUtil {
     );
   }
 
-
   static bool getIfSheelaAttachmentPreviewisActive() {
     return _prefsInstance!.getBool(
-      Constants.KEY_IS_Active_Sheela_Preview,
-    ) ??
+          Constants.KEY_IS_Active_Sheela_Preview,
+        ) ??
         false;
   }
 
