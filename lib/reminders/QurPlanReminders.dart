@@ -41,7 +41,7 @@ class QurPlanReminders {
           headers: headers,
           body: params);
       var dataArray = await json.decode(responseFromApi!.body);
-      final List<dynamic> data = dataArray['result'];
+      final List<dynamic> data = dataArray['result'] ?? [];
       var reminders = <Reminder>[];
       if (Platform.isIOS) {
         deleteAllLocalReminders();
