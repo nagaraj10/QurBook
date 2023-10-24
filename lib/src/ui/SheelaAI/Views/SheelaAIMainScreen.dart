@@ -324,14 +324,14 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       actions: [
         Row(
           children: [
-            hubListViewController.isUserHasParedDevice.value
+            if (!CommonUtil.isUSRegion()) hubListViewController.isUserHasParedDevice.value
                 ? MyBlinkingBLEIcon()
                 : SizedBox.shrink(),
-            SizedBox(width: 8.w),
+            SizedBox(width: 12.w),
             if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
-            SizedBox(width: 8.w),
+            SizedBox(width: 12.w),
             getLanguageButton(),
-            SizedBox(width: 5.w),
+            SizedBox(width: 8.w),
           ],
         )
       ],
@@ -429,17 +429,25 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   )
                 :*/
                 CommonUtil.isUSRegion()
-                    ? Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.h,
-                          vertical: 4.h,
-                        ),
-                        child: Icon(
-                          Icons.home,
-                          size: 32.sp,
-                          color: Color(CommonUtil().getQurhomePrimaryColor()),
-                        ),
-                      )
+                    ? Row(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.h,
+                              vertical: 4.h,
+                            ),
+                            child: Icon(
+                              Icons.home,
+                              size: 32.sp,
+                              color: Color(CommonUtil().getQurhomePrimaryColor()),
+                            ),
+                          ),
+                        SizedBox(width: 12.w),
+                        hubListViewController.isUserHasParedDevice.value
+                            ? MyBlinkingBLEIcon()
+                            : SizedBox.shrink(),
+                      ],
+                    )
                     : Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: CommonUtil().isTablet! ? 0 : 8.h,
