@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -456,6 +458,23 @@ class IosNotificationHandler {
           dataTwo,
           false,
         );
+      }
+    } else if (model.redirect == parameters.stringConnectedDevicesScreen) {
+      try {
+        Get.to(
+          () => HubListView(),
+          binding: BindingsBuilder(
+            () {
+              if (!Get.isRegistered<HubListViewController>()) {
+                Get.lazyPut(
+                  () => HubListViewController(),
+                );
+              }
+            },
+          ),
+        );
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     } else if (model.redirect == parameters.strAppointmentDetail &&
         (model.appointmentId ?? '').isNotEmpty &&

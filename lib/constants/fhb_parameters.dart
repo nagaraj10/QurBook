@@ -853,3 +853,4 @@ const String strAppointmentDetail = 'appointmentDetail';
 const String strAppVersion = 'App Version';
 const String strOSVersion = 'OS Version';
 const String strErrorLog = 'Error Log';
+const String stringConnectedDevicesScreen = 'connectedDevicesScreen';
