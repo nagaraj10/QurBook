@@ -1007,6 +1007,8 @@ class SheelaAIController extends GetxController {
         prof.caregiverCommunicationSetting?.vitals ?? true;
     currentDeviceStatus.allowSymptomsNotification =
         prof.caregiverCommunicationSetting?.symptoms ?? true;
+
+    PreferenceUtil.saveString(SHEELA_LANG,prof.preferred_language??'en-IN');
   }
 
   Future<CreateDeviceSelectionModel?> createDeviceSel() async {
