@@ -47,6 +47,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
+    controller.conversations = [];
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -100,6 +101,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.stopTTS();
     controller.isSheelaScreenActive = false;
     controller.isDiscardDialogShown.value = false;
+    controller.conversations = [];
     if (controller.bleController != null) {
       controller.bleController!.stopTTS();
       controller.bleController!.stopScanning();
