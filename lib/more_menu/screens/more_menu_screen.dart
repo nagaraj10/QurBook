@@ -234,35 +234,35 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ]),
         floatingActionButton: !isProd
             ? GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TroubleShooting(),
-                      ),
-                    ).then((value) {
-                      if (value) {
-                        setState(() {});
-                      }
-                    });
-                  },
-                  child: Container(
-                    width: 200,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TroubleShooting(),
                     ),
-                    child: Center(
-                      child: Text(strTroubleShoot,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16.0.sp,
-                            color: ColorUtils.white,
-                          )),
-                    ),
+                  ).then((value) {
+                    if (value) {
+                      setState(() {});
+                    }
+                  });
+                },
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
-                )
+                  child: Center(
+                    child: Text(strTroubleShoot,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.0.sp,
+                          color: ColorUtils.white,
+                        )),
+                  ),
+                ),
+              )
             : SizedBox(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: getValuesFromSharedPrefernce());

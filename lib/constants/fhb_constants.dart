@@ -166,6 +166,12 @@ const String PROFILE_EMAIL = 'Email';
 const String KEY_PROFILE_BANNER = 'profileBanner';
 const String KEY_PROFILE_IMAGE = 'profileImage';
 
+const String strYesValue = 'YES';
+const String strNoValue = 'NO';
+const String strKeyCareGiver = 'keyCareGiver';
+const String strKeyFamilyAlert = 'isFamilyALert';
+const String strKeyAlertChildID = 'isFamilyALertChildID';
+
 const String KEY_DASHBOARD_BANNER = 'dashboardBanner';
 const String MSG_NO_CAMERA_VOICERECORDS = 'No Camera Option Available for';
 const String INTRO_SLIDE_TITLE_1 = 'Click ‘n’ Store';
