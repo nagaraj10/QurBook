@@ -879,6 +879,7 @@ class SheelaAIController extends GetxController {
                               chatAttachments: button?.chatAttachments ?? []),
                         )?.then((value) {
                           isSheelaScreenActive = true;
+                          playPauseTTS(conversations.last ?? SheelaResponse());
                         });
                       }
                     } else if (button?.btnRedirectTo ==
@@ -896,6 +897,7 @@ class SheelaAIController extends GetxController {
                           titleSheelaPreview: strImageTitle,
                         ))?.then((value) {
                           isSheelaScreenActive = true;
+                          playPauseTTS(conversations.last ?? SheelaResponse());
                         });
                       }
                     } else {
@@ -1222,6 +1224,7 @@ class SheelaAIController extends GetxController {
         )!
             .then((value) {
           updateTimer(enable: true);
+          playPauseTTS(conversations.last ?? SheelaResponse());
         });
       } else {
         isPlayPauseView.value = false;
@@ -1234,6 +1237,7 @@ class SheelaAIController extends GetxController {
         )!
             .then((value) {
           updateTimer(enable: true);
+          playPauseTTS(conversations.last ?? SheelaResponse());
         });
       }
     } catch (e, stackTrace) {
@@ -1252,6 +1256,7 @@ class SheelaAIController extends GetxController {
       ))!
           .then((value) {
         updateTimer(enable: true);
+        playPauseTTS(conversations.last ?? SheelaResponse());
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1289,4 +1294,22 @@ class SheelaAIController extends GetxController {
       _sessionTimeout = null;
     }
   }
+
+  playPauseTTS(SheelaResponse chat) {
+    try {
+      if (isLoading.isTrue) {
+        return;
+      }
+      if (chat.isPlaying.isTrue) {
+        stopTTS();
+      } else {
+        stopTTS();
+        currentPlayingConversation = chat;
+        playTTS();
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
 }
