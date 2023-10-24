@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/language/model/Language.dart';
+import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
@@ -36,6 +38,10 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   Animation<double>? _animation;
 
   final hubListViewController = CommonUtil().onInitHubListViewController();
+
+  LanguageRepository languageBlock = LanguageRepository();
+
+  Map<String, dynamic> langaugeDropdownList = {};
 
   @override
   void initState() {
@@ -80,6 +86,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       if (CommonUtil.isUSRegion()) {
         controller.isMuted.value = false;
       }
+      getLanguagesFromApi().then((value) {
+        controller.getDeviceSelectionValues(savePrefLang: true);
+      });
     });
   }
 
@@ -201,32 +210,10 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         }
                       },
                     ),
-                    actions: [
-                      Visibility(
-                        visible: !Platform.isIOS,
-                        child: PopupMenuButton<String>(
-                          onSelected: (languageCode) {
-                            PreferenceUtil.saveString(SHEELA_LANG,
-                                CommonUtil.langaugeCodes[languageCode]!);
-                            controller.getDeviceSelectionValues(
-                              preferredLanguage: languageCode,
-                            );
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              getSupportedLanguages(),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              right: 10.0.w,
-                            ),
-                            child: Image.asset(
-                              icon_language,
-                              width: 35.0.sp,
-                              height: 35.0.sp,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    actions: [Padding(
+                      padding: const EdgeInsets.only(right: 4.0),
+                      child: getLanguageButton(),
+                    )],
                   ),
             body: Stack(
               fit: StackFit.expand,
@@ -335,14 +322,18 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       centerTitle: true,
       elevation: 0,
       actions: [
-        hubListViewController.isUserHasParedDevice.value
-            ? Padding(
-                padding: const EdgeInsets.only(
-                  right: 16,
-                ),
-                child: MyBlinkingBLEIcon(),
-              )
-            : SizedBox.shrink(),
+        Row(
+          children: [
+            if (!CommonUtil.isUSRegion()) hubListViewController.isUserHasParedDevice.value
+                ? MyBlinkingBLEIcon()
+                : SizedBox.shrink(),
+            SizedBox(width: 12.w),
+            if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
+            SizedBox(width: 12.w),
+            getLanguageButton(),
+            SizedBox(width: 8.w),
+          ],
+        )
       ],
       title: CommonUtil().isTablet!
           ? Row(
@@ -371,7 +362,6 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                     ),
                   ),
                 ),
-                if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
               ],
             )
           : Row(
@@ -393,9 +383,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   ),
                 ),
                 const Spacer(
-                  flex: 2,
+                  flex: 1,
                 ),
-                if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
               ],
             ),
       leading: Container(
@@ -440,17 +429,25 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   )
                 :*/
                 CommonUtil.isUSRegion()
-                    ? Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.h,
-                          vertical: 4.h,
-                        ),
-                        child: Icon(
-                          Icons.home,
-                          size: 32.sp,
-                          color: Color(CommonUtil().getQurhomePrimaryColor()),
-                        ),
-                      )
+                    ? Row(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.h,
+                              vertical: 4.h,
+                            ),
+                            child: Icon(
+                              Icons.home,
+                              size: 32.sp,
+                              color: Color(CommonUtil().getQurhomePrimaryColor()),
+                            ),
+                          ),
+                        SizedBox(width: 12.w),
+                        hubListViewController.isUserHasParedDevice.value
+                            ? MyBlinkingBLEIcon()
+                            : SizedBox.shrink(),
+                      ],
+                    )
                     : Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: CommonUtil().isTablet! ? 0 : 8.h,
@@ -519,7 +516,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.isMicListening.value = false;
     final List<PopupMenuItem<String>> languagesMenuList = [];
     final currentLanguage = controller.getCurrentLanCode(splittedCode: true);
-    CommonUtil.supportedLanguages.forEach(
+
+    langaugeDropdownList.forEach(
       (
         language,
         languageCode,
@@ -560,5 +558,58 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       },
     );
     return languagesMenuList;
+  }
+
+  Widget getLanguageButton() {
+    return PopupMenuButton<String>(
+      onSelected: (languageCode) {
+        PreferenceUtil.saveString(
+            SHEELA_LANG, CommonUtil.langaugeCodes[languageCode]!);
+        controller.getDeviceSelectionValues(
+          preferredLanguage: languageCode,
+        );
+      },
+      itemBuilder: (BuildContext context) => getSupportedLanguages(),
+      child: Padding(
+        padding: EdgeInsets.only(
+          right: 10.0.w,
+        ),
+        child: Image.asset(
+          icon_language,
+          width: 35.0.sp,
+          height: 35.0.sp,
+          color: PreferenceUtil.getIfQurhomeisAcive()
+              ? Color(CommonUtil().getQurhomePrimaryColor())
+              : Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Future<void> getLanguagesFromApi() async {
+    try {
+      var languageModelList = await languageBlock.getLanguage();
+      if (languageModelList != null) {
+        if (languageModelList.result != null) {
+          for (var languageResultObj in languageModelList.result!) {
+            if (languageResultObj.referenceValueCollection != null &&
+                languageResultObj.referenceValueCollection!.isNotEmpty) {
+              for (var referenceValueCollection
+                  in languageResultObj.referenceValueCollection!) {
+                if (referenceValueCollection.name != null &&
+                    referenceValueCollection.code != null) {
+                  langaugeDropdownList.addAll({
+                    referenceValueCollection.name?.toLowerCase() ?? '':
+                        referenceValueCollection.code ?? ''
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 }

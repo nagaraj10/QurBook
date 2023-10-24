@@ -31,7 +31,7 @@ const String qr_doctorpatientmapping = 'doctorpatientmapping/';
 const String qr_updateDefaultProvider = 'updateDefaultProvider';
 const String qr_isOriginalPicRequired = 'isOriginalPicRequired=false';
 const String qr_isOriginalPicRequiredTrue = 'isOriginalPicRequired=true';
-const String qr_language = 'reference-data?search-name=Language';
+const String qr_language = 'reference-data?search-name=Language&patient-lang=true';
 const String qr_BLEDataUpload = 'device-data/kiosk/send-device-data';
 const String qr_sendVerificationMail = '/sendVerificationMail';
 const String qr_sortByQ = '?sortBy=';
