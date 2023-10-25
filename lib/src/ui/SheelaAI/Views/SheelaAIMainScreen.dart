@@ -39,10 +39,6 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
 
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
-  LanguageRepository languageBlock = LanguageRepository();
-
-  Map<String, dynamic> langaugeDropdownList = {};
-
   @override
   void initState() {
     super.initState();
@@ -86,7 +82,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       if (CommonUtil.isUSRegion()) {
         controller.isMuted.value = false;
       }
-      getLanguagesFromApi().then((value) {
+      controller.getLanguagesFromApi().then((value) {
         controller.getDeviceSelectionValues(savePrefLang: true);
       });
     });
@@ -517,7 +513,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     final List<PopupMenuItem<String>> languagesMenuList = [];
     final currentLanguage = controller.getCurrentLanCode(splittedCode: true);
 
-    langaugeDropdownList.forEach(
+    controller.langaugeDropdownList.forEach(
       (
         language,
         languageCode,
@@ -584,32 +580,5 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         ),
       ),
     );
-  }
-
-  Future<void> getLanguagesFromApi() async {
-    try {
-      var languageModelList = await languageBlock.getLanguage();
-      if (languageModelList != null) {
-        if (languageModelList.result != null) {
-          for (var languageResultObj in languageModelList.result!) {
-            if (languageResultObj.referenceValueCollection != null &&
-                languageResultObj.referenceValueCollection!.isNotEmpty) {
-              for (var referenceValueCollection
-                  in languageResultObj.referenceValueCollection!) {
-                if (referenceValueCollection.name != null &&
-                    referenceValueCollection.code != null) {
-                  langaugeDropdownList.addAll({
-                    referenceValueCollection.name?.toLowerCase() ?? '':
-                        referenceValueCollection.code ?? ''
-                  });
-                }
-              }
-            }
-          }
-        }
-      }
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
   }
 }
