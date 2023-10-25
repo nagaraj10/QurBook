@@ -125,7 +125,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             val DOC_PIC = data[getString(R.string.docPic)]
             val PAT_ID = data[getString(R.string.pat_id)]
             val PAT_NAME = data[getString(R.string.pat_name)]
-            val PAT_PIC = data[getString(R.string.pat_pic)]
+            val PAT_PIC = data[getString(R.string.pat_pic)]?:""
             val CallType = data[getString(R.string.callType)]
             val isWeb = data[getString(R.string.web)]
             val NS_TIMEOUT = 30 * 1000L
@@ -135,21 +135,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
             val declineIntent = Intent(applicationContext, DeclineReciver::class.java)
             declineIntent.putExtra(getString(R.string.nsid), NS_ID)
-            val declinePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getBroadcast(
-                    applicationContext,
-                    0,
-                    declineIntent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getBroadcast(
-                    applicationContext,
-                    0,
-                    declineIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-                )
-            }
+
+            val declinePendingIntent = PendingIntent.getBroadcast(
+                applicationContext,
+                0,
+                declineIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
             val acceptIntent = Intent(applicationContext, MainActivity::class.java)
             acceptIntent.action = Intent.ACTION_SEND
@@ -174,6 +166,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
 
             val fullScreenIntent = Intent(this, NotificationActivity::class.java)
+                    .setAction(Intent.ACTION_SEND) // Add the action
+                    .setType(Constants.TXT_PLAIN)
                     .putExtra(getString(R.string.username), USER_NAME)
                     .putExtra(getString(R.string.docId), DOC_ID)
                     .putExtra(getString(R.string.docPic), DOC_PIC)
@@ -1998,7 +1992,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .build()
         //notification.flags=Notification.FLAG_INSISTENT
         nsManager.notify(NS_ID, notification)
-   
+
     }
 
     private fun careGiverTransportRequestReminder(data: Map<String, String> = HashMap()) {
