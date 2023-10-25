@@ -29,6 +29,7 @@ import 'package:intl/intl.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
@@ -6995,6 +6996,30 @@ class CommonUtil {
     return hubListViewController;
   }
 
+  navigateToHubList(BuildContext context, {bool fromNotification = false}) {
+    try {
+      //Get.back();
+      Get.to(
+        () => HubListView(),
+        binding: BindingsBuilder(
+          () {
+            if (!Get.isRegistered<HubListViewController>()) {
+              Get.lazyPut(
+                () => HubListViewController(),
+              );
+            }
+          },
+        ),
+      )?.then((value) {
+        if (!fromNotification) {
+          PageNavigator.goToPermanent(context, router.rt_Landing);
+        }
+      });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
   LandingScreenController onInitLandingScreenController() {
     LandingScreenController landingScreenController;
     if (!Get.isRegistered<LandingScreenController>()) {
@@ -7132,7 +7157,6 @@ class CommonUtil {
           statuses[Permission.notification]!.isGranted) {}*/
   }
 
-
   String getExtensionSheelaPreview(int type) {
     switch (type) {
       case 0:
@@ -7147,7 +7171,6 @@ class CommonUtil {
         return "";
     }
   }
-
 }
 
 extension CapExtension on String {
