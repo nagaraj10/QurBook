@@ -7,6 +7,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -1391,9 +1393,25 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
         break;
       case strConnectedDevicesScreen:
-        CommonUtil().navigateToHubList().then((value) {
-          readUnreadAction(result);
-        });
+        try {
+          //Get.back();
+          Get.to(
+            () => HubListView(),
+            binding: BindingsBuilder(
+              () {
+                if (!Get.isRegistered<HubListViewController>()) {
+                  Get.lazyPut(
+                    () => HubListViewController(),
+                  );
+                }
+              },
+            ),
+          )?.then((value) {
+            readUnreadAction(result, isRead: true);
+          });
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        }
 
         break;
       default:

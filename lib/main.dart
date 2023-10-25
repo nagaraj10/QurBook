@@ -897,7 +897,7 @@ class _MyFHBState extends State<MyFHB> {
             }
           }
         } else if (passedValArr[1] == strConnectedDevicesScreen) {
-          CommonUtil().navigateToHubList();
+          CommonUtil().navigateToHubList(Get.context!, fromNotification: false);
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',

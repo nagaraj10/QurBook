@@ -6996,8 +6996,9 @@ class CommonUtil {
     return hubListViewController;
   }
 
-  navigateToHubList() {
+  navigateToHubList(BuildContext context, {bool fromNotification = false}) {
     try {
+      //Get.back();
       Get.to(
         () => HubListView(),
         binding: BindingsBuilder(
@@ -7009,7 +7010,11 @@ class CommonUtil {
             }
           },
         ),
-      );
+      )?.then((value) {
+        if (!fromNotification) {
+          PageNavigator.goToPermanent(context, router.rt_Landing);
+        }
+      });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
