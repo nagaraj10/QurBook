@@ -42,7 +42,7 @@ class NotificationActivity : AppCompatActivity() {
     private lateinit var docPic: String
     private lateinit var patId: String
     private lateinit var patName: String
-    private lateinit var patPic: String
+    private  var patPic: String? = null
     private lateinit var callType: String
     private lateinit var isWeb: String
 
@@ -65,7 +65,7 @@ class NotificationActivity : AppCompatActivity() {
         docPic = intent.getStringExtra(getString(R.string.docPic))!!
         patId = intent.getStringExtra(getString(R.string.pat_id))!!
         patName = intent.getStringExtra(getString(R.string.pat_name))!!
-        patPic = intent.getStringExtra(getString(R.string.pat_pic))!!
+        patPic = intent?.getStringExtra(getString(R.string.pat_pic))
         callType = intent.getStringExtra(getString(R.string.callType))!!
         isWeb = intent.getStringExtra(getString(R.string.web))!!
         tv_callType.text = intent.getStringExtra(getString(R.string.pro_ns_body))
@@ -188,8 +188,7 @@ class NotificationActivity : AppCompatActivity() {
         launchIntent?.putExtra(getString(R.string.docPic), docPic)
         launchIntent?.putExtra(getString(R.string.pat_id), patId)
         launchIntent?.putExtra(getString(R.string.pat_name), patName)
-        launchIntent?.putExtra(getString(R.string.pat_pic), patPic)
-        launchIntent?.putExtra(getString(R.string.pat_pic), patPic)
+        launchIntent?.putExtra(getString(R.string.pat_pic), patPic.toString())
         launchIntent?.putExtra(getString(R.string.callType), callType)
         launchIntent?.putExtra(getString(R.string.web), isWeb)
         startActivity(launchIntent)
