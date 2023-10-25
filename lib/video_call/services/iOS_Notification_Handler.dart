@@ -7,6 +7,7 @@ import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 
 import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import '../../caregiverAssosication/caregiverAPIProvider.dart';
@@ -460,8 +461,9 @@ class IosNotificationHandler {
         );
       }
     } else if (model.redirect == parameters.stringConnectedDevicesScreen) {
+      Timer(Duration(seconds: 4), () async {
       try {
-        Get.to(
+        await Get.to(
           () => HubListView(),
           binding: BindingsBuilder(
             () {
@@ -476,6 +478,7 @@ class IosNotificationHandler {
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
+      });
     } else if (model.redirect == parameters.strAppointmentDetail &&
         (model.appointmentId ?? '').isNotEmpty &&
         (model.patientId ?? '').isNotEmpty &&
