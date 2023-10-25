@@ -6394,6 +6394,15 @@ class CommonUtil {
     return chatUserListController;
   }
 
+  SheelaAIController  onInitSheelaAIController() {
+    SheelaAIController sheelaAIController;
+    if (!Get.isRegistered<SheelaAIController>()) {
+      Get.put(SheelaAIController());
+    }
+    sheelaAIController = Get.find();
+    return sheelaAIController;
+  }
+
   void goToAppointmentDetailScreen(String appointmentId) {
     if (!Get.isRegistered<AppointmentDetailsController>())
       Get.lazyPut(() => AppointmentDetailsController());
