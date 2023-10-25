@@ -77,7 +77,6 @@ class _NotificationScreen extends State<NotificationScreen> {
 
   @override
   void initState() {
-
     qurhomeController.setActiveQurhomeDashboardToChat(
       status: false,
     );
@@ -577,6 +576,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                                 payload?.templateName,
                               );
                             }
+                          } else if (payload?.redirectTo ==
+                              parameters.strConnectedDevicesScreen) {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
                           } else {
                             readUnreadAction(notification);
                           }
@@ -1385,7 +1390,12 @@ class _NotificationScreen extends State<NotificationScreen> {
           readUnreadAction(result);
         }
         break;
+      case strConnectedDevicesScreen:
+        CommonUtil().navigateToHubList().then((value) {
+          readUnreadAction(result);
+        });
 
+        break;
       default:
         readUnreadAction(result);
         break;

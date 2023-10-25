@@ -963,6 +963,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else if (widget.nsRoute == call) {
                       CommonUtil().startTheCall(widget.bundle);
+                    } else if (widget.nsRoute == strConnectedDevicesScreen) {
+                      CommonUtil().navigateToHubList();
                     } else {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
