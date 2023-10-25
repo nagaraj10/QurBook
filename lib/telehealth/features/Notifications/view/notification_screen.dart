@@ -7,6 +7,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -77,7 +79,6 @@ class _NotificationScreen extends State<NotificationScreen> {
 
   @override
   void initState() {
-
     qurhomeController.setActiveQurhomeDashboardToChat(
       status: false,
     );
@@ -577,6 +578,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                                 payload?.templateName,
                               );
                             }
+                          } else if (payload?.redirectTo ==
+                              parameters.strConnectedDevicesScreen) {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
                           } else {
                             readUnreadAction(notification);
                           }
@@ -1385,7 +1392,28 @@ class _NotificationScreen extends State<NotificationScreen> {
           readUnreadAction(result);
         }
         break;
+      case strConnectedDevicesScreen:
+        try {
+          //Get.back();
+          Get.to(
+            () => HubListView(),
+            binding: BindingsBuilder(
+              () {
+                if (!Get.isRegistered<HubListViewController>()) {
+                  Get.lazyPut(
+                    () => HubListViewController(),
+                  );
+                }
+              },
+            ),
+          )?.then((value) {
+            readUnreadAction(result, isRead: true);
+          });
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        }
 
+        break;
       default:
         readUnreadAction(result);
         break;
