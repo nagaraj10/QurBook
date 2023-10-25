@@ -14,6 +14,7 @@ import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
@@ -97,6 +98,9 @@ class SheelaAIController extends GetxController {
   Rx<bool> isFullScreenVideoPlayer = false.obs;
   Rx<bool> isPlayPauseView = false.obs;
   Rx<bool> isAudioScreenLoading = false.obs;
+
+  LanguageRepository languageBlock = LanguageRepository();
+  Map<String, dynamic> langaugeDropdownList = {};
 
   @override
   void onInit() {
@@ -1290,6 +1294,34 @@ class SheelaAIController extends GetxController {
     if (_sessionTimeout != null && _sessionTimeout!.isActive) {
       _sessionTimeout!.cancel();
       _sessionTimeout = null;
+    }
+  }
+
+  Future<void> getLanguagesFromApi() async {
+    langaugeDropdownList = {};
+    try {
+      var languageModelList = await languageBlock.getLanguage();
+      if (languageModelList != null) {
+        if (languageModelList.result != null) {
+          for (var languageResultObj in languageModelList.result!) {
+            if (languageResultObj.referenceValueCollection != null &&
+                languageResultObj.referenceValueCollection!.isNotEmpty) {
+              for (var referenceValueCollection
+              in languageResultObj.referenceValueCollection!) {
+                if (referenceValueCollection.name != null &&
+                    referenceValueCollection.code != null) {
+                  langaugeDropdownList.addAll({
+                    referenceValueCollection.name?.toLowerCase() ?? '':
+                    referenceValueCollection.code ?? ''
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
