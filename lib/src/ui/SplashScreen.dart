@@ -4,6 +4,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -963,6 +965,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else if (widget.nsRoute == call) {
                       CommonUtil().startTheCall(widget.bundle);
+                    } else if (widget.nsRoute == strConnectedDevicesScreen) {
+                      CommonUtil()
+                          .navigateToHubList(context, fromNotification: false);
                     } else {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

@@ -808,6 +808,8 @@ const String strPatientReferralAcceptToPatient =
 const String strNotificationChat = 'chat';
 const String strChoosePrefDate = 'apptChoosePreferredDate';
 const String strMissedCallFromCCToPatient ='missedCallFromCCToPatient';
+const String strConnectedDevicesScreen ='connectedDevicesScreen';
+
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
 const String strDoctorSession = 'doctorSession';
@@ -853,3 +855,4 @@ const String strAppointmentDetail = 'appointmentDetail';
 const String strAppVersion = 'App Version';
 const String strOSVersion = 'OS Version';
 const String strErrorLog = 'Error Log';
+const String stringConnectedDevicesScreen = 'connectedDevicesScreen';
