@@ -390,6 +390,7 @@ class SheelaAIController extends GetxController {
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;
       }
+      sheelaRequest.language = getCurrentLanCode(splittedCode: true);
       final body = sheelaRequest.toJson();
       final response = await SheelAIAPIService().SheelaAIAPI(
         body,
