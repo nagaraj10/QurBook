@@ -76,7 +76,11 @@ class Voice {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     //languageCode get from API response
-    data[strlanguageCode] = (languageCode ?? 'en-US');
+    languageCode = (languageCode ?? 'en-US');
+    if ((languageCode ?? "").toLowerCase().contains('en')) {
+      languageCode = 'en-US';
+    }
+    data[strlanguageCode] = languageCode;
     data[ssmlGender] = ssmlGenderType;
     return data;
   }
