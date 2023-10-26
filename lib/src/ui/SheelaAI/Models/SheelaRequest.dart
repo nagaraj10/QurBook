@@ -22,6 +22,7 @@ class SheelaRequestModel {
   var additionalInfo;
   String? localDateTime;
   String? directCall;
+  String? language;
   SheelaRequestModel({
     this.sender,
     this.name,
@@ -40,6 +41,7 @@ class SheelaRequestModel {
     this.additionalInfo,
     this.localDateTime,
     this.directCall,
+    this.language
   });
 
   SheelaRequestModel.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class SheelaRequestModel {
       ProviderMsg = json['provider_msg'];
       directCall = json['directCall'];
       additionalInfo = json['additionalInfo'];
+      language = json['language'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -82,6 +85,7 @@ class SheelaRequestModel {
     data['additionalInfo'] = additionalInfo;
     data["localDateTime"] = localDateTime;
     data["directCall"] = directCall;
+    data['language'] = language;
     return data;
   }
 }
