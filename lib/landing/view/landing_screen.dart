@@ -97,7 +97,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   final controller = Get.put(ChatUserListController());
   final qurhomeDashboardController = Get.put(QurhomeDashboardController());
-  final controllerQurhomeRegimen = CommonUtil().onInitQurhomeRegimenController();
+  final controllerQurhomeRegimen =
+      CommonUtil().onInitQurhomeRegimenController();
 
   final sheelBadgeController = Get.put(SheelaAIController());
 
@@ -171,7 +172,6 @@ class _LandingScreenState extends State<LandingScreen> {
       // });
 
       CommonUtil().initSocket();
-      sheelBadgeController.getSheelaBadgeCount();
 
       if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
         await CommonUtil().getSheelaConfig();
@@ -181,16 +181,19 @@ class _LandingScreenState extends State<LandingScreen> {
             controllerQurhomeRegimen.qurHomeRegimenResponseModel?.regimentsList;
         if (activitiesFilteredList != null &&
             activitiesFilteredList.length > 0) {
-          controllerQurhomeRegimen.initRemainderQueue();
+          // controllerQurhomeRegimen.initRemainderQueue();
 
           int length = activitiesFilteredList?.length ?? 0;
           PreferenceUtil.saveString("SheelaRemainderStart",
               activitiesFilteredList?[0]?.estartNew ?? '');
           PreferenceUtil.saveString("SheelaRemainderEnd",
               activitiesFilteredList?[length - 1]?.estartNew ?? '');
+          controllerQurhomeRegimen.initRemainderQueue();
 
           controllerQurhomeRegimen.initOneRemainderQueue();
         }
+      } else {
+        sheelBadgeController.getSheelaBadgeCount();
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);

@@ -32,6 +32,7 @@ import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/SheelaRemainderConfig.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
@@ -187,6 +188,8 @@ class CommonUtil {
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
   static String PUSH_KIT_TOKEN = '';
+  static String SHEELA_CONFIGURATION_URL =
+      'system-configuration/sheela-reminder-config';
 
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
@@ -6395,7 +6398,7 @@ class CommonUtil {
     return chatUserListController;
   }
 
-  SheelaAIController  onInitSheelaAIController() {
+  SheelaAIController onInitSheelaAIController() {
     SheelaAIController sheelaAIController;
     if (!Get.isRegistered<SheelaAIController>()) {
       Get.put(SheelaAIController());
@@ -7181,7 +7184,7 @@ class CommonUtil {
     }
   }
 
-   getSheelaConfig() async {
+  getSheelaConfig() async {
     var apiBaseHelper = ApiBaseHelper();
 
     final response =
@@ -7210,8 +7213,8 @@ class CommonUtil {
     }
     return sheelaRemainderConfig;
   }
-  
-   int getTime(String value) {
+
+  int getTime(String value) {
     switch (value) {
       case "15m":
         return 15;
@@ -8563,5 +8566,4 @@ class VideoCallCommonUtils {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
-
 }
