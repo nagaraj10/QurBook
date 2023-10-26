@@ -7180,6 +7180,60 @@ class CommonUtil {
         return "";
     }
   }
+
+   getSheelaConfig() async {
+    var apiBaseHelper = ApiBaseHelper();
+
+    final response =
+        await apiBaseHelper.getSheelaConfig(SHEELA_CONFIGURATION_URL);
+    SheelaRemainderConfig sheelaRemainderConfig =
+        SheelaRemainderConfig.fromJson(response);
+    if (sheelaRemainderConfig != null &&
+        sheelaRemainderConfig.isSuccess == true) {
+      if (sheelaRemainderConfig.result != null &&
+          (sheelaRemainderConfig.result?.length ?? 0) > 0) {
+        if (sheelaRemainderConfig.result?[0].configurationData != null &&
+            (sheelaRemainderConfig.result?[0].configurationData?.length ?? 0) >
+                0) {
+          if (sheelaRemainderConfig.result?[0].configurationData?[0].name ==
+              "sheelaReminderTime") {
+            int time = getTime(
+                sheelaRemainderConfig?.result?[0].configurationData?[0].value ??
+                    '');
+
+            PreferenceUtil.saveInt("SheelaReminderTime", (time));
+          } else {
+            PreferenceUtil.saveInt("SheelaReminderTime", (30));
+          }
+        }
+      }
+    }
+    return sheelaRemainderConfig;
+  }
+  
+   int getTime(String value) {
+    switch (value) {
+      case "15m":
+        return 15;
+        break;
+      case "30m":
+        return 30;
+        break;
+
+      case "45m":
+        return 45;
+        break;
+      case "1h":
+        return 60;
+        break;
+      case "2h":
+        return 120;
+        break;
+
+      default:
+        return 30;
+    }
+  }
 }
 
 extension CapExtension on String {
@@ -8509,4 +8563,5 @@ class VideoCallCommonUtils {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
 }
