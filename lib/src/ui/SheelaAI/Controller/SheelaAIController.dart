@@ -390,6 +390,7 @@ class SheelaAIController extends GetxController {
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;
       }
+      sheelaRequest.language = getCurrentLanCode(splittedCode: true);
       final body = sheelaRequest.toJson();
       final response = await SheelAIAPIService().SheelaAIAPI(
         body,
@@ -461,9 +462,9 @@ class SheelaAIController extends GetxController {
             playTTS();
           }
           callToCC(currentResponse);
-          if (currentResponse.lang != null && currentResponse.lang != '') {
+          /*if (currentResponse.lang != null && currentResponse.lang != '') {
             PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang ?? "");
-          }
+          }*/
           scrollToEnd();
         } else {
           //Received a wrong format data
@@ -759,7 +760,7 @@ class SheelaAIController extends GetxController {
     try {
       final req = GoogleTTSRequestModel.fromJson({});
       req.input!.text = text;
-      req.voice!.languageCode = getCurrentLanCode();
+      req.voice!.languageCode = getCurrentLanCode(splittedCode: true);
       final response = await SheelAIAPIService().getAudioFileTTS(req.toJson());
       if (response.statusCode == 200 && (response.body).isNotEmpty) {
         final data = jsonDecode(response.body);

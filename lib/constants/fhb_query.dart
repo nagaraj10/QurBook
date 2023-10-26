@@ -452,3 +452,6 @@ const String post_event_logapp_logs = 'event-log/app-logs';
 const String appName = 'appName';
 
 
+const String platformIOS = '&platform=ios';
+
+
