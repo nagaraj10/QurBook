@@ -138,7 +138,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
             val declinePendingIntent = PendingIntent.getBroadcast(
                 applicationContext,
-                0,
+                NS_ID,
                 declineIntent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
@@ -159,15 +159,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
             val acceptPendingIntent = PendingIntent.getActivity(
                 this,
-                0,
+                NS_ID,
                 acceptIntent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
 
 
             val fullScreenIntent = Intent(this, NotificationActivity::class.java)
-                    .setAction(Intent.ACTION_SEND) // Add the action
-                    .setType(Constants.TXT_PLAIN)
                     .putExtra(getString(R.string.username), USER_NAME)
                     .putExtra(getString(R.string.docId), DOC_ID)
                     .putExtra(getString(R.string.docPic), DOC_PIC)
@@ -181,18 +179,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                     .putExtra(getString(R.string.pro_ns_body), data[getString(R.string.pro_ns_body)])
 
 
-
-            val fullScreenPendingIntent =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getActivity(
-                    this, 0,
-                    fullScreenIntent, PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getActivity(
-                    this, 0,
-                    fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT
-                )
-            }
+            val fullScreenPendingIntent = PendingIntent.getActivity(
+                this,
+                NS_ID,
+                fullScreenIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
 
 
