@@ -1137,7 +1137,7 @@ class SheelaAIController extends GetxController {
                       startDate != "" &&
                       endDate != null &&
                       endDate != "") {
-                    if (3 > 0) {
+                    if ((value.result?.queueCount ?? 0) > 0) {
                       if ((DateTime.parse(startDate ?? '')
                                   .isAtSameMomentAs(DateTime.now()) ||
                               DateTime.now()

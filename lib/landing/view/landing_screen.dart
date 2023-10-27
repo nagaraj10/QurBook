@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -177,6 +178,8 @@ class _LandingScreenState extends State<LandingScreen> {
         await CommonUtil().getSheelaConfig();
         List<RegimentDataModel>? activitiesFilteredList = [];
         await controllerQurhomeRegimen.getRegimenList();
+        controllerQurhomeRegimen.initRemainderQueue();
+
         activitiesFilteredList =
             controllerQurhomeRegimen.qurHomeRegimenResponseModel?.regimentsList;
         if (activitiesFilteredList != null &&
@@ -188,7 +191,6 @@ class _LandingScreenState extends State<LandingScreen> {
               activitiesFilteredList?[0]?.estartNew ?? '');
           PreferenceUtil.saveString("SheelaRemainderEnd",
               activitiesFilteredList?[length - 1]?.estartNew ?? '');
-          controllerQurhomeRegimen.initRemainderQueue();
 
           controllerQurhomeRegimen.initOneRemainderQueue();
         }
@@ -882,6 +884,11 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void moveToLoginPage() {
+    if (controllerQurhomeRegimen.evryOneMinuteRemainder != null &&
+        controllerQurhomeRegimen.evryOneMinuteRemainder?.isActive == true) {
+      controllerQurhomeRegimen.evryOneMinuteRemainder?.cancel();
+      controllerQurhomeRegimen.evryOneMinuteRemainder = null;
+    }
     PreferenceUtil.clearAllData().then(
       (value) {
         Navigator.pushAndRemoveUntil(
