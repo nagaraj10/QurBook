@@ -232,10 +232,12 @@ class SheelaBLEController extends GetxController {
                 return;
               }
               if (SheelaController.isSheelaScreenActive) {
+                String? strTextMsg = await SheelaController.getTextTranslate(
+                    receivedValues.last ?? '');
                 addToConversationAndPlay(
                   SheelaResponse(
                     recipientId: conversationType,
-                    text: receivedValues.last,
+                    text: strTextMsg,
                   ),
                 );
                 return;
@@ -403,7 +405,7 @@ class SheelaBLEController extends GetxController {
     }
   }
 
-  startSheelaBLEDeviceReadings() {
+  startSheelaBLEDeviceReadings() async {
     final arguments = SheelaController.arguments!;
     isCompleted = false;
     var msg = '';
@@ -421,26 +423,32 @@ class SheelaBLEController extends GetxController {
     }
 
     if (msg.isNotEmpty) {
+      String? strTextMsg = await SheelaController.getTextTranslate(
+          msg ?? '');
       addToConversationAndPlay(
         SheelaResponse(
           recipientId: conversationType,
-          text: msg,
+          text: strTextMsg,
         ),
       );
       if (strText.toLowerCase().contains("bgl")) {
+        String? strTextMsg =
+            await SheelaController.getTextTranslate("Please insert strip");
         playConversations.add(SheelaResponse(
           recipientId: conversationType,
-          text: "Please insert strip",
+          text: strTextMsg,
         ));
       }
       refreshTimeoutTimer();
     }
   }
 
-  addBGLMessage(String msg) {
+  addBGLMessage(String msg) async {
+    String? strTextMsg = await SheelaController.getTextTranslate(
+        msg ?? '');
     final conv = SheelaResponse(
       recipientId: conversationType,
-      text: msg,
+      text: strTextMsg,
     );
     if (isPlaying) {
       playConversations.add(conv);
@@ -458,10 +466,12 @@ class SheelaBLEController extends GetxController {
     if (SheelaController.isSheelaScreenActive &&
         !isCompleted &&
         !receivedData) {
+      String? strTextMsg = await SheelaController.getTextTranslate(
+          "Failed to save the values, Please try again");
       addToConversationAndPlay(
         SheelaResponse(
           recipientId: conversationType,
-          text: "Failed to save the values, Please try again",
+          text: strTextMsg,
         ),
       );
       isCompleted = true;
@@ -540,18 +550,22 @@ class SheelaBLEController extends GetxController {
         } else if (model.deviceType == "SPO2") {
           if ((model.data!.sPO2 ?? '').isNotEmpty &&
               (model.data!.pulse ?? '').isNotEmpty) {
+            String? strTextMsg = await SheelaController.getTextTranslate(
+                "Completed reading values. Please take your finger from the device");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Completed reading values. Please take your finger from the device",
+                strTextMsg,
               ),
             );
+            String? strTextMsgTwo = await SheelaController.getTextTranslate(
+                "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
             playConversations.add(
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye.",
+                strTextMsgTwo,
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -561,11 +575,13 @@ class SheelaBLEController extends GetxController {
           }
         } else if (model.deviceType?.toLowerCase() == "bgl") {
           if ((model.data?.bgl ?? '').isNotEmpty) {
+            String? strTextMsg = await SheelaController.getTextTranslate(
+                "Your Blood Glucose value ${model.data!.bgl} mg/dL is recorded successfully.");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Your Blood Glucose value ${model.data!.bgl} mg/dL is recorded successfully.",
+                strTextMsg,
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -577,12 +593,14 @@ class SheelaBLEController extends GetxController {
           if ((model.data!.systolic ?? '').isNotEmpty &&
               (model.data!.diastolic ?? '').isNotEmpty &&
               (model.data!.pulse ?? '').isNotEmpty) {
+            String? strTextMsg = await SheelaController.getTextTranslate(
+                "Thank you. Your BP systolic ${model.data!.systolic} "
+                    ", Diastolic ${model.data!.diastolic} "
+                    "and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
-                text: "Thank you. Your BP systolic ${model.data!.systolic} "
-                    ", Diastolic ${model.data!.diastolic} "
-                    "and Pulse ${model.data!.pulse} are successfully recorded. Bye.",
+                text: strTextMsg,
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -592,11 +610,13 @@ class SheelaBLEController extends GetxController {
           }
         } else if (model.deviceType?.toLowerCase() == "weight") {
           if ((model.data!.weight ?? '').isNotEmpty) {
+            String? strTextMsg = await SheelaController.getTextTranslate(
+                "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye.");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye.",
+                strTextMsg,
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
