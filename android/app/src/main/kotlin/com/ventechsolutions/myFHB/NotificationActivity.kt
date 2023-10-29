@@ -31,6 +31,7 @@ import java.lang.Exception
 import android.R.string.no
 import android.media.MediaPlayer
 import android.media.Ringtone
+import android.os.Looper
 import android.provider.Settings
 
 
@@ -45,6 +46,7 @@ class NotificationActivity : AppCompatActivity() {
     private  var patPic: String? = null
     private lateinit var callType: String
     private lateinit var isWeb: String
+    private val handler = Handler(Looper.getMainLooper())
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +72,7 @@ class NotificationActivity : AppCompatActivity() {
         isWeb = intent.getStringExtra(getString(R.string.web))!!
         tv_callType.text = intent.getStringExtra(getString(R.string.pro_ns_body))
         listenEvent(id = channelName)
-        val handler = Handler()
+
         val r = object : Runnable {
             public override fun run() {
                 disconnectNotifiationManager()
@@ -101,6 +103,7 @@ class NotificationActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
 //        turnScreenOffAndKeyguardOn()
     }
 
