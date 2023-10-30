@@ -23,6 +23,7 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:provider/provider.dart';
@@ -102,30 +103,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
         CommonUtil().initSocket();
         CommonUtil().versionCheck(context);
-
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
-
-        String? permissionValue =
-            await PreferenceUtil.getStringValue(strKeyFamilyAlert);
-        String? childId =
-            await PreferenceUtil.getStringValue(strKeyAlertChildID);
-        if (permissionValue == strYesValue) {
-          if (childId != null && childId != "") {
-            controller.forPatientList.value = true;
-            CareGiverPatientListResult? response =
-                await PreferenceUtil.getCareGiver(strKeyCareGiver);
-            if (response != null) {
-              controller.careGiverPatientListResult = null;
-              controller.careGiverPatientListResult = response;
-              controller.currentSelectedTab.value = 0;
-
-              controller.isPatientClicked.value = true;
-
-              controller.getPatientAlertList();
-            }
-          }
-        }
+        moveToPateintAlert();
 
         controller.enableModuleAccess();
         controller.getModuleAccess();
@@ -928,5 +908,31 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         print(e);
       }
     }
+  }
+
+  void moveToPateintAlert() async {
+    controller.isLoading.value = true;
+    if (CommonUtil.isUSRegion()) {
+      String? permissionValue =
+          await PreferenceUtil.getStringValue(strKeyFamilyAlert);
+      String? childId = await PreferenceUtil.getStringValue(strKeyAlertChildID);
+      if (permissionValue == strYesValue) {
+        if (childId != null && childId != "") {
+          controller.forPatientList.value = true;
+          CareGiverPatientListResult? response =
+              await PreferenceUtil.getCareGiver(strKeyCareGiver);
+          if (response != null) {
+            controller.careGiverPatientListResult = null;
+            controller.careGiverPatientListResult = response;
+            controller.currentSelectedTab.value = 0;
+
+            controller.isPatientClicked.value = true;
+
+            controller.getPatientAlertList();
+          }
+        }
+      }
+    }
+    controller.isLoading.value = false;
   }
 }
