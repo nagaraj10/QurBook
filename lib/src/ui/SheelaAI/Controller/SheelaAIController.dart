@@ -1126,9 +1126,9 @@ class SheelaAIController extends GetxController {
                 if ((CommonUtil.REGION_CODE != "US" &&
                     CommonUtil().isTablet == true)) {
                   String? startDate =
-                      PreferenceUtil.getStringValue('SheelaRemainderStart');
+                      PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
                   String? endDate =
-                      PreferenceUtil.getStringValue('SheelaRemainderEnd');
+                      PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
                   var sheelaAIController = Get.find<SheelaAIController>();
                   var qurhomeCOntroller =
                       CommonUtil().onInitQurhomeRegimenController();
@@ -1137,7 +1137,7 @@ class SheelaAIController extends GetxController {
                       startDate != "" &&
                       endDate != null &&
                       endDate != "") {
-                    if ((value.result?.queueCount ?? 0) > 0) {
+                    if (((value.result?.queueCount ?? 0)) > 0) {
                       if ((DateTime.parse(startDate ?? '')
                                   .isAtSameMomentAs(DateTime.now()) ||
                               DateTime.now()
@@ -1160,8 +1160,8 @@ class SheelaAIController extends GetxController {
                           (DateTime.now()
                               .isAfter(DateTime.parse(endDate ?? '')))) {
                         qurhomeCOntroller.evryOneMinuteRemainder?.cancel();
-                        PreferenceUtil.saveString("SheelaRemainderStart", '');
-                        PreferenceUtil.saveString("SheelaRemainderEnd", '');
+                        PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
+                        PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
                       }
                     }
                   }

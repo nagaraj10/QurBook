@@ -684,8 +684,8 @@ class QurhomeRegimenController extends GetxController {
   }
 
   initOneRemainderQueue() async {
-    String? startDate = PreferenceUtil.getStringValue('SheelaRemainderStart');
-    String? endDate = PreferenceUtil.getStringValue('SheelaRemainderEnd');
+    String? startDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
+    String? endDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
     try {
       if (startDate != null &&
           startDate != "" &&
@@ -706,10 +706,11 @@ class QurhomeRegimenController extends GetxController {
                   (evryOneMinuteRemainder == null ||
                       evryOneMinuteRemainder?.isActive == false)) {
                 try {
-                  //int getTimeINSeconds = await PreferenceUtil.getIntValue('sheelaReminderTime') ?? 30;
-                  int getTimeINSeconds = 30;
+                  int getTimeINSeconds =
+                      await PreferenceUtil.getIntValue(SHEELA_REMAINDER_TIME) ??
+                          30;
                   evryOneMinuteRemainder = Timer.periodic(
-                    Duration(seconds: getTimeINSeconds),
+                    Duration(minutes: getTimeINSeconds),
                     (Timer timer) {
                       sheelaAIController.getSheelaBadgeCount(
                           isNeedSheelaDialog: true);
@@ -722,14 +723,9 @@ class QurhomeRegimenController extends GetxController {
                       .isAtSameMomentAs(DateTime.now())) ||
                   (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) {
                 evryOneMinuteRemainder?.cancel();
-                PreferenceUtil.saveString("SheelaRemainderStart", '');
-                PreferenceUtil.saveString("SheelaRemainderEnd", '');
+                PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
+                PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
               }
-            } else if (evryOneMinuteRemainder != null &&
-                evryOneMinuteRemainder?.isActive == true) {
-              evryOneMinuteRemainder?.cancel();
-              PreferenceUtil.saveString("SheelaRemainderStart", '');
-              PreferenceUtil.saveString("SheelaRemainderEnd", '');
             }
           }
         }
@@ -743,10 +739,11 @@ class QurhomeRegimenController extends GetxController {
         if (activitiesFilteredList != null &&
             activitiesFilteredList.length > 0) {
           int length = activitiesFilteredList?.length ?? 0;
-          PreferenceUtil.saveString("SheelaRemainderStart",
+          PreferenceUtil.saveString(SHEELA_REMAINDER_START,
               activitiesFilteredList?[0]?.estartNew ?? '');
-          PreferenceUtil.saveString("SheelaRemainderEnd",
+          PreferenceUtil.saveString(SHEELA_REMAINDER_END,
               activitiesFilteredList?[length - 1]?.estartNew ?? '');
+          initOneRemainderQueue();
         }
       }
     } catch (e, stackTrace) {

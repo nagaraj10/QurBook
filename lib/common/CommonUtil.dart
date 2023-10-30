@@ -7204,9 +7204,9 @@ class CommonUtil {
                 sheelaRemainderConfig?.result?[0].configurationData?[0].value ??
                     '');
 
-            PreferenceUtil.saveInt("SheelaReminderTime", (time));
+            PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (time));
           } else {
-            PreferenceUtil.saveInt("SheelaReminderTime", (30));
+            PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
           }
         }
       }

@@ -187,9 +187,9 @@ class _LandingScreenState extends State<LandingScreen> {
           // controllerQurhomeRegimen.initRemainderQueue();
 
           int length = activitiesFilteredList?.length ?? 0;
-          PreferenceUtil.saveString("SheelaRemainderStart",
+          PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_START,
               activitiesFilteredList?[0]?.estartNew ?? '');
-          PreferenceUtil.saveString("SheelaRemainderEnd",
+          PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_END,
               activitiesFilteredList?[length - 1]?.estartNew ?? '');
 
           controllerQurhomeRegimen.initOneRemainderQueue();
