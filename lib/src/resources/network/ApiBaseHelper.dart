@@ -2969,6 +2969,21 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+ Future<dynamic> getSheelaConfig(String url) async {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersAuthAccept());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 }
 
 void exitFromApp() async {

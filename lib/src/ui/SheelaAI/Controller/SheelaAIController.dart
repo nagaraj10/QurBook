@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
@@ -1105,6 +1106,8 @@ class SheelaAIController extends GetxController {
   getSheelaBadgeCount(
       {bool isNeedSheelaDialog = false,
       bool isFromQurHomeRegimen = false}) async {
+    final dir = await getTemporaryDirectory();
+
     if (!(sheelaIconBadgeCount.value > 0)) {
       sheelaIconBadgeCount.value = 0;
     }
@@ -1120,32 +1123,57 @@ class SheelaAIController extends GetxController {
                 isNeedSheelaDialog = true;
               }
               if (isNeedSheelaDialog) {
-                if ((value.result?.queueCount ?? 0) > 0 &&
+                if ((CommonUtil.REGION_CODE != "US" &&
+                    CommonUtil().isTablet == true)) {
+                  String? startDate =
+                      PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
+                  String? endDate =
+                      PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
+                  var sheelaAIController = Get.find<SheelaAIController>();
+                  var qurhomeCOntroller =
+                      CommonUtil().onInitQurhomeRegimenController();
+
+                  if (startDate != null &&
+                      startDate != "" &&
+                      endDate != null &&
+                      endDate != "") {
+                    if (((value.result?.queueCount ?? 0)) > 0) {
+                      if ((DateTime.parse(startDate ?? '')
+                                  .isAtSameMomentAs(DateTime.now()) ||
+                              DateTime.now()
+                                  .isAfter(DateTime.parse(startDate ?? ''))) &&
+                          (DateTime.now()
+                              .isBefore(DateTime.parse(endDate ?? ''))) &&
+                          (qurhomeCOntroller.evryOneMinuteRemainder != null ||
+                              qurhomeCOntroller
+                                      .evryOneMinuteRemainder?.isActive ==
+                                  true)) {
+                        if (!isQueueDialogShowing.value) {
+                          playAudioPlayer().then((value) {
+                            showDialogForSheelaBox(
+                                isFromQurHomeRegimen: isFromQurHomeRegimen,
+                                isNeedSheelaDialog: isNeedSheelaDialog);
+                          });
+                        }
+                      } else if ((DateTime.parse(endDate ?? '')
+                              .isAtSameMomentAs(DateTime.now())) ||
+                          (DateTime.now()
+                              .isAfter(DateTime.parse(endDate ?? '')))) {
+                        qurhomeCOntroller.evryOneMinuteRemainder?.cancel();
+                        PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
+                        PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
+                      }
+                    }
+                  }
+                } else if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
                   isQueueDialogShowing.value = true;
-                  CommonUtil().dialogForSheelaQueueStable(Get.context!,
-                      unReadMsgCount: Provider.of<ChatSocketViewModel>(
-                              Get.context!,
-                              listen: false)
-                          .chatTotalCount, onTapSheelaRemainders: (value) {
-                    isQueueDialogShowing.value = false;
-                    Get.back();
-                    Get.toNamed(
-                      rt_Sheela,
-                      arguments: value
-                          ? SheelaArgument(
-                              rawMessage: sheelaQueueShowRemind,
-                            )
-                          : SheelaArgument(showUnreadMessage: true),
-                    )?.then((value) {
-                      ///Update Sheela remainder count
-                      getSheelaBadgeCount(isNeedSheelaDialog: true);
-                    });
-                  });
+
+                  showDialogForSheelaBox(
+                      isFromQurHomeRegimen: isFromQurHomeRegimen,
+                      isNeedSheelaDialog: isNeedSheelaDialog);
                 }
               }
-            } else {
-              sheelaIconBadgeCount.value = 0;
             }
           } else {
             sheelaIconBadgeCount.value = 0;
@@ -1159,6 +1187,19 @@ class SheelaAIController extends GetxController {
 
       sheelaIconBadgeCount.value = 0;
     }
+  }
+
+  Future<int?> playAudioPlayer() async {
+    late AudioCache _audioCache;
+    _audioCache = AudioCache();
+
+    String audioasset = "assets/raw/ns_final.mp3";
+    ByteData bytes = await rootBundle.load(audioasset); //load sound from assets
+    Uint8List soundbytes =
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    int? result = await player?.playBytes(soundbytes);
+    player?.play(audioasset);
+    return result;
   }
 
   void updateTimer({bool enable = false}) {
@@ -1312,12 +1353,12 @@ class SheelaAIController extends GetxController {
             if (languageResultObj.referenceValueCollection != null &&
                 languageResultObj.referenceValueCollection!.isNotEmpty) {
               for (var referenceValueCollection
-              in languageResultObj.referenceValueCollection!) {
+                  in languageResultObj.referenceValueCollection!) {
                 if (referenceValueCollection.name != null &&
                     referenceValueCollection.code != null) {
                   langaugeDropdownList.addAll({
                     referenceValueCollection.name?.toLowerCase() ?? '':
-                    referenceValueCollection.code ?? ''
+                        referenceValueCollection.code ?? ''
                   });
                 }
               }
@@ -1328,5 +1369,29 @@ class SheelaAIController extends GetxController {
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
+  }
+
+  void showDialogForSheelaBox(
+      {bool isNeedSheelaDialog = false, bool isFromQurHomeRegimen = false}) {
+    isQueueDialogShowing.value = true;
+
+    CommonUtil().dialogForSheelaQueueStable(Get.context!,
+        unReadMsgCount:
+            Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+                .chatTotalCount, onTapSheelaRemainders: (value) {
+      isQueueDialogShowing.value = false;
+      Get.back();
+      Get.toNamed(
+        rt_Sheela,
+        arguments: value
+            ? SheelaArgument(
+                rawMessage: sheelaQueueShowRemind,
+              )
+            : SheelaArgument(showUnreadMessage: true),
+      )?.then((value) {
+        ///Update Sheela remainder count
+        getSheelaBadgeCount(isNeedSheelaDialog: true);
+      });
+    });
   }
 }
