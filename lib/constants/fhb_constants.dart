@@ -781,6 +781,9 @@ const String DEVICE_TYPE = 'deviceType';
 const String USER_HUB_ID = 'userHubId';
 const String USER_ID = 'userId';
 const String DEVICE_NAME = 'deviceName';
+const String SHEELA_REMAINDER_START = 'SheelaRemainderStart';
+const String SHEELA_REMAINDER_END = 'SheelaRemainderEnd';
+const String SHEELA_REMAINDER_TIME = 'SheelaReminderTime';
 
 const String ISBPCONNECT = 'bpconnect';
 const String IS_BP_SCAN_CANCEL = 'bpscancancel';
