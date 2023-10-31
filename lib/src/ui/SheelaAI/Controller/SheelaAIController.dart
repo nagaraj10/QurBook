@@ -572,9 +572,10 @@ class SheelaAIController extends GetxController {
       if (playButtons) {
         final currentButton = currentPlayingConversation!
             .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
-        if (currentButton.title!.contains(StrExit) ||
-            (currentButton.title!.contains(str_Undo) ||
-                (currentButton.title!.contains(StrUndoAll)))) {
+        if ((currentButton.title!.contains(StrExit)) ||
+            (currentButton.title!.contains(str_Undo)) ||
+                (currentButton.title!.contains(StrUndoAll)) ||
+            (conversations.last.endOfConv ?? false)) {
           if (conversations.last.endOfConv) {
             currentPlayingConversation!.isPlaying.value = false;
             currentButton.isPlaying.value = false;
