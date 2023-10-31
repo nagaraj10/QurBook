@@ -3121,24 +3121,19 @@ class CommonUtil {
     }
   }
 
-  static Map<String, String> supportedLanguages = (REGION_CODE == 'IN')
-      ? {
-          'english': 'en',
-          'french': 'fr',
-          'german': 'de',
-          'spanish': 'es',
-          'bengali': 'bn',
-          'gujarati': 'gu',
-          'hindi': 'hi',
-          'kannada': 'kn',
-          'malayalam': 'ml',
-          'tamil': 'ta',
-          'telugu': 'te',
-        }
-      : {
-          'english': 'en',
-          'spanish': 'es',
-        };
+  static Map<String, String> supportedLanguages = {
+    'english': 'en',
+    'french': 'fr',
+    'german': 'de',
+    'spanish': 'es',
+    'bengali': 'bn',
+    'gujarati': 'gu',
+    'hindi': 'hi',
+    'kannada': 'kn',
+    'malayalam': 'ml',
+    'tamil': 'ta',
+    'telugu': 'te',
+  };
 
   static const Map<String, String> langaugeCodes = {
     'en': 'en-IN',
