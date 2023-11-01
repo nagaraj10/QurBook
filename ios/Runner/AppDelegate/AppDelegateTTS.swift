@@ -30,6 +30,10 @@ extension AppDelegate : AVSpeechSynthesizerDelegate {
             if call.method == self?.STT_METHOD  {
                 print(Constants.speechToText)
                 print(Constants.STT, result)
+                if let argu = call.arguments as? NSDictionary,let langCode = argu["langcode"] as? String {
+                    let locale = Language().checkIfTheLocaleIsSupported(locale: langCode)
+                    self?.speechRecognizer = SFSpeechRecognizer(locale: locale)!
+                }
                 self?.startLoadingVC()
                 self?.STT_Result = result;
                 do{
