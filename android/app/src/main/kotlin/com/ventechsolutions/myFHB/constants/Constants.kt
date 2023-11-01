@@ -139,4 +139,6 @@ object Constants {
     val IS_NOTIFICATION_PERMISSION_CHECK ="notification_permission_check"
     val PROP_DOSEMEAL ="dosemeal"
 
+    val sheelaText ="Sheela"
+
 }
