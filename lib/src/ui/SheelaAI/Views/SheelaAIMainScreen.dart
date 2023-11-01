@@ -521,33 +521,29 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         languagesMenuList.add(
           PopupMenuItem<String>(
             value: languageCode,
-            child: Row(
-              children: [
-                Radio(
-                  value: languageCode,
-                  groupValue: currentLanguage,
-                  activeColor: Color(CommonUtil().getMyPrimaryColor()),
-                  onChanged: (dynamic value) {
-                    Get.back();
-                    PreferenceUtil.saveString(SHEELA_LANG,
-                        CommonUtil.langaugeCodes[value ?? 'undef']!);
-                    controller
-                        .getDeviceSelectionValues(
-                      preferredLanguage: value,
-                    )
-                        .then((value1) {
-                      controller.updateDeviceSelectionModel(
-                          preferredLanguage: value);
-                    });
-                  },
-                ),
-                Text(
-                  toBeginningOfSentenceCase(language)!,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
+            child: Container(
+              padding: CommonUtil().isTablet!
+                  ? EdgeInsets.all(14)
+                  : EdgeInsets.all(0),
+              child: Row(
+                children: [
+                  Radio(
+                    value: languageCode,
+                    groupValue: currentLanguage,
+                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                    onChanged: (dynamic value) {
+                      Get.back();
+                      getupdateDeviceSelection(value);
+                    },
                   ),
-                ),
-              ],
+                  Text(
+                    toBeginningOfSentenceCase(language)!,
+                    style: TextStyle(
+                      fontSize: 16.0.sp,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -556,14 +552,22 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     return languagesMenuList;
   }
 
+  void getupdateDeviceSelection(String value) {
+    PreferenceUtil.saveString(
+        SHEELA_LANG, CommonUtil.langaugeCodes[value ?? 'undef']!);
+    controller
+        .getDeviceSelectionValues(
+      preferredLanguage: value,
+    )
+        .then((value1) {
+      controller.updateDeviceSelectionModel(preferredLanguage: value);
+    });
+  }
+
   Widget getLanguageButton() {
     return PopupMenuButton<String>(
       onSelected: (languageCode) {
-        PreferenceUtil.saveString(
-            SHEELA_LANG, CommonUtil.langaugeCodes[languageCode]!);
-        controller.getDeviceSelectionValues(
-          preferredLanguage: languageCode,
-        );
+        getupdateDeviceSelection(languageCode);
       },
       itemBuilder: (BuildContext context) => getSupportedLanguages(),
       child: Padding(
