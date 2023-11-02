@@ -118,6 +118,8 @@ const String STR_KEY_HEIGHT = 'height';
 const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
 
+const String stringLastTimeZone = 'lastTimeZone';
+
 const String STR_VAL_HEIGHT_IND = 'f-in';
 const String STR_VAL_HEIGHT_IND_NEW = 'feet';
 
