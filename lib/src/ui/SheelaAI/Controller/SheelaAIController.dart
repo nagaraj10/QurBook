@@ -957,6 +957,9 @@ class SheelaAIController extends GetxController {
   String? getCurrentLanCode({bool splittedCode = false}) {
     try {
       String? currentLang = PreferenceUtil.getStringValue(SHEELA_LANG);
+      if (!((currentLang ?? '').contains("-"))) {
+        currentLang = CommonUtil.langaugeCodes[currentLang ?? 'undef'];
+      }
       if ((currentLang ?? '').isNotEmpty) {
         if (splittedCode && (currentLang != "undef")) {
           final langCode = currentLang!.split("-").first;
