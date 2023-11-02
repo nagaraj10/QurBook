@@ -898,6 +898,8 @@ const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
 const String StrUndoAll = 'Undo all';
 
+const String StrSheelaErrorMsg = 'There is some issue with sheela,\n Please try after some time';
+
 const double tabFontTitle = 25.0;
 const double mobileFontTitle = 18.0;
 
