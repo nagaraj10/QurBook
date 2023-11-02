@@ -33,6 +33,7 @@ import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import '../utils/timezone/timezone_services.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
@@ -293,7 +294,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         FirebaseMessaging.instance;
 
                     _firebaseMessaging.getToken().then((token) {
-                      CommonUtil.checkUpdateTimezone();
+                      TimezoneServices().checkUpdateTimezone();
                       CommonUtil()
                           .sendDeviceToken(
                               PreferenceUtil.getStringValue(

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -28,7 +27,6 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
-import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
@@ -2177,33 +2175,6 @@ class CommonUtil {
 
     getLoggedIDetails();
     return DeviceInfoSucess.fromJson(response);
-  }
-
-  static Future<void> checkUpdateTimezone() async {
-    try {
-      final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
-      final lastTimeZone = await PreferenceUtil.getLastTimeZone();
-      final currentTimezone = await FlutterTimezone.getLocalTimezone();
-
-      if (currentTimezone != lastTimeZone) {
-        ApiBaseHelper _apiBaseHelper = ApiBaseHelper();
-        var body = {
-          "id": userid,
-          "timezone": currentTimezone,
-        };
-        String jsonData = json.encode(body);
-        final req = await _apiBaseHelper.updateUserTimeZone(
-          query.qr_user + userid + query.qr_section + query.qr_generalInfo,
-          jsonData,
-        );
-        if (req != null) {
-          await PreferenceUtil.saveLastTimeZone(currentTimezone);
-        }
-      }
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-      print('$e exception thrown');
-    }
   }
 
   static Future<File?> downloadFile(String url, String? extension) async {

@@ -29,6 +29,7 @@ import 'corp_users_welcome_dialog.dart';
 import '../../src/blocs/Category/CategoryListBlock.dart';
 import '../../src/model/user/MyProfileResult.dart';
 import '../../src/utils/dynamic_links.dart';
+import '../../src/utils/timezone/timezone_services.dart';
 import '../../telehealth/features/chat/view/PDFViewerController.dart';
 import '../../user_plans/view_model/user_plans_view_model.dart';
 
@@ -118,7 +119,7 @@ class _LandingScreenState extends State<LandingScreen> {
       WidgetsBinding.instance?.addObserver(
         LifecycleEventHandler(
           resumeCallBack: () async {
-            CommonUtil.checkUpdateTimezone();
+            TimezoneServices().checkUpdateTimezone();
           },
         ),
       );
