@@ -9,9 +9,11 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
 import '../../chat_socket/view/ChatDetail.dart';
@@ -96,6 +98,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   final controller = Get.put(ChatUserListController());
   final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+  final controllerQurhomeRegimen =
+      CommonUtil().onInitQurhomeRegimenController();
 
   final sheelBadgeController = Get.put(SheelaAIController());
 
@@ -169,7 +173,30 @@ class _LandingScreenState extends State<LandingScreen> {
       // });
 
       CommonUtil().initSocket();
-      sheelBadgeController.getSheelaBadgeCount();
+
+      if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+        await CommonUtil().getSheelaConfig();
+        List<RegimentDataModel>? activitiesFilteredList = [];
+        await controllerQurhomeRegimen.getRegimenList();
+        controllerQurhomeRegimen.initRemainderQueue();
+
+        activitiesFilteredList =
+            controllerQurhomeRegimen.qurHomeRegimenResponseModel?.regimentsList;
+        if (activitiesFilteredList != null &&
+            activitiesFilteredList.length > 0) {
+          // controllerQurhomeRegimen.initRemainderQueue();
+
+          int length = activitiesFilteredList?.length ?? 0;
+          PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_START,
+              activitiesFilteredList?[0]?.estartNew ?? '');
+          PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_END,
+              activitiesFilteredList?[length - 1]?.estartNew ?? '');
+
+          controllerQurhomeRegimen.initOneRemainderQueue();
+        }
+      } else {
+        sheelBadgeController.getSheelaBadgeCount();
+      }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -857,6 +884,11 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void moveToLoginPage() {
+    if (controllerQurhomeRegimen.evryOneMinuteRemainder != null &&
+        controllerQurhomeRegimen.evryOneMinuteRemainder?.isActive == true) {
+      controllerQurhomeRegimen.evryOneMinuteRemainder?.cancel();
+      controllerQurhomeRegimen.evryOneMinuteRemainder = null;
+    }
     PreferenceUtil.clearAllData().then(
       (value) {
         Navigator.pushAndRemoveUntil(
