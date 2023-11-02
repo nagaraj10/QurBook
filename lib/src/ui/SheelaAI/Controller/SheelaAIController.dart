@@ -14,6 +14,7 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
@@ -476,7 +477,7 @@ class SheelaAIController extends GetxController {
         conversations.removeLast();
         if (kDebugMode) print(response.body);
         FlutterToast().getToast(
-            'There is some issue with sheela,\n Please try after some time',
+            StrSheelaErrorMsg,
             Colors.black54);
       }
       isLoading.value = false;
@@ -488,7 +489,7 @@ class SheelaAIController extends GetxController {
       conversations.removeLast();
       if (kDebugMode) print(e.toString());
       FlutterToast().getToast(
-          'There is some issue with sheela,\n Please try after some time',
+          StrSheelaErrorMsg,
           Colors.black54);
     }
   }
@@ -773,13 +774,13 @@ class SheelaAIController extends GetxController {
         } else {
           //Need to handle failure
           FlutterToast().getToast(
-              'There is some issue with sheela,\n Please try after some time',
+              StrSheelaErrorMsg,
               Colors.black54);
         }
       } else {
         //Failed to get body or failed status code
         FlutterToast().getToast(
-            'There is some issue with sheela,\n Please try after some time',
+            StrSheelaErrorMsg,
             Colors.black54);
       }
     } catch (e, stackTrace) {
@@ -787,7 +788,7 @@ class SheelaAIController extends GetxController {
       print(e.toString());
       //need to handle failure in the api call for tts
       FlutterToast().getToast(
-          'There is some issue with sheela,\n Please try after some time',
+          StrSheelaErrorMsg,
           Colors.black54);
     }
   }
@@ -942,14 +943,14 @@ class SheelaAIController extends GetxController {
     } on PlatformException {
       isMicListening.value = false;
       FlutterToast().getToast(
-          'There is some issue with sheela,\n Please try after some time',
+          StrSheelaErrorMsg,
           Colors.black54);
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
       FlutterToast().getToast(
-          'There is some issue with sheela,\n Please try after some time',
+          StrSheelaErrorMsg,
           Colors.black54);
     }
   }
@@ -1372,6 +1373,38 @@ class SheelaAIController extends GetxController {
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Future<String?> getTextTranslate(String? text) async {
+    try {
+      String? selLanguageCode = getCurrentLanCode(splittedCode: true);
+      if ((selLanguageCode ?? '').contains('en')) {
+        return text;
+      }
+      Map<String, dynamic> reqJson = new Map<String, dynamic>();
+      reqJson[qr_textToTranslate] = text;
+      reqJson[qr_targetLanguageCode] = getCurrentLanCode(splittedCode: true);
+      reqJson[qr_sourceLanguageCode] = 'en';
+      final response = await SheelAIAPIService().getTextTranslate(reqJson);
+      if (response.statusCode == 200 && (response.body).isNotEmpty) {
+        final data = jsonDecode(response.body);
+        final GoogleTTSResponseModel googleTTSResponseModel =
+            GoogleTTSResponseModel.fromJson(data);
+        if ((googleTTSResponseModel != null) &&
+            (googleTTSResponseModel.isSuccess ?? false)) {
+          String strText =
+              (googleTTSResponseModel?.result?.translatedText ?? '');
+          return (strText.trim().isNotEmpty) ? strText : text;
+        } else {
+          return text;
+        }
+      } else {
+        return text;
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      return text;
     }
   }
 
