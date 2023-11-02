@@ -16,6 +16,7 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
+import 'package:myfhb/src/utils/lifecycle_state_provider.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
@@ -114,6 +115,13 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     try {
       super.initState();
+      WidgetsBinding.instance?.addObserver(
+        LifecycleEventHandler(
+          resumeCallBack: () async {
+            CommonUtil.checkUpdateTimezone();
+          },
+        ),
+      );
       Future.delayed(Duration.zero, () async {
         onInit();
       });

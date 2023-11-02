@@ -293,6 +293,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         FirebaseMessaging.instance;
 
                     _firebaseMessaging.getToken().then((token) {
+                      CommonUtil.checkUpdateTimezone();
                       CommonUtil()
                           .sendDeviceToken(
                               PreferenceUtil.getStringValue(
