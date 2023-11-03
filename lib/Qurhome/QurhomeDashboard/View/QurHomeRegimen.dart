@@ -1458,8 +1458,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
     var canEdit = false;
 
-    canEdit = CommonUtil.canEditRegimen(
-        controller.selectedDate.value, regimen!, context!);
+    canEdit = CommonUtil()
+        .canEditRegimen(controller.selectedDate.value, regimen!, context!);
 
     if (regimen!.ack != null && regimen.ack != "") {
       if (fromView) {
@@ -1771,8 +1771,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   bool checkCanEdit(RegimentDataModel regimen) {
     var canEdit = false;
-    canEdit = CommonUtil.canEditRegimen(
-        controller.selectedDate.value, regimen!, context!);
+    canEdit = CommonUtil()
+        .canEditRegimen(controller.selectedDate.value, regimen!, context!);
 
     return canEdit;
   }
