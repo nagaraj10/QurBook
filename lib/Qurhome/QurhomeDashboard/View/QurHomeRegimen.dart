@@ -38,6 +38,7 @@ import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/src/utils/timezone/timezone_helper.dart';
 import 'package:myfhb/src/utils/timezone/timezone_services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -239,12 +240,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        if (appIsInBackground && controller.isSOSAgentCallDialogOpen.value) {
-          appIsInBackground = false;
-          controller.updateSOSAgentCallDialogStatus(false);
-          Get.back();
-        }
-        TimezoneServices().checkUpdateTimezone();
+        onResumeEvent();
         break;
       case AppLifecycleState.paused:
         appIsInBackground = true;
@@ -2454,6 +2450,29 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (kDebugMode) {
         print(e);
       }
+    }
+  }
+
+  onResumeEvent() async {
+    try {
+      if (appIsInBackground && controller.isSOSAgentCallDialogOpen.value) {
+        appIsInBackground = false;
+        controller.updateSOSAgentCallDialogStatus(false);
+        Get.back();
+      }
+      var isTimezoneChanged =
+          await TimezoneServices().checkUpdateTimezone(isUpdateTimezone: false);
+      if (isTimezoneChanged) {
+        await controller.getRegimenList(
+            date: controller.selectedDate.value.toString());
+        await QurPlanReminders.getTheRemindersFromAPI();
+        if (CommonUtil.isUSRegion()) {
+          final currentTimezone = await TimeZoneHelper.getCurrentTimezone;
+          await TimezoneServices().updateTimezone(currentTimezone);
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
