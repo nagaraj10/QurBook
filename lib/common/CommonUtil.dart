@@ -6585,7 +6585,7 @@ class CommonUtil {
         .inDays;
   }
 
-  static bool canEditRegimen(
+  bool canEditRegimen(
       DateTime selectedDate, RegimentDataModel regimen, BuildContext context) {
     var canEdit = false;
     try {
@@ -6593,19 +6593,53 @@ class CommonUtil {
         canEdit = true;
       } else if (regimen?.doseMealString == Constants.doseValueless ||
           regimen?.doseMealString == Constants.doseValueHigh) {
-        DateTime selectedDateTime =
-            CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
+        if (regimen?.activityOrgin == strSurvey &&
+            regimen?.otherinfo?.isAllDayActivity == true) {
+          DateTime selectedDateTime =
+              CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
 
-        canEdit =
-            selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
-                Provider.of<RegimentViewModel>(context!, listen: false)
-                        .regimentMode ==
-                    RegimentMode.Schedule;
+          if (calculateDifference(selectedDateTime ?? DateTime.now()) <= 0) {
+            canEdit = true;
+          } else {
+            canEdit =
+                (selectedDateTime?.difference(DateTime.now()).inMinutes ?? 0) <=
+                        15 &&
+                    Provider.of<RegimentViewModel>(context!, listen: false)
+                            .regimentMode ==
+                        RegimentMode.Schedule;
+          }
+        } else {
+          DateTime selectedDateTime =
+              CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
+
+          canEdit =
+              (selectedDateTime?.difference(DateTime.now()).inMinutes ?? 0) <=
+                      15 &&
+                  Provider.of<RegimentViewModel>(context!, listen: false)
+                          .regimentMode ==
+                      RegimentMode.Schedule;
+        }
       } else {
-        canEdit = regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-            Provider.of<RegimentViewModel>(context!, listen: false)
-                    .regimentMode ==
-                RegimentMode.Schedule;
+        if (regimen?.activityOrgin == strSurvey &&
+            regimen?.otherinfo?.isAllDayActivity == true) {
+          if (calculateDifference(regimen?.estart ?? DateTime.now()) <= 0) {
+            canEdit = true;
+          } else {
+            canEdit =
+                (regimen?.estart?.difference(DateTime.now()).inMinutes ?? 0) <=
+                        15 &&
+                    Provider.of<RegimentViewModel>(context!, listen: false)
+                            .regimentMode ==
+                        RegimentMode.Schedule;
+          }
+        } else {
+          canEdit =
+              (regimen?.estart?.difference(DateTime.now()).inMinutes ?? 0) <=
+                      15 &&
+                  Provider.of<RegimentViewModel>(context!, listen: false)
+                          .regimentMode ==
+                      RegimentMode.Schedule;
+        }
       }
     } catch (e) {
       canEdit = false;
