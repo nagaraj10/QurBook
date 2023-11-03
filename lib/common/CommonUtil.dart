@@ -6598,11 +6598,12 @@ class CommonUtil {
           DateTime selectedDateTime =
               CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
 
-          if (calculateDifference(selectedDateTime) <= 0) {
+          if (calculateDifference(selectedDateTime ?? DateTime.now()) <= 0) {
             canEdit = true;
           } else {
             canEdit =
-                regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
+                (selectedDateTime?.difference(DateTime.now()).inMinutes ?? 0) <=
+                        15 &&
                     Provider.of<RegimentViewModel>(context!, listen: false)
                             .regimentMode ==
                         RegimentMode.Schedule;
@@ -6612,7 +6613,8 @@ class CommonUtil {
               CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
 
           canEdit =
-              selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
+              (selectedDateTime?.difference(DateTime.now()).inMinutes ?? 0) <=
+                      15 &&
                   Provider.of<RegimentViewModel>(context!, listen: false)
                           .regimentMode ==
                       RegimentMode.Schedule;
@@ -6620,18 +6622,20 @@ class CommonUtil {
       } else {
         if (regimen?.activityOrgin == strSurvey &&
             regimen?.otherinfo?.isAllDayActivity == true) {
-          if (calculateDifference(regimen!.estart!) <= 0) {
+          if (calculateDifference(regimen?.estart ?? DateTime.now()) <= 0) {
             canEdit = true;
           } else {
             canEdit =
-                regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
+                (regimen?.estart?.difference(DateTime.now()).inMinutes ?? 0) <=
+                        15 &&
                     Provider.of<RegimentViewModel>(context!, listen: false)
                             .regimentMode ==
                         RegimentMode.Schedule;
           }
         } else {
           canEdit =
-              regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
+              (regimen?.estart?.difference(DateTime.now()).inMinutes ?? 0) <=
+                      15 &&
                   Provider.of<RegimentViewModel>(context!, listen: false)
                           .regimentMode ==
                       RegimentMode.Schedule;
