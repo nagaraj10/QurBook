@@ -16,6 +16,7 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
+import 'package:myfhb/src/utils/lifecycle_state_provider.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,7 @@ import 'corp_users_welcome_dialog.dart';
 import '../../src/blocs/Category/CategoryListBlock.dart';
 import '../../src/model/user/MyProfileResult.dart';
 import '../../src/utils/dynamic_links.dart';
+import '../../src/utils/timezone/timezone_services.dart';
 import '../../telehealth/features/chat/view/PDFViewerController.dart';
 import '../../user_plans/view_model/user_plans_view_model.dart';
 
@@ -114,6 +116,13 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     try {
       super.initState();
+      WidgetsBinding.instance?.addObserver(
+        LifecycleEventHandler(
+          resumeCallBack: () async {
+            TimezoneServices().checkUpdateTimezone();
+          },
+        ),
+      );
       Future.delayed(Duration.zero, () async {
         onInit();
       });
