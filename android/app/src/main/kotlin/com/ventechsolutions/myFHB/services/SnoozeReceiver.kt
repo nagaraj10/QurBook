@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.R
@@ -22,6 +23,7 @@ class SnoozeReceiver : BroadcastReceiver() {
         val notificationId = p1?.getIntExtra(ReminderBroadcaster.NOTIFICATION_ID, 0)
         val currentMillis = p1?.getLongExtra(p0?.getString(R.string.currentMillis), 0)
         val title = p1?.getStringExtra(p0?.getString(R.string.title))
+        val eventId = p1?.getStringExtra(p0?.getString(R.string.eventId))
         val body = p1?.getStringExtra(p0?.getString(R.string.body))
 
         val nsManager = p0?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -29,7 +31,7 @@ class SnoozeReceiver : BroadcastReceiver() {
         MyApp.snoozeTapCountTime = MyApp.snoozeTapCountTime + 1
         if (MyApp.snoozeTapCountTime <= 1) {
             //currentMillis?.let { snoozeForSometime(p0, title, body, notificationId, it + nsTimeThreshold) }
-            snoozeForSometime(p0, title, body, notificationId, Calendar.getInstance().timeInMillis + nsTimeThreshold)
+            snoozeForSometime(p0, title, body, notificationId, Calendar.getInstance().timeInMillis + nsTimeThreshold,eventId.toString())
             notificationId?.let { nsManager.cancel(it) }
             notificationId?.let { SharedPrefUtils().deleteNotificationObject(p0, it) }
 
@@ -69,28 +71,64 @@ class SnoozeReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun snoozeForSometime(p0: Context?, title: String?, body: String?, notificationId: Int?, currentMillis: Long) {
-        val reminderBroadcaster = Intent(p0, ReminderBroadcaster::class.java)
-        reminderBroadcaster.putExtra(p0?.getString(R.string.title), title)
-        reminderBroadcaster.putExtra(p0?.getString(R.string.body), body)
-        reminderBroadcaster.putExtra(p0?.getString(R.string.nsid), notificationId)
-        reminderBroadcaster.putExtra("isCancel", false)
+    private fun snoozeForSometime(p0: Context?, title: String?, body: String?, notificationId: Int?, currentMillis: Long,eventId: String) {
+        try {
+            val reminderBroadcaster = Intent(p0, ReminderBroadcaster::class.java)
+            reminderBroadcaster.putExtra(p0?.getString(R.string.title), title)
+            reminderBroadcaster.putExtra(p0?.getString(R.string.body), body)
+            reminderBroadcaster.putExtra(p0?.getString(R.string.nsid), notificationId)
+            reminderBroadcaster.putExtra(p0?.getString(R.string.eventId), eventId)
+            reminderBroadcaster.putExtra("isCancel", false)
 
-        val alarmMgr = p0?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        var pendingIntent: PendingIntent? = null
-        pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(p0, 1, reminderBroadcaster, PendingIntent.FLAG_IMMUTABLE)
-        } else {
-            PendingIntent.getBroadcast(p0, 1, reminderBroadcaster, PendingIntent.FLAG_ONE_SHOT)
+            /*val alarmMgr = p0?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            var pendingIntent: PendingIntent? = null
+            pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getBroadcast(p0, 1, reminderBroadcaster, PendingIntent.FLAG_IMMUTABLE)
+            } else {
+                PendingIntent.getBroadcast(p0, 1, reminderBroadcaster, PendingIntent.FLAG_ONE_SHOT)
 
-        }
+            }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            currentMillis.let { alarmMgr.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, it, pendingIntent) }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            currentMillis.let { alarmMgr.setExact(AlarmManager.RTC_WAKEUP, it, pendingIntent) }
-        } else {
-            currentMillis.let { alarmMgr.set(AlarmManager.RTC_WAKEUP, it, pendingIntent) }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                currentMillis.let { alarmMgr.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, it, pendingIntent) }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                currentMillis.let { alarmMgr.setExact(AlarmManager.RTC_WAKEUP, it, pendingIntent) }
+            } else {
+                currentMillis.let { alarmMgr.set(AlarmManager.RTC_WAKEUP, it, pendingIntent) }
+            }*/
+
+            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getBroadcast(
+                    p0,
+                    notificationId!!,
+                    reminderBroadcaster,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                PendingIntent.getBroadcast(
+                    p0,
+                    notificationId!!,
+                    reminderBroadcaster,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            }
+
+
+            val alarmManager = p0?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    currentMillis,
+                    pendingIntent
+                )
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
+            }
+
+
+
+        } catch (e: Exception) {
+            Log.e("crash", e.message.toString())
         }
     }
 
