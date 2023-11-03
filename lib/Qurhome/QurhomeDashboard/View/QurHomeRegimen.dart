@@ -38,6 +38,7 @@ import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/src/utils/timezone/timezone_services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -243,6 +244,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           controller.updateSOSAgentCallDialogStatus(false);
           Get.back();
         }
+        TimezoneServices().checkUpdateTimezone();
         break;
       case AppLifecycleState.paused:
         appIsInBackground = true;
