@@ -97,8 +97,8 @@ class _QurHomePatientRegimenListScreenState
       controller.timer = null;
       controller.startTimer();
       super.initState();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         print(e);
@@ -111,8 +111,8 @@ class _QurHomePatientRegimenListScreenState
       await controller.getRegimenList(
           isLoading: true,
           patientId: widget.careGiverPatientListResult!.childId);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -407,8 +407,8 @@ class _QurHomePatientRegimenListScreenState
           strTitle = strServiceType;
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         print(e);
@@ -559,8 +559,8 @@ class _QurHomePatientRegimenListScreenState
         return getDefaultIcon(
             activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return getDefaultIcon(
           activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
@@ -626,13 +626,13 @@ class _QurHomePatientRegimenListScreenState
       if (start != null) {
         first = title.substring(start, length);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       try {
         first = title.split("|").first;
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         first = title;
       }
@@ -643,8 +643,8 @@ class _QurHomePatientRegimenListScreenState
       if (startSecond != null) {
         second = title.substring(startSecond, lengthSecond);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     return first + second;
@@ -680,8 +680,8 @@ class _QurHomePatientRegimenListScreenState
 
   bool checkCanEdit(RegimentDataModel regimen) {
     var canEdit = false;
-    canEdit = CommonUtil.canEditRegimen(
-        controller.selectedDate.value, regimen!, context!);
+    canEdit = CommonUtil()
+        .canEditRegimen(controller.selectedDate.value, regimen!, context!);
 
     return canEdit;
   }
@@ -719,8 +719,8 @@ class _QurHomePatientRegimenListScreenState
         _events.close();
         controller.updateisShowTimerDialog(false);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -789,8 +789,8 @@ class _QurHomePatientRegimenListScreenState
       onTap: () async {
         try {
           //callNowSOS();
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           print(e);
         }
@@ -830,8 +830,8 @@ class _QurHomePatientRegimenListScreenState
       onTap: () async {
         try {
           closeDialog();
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           print(e);
         }
@@ -876,8 +876,8 @@ class _QurHomePatientRegimenListScreenState
       _events.close();
       WidgetsBinding.instance!.removeObserver(this);
       super.dispose();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -968,8 +968,8 @@ class SOSAgentCallWidget extends StatelessWidget {
                       var regController = Get.find<QurhomeRegimenController>();
                       regController.updateSOSAgentCallDialogStatus(false);
                       Get.back();
-                    } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                    } catch (e, stackTrace) {
+                      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
                       print(e);
                     }
@@ -1005,8 +1005,8 @@ class SOSAgentCallWidget extends StatelessWidget {
                       if (await canLaunch('tel:$SOSAgentNumber')) {
                         await launch('tel:$SOSAgentNumber');
                       }
-                    } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                    } catch (e, stackTrace) {
+                      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
                       print(e);
                     }
