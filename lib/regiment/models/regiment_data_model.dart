@@ -312,7 +312,7 @@ class Otherinfo {
         needFile: (json['NeedFile'] ?? 0).toString(),
         snoozeText: json.containsKey('snoozeText') ? (json['snoozeText']) : '',
         isAllDayActivity: json.containsKey('isAllDayActivity')
-            ? (json['isAllDayActivity'])
+            ? (json['isAllDayActivity'] ?? false)
             : false,
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
       );
