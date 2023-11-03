@@ -700,6 +700,16 @@ class PreferenceUtil {
     return instance.setString(keyCompletedData, completeDataStr);
   }
 
+  static Future<bool> saveLastTimeZone(String timezone) async {
+    final instance = await _prefs;
+    return instance!.setString(Constants.stringLastTimeZone, timezone);
+  }
+
+  static Future<String?> getLastTimeZone() async {
+    if (_prefsInstance == null) {}
+    return _prefsInstance!.getString(Constants.stringLastTimeZone);
+  }
+
   static PreferredMeasurement? getPreferredMeasurement(
       String keyCompletedData) {
     try {

@@ -453,5 +453,9 @@ const String appName = 'appName';
 
 
 const String platformIOS = '&platform=ios';
+const String qr_Text_Translate = 'sheela/text-translate';
+const String qr_textToTranslate = 'textToTranslate';
+const String qr_targetLanguageCode = 'TargetLanguageCode';
+const String qr_sourceLanguageCode = 'sourceLanguageCode';
 
 

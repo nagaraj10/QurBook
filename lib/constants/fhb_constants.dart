@@ -118,6 +118,8 @@ const String STR_KEY_HEIGHT = 'height';
 const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
 
+const String stringLastTimeZone = 'lastTimeZone';
+
 const String STR_VAL_HEIGHT_IND = 'f-in';
 const String STR_VAL_HEIGHT_IND_NEW = 'feet';
 
@@ -897,6 +899,8 @@ const String activity_completed_regimen =
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
 const String StrUndoAll = 'Undo all';
+
+const String StrSheelaErrorMsg = 'There is some issue with sheela,\n Please try after some time';
 
 const double tabFontTitle = 25.0;
 const double mobileFontTitle = 18.0;
