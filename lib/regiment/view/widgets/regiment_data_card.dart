@@ -85,8 +85,8 @@ class RegimentDataCard extends StatelessWidget {
                 } else {
                   if (regimentData.activityOrgin == strSurvey) {
                     var canEdit = false;
-                    canEdit = CommonUtil.canEditRegimen(
-                        selectedDate, regimentData!, context!);
+                    canEdit = CommonUtil()
+                        .canEditRegimen(selectedDate, regimentData!, context!);
 
                     if (canEdit) {
                       redirectToSheelaScreen(regimentData, context,
@@ -111,7 +111,7 @@ class RegimentDataCard extends StatelessWidget {
                         onTap: () {
                           if (regimentData.activityOrgin == strSurvey) {
                             var canEdit = false;
-                            canEdit = CommonUtil.canEditRegimen(
+                            canEdit = CommonUtil().canEditRegimen(
                                 selectedDate, regimentData!, context!);
 
                             if (canEdit) {
@@ -577,7 +577,7 @@ class RegimentDataCard extends StatelessWidget {
                           Navigator.pop(context);
                           stopRegimenTTS();
                           var canEdit = false;
-                          canEdit = CommonUtil.canEditRegimen(
+                          canEdit = CommonUtil().canEditRegimen(
                               selectedDate, regimentData, context!);
 
                           if (canEdit || isValidSymptom(context)) {
@@ -746,7 +746,7 @@ class RegimentDataCard extends StatelessWidget {
       }
       var canEdit = false;
       canEdit =
-          CommonUtil.canEditRegimen(selectedDate, regimentData!, context!);
+          CommonUtil().canEditRegimen(selectedDate, regimentData!, context!);
 
       // if (canEdit || isValidSymptom(context)) {
       final fieldsResponseModel =
