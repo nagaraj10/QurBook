@@ -1477,7 +1477,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         Get.put(SheelaBLEController());
       }
       _sheelaBLEController = Get.find();
-      String trimmedTitle = removeAllWhitespaces(regimen.title);
+      String trimmedTitle = removeAllWhitespaces(regimen.uformname1 ?? "");
       trimmedTitle = removeAllUnderscores(trimmedTitle);
       trimmedTitle = trimmedTitle.toLowerCase();
       if (trimmedTitle.isNotEmpty &&
