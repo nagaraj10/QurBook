@@ -1445,7 +1445,8 @@ class SheelaAIController extends GetxController {
         if ((strResponse ?? "")
             .toLowerCase()
             .contains(strSheelaText.toLowerCase())) {
-          strResponse = strResponse.replaceAll(strSheelaText, sheelaText);
+          var regEx = RegExp(strSheelaText, caseSensitive: false);
+          strResponse = strResponse.replaceAll(regEx, sheelaText);
         }
       }
       return strResponse;

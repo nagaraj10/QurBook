@@ -4499,7 +4499,8 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         try {
             for (strSheelaText in sheelaTTSWordList) {
                 if (finalWords!!.lowercase().contains(strSheelaText.lowercase())) {
-                    finalWords = finalWords!!.replace(strSheelaText, Constants.sheelaText)
+                    finalWords =
+                        finalWords!!.replace(strSheelaText, Constants.sheelaText, ignoreCase = true)
                 }
             }
             return finalWords!!
