@@ -34,7 +34,7 @@ class SnoozeReceiver : BroadcastReceiver() {
         val eid = p1?.getStringExtra(Constants.EID_SNOOZE)
 
         val nsManager = p0?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val nsTimeThreshold = 100000
+        val nsTimeThreshold = 300000
         MyApp.snoozeTapCountTime = MyApp.snoozeTapCountTime + 1
         if (MyApp.snoozeTapCountTime <= 1) {
             //currentMillis?.let { snoozeForSometime(p0, title, body, notificationId, it + nsTimeThreshold) }
