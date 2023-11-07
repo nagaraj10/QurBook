@@ -3591,7 +3591,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 //                        if(pattern.containsMatchIn(data[0])){
                         finalWords += data[0] + " "
                         if (langCode.contains("en")) {
-                            displayText.setText((prefixListFiltering(finalWords)))
+                            displayText.setText((prefixListFiltering()))
                         } else {
                             displayText.setText(finalWords)
                         }
@@ -3689,7 +3689,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                                         )
                                     }
                                     if (langCode.contains("en")) {
-                                        displayText.setText((prefixListFiltering(finalWords)))
+                                        displayText.setText((prefixListFiltering()))
                                     } else {
                                         displayText.setText(finalWords)
                                     }
@@ -4493,31 +4493,18 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         }
     }
 
-    fun prefixListFiltering(strText: String?): String {
-        val words = strText?.lowercase()?.split(" ")
-        val modifiedWords = words?.mapIndexed { index, word ->
-            /*for (webSiteName in sheelaTTSWordList) {
-                if (webSiteName.contains(word)) {
-                    "Sheela"
-                } else {
-                    if (index == 0) {
-                        word.capitalize()
-                    } else {
-                        word
-                    }
-                }
-            }*/
-            if (sheelaTTSWordList.contains(word)) {
-                "Sheela"
-            } else {
-                if (index == 0) {
-                    word.capitalize()
-                } else {
-                    word
+    fun prefixListFiltering(): String {
+        try {
+            for (strSheelaText in sheelaTTSWordList) {
+                if (finalWords!!.lowercase().contains(strSheelaText.lowercase())) {
+                    finalWords = finalWords!!.replace(strSheelaText, Constants.sheelaText)
                 }
             }
+            return finalWords!!
+        } catch (e: Exception) {
+            Log.e("crash", e.message.toString())
+            return finalWords!!
         }
-        return modifiedWords!!.joinToString(" ")
     }
 
 
