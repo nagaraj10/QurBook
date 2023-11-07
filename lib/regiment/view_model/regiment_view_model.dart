@@ -1,9 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/SuccessModel.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
+import 'package:path/path.dart';
 
 import '../../common/CommonUtil.dart';
 import '../../src/ui/loader_class.dart';
@@ -13,6 +18,7 @@ import '../models/regiment_data_model.dart';
 import '../models/regiment_response_model.dart';
 import '../models/save_response_model.dart';
 import '../service/regiment_service.dart';
+import 'dart:convert' as convert;
 
 enum RegimentMode { Schedule, Symptoms }
 
@@ -49,6 +55,8 @@ class RegimentViewModel extends ChangeNotifier {
   String redirectEventId = '';
   ActivityStatus activityStatus = ActivityStatus.Loaded;
   List<String> cachedEvents = [];
+  String disableComment = "";
+  String eid = "";
 
   void updateInitialShowIndex({
     bool isDone = false,
@@ -282,8 +290,8 @@ class RegimentViewModel extends ChangeNotifier {
             regimentsFilteredList.add(event);
           }
         });
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         print(e);
       }
@@ -600,8 +608,8 @@ class RegimentViewModel extends ChangeNotifier {
             activitiesFilteredList.add(event);
           }
         });
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         print(e);
       }
@@ -642,9 +650,51 @@ class RegimentViewModel extends ChangeNotifier {
       isDisable: isDisable,
     );
     if (response.isSuccess ?? false) {
-      await fetchScheduledActivities(isInitial: true);
+      if (CommonUtil.isUSRegion()) {
+        if (isDisable) {
+          var disableActivityCommentResp = await disableActivity(
+              eid ?? "", disableComment ?? "Disabled by the patient");
+
+          if (disableActivityCommentResp.isSuccess ?? false) {
+            FlutterToast().getToast(
+                disableActivityCommentResp?.message ?? "", Colors.green);
+
+            await fetchScheduledActivities(isInitial: true);
+          } else {
+            FlutterToast().getToast(
+                disableActivityCommentResp?.message ?? "", Colors.red);
+          }
+        } else {
+          await fetchScheduledActivities(isInitial: true);
+        }
+      } else {
+        await fetchScheduledActivities(isInitial: true);
+      }
     }
+    if (isDisable && CommonUtil.isUSRegion()) {
+      Navigator.pop(
+        Get.context!,
+      );
+    }
+
     LoaderClass.hideLoadingDialog(Get.context!);
+    return response;
+  }
+
+  Future<SuccessModel> disableActivity(String eid, String comment) async {
+    var disableMap = {};
+    var userId = await PreferenceUtil.getStringValue(KEY_USERID);
+    disableMap['patientId'] = userId;
+    disableMap['healthOrganizationId'] = null;
+    disableMap['time'] = null;
+    disableMap['screen'] = "Regimen";
+    disableMap['eid'] = eid;
+    disableMap['comment'] = comment;
+
+    var jsonString = convert.jsonEncode(disableMap);
+    var response = await RegimentService.disableActivityWIthComment(
+        escalate_add_comments, jsonString);
+
     return response;
   }
 }

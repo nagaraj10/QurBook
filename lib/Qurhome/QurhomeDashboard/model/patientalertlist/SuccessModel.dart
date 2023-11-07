@@ -2,14 +2,16 @@ import 'package:myfhb/common/CommonUtil.dart';
 
 class SuccessModel {
   bool? isSuccess;
+  String? message;
 
-  SuccessModel({this.isSuccess});
+  SuccessModel({this.isSuccess, this.message});
 
   SuccessModel.fromJson(Map<String, dynamic> json) {
     try {
       isSuccess = json['isSuccess'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      message = json.containsKey('message' ?? "") ? json['message'] : "";
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
