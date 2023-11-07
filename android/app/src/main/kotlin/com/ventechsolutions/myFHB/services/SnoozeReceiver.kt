@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.ventechsolutions.myFHB.MyApp
@@ -35,16 +36,16 @@ class SnoozeReceiver : BroadcastReceiver() {
         val nsManager = p0?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val nsTimeThreshold = 100000
         MyApp.snoozeTapCountTime = MyApp.snoozeTapCountTime + 1
-        Log.d("----faisal1",notificationId.toString())
         if (MyApp.snoozeTapCountTime <= 1) {
             //currentMillis?.let { snoozeForSometime(p0, title, body, notificationId, it + nsTimeThreshold) }
+            val snoozeNotificationId = Random().nextInt(999999);
             var notification = createNotifiationBuilderSnooze(
                 p0,
                 title.toString(),
                 body.toString(),
                 eid.toString(),
-                notificationId!!.toInt()+1,
-                currentMillis!!.toLong(),
+                snoozeNotificationId,
+                Calendar.getInstance().timeInMillis,
                 false,
                 true,
                 channelId.toString(),
@@ -52,56 +53,118 @@ class SnoozeReceiver : BroadcastReceiver() {
                 estart.toString(),
                 dosemeal.toString()
             )
-            snoozeForSometime(p0, title, body, notificationId, Calendar.getInstance().timeInMillis + nsTimeThreshold,eventId.toString(),notification,eid)
-            //notificationId?.let { nsManager.cancel(it) }
-            //notificationId?.let { SharedPrefUtils().deleteNotificationObject(p0, it) }
+            snoozeForSometime(
+                p0,
+                title,
+                body,
+                snoozeNotificationId,
+                Calendar.getInstance().timeInMillis + nsTimeThreshold,
+                eventId.toString(),
+                notification,
+                eid
+            )
+            notificationId?.let { nsManager.cancel(it) }
+            notificationId?.let { SharedPrefUtils().deleteNotificationObject(p0, it) }
 
         } else {
-            Log.d("----faisal2",notificationId.toString())
-            /*Handler().postDelayed({
-                val CHANNEL_REMINDER = "ch_reminder"
-                val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + p0.packageName + "/" + R.raw.msg_tone)
-                val dismissIntent = Intent(p0, DismissReceiver::class.java)
-                dismissIntent.putExtra(p0.getString(R.string.nsid), notificationId)
-                val dismissIntentPendingIntent =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    PendingIntent.getBroadcast(p0, notificationId!!, dismissIntent, PendingIntent.FLAG_IMMUTABLE)
 
-                } else {
-                    PendingIntent.getBroadcast(p0, notificationId!!, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            nsManager.cancel(notificationId!! as Int)
+            val dismissNotificationId = Random().nextInt(999999);
+            val _sound: Uri =
+                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + p0.packageName + "/" + R.raw.msg_tone)
+            val dismissIntent = Intent(p0, DismissReceiver::class.java)
+            dismissIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, dismissNotificationId)
+            val dismissIntentPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getBroadcast(
+                    p0,
+                    dismissNotificationId!!,
+                    dismissIntent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
 
-                }
+            } else {
+                PendingIntent.getBroadcast(
+                    p0,
+                    dismissNotificationId!!,
+                    dismissIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+
+            }
+
+            var notification = NotificationCompat.Builder(p0, channelId.toString())
+                .setSmallIcon(R.drawable.ic_alarm_new)
+                .setLargeIcon(BitmapFactory.decodeResource(p0.resources, R.mipmap.ic_launcher))
+                .setContentTitle(title)
+                .setContentText(body)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
+                .setAutoCancel(true)
+                .setSound(_sound)
+                //.setOngoing(true)
+                .setOnlyAlertOnce(false)
+                .build()
+
+            val reminderBroadcaster = Intent(p0, ReminderBroadcaster::class.java)
+            reminderBroadcaster.putExtra(p0?.getString(R.string.title), title)
+            reminderBroadcaster.putExtra(p0?.getString(R.string.body), body)
+            reminderBroadcaster.putExtra(ReminderBroadcaster.NOTIFICATION_ID, dismissNotificationId)
+            reminderBroadcaster.putExtra(p0?.getString(R.string.eventId), eventId)
+            reminderBroadcaster.putExtra("isCancel", false)
+            reminderBroadcaster.putExtra(ReminderBroadcaster.EID, eid)
+            reminderBroadcaster.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
+
+            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getBroadcast(
+                    p0,
+                    dismissNotificationId!!,
+                    reminderBroadcaster,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                PendingIntent.getBroadcast(
+                    p0,
+                    dismissNotificationId!!,
+                    reminderBroadcaster,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            }
 
 
-                var notification = NotificationCompat.Builder(p0, CHANNEL_REMINDER)
-                        .setSmallIcon(R.drawable.ic_alarm_new)
-                        .setLargeIcon(BitmapFactory.decodeResource(p0.resources, R.mipmap.ic_launcher))
-                        .setContentTitle(title)
-                        .setContentText(body)
-                        .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setCategory(NotificationCompat.CATEGORY_ALARM)
-                        .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
-                        .setAutoCancel(true)
-                        .setSound(_sound)
-                        //.setOngoing(true)
-                        .setOnlyAlertOnce(false)
-                        .build()
-
-                nsManager.notify(notificationId!!, notification)
-            }, currentMillis!! + nsTimeThreshold)*/
-            //nsManager.cancel(notificationId!! as Int)
+            val alarmManager = p0?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    Calendar.getInstance().timeInMillis!! + nsTimeThreshold,
+                    pendingIntent
+                )
+            } else {
+                alarmManager.set(
+                    AlarmManager.RTC_WAKEUP,
+                    Calendar.getInstance().timeInMillis!! + nsTimeThreshold,
+                    pendingIntent
+                )
+            }
 
         }
-
-        notificationId?.let { nsManager.cancel(it) }
-        notificationId?.let { SharedPrefUtils().deleteNotificationObject(p0, it) }
     }
 
-    private fun snoozeForSometime(p0: Context?, title: String?, body: String?, notificationId: Int?, currentMillis: Long,eventId: String, notification: Notification?,eid:String?) {
+    private fun snoozeForSometime(
+        p0: Context?,
+        title: String?,
+        body: String?,
+        notificationId: Int?,
+        currentMillis: Long,
+        eventId: String,
+        notification: Notification?,
+        eid: String?
+    ) {
         try {
             val reminderBroadcaster = Intent(p0, ReminderBroadcaster::class.java)
             reminderBroadcaster.putExtra(p0?.getString(R.string.title), title)
             reminderBroadcaster.putExtra(p0?.getString(R.string.body), body)
-            reminderBroadcaster.putExtra(p0?.getString(R.string.nsid), notificationId)
+            reminderBroadcaster.putExtra(ReminderBroadcaster.NOTIFICATION_ID, notificationId)
             reminderBroadcaster.putExtra(p0?.getString(R.string.eventId), eventId)
             reminderBroadcaster.putExtra("isCancel", false)
             reminderBroadcaster.putExtra(ReminderBroadcaster.EID, eid)
@@ -151,7 +214,6 @@ class SnoozeReceiver : BroadcastReceiver() {
             } else {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
             }
-
 
 
         } catch (e: Exception) {
@@ -285,6 +347,6 @@ class SnoozeReceiver : BroadcastReceiver() {
             Log.e("crash", e.message.toString())
         }
 
-     return  null
+        return null
     }
 }
