@@ -454,6 +454,7 @@ const String strReasonDiabling =
     'Are you sure you want to disable the activity?';
 const String strReasonDiablingHint = 'Reasons for disabling the activity';
 const String DISABLE = 'Disable';
+const String strDisableText='Disabled by the patient';
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';

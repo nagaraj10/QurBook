@@ -264,7 +264,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                                   Provider.of<RegimentViewModel>(
                                     context,
                                     listen: false,
-                                  ).disableComment = "Disabled by the patient.";
+                                  ).disableComment = strDisableText;
                                   enableActivityMethod(context, isEnabled);
                                 }
                               },

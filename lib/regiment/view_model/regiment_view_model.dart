@@ -653,7 +653,7 @@ class RegimentViewModel extends ChangeNotifier {
       if (CommonUtil.isUSRegion()) {
         if (isDisable) {
           var disableActivityCommentResp = await disableActivity(
-              eid ?? "", disableComment ?? "Disabled by the patient");
+              eid ?? "", disableComment ?? strDisableText);
 
           if (disableActivityCommentResp.isSuccess ?? false) {
             FlutterToast().getToast(
