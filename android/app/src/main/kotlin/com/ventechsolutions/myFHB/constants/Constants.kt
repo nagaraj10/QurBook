@@ -138,5 +138,7 @@ object Constants {
     val PROP_ESTART ="estart"
     val IS_NOTIFICATION_PERMISSION_CHECK ="notification_permission_check"
     val PROP_DOSEMEAL ="dosemeal"
+    val CHANNEL_ID ="channelId"
+    val EID_SNOOZE ="eid"
 
 }
