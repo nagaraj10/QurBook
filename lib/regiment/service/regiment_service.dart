@@ -571,7 +571,6 @@ class RegimentService {
       var response = await ApiServices.post(Constants.BASE_URL + url,
           headers: headerRequest, body: jsonBody);
       if (response != null && response.statusCode == 200) {
-        print(response.body);
         return SuccessModel.fromJson(json.decode(response.body));
       } else {
         return SuccessModel();

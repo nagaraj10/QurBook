@@ -9,7 +9,7 @@ class SuccessModel {
   SuccessModel.fromJson(Map<String, dynamic> json) {
     try {
       isSuccess = json['isSuccess'];
-      message = json.containsKey('message' ?? "") ? json['message'] : "";
+      message = json.containsKey('message') ? (json['message'] ?? "") : "";
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
