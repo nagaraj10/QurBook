@@ -448,6 +448,12 @@ const String PLEASE_ADD_COMMENTS = 'Please add comments';
 const String COMMENTS = 'Comments';
 const String strEmergency = 'Escalate this as emergency';
 
+const String strReasonDiabling =
+    'Are you sure you want to disable the activity?';
+const String strReasonDiablingHint = 'Reasons for disabling the activity';
+const String DISABLE = 'Disable';
+const String strDisableText='Disabled by the patient';
+
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
 const String CSR_DISCOUNT = 'CSR_DISCOUNT';
@@ -899,10 +905,14 @@ const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
 const String StrUndoAll = 'Undo all';
 
-const String StrSheelaErrorMsg = 'There is some issue with sheela,\n Please try after some time';
+const String StrSheelaErrorMsg =
+    'There is some issue with sheela,\n Please try after some time';
 
 const double tabFontTitle = 25.0;
 const double mobileFontTitle = 18.0;
+
+const double tabTitle = 25.0;
+const double mobileTitle = 22.0;
 
 const double tabHeader1 = 22.0;
 const double mobileHeader1 = 14.0;
