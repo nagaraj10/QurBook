@@ -4100,6 +4100,8 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             snoozeIntent.putExtra(Constants.PROP_EVEID, eventId)
             snoozeIntent.putExtra(Constants.PROP_ESTART, eStart)
             snoozeIntent.putExtra(Constants.PROP_DOSEMEAL, dosemeal)
+            snoozeIntent.putExtra(Constants.CHANNEL_ID, channelId)
+            snoozeIntent.putExtra(Constants.EID_SNOOZE, eId)
             val snoozePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getBroadcast(
                     this,
