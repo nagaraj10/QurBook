@@ -6588,6 +6588,8 @@ class CommonUtil {
   bool canEditRegimen(
       DateTime selectedDate, RegimentDataModel regimen, BuildContext context) {
     var canEdit = false;
+    int duration = 15;
+    duration = CommonUtil.isUSRegion() ? regimen?.activityThreshold ?? 15 : 15;
     try {
       if (regimen?.ack != null) {
         canEdit = true;
@@ -6603,7 +6605,7 @@ class CommonUtil {
           } else {
             canEdit =
                 (selectedDateTime?.difference(DateTime.now()).inMinutes ?? 0) <=
-                        15 &&
+                        duration &&
                     Provider.of<RegimentViewModel>(context!, listen: false)
                             .regimentMode ==
                         RegimentMode.Schedule;
@@ -6614,7 +6616,7 @@ class CommonUtil {
 
           canEdit =
               (selectedDateTime?.difference(DateTime.now()).inMinutes ?? 0) <=
-                      15 &&
+                      duration &&
                   Provider.of<RegimentViewModel>(context!, listen: false)
                           .regimentMode ==
                       RegimentMode.Schedule;
@@ -6627,7 +6629,7 @@ class CommonUtil {
           } else {
             canEdit =
                 (regimen?.estart?.difference(DateTime.now()).inMinutes ?? 0) <=
-                        15 &&
+                        duration &&
                     Provider.of<RegimentViewModel>(context!, listen: false)
                             .regimentMode ==
                         RegimentMode.Schedule;
@@ -6635,7 +6637,7 @@ class CommonUtil {
         } else {
           canEdit =
               (regimen?.estart?.difference(DateTime.now()).inMinutes ?? 0) <=
-                      15 &&
+                      duration &&
                   Provider.of<RegimentViewModel>(context!, listen: false)
                           .regimentMode ==
                       RegimentMode.Schedule;
@@ -7264,6 +7266,36 @@ class CommonUtil {
 
       default:
         return 30;
+    }
+  }
+
+  getErrorMessage(RegimentDataModel? regimen, BuildContext context) {
+    if (isUSRegion()) {
+      String duration, dynamicActivityError;
+
+      if (regimen?.activityThreshold != null &&
+          regimen?.activityThreshold > 0) {
+        duration = convertMinuteToHour(regimen?.activityThreshold);
+        dynamicActivityError =
+            "Future activities can be logged only ${duration} before the occurrence";
+        return (Provider.of<RegimentViewModel>(context, listen: false)
+                    .regimentMode ==
+                RegimentMode.Symptoms)
+            ? symptomsError
+            : dynamicActivityError;
+      } else {
+        return (Provider.of<RegimentViewModel>(context, listen: false)
+                    .regimentMode ==
+                RegimentMode.Symptoms)
+            ? symptomsError
+            : activitiesError;
+      }
+    } else {
+      return (Provider.of<RegimentViewModel>(context, listen: false)
+                  .regimentMode ==
+              RegimentMode.Symptoms)
+          ? symptomsError
+          : activitiesError;
     }
   }
 }

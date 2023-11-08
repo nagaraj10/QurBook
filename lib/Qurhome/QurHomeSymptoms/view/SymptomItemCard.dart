@@ -393,15 +393,10 @@ class SymptomItemCard extends StatelessWidget {
                                                     }
                                                   } else {
                                                     FlutterToast().getToast(
-                                                      (Provider.of<RegimentViewModel>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .regimentMode ==
-                                                              RegimentMode
-                                                                  .Symptoms)
-                                                          ? symptomsError
-                                                          : activitiesError,
+                                                      CommonUtil()
+                                                          .getErrorMessage(
+                                                              regimentData,
+                                                              context),
                                                       Colors.red,
                                                     );
                                                   }
@@ -859,8 +854,8 @@ class SymptomItemCard extends StatelessWidget {
                   double.tryParse(vitalData.value)! >=
                       double.tryParse(vitalData.amin)!)
               : true;
-        } catch (e,stackTrace) {
-                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           //print(e);
         }
@@ -1024,12 +1019,8 @@ class SymptomItemCard extends StatelessWidget {
                                   }
                                 } else {
                                   FlutterToast().getToast(
-                                    (Provider.of<RegimentViewModel>(context,
-                                                    listen: false)
-                                                .regimentMode ==
-                                            RegimentMode.Symptoms)
-                                        ? symptomsError
-                                        : activitiesError,
+                                    CommonUtil()
+                                        .getErrorMessage(regimentData, context),
                                     Colors.red,
                                   );
                                 }
@@ -1128,6 +1119,7 @@ class SymptomItemCard extends StatelessWidget {
       var value = await showDialog(
         context: context,
         builder: (context) => FormDataDialog(
+          regimen: regimentData,
           introText: regimentData.otherinfo?.introText ?? '',
           fieldsData: fieldsResponseModel.result!.fields,
           eid: eventId,
