@@ -6589,7 +6589,7 @@ class CommonUtil {
       DateTime selectedDate, RegimentDataModel regimen, BuildContext context) {
     var canEdit = false;
     int duration = 15;
-    duration = CommonUtil.isUSRegion() ? regimen?.activityThreshold ?? 120 : 15;
+    duration = CommonUtil.isUSRegion() ? regimen?.activityThreshold ?? 15 : 15;
     try {
       if (regimen?.ack != null) {
         canEdit = true;
