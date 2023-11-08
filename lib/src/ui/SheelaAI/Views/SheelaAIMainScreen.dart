@@ -317,7 +317,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
       centerTitle: true,
       elevation: 0,
-      leadingWidth: 106,
+      leadingWidth: (CommonUtil().isTablet ?? false) ? 147 : 106,
       actions: [
         Row(
           children: [

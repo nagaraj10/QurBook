@@ -66,40 +66,40 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
   Widget build(BuildContext context) {
     return Obx(() {
       if (_sheelaAIController.isBLEStatus.value == BLEStatus.Searching) {
-    return CircularPercentIndicator(
-      radius: 16,
-      lineWidth: 2,
-      percent: _percent,
-      backgroundColor: Colors.transparent,
-      progressColor: Colors.grey,
-      center: getBluetoothIcon(
-        icon: Icons.bluetooth_disabled,
-        color: Colors.grey,
-      ),
-    );
-      } else if (_sheelaAIController.isBLEStatus.value == BLEStatus.Connected) {
-     return  CircularPercentIndicator(
-      radius: 16,
-      lineWidth: 2,
-      percent: 1,
-      backgroundColor: Colors.transparent,
-      progressColor: Colors.blue,
-      center: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) => Transform.scale(
-          scale: _scaleFactor,
-          child: getBluetoothIcon(
-            icon: Icons.bluetooth,
-            color: Colors.blue,
+        return CircularPercentIndicator(
+          radius: (CommonUtil().isTablet ?? false) ? 105 : 16,
+          lineWidth: 2,
+          percent: _percent,
+          backgroundColor: Colors.transparent,
+          progressColor: Colors.grey,
+          center: getBluetoothIcon(
+            icon: Icons.bluetooth_disabled,
+            color: Colors.grey,
           ),
-        ),
-      ),
-    );
+        );
+      } else if (_sheelaAIController.isBLEStatus.value == BLEStatus.Connected) {
+        return CircularPercentIndicator(
+          radius: (CommonUtil().isTablet ?? false) ? 105 : 16,
+          lineWidth: 2,
+          percent: 1,
+          backgroundColor: Colors.transparent,
+          progressColor: Colors.blue,
+          center: AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) => Transform.scale(
+              scale: _scaleFactor,
+              child: getBluetoothIcon(
+                icon: Icons.bluetooth,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+        );
       } else {
-    return getBluetoothIcon(
-      icon: Icons.bluetooth_disabled,
-      color: Colors.grey,
-    );
+        return getBluetoothIcon(
+          icon: Icons.bluetooth_disabled,
+          color: Colors.grey,
+        );
       }
     });
   }
