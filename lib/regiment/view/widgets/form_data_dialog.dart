@@ -601,11 +601,7 @@ class FormDataDialogState extends State<FormDataDialog> {
             ),
             child: Visibility(
               child: Text(
-                (Provider.of<RegimentViewModel>(context, listen: false)
-                            .regimentMode ==
-                        RegimentMode.Symptoms)
-                    ? symptomsError
-                    : activitiesError,
+                CommonUtil().getErrorMessage(widget?.regimen, context),
                 style: TextStyle(
                   fontSize: 14.0.sp,
                   color: Colors.red[500],
@@ -1300,10 +1296,7 @@ class FormDataDialogState extends State<FormDataDialog> {
       }
     } else {
       FlutterToast().getToast(
-        (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
-            ? symptomsError
-            : activitiesError,
+        CommonUtil().getErrorMessage(widget?.regimen, context),
         Colors.red,
       );
     }
