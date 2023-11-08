@@ -1071,9 +1071,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       iconColor: Colors.black,
                       initiallyExpanded: isIntegration,
                       onExpansionChanged: (value) {
-                        isIntegration = value;
+                        setState(() {
+                          isIntegration = value;
+                        });
                       },
-                      title: Text(variable.strIntegration,
+                      title: const Text(variable.strIntegration,
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.black)),
@@ -1082,69 +1084,70 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         size: 16.0.sp,
                       ),
                       children: [
-                        FutureBuilder(
-                            future: _handleGoogleFit(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Column(
-                                  children: [
-                                    ListTile(
-                                      leading: ImageIcon(
-                                        AssetImage(
-                                            variable.icon_digit_googleFit),
-                                        //size: 30,
-                                        color: Colors.black,
-                                      ),
-                                      title: Text(variable.strGoogleFit),
-                                      subtitle: Text(
-                                        variable.strAllowGoogle,
-                                        style: TextStyle(fontSize: 12.0.sp),
-                                      ),
-                                      trailing: Wrap(
-                                        children: <Widget>[
-                                          Transform.scale(
-                                            scale: 0.8,
-                                            child: IconButton(
-                                              icon: Icon(Icons.sync),
-                                              onPressed: () {
-                                                _deviceDataHelper
-                                                    .syncGoogleFit();
-                                              },
+                        if (isIntegration)
+                          FutureBuilder(
+                              future: _handleGoogleFit(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                        leading: ImageIcon(
+                                          AssetImage(
+                                              variable.icon_digit_googleFit),
+                                          //size: 30,
+                                          color: Colors.black,
+                                        ),
+                                        title: Text(variable.strGoogleFit),
+                                        subtitle: Text(
+                                          variable.strAllowGoogle,
+                                          style: TextStyle(fontSize: 12.0.sp),
+                                        ),
+                                        trailing: Wrap(
+                                          children: <Widget>[
+                                            Transform.scale(
+                                              scale: 0.8,
+                                              child: IconButton(
+                                                icon: Icon(Icons.sync),
+                                                onPressed: () {
+                                                  _deviceDataHelper
+                                                      .syncGoogleFit();
+                                                },
+                                              ),
                                             ),
-                                          ),
-                                          Transform.scale(
-                                            scale: 0.8,
-                                            child: Switch(
-                                              value: _isGFActive!,
-                                              activeColor: Color(
-                                                  new CommonUtil()
-                                                      .getMyPrimaryColor()),
-                                              onChanged: (bool newValue) {
-                                                setState(() {
-                                                  //isTouched = true;
-                                                  _isGFActive = newValue;
-                                                  isIntegration = true;
-                                                });
-                                              },
-                                            ),
-                                          )
-                                        ],
+                                            Transform.scale(
+                                              scale: 0.8,
+                                              child: Switch(
+                                                value: _isGFActive!,
+                                                activeColor: Color(
+                                                    new CommonUtil()
+                                                        .getMyPrimaryColor()),
+                                                onChanged: (bool newValue) {
+                                                  setState(() {
+                                                    //isTouched = true;
+                                                    _isGFActive = newValue;
+                                                    isIntegration = true;
+                                                  });
+                                                },
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    !loading
-                                        ? ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: devices.length,
-                                            itemBuilder: (context, index) {
-                                              return devices[index];
-                                            })
-                                        : CircularProgressIndicator(),
-                                  ],
-                                );
-                              } else {
-                                return Container();
-                              }
-                            }),
+                                      !loading
+                                          ? ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: devices.length,
+                                              itemBuilder: (context, index) {
+                                                return devices[index];
+                                              })
+                                          : CircularProgressIndicator(),
+                                    ],
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }),
                         Container(
                           height: 1,
                           color: Colors.grey[200],

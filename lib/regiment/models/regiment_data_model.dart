@@ -68,7 +68,8 @@ class RegimentDataModel {
       this.code,
       this.dayrepeat,
       this.additionalInfo,
-      this.doseMealString});
+      this.doseMealString,
+      this.activityThreshold});
 
   final dynamic eid;
   final dynamic id;
@@ -131,6 +132,7 @@ class RegimentDataModel {
   final dynamic dayrepeat;
   AdditionalInfo? additionalInfo;
   String? doseMealString;
+  final dynamic? activityThreshold;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json,
           {String? date}) =>
@@ -153,7 +155,7 @@ class RegimentDataModel {
         activityname: activitynameValues.map[json['activityname']],
         uformid: json['uformid'],
         uformname: uformnameValues.map[json['uformname']],
-        uformname1: (json['uformname']??''),
+        uformname1: (json['uformname'] ?? ''),
         estart: DateTime.tryParse(json['estart'] ?? ''),
         estartNew: json['estart'] ?? '',
         eend: DateTime.tryParse(json['eend'] ?? ''),
@@ -227,6 +229,9 @@ class RegimentDataModel {
             ? new ServiceCategory.fromJson(json['modeOfService'])
             : null,
         dayrepeat: json['hour_repeat'],
+        activityThreshold: json.containsKey('activityThreshold')
+            ? json['activityThreshold' ?? 15]
+            : 15,
         additionalInfo: json['additionalInfo'] != null
             ? AdditionalInfo.fromJson(json['additionalInfo'])
             : null,
@@ -282,6 +287,7 @@ class RegimentDataModel {
         'serviceCategory': serviceCategory!.toJson(),
         'modeOfService': modeOfService!.toJson(),
         'hour_repeat': dayrepeat,
+        'activityThreshold': activityThreshold,
         'additionalInfo':
             additionalInfo?.toJson() ?? new Map<String, dynamic>(),
       };

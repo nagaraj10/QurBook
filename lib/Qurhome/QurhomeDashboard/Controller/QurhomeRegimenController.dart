@@ -697,7 +697,7 @@ class QurhomeRegimenController extends GetxController {
               startDate != "" &&
               endDate != null &&
               endDate != "") {
-            if (3 > 0) {
+            if ((sheelaAIController?.sheelaIconBadgeCount?.value ?? 0) > 0) {
               if ((DateTime.parse(startDate ?? '')
                           .isAtSameMomentAs(DateTime.now()) ||
                       DateTime.now()
