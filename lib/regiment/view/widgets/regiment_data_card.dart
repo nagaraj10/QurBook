@@ -92,7 +92,7 @@ class RegimentDataCard extends StatelessWidget {
                       redirectToSheelaScreen(regimentData, context,
                           isSurvey: true);
                     } else {
-                      onErrorMessage(context);
+                      onErrorMessage(regimentData, context);
                     }
                   } else {
                     onCardPressed(context,
@@ -118,7 +118,7 @@ class RegimentDataCard extends StatelessWidget {
                               redirectToSheelaScreen(regimentData, context,
                                   isSurvey: true);
                             } else {
-                              onErrorMessage(context);
+                              onErrorMessage(regimentData, context);
                             }
                           } else if (regimentData.activityOrgin !=
                               strAppointmentRegimen) {
@@ -618,12 +618,8 @@ class RegimentDataCard extends StatelessWidget {
                             }
                           } else {
                             FlutterToast().getToast(
-                              (Provider.of<RegimentViewModel>(context,
-                                              listen: false)
-                                          .regimentMode ==
-                                      RegimentMode.Symptoms)
-                                  ? symptomsError
-                                  : activitiesError,
+                              CommonUtil()
+                                  .getErrorMessage(regimentData, context),
                               Colors.red,
                             );
                           }
@@ -764,6 +760,7 @@ class RegimentDataCard extends StatelessWidget {
         var value = await showDialog(
           context: context,
           builder: (context) => FormDataDialog(
+            regimen: regimentData,
             introText: regimentData.otherinfo?.introText ?? '',
             fieldsData: fieldsResponseModel.result?.fields,
             eid: eventId,
@@ -1103,27 +1100,14 @@ class RegimentDataCard extends StatelessWidget {
     });
   }
 
-  onErrorMessage(BuildContext context) {
-    if (((Provider.of<RegimentViewModel>(context!, listen: false)
-                    .regimentMode ==
-                RegimentMode.Symptoms)
-            ? symptomsError
-            : activitiesError)
-        .toLowerCase()
-        .contains('future activi')) {
-      _showErrorAlert(
-          (Provider.of<RegimentViewModel>(context!, listen: false)
-                      .regimentMode ==
-                  RegimentMode.Symptoms)
-              ? symptomsError
-              : activitiesError,
-          context);
+  onErrorMessage(RegimentDataModel regimen, BuildContext context) {
+    String error = "";
+    error = CommonUtil().getErrorMessage(regimen, context);
+    if (error.toLowerCase().contains('future activi')) {
+      _showErrorAlert(error, context);
     } else {
       FlutterToast().getToast(
-        (Provider.of<RegimentViewModel>(context!, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
-            ? symptomsError
-            : activitiesError,
+        error,
         Colors.red,
       );
     }
