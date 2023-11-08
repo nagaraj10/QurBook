@@ -893,24 +893,14 @@ class _QurHomePatientRegimenListScreenState
     // });
   }
 
-  onErrorMessage() {
-    if (((Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
-            ? symptomsError
-            : activitiesError)
-        .toLowerCase()
-        .contains('future activi')) {
-      _showErrorAlert((Provider.of<RegimentViewModel>(context, listen: false)
-                  .regimentMode ==
-              RegimentMode.Symptoms)
-          ? symptomsError
-          : activitiesError);
+  onErrorMessage(RegimentDataModel regimen) {
+    String error = "";
+    error = CommonUtil().getErrorMessage(regimen, context);
+    if (error.toLowerCase().contains('future activi')) {
+      _showErrorAlert(error);
     } else {
       FlutterToast().getToast(
-        (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
-            ? symptomsError
-            : activitiesError,
+        error,
         Colors.red,
       );
     }
