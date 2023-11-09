@@ -278,9 +278,6 @@ extension AppDelegate: MessagingDelegate {
                 if let error = error {
                     print("Error \(error.localizedDescription)")
                 }
-                self.notificationCenter.getPendingNotificationRequests { data in
-                    print("All pending notificaiton count = \(data.count)")
-                }
             }
         });
         if after > 0,!snooze{
@@ -298,6 +295,7 @@ extension AppDelegate: MessagingDelegate {
                 if let error = error {
                     print("Error \(error.localizedDescription)")
                 }
+                
             }
         }
         if before > 0,!snooze{
@@ -311,12 +309,13 @@ extension AppDelegate: MessagingDelegate {
             content.userInfo = message as! [AnyHashable : Any]
             let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponentBefore, repeats: false)
             let  request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
-            //adding the notification
-            notificationCenter.add(request) { (error) in
-                if let error = error {
-                    print("Error \(error.localizedDescription)")
+            DispatchQueue.main.asyncAfter(deadline: .now()+1, execute:  { [self] in
+                notificationCenter.add(request) { (error) in
+                    if let error = error {
+                        print("Error \(error.localizedDescription)")
+                    }
                 }
-            }
+            });
         }
     }
     
