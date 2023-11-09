@@ -197,8 +197,9 @@ class _LandingScreenState extends State<LandingScreen> {
               activitiesFilteredList?[0]?.estartNew ?? '');
           PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_END,
               activitiesFilteredList?[length - 1]?.estartNew ?? '');
-          controllerQurhomeRegimen.initRemainderQueue();
-          controllerQurhomeRegimen.initOneRemainderQueue();
+          controllerQurhomeRegimen.callMethodToSaveRemainder();
+
+          controllerQurhomeRegimen.startTimerForSheela();
         }
       } else {
         sheelBadgeController.getSheelaBadgeCount();

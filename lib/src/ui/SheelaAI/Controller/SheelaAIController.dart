@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
@@ -17,6 +18,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
@@ -1116,47 +1118,9 @@ class SheelaAIController extends GetxController {
               if (isNeedSheelaDialog) {
                 if ((CommonUtil.REGION_CODE != "US" &&
                     CommonUtil().isTablet == true)) {
-                  String? startDate =
-                      PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
-                  String? endDate =
-                      PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
-                  var sheelaAIController = Get.find<SheelaAIController>();
-                  var qurhomeCOntroller =
-                      CommonUtil().onInitQurhomeRegimenController();
-
-                  if (startDate != null &&
-                      startDate != "" &&
-                      endDate != null &&
-                      endDate != "") {
-                    if (((3)) > 0) {
-                      if ((DateTime.parse(startDate ?? '')
-                                  .isAtSameMomentAs(DateTime.now()) ||
-                              DateTime.now()
-                                  .isAfter(DateTime.parse(startDate ?? ''))) &&
-                          (DateTime.now()
-                              .isBefore(DateTime.parse(endDate ?? ''))) &&
-                          (qurhomeCOntroller.evryOneMinuteRemainder != null ||
-                              qurhomeCOntroller
-                                      .evryOneMinuteRemainder?.isActive ==
-                                  true)) {
-                        if (isQueueDialogShowing.value == false) {
-                          isQueueDialogShowing.value = true;
-                          playAudioPlayer().then((value) {
-                            showDialogForSheelaBox(
-                                isFromQurHomeRegimen: isFromQurHomeRegimen,
-                                isNeedSheelaDialog: isNeedSheelaDialog);
-                          });
-                        }
-                      } else if ((DateTime.parse(endDate ?? '')
-                              .isAtSameMomentAs(DateTime.now())) ||
-                          (DateTime.now()
-                              .isAfter(DateTime.parse(endDate ?? '')))) {
-                        qurhomeCOntroller.evryOneMinuteRemainder?.cancel();
-                        PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
-                        PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
-                      }
-                    }
-                  }
+                  showRemainderBasedOnCondition(
+                      isFromQurHomeRegimen: isFromQurHomeRegimen,
+                      isNeedSheelaDialog: isNeedSheelaDialog);
                 } else if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
                   if (isQueueDialogShowing.value == false) {
@@ -1424,5 +1388,59 @@ class SheelaAIController extends GetxController {
         getSheelaBadgeCount(isNeedSheelaDialog: true);
       });
     });
+  }
+
+  void showRemainderBasedOnCondition(
+      {bool isNeedSheelaDialog = false,
+      bool isFromQurHomeRegimen = false}) async {
+    String? startDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
+    String? endDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
+    var sheelaAIController = Get.find<SheelaAIController>();
+    var qurhomeCOntroller = CommonUtil().onInitQurhomeRegimenController();
+    final controllerQurhomeRegimen =
+        CommonUtil().onInitQurhomeRegimenController();
+
+    List activitiesFilteredList =
+        controllerQurhomeRegimen.remainderTimestamps ?? [];
+
+    if (startDate != null &&
+        startDate != "" &&
+        endDate != null &&
+        endDate != "") {
+      if (((3)) > 0) {
+        if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) ||
+                DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
+            (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
+            (qurhomeCOntroller.evryOneMinuteRemainder != null ||
+                qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
+          if (activitiesFilteredList != null &&
+              activitiesFilteredList.length > 0) {
+            for (DateTime regimentDataModel in activitiesFilteredList) {
+              if (((DateTime.now().difference(regimentDataModel).inMinutes ??
+                          0) ==
+                      0) ||
+                  ((DateTime.now().difference(regimentDataModel).inMinutes ??
+                          1) ==
+                      0)) {
+                if (isQueueDialogShowing.value == false) {
+                  isQueueDialogShowing.value = true;
+                  playAudioPlayer().then((value) {
+                    showDialogForSheelaBox(
+                        isFromQurHomeRegimen: isFromQurHomeRegimen,
+                        isNeedSheelaDialog: isNeedSheelaDialog);
+                  });
+                }
+              }
+            }
+          }
+        }
+      } else if ((DateTime.parse(endDate ?? '')
+              .isAtSameMomentAs(DateTime.now())) ||
+          (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) {
+        qurhomeCOntroller.evryOneMinuteRemainder?.cancel();
+        PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
+        PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
+      }
+    }
   }
 }
