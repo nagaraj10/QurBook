@@ -1415,13 +1415,21 @@ class SheelaAIController extends GetxController {
                 qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
           if (activitiesFilteredList != null &&
               activitiesFilteredList.length > 0) {
-            for (DateTime regimentDataModel in activitiesFilteredList) {
-              if (((DateTime.now().difference(regimentDataModel).inMinutes ??
-                      0) ==
-                  0)) {
+            for (int i = 0; i < activitiesFilteredList.length; i++) {
+              if (((DateTime.now()
+                              .difference(activitiesFilteredList[i])
+                              .inMinutes ??
+                          0) ==
+                      0) ||
+                  ((DateTime.now()
+                              .difference(activitiesFilteredList[i])
+                              .inMinutes ??
+                          0) ==
+                      1)) {
                 if (isQueueDialogShowing.value == false) {
                   isQueueDialogShowing.value = true;
                   playAudioPlayer().then((value) {
+                    activitiesFilteredList.removeAt(i);
                     showDialogForSheelaBox(
                         isFromQurHomeRegimen: isFromQurHomeRegimen,
                         isNeedSheelaDialog: isNeedSheelaDialog);
