@@ -62,12 +62,15 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
     _animationController.forward();
   }
 
+  double getCircularPercentIndicatorRadius() =>
+      (CommonUtil().isTablet ?? false) ? 22 : 16;
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       if (_sheelaAIController.isBLEStatus.value == BLEStatus.Searching) {
         return CircularPercentIndicator(
-          radius: (CommonUtil().isTablet ?? false) ? 105 : 16,
+          radius: getCircularPercentIndicatorRadius(),
           lineWidth: 2,
           percent: _percent,
           backgroundColor: Colors.transparent,
@@ -79,7 +82,7 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
         );
       } else if (_sheelaAIController.isBLEStatus.value == BLEStatus.Connected) {
         return CircularPercentIndicator(
-          radius: (CommonUtil().isTablet ?? false) ? 105 : 16,
+          radius: getCircularPercentIndicatorRadius(),
           lineWidth: 2,
           percent: 1,
           backgroundColor: Colors.transparent,
