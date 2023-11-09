@@ -2456,7 +2456,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (isTimezoneChanged) {
         await controller.getRegimenList(
             isLoading: true, date: controller.selectedDate.value.toString());
-        await QurPlanReminders.getTheRemindersFromAPI();
         if (CommonUtil.isUSRegion()) {
           final currentTimezone = await TimeZoneHelper.getCurrentTimezone;
           await TimezoneServices().updateTimezone(currentTimezone);
