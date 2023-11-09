@@ -121,15 +121,13 @@ class RegimentActivitiesCard extends StatelessWidget {
                   inactiveThumbColor: Colors.grey[200],
                   inactiveTrackColor: Colors.grey[400],
                   value: !regimentData.isEventDisabled,
-                  onChanged: (regimentData.isMandatory)
-                      ? null
-                      : (isEnabled) {
-                          if (CommonUtil.isUSRegion()) {
-                            showDialogBoxForReason(context, isEnabled);
-                          } else {
-                            enableActivityMethod(context, isEnabled);
-                          }
-                        },
+                  onChanged: (isEnabled) {
+                    if (CommonUtil.isUSRegion()) {
+                      showDialogBoxForReason(context, isEnabled);
+                    } else {
+                      enableActivityMethod(context, isEnabled);
+                    }
+                  },
                 ),
                 SizedBox(
                   width: 3.0.w,

@@ -233,6 +233,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
                 elevation: 0,
                 centerTitle: true,
+                leadingWidth: (CommonUtil().isTablet ?? false) ? 117 : 83,
                 actions: [
                   (!(CommonUtil.isUSRegion()) &&
                           hubListViewController.isUserHasParedDevice.value &&
