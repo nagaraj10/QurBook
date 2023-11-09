@@ -278,9 +278,6 @@ extension AppDelegate: MessagingDelegate {
                 if let error = error {
                     print("Error \(error.localizedDescription)")
                 }
-                self.notificationCenter.getPendingNotificationRequests { data in
-                    print("All pending notificaiton count = \(data.count)")
-                }
             }
         });
         if after > 0,!snooze{
@@ -298,6 +295,7 @@ extension AppDelegate: MessagingDelegate {
                 if let error = error {
                     print("Error \(error.localizedDescription)")
                 }
+                
             }
         }
         if before > 0,!snooze{
@@ -311,12 +309,13 @@ extension AppDelegate: MessagingDelegate {
             content.userInfo = message as! [AnyHashable : Any]
             let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponentBefore, repeats: false)
             let  request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
-            //adding the notification
-            notificationCenter.add(request) { (error) in
-                if let error = error {
-                    print("Error \(error.localizedDescription)")
+            DispatchQueue.main.asyncAfter(deadline: .now()+1, execute:  { [self] in
+                notificationCenter.add(request) { (error) in
+                    if let error = error {
+                        print("Error \(error.localizedDescription)")
+                    }
                 }
-            }
+            });
         }
     }
     
@@ -395,18 +394,9 @@ extension AppDelegate: MessagingDelegate {
         if let data = response.notification.request.content.userInfo as? NSDictionary,let controller = navigationController?.children.first as? FlutterViewController{
             if (data["eid"] as? String) != nil{
                 if response.actionIdentifier == "Snooze" {
-                    if let count = data["snoozeCount"] as? Int{
-                        if count < 2{
-                            var newData = response.notification.request.content.userInfo
-                            newData["snoozeCount"] = count + 1
-                            self.scheduleNotification(message:newData as NSDictionary, snooze: true)
-                        }
-                    }else{
-                        var newData = response.notification.request.content.userInfo
-                        newData["snoozeCount"] = 1
-                        self.scheduleNotification(message:newData as NSDictionary, snooze: true)
-                    }
+                    //it is already handled
                 }else if response.actionIdentifier == "Dismiss"{
+                    //it is already handled
                 }else{
                     var newData :NSDictionary
                     newData  = [
@@ -417,12 +407,10 @@ extension AppDelegate: MessagingDelegate {
                     
                     if(ReminderMethodChannel == nil){
                         ReminderMethodChannel = FlutterMethodChannel.init(name: Constants.reminderMethodChannel, binaryMessenger: controller.binaryMessenger)
-                        
                     }
                     ReminderMethodChannel.invokeMethod(Constants.callLocalNotificationMethod, arguments: newData)
                 }
-            }
-            else {
+            } else {
                 var newData :NSDictionary
                 if (response.actionIdentifier == "Renew" || response.actionIdentifier == "Callback"){
                     newData  = [
@@ -469,6 +457,25 @@ extension AppDelegate: MessagingDelegate {
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          didReceive response: UNNotificationResponse,
                                          withCompletionHandler completionHandler: @escaping () -> Void) {
+        if let data = response.notification.request.content.userInfo as? NSDictionary{
+            if (data["eid"] as? String) != nil {
+                if response.actionIdentifier == "Snooze" {
+                    if let count = data["snoozeCount"] as? Int{
+                        if count < 2{
+                            var newData = response.notification.request.content.userInfo
+                            newData["snoozeCount"] = count + 1
+                            self.scheduleNotification(message:newData as NSDictionary, snooze: true)
+                        }
+                    }else{
+                        var newData = response.notification.request.content.userInfo
+                        newData["snoozeCount"] = 1
+                        self.scheduleNotification(message:newData as NSDictionary, snooze: true)
+                    }
+                }else if response.actionIdentifier == "Dismiss"{
+                }
+            }
+        }
+        
         payloadResonse = nil
         if(isFromKilledStateNotification == false){
             let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
