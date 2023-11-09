@@ -187,20 +187,17 @@ class _LandingScreenState extends State<LandingScreen> {
         await CommonUtil().getSheelaConfig();
         List<RegimentDataModel>? activitiesFilteredList = [];
         await controllerQurhomeRegimen.getRegimenList();
-        controllerQurhomeRegimen.initRemainderQueue();
 
         activitiesFilteredList =
             controllerQurhomeRegimen.qurHomeRegimenResponseModel?.regimentsList;
         if (activitiesFilteredList != null &&
             activitiesFilteredList.length > 0) {
-          // controllerQurhomeRegimen.initRemainderQueue();
-
           int length = activitiesFilteredList?.length ?? 0;
           PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_START,
               activitiesFilteredList?[0]?.estartNew ?? '');
           PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_END,
               activitiesFilteredList?[length - 1]?.estartNew ?? '');
-
+          controllerQurhomeRegimen.initRemainderQueue();
           controllerQurhomeRegimen.initOneRemainderQueue();
         }
       } else {

@@ -697,35 +697,34 @@ class QurhomeRegimenController extends GetxController {
               startDate != "" &&
               endDate != null &&
               endDate != "") {
-            if ((sheelaAIController?.sheelaIconBadgeCount?.value ?? 0) > 0) {
-              if ((DateTime.parse(startDate ?? '')
-                          .isAtSameMomentAs(DateTime.now()) ||
-                      DateTime.now()
-                          .isAfter(DateTime.parse(startDate ?? ''))) &&
-                  (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
-                  (evryOneMinuteRemainder == null ||
-                      evryOneMinuteRemainder?.isActive == false)) {
-                try {
-                  int getTimeINSeconds =
-                      await PreferenceUtil.getIntValue(SHEELA_REMAINDER_TIME) ??
-                          30;
-                  evryOneMinuteRemainder = Timer.periodic(
-                    Duration(minutes: getTimeINSeconds),
-                    (Timer timer) {
-                      sheelaAIController.getSheelaBadgeCount(
-                          isNeedSheelaDialog: true);
-                    },
-                  );
-                } catch (e, stackTrace) {
-                  CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-                }
-              } else if ((DateTime.parse(endDate ?? '')
-                      .isAtSameMomentAs(DateTime.now())) ||
-                  (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) {
-                evryOneMinuteRemainder?.cancel();
-                PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
-                PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
+            if ((DateTime.parse(startDate ?? '')
+                        .isAtSameMomentAs(DateTime.now()) ||
+                    DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
+                (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
+                (evryOneMinuteRemainder == null ||
+                    evryOneMinuteRemainder?.isActive == false)) {
+              try {
+                int getTimeINSeconds =
+                    await PreferenceUtil.getIntValue(SHEELA_REMAINDER_TIME) ??
+                        30;
+                evryOneMinuteRemainder = Timer.periodic(
+                  Duration(minutes: 10),
+                  (Timer timer) {
+                    sheelaAIController.getSheelaBadgeCount(
+                        isNeedSheelaDialog: true);
+                  },
+                );
+
+                FlutterToast().getToast("Timer Started", Colors.green);
+              } catch (e, stackTrace) {
+                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
               }
+            } else if ((DateTime.parse(endDate ?? '')
+                    .isAtSameMomentAs(DateTime.now())) ||
+                (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) {
+              evryOneMinuteRemainder?.cancel();
+              PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
+              PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
             }
           }
         }
@@ -743,7 +742,7 @@ class QurhomeRegimenController extends GetxController {
               activitiesFilteredList?[0]?.estartNew ?? '');
           PreferenceUtil.saveString(SHEELA_REMAINDER_END,
               activitiesFilteredList?[length - 1]?.estartNew ?? '');
-          initOneRemainderQueue();
+          FlutterToast().getToast("Error Timer Started", Colors.red);
         }
       }
     } catch (e, stackTrace) {

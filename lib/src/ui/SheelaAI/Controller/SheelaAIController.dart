@@ -476,9 +476,7 @@ class SheelaAIController extends GetxController {
         // Failed to get Sheela Response
         conversations.removeLast();
         if (kDebugMode) print(response.body);
-        FlutterToast().getToast(
-            StrSheelaErrorMsg,
-            Colors.black54);
+        FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
       }
       isLoading.value = false;
     } catch (e, stackTrace) {
@@ -488,9 +486,7 @@ class SheelaAIController extends GetxController {
       isLoading.value = false;
       conversations.removeLast();
       if (kDebugMode) print(e.toString());
-      FlutterToast().getToast(
-          StrSheelaErrorMsg,
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     }
   }
 
@@ -575,7 +571,7 @@ class SheelaAIController extends GetxController {
             .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
         if ((currentButton.title!.contains(StrExit)) ||
             (currentButton.title!.contains(str_Undo)) ||
-                (currentButton.title!.contains(StrUndoAll)) ||
+            (currentButton.title!.contains(StrUndoAll)) ||
             (conversations.last.endOfConv ?? false)) {
           if (conversations.last.endOfConv) {
             currentPlayingConversation!.isPlaying.value = false;
@@ -773,23 +769,17 @@ class SheelaAIController extends GetxController {
           return result;
         } else {
           //Need to handle failure
-          FlutterToast().getToast(
-              StrSheelaErrorMsg,
-              Colors.black54);
+          FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
         }
       } else {
         //Failed to get body or failed status code
-        FlutterToast().getToast(
-            StrSheelaErrorMsg,
-            Colors.black54);
+        FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e.toString());
       //need to handle failure in the api call for tts
-      FlutterToast().getToast(
-          StrSheelaErrorMsg,
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     }
   }
 
@@ -942,16 +932,12 @@ class SheelaAIController extends GetxController {
       }
     } on PlatformException {
       isMicListening.value = false;
-      FlutterToast().getToast(
-          StrSheelaErrorMsg,
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
-      FlutterToast().getToast(
-          StrSheelaErrorMsg,
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     }
   }
 
@@ -1142,7 +1128,7 @@ class SheelaAIController extends GetxController {
                       startDate != "" &&
                       endDate != null &&
                       endDate != "") {
-                    if (((value.result?.queueCount ?? 0)) > 0) {
+                    if (((3)) > 0) {
                       if ((DateTime.parse(startDate ?? '')
                                   .isAtSameMomentAs(DateTime.now()) ||
                               DateTime.now()
@@ -1153,7 +1139,8 @@ class SheelaAIController extends GetxController {
                               qurhomeCOntroller
                                       .evryOneMinuteRemainder?.isActive ==
                                   true)) {
-                        if (!isQueueDialogShowing.value) {
+                        if (isQueueDialogShowing.value == false) {
+                          isQueueDialogShowing.value = true;
                           playAudioPlayer().then((value) {
                             showDialogForSheelaBox(
                                 isFromQurHomeRegimen: isFromQurHomeRegimen,
@@ -1172,11 +1159,13 @@ class SheelaAIController extends GetxController {
                   }
                 } else if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
-                  isQueueDialogShowing.value = true;
+                  if (isQueueDialogShowing.value == false) {
+                    isQueueDialogShowing.value = true;
 
-                  showDialogForSheelaBox(
-                      isFromQurHomeRegimen: isFromQurHomeRegimen,
-                      isNeedSheelaDialog: isNeedSheelaDialog);
+                    showDialogForSheelaBox(
+                        isFromQurHomeRegimen: isFromQurHomeRegimen,
+                        isNeedSheelaDialog: isNeedSheelaDialog);
+                  }
                 }
               }
             }
@@ -1195,16 +1184,21 @@ class SheelaAIController extends GetxController {
   }
 
   Future<int?> playAudioPlayer() async {
-    late AudioCache _audioCache;
-    _audioCache = AudioCache();
+    try {
+      late AudioCache _audioCache;
+      _audioCache = AudioCache();
 
-    String audioasset = "assets/raw/ns_final.mp3";
-    ByteData bytes = await rootBundle.load(audioasset); //load sound from assets
-    Uint8List soundbytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    int? result = await player?.playBytes(soundbytes);
-    player?.play(audioasset);
-    return result;
+      String audioasset = "assets/raw/ns_final.mp3";
+      ByteData bytes =
+          await rootBundle.load(audioasset); //load sound from assets
+      Uint8List soundbytes =
+          bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+      int? result = await player?.playBytes(soundbytes);
+      player?.play(audioasset);
+      return result;
+    } catch (e) {
+      print(e);
+    }
   }
 
   void updateTimer({bool enable = false}) {
