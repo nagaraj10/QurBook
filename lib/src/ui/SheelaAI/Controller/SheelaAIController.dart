@@ -1417,11 +1417,8 @@ class SheelaAIController extends GetxController {
               activitiesFilteredList.length > 0) {
             for (DateTime regimentDataModel in activitiesFilteredList) {
               if (((DateTime.now().difference(regimentDataModel).inMinutes ??
-                          0) ==
-                      0) ||
-                  ((DateTime.now().difference(regimentDataModel).inMinutes ??
-                          1) ==
-                      0)) {
+                      0) ==
+                  0)) {
                 if (isQueueDialogShowing.value == false) {
                   isQueueDialogShowing.value = true;
                   playAudioPlayer().then((value) {

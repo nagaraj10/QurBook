@@ -668,9 +668,6 @@ class QurhomeRegimenController extends GetxController {
   }
 
   initRemainderQueue() {
-    if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
-      initOneRemainderQueue();
-    }
     try {
       remainderQueueTimer = Timer.periodic(
         Duration(minutes: 2),
