@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
@@ -17,6 +18,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
@@ -476,9 +478,7 @@ class SheelaAIController extends GetxController {
         // Failed to get Sheela Response
         conversations.removeLast();
         if (kDebugMode) print(response.body);
-        FlutterToast().getToast(
-            StrSheelaErrorMsg,
-            Colors.black54);
+        FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
       }
       isLoading.value = false;
     } catch (e, stackTrace) {
@@ -488,9 +488,7 @@ class SheelaAIController extends GetxController {
       isLoading.value = false;
       conversations.removeLast();
       if (kDebugMode) print(e.toString());
-      FlutterToast().getToast(
-          StrSheelaErrorMsg,
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     }
   }
 
@@ -575,7 +573,7 @@ class SheelaAIController extends GetxController {
             .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
         if ((currentButton.title!.contains(StrExit)) ||
             (currentButton.title!.contains(str_Undo)) ||
-                (currentButton.title!.contains(StrUndoAll)) ||
+            (currentButton.title!.contains(StrUndoAll)) ||
             (conversations.last.endOfConv ?? false)) {
           if (conversations.last.endOfConv) {
             currentPlayingConversation!.isPlaying.value = false;
@@ -773,23 +771,17 @@ class SheelaAIController extends GetxController {
           return result;
         } else {
           //Need to handle failure
-          FlutterToast().getToast(
-              StrSheelaErrorMsg,
-              Colors.black54);
+          FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
         }
       } else {
         //Failed to get body or failed status code
-        FlutterToast().getToast(
-            StrSheelaErrorMsg,
-            Colors.black54);
+        FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e.toString());
       //need to handle failure in the api call for tts
-      FlutterToast().getToast(
-          StrSheelaErrorMsg,
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     }
   }
 
@@ -942,16 +934,12 @@ class SheelaAIController extends GetxController {
       }
     } on PlatformException {
       isMicListening.value = false;
-      FlutterToast().getToast(
-          StrSheelaErrorMsg,
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
-      FlutterToast().getToast(
-          StrSheelaErrorMsg,
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     }
   }
 
@@ -1130,53 +1118,18 @@ class SheelaAIController extends GetxController {
               if (isNeedSheelaDialog) {
                 if ((CommonUtil.REGION_CODE != "US" &&
                     CommonUtil().isTablet == true)) {
-                  String? startDate =
-                      PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
-                  String? endDate =
-                      PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
-                  var sheelaAIController = Get.find<SheelaAIController>();
-                  var qurhomeCOntroller =
-                      CommonUtil().onInitQurhomeRegimenController();
-
-                  if (startDate != null &&
-                      startDate != "" &&
-                      endDate != null &&
-                      endDate != "") {
-                    if (((value.result?.queueCount ?? 0)) > 0) {
-                      if ((DateTime.parse(startDate ?? '')
-                                  .isAtSameMomentAs(DateTime.now()) ||
-                              DateTime.now()
-                                  .isAfter(DateTime.parse(startDate ?? ''))) &&
-                          (DateTime.now()
-                              .isBefore(DateTime.parse(endDate ?? ''))) &&
-                          (qurhomeCOntroller.evryOneMinuteRemainder != null ||
-                              qurhomeCOntroller
-                                      .evryOneMinuteRemainder?.isActive ==
-                                  true)) {
-                        if (!isQueueDialogShowing.value) {
-                          playAudioPlayer().then((value) {
-                            showDialogForSheelaBox(
-                                isFromQurHomeRegimen: isFromQurHomeRegimen,
-                                isNeedSheelaDialog: isNeedSheelaDialog);
-                          });
-                        }
-                      } else if ((DateTime.parse(endDate ?? '')
-                              .isAtSameMomentAs(DateTime.now())) ||
-                          (DateTime.now()
-                              .isAfter(DateTime.parse(endDate ?? '')))) {
-                        qurhomeCOntroller.evryOneMinuteRemainder?.cancel();
-                        PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
-                        PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
-                      }
-                    }
-                  }
-                } else if ((value.result?.queueCount ?? 0) > 0 &&
-                    PreferenceUtil.getIfQurhomeisAcive()) {
-                  isQueueDialogShowing.value = true;
-
-                  showDialogForSheelaBox(
+                  showRemainderBasedOnCondition(
                       isFromQurHomeRegimen: isFromQurHomeRegimen,
                       isNeedSheelaDialog: isNeedSheelaDialog);
+                } else if ((value.result?.queueCount ?? 0) > 0 &&
+                    PreferenceUtil.getIfQurhomeisAcive()) {
+                  if (isQueueDialogShowing.value == false) {
+                    isQueueDialogShowing.value = true;
+
+                    showDialogForSheelaBox(
+                        isFromQurHomeRegimen: isFromQurHomeRegimen,
+                        isNeedSheelaDialog: isNeedSheelaDialog);
+                  }
                 }
               }
             }
@@ -1195,16 +1148,21 @@ class SheelaAIController extends GetxController {
   }
 
   Future<int?> playAudioPlayer() async {
-    late AudioCache _audioCache;
-    _audioCache = AudioCache();
+    try {
+      late AudioCache _audioCache;
+      _audioCache = AudioCache();
 
-    String audioasset = "assets/raw/ns_final.mp3";
-    ByteData bytes = await rootBundle.load(audioasset); //load sound from assets
-    Uint8List soundbytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    int? result = await player?.playBytes(soundbytes);
-    player?.play(audioasset);
-    return result;
+      String audioasset = "assets/raw/ns_final.mp3";
+      ByteData bytes =
+          await rootBundle.load(audioasset); //load sound from assets
+      Uint8List soundbytes =
+          bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+      int? result = await player?.playBytes(soundbytes);
+      player?.play(audioasset);
+      return result;
+    } catch (e) {
+      print(e);
+    }
   }
 
   void updateTimer({bool enable = false}) {
@@ -1430,5 +1388,66 @@ class SheelaAIController extends GetxController {
         getSheelaBadgeCount(isNeedSheelaDialog: true);
       });
     });
+  }
+
+  void showRemainderBasedOnCondition(
+      {bool isNeedSheelaDialog = false,
+      bool isFromQurHomeRegimen = false}) async {
+    String? startDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
+    String? endDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
+    var sheelaAIController = Get.find<SheelaAIController>();
+    var qurhomeCOntroller = CommonUtil().onInitQurhomeRegimenController();
+    final controllerQurhomeRegimen =
+        CommonUtil().onInitQurhomeRegimenController();
+
+    List activitiesFilteredList =
+        controllerQurhomeRegimen.remainderTimestamps ?? [];
+
+    if (startDate != null &&
+        startDate != "" &&
+        endDate != null &&
+        endDate != "") {
+      if (((sheelaAIController.sheelaIconBadgeCount.value ?? 0)) > 0) {
+        if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) ||
+                DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
+            (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
+            (qurhomeCOntroller.evryOneMinuteRemainder != null ||
+                qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
+          if (activitiesFilteredList != null &&
+              activitiesFilteredList.length > 0) {
+            for (int i = 0; i < activitiesFilteredList.length; i++) {
+              if (((DateTime.now()
+                              .difference(activitiesFilteredList[i])
+                              .inMinutes ??
+                          0) ==
+                      0) ||
+                  ((DateTime.now()
+                              .difference(activitiesFilteredList[i])
+                              .inMinutes ??
+                          0) ==
+                      1)) {
+                if (isQueueDialogShowing.value == false) {
+                  isQueueDialogShowing.value = true;
+                  playAudioPlayer().then((value) {
+                    activitiesFilteredList.removeAt(i);
+                    showDialogForSheelaBox(
+                        isFromQurHomeRegimen: isFromQurHomeRegimen,
+                        isNeedSheelaDialog: isNeedSheelaDialog);
+                  });
+                }
+              }
+            }
+          }
+        }
+      } else if (((DateTime.parse(endDate ?? '')
+                  .isAtSameMomentAs(DateTime.now())) ||
+              (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) &&
+          (qurhomeCOntroller.evryOneMinuteRemainder != null &&
+              qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
+        qurhomeCOntroller.evryOneMinuteRemainder?.cancel();
+        PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
+        PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
+      }
+    }
   }
 }

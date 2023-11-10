@@ -74,6 +74,7 @@ class QurhomeRegimenController extends GetxController {
   var selectedCalendar = DateTime.now().obs;
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
+  List<DateTime?> remainderTimestamps = [];
 
   Location? locationModel;
 
@@ -667,9 +668,6 @@ class QurhomeRegimenController extends GetxController {
   }
 
   initRemainderQueue() {
-    if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
-      initOneRemainderQueue();
-    }
     try {
       remainderQueueTimer = Timer.periodic(
         Duration(minutes: 2),
@@ -687,67 +685,88 @@ class QurhomeRegimenController extends GetxController {
     String? startDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
     String? endDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
     try {
-      if (startDate != null &&
-          startDate != "" &&
-          endDate != null &&
-          endDate != "") {
-        if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+      if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+        if (startDate != null &&
+            startDate != "" &&
+            endDate != null &&
+            endDate != "") {
           var sheelaAIController = Get.find<SheelaAIController>();
-          if (startDate != null &&
-              startDate != "" &&
-              endDate != null &&
-              endDate != "") {
-            if ((sheelaAIController?.sheelaIconBadgeCount?.value ?? 0) > 0) {
-              if ((DateTime.parse(startDate ?? '')
-                          .isAtSameMomentAs(DateTime.now()) ||
-                      DateTime.now()
-                          .isAfter(DateTime.parse(startDate ?? ''))) &&
-                  (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
-                  (evryOneMinuteRemainder == null ||
-                      evryOneMinuteRemainder?.isActive == false)) {
-                try {
-                  int getTimeINSeconds =
-                      await PreferenceUtil.getIntValue(SHEELA_REMAINDER_TIME) ??
-                          30;
-                  evryOneMinuteRemainder = Timer.periodic(
-                    Duration(minutes: getTimeINSeconds),
-                    (Timer timer) {
-                      sheelaAIController.getSheelaBadgeCount(
-                          isNeedSheelaDialog: true);
-                    },
-                  );
-                } catch (e, stackTrace) {
-                  CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-                }
-              } else if ((DateTime.parse(endDate ?? '')
-                      .isAtSameMomentAs(DateTime.now())) ||
-                  (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) {
-                evryOneMinuteRemainder?.cancel();
-                PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
-                PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
-              }
+
+          if ((DateTime.parse(startDate ?? '')
+                      .isAtSameMomentAs(DateTime.now()) ||
+                  DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
+              (DateTime.now().isBefore(DateTime.parse(endDate ?? '')))) {
+            try {
+              sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
+          } else if ((DateTime.parse(endDate ?? '')
+                  .isAtSameMomentAs(DateTime.now())) ||
+              (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) {
+            evryOneMinuteRemainder?.cancel();
+            PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
+            PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
           }
-        }
-      } else {
-        final controllerQurhomeRegimen =
-            CommonUtil().onInitQurhomeRegimenController();
-        List<RegimentDataModel>? activitiesFilteredList = [];
-        await controllerQurhomeRegimen.getRegimenList();
-        activitiesFilteredList =
-            controllerQurhomeRegimen.qurHomeRegimenResponseModel?.regimentsList;
-        if (activitiesFilteredList != null &&
-            activitiesFilteredList.length > 0) {
-          int length = activitiesFilteredList?.length ?? 0;
-          PreferenceUtil.saveString(SHEELA_REMAINDER_START,
-              activitiesFilteredList?[0]?.estartNew ?? '');
-          PreferenceUtil.saveString(SHEELA_REMAINDER_END,
-              activitiesFilteredList?[length - 1]?.estartNew ?? '');
-          initOneRemainderQueue();
+        } else {
+          callMethodToSaveRemainder();
         }
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  void startTimerForSheela() {
+    if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+      try {
+        evryOneMinuteRemainder = Timer.periodic(
+          Duration(minutes: 1),
+          (Timer timer) {
+            initOneRemainderQueue();
+          },
+        );
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      }
+    }
+  }
+
+  void callMethodToSaveRemainder() async {
+    final controllerQurhomeRegimen =
+        CommonUtil().onInitQurhomeRegimenController();
+    List<RegimentDataModel>? activitiesFilteredList = [];
+    await controllerQurhomeRegimen.getRegimenList();
+    activitiesFilteredList =
+        controllerQurhomeRegimen.qurHomeRegimenResponseModel?.regimentsList;
+    if (activitiesFilteredList != null && activitiesFilteredList.length > 0) {
+      int length = activitiesFilteredList?.length ?? 0;
+      if ((length ?? 0) > 0) {
+        PreferenceUtil.saveString(SHEELA_REMAINDER_START,
+            activitiesFilteredList?[0]?.estartNew ?? '');
+        PreferenceUtil.saveString(SHEELA_REMAINDER_END,
+            activitiesFilteredList?[length - 1]?.estartNew ?? '');
+        if (controllerQurhomeRegimen.remainderTimestamps.length >= 0) {
+          controllerQurhomeRegimen.remainderTimestamps = [];
+          DateTime startTime =
+              DateTime.parse(activitiesFilteredList?[0]?.estartNew ?? "");
+          DateTime endTime = DateTime.parse(
+              activitiesFilteredList?[length - 1]?.estartNew ?? '');
+
+          controllerQurhomeRegimen.remainderTimestamps
+              .add(((startTime ?? DateTime.now()).add(Duration(minutes: 30))));
+          DateTime clonedTime =
+              controllerQurhomeRegimen.remainderTimestamps[0] ?? DateTime.now();
+          DateTime storTime = clonedTime;
+          do {
+            storTime =
+                ((storTime ?? DateTime.now()).add(Duration(minutes: 30)));
+            if (storTime.isBefore(endTime))
+              controllerQurhomeRegimen.remainderTimestamps.add(storTime);
+          } while (storTime.isBefore(endTime));
+          controllerQurhomeRegimen.remainderTimestamps.add(endTime);
+        }
+      }
     }
   }
 }
