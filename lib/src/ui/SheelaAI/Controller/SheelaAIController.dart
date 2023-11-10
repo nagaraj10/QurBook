@@ -1407,7 +1407,7 @@ class SheelaAIController extends GetxController {
         startDate != "" &&
         endDate != null &&
         endDate != "") {
-      if (((3)) > 0) {
+      if (((sheelaAIController.sheelaIconBadgeCount.value ?? 0)) > 0) {
         if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) ||
                 DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
             (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
@@ -1439,9 +1439,11 @@ class SheelaAIController extends GetxController {
             }
           }
         }
-      } else if ((DateTime.parse(endDate ?? '')
-              .isAtSameMomentAs(DateTime.now())) ||
-          (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) {
+      } else if (((DateTime.parse(endDate ?? '')
+                  .isAtSameMomentAs(DateTime.now())) ||
+              (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) &&
+          (qurhomeCOntroller.evryOneMinuteRemainder != null &&
+              qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
         qurhomeCOntroller.evryOneMinuteRemainder?.cancel();
         PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
         PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');

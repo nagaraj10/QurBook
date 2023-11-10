@@ -758,13 +758,12 @@ class QurhomeRegimenController extends GetxController {
           DateTime clonedTime =
               controllerQurhomeRegimen.remainderTimestamps[0] ?? DateTime.now();
           DateTime storTime = clonedTime;
-          print(endTime);
+          controllerQurhomeRegimen.remainderTimestamps.add(storTime);
           do {
             storTime =
                 ((storTime ?? DateTime.now()).add(Duration(minutes: 30)));
             if (storTime.isBefore(endTime))
               controllerQurhomeRegimen.remainderTimestamps.add(storTime);
-            print(storTime);
           } while (storTime.isBefore(endTime));
           controllerQurhomeRegimen.remainderTimestamps.add(endTime);
 

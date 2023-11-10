@@ -198,7 +198,6 @@ class _LandingScreenState extends State<LandingScreen> {
           PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_END,
               activitiesFilteredList?[length - 1]?.estartNew ?? '');
           controllerQurhomeRegimen.callMethodToSaveRemainder();
-
           controllerQurhomeRegimen.startTimerForSheela();
         }
       } else {
