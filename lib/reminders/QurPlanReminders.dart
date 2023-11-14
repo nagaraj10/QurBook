@@ -47,16 +47,24 @@ class QurPlanReminders {
         deleteAllLocalReminders();
         var notificationsCount = 0;
         data.forEach((element) {
+          if (notificationsCount > 63) {
+            return;
+          }
           var newData = Reminder.fromMap(element);
           if (!newData.evDisabled) {
-            if (newData.ack_local == '' ||
-                newData.ack_local ==
-                    null) if ((newData.estart ?? '').isNotEmpty) {
-              DateTime estartAsDateTime = DateTime.parse(newData.estart!);
-              if (estartAsDateTime.isAfter(DateTime.now()) &&
-                  notificationsCount < 64) {
-                notificationsCount = notificationsCount + 1;
-                reminders.add(newData);
+            if (newData.ack_local == '' || newData.ack_local == null) {
+              if ((newData.estart ?? '').isNotEmpty) {
+                DateTime estartAsDateTime = DateTime.parse(newData.estart!);
+                if (estartAsDateTime.isAfter(DateTime.now())) {
+                  notificationsCount = notificationsCount + 1;
+                  reminders.add(newData);
+                } else {
+                  var afterInt = int.parse(newData.remindin!);
+                  if (afterInt != null && afterInt > 0) {
+                    notificationsCount = notificationsCount + 1;
+                    reminders.add(newData);
+                  }
+                }
               }
             }
           }
