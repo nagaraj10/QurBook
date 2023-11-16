@@ -2603,7 +2603,7 @@ class ChatState extends State<ChatDetail> {
                 strSentViaSheela,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    color: color, fontSize: (CommonUtil().isTablet ?? false) ? 18.0.sp :14.0.sp, fontStyle: FontStyle.italic),
+                    color: color, fontSize: (CommonUtil().isTablet ?? false) ? 16.0.sp :14.0.sp, fontStyle: FontStyle.italic),
               ),
           )
           : SizedBox.shrink();
