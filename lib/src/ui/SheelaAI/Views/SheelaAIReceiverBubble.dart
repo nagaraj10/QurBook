@@ -134,18 +134,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                       height: 30.0,
                                       child: InkWell(
                                         onTap: () {
-                                          if (controller.isLoading.isTrue) {
-                                            return;
-                                          }
-                                          if (chat.isPlaying.isTrue) {
-                                            controller.stopTTS();
-                                          } else {
-                                            controller.stopTTS();
-                                            controller
-                                                    .currentPlayingConversation =
-                                                chat;
-                                            controller.playTTS();
-                                          }
+                                          controller.playPauseTTS(chat);
                                         },
                                         child: Icon(
                                           chat.isPlaying.isTrue
@@ -319,6 +308,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                     buttonData?.chatAttachments ?? []),
                           )?.then((value) {
                             controller.isSheelaScreenActive = true;
+                            controller.playPauseTTS(chat);
                           });
                         }
                       } else if (buttonData?.btnRedirectTo ==
@@ -338,6 +328,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             titleSheelaPreview: strImageTitle,
                           ))?.then((value) {
                             controller.isSheelaScreenActive = true;
+                            controller.playPauseTTS(chat);
                           });
                         }
                       } else {
@@ -495,6 +486,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         )!
             .then((value) {
           controller.updateTimer(enable: true);
+          controller.playPauseTTS(chat);
         });
       } else {
         controller.isPlayPauseView.value = false;
@@ -507,6 +499,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         )!
             .then((value) {
           controller.updateTimer(enable: true);
+          controller.playPauseTTS(chat);
         });
       }
     } catch (e, stackTrace) {
@@ -525,6 +518,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       ))!
           .then((value) {
         controller.updateTimer(enable: true);
+        controller.playPauseTTS(chat);
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);

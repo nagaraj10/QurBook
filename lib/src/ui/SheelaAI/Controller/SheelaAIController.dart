@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
@@ -18,7 +17,6 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
@@ -105,6 +103,8 @@ class SheelaAIController extends GetxController {
 
   LanguageRepository languageBlock = LanguageRepository();
   Map<String, dynamic> langaugeDropdownList = {};
+
+  List<String> sheelaTTSWordList = ["sheila", "sila", "shila", "shiela"];
 
   @override
   void onInit() {
@@ -794,10 +794,12 @@ class SheelaAIController extends GetxController {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
 
+          String? currentLanCode = getCurrentLanCode();
+
           await voice_platform.invokeMethod(
             strspeakAssistant,
             {
-              'langcode': getCurrentLanCode(),
+              'langcode': currentLanCode,
             },
           ).then((response) async {
             isMicListening.value = false;
@@ -806,6 +808,9 @@ class SheelaAIController extends GetxController {
             }
 
             if ((response ?? '').toString().isNotEmpty) {
+              if ((currentLanCode ?? "").contains("en")) {
+                response = prefixListFiltering(response ?? '');
+              }
               final newConversation = SheelaResponse(text: response);
               if (conversations.isNotEmpty &&
                   ((conversations.last?.buttons?.length ?? 0) > 0)) {
@@ -879,6 +884,7 @@ class SheelaAIController extends GetxController {
                               chatAttachments: button?.chatAttachments ?? []),
                         )?.then((value) {
                           isSheelaScreenActive = true;
+                          playPauseTTS(conversations.last ?? SheelaResponse());
                         });
                       }
                     } else if (button?.btnRedirectTo ==
@@ -896,6 +902,7 @@ class SheelaAIController extends GetxController {
                           titleSheelaPreview: strImageTitle,
                         ))?.then((value) {
                           isSheelaScreenActive = true;
+                          playPauseTTS(conversations.last ?? SheelaResponse());
                         });
                       }
                     } else {
@@ -1238,6 +1245,7 @@ class SheelaAIController extends GetxController {
         )!
             .then((value) {
           updateTimer(enable: true);
+          playPauseTTS(conversations.last ?? SheelaResponse());
         });
       } else {
         isPlayPauseView.value = false;
@@ -1250,6 +1258,7 @@ class SheelaAIController extends GetxController {
         )!
             .then((value) {
           updateTimer(enable: true);
+          playPauseTTS(conversations.last ?? SheelaResponse());
         });
       }
     } catch (e, stackTrace) {
@@ -1268,6 +1277,7 @@ class SheelaAIController extends GetxController {
       ))!
           .then((value) {
         updateTimer(enable: true);
+        playPauseTTS(conversations.last ?? SheelaResponse());
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1448,6 +1458,41 @@ class SheelaAIController extends GetxController {
         PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
         PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
       }
+    }
+  }
+
+  playPauseTTS(SheelaResponse chat) {
+    try {
+      if (isLoading.isTrue) {
+        return;
+      }
+      if (chat.isPlaying.isTrue) {
+        stopTTS();
+      } else {
+        stopTTS();
+        currentPlayingConversation = chat;
+        playTTS();
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+
+  String? prefixListFiltering(String strResponse) {
+    try {
+      for (String strSheelaText in sheelaTTSWordList) {
+        if ((strResponse ?? "")
+            .toLowerCase()
+            .contains(strSheelaText.toLowerCase())) {
+          var regEx = RegExp(strSheelaText, caseSensitive: false);
+          strResponse = strResponse.replaceAll(regEx, sheelaText);
+        }
+      }
+      return strResponse;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      return strResponse;
     }
   }
 }
