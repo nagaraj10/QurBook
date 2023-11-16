@@ -1166,7 +1166,7 @@ class ChatState extends State<ChatDetail> {
   Widget buildListMessage() {
     return Flexible(
         child: ScrollablePositionedList.builder(
-      padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all((CommonUtil().isTablet ?? false) ? 20.00 : 10.0),
       itemBuilder: (context, index) {
         var chatList = Provider.of<ChatSocketViewModel>(Get.context!)
             .chatHistoryList!
@@ -1209,6 +1209,9 @@ class ChatState extends State<ChatDetail> {
     return IconTheme(
       data: IconThemeData(color: Color(new CommonUtil().getMyPrimaryColor())),
       child: Container(
+        width: (CommonUtil().isTablet ?? false)
+            ? MediaQuery.of(context).size.width
+            : null,
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: <Widget>[
