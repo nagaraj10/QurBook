@@ -22,6 +22,7 @@ import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
@@ -38,6 +39,8 @@ import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/src/utils/timezone/timezone_helper.dart';
+import 'package:myfhb/src/utils/timezone/timezone_services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -238,11 +241,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        if (appIsInBackground && controller.isSOSAgentCallDialogOpen.value) {
-          appIsInBackground = false;
-          controller.updateSOSAgentCallDialogStatus(false);
-          Get.back();
-        }
+        onResumeEvent();
         break;
       case AppLifecycleState.paused:
         appIsInBackground = true;
@@ -951,7 +950,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                     redirectToSheelaScreen(regimen,
                                         isSurvey: true);
                                   } else {
-                                    onErrorMessage();
+                                    onErrorMessage(regimen);
                                   }
                                 } else {
                                   if (regimen.hasform!) {
@@ -1458,8 +1457,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
     var canEdit = false;
 
-    canEdit = CommonUtil.canEditRegimen(
-        controller.selectedDate.value, regimen!, context!);
+    canEdit = CommonUtil()
+        .canEditRegimen(controller.selectedDate.value, regimen!, context!);
 
     if (regimen!.ack != null && regimen.ack != "") {
       if (fromView) {
@@ -1479,7 +1478,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         Get.put(SheelaBLEController());
       }
       _sheelaBLEController = Get.find();
-      String trimmedTitle = removeAllWhitespaces(regimen.title);
+      String trimmedTitle = removeAllWhitespaces(regimen.uformname1 ?? "");
       trimmedTitle = removeAllUnderscores(trimmedTitle);
       trimmedTitle = trimmedTitle.toLowerCase();
       if (trimmedTitle.isNotEmpty &&
@@ -1525,7 +1524,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           _sheelaBLEController.filteredDeviceType = 'spo2';
           _sheelaBLEController.setupListenerForReadings();
         } else {
-          onErrorMessage();
+          onErrorMessage(regimen);
         }
       } else if (trimmedTitle.isNotEmpty &&
           KeysForBP.contains(
@@ -1570,7 +1569,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           _sheelaBLEController.filteredDeviceType = 'bp';
           _sheelaBLEController.setupListenerForReadings();
         } else {
-          onErrorMessage();
+          onErrorMessage(regimen);
         }
       } else if ((trimmedTitle.isNotEmpty) && (trimmedTitle == "weight")) {
         if (checkCanEdit(regimen)) {
@@ -1612,7 +1611,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           _sheelaBLEController.filteredDeviceType = 'weight';
           _sheelaBLEController.setupListenerForReadings();
         } else {
-          onErrorMessage();
+          onErrorMessage(regimen);
         }
       } else if (trimmedTitle.isNotEmpty &&
           KeysForGlucose.contains(
@@ -1657,13 +1656,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           _sheelaBLEController.filteredDeviceType = 'bgl';
           _sheelaBLEController.setupListenerForReadings();
         } else {
-          onErrorMessage();
+          onErrorMessage(regimen);
         }
       } else if (trimmedTitle.isNotEmpty && (trimmedTitle == "temperature")) {
         if (checkCanEdit(regimen)) {
           redirectToSheelaScreen(regimen);
         } else {
-          onErrorMessage();
+          onErrorMessage(regimen);
         }
       } else {
         openFormDataDialog(
@@ -1771,8 +1770,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   bool checkCanEdit(RegimentDataModel regimen) {
     var canEdit = false;
-    canEdit = CommonUtil.canEditRegimen(
-        controller.selectedDate.value, regimen!, context!);
+    canEdit = CommonUtil()
+        .canEditRegimen(controller.selectedDate.value, regimen!, context!);
 
     return canEdit;
   }
@@ -1803,7 +1802,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         LoaderClass.hideLoadingDialog(Get.context!);
       }
     } else {
-      onErrorMessage();
+      onErrorMessage(regimen);
     }
   }
 
@@ -2279,24 +2278,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     });
   }
 
-  onErrorMessage() {
-    if (((Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
-            ? symptomsError
-            : activitiesError)
-        .toLowerCase()
-        .contains('future activi')) {
-      _showErrorAlert((Provider.of<RegimentViewModel>(context, listen: false)
-                  .regimentMode ==
-              RegimentMode.Symptoms)
-          ? symptomsError
-          : activitiesError);
+  onErrorMessage(RegimentDataModel regimen) {
+    String error = "";
+    error = CommonUtil().getErrorMessage(regimen, context);
+    if (error.toLowerCase().contains('future activi')) {
+      _showErrorAlert(error);
     } else {
       FlutterToast().getToast(
-        (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
-            ? symptomsError
-            : activitiesError,
+        error,
         Colors.red,
       );
     }
@@ -2331,7 +2320,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   redirectToSheelaScreen(regimen);
                 }
               } else {
-                onErrorMessage();
+                onErrorMessage(regimen);
               }
             } else {
               if (regimen.isPlaying.value) {
@@ -2452,6 +2441,28 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (kDebugMode) {
         print(e);
       }
+    }
+  }
+
+  onResumeEvent() async {
+    try {
+      if (appIsInBackground && controller.isSOSAgentCallDialogOpen.value) {
+        appIsInBackground = false;
+        controller.updateSOSAgentCallDialogStatus(false);
+        Get.back();
+      }
+      var isTimezoneChanged =
+          await TimezoneServices().checkUpdateTimezone(isUpdateTimezone: false);
+      if (isTimezoneChanged) {
+        await controller.getRegimenList(
+            isLoading: true, date: controller.selectedDate.value.toString());
+        if (CommonUtil.isUSRegion()) {
+          final currentTimezone = await TimeZoneHelper.getCurrentTimezone;
+          await TimezoneServices().updateTimezone(currentTimezone);
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }

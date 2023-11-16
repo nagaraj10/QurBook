@@ -31,7 +31,7 @@ const String qr_doctorpatientmapping = 'doctorpatientmapping/';
 const String qr_updateDefaultProvider = 'updateDefaultProvider';
 const String qr_isOriginalPicRequired = 'isOriginalPicRequired=false';
 const String qr_isOriginalPicRequiredTrue = 'isOriginalPicRequired=true';
-const String qr_language = 'reference-data?search-name=Language';
+const String qr_language = 'reference-data?search-name=Language&patient-lang=true';
 const String qr_BLEDataUpload = 'device-data/kiosk/send-device-data';
 const String qr_sendVerificationMail = '/sendVerificationMail';
 const String qr_sortByQ = '?sortBy=';
@@ -450,5 +450,12 @@ const String strDeviceName = 'deviceName';
 const String strException = 'exception';
 const String post_event_logapp_logs = 'event-log/app-logs';
 const String appName = 'appName';
+
+
+const String platformIOS = '&platform=ios';
+const String qr_Text_Translate = 'sheela/text-translate';
+const String qr_textToTranslate = 'textToTranslate';
+const String qr_targetLanguageCode = 'TargetLanguageCode';
+const String qr_sourceLanguageCode = 'sourceLanguageCode';
 
 

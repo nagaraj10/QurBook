@@ -11,6 +11,7 @@ import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/widgets/DropdownWithTags.dart';
 import 'package:myfhb/widgets/TagsList.dart';
 import '../../constants/fhb_constants.dart';
@@ -182,11 +183,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   String? heightUnit = 'feet', weightUnit = 'kg';
 
+  SheelaAIController? sheelaAIcontroller =
+  CommonUtil().onInitSheelaAIController();
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    getSupportedLanguages();
+    sheelaAIcontroller!.getLanguagesFromApi().then((value){
+      getSupportedLanguages();
+    });
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     addFamilyUserInfoBloc!.getCustomRoles();
@@ -533,7 +539,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         ],
                       ),
                 if (widget.arguments!.fromClass == CommonConstants.user_update)
-                  getLanguageWidget()
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 20,top: 12),
+                        child: Text(
+                          CommonConstants.preferredLanguage,
+                          style: TextStyle(
+                            fontSize: 12.0.sp,
+                            color: ColorUtils.myFamilyGreyColor,
+                            fontWeight: FontWeight.w400
+                          ),
+                        ),
+                      ),
+                      getLanguageWidget()
+                    ],
+                  )
                 else
                   Container(),
                 if (widget.arguments!.fromClass == CommonConstants.user_update)
@@ -641,7 +663,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       selectedLanguage = "en";
       PreferenceUtil.saveString(SHEELA_LANG, 'en-IN');
     }
-    CommonUtil.supportedLanguages.forEach((language, languageCode) {
+    sheelaAIcontroller!.langaugeDropdownList.forEach((language, languageCode) {
       languagesList.add(
         DropdownMenuItem<String>(
           value: languageCode,
@@ -3073,13 +3095,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         builder: (context, snapshot) {
           print('I m here');
           return Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+            padding: EdgeInsets.only(left: 20, right: 20),
             child: DropdownButton(
               isExpanded: true,
               hint: Text(
                 CommonConstants.preferredLanguage,
                 style: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: 15.0.sp,
                 ),
               ),
               value: selectedLanguage,

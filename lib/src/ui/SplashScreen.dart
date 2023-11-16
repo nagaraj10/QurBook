@@ -4,6 +4,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
@@ -31,6 +33,7 @@ import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import '../utils/timezone/timezone_services.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
@@ -291,6 +294,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         FirebaseMessaging.instance;
 
                     _firebaseMessaging.getToken().then((token) {
+                      TimezoneServices().checkUpdateTimezone();
                       CommonUtil()
                           .sendDeviceToken(
                               PreferenceUtil.getStringValue(
@@ -963,6 +967,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else if (widget.nsRoute == call) {
                       CommonUtil().startTheCall(widget.bundle);
+                    } else if (widget.nsRoute == strConnectedDevicesScreen) {
+                      CommonUtil()
+                          .navigateToHubList(context, fromNotification: false);
                     } else {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

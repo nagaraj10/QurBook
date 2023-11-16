@@ -1,13 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/SuccessModel.dart';
 import 'package:myfhb/common/models/ExternalLinksResponseModel.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/ActivityStatusModel.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 
@@ -83,8 +87,8 @@ class RegimentService {
           regimentsList: [],
         );
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
 
@@ -129,9 +133,8 @@ class RegimentService {
           regimentsList: [],
         );
       }
-    } catch (e,stackTrace) {
-
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e.toString());
 
       return RegimentResponseModel(
@@ -157,8 +160,8 @@ class RegimentService {
       } else {
         return ExternalLinksResponseModel();
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
       return ExternalLinksResponseModel();
@@ -220,8 +223,8 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       LoaderClass.hideLoadingDialog(Get.context!);
@@ -286,8 +289,8 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw Exception('$e was thrown');
@@ -320,8 +323,8 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw Exception('$e was thrown');
@@ -353,8 +356,8 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw Exception('$e was thrown');
@@ -385,8 +388,8 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw Exception('$e was thrown');
@@ -418,8 +421,8 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw Exception('$e was thrown');
@@ -454,8 +457,8 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       throw Exception('$e was thrown');
@@ -496,9 +499,9 @@ class RegimentService {
           isSuccess: false,
         );
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       throw Exception('$e was thrown');
     }
@@ -527,9 +530,9 @@ class RegimentService {
         print(response.body);
         return GetEventIdModel.fromJson(json.decode(response.body));
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       throw Exception('$e was thrown');
     }
@@ -552,10 +555,28 @@ class RegimentService {
       } else {
         return ActivityStatusModel();
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       throw Exception('$e was thrown');
+    }
+  }
+
+  static Future<SuccessModel> disableActivityWIthComment(
+      String url, String jsonBody) async {
+    var responseJson;
+    var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+
+    try {
+      var response = await ApiServices.post(Constants.BASE_URL + url,
+          headers: headerRequest, body: jsonBody);
+      if (response != null && response.statusCode == 200) {
+        return SuccessModel.fromJson(json.decode(response.body));
+      } else {
+        return SuccessModel();
+      }
+    } on SocketException {
+      throw FetchDataException(strNoInternet);
     }
   }
 }

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/language/model/Language.dart';
+import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
@@ -41,6 +43,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
+    controller.conversations = [];
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -79,6 +82,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       if (CommonUtil.isUSRegion()) {
         controller.isMuted.value = false;
       }
+      controller.getLanguagesFromApi().then((value) {
+        controller.getDeviceSelectionValues(savePrefLang: true);
+      });
     });
   }
 
@@ -91,6 +97,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.stopTTS();
     controller.isSheelaScreenActive = false;
     controller.isDiscardDialogShown.value = false;
+    controller.conversations = [];
     if (controller.bleController != null) {
       controller.bleController!.stopTTS();
       controller.bleController!.stopScanning();
@@ -199,32 +206,10 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         }
                       },
                     ),
-                    actions: [
-                      Visibility(
-                        visible: !Platform.isIOS,
-                        child: PopupMenuButton<String>(
-                          onSelected: (languageCode) {
-                            PreferenceUtil.saveString(SHEELA_LANG,
-                                CommonUtil.langaugeCodes[languageCode]!);
-                            controller.getDeviceSelectionValues(
-                              preferredLanguage: languageCode,
-                            );
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              getSupportedLanguages(),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              right: 10.0.w,
-                            ),
-                            child: Image.asset(
-                              icon_language,
-                              width: 35.0.sp,
-                              height: 35.0.sp,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    actions: [Padding(
+                      padding: const EdgeInsets.only(right: 4.0),
+                      child: getLanguageButton(),
+                    )],
                   ),
             body: Stack(
               fit: StackFit.expand,
@@ -332,15 +317,20 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
       centerTitle: true,
       elevation: 0,
+      leadingWidth: CommonUtil.isUSRegion() ? (CommonUtil().isTablet ?? false) ? 147 : 106 : 58.0,
       actions: [
-        hubListViewController.isUserHasParedDevice.value
-            ? Padding(
-                padding: const EdgeInsets.only(
-                  right: 16,
-                ),
-                child: MyBlinkingBLEIcon(),
-              )
-            : SizedBox.shrink(),
+        Row(
+          children: [
+            if (!CommonUtil.isUSRegion()) hubListViewController.isUserHasParedDevice.value
+                ? MyBlinkingBLEIcon()
+                : SizedBox.shrink(),
+            SizedBox(width: 12.w),
+            if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
+            SizedBox(width: 12.w),
+            getLanguageButton(),
+            SizedBox(width: 8.w),
+          ],
+        )
       ],
       title: CommonUtil().isTablet!
           ? Row(
@@ -369,7 +359,6 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                     ),
                   ),
                 ),
-                if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
               ],
             )
           : Row(
@@ -391,9 +380,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   ),
                 ),
                 const Spacer(
-                  flex: 2,
+                  flex: 1,
                 ),
-                if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
               ],
             ),
       leading: Container(
@@ -438,17 +426,25 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   )
                 :*/
                 CommonUtil.isUSRegion()
-                    ? Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.h,
-                          vertical: 4.h,
-                        ),
-                        child: Icon(
-                          Icons.home,
-                          size: 32.sp,
-                          color: Color(CommonUtil().getQurhomePrimaryColor()),
-                        ),
-                      )
+                    ? Row(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.h,
+                              vertical: 4.h,
+                            ),
+                            child: Icon(
+                              Icons.home,
+                              size: 32.sp,
+                              color: Color(CommonUtil().getQurhomePrimaryColor()),
+                            ),
+                          ),
+                        SizedBox(width: 12.w),
+                        hubListViewController.isUserHasParedDevice.value
+                            ? MyBlinkingBLEIcon()
+                            : SizedBox.shrink(),
+                      ],
+                    )
                     : Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: CommonUtil().isTablet! ? 0 : 8.h,
@@ -517,7 +513,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.isMicListening.value = false;
     final List<PopupMenuItem<String>> languagesMenuList = [];
     final currentLanguage = controller.getCurrentLanCode(splittedCode: true);
-    CommonUtil.supportedLanguages.forEach(
+
+    controller.langaugeDropdownList.forEach(
       (
         language,
         languageCode,
@@ -525,38 +522,68 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         languagesMenuList.add(
           PopupMenuItem<String>(
             value: languageCode,
-            child: Row(
-              children: [
-                Radio(
-                  value: languageCode,
-                  groupValue: currentLanguage,
-                  activeColor: Color(CommonUtil().getMyPrimaryColor()),
-                  onChanged: (dynamic value) {
-                    Get.back();
-                    PreferenceUtil.saveString(SHEELA_LANG,
-                        CommonUtil.langaugeCodes[value ?? 'undef']!);
-                    controller
-                        .getDeviceSelectionValues(
-                      preferredLanguage: value,
-                    )
-                        .then((value1) {
-                      controller.updateDeviceSelectionModel(
-                          preferredLanguage: value);
-                    });
-                  },
-                ),
-                Text(
-                  toBeginningOfSentenceCase(language)!,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
+            child: Container(
+              padding: CommonUtil().isTablet!
+                  ? EdgeInsets.all(14)
+                  : EdgeInsets.all(0),
+              child: Row(
+                children: [
+                  Radio(
+                    value: languageCode,
+                    groupValue: currentLanguage,
+                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                    onChanged: (dynamic value) {
+                      Get.back();
+                      getupdateDeviceSelection(value);
+                    },
                   ),
-                ),
-              ],
+                  Text(
+                    toBeginningOfSentenceCase(language)!,
+                    style: TextStyle(
+                      fontSize: 16.0.sp,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
       },
     );
     return languagesMenuList;
+  }
+
+  void getupdateDeviceSelection(String value) {
+    PreferenceUtil.saveString(
+        SHEELA_LANG, CommonUtil.langaugeCodes[value ?? 'undef']!);
+    controller
+        .getDeviceSelectionValues(
+      preferredLanguage: value,
+    )
+        .then((value1) {
+      controller.updateDeviceSelectionModel(preferredLanguage: value);
+    });
+  }
+
+  Widget getLanguageButton() {
+    return PopupMenuButton<String>(
+      onSelected: (languageCode) {
+        getupdateDeviceSelection(languageCode);
+      },
+      itemBuilder: (BuildContext context) => getSupportedLanguages(),
+      child: Padding(
+        padding: EdgeInsets.only(
+          right: 10.0.w,
+        ),
+        child: Image.asset(
+          icon_language,
+          width: 35.0.sp,
+          height: 35.0.sp,
+          color: PreferenceUtil.getIfQurhomeisAcive()
+              ? Color(CommonUtil().getQurhomePrimaryColor())
+              : Colors.white,
+        ),
+      ),
+    );
   }
 }

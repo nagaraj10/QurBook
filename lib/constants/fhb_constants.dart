@@ -118,6 +118,8 @@ const String STR_KEY_HEIGHT = 'height';
 const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
 
+const String stringLastTimeZone = 'lastTimeZone';
+
 const String STR_VAL_HEIGHT_IND = 'f-in';
 const String STR_VAL_HEIGHT_IND_NEW = 'feet';
 
@@ -167,6 +169,12 @@ const String MSG_EMAIL_OTP_VERIFIED = 'Verified';
 const String PROFILE_EMAIL = 'Email';
 const String KEY_PROFILE_BANNER = 'profileBanner';
 const String KEY_PROFILE_IMAGE = 'profileImage';
+
+const String strYesValue = 'YES';
+const String strNoValue = 'NO';
+const String strKeyCareGiver = 'keyCareGiver';
+const String strKeyFamilyAlert = 'isFamilyALert';
+const String strKeyAlertChildID = 'isFamilyALertChildID';
 
 const String KEY_DASHBOARD_BANNER = 'dashboardBanner';
 const String MSG_NO_CAMERA_VOICERECORDS = 'No Camera Option Available for';
@@ -442,6 +450,11 @@ const String PLEASE_ADD_COMMENTS = 'Please add comments';
 const String COMMENTS = 'Comments';
 const String strEmergency = 'Escalate this as emergency';
 
+const String strReasonDiabling =
+    'Are you sure you want to disable the activity?';
+const String strReasonDiablingHint = 'Reasons for disabling the activity';
+const String DISABLE = 'Disable';
+const String strDisableText='Disabled by the patient';
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
@@ -776,6 +789,9 @@ const String DEVICE_TYPE = 'deviceType';
 const String USER_HUB_ID = 'userHubId';
 const String USER_ID = 'userId';
 const String DEVICE_NAME = 'deviceName';
+const String SHEELA_REMAINDER_START = 'SheelaRemainderStart';
+const String SHEELA_REMAINDER_END = 'SheelaRemainderEnd';
+const String SHEELA_REMAINDER_TIME = 'SheelaReminderTime';
 
 const String ISBPCONNECT = 'bpconnect';
 const String IS_BP_SCAN_CANCEL = 'bpscancancel';
@@ -821,7 +837,8 @@ const String IND_REG = 'IN';
 
 String strMicPermission = 'Microphone permission is required';
 String strCameraPermission = 'Camera permission is required';
-String strLocationBlePermission = 'Location or Bluetooth scan permission is required';
+String strLocationBlePermission =
+    'Location or Bluetooth scan permission is required';
 String strCallPermission = 'Camera or Microphone permission is required';
 
 double height = 0.0;
@@ -852,7 +869,7 @@ const String primary_chat = '(Primary)';
 const String primary_provider = 'Primary';
 
 //patientAlert
-const String escalated ='Escalated';
+const String escalated = 'Escalated';
 
 const String STR_PROVIDERDOCUMENTS = 'Provider Documents';
 const String STR_PRESCRIPTION = 'Prescription';
@@ -882,14 +899,21 @@ const String SearchingForDevices = 'Searching for devices';
 const String deviceConnected = 'Device connected';
 
 const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
-const String activity_completed_regimen = 'The activity has been already completed';
+const String activity_completed_regimen =
+    'The activity has been already completed';
 
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
 const String StrUndoAll = 'Undo all';
 
+const String StrSheelaErrorMsg =
+    'There is some issue with sheela,\n Please try after some time';
+
 const double tabFontTitle = 25.0;
 const double mobileFontTitle = 18.0;
+
+const double tabTitle = 25.0;
+const double mobileTitle = 22.0;
 
 const double tabHeader1 = 22.0;
 const double mobileHeader1 = 14.0;
@@ -901,14 +925,13 @@ const double tabHeader3 = 18.0;
 const double mobileHeader3 = 12.0;
 
 const double tabHeader4 = 16.0;
-const double mobileHeader4= 11.0;
+const double mobileHeader4 = 11.0;
 
 const double imageTabHeader = 70.0;
 const double imageMobileHeader = 40.0;
 
 const double imageTabIcon = 70.0;
 const double imageMobileIcon = 60.0;
-
 
 const double imageProfileTabHeader = 65.0;
 const double imageProfileMobileHeader = 40.0;
@@ -932,8 +955,8 @@ Future<void> fbaLog({String? eveName, eveParams}) async {
               'navigationPage': 'Appointment page',
               'ns_type': 'appointment_list'
             });
-  } catch (e,stackTrace) {
+  } catch (e, stackTrace) {
     print(e);
-    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
 }

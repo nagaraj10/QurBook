@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
@@ -8,12 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
@@ -97,6 +102,9 @@ class SheelaAIController extends GetxController {
   Rx<bool> isFullScreenVideoPlayer = false.obs;
   Rx<bool> isPlayPauseView = false.obs;
   Rx<bool> isAudioScreenLoading = false.obs;
+
+  LanguageRepository languageBlock = LanguageRepository();
+  Map<String, dynamic> langaugeDropdownList = {};
 
   @override
   void onInit() {
@@ -386,6 +394,7 @@ class SheelaAIController extends GetxController {
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;
       }
+      sheelaRequest.language = getCurrentLanCode(splittedCode: true);
       final body = sheelaRequest.toJson();
       final response = await SheelAIAPIService().SheelaAIAPI(
         body,
@@ -457,9 +466,9 @@ class SheelaAIController extends GetxController {
             playTTS();
           }
           callToCC(currentResponse);
-          if (currentResponse.lang != null && currentResponse.lang != '') {
+          /*if (currentResponse.lang != null && currentResponse.lang != '') {
             PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang ?? "");
-          }
+          }*/
           scrollToEnd();
         } else {
           //Received a wrong format data
@@ -469,9 +478,7 @@ class SheelaAIController extends GetxController {
         // Failed to get Sheela Response
         conversations.removeLast();
         if (kDebugMode) print(response.body);
-        FlutterToast().getToast(
-            'There is some issue with sheela,\n Please try after some time',
-            Colors.black54);
+        FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
       }
       isLoading.value = false;
     } catch (e, stackTrace) {
@@ -481,9 +488,7 @@ class SheelaAIController extends GetxController {
       isLoading.value = false;
       conversations.removeLast();
       if (kDebugMode) print(e.toString());
-      FlutterToast().getToast(
-          'There is some issue with sheela,\n Please try after some time',
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     }
   }
 
@@ -566,9 +571,10 @@ class SheelaAIController extends GetxController {
       if (playButtons) {
         final currentButton = currentPlayingConversation!
             .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
-        if (currentButton.title!.contains(StrExit) ||
-            (currentButton.title!.contains(str_Undo) ||
-                (currentButton.title!.contains(StrUndoAll)))) {
+        if ((currentButton.title!.contains(StrExit)) ||
+            (currentButton.title!.contains(str_Undo)) ||
+            (currentButton.title!.contains(StrUndoAll)) ||
+            (conversations.last.endOfConv ?? false)) {
           if (conversations.last.endOfConv) {
             currentPlayingConversation!.isPlaying.value = false;
             currentButton.isPlaying.value = false;
@@ -755,7 +761,7 @@ class SheelaAIController extends GetxController {
     try {
       final req = GoogleTTSRequestModel.fromJson({});
       req.input!.text = text;
-      req.voice!.languageCode = getCurrentLanCode();
+      req.voice!.languageCode = getCurrentLanCode(splittedCode: true);
       final response = await SheelAIAPIService().getAudioFileTTS(req.toJson());
       if (response.statusCode == 200 && (response.body).isNotEmpty) {
         final data = jsonDecode(response.body);
@@ -765,23 +771,17 @@ class SheelaAIController extends GetxController {
           return result;
         } else {
           //Need to handle failure
-          FlutterToast().getToast(
-              'There is some issue with sheela,\n Please try after some time',
-              Colors.black54);
+          FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
         }
       } else {
         //Failed to get body or failed status code
-        FlutterToast().getToast(
-            'There is some issue with sheela,\n Please try after some time',
-            Colors.black54);
+        FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e.toString());
       //need to handle failure in the api call for tts
-      FlutterToast().getToast(
-          'There is some issue with sheela,\n Please try after some time',
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     }
   }
 
@@ -936,22 +936,21 @@ class SheelaAIController extends GetxController {
       }
     } on PlatformException {
       isMicListening.value = false;
-      FlutterToast().getToast(
-          'There is some issue with sheela,\n Please try after some time',
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
-      FlutterToast().getToast(
-          'There is some issue with sheela,\n Please try after some time',
-          Colors.black54);
+      FlutterToast().getToast(StrSheelaErrorMsg, Colors.black54);
     }
   }
 
   String? getCurrentLanCode({bool splittedCode = false}) {
     try {
       String? currentLang = PreferenceUtil.getStringValue(SHEELA_LANG);
+      if (!((currentLang ?? '').contains("-"))) {
+        currentLang = CommonUtil.langaugeCodes[currentLang ?? 'undef'];
+      }
       if ((currentLang ?? '').isNotEmpty) {
         if (splittedCode && (currentLang != "undef")) {
           final langCode = currentLang!.split("-").first;
@@ -982,7 +981,8 @@ class SheelaAIController extends GetxController {
   DeviceStatus currentDeviceStatus = DeviceStatus();
   late CreateDeviceSelectionModel createDeviceSelectionModel;
 
-  setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
+  setValues(
+      GetDeviceSelectionModel getDeviceSelectionModel, bool savePrefLang) {
     final selection = getDeviceSelectionModel.result![0];
     final prof = selection.profileSetting!;
     currentDeviceStatus.preColor = prof.preColor;
@@ -1009,6 +1009,11 @@ class SheelaAIController extends GetxController {
         prof.caregiverCommunicationSetting?.vitals ?? true;
     currentDeviceStatus.allowSymptomsNotification =
         prof.caregiverCommunicationSetting?.symptoms ?? true;
+
+    if (savePrefLang) {
+      PreferenceUtil.saveString(
+          SHEELA_LANG, prof.preferred_language ?? 'en-IN');
+    }
   }
 
   Future<CreateDeviceSelectionModel?> createDeviceSel() async {
@@ -1041,12 +1046,13 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  Future getDeviceSelectionValues({String? preferredLanguage}) async {
+  Future getDeviceSelectionValues(
+      {String? preferredLanguage, bool savePrefLang = false}) async {
     final GetDeviceSelectionModel selectionResult =
         await HealthReportListForUserRepository().getDeviceSelection();
     if (selectionResult.isSuccess!) {
       if (selectionResult.result != null) {
-        setValues(selectionResult);
+        setValues(selectionResult, savePrefLang);
         currentDeviceStatus.userMappingId = selectionResult.result![0].id;
       } else {
         currentDeviceStatus = DeviceStatus();
@@ -1095,6 +1101,8 @@ class SheelaAIController extends GetxController {
   getSheelaBadgeCount(
       {bool isNeedSheelaDialog = false,
       bool isFromQurHomeRegimen = false}) async {
+    final dir = await getTemporaryDirectory();
+
     if (!(sheelaIconBadgeCount.value > 0)) {
       sheelaIconBadgeCount.value = 0;
     }
@@ -1110,32 +1118,22 @@ class SheelaAIController extends GetxController {
                 isNeedSheelaDialog = true;
               }
               if (isNeedSheelaDialog) {
-                if ((value.result?.queueCount ?? 0) > 0 &&
+                if ((CommonUtil.REGION_CODE != "US" &&
+                    CommonUtil().isTablet == true)) {
+                  showRemainderBasedOnCondition(
+                      isFromQurHomeRegimen: isFromQurHomeRegimen,
+                      isNeedSheelaDialog: isNeedSheelaDialog);
+                } else if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
-                  isQueueDialogShowing.value = true;
-                  CommonUtil().dialogForSheelaQueueStable(Get.context!,
-                      unReadMsgCount: Provider.of<ChatSocketViewModel>(
-                              Get.context!,
-                              listen: false)
-                          .chatTotalCount, onTapSheelaRemainders: (value) {
-                    isQueueDialogShowing.value = false;
-                    Get.back();
-                    Get.toNamed(
-                      rt_Sheela,
-                      arguments: value
-                          ? SheelaArgument(
-                              rawMessage: sheelaQueueShowRemind,
-                            )
-                          : SheelaArgument(showUnreadMessage: true),
-                    )?.then((value) {
-                      ///Update Sheela remainder count
-                      getSheelaBadgeCount(isNeedSheelaDialog: true);
-                    });
-                  });
+                  if (isQueueDialogShowing.value == false) {
+                    isQueueDialogShowing.value = true;
+
+                    showDialogForSheelaBox(
+                        isFromQurHomeRegimen: isFromQurHomeRegimen,
+                        isNeedSheelaDialog: isNeedSheelaDialog);
+                  }
                 }
               }
-            } else {
-              sheelaIconBadgeCount.value = 0;
             }
           } else {
             sheelaIconBadgeCount.value = 0;
@@ -1148,6 +1146,24 @@ class SheelaAIController extends GetxController {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       sheelaIconBadgeCount.value = 0;
+    }
+  }
+
+  Future<int?> playAudioPlayer() async {
+    try {
+      late AudioCache _audioCache;
+      _audioCache = AudioCache();
+
+      String audioasset = "assets/raw/ns_final.mp3";
+      ByteData bytes =
+          await rootBundle.load(audioasset); //load sound from assets
+      Uint8List soundbytes =
+          bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+      int? result = await player?.playBytes(soundbytes);
+      player?.play(audioasset);
+      return result;
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -1292,6 +1308,151 @@ class SheelaAIController extends GetxController {
     if (_sessionTimeout != null && _sessionTimeout!.isActive) {
       _sessionTimeout!.cancel();
       _sessionTimeout = null;
+    }
+  }
+
+  Future<void> getLanguagesFromApi() async {
+    langaugeDropdownList = {};
+    try {
+      var languageModelList = await languageBlock.getLanguage();
+      if (languageModelList != null) {
+        if (languageModelList.result != null) {
+          for (var languageResultObj in languageModelList.result!) {
+            if (languageResultObj.referenceValueCollection != null &&
+                languageResultObj.referenceValueCollection!.isNotEmpty) {
+              for (var referenceValueCollection
+                  in languageResultObj.referenceValueCollection!) {
+                if (referenceValueCollection.name != null &&
+                    referenceValueCollection.code != null) {
+                  langaugeDropdownList.addAll({
+                    referenceValueCollection.name?.toLowerCase() ?? '':
+                        referenceValueCollection.code ?? ''
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Future<String?> getTextTranslate(String? text) async {
+    try {
+      String? selLanguageCode = getCurrentLanCode(splittedCode: true);
+      if ((selLanguageCode ?? '').contains('en')) {
+        return text;
+      }
+      Map<String, dynamic> reqJson = new Map<String, dynamic>();
+      reqJson[qr_textToTranslate] = text;
+      reqJson[qr_targetLanguageCode] = getCurrentLanCode(splittedCode: true);
+      reqJson[qr_sourceLanguageCode] = 'en';
+      final response = await SheelAIAPIService().getTextTranslate(reqJson);
+      if (response.statusCode == 200 && (response.body).isNotEmpty) {
+        final data = jsonDecode(response.body);
+        final GoogleTTSResponseModel googleTTSResponseModel =
+            GoogleTTSResponseModel.fromJson(data);
+        if ((googleTTSResponseModel != null) &&
+            (googleTTSResponseModel.isSuccess ?? false)) {
+          String strText =
+              (googleTTSResponseModel?.result?.translatedText ?? '');
+          return (strText.trim().isNotEmpty) ? strText : text;
+        } else {
+          return text;
+        }
+      } else {
+        return text;
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      return text;
+    }
+  }
+
+  void showDialogForSheelaBox(
+      {bool isNeedSheelaDialog = false, bool isFromQurHomeRegimen = false}) {
+    isQueueDialogShowing.value = true;
+
+    CommonUtil().dialogForSheelaQueueStable(Get.context!,
+        unReadMsgCount:
+            Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+                .chatTotalCount, onTapSheelaRemainders: (value) {
+      isQueueDialogShowing.value = false;
+      Get.back();
+      Get.toNamed(
+        rt_Sheela,
+        arguments: value
+            ? SheelaArgument(
+                rawMessage: sheelaQueueShowRemind,
+              )
+            : SheelaArgument(showUnreadMessage: true),
+      )?.then((value) {
+        ///Update Sheela remainder count
+        getSheelaBadgeCount(isNeedSheelaDialog: true);
+      });
+    });
+  }
+
+  void showRemainderBasedOnCondition(
+      {bool isNeedSheelaDialog = false,
+      bool isFromQurHomeRegimen = false}) async {
+    String? startDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
+    String? endDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
+    var sheelaAIController = Get.find<SheelaAIController>();
+    var qurhomeCOntroller = CommonUtil().onInitQurhomeRegimenController();
+    final controllerQurhomeRegimen =
+        CommonUtil().onInitQurhomeRegimenController();
+
+    List activitiesFilteredList =
+        controllerQurhomeRegimen.remainderTimestamps ?? [];
+
+    if (startDate != null &&
+        startDate != "" &&
+        endDate != null &&
+        endDate != "") {
+      if (((sheelaAIController.sheelaIconBadgeCount.value ?? 0)) > 0) {
+        if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) ||
+                DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
+            (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
+            (qurhomeCOntroller.evryOneMinuteRemainder != null ||
+                qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
+          if (activitiesFilteredList != null &&
+              activitiesFilteredList.length > 0) {
+            for (int i = 0; i < activitiesFilteredList.length; i++) {
+              if (((DateTime.now()
+                              .difference(activitiesFilteredList[i])
+                              .inMinutes ??
+                          0) ==
+                      0) ||
+                  ((DateTime.now()
+                              .difference(activitiesFilteredList[i])
+                              .inMinutes ??
+                          0) ==
+                      1)) {
+                if (isQueueDialogShowing.value == false) {
+                  isQueueDialogShowing.value = true;
+                  playAudioPlayer().then((value) {
+                    activitiesFilteredList.removeAt(i);
+                    showDialogForSheelaBox(
+                        isFromQurHomeRegimen: isFromQurHomeRegimen,
+                        isNeedSheelaDialog: isNeedSheelaDialog);
+                  });
+                }
+              }
+            }
+          }
+        }
+      } else if (((DateTime.parse(endDate ?? '')
+                  .isAtSameMomentAs(DateTime.now())) ||
+              (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) &&
+          (qurhomeCOntroller.evryOneMinuteRemainder != null &&
+              qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
+        qurhomeCOntroller.evryOneMinuteRemainder?.cancel();
+        PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
+        PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
+      }
     }
   }
 

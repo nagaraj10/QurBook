@@ -32,6 +32,7 @@ import 'dart:io';
 import '../../constants/router_variable.dart' as router;
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/PageNavigator.dart';
+import '../../src/utils/timezone/timezone_services.dart';
 import '../model/patientlogin_model.dart' as loginModel;
 import '../../constants/fhb_constants.dart' as con;
 import '../view_model/otp_view_model.dart';
@@ -647,7 +648,7 @@ class _VerifyPatientState extends State<VerifyPatient>
       final _firebaseMessaging = FirebaseMessaging.instance;
       var token = await _firebaseMessaging.getToken();
       CommonUtil().OnInitAction();
-
+      TimezoneServices().checkUpdateTimezone();
       await CommonUtil()
           .sendDeviceToken(
               userId, widget.emailId, widget.PhoneNumber, token, true)
@@ -709,6 +710,7 @@ class _VerifyPatientState extends State<VerifyPatient>
         CommonUtil().appLogs(message: e,stackTrace:stackTrace);
       }
       CommonUtil().OnInitAction();
+      TimezoneServices().checkUpdateTimezone();
       await CommonUtil()
           .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {

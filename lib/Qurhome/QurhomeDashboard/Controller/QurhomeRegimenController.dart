@@ -74,6 +74,7 @@ class QurhomeRegimenController extends GetxController {
   var selectedCalendar = DateTime.now().obs;
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE)!;
+  List<DateTime?> remainderTimestamps = [];
 
   Location? locationModel;
 
@@ -91,6 +92,7 @@ class QurhomeRegimenController extends GetxController {
   Rx<bool> isErrorAppLogDialogShowing = false.obs;
   List<ErrorAppLogDataModel>? errorAppLogList = [];
   Timer? remainderQueueTimer;
+  Timer? evryOneMinuteRemainder;
 
   getRegimenList(
       {bool isLoading = true, String? date, String? patientId}) async {
@@ -183,8 +185,8 @@ class QurhomeRegimenController extends GetxController {
                       await platform.invokeMethod(APPOINTMENT_DETAILS,
                           {'data': jsonEncode(apiReminder.toJson())});
                     }
-                  } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                  } catch (e, stackTrace) {
+                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
                     if (kDebugMode) {
                       print(e);
@@ -205,11 +207,11 @@ class QurhomeRegimenController extends GetxController {
         getUserDetails();
         getCareCoordinatorId();
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
-        printError(info: "Regimentlist: "+e.toString());
+        printError(info: "Regimentlist: " + e.toString());
       }
       onStopLoadingCircle();
     }
@@ -248,8 +250,8 @@ class QurhomeRegimenController extends GetxController {
       timer?.cancel();
       remainderQueueTimer?.cancel();
       super.onClose();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -293,8 +295,8 @@ class QurhomeRegimenController extends GetxController {
           }
         });
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -329,8 +331,8 @@ class QurhomeRegimenController extends GetxController {
                   CommonUtil().validString(address.subThoroughfare));
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -369,8 +371,8 @@ class QurhomeRegimenController extends GetxController {
           }
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -431,8 +433,8 @@ class QurhomeRegimenController extends GetxController {
         FlutterToast().getToast(
             'Could not start call due to permission issue', Colors.red);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -458,8 +460,8 @@ class QurhomeRegimenController extends GetxController {
           ? CommonUtil()
               .validString(prof.result!.userContactCollection3![0]!.phoneNumber)
           : '';
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -490,8 +492,8 @@ class QurhomeRegimenController extends GetxController {
               .validString(sosCallAgentNumberData.result!.exoPhoneNumber);
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -561,8 +563,8 @@ class QurhomeRegimenController extends GetxController {
           }
         },
       );
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -581,8 +583,8 @@ class QurhomeRegimenController extends GetxController {
       }
 
       startTimer();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -646,8 +648,8 @@ class QurhomeRegimenController extends GetxController {
       await getSOSButtonStatus();
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         print(e);
@@ -658,7 +660,7 @@ class QurhomeRegimenController extends GetxController {
   getSOSButtonStatus() async {
     try {
       await _apiProvider.getSOSButtonStatus();
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
         print(e);
       }
@@ -676,6 +678,95 @@ class QurhomeRegimenController extends GetxController {
       );
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  initOneRemainderQueue() async {
+    String? startDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
+    String? endDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
+    try {
+      if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+        if (startDate != null &&
+            startDate != "" &&
+            endDate != null &&
+            endDate != "") {
+          var sheelaAIController = Get.find<SheelaAIController>();
+
+          if ((DateTime.parse(startDate ?? '')
+                      .isAtSameMomentAs(DateTime.now()) ||
+                  DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
+              (DateTime.now().isBefore(DateTime.parse(endDate ?? '')))) {
+            try {
+              sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+            }
+          } else if ((DateTime.parse(endDate ?? '')
+                  .isAtSameMomentAs(DateTime.now())) ||
+              (DateTime.now().isAfter(DateTime.parse(endDate ?? '')))) {
+            evryOneMinuteRemainder?.cancel();
+            PreferenceUtil.saveString(SHEELA_REMAINDER_START, '');
+            PreferenceUtil.saveString(SHEELA_REMAINDER_END, '');
+          }
+        } else {
+          callMethodToSaveRemainder();
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  void startTimerForSheela() {
+    if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+      try {
+        evryOneMinuteRemainder = Timer.periodic(
+          Duration(minutes: 1),
+          (Timer timer) {
+            initOneRemainderQueue();
+          },
+        );
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      }
+    }
+  }
+
+  void callMethodToSaveRemainder() async {
+    final controllerQurhomeRegimen =
+        CommonUtil().onInitQurhomeRegimenController();
+    List<RegimentDataModel>? activitiesFilteredList = [];
+    await controllerQurhomeRegimen.getRegimenList();
+    activitiesFilteredList =
+        controllerQurhomeRegimen.qurHomeRegimenResponseModel?.regimentsList;
+    if (activitiesFilteredList != null && activitiesFilteredList.length > 0) {
+      int length = activitiesFilteredList?.length ?? 0;
+      if ((length ?? 0) > 0) {
+        PreferenceUtil.saveString(SHEELA_REMAINDER_START,
+            activitiesFilteredList?[0]?.estartNew ?? '');
+        PreferenceUtil.saveString(SHEELA_REMAINDER_END,
+            activitiesFilteredList?[length - 1]?.estartNew ?? '');
+        if (controllerQurhomeRegimen.remainderTimestamps.length >= 0) {
+          controllerQurhomeRegimen.remainderTimestamps = [];
+          DateTime startTime =
+              DateTime.parse(activitiesFilteredList?[0]?.estartNew ?? "");
+          DateTime endTime = DateTime.parse(
+              activitiesFilteredList?[length - 1]?.estartNew ?? '');
+
+          controllerQurhomeRegimen.remainderTimestamps
+              .add(((startTime ?? DateTime.now()).add(Duration(minutes: 30))));
+          DateTime clonedTime =
+              controllerQurhomeRegimen.remainderTimestamps[0] ?? DateTime.now();
+          DateTime storTime = clonedTime;
+          do {
+            storTime =
+                ((storTime ?? DateTime.now()).add(Duration(minutes: 30)));
+            if (storTime.isBefore(endTime))
+              controllerQurhomeRegimen.remainderTimestamps.add(storTime);
+          } while (storTime.isBefore(endTime));
+          controllerQurhomeRegimen.remainderTimestamps.add(endTime);
+        }
+      }
     }
   }
 }

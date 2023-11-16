@@ -29,8 +29,10 @@ import 'package:intl/intl.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/SheelaRemainderConfig.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
@@ -186,6 +188,8 @@ class CommonUtil {
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
   static String PUSH_KIT_TOKEN = '';
+  static String SHEELA_CONFIGURATION_URL =
+      'system-configuration/sheela-reminder-config';
 
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
@@ -3117,24 +3121,19 @@ class CommonUtil {
     }
   }
 
-  static Map<String, String> supportedLanguages = (REGION_CODE == 'IN')
-      ? {
-          'english': 'en',
-          'french': 'fr',
-          'german': 'de',
-          'spanish': 'es',
-          'bengali': 'bn',
-          'gujarati': 'gu',
-          'hindi': 'hi',
-          'kannada': 'kn',
-          'malayalam': 'ml',
-          'tamil': 'ta',
-          'telugu': 'te',
-        }
-      : {
-          'english': 'en',
-          'spanish': 'es',
-        };
+  static Map<String, String> supportedLanguages = {
+    'english': 'en',
+    'french': 'fr',
+    'german': 'de',
+    'spanish': 'es',
+    'bengali': 'bn',
+    'gujarati': 'gu',
+    'hindi': 'hi',
+    'kannada': 'kn',
+    'malayalam': 'ml',
+    'tamil': 'ta',
+    'telugu': 'te',
+  };
 
   static const Map<String, String> langaugeCodes = {
     'en': 'en-IN',
@@ -6394,6 +6393,15 @@ class CommonUtil {
     return chatUserListController;
   }
 
+  SheelaAIController onInitSheelaAIController() {
+    SheelaAIController sheelaAIController;
+    if (!Get.isRegistered<SheelaAIController>()) {
+      Get.put(SheelaAIController());
+    }
+    sheelaAIController = Get.find();
+    return sheelaAIController;
+  }
+
   void goToAppointmentDetailScreen(String appointmentId) {
     if (!Get.isRegistered<AppointmentDetailsController>())
       Get.lazyPut(() => AppointmentDetailsController());
@@ -6577,27 +6585,63 @@ class CommonUtil {
         .inDays;
   }
 
-  static bool canEditRegimen(
+  bool canEditRegimen(
       DateTime selectedDate, RegimentDataModel regimen, BuildContext context) {
     var canEdit = false;
+    int duration = 15;
+    duration = CommonUtil.isUSRegion() ? regimen?.activityThreshold ?? 15 : 15;
     try {
       if (regimen?.ack != null) {
         canEdit = true;
       } else if (regimen?.doseMealString == Constants.doseValueless ||
           regimen?.doseMealString == Constants.doseValueHigh) {
-        DateTime selectedDateTime =
-            CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
+        if (regimen?.activityOrgin == strSurvey &&
+            regimen?.otherinfo?.isAllDayActivity == true) {
+          DateTime selectedDateTime =
+              CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
 
-        canEdit =
-            selectedDateTime!.difference(DateTime.now()).inMinutes <= 15 &&
-                Provider.of<RegimentViewModel>(context!, listen: false)
-                        .regimentMode ==
-                    RegimentMode.Schedule;
+          if (calculateDifference(selectedDateTime ?? DateTime.now()) <= 0) {
+            canEdit = true;
+          } else {
+            canEdit =
+                (selectedDateTime?.difference(DateTime.now()).inMinutes ?? 0) <=
+                        duration &&
+                    Provider.of<RegimentViewModel>(context!, listen: false)
+                            .regimentMode ==
+                        RegimentMode.Schedule;
+          }
+        } else {
+          DateTime selectedDateTime =
+              CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
+
+          canEdit =
+              (selectedDateTime?.difference(DateTime.now()).inMinutes ?? 0) <=
+                      duration &&
+                  Provider.of<RegimentViewModel>(context!, listen: false)
+                          .regimentMode ==
+                      RegimentMode.Schedule;
+        }
       } else {
-        canEdit = regimen!.estart!.difference(DateTime.now()).inMinutes <= 15 &&
-            Provider.of<RegimentViewModel>(context!, listen: false)
-                    .regimentMode ==
-                RegimentMode.Schedule;
+        if (regimen?.activityOrgin == strSurvey &&
+            regimen?.otherinfo?.isAllDayActivity == true) {
+          if (calculateDifference(regimen?.estart ?? DateTime.now()) <= 0) {
+            canEdit = true;
+          } else {
+            canEdit =
+                (regimen?.estart?.difference(DateTime.now()).inMinutes ?? 0) <=
+                        duration &&
+                    Provider.of<RegimentViewModel>(context!, listen: false)
+                            .regimentMode ==
+                        RegimentMode.Schedule;
+          }
+        } else {
+          canEdit =
+              (regimen?.estart?.difference(DateTime.now()).inMinutes ?? 0) <=
+                      duration &&
+                  Provider.of<RegimentViewModel>(context!, listen: false)
+                          .regimentMode ==
+                      RegimentMode.Schedule;
+        }
       }
     } catch (e) {
       canEdit = false;
@@ -6995,6 +7039,30 @@ class CommonUtil {
     return hubListViewController;
   }
 
+  navigateToHubList(BuildContext context, {bool fromNotification = false}) {
+    try {
+      //Get.back();
+      Get.to(
+        () => HubListView(),
+        binding: BindingsBuilder(
+          () {
+            if (!Get.isRegistered<HubListViewController>()) {
+              Get.lazyPut(
+                () => HubListViewController(),
+              );
+            }
+          },
+        ),
+      )?.then((value) {
+        if (!fromNotification) {
+          PageNavigator.goToPermanent(context, router.rt_Landing);
+        }
+      });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
   LandingScreenController onInitLandingScreenController() {
     LandingScreenController landingScreenController;
     if (!Get.isRegistered<LandingScreenController>()) {
@@ -7132,7 +7200,6 @@ class CommonUtil {
           statuses[Permission.notification]!.isGranted) {}*/
   }
 
-
   String getExtensionSheelaPreview(int type) {
     switch (type) {
       case 0:
@@ -7148,6 +7215,89 @@ class CommonUtil {
     }
   }
 
+  getSheelaConfig() async {
+    var apiBaseHelper = ApiBaseHelper();
+
+    final response =
+        await apiBaseHelper.getSheelaConfig(SHEELA_CONFIGURATION_URL);
+    SheelaRemainderConfig sheelaRemainderConfig =
+        SheelaRemainderConfig.fromJson(response);
+    if (sheelaRemainderConfig != null &&
+        sheelaRemainderConfig.isSuccess == true) {
+      if (sheelaRemainderConfig.result != null &&
+          (sheelaRemainderConfig.result?.length ?? 0) > 0) {
+        if (sheelaRemainderConfig.result?[0].configurationData != null &&
+            (sheelaRemainderConfig.result?[0].configurationData?.length ?? 0) >
+                0) {
+          if (sheelaRemainderConfig.result?[0].configurationData?[0].name ==
+              "sheelaReminderTime") {
+            int time = getTime(
+                sheelaRemainderConfig?.result?[0].configurationData?[0].value ??
+                    '');
+
+            PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (time));
+          } else {
+            PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
+          }
+        }
+      }
+    }
+    return sheelaRemainderConfig;
+  }
+
+  int getTime(String value) {
+    switch (value) {
+      case "15m":
+        return 15;
+        break;
+      case "30m":
+        return 30;
+        break;
+
+      case "45m":
+        return 45;
+        break;
+      case "1h":
+        return 60;
+        break;
+      case "2h":
+        return 120;
+        break;
+
+      default:
+        return 30;
+    }
+  }
+
+  getErrorMessage(RegimentDataModel? regimen, BuildContext context) {
+    if (isUSRegion()) {
+      String duration, dynamicActivityError;
+
+      if (regimen?.activityThreshold != null &&
+          regimen?.activityThreshold > 0) {
+        duration = convertMinuteToHour(regimen?.activityThreshold);
+        dynamicActivityError =
+            "Future activities can be logged only ${duration} before the occurrence";
+        return (Provider.of<RegimentViewModel>(context, listen: false)
+                    .regimentMode ==
+                RegimentMode.Symptoms)
+            ? symptomsError
+            : dynamicActivityError;
+      } else {
+        return (Provider.of<RegimentViewModel>(context, listen: false)
+                    .regimentMode ==
+                RegimentMode.Symptoms)
+            ? symptomsError
+            : activitiesError;
+      }
+    } else {
+      return (Provider.of<RegimentViewModel>(context, listen: false)
+                  .regimentMode ==
+              RegimentMode.Symptoms)
+          ? symptomsError
+          : activitiesError;
+    }
+  }
 }
 
 extension CapExtension on String {

@@ -23,6 +23,7 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:provider/provider.dart';
@@ -70,8 +71,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final hubListViewController =
-  CommonUtil().onInitHubListViewController();
+  final hubListViewController = CommonUtil().onInitHubListViewController();
 
   @override
   void initState() {
@@ -103,9 +103,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
         CommonUtil().initSocket();
         CommonUtil().versionCheck(context);
-
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
+        moveToPateintAlert();
 
         controller.enableModuleAccess();
         controller.getModuleAccess();
@@ -139,10 +139,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
 
-      if(Platform.isAndroid){
+      if (Platform.isAndroid) {
         CommonUtil().askPermssionLocationBleScan();
       }
-
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -234,6 +233,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
                 elevation: 0,
                 centerTitle: true,
+                leadingWidth: (CommonUtil().isTablet ?? false) ? 117 : 83,
                 actions: [
                   (!(CommonUtil.isUSRegion()) &&
                           hubListViewController.isUserHasParedDevice.value &&
@@ -245,7 +245,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                           child: MyBlinkingBLEIcon(),
                         )
                       : SizedBox.shrink(),
-
                   ((CommonUtil.isUSRegion()) &&
                           hubListViewController.isUserHasParedDevice.value &&
                           (controller.currentSelectedIndex != 0) &&
@@ -445,7 +444,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                   },
                                 ),
                               ),
-                              if (hubListViewController.isUserHasParedDevice.value) ...{
+                              if (hubListViewController
+                                  .isUserHasParedDevice.value) ...{
                                 SizedBox(width: 2.w),
                                 Expanded(child: MyBlinkingBLEIcon())
                               }
@@ -759,6 +759,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       controller.forPatientList.value = false;
                       controller.isPatientClicked.value = false;
                       controller.careGiverPatientListResult = null;
+                      PreferenceUtil.saveString(strKeyFamilyAlert, strNoValue);
+                      PreferenceUtil.saveString(strKeyAlertChildID, '');
+                      PreferenceUtil.saveCareGiver(strKeyCareGiver, null);
                     } else {
                       if (controller.careGiverPatientListResult?.childId !=
                           result?.childId) {
@@ -771,6 +774,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         controller.isPatientClicked.value = true;
 
                         controller.getPatientAlertList();
+                        PreferenceUtil.saveString(
+                            strKeyFamilyAlert, strYesValue);
+                        PreferenceUtil.saveString(
+                            strKeyAlertChildID, result?.childId ?? '');
+                        PreferenceUtil.saveCareGiver(strKeyCareGiver,
+                            controller.careGiverPatientListResult);
                       }
 
                       Navigator.pop(context);
@@ -900,5 +909,31 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         print(e);
       }
     }
+  }
+
+  void moveToPateintAlert() async {
+    controller.isLoading.value = true;
+    if (CommonUtil.isUSRegion()) {
+      String? permissionValue =
+          await PreferenceUtil.getStringValue(strKeyFamilyAlert);
+      String? childId = await PreferenceUtil.getStringValue(strKeyAlertChildID);
+      if (permissionValue == strYesValue) {
+        if (childId != null && childId != "") {
+          controller.forPatientList.value = true;
+          CareGiverPatientListResult? response =
+              await PreferenceUtil.getCareGiver(strKeyCareGiver);
+          if (response != null) {
+            controller.careGiverPatientListResult = null;
+            controller.careGiverPatientListResult = response;
+            controller.currentSelectedTab.value = 0;
+
+            controller.isPatientClicked.value = true;
+
+            controller.getPatientAlertList();
+          }
+        }
+      }
+    }
+    controller.isLoading.value = false;
   }
 }

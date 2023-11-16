@@ -60,4 +60,21 @@ class SheelAIAPIService {
       throw Exception('$e was thrown');
     }
   }
+
+  Future<Response> getTextTranslate(Map<String, dynamic> reqJson) async {
+    final urlForTextTranslate = BASE_URL + qr_Text_Translate;
+    try {
+      final jsonString = jsonEncode(reqJson);
+      final headerRequest = await HeaderRequest().getRequestHeader();
+      final response = await ApiServices.post(
+        urlForTextTranslate,
+        body: jsonString,
+        headers: headerRequest,
+      );
+      return response!;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      throw Exception('$e was thrown');
+    }
+  }
 }

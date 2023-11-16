@@ -22,7 +22,8 @@ class RegimentDataModel {
       this.uformid,
       this.uformname,
       this.uformname1,
-      this.estart,this.estartNew,
+      this.estart,
+      this.estartNew,
       this.eend,
       this.html,
       this.otherinfo,
@@ -67,7 +68,8 @@ class RegimentDataModel {
       this.code,
       this.dayrepeat,
       this.additionalInfo,
-      this.doseMealString});
+      this.doseMealString,
+      this.activityThreshold});
 
   final dynamic eid;
   final dynamic id;
@@ -130,6 +132,7 @@ class RegimentDataModel {
   final dynamic dayrepeat;
   AdditionalInfo? additionalInfo;
   String? doseMealString;
+  final dynamic? activityThreshold;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json,
           {String? date}) =>
@@ -152,9 +155,9 @@ class RegimentDataModel {
         activityname: activitynameValues.map[json['activityname']],
         uformid: json['uformid'],
         uformname: uformnameValues.map[json['uformname']],
-        uformname1: json['uformname'],
+        uformname1: (json['uformname'] ?? ''),
         estart: DateTime.tryParse(json['estart'] ?? ''),
-          estartNew:json['estart'] ?? '',
+        estartNew: json['estart'] ?? '',
         eend: DateTime.tryParse(json['eend'] ?? ''),
         html: json['html'] != null ? json['html'] : '',
         otherinfo: json['otherinfo'] != null
@@ -226,6 +229,9 @@ class RegimentDataModel {
             ? new ServiceCategory.fromJson(json['modeOfService'])
             : null,
         dayrepeat: json['hour_repeat'],
+        activityThreshold: json.containsKey('activityThreshold')
+            ? json['activityThreshold' ?? 15]
+            : 15,
         additionalInfo: json['additionalInfo'] != null
             ? AdditionalInfo.fromJson(json['additionalInfo'])
             : null,
@@ -281,6 +287,7 @@ class RegimentDataModel {
         'serviceCategory': serviceCategory!.toJson(),
         'modeOfService': modeOfService!.toJson(),
         'hour_repeat': dayrepeat,
+        'activityThreshold': activityThreshold,
         'additionalInfo':
             additionalInfo?.toJson() ?? new Map<String, dynamic>(),
       };
@@ -293,7 +300,8 @@ class Otherinfo {
       this.needVideo,
       this.needFile,
       this.snoozeText,
-      this.introText});
+      this.introText,
+      this.isAllDayActivity});
 
   final String? needPhoto;
   final String? needAudio;
@@ -301,6 +309,7 @@ class Otherinfo {
   final String? needFile;
   final String? snoozeText;
   final String? introText;
+  final bool? isAllDayActivity;
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
         needPhoto: (json['NeedPhoto'] ?? 0).toString(),
@@ -308,6 +317,9 @@ class Otherinfo {
         needVideo: (json['NeedVideo'] ?? 0).toString(),
         needFile: (json['NeedFile'] ?? 0).toString(),
         snoozeText: json.containsKey('snoozeText') ? (json['snoozeText']) : '',
+        isAllDayActivity: json.containsKey('isAllDayActivity')
+            ? (json['isAllDayActivity'] ?? false)
+            : false,
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
       );
 
@@ -317,7 +329,8 @@ class Otherinfo {
         'NeedVideo': needVideo,
         'NeedFile': needFile,
         'snoozeText': snoozeText,
-        'introtext': introText
+        'introtext': introText,
+        'isAllDayActivity': isAllDayActivity
       };
 }
 
