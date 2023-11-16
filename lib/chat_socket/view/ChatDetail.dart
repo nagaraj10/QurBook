@@ -26,7 +26,6 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -40,7 +39,6 @@ import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart
 import 'package:myfhb/telehealth/features/chat/view/ChooseDateSlot.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:open_filex/open_filex.dart';
@@ -918,7 +916,7 @@ class ChatState extends State<ChatDetail> {
               child: Text(
                 '$popUpChoiceOne',
                 style: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
                 ),
               ),
             ),
@@ -1053,7 +1051,7 @@ class ChatState extends State<ChatDetail> {
                           : '',
                       style: TextStyle(
                         color: Color(new CommonUtil().getMyPrimaryColor()),
-                        fontSize: 16.0.sp,
+                        fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
                         fontWeight: FontWeight.w400,
                       ),
                     )),
@@ -1081,7 +1079,7 @@ class ChatState extends State<ChatDetail> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: font_poppins,
-                            fontSize: 16.0.sp,
+                            fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
                             color: Colors.white)),
                     getTopBookingDetail(),
                     lastReceived != null &&
@@ -1110,7 +1108,7 @@ class ChatState extends State<ChatDetail> {
           maxLines: 1,
           style: TextStyle(
               fontFamily: font_poppins,
-              fontSize: 12.0.sp,
+              fontSize: (CommonUtil().isTablet ?? false) ? 18.0.sp :12.0.sp,
               color: Colors.white));
     } else {
       if (!isCareGiverApi) {
@@ -1126,7 +1124,7 @@ class ChatState extends State<ChatDetail> {
                     maxLines: 1,
                     style: TextStyle(
                         fontFamily: font_poppins,
-                        fontSize: 12.0.sp,
+                        fontSize: (CommonUtil().isTablet ?? false) ? 18.0.sp :12.0.sp,
                         color: Colors.white)),
                 Text(
                     'Next Appointment: ' +
@@ -1136,7 +1134,7 @@ class ChatState extends State<ChatDetail> {
                     maxLines: 1,
                     style: TextStyle(
                         fontFamily: font_poppins,
-                        fontSize: 12.0.sp,
+                        fontSize: (CommonUtil().isTablet ?? false) ? 18.0.sp :12.0.sp,
                         color: Colors.white)),
                 Text(
                     toBeginningOfSentenceCase('Last Appointment: ' +
@@ -1146,7 +1144,7 @@ class ChatState extends State<ChatDetail> {
                     maxLines: 1,
                     style: TextStyle(
                         fontFamily: font_poppins,
-                        fontSize: 12.0.sp,
+                        fontSize: (CommonUtil().isTablet ?? false) ? 18.0.sp :12.0.sp,
                         color: Colors.white)),
               ],
             ),
@@ -1392,7 +1390,7 @@ class ChatState extends State<ChatDetail> {
                           text: TextSpan(
                               style: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 14.0.sp,
+                                fontSize: (CommonUtil().isTablet ?? false) ? 20.0.sp :14.0.sp,
                               ),
                               children: textSpanList),
                         ),
@@ -1427,7 +1425,7 @@ class ChatState extends State<ChatDetail> {
                           text: TextSpan(
                               style: TextStyle(
                                 color: Color(CommonUtil().getMyPrimaryColor()),
-                                fontSize: 16.0.sp,
+                                fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
                               ),
                               children: textSpanList),
                         ),
@@ -1596,7 +1594,7 @@ class ChatState extends State<ChatDetail> {
                         text: TextSpan(
                             style: TextStyle(
                               color: Colors.black54,
-                              fontSize: 14.0.sp,
+                              fontSize: (CommonUtil().isTablet ?? false) ? 20.0.sp :14.0.sp,
                             ),
                             children: textSpanList),
                       ),
@@ -1640,7 +1638,7 @@ class ChatState extends State<ChatDetail> {
                                           style: TextStyle(
                                             color: Color(new CommonUtil()
                                                 .getMyPrimaryColor()),
-                                            fontSize: 16.0.sp,
+                                            fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         )),
@@ -1678,7 +1676,7 @@ class ChatState extends State<ChatDetail> {
                                   children: [
                                     RichText(
                                       text: TextSpan(
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.white,fontSize: (CommonUtil().isTablet ?? false) ? 20.0.sp :14.0.sp,),
                                           children: textSpanList),
                                     ),
                                     isSentViaSheelaTextWidget(chatList,Colors.white),
@@ -1796,7 +1794,7 @@ class ChatState extends State<ChatDetail> {
                                               Text(
                                                 'Click to view PDF',
                                                 style: TextStyle(
-                                                    color: Colors.white),
+                                                    color: Colors.white,fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,),
                                               ),
                                             ],
                                           ),
@@ -1859,7 +1857,7 @@ class ChatState extends State<ChatDetail> {
                                     .toString()),
                             style: TextStyle(
                                 color: greyColor,
-                                fontSize: 14.0.sp,
+                                fontSize: (CommonUtil().isTablet ?? false) ? 20.0.sp :14.0.sp,
                                 fontStyle: FontStyle.italic),
                           ),
                           margin: EdgeInsets.only(
@@ -1896,7 +1894,7 @@ class ChatState extends State<ChatDetail> {
                 //   ..color =
                 //       Colors.white,
                 decoration: TextDecoration.underline,
-                fontSize: 16.0.sp,
+                fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
               ),
             ),
           ),
@@ -1929,7 +1927,7 @@ class ChatState extends State<ChatDetail> {
                             index),
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 14.0.sp,
+                          fontSize: (CommonUtil().isTablet ?? false) ? 20.0.sp :14.0.sp,
                         ),
                       ),
                     ),
@@ -2223,7 +2221,7 @@ class ChatState extends State<ChatDetail> {
         'File ' + dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          fontSize: 16.0.sp,
+          fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
         ),
       );
     } else {
@@ -2231,7 +2229,7 @@ class ChatState extends State<ChatDetail> {
         'Click to View Pdf',
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          fontSize: 16.0.sp,
+          fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
         ),
       );
     }
@@ -2246,7 +2244,7 @@ class ChatState extends State<ChatDetail> {
           content: Text(
             'Are you sure want to download?',
             style: TextStyle(
-              fontSize: 16.0.sp,
+              fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
             ),
           ),
           actions: <Widget>[
@@ -2258,7 +2256,7 @@ class ChatState extends State<ChatDetail> {
               child: Text(
                 'Download',
                 style: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
                 ),
               ),
             ),
@@ -2317,7 +2315,7 @@ class ChatState extends State<ChatDetail> {
       content: Text(
         strDownloadStart,
         style: TextStyle(
-          fontSize: 16.0.sp,
+          fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
         ),
       ),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -2338,7 +2336,7 @@ class ChatState extends State<ChatDetail> {
           content: Text(
             strFileDownloaded,
             style: TextStyle(
-              fontSize: 16.0.sp,
+              fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
             ),
           ),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -2377,7 +2375,7 @@ class ChatState extends State<ChatDetail> {
               content: Text(
                 strFileDownloaded,
                 style: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
                 ),
               ),
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -2475,7 +2473,7 @@ class ChatState extends State<ChatDetail> {
         content: Text(
           'Send to Dr. ' + peerName! != null && peerName != '' ? peerName! : '',
           style: TextStyle(
-            fontSize: 16.0.sp,
+            fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
           ),
         ),
         actions: <Widget>[
@@ -2484,7 +2482,7 @@ class ChatState extends State<ChatDetail> {
             child: Text(
               'Cancel',
               style: TextStyle(
-                fontSize: 16.0.sp,
+                fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
               ),
             ),
           ),
@@ -2496,7 +2494,7 @@ class ChatState extends State<ChatDetail> {
             child: Text(
               'Send',
               style: TextStyle(
-                fontSize: 16.0.sp,
+                fontSize: (CommonUtil().isTablet ?? false) ? 22.0.sp :16.0.sp,
               ),
             ),
           ),
@@ -2593,7 +2591,7 @@ class ChatState extends State<ChatDetail> {
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
       style: TextStyle(
-          fontFamily: font_poppins, fontSize: 12.0.sp, color: Colors.white),
+          fontFamily: font_poppins, fontSize: (CommonUtil().isTablet ?? false) ? 18.0.sp :12.0.sp, color: Colors.white),
     );
   }
 
@@ -2605,7 +2603,7 @@ class ChatState extends State<ChatDetail> {
                 strSentViaSheela,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    color: color, fontSize: 14.0.sp, fontStyle: FontStyle.italic),
+                    color: color, fontSize: (CommonUtil().isTablet ?? false) ? 20.0.sp :14.0.sp, fontStyle: FontStyle.italic),
               ),
           )
           : SizedBox.shrink();
