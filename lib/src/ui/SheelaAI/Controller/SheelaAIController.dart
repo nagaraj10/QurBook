@@ -104,6 +104,8 @@ class SheelaAIController extends GetxController {
   LanguageRepository languageBlock = LanguageRepository();
   Map<String, dynamic> langaugeDropdownList = {};
 
+  List<String> sheelaTTSWordList = ["sheila", "sila", "shila", "shiela"];
+
   @override
   void onInit() {
     super.onInit();
@@ -792,10 +794,12 @@ class SheelaAIController extends GetxController {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
 
+          String? currentLanCode = getCurrentLanCode();
+
           await voice_platform.invokeMethod(
             strspeakAssistant,
             {
-              'langcode': getCurrentLanCode(),
+              'langcode': currentLanCode,
             },
           ).then((response) async {
             isMicListening.value = false;
@@ -804,6 +808,9 @@ class SheelaAIController extends GetxController {
             }
 
             if ((response ?? '').toString().isNotEmpty) {
+              if ((currentLanCode ?? "").contains("en")) {
+                response = prefixListFiltering(response ?? '');
+              }
               final newConversation = SheelaResponse(text: response);
               if (conversations.isNotEmpty &&
                   ((conversations.last?.buttons?.length ?? 0) > 0)) {
@@ -1471,4 +1478,21 @@ class SheelaAIController extends GetxController {
     }
   }
 
+
+  String? prefixListFiltering(String strResponse) {
+    try {
+      for (String strSheelaText in sheelaTTSWordList) {
+        if ((strResponse ?? "")
+            .toLowerCase()
+            .contains(strSheelaText.toLowerCase())) {
+          var regEx = RegExp(strSheelaText, caseSensitive: false);
+          strResponse = strResponse.replaceAll(regEx, sheelaText);
+        }
+      }
+      return strResponse;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      return strResponse;
+    }
+  }
 }

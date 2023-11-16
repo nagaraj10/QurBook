@@ -1,5 +1,9 @@
 package com.ventechsolutions.myFHB
 
+/*import com.ventechsolutions.myFHB.bloodpressure.controller.SessionController*/
+/*import jp.co.ohq.ble.OHQDeviceManager
+import jp.co.ohq.ble.OHQDeviceManager.CompletionBlock
+import jp.co.ohq.ble.OHQDeviceManager.ScanObserverBlock*/
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
@@ -59,10 +63,21 @@ import com.gsh.api.BluetoothStatus
 import com.gsh.spo2.api.GoldenBLEDeviceManager
 import com.gsh.spo2.api.GoldenBLEDeviceManagerCallback
 import com.gsh.weightscale.api.WeightData
+import com.lifesense.plugin.ble.LSBluetoothManager
+import com.lifesense.plugin.ble.OnPairingListener
+import com.lifesense.plugin.ble.OnSearchingListener
+import com.lifesense.plugin.ble.OnSyncingListener
+import com.lifesense.plugin.ble.data.*
+import com.lifesense.plugin.ble.data.bgm.BGDataSummary
+import com.lifesense.plugin.ble.data.bpm.LSBloodPressure
+import com.lifesense.plugin.ble.data.scale.LSScaleState
+import com.lifesense.plugin.ble.data.scale.LSScaleWeight
+import com.lifesense.plugin.ble.data.tracker.ATDeviceData
+import com.lifesense.plugin.ble.data.tracker.ATPairResultsCode
+import com.lifesense.plugin.ble.data.tracker.ATUserInfo
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure
 import com.ventechsolutions.myFHB.bloodpressure.controller.BluetoothPowerController
 import com.ventechsolutions.myFHB.bloodpressure.controller.ScanController
-/*import com.ventechsolutions.myFHB.bloodpressure.controller.SessionController*/
 import com.ventechsolutions.myFHB.bloodpressure.controller.util.AppLog
 import com.ventechsolutions.myFHB.bloodpressure.model.entity.DiscoveredDevice
 import com.ventechsolutions.myFHB.bloodpressure.model.entity.SessionData
@@ -79,7 +94,6 @@ import com.ventechsolutions.myFHB.constants.Constants.eidSheela
 import com.ventechsolutions.myFHB.constants.Constants.idSheela
 import com.ventechsolutions.myFHB.constants.Constants.sayTextSheela
 import com.ventechsolutions.myFHB.services.*
-import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
@@ -89,9 +103,6 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import jp.co.ohq.androidcorebluetooth.CBConfig.CreateBondOption
 import jp.co.ohq.androidcorebluetooth.CBConfig.RemoveBondOption
 import jp.co.ohq.ble.OHQConfig
-/*import jp.co.ohq.ble.OHQDeviceManager
-import jp.co.ohq.ble.OHQDeviceManager.CompletionBlock
-import jp.co.ohq.ble.OHQDeviceManager.ScanObserverBlock*/
 import jp.co.ohq.ble.enumerate.*
 import jp.co.ohq.utility.Bundler
 import jp.co.ohq.utility.Types
@@ -100,21 +111,6 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.experimental.and
 import kotlin.system.exitProcess
-import com.lifesense.plugin.ble.LSBluetoothManager
-import com.lifesense.plugin.ble.OnPairingListener
-import com.lifesense.plugin.ble.OnSearchingListener
-import com.lifesense.plugin.ble.OnSyncingListener
-import com.lifesense.plugin.ble.data.*
-import com.lifesense.plugin.ble.data.bgm.BGDataSummary
-import com.lifesense.plugin.ble.data.bpm.LSBloodPressure
-import com.lifesense.plugin.ble.data.scale.LSScaleState
-import com.lifesense.plugin.ble.data.scale.LSScaleWeight
-import com.lifesense.plugin.ble.data.tracker.ATDeviceData
-import com.lifesense.plugin.ble.data.tracker.ATPairResultsCode
-import com.lifesense.plugin.ble.data.tracker.ATUserInfo
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
-import kotlin.collections.ArrayList
 
 class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     BluetoothPowerController.Listener {
@@ -307,6 +303,8 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private var isExecuting = false
 
     var wowGoTimer = Timer()
+
+    var sheelaTTSWordList: ArrayList<String> = arrayListOf<String>("sheila","sila","shila","shiela")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -2839,14 +2837,14 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
 
     fun startWowGoSpo2DeviceScan(){
-        Log.e("checking", "startWowGoSpo2DeviceScan: starting spo2", )
+        Log.e("checking", "startWowGoSpo2DeviceScan: starting spo2")
         selectedBle = "spo2"
         gManager = GoldenBLEDeviceManager(applicationContext, gCallback)
         gManager?.scanLeDevice(true)
         WOWGoDataUpload = 0
     }
     fun startWowGoBPDeviceScan(){
-        Log.e("checking", "startWowGoBPDeviceScan: starting bp", )
+        Log.e("checking", "startWowGoBPDeviceScan: starting bp")
 
         selectedBle = "bp"
         gManagerBP = com.gsh.bloodpressure.api.GoldenBLEDeviceManager(
@@ -2856,7 +2854,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         gManagerBP?.scanLeDevice(true)
     }
     fun startWowGoWeightDeviceScan(){
-        Log.e("checking", "startWowGoWeightDeviceScan: starting weight", )
+        Log.e("checking", "startWowGoWeightDeviceScan: starting weight")
 
         selectedBle = "weight"
         gManagerFat = com.gsh.weightscale.api.GoldenBLEDeviceManager(
@@ -3451,7 +3449,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         }
         countDown?.start()
         firstTimeSpeechError=true;
-        setRecognizerListener()
+        setRecognizerListener(langCode)
         //Timer().schedule(100){
 
 //         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
@@ -3461,7 +3459,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 //         })
     }
 
-    private fun setRecognizerListener() {
+    private fun setRecognizerListener(langCode: String) {
         try {
             //startActivityForResult(intent, REQ_CODE)
             speechRecognizer?.setRecognitionListener(object : RecognitionListener {
@@ -3553,7 +3551,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                     speechRecognizer?.destroy()
                     if(firstTimeSpeechError){
                         firstTimeSpeechError=false;
-                        setRecognizerListener()
+                        setRecognizerListener(langCode)
                     }
 //                    speechRecognizer?.startListening(intent)
                     //close.performClick()
@@ -3592,7 +3590,11 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                         val pattern = Regex("^[A-Za-z]+\$")
 //                        if(pattern.containsMatchIn(data[0])){
                         finalWords += data[0] + " "
-                        displayText.setText(finalWords)
+                        if (langCode.contains("en")) {
+                            displayText.setText((prefixListFiltering()))
+                        } else {
+                            displayText.setText(finalWords)
+                        }
 //                        }
                         speechRecognizer?.cancel()
                         speechRecognizer?.startListening(speechIntent)
@@ -3686,7 +3688,11 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                                             }
                                         )
                                     }
-                                    displayText.setText(finalWords)
+                                    if (langCode.contains("en")) {
+                                        displayText.setText((prefixListFiltering()))
+                                    } else {
+                                        displayText.setText(finalWords)
+                                    }
                                 }
                             }
                         )
@@ -4488,5 +4494,21 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             Log.e("crash", e.message.toString())
         }
     }
+
+    fun prefixListFiltering(): String {
+        try {
+            for (strSheelaText in sheelaTTSWordList) {
+                if (finalWords!!.lowercase().contains(strSheelaText.lowercase())) {
+                    finalWords =
+                        finalWords!!.replace(strSheelaText, Constants.sheelaText, ignoreCase = true)
+                }
+            }
+            return finalWords!!
+        } catch (e: Exception) {
+            Log.e("crash", e.message.toString())
+            return finalWords!!
+        }
+    }
+
 
 }
