@@ -141,4 +141,6 @@ object Constants {
     val CHANNEL_ID ="channelId"
     val EID_SNOOZE ="eid"
 
+    val sheelaText ="Sheela"
+
 }

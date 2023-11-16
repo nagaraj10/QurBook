@@ -144,7 +144,8 @@ extension AppDelegate : AVSpeechSynthesizerDelegate {
         
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
             if let result = result {
-                self.message = result.bestTranscription.formattedString
+                var bestTranscription = result.bestTranscription.formattedString
+                self.message = self.prefixListFiltering(bestTranscription: bestTranscription)
                 self.detectionTimer?.invalidate()
                 if let viewControllers = self.navigationController?.visibleViewController as? LoaderVC {
                     viewControllers.dismiss(animated: false, completion: nil)
@@ -245,5 +246,29 @@ extension AppDelegate : AVSpeechSynthesizerDelegate {
         }catch(let error){
             print("\(Constants.errorIs) \(error.localizedDescription)")
         }
+    }
+}
+extension AppDelegate {
+    var sheelaTTSWordList: [String] {
+        return [
+            "sheela",
+            "sheila",
+            "sila",
+            "shila",
+            "shiela"
+        ]
+    }
+    
+    var replacementWordSheelaTTS: String {
+        return "Sheela"
+    }
+    
+    func prefixListFiltering(bestTranscription: String) -> String {
+        let words = bestTranscription.lowercased().split(separator: " ").map(String.init)
+        
+        let modifiedWords = words.enumerated().map { (index, word) in
+            return sheelaTTSWordList.contains(word) ? replacementWordSheelaTTS : (index == 0 ? word.capitalized : word)
+        }
+        return modifiedWords.joined(separator: " ")
     }
 }
