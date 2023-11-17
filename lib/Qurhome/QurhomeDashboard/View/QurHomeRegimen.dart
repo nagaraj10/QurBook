@@ -1664,6 +1664,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       } else if (trimmedTitle.isNotEmpty && (trimmedTitle == "temperature")) {
         if (checkCanEdit(regimen)) {
+          if (canEditMain || fromView) {
+            openFormDataDialog(
+                context, regimen, canEdit, eventId, fieldsResponseModel,
+                eventIdReturn: eventIdReturn,
+                followEventContext: followEventContext,
+                activityName: activityName,
+                uid: uid,
+                aid: aid,
+                formId: formId,
+                formName: formName,
+                canEditMain: canEditMain,
+                fromView: fromView);
+            return;
+          }
           redirectToSheelaScreen(regimen);
         } else {
           onErrorMessage(regimen);
