@@ -604,7 +604,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
     return InkWell(
       onTap: () {
-        if (regimen.activityOrgin != strAppointmentRegimen) {
+        if (regimen.activityOrgin == strAppointmentRegimen) {
+          if ((regimen.eid != null) && (regimen.eid != '')) {
+            CommonUtil().goToAppointmentDetailScreen(regimen.eid);
+          }
+        } else {
           showRegimenDialog(regimen, itemIndex);
         }
       },
