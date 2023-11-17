@@ -1036,6 +1036,12 @@ class CommonUtil {
     return 0xFFFd7a2b;
   }
 
+  int getCommonPrimaryColorQurHomeBook(){
+    return (PreferenceUtil.getIfQurhomeisAcive())
+        ? CommonUtil().getQurhomePrimaryColor()
+        : CommonUtil().getMyPrimaryColor();
+  }
+
   LinearGradient getQurhomeLinearGradient() {
     return LinearGradient(
       begin: Alignment.centerLeft,

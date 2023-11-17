@@ -7,7 +7,7 @@ class CommonCircularIndicator extends StatelessWidget {
     child: CircularProgressIndicator(
       valueColor: AlwaysStoppedAnimation<Color>(
         Color(
-          CommonUtil().getMyPrimaryColor(),
+          CommonUtil().getCommonPrimaryColorQurHomeBook(),
         ),
       ),
       backgroundColor: Colors.white.withOpacity(0.8),
