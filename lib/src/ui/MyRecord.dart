@@ -1216,7 +1216,13 @@ class _CustomTabsState extends State<CustomTabView>
         }
       } else {
         widget.selectedMedia!.remove(metaId!);
-        widget.selectedRecordsId!.remove(healthRecords!);
+        //widget.selectedRecordsId!.remove(healthRecords!);
+        if ((healthRecords != null) && (healthRecords?.length ?? 0) > 0) {
+          for (final healthRecord in healthRecords) {
+            widget.selectedRecordsId?.removeWhere(
+                (item) => (item.id ?? '') == (healthRecord.id ?? ''));
+          }
+        }
       }
     }
     callBackToRefresh();
@@ -1489,9 +1495,11 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
         try {
           _currentPosition = controller!.index;
 
-          categoryName =
-              categoryDataList.elementAt(_currentPosition!).categoryName;
-          categoryID = categoryDataList.elementAt(_currentPosition!).id;
+          if ((categoryDataList != null) && (categoryDataList?.length ?? 0) > 0) {
+            categoryName =
+                categoryDataList.elementAt(_currentPosition!).categoryName;
+            categoryID = categoryDataList.elementAt(_currentPosition!).id;
+          }
         } catch (e,stackTrace) {
                       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
@@ -1507,11 +1515,14 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
       try {
         _currentPosition = controller!.animation!.value.toInt();
 
-        categoryName = categoryDataList
-            .elementAt(controller!.animation!.value.toInt())
-            .categoryName;
-        categoryID =
-            categoryDataList.elementAt(controller!.animation!.value.toInt()).id;
+        if ((categoryDataList != null) && (categoryDataList?.length ?? 0) > 0) {
+          categoryName = categoryDataList
+              .elementAt(controller!.animation!.value.toInt())
+              .categoryName;
+          categoryID = categoryDataList
+              .elementAt(controller!.animation!.value.toInt())
+              .id;
+        }
       } catch (e,stackTrace) {
                     CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
@@ -1708,7 +1719,10 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
   }
 
   saveCategoryToPrefernce() async {
-    categoryName = widget.categoryData!.elementAt(_currentPosition!).categoryName;
-    categoryID = widget.categoryData!.elementAt(_currentPosition!).id;
+    if ((widget.categoryData != null) && (widget.categoryData?.length ?? 0) > 0) {
+      categoryName =
+          widget.categoryData!.elementAt(_currentPosition!).categoryName;
+      categoryID = widget.categoryData!.elementAt(_currentPosition!).id;
+    }
   }
 }
