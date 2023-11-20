@@ -1334,18 +1334,19 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             if(lsDeviceInfo.deviceType.equals("06")) {
 
 
-                if (p1.toString().contains("InsertStrip")) {
+ //               if (p1.toString().contains("InsertStrip")) {
+ //                   if (::BLEEventChannel.isInitialized) {
+ //                       MainThreadEventSink(BLEEventChannel).success("update|" + "Strip inserted")
+ //                   }
+ //               }
+ //               if (p1.toString().contains("Collecting")) {
+ //                   if (::BLEEventChannel.isInitialized) {
+ //                       MainThreadEventSink(BLEEventChannel).success("update|" + "Insert the blood sample on the strip.")
+ //                   }
+ //               } else
+                 if (p1.toString().contains("Collected")) {
                     if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("update|" + "Strip inserted")
-                    }
-                }
-                if (p1.toString().contains("Collecting")) {
-                    if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("update|" + "Insert the blood sample on the strip.")
-                    }
-                } else if (p1.toString().contains("Collected")) {
-                    if (::BLEEventChannel.isInitialized) {
-                        MainThreadEventSink(BLEEventChannel).success("update|" + "Calculating your blood glucose value.")
+                        MainThreadEventSink(BLEEventChannel).success("update|" + "Blood sample collected successfully.")
                     }
                 } else if (p1.toString().contains("Result")) {
                     val result = p1.toString().substringAfter("value=").substringBefore(',')
