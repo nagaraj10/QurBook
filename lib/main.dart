@@ -428,10 +428,30 @@ class _MyFHBState extends State<MyFHB> {
           };
           CommonUtil().callQueueNotificationPostApi(reqJson);
         } else {
-          Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(eId: passedValArr[1].toString()),
-          );
+          if (sheelaAIController.isQueueDialogShowing.value) {
+            Get.back();
+            Future.delayed(Duration(milliseconds: 200), () async {
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(eId: passedValArr[1].toString()),
+              )!.then((value) {
+                try {
+                  sheelaAIController.getSheelaBadgeCount(
+                      isNeedSheelaDialog: true);
+                } catch (e, stackTrace) {
+                  CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                  if (kDebugMode) {
+                    print(e);
+                  }
+                }
+              });
+            });
+          } else {
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(eId: passedValArr[1].toString()),
+            );
+          }
         }
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
