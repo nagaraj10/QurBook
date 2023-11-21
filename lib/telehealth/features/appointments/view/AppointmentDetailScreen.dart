@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/divider_widget.dart';
+import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
+import 'package:myfhb/common/CommonCircularQurHome.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -10,6 +12,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variableConstant;
 
@@ -35,9 +38,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
-        backgroundColor: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
+        flexibleSpace: (PreferenceUtil.getIfQurhomeisAcive())
+            ? GradientAppBarQurhome()
+            : GradientAppBar(),
         titleSpacing: 0,
         leading: IconButton(
           icon: Icon(
@@ -58,7 +61,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Obx(() => appointmentDetailsController.loadingData.isTrue
           ? Center(
-              child: CircularProgressIndicator(),
+              child: (PreferenceUtil.getIfQurhomeisAcive())
+                  ? CommonCircularQurHome()
+                  : CircularProgressIndicator(),
             )
           : getAppointmentDetailWidget()),
     );
@@ -154,7 +159,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ),
         ),
         color: Color(
-          CommonUtil().getMyPrimaryColor(),
+          CommonUtil().getCommonPrimaryColorQurHomeBook(),
         ),
         child: Padding(
           padding: EdgeInsets.only(
@@ -188,7 +193,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ),
         ),
         color: Color(
-          CommonUtil().getMyPrimaryColor(),
+          CommonUtil().getCommonPrimaryColorQurHomeBook(),
         ),
         child: Padding(
           padding: EdgeInsets.only(
@@ -222,7 +227,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ),
         ),
         color: Color(
-          CommonUtil().getMyPrimaryColor(),
+          CommonUtil().getCommonPrimaryColorQurHomeBook(),
         ),
         child: Padding(
           padding: EdgeInsets.only(
@@ -309,12 +314,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color(
-                        CommonUtil().getMyPrimaryColor(),
+                        CommonUtil().getCommonPrimaryColorQurHomeBook(),
                       ),
                       border: Border.all(
                         width: 1,
                         color: Color(
-                          CommonUtil().getMyPrimaryColor(),
+                          CommonUtil().getCommonPrimaryColorQurHomeBook(),
                         ),
                       )),
                   child: Center(
@@ -438,7 +443,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     ),
                   ),
                   color: Color(
-                    CommonUtil().getMyPrimaryColor(),
+                    CommonUtil().getCommonPrimaryColorQurHomeBook(),
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(

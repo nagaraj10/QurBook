@@ -953,6 +953,7 @@ const String strConnectedOn = 'Connected on - ';
 const String strDeviceID = 'Device ID - ';
 const String strDeviceTypeConnectedDeviceScreen = 'Device Type - ';
 const String strLTE = '4G LTE';
+const String sheelaText = 'Sheela';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
