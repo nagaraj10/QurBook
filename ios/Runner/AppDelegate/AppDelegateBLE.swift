@@ -498,14 +498,15 @@ extension AppDelegate : LSBluetoothStatusDelegate,LSDeviceDataDelegate,LSDeviceP
                     }
                 } else if components.count > 1, components.first == "status"{
                     let value = components[1]
-                    if(value == "17"){
-                        eventSink?("bgl|Your device is ready")
-                    }else if (value == "34"){
-                        eventSink?("bgl|Insert the blood sample on the strip.")
-                    }else if (value == "221"){
+//                    if(value == "17"){
+//                        eventSink?("bgl|Your device is ready")
+//                    }else if (value == "34"){
+//                        eventSink?("bgl|Insert the blood sample on the strip.")
+//                    }else
+                    if (value == "221"){
                         eventSink?("disconnected|Disconnected")
                     }else if (value == "51"){
-                        eventSink?("bgl|Calculating your blood glucose value.")
+                        eventSink?("bgl|Blood sample collected successfully.")
                     }
                 }
                 
