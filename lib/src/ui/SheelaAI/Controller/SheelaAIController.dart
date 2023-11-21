@@ -64,6 +64,7 @@ class SheelaAIController extends GetxController {
   Rx<bool> isMicListening = false.obs;
   bool canSpeak = false;
   List conversations = [].obs;
+  SheelaResponse? redoCurrentPlayingConversation;
   SheelaResponse? currentPlayingConversation;
   int? indexOfCurrentPlayingConversation;
   AudioPlayer? player;
@@ -263,6 +264,7 @@ class SheelaAIController extends GetxController {
   startSheelaConversation() {
     canSpeak = true;
     conversations = [];
+    redoCurrentPlayingConversation = null;
     sessionToken = const Uuid().v1();
     if (PreferenceUtil.getIfQurhomeisAcive() &&
         (arguments?.takeActiveDeviceReadings ?? false)) {
@@ -811,122 +813,149 @@ class SheelaAIController extends GetxController {
               if ((currentLanCode ?? "").contains("en")) {
                 response = prefixListFiltering(response ?? '');
               }
-              final newConversation = SheelaResponse(text: response);
-              if (conversations.isNotEmpty &&
-                  ((conversations.last?.buttons?.length ?? 0) > 0)) {
-                try {
-                  var responseRecived =
-                      response.toString().toLowerCase().trim();
+              if ((conversations.isNotEmpty) &&
+                  (conversations.last?.additionalInfoSheelaResponse
+                      ?.reconfirmationFlag ??
+                      false)) {
+                redoCurrentPlayingConversation = conversations.last;
+                freeTextConversation(freeText: response);
+              } else {
+                final newConversation = SheelaResponse(text: response);
+                if (conversations.isNotEmpty &&
+                    ((conversations.last?.buttons?.length ?? 0) > 0)) {
+                  try {
+                    var responseRecived =
+                    response.toString().toLowerCase().trim();
 
-                  dynamic button = null;
+                    dynamic button = null;
 
-                  if (!conversations.last?.isButtonNumber) {
-                    if (responseRecived == carGiverSheela) {
-                      responseRecived = careGiverSheela;
-                    }
-                    button = conversations.last?.buttons.firstWhere((element) =>
-                        (element.title ?? "").toLowerCase() == responseRecived);
-                  } else if (conversations.last?.isButtonNumber) {
-                    bool isDigit = CommonUtil().isNumeric(responseRecived);
-                    for (int i = 0;
-                        i < conversations.last?.buttons.length;
-                        i++) {
-                      var temp =
-                          conversations.last?.buttons[i].title.split(".");
-                      var realNumber = CommonUtil()
-                          .realNumber(int.tryParse(temp[0].toString().trim()));
-                      var optionWithRealNumber =
-                          "Option ${realNumber.toString().trim()}";
-                      var optionWithDigit =
-                          "Option ${temp[0].toString().trim()}";
-                      var numberWithRealNumber =
-                          "Number ${realNumber.toString().trim()}";
-                      var numberWithDigit =
-                          "Number ${temp[0].toString().trim()}";
-                      if (((temp[isDigit ? 0 : 1].toString().trim())
-                                  .toLowerCase() ==
-                              responseRecived) ||
-                          (realNumber.toString().toLowerCase().trim() ==
-                              responseRecived) ||
-                          (optionWithRealNumber
-                                  .toString()
-                                  .toLowerCase()
-                                  .trim() ==
-                              responseRecived) ||
-                          (optionWithDigit.toString().toLowerCase().trim() ==
-                              responseRecived) ||
-                          (numberWithRealNumber
-                                  .toString()
-                                  .toLowerCase()
-                                  .trim() ==
-                              responseRecived) ||
-                          (numberWithDigit.toString().toLowerCase().trim() ==
-                              responseRecived)) {
-                        button = conversations.last?.buttons[i];
-                        break;
+                    if (!(conversations.last?.isButtonNumber??false)) {
+                      if (responseRecived == carGiverSheela) {
+                        responseRecived = careGiverSheela;
                       }
-                    }
-                  }
-                  if (button != null) {
-                    if (button?.btnRedirectTo == strPreviewScreen) {
-                      if (button?.chatAttachments != null &&
-                          (button?.chatAttachments?.length ?? 0) > 0) {
-                        if (isLoading.isTrue) {
-                          return;
+                      button =
+                          conversations.last?.buttons.firstWhere((element) =>
+                          (element.title ?? "").toLowerCase() ==
+                              responseRecived);
+                    } else if ((conversations.last?.isButtonNumber??false)) {
+                      bool isDigit = CommonUtil().isNumeric(responseRecived);
+                      for (int i = 0;
+                      i < conversations.last?.buttons.length;
+                      i++) {
+                        var temp =
+                        conversations.last?.buttons[i].title.split(".");
+                        var realNumber = CommonUtil()
+                            .realNumber(
+                            int.tryParse(temp[0].toString().trim()));
+                        var optionWithRealNumber =
+                            "Option ${realNumber.toString().trim()}";
+                        var optionWithDigit =
+                            "Option ${temp[0].toString().trim()}";
+                        var numberWithRealNumber =
+                            "Number ${realNumber.toString().trim()}";
+                        var numberWithDigit =
+                            "Number ${temp[0].toString().trim()}";
+                        if (((temp[isDigit ? 0 : 1].toString().trim())
+                            .toLowerCase() ==
+                            responseRecived) ||
+                            (realNumber.toString().toLowerCase().trim() ==
+                                responseRecived) ||
+                            (optionWithRealNumber
+                                .toString()
+                                .toLowerCase()
+                                .trim() ==
+                                responseRecived) ||
+                            (optionWithDigit.toString().toLowerCase().trim() ==
+                                responseRecived) ||
+                            (numberWithRealNumber
+                                .toString()
+                                .toLowerCase()
+                                .trim() ==
+                                responseRecived) ||
+                            (numberWithDigit.toString().toLowerCase().trim() ==
+                                responseRecived)) {
+                          button = conversations.last?.buttons[i];
+                          break;
                         }
-                        stopTTS();
-                        isSheelaScreenActive = false;
-                        CommonUtil()
-                            .onInitQurhomeDashboardController()
-                            .setActiveQurhomeDashboardToChat(status: false);
-                        Get.to(
-                          AttachmentListSheela(
-                              chatAttachments: button?.chatAttachments ?? []),
-                        )?.then((value) {
-                          isSheelaScreenActive = true;
-                          playPauseTTS(conversations.last ?? SheelaResponse());
-                        });
                       }
-                    } else if (button?.btnRedirectTo ==
-                        strRedirectToHelpPreview) {
-                      if (button?.videoUrl != null && button?.videoUrl != '') {
-                        playYoutube(button?.videoUrl);
-                      } else if (button?.audioUrl != null &&
-                          button?.audioUrl != '') {
-                        playAudioFile(button?.audioUrl);
-                      } else if (button?.imageUrl != null &&
-                          button?.imageUrl != '') {
-                        isSheelaScreenActive = false;
-                        Get.to(FullPhoto(
-                          url: button?.imageUrl ?? '',
-                          titleSheelaPreview: strImageTitle,
-                        ))?.then((value) {
-                          isSheelaScreenActive = true;
-                          playPauseTTS(conversations.last ?? SheelaResponse());
+                    }
+                    if (button != null) {
+                      if (button?.btnRedirectTo == strPreviewScreen) {
+                        if (button?.chatAttachments != null &&
+                            (button?.chatAttachments?.length ?? 0) > 0) {
+                          if (isLoading.isTrue) {
+                            return;
+                          }
+                          stopTTS();
+                          isSheelaScreenActive = false;
+                          CommonUtil()
+                              .onInitQurhomeDashboardController()
+                              .setActiveQurhomeDashboardToChat(status: false);
+                          Get.to(
+                            AttachmentListSheela(
+                                chatAttachments: button?.chatAttachments ?? []),
+                          )?.then((value) {
+                            isSheelaScreenActive = true;
+                            playPauseTTS(
+                                conversations.last ?? SheelaResponse());
+                          });
+                        }
+                      } else if (button?.btnRedirectTo ==
+                          strRedirectToHelpPreview) {
+                        if (button?.videoUrl != null && button?.videoUrl !=
+                            '') {
+                          playYoutube(button?.videoUrl);
+                        } else if (button?.audioUrl != null &&
+                            button?.audioUrl != '') {
+                          playAudioFile(button?.audioUrl);
+                        } else if (button?.imageUrl != null &&
+                            button?.imageUrl != '') {
+                          isSheelaScreenActive = false;
+                          Get.to(FullPhoto(
+                            url: button?.imageUrl ?? '',
+                            titleSheelaPreview: strImageTitle,
+                          ))?.then((value) {
+                            isSheelaScreenActive = true;
+                            playPauseTTS(
+                                conversations.last ?? SheelaResponse());
+                          });
+                        }
+                      } else if (button?.btnRedirectTo == strRedirectRedo) {
+                        final cardResponse = SheelaResponse(text: button?.title);
+                        conversations.add(cardResponse);
+                        scrollToEnd();
+                        Future.delayed(Duration(seconds: 2), () {
+                          conversations
+                              .add(redoCurrentPlayingConversation);
+                          currentPlayingConversation =
+                              redoCurrentPlayingConversation;
+                          isLoading.value = false;
+                          playTTS();
+                          scrollToEnd();
                         });
+                      } else {
+                        startSheelaFromButton(
+                            buttonText: button.title,
+                            payload: button.payload,
+                            buttons: button);
                       }
                     } else {
-                      startSheelaFromButton(
-                          buttonText: button.title,
-                          payload: button.payload,
-                          buttons: button);
+                      lastMsgIsOfButtons = false;
+                      conversations.add(newConversation);
+                      getAIAPIResponseFor(response, button);
                     }
-                  } else {
+                  } catch (e, stackTrace) {
+                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+
                     lastMsgIsOfButtons = false;
                     conversations.add(newConversation);
-                    getAIAPIResponseFor(response, button);
+                    getAIAPIResponseFor(response, null);
                   }
-                } catch (e, stackTrace) {
-                  CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
+                } else {
                   lastMsgIsOfButtons = false;
                   conversations.add(newConversation);
                   getAIAPIResponseFor(response, null);
                 }
-              } else {
-                lastMsgIsOfButtons = false;
-                conversations.add(newConversation);
-                getAIAPIResponseFor(response, null);
               }
             }
             scrollToEnd();
@@ -1494,5 +1523,53 @@ class SheelaAIController extends GetxController {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       return strResponse;
     }
+  }
+
+  void freeTextConversation({dynamic freeText}) {
+    try {
+      if (freeText != null) {
+        // right user card
+        final cardResponse = SheelaResponse(text: freeText);
+        conversations.add(cardResponse);
+        scrollToEnd();
+        // left sheela card
+        Future.delayed(Duration(seconds: 2), () {
+          isLoading.value = true;
+          SheelaResponse currentCon = SheelaResponse();
+          currentCon.text =
+              freeTextReply + (freeText ?? '') + freeTextReplyConfirm;
+          currentCon.recipientId = sheelaRecepId;
+          currentCon.singleuse = true;
+          currentCon.isActionDone = false;
+          currentCon.recipientId = sheelaRecepId;
+          currentCon.buttons = freeTextButtons(freeTextPayload: freeText);
+          conversations.add(currentCon);
+          currentPlayingConversation = currentCon;
+          isLoading.value = false;
+          playTTS();
+          scrollToEnd();
+        });
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  List<Buttons> freeTextButtons({String? freeTextPayload}) {
+    List<Buttons> buttons = [
+      Buttons(
+        title: strContinue,
+        payload: freeTextPayload
+      ),
+      Buttons(
+        title: strRedo,
+        btnRedirectTo: strRedirectRedo
+      ),
+      Buttons(
+        title: strExit,
+        payload: strExit,
+      ),
+    ];
+    return buttons;
   }
 }
