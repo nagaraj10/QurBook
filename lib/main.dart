@@ -16,7 +16,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/app_theme.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/Controller/HubListViewController.dart';
@@ -430,28 +429,12 @@ class _MyFHBState extends State<MyFHB> {
         } else {
           if (sheelaAIController.isQueueDialogShowing.value) {
             Get.back();
-            Future.delayed(Duration(milliseconds: 200), () async {
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(eId: passedValArr[1].toString()),
-              )!.then((value) {
-                try {
-                  sheelaAIController.getSheelaBadgeCount(
-                      isNeedSheelaDialog: true);
-                } catch (e, stackTrace) {
-                  CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-                  if (kDebugMode) {
-                    print(e);
-                  }
-                }
-              });
-            });
-          } else {
-            Get.toNamed(
-              rt_Sheela,
-              arguments: SheelaArgument(eId: passedValArr[1].toString()),
-            );
+            sheelaAIController.isQueueDialogShowing.value = false;
           }
+          Future.delayed(Duration(milliseconds: 500), () async {
+            getToSheelaNavigate(passedValArr,
+                isFromActivityRemainderInvokeSheela: true);
+          });
         }
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
@@ -1144,7 +1127,21 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getToSheelaNavigate(var passedValArr, {bool isFromAudio = false}) {
+  getToSheelaNavigate(var passedValArr, {bool isFromAudio = false,bool isFromActivityRemainderInvokeSheela = false}) {
+    if (isFromActivityRemainderInvokeSheela) {
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(eId: passedValArr[1].toString()),
+      )!
+          .then((value) {
+        try {
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        }
+      });
+      return;
+    }
     if (isFromAudio) {
       Get.toNamed(
         router.rt_Sheela,
