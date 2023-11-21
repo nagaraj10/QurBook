@@ -7,13 +7,9 @@ import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../record_detail/screens/record_detail_screen.dart';
-import '../../src/model/Health/UserHealthResponseList.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/utils/FHBUtils.dart';
-import '../../src/model/Health/CompleteData.dart';
-import '../../src/model/Health/MediaMetaInfo.dart';
 import '../../constants/variable_constant.dart' as variable;
-import '../../constants/fhb_query.dart' as query;
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class MyFamilyDetailViewHospital extends StatefulWidget {

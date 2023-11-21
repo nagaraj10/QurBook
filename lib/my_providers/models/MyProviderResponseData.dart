@@ -129,7 +129,7 @@ class MyProvidersResponseData {
               providerRequestCollection3 = <ProviderRequestCollection3>[];
               json['providerRequestCollection3'].forEach((v) {
                 providerRequestCollection3!
-                    .add(new ProviderRequestCollection3.fromJson(v));
+                    .add(ProviderRequestCollection3.fromJson(v));
               });
             }
           }

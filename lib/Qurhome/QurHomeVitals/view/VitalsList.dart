@@ -10,7 +10,6 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';

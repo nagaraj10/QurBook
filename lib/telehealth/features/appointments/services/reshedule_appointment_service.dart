@@ -19,7 +19,7 @@ class ResheduleAppointmentsService {
   final String _baseUrl = Constants.BASE_URL;
   String? authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-  HeaderRequest headerRequest = new HeaderRequest();
+  HeaderRequest headerRequest = HeaderRequest();
 
   Future<ResheduleModel> resheduleAppointment(List<String?> doctorIds,
       String slotNumber, String resheduleDate, String doctorSessionId) async {
@@ -37,7 +37,7 @@ class ResheduleAppointmentsService {
 
   Future<dynamic> getApiForresheduleAppointment(
       String url, String jsonBody) async {
-//    Map<String, String> requestHeadersAuthContent = new Map();
+//    Map<String, String> requestHeadersAuthContent = Map();
 //
 //    requestHeadersAuthContent['Content-type'] = 'application/json';
 //    requestHeadersAuthContent['authorization'] =

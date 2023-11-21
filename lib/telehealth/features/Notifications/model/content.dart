@@ -11,7 +11,7 @@ class Content {
   Content.fromJson(Map<String, dynamic> json) {
     try {
       variables = json['variables'] != null
-              ? new Variables.fromJson(json['variables'])
+              ? Variables.fromJson(json['variables'])
               : null;
       templateName = json['templateName'] != null ? json['templateName'] : null;
     } catch (e,stackTrace) {
@@ -20,7 +20,7 @@ class Content {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.variables != null) {
       data['variables'] = this.variables!.toJson();
     }

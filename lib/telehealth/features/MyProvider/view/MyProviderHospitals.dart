@@ -50,7 +50,7 @@ class MyProvidersHospitals extends StatefulWidget {
 class _MyProvidersState extends State<MyProvidersHospitals> {
   MyProviderViewModel providerViewModel = MyProviderViewModel();
   MyProvidersResponse? myProvidersResponseList;
-  CommonWidgets commonWidgets = new CommonWidgets();
+  CommonWidgets commonWidgets = CommonWidgets();
   bool isSearch = false;
   late ProvidersBloc _providersBloc;
   List<Hospitals> myProviderHospitalList = [];
@@ -61,7 +61,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    _providersBloc = new ProvidersBloc();
+    _providersBloc = ProvidersBloc();
     _medicalPreferenceList = _providersBloc.getMedicalPreferencesForHospital();
     print('init hospital');
   }
@@ -156,13 +156,13 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           },
           child: Icon(
             Icons.add,
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ));
   }
 
   Widget getDoctorProviderListNew() {
-    return new FutureBuilder<MyProvidersResponse?>(
+    return FutureBuilder<MyProvidersResponse?>(
       future: _medicalPreferenceList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -206,7 +206,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
 
   Widget hospitalList(List<Hospitals>? hospitalList) {
     return (hospitalList != null && hospitalList.length > 0)
-        ? new ListView.builder(
+        ? ListView.builder(
             itemBuilder: (BuildContext ctx, int i) =>
                 hospitalListItem(ctx, i, hospitalList),
             itemCount: hospitalList.length,

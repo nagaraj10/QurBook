@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
@@ -30,7 +31,7 @@ class CarePlanCard extends StatelessWidget {
 
   CarePlanCard({this.planList, this.onClick, this.isFrom});
 
-  PlanWizardViewModel planWizardViewModel = new PlanWizardViewModel();
+  PlanWizardViewModel planWizardViewModel = PlanWizardViewModel();
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   TextEditingController memoController = TextEditingController();
   bool? isCheckbox = false;
@@ -123,7 +124,7 @@ class CarePlanCard extends StatelessWidget {
                                         style: TextStyle(
                                             fontSize: 12.0.sp,
                                             fontWeight: FontWeight.w600,
-                                            color: Color(new CommonUtil()
+                                            color: Color(CommonUtil()
                                                 .getMyPrimaryColor())),
                                       )
                                     : Container(),
@@ -144,13 +145,13 @@ class CarePlanCard extends StatelessWidget {
                                                 planList!.price!,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
-                                            colors: Color(new CommonUtil()
+                                            colors: Color(CommonUtil()
                                                 .getMyPrimaryColor())),
                                         replacement: TextWidget(
                                             text: FREE,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
-                                            colors: Color(new CommonUtil()
+                                            colors: Color(CommonUtil()
                                                 .getMyPrimaryColor())),
                                       )
                                     : Container(),
@@ -392,12 +393,16 @@ class CarePlanCard extends StatelessWidget {
             title: Text('Are you sure?'),
             content: Text(alreadySubscribed),
             actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Cancel'),
-              ),
-              FlatButton(
-                onPressed: () async {
+              FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => Navigator.pop(context),
+            title: 'Cancel',
+          ),
+              FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () async {
                   Navigator.pop(context);
 
                   bool canProceed = await Provider.of<PlanWizardViewModel>(
@@ -471,7 +476,7 @@ class CarePlanCard extends StatelessWidget {
                     }
                   }
                 },
-                child: Text('Ok'),
+                title: 'Ok',
               ),
             ],
           ),
@@ -487,22 +492,26 @@ class CarePlanCard extends StatelessWidget {
             content: Text(
                 "You can subscribe/renew this plan for free. Do you want to use your membership benefit?"),
             actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  addToCartCommonMethod(
+              FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
+              Navigator.pop(context);
+              addToCartCommonMethod(
                       planList, context, originalPrice, "", false);
                 },
-                child: Text('No'),
+                title: 'No',
               ),
-              FlatButton(
-                onPressed: () async {
-                  Navigator.pop(context);
+              FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () async {
+              Navigator.pop(context);
 
                   addToCartCommonMethod(
                       planList, context, originalPrice, "", true);
                 },
-                child: Text('Yes'),
+                title: 'Yes',
               ),
             ],
           ),
@@ -585,13 +594,13 @@ class CarePlanCard extends StatelessWidget {
                         SizedBox(
                           height: 10.0.h,
                         ),
-                        new Container(
+                        Container(
                           width: 1.sw - 20,
                           padding: EdgeInsets.symmetric(
                               horizontal: 10, vertical: 10),
-                          decoration: new BoxDecoration(
+                          decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
-                            border: new Border.all(
+                            border: Border.all(
                               color: Colors.grey,
                               width: 1.0,
                             ),
@@ -659,18 +668,22 @@ class CarePlanCard extends StatelessWidget {
             height: 1.sw - 80,
           ),
           actions: <Widget>[
-            FlatButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('No'),
+            FlatButtonWidget(
+              bgColor: Colors.transparent,
+              isSelected: true,
+              onPress: () => Navigator.pop(context),
+              title: 'No',
             ),
-            FlatButton(
-              onPressed: () async {
+            FlatButtonWidget(
+              bgColor: Colors.transparent,
+              isSelected: true,
+              onPress: () async {
                 Navigator.pop(context);
 
                 addToCartCommonMethod(planList, context, originalPrice,
                     memoController.text, isCheckbox ?? false);
               },
-              child: Text('Yes'),
+              title: 'Yes',
             ),
           ]);
     });

@@ -1,12 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/my_reports/model/report_model.dart';
-import 'package:myfhb/my_reports/view_model/report_view_model.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/model/ticket_model.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
@@ -333,9 +328,9 @@ class _TicketsList extends State<TicketsList> {
                                       gradient: LinearGradient(
                                           end: Alignment.centerRight,
                                           colors: [
-                                            Color(new CommonUtil()
+                                            Color(CommonUtil()
                                                 .getMyPrimaryColor()),
-                                            Color(new CommonUtil()
+                                            Color(CommonUtil()
                                                 .getMyGredientColor())
                                             /*getColorFromHex('#5428ef'),
                                                 getColorFromHex('#5428ef'),*/

@@ -4,9 +4,6 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
-import 'package:myfhb/chat_socket/constants/const_socket.dart';
-import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
-import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -17,7 +14,6 @@ import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
@@ -25,29 +21,10 @@ import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:provider/provider.dart';
-import '../colors/fhb_colors.dart' as fhbColors;
-import 'CommonUtil.dart';
-import 'FHBBasicWidget.dart';
-import 'PreferenceUtil.dart';
 import '../constants/fhb_constants.dart' as Constants;
-import '../constants/variable_constant.dart' as variable;
-import '../my_family/bloc/FamilyListBloc.dart';
-import '../my_family/models/FamilyData.dart';
-import '../my_family/models/FamilyMembersRes.dart';
-import '../my_family/screens/FamilyListView.dart';
-import '../src/blocs/User/MyProfileBloc.dart';
-import '../src/blocs/health/HealthReportListForUserBlock.dart';
-import '../src/model/user/MyProfileModel.dart';
-import '../src/model/user/user_accounts_arguments.dart';
-import '../src/ui/user/UserAccounts.dart';
-import '../src/utils/FHBUtils.dart';
-import '../src/utils/colors_utils.dart';
-import '../src/utils/screenutils/size_extensions.dart';
 
 class SwitchProfile {
   FamilyListBloc? _familyListBloc;
@@ -68,7 +45,7 @@ class SwitchProfile {
 
   Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
       Function _callBackToRefresh, bool isFromDashborad,
-      {GlobalKey<ScaffoldState>? scaffold_state, bool? changeWhiteBg}) {
+      {GlobalKey<ScaffoldMessengerState>? scaffold_state, bool? changeWhiteBg}) {
     context = _context;
     keyLoader = _keyLoader;
     callBackToRefresh = _callBackToRefresh;
@@ -171,7 +148,7 @@ class SwitchProfile {
 
         Navigator.of(context).pop();
         try {
-          ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
+          ApiBaseHelper apiBaseHelper = ApiBaseHelper();
           var res = apiBaseHelper.updateLastVisited();
         } catch (e, stackTrace) {
           CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -225,7 +202,7 @@ class SwitchProfile {
   }
 
   checkInternet(
-      GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState>? scaffoldState) {
+      GlobalKey<State> _keyLoader, GlobalKey<ScaffoldMessengerState>? scaffoldState) {
     FHBUtils().check().then((intenet) {
       CommonUtil().showSingleLoadingDialog(context);
       if (intenet != null && intenet) {
@@ -355,7 +332,7 @@ class SwitchProfile {
       Function _callBackToRefresh,
       bool isFromDashborad,
       MyProfileModel myProfile,
-      {GlobalKey<ScaffoldState>? scaffold_state}) async {
+      {GlobalKey<ScaffoldMessengerState>? scaffold_state}) async {
     context = _context;
     keyLoader = _keyLoader;
     callBackToRefresh = _callBackToRefresh;

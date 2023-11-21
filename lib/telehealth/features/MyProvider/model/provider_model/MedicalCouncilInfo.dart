@@ -20,7 +20,7 @@ class MedicalCouncilInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strName] = this.name;
     data[parameters.strIsActive] = this.isActive;
     data[parameters.strDescription] = this.description;

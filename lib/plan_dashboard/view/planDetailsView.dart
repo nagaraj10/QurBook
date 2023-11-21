@@ -1,31 +1,16 @@
-import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/view/plan_pdf_viewer.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
-import '../../constants/fhb_parameters.dart';
-import '../../constants/responseModel.dart';
 import '../../widgets/GradientAppBar.dart';
-import 'package:path/path.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
 import '../model/MetaDataForURL.dart';
 import '../../authentication/constants/constants.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
@@ -97,7 +82,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   bool isRenew = false;
   String? isFrom = '';
   MetaDataForURL? metaDataForURL;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   late Future<PlanListModel?> planListModel;
   @override
@@ -248,10 +233,10 @@ class PlanDetail extends State<MyPlanDetailView> {
                               //                     iconApi,
                               //                     placeholderBuilder: (BuildContext
                               //                             context) =>
-                              //                         new CircularProgressIndicator(
+                              //                         CircularProgressIndicator(
                               //                             strokeWidth: 1.5,
                               //                             backgroundColor: Color(
-                              //                                 new CommonUtil()
+                              //                                 CommonUtil()
                               //                                     .getMyPrimaryColor())),
                               //                   ),
                               //                 ),
@@ -259,10 +244,10 @@ class PlanDetail extends State<MyPlanDetailView> {
                               //             : CachedNetworkImage(
                               //                 imageUrl: iconApi,
                               //                 placeholder: (context, url) =>
-                              //                     new CircularProgressIndicator(
+                              //                     CircularProgressIndicator(
                               //                         strokeWidth: 1.5,
                               //                         backgroundColor: Color(
-                              //                             new CommonUtil()
+                              //                             CommonUtil()
                               //                                 .getMyPrimaryColor())),
                               //                 errorWidget: (context, url, error) =>
                               //                     ClipOval(
@@ -293,19 +278,19 @@ class PlanDetail extends State<MyPlanDetailView> {
                               //                     icon,
                               //                     placeholderBuilder: (BuildContext
                               //                             context) =>
-                              //                         new CircularProgressIndicator(
+                              //                         CircularProgressIndicator(
                               //                             strokeWidth: 1.5,
                               //                             backgroundColor: Color(
-                              //                                 new CommonUtil()
+                              //                                 CommonUtil()
                               //                                     .getMyPrimaryColor())),
                               //                   )
                               //                 : CachedNetworkImage(
                               //                     imageUrl: icon,
                               //                     placeholder: (context, url) =>
-                              //                         new CircularProgressIndicator(
+                              //                         CircularProgressIndicator(
                               //                             strokeWidth: 1.5,
                               //                             backgroundColor: Color(
-                              //                                 new CommonUtil()
+                              //                                 CommonUtil()
                               //                                     .getMyPrimaryColor())),
                               //                     errorWidget: (context, url, error) =>
                               //                         ClipOval(
@@ -497,7 +482,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                         /*Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            OutlineButton(
+                            OutlinedButton(
                               //hoverColor: Color(getMyPrimaryColor()),
                               onPressed:
                                   */ /*isDisable
@@ -811,7 +796,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                             SizedBox(
                               width: 10,
                             ),
-                            OutlineButton(
+                            OutlinedButton(
                               //hoverColor: Color(getMyPrimaryColor()),
                               onPressed: () async {
                                 // open profile page

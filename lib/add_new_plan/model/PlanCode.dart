@@ -13,7 +13,7 @@ class PlanCode {
       if (json['result'] != null) {
             result =  <PlanCodeResult>[];
             json['result'].forEach((v) {
-              result!.add(new PlanCodeResult.fromJson(v));
+              result!.add(PlanCodeResult.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class PlanCode {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -49,7 +49,7 @@ class PlanCodeResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;

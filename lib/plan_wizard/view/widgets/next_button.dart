@@ -9,10 +9,12 @@ class NextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      color: Color(new CommonUtil().getMyPrimaryColor()),
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0.sp)),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0.sp)),
+      ),
       onPressed: onPressed,
       child: Row(
         mainAxisSize: MainAxisSize.min,

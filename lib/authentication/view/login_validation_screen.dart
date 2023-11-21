@@ -172,7 +172,7 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                   ),
-                                  autovalidate: _autoValidateBool,
+                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                                   obscureText: _isHidden,
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.only(

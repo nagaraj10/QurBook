@@ -1,7 +1,6 @@
 
 import 'dart:ui';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShowMoreTextPopup {
@@ -179,8 +178,8 @@ class TrianglePainter extends CustomPainter {
   /// Draws the triangle of specific [size] on [canvas]
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = new Path();
-    Paint paint = new Paint();
+    Path path = Path();
+    Paint paint = Paint();
     paint.strokeWidth = 2.0;
     paint.color = color!;
     paint.style = PaintingStyle.fill;

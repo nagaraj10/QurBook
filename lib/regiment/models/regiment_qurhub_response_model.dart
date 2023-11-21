@@ -27,14 +27,14 @@ class RegimentQurHubResponseModel {
   RegimentQurHubResponseModel.fromJson(Map<String, dynamic> json) {
     try {
       isSuccess = json['isSuccess'];
-      result = json['result'] != null ? new Result.fromJson(json['result']) : null;
+      result = json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -58,7 +58,7 @@ class Result {
       if (json['upcomingActivities'] != null) {
             upcomingActivities = <RegimentDataModel>[];
             json['upcomingActivities'].forEach((v) {
-              upcomingActivities!.add(new RegimentDataModel.fromJson(v));
+              upcomingActivities!.add(RegimentDataModel.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -67,7 +67,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['date'] = this.date;
     if (this.upcomingActivities != null) {
       data['upcomingActivities'] =

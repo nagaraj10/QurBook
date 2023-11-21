@@ -214,14 +214,14 @@ class _SymptomListScreen extends State<SymptomListScreen> {
   }
 
   /*Widget getSymptomList() {
-    return new FutureBuilder<RegimentResponseModel>(
+    return FutureBuilder<RegimentResponseModel>(
       future: symptomsList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,

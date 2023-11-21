@@ -55,7 +55,7 @@ class AuthenticationRepository {
       File file,
       String middleName,
       String lastName) async {
-    Map<String, dynamic> mapForSignUp = new Map();
+    Map<String, dynamic> mapForSignUp = Map();
    // mapForSignUp['sourceName'] = CommonConstants.strTrident;
     mapForSignUp[parameters.strCountryCode] = countryCode;
     mapForSignUp[parameters.strPhoneNumber] = phoneNumber;

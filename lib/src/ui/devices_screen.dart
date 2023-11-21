@@ -16,7 +16,7 @@ class DevicesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         elevation: 0,
         title: Text(
           strDevices,

@@ -28,7 +28,7 @@ class PrescriptionMedicines {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['medicineName'] = this.medicineName;
     data['notes'] = this.notes;
     data['beforeOrAfterFood'] = this.beforeOrAfterFood;
@@ -62,7 +62,7 @@ class PrescriptionMedicinesList {
       if (json['data'] != null) {
             medicines = <PrescriptionMedicines>[];
             json['data'].forEach((v) {
-              medicines.add(new PrescriptionMedicines.fromJson(v));
+              medicines.add(PrescriptionMedicines.fromJson(v));
             });
           }
     } catch (e,stackTrace) {

@@ -1,17 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 //import 'package:flutter_absolute_path/flutter_absolute_path.dart';  FU2.5
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 // import 'package:lecle_flutter_absolute_path/lecle_flutter_absolute_path.dart';
 import 'package:myfhb/feedback/Controller/FeedbackController.dart';
 import 'package:myfhb/feedback/Model/FeedbackCategoriesTypeModel.dart';
-import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import '../common/AudioWidget.dart';
 import '../common/CommonConstants.dart';
 import '../common/CommonUtil.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+// TODO: multi_image_picker deprecated so need to FIX
+// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:typed_data';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../common/FHBBasicWidget.dart';
@@ -19,19 +17,10 @@ import '../common/PreferenceUtil.dart';
 import '../constants/fhb_constants.dart' as Constants;
 import '../exception/FetchException.dart';
 import 'FeedbacksSucess.dart';
-import '../src/blocs/Media/MediaTypeBlock.dart';
 import '../src/blocs/health/HealthReportListForUserBlock.dart';
-import '../src/model/Category/CategoryData.dart';
-import '../src/model/Category/CategoryResponseList.dart';
-import '../src/model/Category/catergory_result.dart';
-import '../src/model/Media/MediaData.dart';
-import '../src/model/Media/MediaTypeResponse.dart';
-import '../src/model/Media/media_data_list.dart';
-import '../src/model/Media/media_result.dart';
 import 'dart:convert';
 import '../src/utils/colors_utils.dart';
 import '../constants/variable_constant.dart' as variable;
-import '../colors/fhb_colors.dart' as fhbColors;
 import '../constants/fhb_parameters.dart' as parameters;
 import 'package:get/get.dart';
 
@@ -42,12 +31,15 @@ class Feedbacks extends StatefulWidget {
 }
 
 class _FeedbacksState extends State<Feedbacks> {
-  List<Asset> resultList = <Asset>[];
-  List<Asset> assests = <Asset>[];
+  // TODO: multi_image_picker deprecated so need to FIX
+  // List<Asset> resultList = <Asset>[];
+  // TODO: multi_image_picker deprecated so need to FIX
+  // List<Asset> assests = <Asset>[];
   List<ByteData> byteDataList = [];
 
   List<dynamic> byteDataClonelist = [];
-  List<Asset> images = <Asset>[];
+  // TODO: multi_image_picker deprecated so need to FIX
+  // List<Asset> images = <Asset>[];
 
   String? audioPathMain = '';
   bool containsAudioMain = false;
@@ -67,77 +59,80 @@ class _FeedbacksState extends State<Feedbacks> {
 
   Future<void> loadAssets() async {
     try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 300,
-        enableCamera: true,
-        selectedAssets: assests,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
-        materialOptions: MaterialOptions(
-          actionBarColor: fhbColors.actionColor,
-          useDetailsView: false,
-          selectCircleStrokeColor: fhbColors.colorBlack,
-        ),
-      );
+      // TODO: multi_image_picker deprecated so need to FIX
+      // resultList = await MultiImagePicker.pickImages(
+      //   maxImages: 300,
+      //   enableCamera: true,
+      //   selectedAssets: assests,
+      //   cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
+      //   materialOptions: MaterialOptions(
+      //     actionBarColor: fhbColors.actionColor,
+      //     useDetailsView: false,
+      //     selectCircleStrokeColor: fhbColors.colorBlack,
+      //   ),
+      // );
     } on FetchException catch (e,stackTrace) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
-    for (var asset in resultList) {
-      // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
-      // if(filePath!=null)imagePaths.add(filePath);
-      var filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
-      imagePaths.add(filePath); // FU2.5
-    }
+// TODO: multi_image_picker deprecated so need to FIX
+//     for (var asset in resultList) {
+//       // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
+//       // if(filePath!=null)imagePaths.add(filePath);
+//       var filePath =
+//           await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
+//       imagePaths.add(filePath); // FU2.5
+//     }
 
     setState(() {
-      images = resultList;
+      // TODO: multi_image_picker deprecated so need to FIX
+      // images = resultList;
     });
   }
+// TODO: multi_image_picker deprecated so need to FIX
+  // Widget showListViiewBuilder() {
+  //   final length = resultList.length.toDouble();
+  //   return ListView.builder(
+  //     padding: EdgeInsets.all(8),
+  //     itemExtent: length,
+  //     itemBuilder: (context, index) {
+  //       final ByteData byteData = byteDataClonelist[index];
+  //       return Container(
+  //         height: 30.0.h,
+  //         width: 30.0.h,
+  //         child: Image.memory(
+  //           byteData.buffer.asUint8List(),
+  //           fit: BoxFit.fill,
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
-  Widget showListViiewBuilder() {
-    final length = resultList.length.toDouble();
-    return ListView.builder(
-      padding: EdgeInsets.all(8),
-      itemExtent: length,
-      itemBuilder: (context, index) {
-        final ByteData byteData = byteDataClonelist[index];
-        return Container(
-          height: 30.0.h,
-          width: 30.0.h,
-          child: Image.memory(
-            byteData.buffer.asUint8List(),
-            fit: BoxFit.fill,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget buildGridView() {
-    return images.isNotEmpty
-        ? Container(
-            height: 150.0.h,
-            child: GridView.count(
-              crossAxisCount: 1,
-              scrollDirection: Axis.horizontal,
-              children: List.generate(images.length, (index) {
-                var asset = images[index];
-                return Padding(
-                  padding: EdgeInsets.all(5),
-                  child: AssetThumb(
-                    asset: asset,
-                    width: 100,
-                    height: 100,
-                  ),
-                );
-              }),
-            ))
-        : SizedBox(height: 0.0.h);
-  }
+// TODO: multi_image_picker deprecated so need to FIX
+  // Widget buildGridView() {
+  //   return images.isNotEmpty
+  //       ? Container(
+  //           height: 150.0.h,
+  //           child: GridView.count(
+  //             crossAxisCount: 1,
+  //             scrollDirection: Axis.horizontal,
+  //             children: List.generate(images.length, (index) {
+  //               var asset = images[index];
+  //               return Padding(
+  //                 padding: EdgeInsets.all(5),
+  //                 child: AssetThumb(
+  //                   asset: asset,
+  //                   width: 100,
+  //                   height: 100,
+  //                 ),
+  //               );
+  //             }),
+  //           ))
+  //       : SizedBox(height: 0.0.h);
+  // }
 
   @override
   void initState() {
@@ -251,8 +246,10 @@ class _FeedbacksState extends State<Feedbacks> {
                                       ),
                                       onPressed: loadAssets,
                                     ),
+                                  
                                   ),
-                                  buildGridView(),
+                                  // TODO: multi_image_picker deprecated so need to FIX
+                                  // buildGridView(),
                                   SizedBox(
                                     height: 20.0.h,
                                   ),

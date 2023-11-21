@@ -22,14 +22,14 @@ class BleDataModel {
       eid = json['eid'];
       uid = json['uid'];
       ackLocal = json['ackLocal'];
-      data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
+      data = json['Data'] != null ? Data.fromJson(json['Data']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['Status'] = this.status;
       data['hubId'] = this.hubId;
@@ -81,7 +81,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['SPO2'] = this.sPO2;
       data['Pulse'] = this.pulse;
@@ -106,7 +106,7 @@ class BleDataResponseModel {
     try {
       isSuccess = json['isSuccess'];
       result = json['result'] != null
-          ? new BleDataResult.fromJson(json['result'])
+          ? BleDataResult.fromJson(json['result'])
           : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -114,7 +114,7 @@ class BleDataResponseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['isSuccess'] = this.isSuccess;
       if (this.result != null) {
@@ -147,7 +147,7 @@ class BleDataResult {
   BleDataResult.fromJson(Map<String, dynamic> json) {
     try {
       data = json['Data'] != null
-          ? new BleDataResponseData.fromJson(json['Data'])
+          ? BleDataResponseData.fromJson(json['Data'])
           : null;
       hubId = json['hubId'];
       deviceId = json['deviceId'];
@@ -160,7 +160,7 @@ class BleDataResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       if (this.data != null) {
         data['Data'] = this.data!.toJson();
@@ -194,7 +194,7 @@ class BleDataResponseData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['Pulse'] = this.pulse;
       data['SPO2'] = this.sPO2;

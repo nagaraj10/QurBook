@@ -1,7 +1,6 @@
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
-import '../common/CommonConstants.dart';
 import '../common/PreferenceUtil.dart';
 import 'fhb_constants.dart' as Constants;
 import 'fhb_constants.dart';

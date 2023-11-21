@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:http/http.dart' as http;
@@ -507,7 +506,7 @@ class QurhomeRegimenController extends GetxController {
 
   void startTimer() {
     try {
-      timer = new Timer.periodic(
+      timer = Timer.periodic(
         Duration(seconds: 1),
         (Timer timer) {
           final addSeconds = -1;

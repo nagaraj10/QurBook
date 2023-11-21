@@ -97,7 +97,7 @@ class SheelaAIController extends GetxController {
   Rx<BLEStatus> isBLEStatus = BLEStatus.Disabled.obs;
   bool isCallStartFromSheela = false;
 
-  ChatSocketService _chatSocketService = new ChatSocketService();
+  ChatSocketService _chatSocketService = ChatSocketService();
 
   Rx<bool> isFullScreenVideoPlayer = false.obs;
   Rx<bool> isPlayPauseView = false.obs;
@@ -1340,7 +1340,7 @@ class SheelaAIController extends GetxController {
       if ((selLanguageCode ?? '').contains('en')) {
         return text;
       }
-      Map<String, dynamic> reqJson = new Map<String, dynamic>();
+      Map<String, dynamic> reqJson = Map<String, dynamic>();
       reqJson[qr_textToTranslate] = text;
       reqJson[qr_targetLanguageCode] = getCurrentLanCode(splittedCode: true);
       reqJson[qr_sourceLanguageCode] = 'en';

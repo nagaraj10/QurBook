@@ -11,7 +11,6 @@ import 'package:myfhb/add_providers/models/add_labs_providers_id.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
-import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/view/create_ticket_screen.dart';
 
 import '../widgets/dropdown_with_categories.dart';
@@ -25,6 +24,7 @@ import 'package:flutter/services.dart';
 //import 'package:geocoder/geocoder.dart'; FU2.5
 import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../bloc/add_providers_bloc.dart';
 import '../bloc/update_providers_bloc.dart';
@@ -50,7 +50,6 @@ import '../../search_providers/models/hospital_data.dart';
 import '../../search_providers/models/lab_data.dart';
 import '../../src/blocs/User/MyProfileBloc.dart';
 import '../../src/model/user/MyProfileModel.dart';
-import '../../src/resources/network/ApiResponse.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
 import '../../telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -296,7 +295,7 @@ class AddProvidersState extends State<AddProviders> {
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w400,
-                                    //color: Color(new CommonUtil().getMyPrimaryColor())
+                                    //color: Color(CommonUtil().getMyPrimaryColor())
                                   ),
                                 ),
                               ),
@@ -1470,13 +1469,16 @@ class AddProvidersState extends State<AddProviders> {
           return AlertDialog(
             content: Text(variable.strDisableTeleconsulting),
             actions: <Widget>[
-              FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    teleHealthAlertShown = true;
-                    _addBtnTapped();
-                  },
-                  child: Text('Ok'))
+              FlatButtonWidget(
+                bgColor: Colors.transparent,
+                isSelected: true,
+                onPress: () {
+                  Navigator.of(context).pop();
+                  teleHealthAlertShown = true;
+                  _addBtnTapped();
+                },
+                title: 'Ok',
+              ),
             ],
           );
         });

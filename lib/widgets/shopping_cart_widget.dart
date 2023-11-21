@@ -14,40 +14,40 @@ class ShoppingCartWidget extends StatelessWidget {
       child: Container(
         height: 150.0,
         width: 50.0,
-        child: new GestureDetector(
+        child:  GestureDetector(
           onTap: () {
             Navigator.of(context).push(
-              new MaterialPageRoute(
-                builder: (BuildContext context) => new NotificationMain(),
+               MaterialPageRoute(
+                builder: (BuildContext context) =>  NotificationMain(),
               ),
             );
           },
-          child: new Stack(
+          child: Stack(
             children: <Widget>[
-              new IconButton(
-                icon: new Icon(
+               IconButton(
+                icon:  Icon(
                   Icons.shopping_cart,
                   color: Colors.white,
                 ),
                 onPressed: null,
               ),
               cartCount == 0
-                  ? new Container()
-                  : new Positioned(
-                      child: new Stack(
+                  ?  Container()
+                  :  Positioned(
+                      child:  Stack(
                         children: <Widget>[
-                          new Icon(
+                           Icon(
                             Icons.brightness_1,
                             size: cartCount <= 99 ? 20.0 : 25.0,
                             color: ColorUtils.countColor,
                           ),
-                          new Positioned(
+                           Positioned(
                             top: 3.0,
                             right: 4.0,
-                            child: new Center(
-                              child: new Text(
+                            child:  Center(
+                              child:  Text(
                                 cartCount <= 99 ? '${cartCount}' : '99+',
-                                style: new TextStyle(
+                                style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 10.0,
                                     fontWeight: FontWeight.w500),

@@ -1,7 +1,5 @@
 library db_constants;
 
-import 'package:flutter/cupertino.dart';
-
 const String CT_COUNTRY_METRICS =
     'CREATE TABLE CountryMetrics(countryCode INTEGER PRIMARY KEY, name TEXT, bpSPUnit TEXT, bpDPUnit TEXT,bpPulseUnit TEXT, glucometerUnit TEXT, poOxySatUnit TEXT,poPulseUnit TEXT, tempUnit TEXT, weightUnit TEXT)';
 const String CT_UNITS =

@@ -29,14 +29,14 @@ class ProviderRequestCollection3 {
       lastModifiedOn = json['lastModifiedOn'];
       patientInfo = json['patientInfo'];
       doctor =
-              json['doctor'] != null ? new Doctors.fromJson(json['doctor']) : null;
+              json['doctor'] != null ? Doctors.fromJson(json['doctor']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['userPhoneNumber'] = this.userPhoneNumber;
     data['isActive'] = this.isActive;

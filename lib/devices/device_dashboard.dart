@@ -38,7 +38,7 @@ class Devicedashboard extends StatefulWidget {
 }
 
 class _DevicedashboardScreenState extends State<Devicedashboard> {
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
   TextEditingController deviceController = TextEditingController(text: '');
   TextEditingController pulse = TextEditingController(text: '');
   TextEditingController memoController = TextEditingController(text: '');
@@ -133,7 +133,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       SizedBox(width: 50),
-                      OutlineButton(
+                      OutlinedButton(
                         onPressed: onOkClicked
                             ? () {}
                             : () async {
@@ -150,22 +150,23 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                   }
                                 });
                               } /*() {
-                      new FHBUtils().check().then((intenet) {
+                      FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           createDeviceRecords(deviceName);
                         } else {
-                          new FHBBasicWidget().showInSnackBar(
+                          FHBBasicWidget().showInSnackBar(
                               Constants.STR_NO_CONNECTIVITY, scaffold_state);
                         }
                       });
                     }*/
                         ,
-                        textColor: Color(CommonUtil().getMyPrimaryColor()),
-                        color: Colors.transparent,
-                        borderSide: BorderSide(
+                        style:  OutlinedButton.styleFrom(
+                        foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                        backgroundColor: Colors.transparent,
+                        side: BorderSide(
                             color: Color(CommonUtil().getMyPrimaryColor())),
-                        shape: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),),
                         child: Text('OK'),
                       ),
                       //submitButton(_otpVerifyBloc)
@@ -217,16 +218,16 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     return true;
     /*return showDialog(
           context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit an App'),
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to exit an App'),
             actions: <Widget>[
-              new GestureDetector(
+              GestureDetector(
                 onTap: () => Navigator.of(context).pop(false),
                 child: Text("NO"),
               ),
               SizedBox(height: 16.0.h),
-              new GestureDetector(
+              GestureDetector(
                 onTap: () => Navigator.of(context).pop(true),
                 child: Text("YES"),
               ),

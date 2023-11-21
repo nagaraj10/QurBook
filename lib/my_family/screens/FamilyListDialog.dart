@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import '../../common/CommonUtil.dart';
@@ -16,10 +15,10 @@ import '../models/FamilyMembersResponse.dart';
 import '../models/LinkedData.dart';
 import '../models/ProfileData.dart';
 import '../models/Sharedbyme.dart';
-import '../../src/model/user/MyProfileModel.dart';
 import '../../src/resources/network/ApiResponse.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../src/utils/screenutils/size_extensions.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 
 class FamilyListDialog extends StatefulWidget {
   final FamilyData familyData;
@@ -252,15 +251,12 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                 decoration: BoxDecoration(
                     color: Color(CommonUtil().getMyPrimaryColor()),
                     borderRadius: BorderRadius.circular(10)),
-                child: FlatButton(
-                  onPressed: () {},
-                  child: Text(
-                    variable.strAddFamily,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0.sp,
-                    ),
-                  ),
+                child: FlatButtonWidget(
+                  bgColor: Colors.transparent,
+                  isSelected: true,
+                  onPress: () {},
+                  title: variable.strAddFamily,
+                  fontSize: 16.0.sp,
                 ),
               )
             ],

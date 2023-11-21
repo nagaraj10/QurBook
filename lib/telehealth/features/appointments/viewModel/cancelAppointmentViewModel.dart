@@ -5,8 +5,8 @@ import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/
 import 'package:myfhb/telehealth/features/appointments/services/cancel_appointment_service.dart';
 
 class CancelAppointmentViewModel extends ChangeNotifier {
-  CancelAppointmentsService cancelAppointmentsService=CancelAppointmentsService();
-  CancelAppointmentModel cancelAppointmentModel = new CancelAppointmentModel();
+  CancelAppointmentsService cancelAppointmentsService = CancelAppointmentsService();
+  CancelAppointmentModel cancelAppointmentModel = CancelAppointmentModel();
 
 
   Future<CancelAppointmentModel?> fetchCancelAppointment(

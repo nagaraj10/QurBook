@@ -484,7 +484,7 @@ class IosNotificationHandler {
         (model.appointmentId ?? '').isNotEmpty &&
         (model.patientId ?? '').isNotEmpty &&
         (acceptAction || declineAction)) {
-      new CommonUtil().acceptCareGiverTransportRequestReminder(
+      CommonUtil().acceptCareGiverTransportRequestReminder(
           Get.context!, model.appointmentId!, model.patientId!, acceptAction);
       acceptAction = false;
       declineAction = false;

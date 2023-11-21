@@ -181,7 +181,7 @@ class VitalDetailController extends GetxController {
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
       List<BPResult> ret = [];
-      //List<HeartRateEntity> heartRate = new List();
+      //List<HeartRateEntity> heartRate = List();
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bloodPressureCollection!.isEmpty) {
           loadingData.value = false;
@@ -319,7 +319,7 @@ class VitalDetailController extends GetxController {
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
       var ret = <OxyResult>[];
-      //List<HeartRateEntity> heartRate = new List();
+      //List<HeartRateEntity> heartRate = List();
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.oxygenSaturationCollection!.isEmpty &&
             dataElement.heartRateCollection!.isEmpty) {

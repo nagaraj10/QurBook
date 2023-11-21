@@ -30,7 +30,7 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   bool selectedAlertList = true;
   TabController? tabController;
@@ -116,7 +116,7 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
                     color: Color(CommonUtil().getQurhomePrimaryColor()),
                     border: Border.all(
                         color:
-                            Color(new CommonUtil().getQurhomePrimaryColor())),
+                            Color(CommonUtil().getQurhomePrimaryColor())),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(15.0),
                         topRight: Radius.circular(15.0)),

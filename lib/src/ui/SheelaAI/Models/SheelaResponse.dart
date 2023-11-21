@@ -21,7 +21,7 @@ class SpeechModelAPIResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -255,7 +255,7 @@ class Buttons {
       if (json['chatAttachments'] != null) {
         chatAttachments = <ChatAttachments>[];
         json['chatAttachments'].forEach((v) {
-          chatAttachments!.add(new ChatAttachments.fromJson(v));
+          chatAttachments!.add(ChatAttachments.fromJson(v));
         });
       }
     } catch (e,stackTrace) {
@@ -335,13 +335,13 @@ class ChatAttachments {
     isRead = json['isRead'];
     messageType = json['messageType'];
     messages = json['messages'] != null
-        ? new Messages.fromJson(json['messages'])
+        ? Messages.fromJson(json['messages'])
         : null;
     documentId = json['documentId'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['chatListId'] = this.chatListId;
     data['deliveredDateTime'] = this.deliveredDateTime;
@@ -410,7 +410,7 @@ class Messages {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['idTo'] = this.idTo;
     data['type'] = this.type;

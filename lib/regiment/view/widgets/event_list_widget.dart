@@ -198,14 +198,15 @@ class EventListWidget extends StatelessWidget {
           children: [
             Container(
               width: 150.0.w,
-              child: RaisedButton(
+              child: ElevatedButton(
                 onPressed: onSave as void Function()?,
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                style: ElevatedButton.styleFrom(
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(
                     5.0.sp,
                   )),
-                ),
+                ),),
                 child: Text(
                   confirmButton,
                   style: TextStyle(

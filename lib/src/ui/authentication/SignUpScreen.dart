@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -48,13 +49,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.initState();
 
     _loginBloc = LoginBloc();
-    phoneNumber = new TextEditingController(
+    phoneNumber = TextEditingController(
         text: '+' + widget.selectedCountryCode! + ' ' + widget.enteredMobNumber);
-    name = new TextEditingController(text: '');
-    email = new TextEditingController(text: '');
-    firstName = new TextEditingController(text: '');
-    middleName = new TextEditingController(text: '');
-    lastName = new TextEditingController(text: '');
+    name = TextEditingController(text: '');
+    email = TextEditingController(text: '');
+    firstName = TextEditingController(text: '');
+    middleName = TextEditingController(text: '');
+    lastName = TextEditingController(text: '');
   }
 
   @override
@@ -163,16 +164,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       margin: EdgeInsets.all(20),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: Color(CommonUtil().getMyPrimaryColor()),
                           borderRadius: BorderRadius.circular(10)),
-                      child: FlatButton(
-                          onPressed: () {
+                      child: FlatButtonWidget(
+                        bgColor: Colors.transparent,
+                        isSelected: true,
+                          onPress: () {
                             createUser();
                           },
-                          child: Text(
-                            CommonConstants.send_otp,
-                            style: TextStyle(color: Colors.white),
-                          )),
+                          title: CommonConstants.send_otp,
+                          ),
                     ),
                   )
                 ],
@@ -184,7 +185,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: EdgeInsets.only(bottom: circleRadius / 2.0),
                   child: Container(
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                     height: 160.0.h,
                   ),
                 ),
@@ -287,9 +288,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else {
       showDialog(
           context: context,
-          builder: (context) => new AlertDialog(
-                title: new Text(variable.strAPP_NAME),
-                content: new Text(strErrorMsg),
+          builder: (context) => AlertDialog(
+                title: Text(variable.strAPP_NAME),
+                content: Text(strErrorMsg),
               ));
     }
   }

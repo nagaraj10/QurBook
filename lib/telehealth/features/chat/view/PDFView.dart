@@ -29,7 +29,7 @@ class PDFView extends StatefulWidget {
 class _PDFViewState extends State<PDFView> {
   final controller = Get.find<PDFViewController>();
 
-  ChatSocketService _chatSocketService = new ChatSocketService();
+  ChatSocketService _chatSocketService = ChatSocketService();
 
   @override
   void initState() {

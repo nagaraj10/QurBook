@@ -6,21 +6,13 @@ import '../../common/PreferenceUtil.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
-import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
-import '../model/PlanListModel.dart';
 import '../model/SearchListModel.dart';
 import '../services/SearchListService.dart';
 import 'categoryList.dart';
-import 'planList.dart';
-import 'searchProviderList.dart';
 import '../viewModel/planViewModel.dart';
-import '../viewModel/subscribeViewModel.dart';
-import '../../regiment/view_model/regiment_view_model.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
-import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
@@ -209,20 +201,20 @@ class _SearchListState extends State<SearchListHome> {
   }
 
   /*Widget getSearchList(String title) {
-    return new FutureBuilder<SearchListModel>(
+    return FutureBuilder<SearchListModel>(
       future: myPlanViewModel.getSearchListBasedOnValue(title),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: new CircularProgressIndicator(
+                  child: CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                          Color(CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),

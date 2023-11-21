@@ -13,7 +13,7 @@ class MakePaymentResponse {
       isSuccess = json['isSuccess'];
       if (json.containsKey('result')) {
             result =
-                json['result'] != null ? new Result.fromJson(json['result']) : null;
+                json['result'] != null ? Result.fromJson(json['result']) : null;
           }
       if (json.containsKey('message')) {
             message = json['message'];
@@ -24,7 +24,7 @@ class MakePaymentResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -52,13 +52,13 @@ class Result {
       if (json['subscribeResponse'] != null) {
             subscribeResponse = <SubscribeResponse>[];
             json['subscribeResponse'].forEach((v) {
-              subscribeResponse!.add(new SubscribeResponse.fromJson(v));
+              subscribeResponse!.add(SubscribeResponse.fromJson(v));
             });
           }
       payment =
-              json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
+              json['payment'] != null ? Payment.fromJson(json['payment']) : null;
       paymentGatewayDetail = json['paymentGatewayDetail'] != null
-              ? new PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
+              ? PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -66,7 +66,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['orderId'] = this.orderId;
     if (this.subscribeResponse != null) {
       data['subscribeResponse'] =
@@ -112,7 +112,7 @@ class SubscribeResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['Result'] = this.result;
     data['PlanStartDate'] = this.planStartDate;
     data['Message'] = this.message;
@@ -169,10 +169,10 @@ class Payment {
     try {
       id = json['id'];
       paymentStatus = json['paymentStatus'] != null
-              ? new PaymentStatus.fromJson(json['paymentStatus'])
+              ? PaymentStatus.fromJson(json['paymentStatus'])
               : null;
       paymentGateway = json['paymentGateway'] != null
-              ? new PaymentStatus.fromJson(json['paymentGateway'])
+              ? PaymentStatus.fromJson(json['paymentGateway'])
               : null;
       paidTo = json['paidTo'];
       paidBy = json['paidBy'];
@@ -183,9 +183,9 @@ class Payment {
       paidAmount = json['paidAmount'];
       transactionDateTime = json['transactionDateTime'];
       metadata = json['metadata'] != null
-              ? new Metadata.fromJson(json['metadata'])
+              ? Metadata.fromJson(json['metadata'])
               : null;
-      cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
+      cart = json['cart'] != null ? Cart.fromJson(json['cart']) : null;
       paymentReference = json['paymentReference'];
       paidDate = json['paidDate'];
       receiptUrl = json['receiptUrl'];
@@ -198,7 +198,7 @@ class Payment {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     if (this.paymentStatus != null) {
       data['paymentStatus'] = this.paymentStatus!.toJson();
@@ -266,7 +266,7 @@ class PaymentStatus {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       referenceData = json['referenceData'] != null
-              ? new ReferenceData.fromJson(json['referenceData'])
+              ? ReferenceData.fromJson(json['referenceData'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -274,7 +274,7 @@ class PaymentStatus {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;
@@ -327,7 +327,7 @@ class ReferenceData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;
@@ -354,7 +354,7 @@ class Metadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['paymentGateway'] = this.paymentGateway;
     return data;
   }
@@ -374,7 +374,7 @@ class Cart {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     return data;
   }
@@ -407,7 +407,7 @@ class PaymentGatewayDetail {
       sourceId = json['sourceId'];
       sourceCode = json['sourceCode'];
       responseInfo = json['responseInfo'] != null
-              ? new ResponseInfo.fromJson(json['responseInfo'])
+              ? ResponseInfo.fromJson(json['responseInfo'])
               : null;
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
@@ -421,7 +421,7 @@ class PaymentGatewayDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['sourceId'] = this.sourceId;
     data['sourceCode'] = this.sourceCode;
     if (this.responseInfo != null) {
@@ -512,7 +512,7 @@ class ResponseInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['phone'] = this.phone;
     data['email'] = this.email;

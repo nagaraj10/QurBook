@@ -52,12 +52,12 @@ class _NotesScreenListState extends State<NotesScreenList> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     super.initState();
   }
@@ -82,7 +82,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
   Widget getWidgetToDisplayOtherDocsList(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, widget.categoryDescription);
 
     return RefreshIndicator(
@@ -189,7 +189,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                               .metadata!.healthRecordCategory!.logo!,
                           height: 25.0.h,
                           width: 25.0.h,
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: Color(CommonUtil().getMyPrimaryColor()),
                           errorBuilder: (context, error, stackTrace) =>
                               SizedBox(),
                         )
@@ -218,7 +218,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                         softWrap: false,
                       ),
                       Text(
-                        new FHBUtils()
+                        FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(
                             color: Colors.grey[400],
@@ -240,7 +240,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
+                                      CommonUtil().getMyPrimaryColor()),
                                   size: CommonUtil().isTablet!
                                       ? tabHeader2
                                       : mobileHeader2,
@@ -253,7 +253,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                                       : mobileHeader2,
                                 ),
                           onPressed: () {
-                            new CommonUtil()
+                            CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
                       (mediaMetaInfoObj.metadata!.hasVoiceNotes != null &&
@@ -267,7 +267,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                           ? Icon(
                               Icons.done,
                               color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyPrimaryColor()),
                             )
                           : SizedBox(),
                     ],
@@ -280,12 +280,12 @@ class _NotesScreenListState extends State<NotesScreenList> {
   getDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+          .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(snapshot.data);
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: 50.0.h,
             height: 50.0.h,
             child: Shimmer.fromColors(

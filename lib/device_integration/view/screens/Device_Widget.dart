@@ -1,7 +1,6 @@
 // ignore: file_names
 import 'dart:io';
 import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -10,29 +9,19 @@ import 'package:intl/intl.dart';
 import '../../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
-import '../../../common/SwitchProfile.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_parameters.dart';
 import '../../../common/errors_widget.dart';
 import '../../../constants/variable_constant.dart';
-import 'Clipper.dart';
 import '../../viewModel/deviceDataHelper.dart';
 import '../../../devices/device_dashboard_arguments.dart';
-import '../../../myPlan/view/myPlanList.dart';
 import '../../../my_family/bloc/FamilyListBloc.dart';
-import '../../../my_family/screens/MyFamily.dart';
-import '../../../plan_dashboard/view/categoryList.dart';
-import '../../../plan_dashboard/view/planList.dart';
-import '../../../plan_dashboard/view/planUserProviderList.dart';
-import '../../../regiment/view/regiment_tab.dart';
 import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/common_response.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/model/user/user_accounts_arguments.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
-import '../../../src/ui/HomeScreen.dart';
 import '../../../src/ui/user/UserAccounts.dart';
-import '../../../src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
 import '../../../regiment/view_model/regiment_view_model.dart';
 
@@ -48,7 +37,6 @@ import '../../model/LastMeasureSync.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/router_variable.dart' as router;
 import '../../../src/utils/screenutils/size_extensions.dart';
-import '../../../authentication/view/login_screen.dart';
 
 class ShowDevicesNew extends StatefulWidget {
   const ShowDevicesNew({

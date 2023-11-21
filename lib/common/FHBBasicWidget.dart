@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import '../main.dart';
 import 'errors_widget.dart';
 import '../my_providers/models/Doctors.dart';
@@ -199,7 +200,7 @@ class FHBBasicWidget {
             )));
   }
 
-  void showInSnackBar(String value, GlobalKey<ScaffoldState> scaffoldstate) {
+  void showInSnackBar(String value, GlobalKey<ScaffoldMessengerState> scaffoldstate) {
     var snackBar = SnackBar(content: Text(value));
     scaffoldstate.currentState!.showSnackBar(snackBar);
   }
@@ -266,7 +267,7 @@ class FHBBasicWidget {
     return Text(textTitle,
         textAlign: TextAlign.center,
         style: TextStyle(
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
             fontSize: fontSize ?? 20.0));
   }
 
@@ -603,21 +604,23 @@ class FHBBasicWidget {
           style: TextStyle(fontSize: 16.0.sp),
         ),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               Navigator.of(context).pop(false);
             },
-            child: Text(variable.Cancel,
-                style:
-                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+            title: variable.Cancel,
+            titleColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               logout();
             },
-            child: Text(variable.strYes,
-                style:
-                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+            title: variable.strYes,
+            titleColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ],
       ),
@@ -819,21 +822,23 @@ class FHBBasicWidget {
           style: TextStyle(fontSize: 16.0.sp),
         ),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               Navigator.of(context).pop(false);
             },
-            child: Text(variable.Cancel,
-                style:
-                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+            title: variable.Cancel,
+            titleColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               logout();
             },
-            child: Text(variable.strYes,
-                style:
-                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+            title: variable.strYes,
+            titleColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ],
       ),

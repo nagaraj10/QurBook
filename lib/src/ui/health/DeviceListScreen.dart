@@ -60,15 +60,15 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   List<HealthRecordCollection> mediMasterId = [];
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
     String? categoryID =
         PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
 
@@ -94,7 +94,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   Widget _getWidgetToDisplayDeviceList(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionDevice);
     return RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -155,7 +155,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               data.isSelected = !data.isSelected!;
               if (data != null &&
                   (data.healthRecordCollection?.length ?? 0) > 0) {
-                mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
+                mediMasterId = CommonUtil().getMetaMasterIdListNew(data);
                 print(mediMasterId.length);
                 if (mediMasterId.length > 0) {
                   widget.healthRecordSelected(data.id, mediMasterId, condition);
@@ -218,7 +218,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                           data.metadata!.healthRecordType!.logo!,
                           height: 25.0.h,
                           width: 25.0.h,
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: Color(CommonUtil().getMyPrimaryColor()),
                           errorBuilder: (context, error, stackTrace) =>
                               SizedBox(),
                         ),
@@ -235,7 +235,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                 fontWeight: FontWeight.w500,
                                 fontSize: 12.0.sp,
                                 color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                               ),
                               maxLines: 2,
                               softWrap: true,
@@ -254,11 +254,11 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            new FHBUtils().getFormattedDateStringClone(
+                            FHBUtils().getFormattedDateStringClone(
                                 data.dateTimeValue!.toLocal()),
                             style: TextStyle(
                                 color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 fontWeight: FontWeight.w200,
                                 fontSize: 10.0.sp),
                           )
@@ -281,7 +281,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                           AssetImage(
                                               variable.icon_record_fav_active),
                                           //TODO chnage theme
-                                          color: Color(new CommonUtil()
+                                          color: Color(CommonUtil()
                                               .getMyPrimaryColor()),
                                           size: CommonUtil().isTablet!
                                               ? tabHeader2
@@ -295,7 +295,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                               : mobileHeader2,
                                         ),
                                   onPressed: () {
-                                    new CommonUtil()
+                                    CommonUtil()
                                         .bookMarkRecord(data, _refresh);
                                   }),
                               (data.metadata!.hasVoiceNotes != null &&
@@ -309,7 +309,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                   ? Icon(
                                       Icons.done,
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                     )
                                   : SizedBox(),
                             ],
@@ -324,9 +324,9 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+          .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Container(
@@ -336,7 +336,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
             decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
           );
         } else {
-          return new Shimmer.fromColors(
+          return Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: Container(
@@ -416,13 +416,13 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
 
     return Container(
       height: 58.0.h,
-      child: new ListView(
+      child: ListView(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         children: list,
       ),
     );
-    //return new Row(children: list);
+    //return Row(children: list);
   }
 
   getUnitForTemperature(String unit) {

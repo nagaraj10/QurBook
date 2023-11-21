@@ -1,5 +1,4 @@
 
-import 'dart:convert';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +21,6 @@ import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewMod
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -34,8 +32,8 @@ import 'package:myfhb/constants/fhb_constants.dart' as ConstantKey;
 class AppointmentsCommonWidget {
   List<CategoryResult> filteredCategoryData = [];
   List<CategoryResult> categoryDataList = [];
-  CategoryResult categoryDataObjClone = new CategoryResult();
-  CategoryListBlock _categoryListBlock = new CategoryListBlock();
+  CategoryResult categoryDataObjClone = CategoryResult();
+  CategoryListBlock _categoryListBlock = CategoryListBlock();
 
   Widget docName(BuildContext context, doc) {
     return Container(
@@ -58,7 +56,7 @@ class AppointmentsCommonWidget {
           Padding(
             padding:  EdgeInsets.only(top:4.0),
             child: IconWidget(
-                colors: Color(new CommonUtil().getMyPrimaryColor()),
+                colors: Color(CommonUtil().getMyPrimaryColor()),
                 icon: Icons.info,
                 size: 12.0.sp,
                 onTap: () {}),
@@ -101,7 +99,7 @@ class AppointmentsCommonWidget {
     List<String?> notesId = [];
     List<String?> voiceIds = [];
 
-    FlutterToast toast = new FlutterToast();
+    FlutterToast toast = FlutterToast();
     bool containsNotes, containsVoice, containsRecord;
 
     String notesCount =
@@ -158,7 +156,7 @@ class AppointmentsCommonWidget {
       children: [
         iconWithText(
             Constants.Appointments_notesImage,
-            Color(new CommonUtil().getMyPrimaryColor()),
+            Color(CommonUtil().getMyPrimaryColor()),
             TranslationConstants.notes.t(), () async {
           FocusManager.instance.primaryFocus!.unfocus();
           int position = await getCategoryPosition(AppConstants.notes);
@@ -213,7 +211,7 @@ class AppointmentsCommonWidget {
         SizedBoxWidget(width: 15.0.w),
         iconWithText(
             Constants.Appointments_voiceNotesImage,
-            Color(new CommonUtil().getMyPrimaryColor()),
+            Color(CommonUtil().getMyPrimaryColor()),
             AppConstants.voiceNotes, () async {
           FocusManager.instance.primaryFocus!.unfocus();
           int position = await getCategoryPosition(AppConstants.voiceRecords);
@@ -268,7 +266,7 @@ class AppointmentsCommonWidget {
         SizedBoxWidget(width: 15.0.w),
         iconWithText(
             Constants.Appointments_recordsImage,
-            Color(new CommonUtil().getMyPrimaryColor()),
+            Color(CommonUtil().getMyPrimaryColor()),
             TranslationConstants.records.t(), () async {
           if (rxCount != null /*&& isUpcoming*/) {
             FocusManager.instance.primaryFocus!.unfocus();
@@ -328,7 +326,7 @@ class AppointmentsCommonWidget {
 
   Future<AssociateSuccessResponse> associateRecords(
       String? doctorId, String? userId, List<String>? healthRecords) async {
-    MyProviderViewModel providerViewModel = new MyProviderViewModel();
+    MyProviderViewModel providerViewModel = MyProviderViewModel();
     AssociateSuccessResponse? associateResponseList = await providerViewModel
         .associateRecords(doctorId, userId, healthRecords);
 
@@ -342,7 +340,7 @@ class AppointmentsCommonWidget {
       child: Column(
         children: [
           Stack(
-            overflow: Overflow.visible,
+            clipBehavior: Clip.none,
             children: <Widget>[
               Container(
                 height: 20.0.h,
@@ -355,7 +353,7 @@ class AppointmentsCommonWidget {
               (count == null || count == 0 || count == '' || count == '0')
                   ? Container()
                   : BadgesBlue(
-                      backColor: Color(new CommonUtil().getMyPrimaryColor()),
+                      backColor: Color(CommonUtil().getMyPrimaryColor()),
                       badgeValue: count,
                     )
             ],
@@ -403,17 +401,17 @@ class AppointmentsCommonWidget {
       child: Container(
         height: 20.0.h,
         width: 70.0.h,
-        child: OutlineButton(
-          shape: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-          borderSide:
-              BorderSide(color: Color(new CommonUtil().getMyPrimaryColor())),
+        child: OutlinedButton(style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          side:
+              BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),),
           onPressed: () {},
           child: TextWidget(
             text: TranslationConstants.joinCall.t(),
-            colors: Color(new CommonUtil().getMyPrimaryColor()),
+            colors: Color(CommonUtil().getMyPrimaryColor()),
             fontsize: 10.0.sp,
           ),
-          color: Color(new CommonUtil().getMyPrimaryColor()),
         ),
       ),
     );
@@ -424,14 +422,14 @@ class AppointmentsCommonWidget {
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(
-              color: Color(new CommonUtil().getMyPrimaryColor()),
+              color: Color(CommonUtil().getMyPrimaryColor()),
               width: 3.0.w,
             ),
             borderRadius: BorderRadius.circular(50.0),
             gradient: LinearGradient(
               colors: <Color>[
-                Color(new CommonUtil().getMyPrimaryColor()),
-                Color(new CommonUtil().getMyGredientColor())
+                Color(CommonUtil().getMyPrimaryColor()),
+                Color(CommonUtil().getMyGredientColor())
               ],
             )),
         height: 40.0.h,
@@ -457,13 +455,13 @@ class AppointmentsCommonWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50),
         side: BorderSide(
-            width: 2.0.w, color: Color(new CommonUtil().getMyPrimaryColor())),
+            width: 2.0.w, color: Color(CommonUtil().getMyPrimaryColor())),
       ),
       elevation: 0.0,
       onPressed: () {},
       child: IconWidget(
         icon: Icons.add,
-        colors: Color(new CommonUtil().getMyPrimaryColor()),
+        colors: Color(CommonUtil().getMyPrimaryColor()),
         size: 24.0.sp,
         onTap: () {
           FocusManager.instance.primaryFocus!.unfocus();
@@ -547,7 +545,7 @@ class AppointmentsCommonWidget {
     }
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
-        filteredCategoryData = new CommonUtil().fliterCategories(value!.result!);
+        filteredCategoryData = CommonUtil().fliterCategories(value!.result!);
 
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;
@@ -608,7 +606,7 @@ class AppointmentsCommonWidget {
                       : '')
                   : '',
           style: TextStyle(
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
             fontSize: 16.0.sp,
             fontWeight: FontWeight.w400,
           ));
@@ -619,7 +617,7 @@ class AppointmentsCommonWidget {
         doc.doctor!.user!.firstName![0].toUpperCase() +
             doc.doctor!.user!.lastName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -628,7 +626,7 @@ class AppointmentsCommonWidget {
       return Text(
         doc.doctor!.user!.firstName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -637,7 +635,7 @@ class AppointmentsCommonWidget {
       return Text(
         '',
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w200,
         ),
@@ -647,7 +645,7 @@ class AppointmentsCommonWidget {
 
   Future<AssociateUpdateSuccessResponse> associateUpdateRecords(
       String? bookingID, HealthResult healthResult) async {
-    MyProviderViewModel providerViewModel = new MyProviderViewModel();
+    MyProviderViewModel providerViewModel = MyProviderViewModel();
     AssociateUpdateSuccessResponse? associateResponseList =
         await providerViewModel.associateUpdateRecords(bookingID, healthResult);
 

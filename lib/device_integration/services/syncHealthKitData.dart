@@ -3,7 +3,6 @@ import 'package:myfhb/common/CommonUtil.dart';
 import '../../Device_Integration/services/fetchHealthKitData.dart';
 import '../../src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
 import '../../constants/fhb_query.dart' as query;
-import '../model/myFHBResponseModel.dart';
 import 'dart:convert' show json;
 import '../model/LastSyncResponse.dart';
 

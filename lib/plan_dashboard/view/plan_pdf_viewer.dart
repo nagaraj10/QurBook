@@ -14,7 +14,7 @@ class PlanPdfViewer extends StatelessWidget {
   });
 
   final String? url;
-  final GlobalKey<ScaffoldState>? scaffoldKey;
+  final GlobalKey<ScaffoldMessengerState>? scaffoldKey;
 
   @override
   Widget build(BuildContext context) => Builder(

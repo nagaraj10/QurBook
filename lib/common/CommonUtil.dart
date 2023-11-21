@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as Badge;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -22,6 +22,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:html_unescape/html_unescape.dart';
@@ -403,12 +404,12 @@ class CommonUtil {
       await PreferenceUtil.saveString(
           Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
 
-      heightObj = new Height(
+      heightObj = Height(
           unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'feet/Inches');
       weightObj =
-          new Height(unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+         Height(unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
       tempObj =
-          new Height(unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+         Height(unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
       isKg = true;
       isPounds = false;
 
@@ -425,13 +426,13 @@ class CommonUtil {
       await PreferenceUtil.saveString(
           Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
 
-      heightObj = new Height(
+      heightObj =Height(
           unitCode: Constants.STR_VAL_HEIGHT_IND,
           unitName: variable.str_centi.toLowerCase());
-      weightObj = new Height(
+      weightObj =Height(
           unitCode: Constants.STR_VAL_WEIGHT_IND,
           unitName: variable.str_Kilogram.toLowerCase());
-      tempObj = new Height(
+      tempObj =Height(
           unitCode: Constants.STR_VAL_TEMP_IND,
           unitName: variable.str_far.toLowerCase());
       isKg = false;
@@ -931,7 +932,7 @@ class CommonUtil {
   }
 
   Future<void> getMedicalPreference({Function? callBackToRefresh}) async {
-    /* MyProfileBloc _myProfileBloc = new MyProfileBloc();
+    /* MyProfileBloc _myProfileBloc =MyProfileBloc();
     try {
       _myProfileBloc
           .getCompleteProfileData(Constants.KEY_USERID)
@@ -1145,7 +1146,7 @@ class CommonUtil {
       Hospital hospital;
 
       if (dataObj.metaInfo.hospital != null) {
-        hospital = new Hospital(
+        hospital =Hospital(
           addressLine1: dataObj.metaInfo.hospital.addressLine1,
           addressLine2: dataObj.metaInfo.hospital.addressLine2,
           /*  branch: dataObj.metaInfo.hospital.branch,
@@ -1170,7 +1171,7 @@ class CommonUtil {
       Laboratory laboratory;
 
       if (dataObj.metaInfo.laboratory != null) {
-        laboratory = new Laboratory(
+        laboratory =Laboratory(
           pincode: dataObj.metaInfo.laboratory.zipcode,
           website: dataObj.metaInfo.laboratory.website,
           name: dataObj.metaInfo.laboratory.name,
@@ -1190,7 +1191,7 @@ class CommonUtil {
         laboratory = null;
       }
 
-      List<DeviceReadings> deviceReadings = new List();
+      List<DeviceReadings> deviceReadings =List();
 
      if (dataObj.metaInfo.deviceReadings != null &&
           dataObj.metaInfo.deviceReadings.length > 0) {
@@ -1202,10 +1203,10 @@ class CommonUtil {
               value: deviceReadingsObj.value));
         }
       } else {
-        deviceReadings = new List();
+        deviceReadings =List();
       }
 
-      MetaInfo metaInfo = new MetaInfo(
+      MetaInfo metaInfo =MetaInfo(
           dateOfVisit: dataObj.metaInfo.dateOfVisit,
           categoryInfo: categoryInfo,
           mediaTypeInfo: mediaTypeInfo,
@@ -1220,7 +1221,7 @@ class CommonUtil {
           laboratory: laboratory,
           deviceReadings: deviceReadings);
 
-      MediaMetaInfo mediaMetaInfo = new MediaMetaInfo(
+      MediaMetaInfo mediaMetaInfo =MediaMetaInfo(
           metaInfo: metaInfo,
           createdBy: dataObj.createdBy,
           createdByUser: dataObj.createdBy,
@@ -1237,7 +1238,7 @@ class CommonUtil {
       mediaMetaInfoList.add(mediaMetaInfo);*/
     }
 
-    //completeData = new HealthRecordList(mediaMetaInfo: mediaMetaInfoList);
+    //completeData =HealthRecordList(mediaMetaInfo: mediaMetaInfoList);
 
     return completeData;
   }
@@ -1790,7 +1791,7 @@ class CommonUtil {
             CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
 
         var now = format.parse(string);
-        final df = new DateFormat(
+        final df = DateFormat(
             CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
         return df.format(now);
@@ -1802,7 +1803,7 @@ class CommonUtil {
           CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
 
       var now = format.parse(string);
-      final df = new DateFormat(
+      final df = DateFormat(
           CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
       return df.format(now);
@@ -2018,7 +2019,7 @@ class CommonUtil {
     }
   }
 
-  Future<bool> checkAppLock({bool useErrorDialogs: true}) async {
+  Future<bool> checkAppLock({bool useErrorDialogs = true}) async {
     try {
       var value = await LocalAuthentication().authenticate(
         localizedReason: strAuthToUseApp,
@@ -2220,7 +2221,7 @@ class CommonUtil {
         //     await ApiServices.get(Uri.parse(currentImage.response.data.fileContent));
         // var bytes = req.bodyBytes;
         // String dir = (await getTemporaryDirectory()).path;
-        // File file = new File(
+        // File file =File(
         //     '$dir/${basename(currentImage.response.data.fileContent)}${currentImage.response.data.fileType}');
         // await file.writeAsBytes(bytes);
         /* var file_status =
@@ -2264,7 +2265,7 @@ class CommonUtil {
   }
 
   void mSnackbar(BuildContext context, String message, String actionName) {
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -2415,7 +2416,7 @@ class CommonUtil {
       BuildContext context,
       Function(String? user, CareGiverPatientListResult? result) selectedUser) {
     if (result!.length > 0 && result != null) {
-      CareGiverPatientListResult selfResult = new CareGiverPatientListResult(
+      CareGiverPatientListResult selfResult = CareGiverPatientListResult(
           childId: userID,
           firstName: myProfile?.result?.firstName,
           lastName: myProfile?.result?.lastName,
@@ -2578,8 +2579,8 @@ class CommonUtil {
                   }
                 },
                 child: count! > 0
-                    ? Badge(
-                        position: BadgePosition.topEnd(
+                    ? Badge.Badge(
+                        position: Badge.BadgePosition.topEnd(
                           top: -8,
                           end: -5,
                         ),
@@ -2779,11 +2780,11 @@ class CommonUtil {
           ),
         ),
       ),
-      confirm: OutlineButton(
+      confirm: OutlinedButton(
         onPressed: () {
           Get.back();
-        },
-        borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+        },style: OutlinedButton.styleFrom(
+        side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),),
         child: Text(
           variable.strOK,
           style: TextStyle(
@@ -2833,34 +2834,30 @@ class CommonUtil {
             ? CupertinoAlertDialog(
                 title: Text(
                   title,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
                 content: Text(
                   message,
-                  style: TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14),
                 ),
                 actions: <Widget>[
-                  FlatButton(
-                    onPressed: () => launchURL(APP_STORE_URL),
-                    child: Text(
-                      btnLabel,
-                      style: TextStyle(
-                        color: Color(getMyPrimaryColor()),
-                      ),
-                    ),
+                  FlatButtonWidget(
+                    bgColor: Colors.transparent,
+                    isSelected: true,
+                    onPress: () => launchURL(APP_STORE_URL),
+                    title: btnLabel,
+                    titleColor: Color(getMyPrimaryColor()),
                   ),
                   if (!isForceUpdate)
-                    FlatButton(
-                      child: Text(
-                        btnLabelCancel,
-                        style: TextStyle(
-                          color: Color(
-                            getMyPrimaryColor(),
-                          ),
-                        ),
+                    FlatButtonWidget(
+                      bgColor: Colors.transparent,
+                      isSelected: true,
+                      title: btnLabelCancel,
+                      titleColor: Color(
+                        getMyPrimaryColor(),
                       ),
-                      onPressed: () => Navigator.pop(context),
-                    )
+                      onPress: () => Navigator.pop(context),
+                    ),
                   /*else
                     SizedBox.shrink(),*/
                 ],
@@ -2877,24 +2874,20 @@ class CommonUtil {
                     style: TextStyle(fontSize: 14),
                   ),
                   actions: <Widget>[
-                    FlatButton(
-                      onPressed: () => launchURL(PLAY_STORE_URL),
-                      child: Text(
-                        btnLabel,
-                        style: TextStyle(
-                          color: Color(getMyPrimaryColor()),
-                        ),
-                      ),
+                    FlatButtonWidget(
+                      bgColor: Colors.transparent,
+                      isSelected: true,
+                      onPress: () => launchURL(PLAY_STORE_URL),
+                      title: btnLabel,
+                      titleColor: Color(getMyPrimaryColor()),
                     ),
                     if (!isForceUpdate)
-                      FlatButton(
-                        child: Text(
-                          btnLabelCancel,
-                          style: TextStyle(
-                            color: Color(getMyPrimaryColor()),
-                          ),
-                        ),
-                        onPressed: () => Navigator.pop(context),
+                      FlatButtonWidget(
+                        bgColor: Colors.transparent,
+                        isSelected: true,
+                        title: btnLabelCancel,
+                        titleColor: Color(getMyPrimaryColor()),
+                        onPress: () => Navigator.pop(context),
                       )
                     /*else
                       SizedBox.shrink(),*/
@@ -2930,8 +2923,10 @@ class CommonUtil {
                   style: TextStyle(fontSize: 14),
                 ),
                 actions: <Widget>[
-                  FlatButton(
-                    onPressed: () {
+                  FlatButtonWidget(
+                    bgColor: Colors.transparent,
+                    isSelected: true,
+                    onPress: () {
                       Get.back();
                       if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
                         PreferenceUtil.saveQurhomeAsDefaultUI(
@@ -2939,24 +2934,18 @@ class CommonUtil {
                         );
                       }
                     },
-                    child: Text(
-                      btnLabel,
-                      style: TextStyle(
-                        color: Color(getMyPrimaryColor()),
-                      ),
-                    ),
+                    title: btnLabel,
+                    titleColor: Color(getMyPrimaryColor()),
                   ),
-                  FlatButton(
-                    child: Text(
-                      btnLabelCancel,
-                      style: TextStyle(
-                        color: Color(
-                          getMyPrimaryColor(),
-                        ),
-                      ),
+                  FlatButtonWidget(
+                    bgColor: Colors.transparent,
+                    isSelected: true,
+                    title: btnLabelCancel,
+                    titleColor: Color(
+                      getMyPrimaryColor(),
                     ),
-                    onPressed: () => Get.back(),
-                  )
+                    onPress: () => Get.back(),
+                  ),
                   /*else
                     SizedBox.shrink(),*/
                 ],
@@ -2967,8 +2956,10 @@ class CommonUtil {
                   style: TextStyle(fontSize: 14),
                 ),
                 actions: <Widget>[
-                  FlatButton(
-                    onPressed: () {
+                  FlatButtonWidget(
+                    bgColor: Colors.transparent,
+                    isSelected: true,
+                    onPress: () {
                       Get.back();
                       if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
                         PreferenceUtil.saveQurhomeAsDefaultUI(
@@ -2976,22 +2967,16 @@ class CommonUtil {
                         );
                       }
                     },
-                    child: Text(
-                      btnLabel,
-                      style: TextStyle(
-                        color: Color(getMyPrimaryColor()),
-                      ),
-                    ),
+                    title: btnLabel,
+                    titleColor: Color(getMyPrimaryColor()),
                   ),
-                  FlatButton(
-                    child: Text(
-                      btnLabelCancel,
-                      style: TextStyle(
-                        color: Color(getMyPrimaryColor()),
-                      ),
-                    ),
-                    onPressed: () => Get.back(),
-                  )
+                  FlatButtonWidget(
+                    bgColor: Colors.transparent,
+                    isSelected: true,
+                    title: btnLabelCancel,
+                    titleColor: Color(getMyPrimaryColor()),
+                    onPress: () => Get.back(),
+                  ),
                 ],
               );
       },
@@ -3469,16 +3454,16 @@ class CommonUtil {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        OutlineButton(
+                        OutlinedButton(
                           onPressed: () async {
                             // open profile page
                             Navigator.of(context).pop();
-                          },
-                          borderSide: BorderSide(
+                          },style: OutlinedButton.styleFrom(
+                          side: BorderSide(
                             color: Color(
                               getMyPrimaryColor(),
                             ),
-                          ),
+                          ),),
                           child: Text(
                             'cancel'.toUpperCase(),
                             style: TextStyle(
@@ -3492,7 +3477,7 @@ class CommonUtil {
                         SizedBox(
                           width: 10.0.h,
                         ),
-                        OutlineButton(
+                        OutlinedButton(
                           //hoverColor: Color(getMyPrimaryColor()),
                           onPressed: () async {
                             // open profile page
@@ -3512,12 +3497,12 @@ class CommonUtil {
                                   isFromAppointmentOrSlotPage: false,
                                   isForFamily: false,
                                 ));
-                          },
-                          borderSide: BorderSide(
+                          },style: OutlinedButton.styleFrom(
+                          side: BorderSide(
                             color: Color(
                               getMyPrimaryColor(),
                             ),
-                          ),
+                          ),),
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
                             'complete profile'.toUpperCase(),
@@ -3575,16 +3560,16 @@ class CommonUtil {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        OutlineButton(
+                        OutlinedButton(
                           onPressed: () async {
                             // open profile page
                             Navigator.of(context).pop();
-                          },
-                          borderSide: BorderSide(
+                          },style: OutlinedButton.styleFrom(
+                          side: BorderSide(
                             color: Color(
                               getMyPrimaryColor(),
                             ),
-                          ),
+                          ),),
                           child: Text(
                             'no'.toUpperCase(),
                             style: TextStyle(
@@ -3598,7 +3583,7 @@ class CommonUtil {
                         SizedBox(
                           width: 10.0.h,
                         ),
-                        OutlineButton(
+                        OutlinedButton(
                           //hoverColor: Color(getMyPrimaryColor()),
                           onPressed: () async {
                             CommonUtil.showLoadingDialog(
@@ -3640,12 +3625,12 @@ class CommonUtil {
                                 }
                               }
                             });
-                          },
-                          borderSide: BorderSide(
+                          },style: OutlinedButton.styleFrom(
+                          side: BorderSide(
                             color: Color(
                               getMyPrimaryColor(),
                             ),
-                          ),
+                          ),),
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
                             'yes'.toUpperCase(),
@@ -3720,7 +3705,7 @@ class CommonUtil {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                OutlineButton(
+                OutlinedButton(
                   //hoverColor: Color(getMyPrimaryColor()),
                   onPressed: () async {
                     // open profile page
@@ -3831,12 +3816,12 @@ class CommonUtil {
                         });
                       }
                     }
-                  },
-                  borderSide: BorderSide(
+                  },style: OutlinedButton.styleFrom(
+                  side: BorderSide(
                     color: Color(
                       CommonUtil().getMyPrimaryColor(),
                     ),
-                  ),
+                  ),),
                   //hoverColor: Color(getMyPrimaryColor()),
                   child: Text(
                     'accept'.toUpperCase(),
@@ -3849,17 +3834,17 @@ class CommonUtil {
                 SizedBox(
                   width: 10,
                 ),
-                OutlineButton(
+                OutlinedButton(
                   onPressed: () async {
                     // open profile page
                     Get.back();
                     Get.back(result: 'refreshUI');
-                  },
-                  borderSide: BorderSide(
+                  },style: OutlinedButton.styleFrom(
+                  side: BorderSide(
                     color: Color(
                       CommonUtil().getMyPrimaryColor(),
                     ),
-                  ),
+                  ),),
                   child: Text(
                     'Reject'.toUpperCase(),
                     style: TextStyle(
@@ -3928,14 +3913,14 @@ class CommonUtil {
       dynamic nsBody,
       String? packageDuration}) async {
     DateTime initDate;
-    var formatter = new DateFormat('yyyy-MM-dd');
+    var formatter =DateFormat('yyyy-MM-dd');
 
     DateTime startDateFinal = startDate != null
-        ? new DateFormat("yyyy-MM-dd").parse(startDate)
+        ?DateFormat("yyyy-MM-dd").parse(startDate)
         : DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime endDateFinal = endDate != null
-        ? new DateFormat("yyyy-MM-dd").parse(endDate)
+        ?DateFormat("yyyy-MM-dd").parse(endDate)
         : DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
@@ -4002,17 +3987,17 @@ class CommonUtil {
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          OutlineButton(
+                          OutlinedButton(
                             onPressed: () async {
                               // open profile page
                               isRenewDialogOpened = false;
                               Navigator.of(context).pop();
-                            },
-                            borderSide: BorderSide(
+                            },style: OutlinedButton.styleFrom(
+                            side: BorderSide(
                               color: Color(
                                 getMyPrimaryColor(),
                               ),
-                            ),
+                            ),),
                             child: Text(
                               'no'.toUpperCase(),
                               style: TextStyle(
@@ -4026,7 +4011,7 @@ class CommonUtil {
                           SizedBox(
                             width: 10.0.h,
                           ),
-                          OutlineButton(
+                          OutlinedButton(
                             //hoverColor: Color(getMyPrimaryColor()),
                             onPressed: () async {
                               Navigator.pop(context);
@@ -4075,12 +4060,12 @@ class CommonUtil {
                                     'Renewal limit reached for this plan. Please try after few days',
                                     Colors.black);
                               }
-                            },
-                            borderSide: BorderSide(
+                            },style: OutlinedButton.styleFrom(
+                            side: BorderSide(
                               color: Color(
                                 getMyPrimaryColor(),
                               ),
-                            ),
+                            ),),
                             //hoverColor: Color(getMyPrimaryColor()),
                             child: Text(
                               'yes'.toUpperCase(),
@@ -4139,16 +4124,16 @@ class CommonUtil {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        OutlineButton(
+                        OutlinedButton(
                           onPressed: () async {
                             // open profile page
                             Navigator.of(context).pop();
-                          },
-                          borderSide: BorderSide(
+                          },style: OutlinedButton.styleFrom(
+                          side: BorderSide(
                             color: Color(
                               getMyPrimaryColor(),
                             ),
-                          ),
+                          ),),
                           child: Text(
                             'cancel'.toUpperCase(),
                             style: TextStyle(
@@ -4162,7 +4147,7 @@ class CommonUtil {
                         SizedBox(
                           width: 10.0.h,
                         ),
-                        OutlineButton(
+                        OutlinedButton(
                           //hoverColor: Color(getMyPrimaryColor()),
                           onPressed: () async {
                             CommonUtil.showLoadingDialog(
@@ -4204,12 +4189,12 @@ class CommonUtil {
                                 }
                               }
                             });
-                          },
-                          borderSide: BorderSide(
+                          },style: OutlinedButton.styleFrom(
+                          side: BorderSide(
                             color: Color(
                               getMyPrimaryColor(),
                             ),
-                          ),
+                          ),),
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
                             'confirm'.toUpperCase(),
@@ -4547,7 +4532,7 @@ class CommonUtil {
   }
 
   showStatusToUser(
-      ResultFromResponse response, GlobalKey<ScaffoldState>? scaffoldKey) {
+      ResultFromResponse response, GlobalKey<ScaffoldMessengerState>? scaffoldKey) {
     if (response.status) {
       scaffoldKey!.currentState!.showSnackBar(
         SnackBar(
@@ -4672,17 +4657,19 @@ class CommonUtil {
                                   SizedBoxWithChild(
                                     width: 90,
                                     height: 40,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          side: BorderSide(
-                                              color: Color(CommonUtil()
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            side: BorderSide(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        padding: EdgeInsets.all(8),
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -4695,17 +4682,19 @@ class CommonUtil {
                                   SizedBoxWithChild(
                                     width: 90,
                                     height: 40,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          side: BorderSide(
-                                              color: Color(CommonUtil()
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            side: BorderSide(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        padding: EdgeInsets.all(8),
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                         CommonUtil.showLoadingDialog(context,
@@ -5232,11 +5221,11 @@ class CommonUtil {
           ),
         ),
       ),
-      confirm: OutlineButton(
+      confirm: OutlinedButton(
         onPressed: () {
           Get.back();
-        },
-        borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+        },style: OutlinedButton.styleFrom(
+        side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),),
         child: Text(
           variable.strOK,
           style: TextStyle(
@@ -5322,10 +5311,10 @@ class CommonUtil {
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
-              FlatButton(
-                  textColor: isQurhome
+              ElevatedButton(style: ElevatedButton.styleFrom(
+                  foregroundColor: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
-                      : Color(CommonUtil().getMyPrimaryColor()),
+                      : Color(CommonUtil().getMyPrimaryColor()),),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -5334,11 +5323,11 @@ class CommonUtil {
                     style: TextStyle(
                         fontSize: CommonUtil().isTablet! ? 22.0.sp : null),
                   )),
-              FlatButton(
+              ElevatedButton(style: ElevatedButton.styleFrom(
                   // FlatButton widget is used to make a text to work like a button
-                  textColor: isQurhome
+                  foregroundColor: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
-                      : Color(CommonUtil().getMyPrimaryColor()),
+                      : Color(CommonUtil().getMyPrimaryColor()),),
                   onPressed: onPressedYes,
                   // function used to perform after pressing the button
                   child: Text(
@@ -5463,7 +5452,7 @@ class CommonUtil {
   String parseHtmlString(String? htmlString) {
     var text = "";
     if (validString(htmlString).trim().isNotEmpty) {
-      var unescape = new HtmlUnescape();
+      var unescape =HtmlUnescape();
       text = unescape.convert(htmlString!);
     }
     return text;
@@ -6209,18 +6198,18 @@ class CommonUtil {
                 });
               });
             } else {
-              new CommonUtil().commonMethodToSetPreference();
+              CommonUtil().commonMethodToSetPreference();
             }
           } else {
-            new CommonUtil().commonMethodToSetPreference();
+            CommonUtil().commonMethodToSetPreference();
           }
         } else {
-          new CommonUtil().commonMethodToSetPreference();
+          CommonUtil().commonMethodToSetPreference();
         }
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-        new CommonUtil().commonMethodToSetPreference();
+        CommonUtil().commonMethodToSetPreference();
       }
     } else {
       CommonUtil().logout(moveToLoginPage);
@@ -6525,7 +6514,7 @@ class CommonUtil {
 
   String getFormattedString(
       String title, String type, String name, double fontSize,
-      {bool forDetails: false}) {
+      {bool forDetails = false}) {
     List<TextSpan> widget = [];
     if (type == 'Vitals') {
       try {
@@ -7380,7 +7369,7 @@ class VideoCallCommonUtils {
       );
 
       MessageDetails msg =
-          new MessageDetails(content: _content, payload: payLoad);
+         MessageDetails(content: _content, payload: payLoad);
 
       CallPushNSModel callModel = CallPushNSModel(
           recipients: [
@@ -8036,7 +8025,7 @@ class VideoCallCommonUtils {
             ],
           ),
           actions: <Widget>[
-            FlatButton(
+            ElevatedButton(
               onPressed: () {
                 prepareMyData();
                 try {
@@ -8099,7 +8088,7 @@ class VideoCallCommonUtils {
   }
 
   void prepareMyData() async {
-    PreferenceUtil prefs = new PreferenceUtil();
+    PreferenceUtil prefs =PreferenceUtil();
 
     /*try {
       mtTitle = await prefs.getValueBasedOnKey("display_name");
@@ -8124,7 +8113,7 @@ class VideoCallCommonUtils {
     try {
       var regController = Get.find<QurhomeRegimenController>();
       final apiResponse = QurHomeApiProvider();
-      Map<String, dynamic> body = new Map();
+      Map<String, dynamic> body =Map();
       final now = DateTime.now();
       String endTime =
           '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
@@ -8180,7 +8169,7 @@ class VideoCallCommonUtils {
     if (cameraPermissionStatus == PermissionStatus.denied &&
         microphonePermissionStatus == PermissionStatus.denied) {
       print("Access to camera and microphone denied");
-      // throw new PlatformException(
+      // throwPlatformException(
       //     code: "PERMISSION_DENIED",
       //     message: "Access to camera and microphone denied",
       //     details: null);
@@ -8188,7 +8177,7 @@ class VideoCallCommonUtils {
         microphonePermissionStatus == PermissionStatus.permanentlyDenied) {
       print("Access to camera and microphone denied permanently");
 
-      // throw new PlatformException(
+      // throwPlatformException(
       //     code: "PERMISSION_DISABLED",
       //     message: "Location data is not available on device",
       //     details: null);
@@ -8306,7 +8295,7 @@ class VideoCallCommonUtils {
       bool? isFromSOS,
       dynamic isDoctor}) {
     try {
-      FlutterToast toast = new FlutterToast();
+      FlutterToast toast =FlutterToast();
       final apiResponse = QurHomeApiProvider();
       var regController = Get.find<QurhomeRegimenController>();
       bool callPageShouldEndAutomatically = true;
@@ -8375,7 +8364,7 @@ class VideoCallCommonUtils {
           String startedTime = '';
           clearAudioPlayer(audioPlayer!);
           if (!isFromAppointment!) {
-            Map<String, dynamic> body = new Map();
+            Map<String, dynamic> body =Map();
             final now = DateTime.now();
             startedTime =
                 '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
@@ -8460,7 +8449,7 @@ class VideoCallCommonUtils {
 
       if (regController.isFromSOS.value) {
         AdditionalInfo additionalInfo =
-            new AdditionalInfo(location: regController.locationModel);
+           AdditionalInfo(location: regController.locationModel);
 
         CallEndModel callLogModel = CallEndModel(
             callerUser: regController.userId.value,
@@ -8569,7 +8558,7 @@ class VideoCallCommonUtils {
       String callStartTime, String callEndTime, String status, bool isCallLog) {
     var regController = Get.find<QurhomeRegimenController>();
     AdditionalInfo additionalInfo =
-        new AdditionalInfo(location: regController.locationModel);
+       AdditionalInfo(location: regController.locationModel);
 
     CallLogModel callLogModel = CallLogModel(
         callerUser: regController.userId.value,
@@ -8590,7 +8579,7 @@ class VideoCallCommonUtils {
   }
 
   /*List<String> getAssociateRecords(HealthRecord healthRecord) {
-    List<String> metaId = new List();
+    List<String> metaId =List();
 
     if (healthRecord.associatedRecords != null &&
         healthRecord.associatedRecords.length > 0) {
@@ -8603,7 +8592,7 @@ class VideoCallCommonUtils {
   getDob(String dob) {
     if (dob != '' && dob != null) {
       String currentYear = dob.split('-')[0];
-      DateFormat format = new DateFormat("yyyy");
+      DateFormat format =DateFormat("yyyy");
 
       DateTime dt = format.parse(currentYear);
       final date2 = DateTime.now().year;

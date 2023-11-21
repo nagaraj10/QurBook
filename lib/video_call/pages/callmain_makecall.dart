@@ -1,11 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 
@@ -83,7 +80,7 @@ class CallMainMakeCall extends StatelessWidget {
   bool _isVideoHide = false;
   String? doctor_id, mtTitle = '', specialityName = '';
   String? userIdForNotify = '';
-  PreferenceUtil prefs = new PreferenceUtil();
+  PreferenceUtil prefs = PreferenceUtil();
   var regController = Get.find<QurhomeRegimenController>();
   bool _isTimerRun = true;
   bool _speaker = false;
@@ -124,7 +121,7 @@ class CallMainMakeCall extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        FlatButton(
+                        TextButton(
                           child: Text('Decline'),
                           onPressed: () async {
                             try {
@@ -142,7 +139,7 @@ class CallMainMakeCall extends StatelessWidget {
                             }
                           },
                         ),
-                        FlatButton(
+                        TextButton(
                           child: Text('Switch'),
                           onPressed: () async {
                             try {
@@ -591,7 +588,7 @@ class CallMainMakeCall extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FlatButton(
+                  ElevatedButton(
                     child: Text(
                       'Yes',
                       style: TextStyle(
@@ -614,7 +611,7 @@ class CallMainMakeCall extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
-                  FlatButton(
+                  ElevatedButton(
                     child: Text(
                       'No',
                       style: TextStyle(
@@ -637,7 +634,7 @@ class CallMainMakeCall extends StatelessWidget {
   callApiToUpdateNonAppointment() async {
     try {
       final apiResponse = QurHomeApiProvider();
-      Map<String, dynamic> body = new Map();
+      Map<String, dynamic> body = Map();
       final now = DateTime.now();
       String endTime =
           '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';

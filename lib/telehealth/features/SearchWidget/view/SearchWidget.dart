@@ -1,10 +1,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../common/CommonConstants.dart';
-import '../../../../common/CommonUtil.dart';
-import '../../../../common/CommonUtil.dart';
-import '../../../../widgets/common_components.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 

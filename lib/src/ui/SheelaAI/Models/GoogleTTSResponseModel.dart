@@ -12,7 +12,7 @@ class GoogleTTSResponseModel {
     try {
       isSuccess = json['isSuccess'];
       payload =
-              json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+              json['payload'] != null ? Payload.fromJson(json['payload']) : null;
       getResultFromAPI(json);
     } catch (e,stackTrace) {
       getResultFromAPI(json);
@@ -21,7 +21,7 @@ class GoogleTTSResponseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
       data['payload'] = this.payload!.toJson();
@@ -35,7 +35,7 @@ class GoogleTTSResponseModel {
   getResultFromAPI(Map<String, dynamic> json) {
     try {
       result =
-          json['result'] != null ? new Result.fromJson(json['result']) : null;
+          json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -56,7 +56,7 @@ class Payload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['audioContent'] = this.audioContent;
     return data;
   }
@@ -81,7 +81,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['TranslatedText'] = this.translatedText;
     data['SourceLanguageCode'] = this.sourceLanguageCode;
     data['TargetLanguageCode'] = this.targetLanguageCode;

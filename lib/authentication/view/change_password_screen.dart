@@ -99,7 +99,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 ),
                               ),
                               controller: OldPasswordController,
-                              autovalidate: _autoValidateBool,
+                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                               validator: (value) {
                                 return AuthenticationValidator()
                                     .passwordValidation(value!, patternPassword as String,
@@ -115,7 +115,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                               ),
-                              autovalidate: _autoValidateBool,
+                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: strNewPasswordHintTxt,
@@ -144,7 +144,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                               ),
-                              autovalidate: _autoValidateBool,
+                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: strNewPasswordAgainHintText,

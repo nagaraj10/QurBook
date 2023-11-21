@@ -107,13 +107,13 @@ class _UserAccountsState extends State<UserAccounts>
 
     if (!islogout) fetchUserProfileInfo();
 
-    return new WillPopScope(
+    return WillPopScope(
         onWillPop: () => onBackPressed(context)!,
         child: Scaffold(
-          backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           appBar: AppBar(
             elevation: 0.0,
-            backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
             flexibleSpace: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -188,7 +188,7 @@ class _UserAccountsState extends State<UserAccounts>
   }
 
   moveToLoginPage() {
-    new CommonUtil().moveToLoginPage();
+    CommonUtil().moveToLoginPage();
   }
 
   Widget getProfileSwitchWidget() {
@@ -292,18 +292,18 @@ class _UserAccountsState extends State<UserAccounts>
                 });
               });
             } else {
-              new CommonUtil().commonMethodToSetPreference();
+              CommonUtil().commonMethodToSetPreference();
             }
           } else {
-            new CommonUtil().commonMethodToSetPreference();
+            CommonUtil().commonMethodToSetPreference();
           }
         } else {
-          new CommonUtil().commonMethodToSetPreference();
+          CommonUtil().commonMethodToSetPreference();
         }
       } catch (e,stackTrace) {
                     CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
-        new CommonUtil().commonMethodToSetPreference();
+        CommonUtil().commonMethodToSetPreference();
       }
     } else {
       CommonUtil().logout(moveToLoginPage);
@@ -341,7 +341,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Container(
+    return Container(
       child: _tabBar,
     );
   }

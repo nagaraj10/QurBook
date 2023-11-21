@@ -135,7 +135,7 @@ class SharedByUsers {
               : null;
       child = json['child'] != null ? Child.fromJson(json['child']) : null;
       chatListItem = json['chatListItem'] != null
-              ? new ChatListItem.fromJson(json['chatListItem'])
+              ? ChatListItem.fromJson(json['chatListItem'])
               : null;
       nickNameSelf = '';
     } catch (e,stackTrace) {
@@ -201,7 +201,7 @@ class SharedByUsers {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;
@@ -398,7 +398,7 @@ class HeightObj {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['valueFeet'] = this.valueFeet;
     data['valueInches'] = this.valueInches;
     return data;
@@ -490,7 +490,7 @@ class AdditionalInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     //data['id'] = this.id;
     data['addressLine1'] = this.addressLine1;
     data['addressLine2'] = this.addressLine2;
@@ -946,7 +946,7 @@ class ChatListItem {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['peerId'] = this.peerId;
     data['userId'] = this.userId;

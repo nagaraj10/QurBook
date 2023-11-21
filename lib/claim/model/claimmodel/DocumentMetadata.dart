@@ -30,7 +30,7 @@ class DocumentMetadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['bill_date'] = this.billDate;
     data['bill_name'] = this.billName;
     data['memo_text'] = this.memoText;

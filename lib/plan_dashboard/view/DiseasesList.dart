@@ -10,7 +10,6 @@ import 'categoryList.dart';
 import 'searchProviderList.dart';
 import '../viewModel/planViewModel.dart';
 import '../viewModel/subscribeViewModel.dart';
-import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';

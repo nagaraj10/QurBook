@@ -10,7 +10,6 @@ import '../../src/model/Health/UserHealthResponseList.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/resources/network/ApiResponse.dart';
 import '../../constants/variable_constant.dart' as variable;
-import '../../constants/router_variable.dart' as router;
 
 class MyFamilyDetailViewBloc implements BaseBloc {
   StreamController? _healthReportListController;

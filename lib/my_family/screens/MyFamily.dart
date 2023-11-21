@@ -3,13 +3,10 @@ import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
-import '../../add_family_otp/models/add_family_otp_arguments.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../authentication/constants/constants.dart';
@@ -78,7 +75,7 @@ class _MyFamilyState extends State<MyFamily> {
   RelationsShipModel? selectedRelationShip;
 
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
@@ -359,7 +356,7 @@ class _MyFamilyState extends State<MyFamily> {
             if (value as bool) {
               rebuildFamilyBlock();
               setState(() {});
-              // FlutterToast toast = new FlutterToast();
+              // FlutterToast toast = FlutterToast();
               // toast.getToast('list updated', Colors.green);
             }
           });

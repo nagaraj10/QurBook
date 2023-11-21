@@ -13,10 +13,10 @@ class Payload {
   Payload.fromJson(Map<String, dynamic> json) {
     try {
       refund = json[parameters.strRefund] != null
-              ? new Refund.fromJson(json[parameters.strRefund])
+              ? Refund.fromJson(json[parameters.strRefund])
               : null;
       paymentGatewayDetail = json[parameters.strPaymentGatewayDetail] != null
-              ? new PaymentGatewayDetail.fromJson(
+              ? PaymentGatewayDetail.fromJson(
                   json[parameters.strPaymentGatewayDetail])
               : null;
     } catch (e,stackTrace) {
@@ -25,7 +25,7 @@ class Payload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.refund != null) {
       data[parameters.strRefund] = this.refund!.toJson();
     }

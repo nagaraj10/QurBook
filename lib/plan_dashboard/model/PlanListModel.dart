@@ -137,7 +137,7 @@ class PlanListResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['packageid'] = this.packageid;
     data['title'] = this.title;
     data['description'] = this.description;

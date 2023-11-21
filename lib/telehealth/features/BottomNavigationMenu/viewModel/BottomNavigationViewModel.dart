@@ -10,17 +10,17 @@ class BottomNavigationViewModel extends ChangeNotifier {
 
   
   Future<void>  getAllValuesForBottom() async {
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
         name: variable.strTelehealth, imageIcon: variable.icon_home));
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
         name:variable.strMyRecords , imageIcon: variable.icon_records));
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
       name:variable.strMaya,
       imageIcon: variable.icon_mayaMain,
     ));
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
         name: variable.strAccounts, imageIcon: variable.icon_schedule));
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
         name: variable.strSettings, imageIcon: variable.icon_more));
 
         notifyListeners();

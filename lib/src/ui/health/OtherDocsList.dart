@@ -56,16 +56,16 @@ class _OtherDocsState extends State<OtherDocsList> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   List<HealthRecordCollection> mediMasterId = [];
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     super.initState();
   }
@@ -89,7 +89,7 @@ class _OtherDocsState extends State<OtherDocsList> {
   Widget getWidgetToDisplayOtherDocsList(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, widget.categoryDescription);
 
     return RefreshIndicator(
@@ -153,7 +153,7 @@ class _OtherDocsState extends State<OtherDocsList> {
               if (mediaMetaInfoObj != null &&
                   (mediaMetaInfoObj.healthRecordCollection?.length ?? 0) > 0) {
                 mediMasterId =
-                    new CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
+                    CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
                 if (mediMasterId.length > 0) {
                   widget.healthRecordSelected(
                       mediaMetaInfoObj.id, mediMasterId, condition);
@@ -214,7 +214,7 @@ class _OtherDocsState extends State<OtherDocsList> {
                   mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                   height: 25.0.h,
                   width: 25.0.h,
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                   errorBuilder: (context, error, stackTrace) => SizedBox(),
                 ),
               ),
@@ -244,9 +244,9 @@ class _OtherDocsState extends State<OtherDocsList> {
                     ),
                     Text(
                       mediaMetaInfoObj.createdOn != ''
-                          ? new FHBUtils().getFormattedDateString(
+                          ? FHBUtils().getFormattedDateString(
                               mediaMetaInfoObj.createdOn)
-                          : new FHBUtils().getFormattedDateString(
+                          : FHBUtils().getFormattedDateString(
                               mediaMetaInfoObj
                                   .metadata!.healthRecordType!.createdOn),
                       style: TextStyle(
@@ -269,7 +269,7 @@ class _OtherDocsState extends State<OtherDocsList> {
                             ? ImageIcon(
                                 AssetImage(variable.icon_record_fav_active),
                                 color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 size: CommonUtil().isTablet!
                                     ? tabHeader2
                                     : mobileHeader2,
@@ -282,7 +282,7 @@ class _OtherDocsState extends State<OtherDocsList> {
                                     : mobileHeader2,
                               ),
                         onPressed: () {
-                          new CommonUtil()
+                          CommonUtil()
                               .bookMarkRecord(mediaMetaInfoObj, _refresh);
                         }),
                     (mediaMetaInfoObj.metadata!.hasVoiceNotes != null &&
@@ -295,7 +295,7 @@ class _OtherDocsState extends State<OtherDocsList> {
                     widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                         ? Icon(
                             Icons.done,
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                           )
                         : SizedBox(),
                   ],
@@ -309,12 +309,12 @@ class _OtherDocsState extends State<OtherDocsList> {
   getDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+          .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(snapshot.data);
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: 50.0.h,
             height: 50.0.h,
             child: Shimmer.fromColors(

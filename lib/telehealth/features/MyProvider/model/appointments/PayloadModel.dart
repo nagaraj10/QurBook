@@ -13,9 +13,9 @@ class PayloadModel {
   PayloadModel.fromJson(Map<String, dynamic> json) {
     try {
       payment =
-          json[strPayment] != null ? new PaymentModel.fromJson(json[strPayment]) : null;
+          json[strPayment] != null ? PaymentModel.fromJson(json[strPayment]) : null;
       paymentGatewayDetail = json[strPaymentGateWayDetail] != null
-              ? new PaymentGatewayDetail.fromJson(json[strPaymentGateWayDetail])
+              ? PaymentGatewayDetail.fromJson(json[strPaymentGateWayDetail])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -23,7 +23,7 @@ class PayloadModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.payment != null) {
       data[strPayment] = this.payment!.toJson();
     }

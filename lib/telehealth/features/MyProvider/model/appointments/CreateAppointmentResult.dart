@@ -13,10 +13,10 @@ class CreateAppointmentResult {
   CreateAppointmentResult.fromJson(Map<String, dynamic> json) {
     try {
       appointmentInfo = json[strAppointmentInfo] != null
-              ? new AppointmentInfoModel.fromJson(json[strAppointmentInfo])
+              ? AppointmentInfoModel.fromJson(json[strAppointmentInfo])
               : null;
       paymentInfo = json[strPaymentInfo] != null
-              ? new PaymentInfo.fromJson(json[strPaymentInfo])
+              ? PaymentInfo.fromJson(json[strPaymentInfo])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -24,7 +24,7 @@ class CreateAppointmentResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.appointmentInfo != null) {
       data[strAppointmentInfo] = this.appointmentInfo!.toJson();
     }
@@ -45,14 +45,14 @@ class PaymentInfo {
     try {
       isSuccess = json['isSuccess'];
       payload =
-          json['payload'] != null ? new PayloadModel.fromJson(json['payload']) : null;
+          json['payload'] != null ? PayloadModel.fromJson(json['payload']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
       data['payload'] = this.payload!.toJson();

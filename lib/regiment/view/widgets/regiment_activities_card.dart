@@ -228,7 +228,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                                       CommonUtil().getQurhomePrimaryColor())),
                             ),
                             border: OutlineInputBorder(
-                                // borderSide: new BorderSide(color: Colors.teal)
+                                // borderSide: BorderSide(color: Colors.teal)
                                 ),
                           ),
                           keyboardType: TextInputType.multiline,
