@@ -160,7 +160,7 @@ class SheelaAIController extends GetxController {
           buttons.length) {
         var index = currentPlayingConversation!.currentButtonPlayingIndex ?? 0;
         if ((index < buttons.length - 1) &&
-            buttons[index + 1].skipTts! &&
+            (buttons[index + 1].skipTts??false) &&
             !currentPlayingConversation!.isButtonNumber!) {
           if (currentPlayingConversation!.currentButtonPlayingIndex != null) {
             index++;
@@ -829,7 +829,7 @@ class SheelaAIController extends GetxController {
 
                     dynamic button = null;
 
-                    if (!(conversations.last?.isButtonNumber??false)) {
+                    if (!(conversations.last?.isButtonNumber ?? false)) {
                       if (responseRecived == carGiverSheela) {
                         responseRecived = careGiverSheela;
                       }
@@ -837,7 +837,7 @@ class SheelaAIController extends GetxController {
                           conversations.last?.buttons.firstWhere((element) =>
                           (element.title ?? "").toLowerCase() ==
                               responseRecived);
-                    } else if ((conversations.last?.isButtonNumber??false)) {
+                    } else if ((conversations.last?.isButtonNumber ?? false)) {
                       bool isDigit = CommonUtil().isNumeric(responseRecived);
                       for (int i = 0;
                       i < conversations.last?.buttons.length;
@@ -1539,8 +1539,11 @@ class SheelaAIController extends GetxController {
           currentCon.text =
               freeTextReply + (freeText ?? '') + freeTextReplyConfirm;
           currentCon.recipientId = sheelaRecepId;
+          currentCon.endOfConv = false;
+          currentCon.endOfConvDiscardDialog = false;
           currentCon.singleuse = true;
           currentCon.isActionDone = false;
+          currentCon.isButtonNumber = false;
           currentCon.recipientId = sheelaRecepId;
           currentCon.buttons = freeTextButtons(freeTextPayload: freeText);
           conversations.add(currentCon);
@@ -1559,7 +1562,8 @@ class SheelaAIController extends GetxController {
     List<Buttons> buttons = [
       Buttons(
         title: strContinue,
-        payload: freeTextPayload
+        payload: freeTextPayload,
+
       ),
       Buttons(
         title: strRedo,
@@ -1568,6 +1572,7 @@ class SheelaAIController extends GetxController {
       Buttons(
         title: strExit,
         payload: strExit,
+        mute: sheela_hdn_btn_yes
       ),
     ];
     return buttons;
