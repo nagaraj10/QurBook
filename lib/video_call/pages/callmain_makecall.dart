@@ -652,9 +652,7 @@ class CallMainMakeCall extends StatelessWidget {
       body['recipientUser'] = regController.careCoordinatorId.value;
 
       await apiResponse.putNonAppointmentCall(body).then((value) {
-        if (value['isSuccess'] != null && value['isSuccess']) {
-          print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
-        }
+        if (value['isSuccess'] != null && value['isSuccess']) {}
       });
     } catch (e, stackTrace) {
       //print(e);
