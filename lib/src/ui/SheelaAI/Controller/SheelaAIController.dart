@@ -281,9 +281,13 @@ class SheelaAIController extends GetxController {
         msg = arguments!.rawMessage!;
         getAIAPIResponseFor(msg, null);
       } else if ((arguments?.sheelaInputs ?? '').isNotEmpty) {
-        msg = arguments!.sheelaInputs!;
-        conversations.add(SheelaResponse(text: msg));
-        getAIAPIResponseFor(msg, null);
+        getTextTranslate(arguments?.sheelaInputs ?? '').then((value) {
+          if (value != null) {
+            msg = value.toString();
+            conversations.add(SheelaResponse(text: msg));
+            getAIAPIResponseFor(msg, null);
+          }
+        });
       } else if ((arguments?.eId ?? '').isNotEmpty ||
           (arguments?.scheduleAppointment ?? false) ||
           (arguments?.showUnreadMessage ?? false)) {
