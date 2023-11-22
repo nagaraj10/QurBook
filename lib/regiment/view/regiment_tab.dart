@@ -319,8 +319,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         cardIcon = Icons.screen_search_desktop;
         break;
       default:
-        if (CommonUtil.isUSRegion() &&
-            regimen?.otherinfo?.isSkipAcknowledgement == "1") {
+        if (CommonUtil().checkIfSkipAcknowledgemnt(regimen)) {
           cardIcon = 'assets/icons/icon_acknowledgement.png';
         } else {
           cardIcon = 'assets/Qurhome/Qurhome.png';
@@ -330,7 +329,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         ? Image.asset(cardIcon,
             height: isDefault ? iconSize : iconSize - 5.0.sp,
             width: isDefault ? iconSize : iconSize - 5.0.sp,
-            color: (regimen?.otherinfo?.isSkipAcknowledgement == "1")
+            color: (CommonUtil().checkIfSkipAcknowledgemnt(regimen))
                 ? Colors.white
                 : null)
         : Icon(

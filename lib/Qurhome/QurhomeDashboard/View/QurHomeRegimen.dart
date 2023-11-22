@@ -609,8 +609,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             CommonUtil().goToAppointmentDetailScreen(regimen.eid);
           }
         } else {
-          if (CommonUtil.isUSRegion() &&
-              regimen?.otherinfo?.isSkipAcknowledgement == "1") {
+          if (CommonUtil().checkIfSkipAcknowledgemnt(regimen)) {
             redirectToSheelaScreen(regimen);
           } else {
             showRegimenDialog(regimen, itemIndex);
@@ -809,8 +808,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         cardIcon = Icons.screen_search_desktop;
         break;
       default:
-        if (CommonUtil.isUSRegion() &&
-            regimen?.otherinfo?.isSkipAcknowledgement == "1") {
+        if (CommonUtil().checkIfSkipAcknowledgemnt(regimen)) {
           cardIcon = 'assets/icons/icon_acknowledgement.png';
         } else {
           cardIcon = 'assets/Qurhome/Qurhome.png';
@@ -821,7 +819,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             cardIcon,
             height: isDefault ? iconSize : iconSize - 5.0,
             width: isDefault ? iconSize : iconSize - 5.0,
-            color: (regimen?.otherinfo?.isSkipAcknowledgement == "1")
+            color: (CommonUtil().checkIfSkipAcknowledgemnt(regimen))
                 ? getTextAndIconColor(itemIndex, nextRegimenPosition)
                 : null,
           )

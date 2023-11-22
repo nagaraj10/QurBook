@@ -95,8 +95,7 @@ class RegimentDataCard extends StatelessWidget {
                       onErrorMessage(regimentData, context);
                     }
                   } else {
-                    if (CommonUtil.isUSRegion() &&
-                        regimentData?.otherinfo?.isSkipAcknowledgement == "1") {
+                    if (CommonUtil().checkIfSkipAcknowledgemnt(regimentData)) {
                       redirectToSheelaScreen(regimentData, context);
                     } else {
                       onCardPressed(context,
@@ -130,10 +129,8 @@ class RegimentDataCard extends StatelessWidget {
                             }
                           } else if (regimentData.activityOrgin !=
                               strAppointmentRegimen) {
-                            if (CommonUtil.isUSRegion() &&
-                                regimentData
-                                        ?.otherinfo?.isSkipAcknowledgement ==
-                                    "1") {
+                            if (CommonUtil()
+                                .checkIfSkipAcknowledgemnt(regimentData)) {
                               redirectToSheelaScreen(regimentData, context);
                             } else {
                               onCardPressed(context,
@@ -1093,8 +1090,7 @@ class RegimentDataCard extends StatelessWidget {
   }
 
   getCheckIcon(BuildContext context, RegimentDataModel regimentData) {
-    if (CommonUtil.isUSRegion() &&
-        regimentData?.otherinfo?.isSkipAcknowledgement == "1") {
+    if (CommonUtil().checkIfSkipAcknowledgemnt(regimentData)) {
       return SizedBox();
     } else if (regimentData?.otherinfo?.isSkipAcknowledgement == "0") {
       return InkWell(
