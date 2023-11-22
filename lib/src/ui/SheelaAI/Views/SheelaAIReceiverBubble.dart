@@ -331,6 +331,33 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             controller.playPauseTTS(chat);
                           });
                         }
+                      } else if (buttonData?.btnRedirectTo == strRedirectRedo) {
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+                        if (chat.singleuse != null &&
+                            chat.singleuse! &&
+                            chat.isActionDone != null) {
+                          chat.isActionDone = true;
+                        }
+                        buttonData?.isSelected = true;
+                        controller.stopTTS();
+                        controller.isLoading.value = true;
+                        final cardResponse = SheelaResponse(text: buttonData?.title);
+                        controller.conversations.add(cardResponse);
+                        controller.scrollToEnd();
+                        Future.delayed(Duration(seconds: 2), () {
+                          controller.conversations
+                              .add(controller.redoCurrentPlayingConversation);
+                          controller.currentPlayingConversation =
+                              controller.redoCurrentPlayingConversation;
+                          controller.playTTS();
+                          controller.scrollToEnd();
+                          controller.isLoading.value = false;
+                        });
+                        Future.delayed(const Duration(seconds: 3), () {
+                          buttonData?.isSelected = false;
+                        });
                       } else {
                         if (controller.isLoading.isTrue) {
                           return;
