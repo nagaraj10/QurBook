@@ -69,6 +69,21 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
   Widget build(BuildContext context) {
     return Obx(() {
       if (_sheelaAIController.isBLEStatus.value == BLEStatus.Searching) {
+        return FadeTransition(
+          opacity: _animationController,
+          child: Icon(
+            Icons.bluetooth,
+              size: 32.sp,
+            color: Colors.blue,
+          ),
+        );
+      } else if (_sheelaAIController.isBLEStatus.value == BLEStatus.Connected) {
+        return Icon(
+          Icons.bluetooth,
+          size: 32.sp,
+          color: Colors.green,
+        );
+      } else {
         return CircularPercentIndicator(
           radius: getCircularPercentIndicatorRadius(),
           lineWidth: 2,
@@ -79,29 +94,6 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
             icon: Icons.bluetooth_disabled,
             color: Colors.grey,
           ),
-        );
-      } else if (_sheelaAIController.isBLEStatus.value == BLEStatus.Connected) {
-        return CircularPercentIndicator(
-          radius: getCircularPercentIndicatorRadius(),
-          lineWidth: 2,
-          percent: 1,
-          backgroundColor: Colors.transparent,
-          progressColor: Colors.blue,
-          center: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) => Transform.scale(
-              scale: _scaleFactor,
-              child: getBluetoothIcon(
-                icon: Icons.bluetooth,
-                color: Colors.blue,
-              ),
-            ),
-          ),
-        );
-      } else {
-        return getBluetoothIcon(
-          icon: Icons.bluetooth_disabled,
-          color: Colors.grey,
         );
       }
     });
