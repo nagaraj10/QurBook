@@ -136,9 +136,10 @@ class CallMainMakeCall extends StatelessWidget {
                                 ..collection("call_log")
                                     .doc("$bookId")
                                     .update(newStatus.toMap());
-                            } catch (e,stackTrace) {
+                            } catch (e, stackTrace) {
                               print(e);
-                                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                              CommonUtil()
+                                  .appLogs(message: e, stackTrace: stackTrace);
                             }
                           },
                         ),
@@ -194,9 +195,10 @@ class CallMainMakeCall extends StatelessWidget {
                                       .update(newStatus.toMap());
                                 Get.back();
                               }
-                            } catch (e,stackTrace) {
+                            } catch (e, stackTrace) {
                               print(e);
-                                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                              CommonUtil()
+                                  .appLogs(message: e, stackTrace: stackTrace);
                             }
                           },
                         ),
@@ -294,8 +296,8 @@ class CallMainMakeCall extends StatelessWidget {
           );
         },
       );
-    } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       printError(
         info: e.toString(),
       );
@@ -334,6 +336,7 @@ class CallMainMakeCall extends StatelessWidget {
           backgroundColor: regController.isFromSOS.value
               ? Colors.white
               : Color(CommonUtil().getMyPrimaryColor()),
+          toolbarHeight: (CommonUtil().isTablet ?? false) ? 100 : 50,
           automaticallyImplyLeading: false,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -471,8 +474,8 @@ class CallMainMakeCall extends StatelessWidget {
                           status.isAudioSwitchToVideo == 0 ? true : false;
                       hideStatus.isAudioSwitchToVideo = -1;
                     }
-                  } catch (e,stackTrace) {
-                                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                  } catch (e, stackTrace) {
+                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
                     print(e);
                   }
@@ -553,8 +556,8 @@ class CallMainMakeCall extends StatelessWidget {
       userIdForNotify =
           await PreferenceUtil.getStringValue(constants.KEY_USERID);
       //userIdForNotify = json.decode(userIdForNotify);
-    } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -603,8 +606,9 @@ class CallMainMakeCall extends StatelessWidget {
                       try {
                         if (!isFromAppointment!)
                           callApiToUpdateNonAppointment();
-                      } catch (e,stackTrace) {
-                                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                      } catch (e, stackTrace) {
+                        CommonUtil()
+                            .appLogs(message: e, stackTrace: stackTrace);
                       }
                       VideoCallCommonUtils().terminate(
                           appsID: appointmentId,
@@ -652,9 +656,9 @@ class CallMainMakeCall extends StatelessWidget {
           print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
         }
       });
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
