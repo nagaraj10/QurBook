@@ -154,9 +154,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 : ShowCaseWidget.of(_myContext)!
                     .startShowCase([_DailyKey, _cardKey, _SymptomsKey]));
       });
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -246,16 +245,16 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
             cardColor = Color(CommonUtil().getMyPrimaryColor());
         }
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       cardColor = Color(CommonUtil().getMyPrimaryColor());
     }
     return cardColor;
   }
 
-  dynamic getIcon(
-      Activityname? activityname, Uformname? uformName, Metadata? metadata) {
+  dynamic getIcon(RegimentDataModel regimen, Activityname? activityname,
+      Uformname? uformName, Metadata? metadata) {
     final iconSize = (_regimentViewModel.regimentMode == RegimentMode.Schedule)
         ? 40.0.sp
         : 40.0.sp;
@@ -275,21 +274,22 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
             width: iconSize,
             color: Colors.white,
             errorWidget: (context, url, error) {
-              return getDefaultIcon(activityname, uformName, iconSize);
+              return getDefaultIcon(regimen, activityname, uformName, iconSize);
             },
           );
         }
       } else {
-        return getDefaultIcon(activityname, uformName, iconSize);
+        return getDefaultIcon(regimen, activityname, uformName, iconSize);
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-      return getDefaultIcon(activityname, uformName, iconSize);
+      return getDefaultIcon(regimen, activityname, uformName, iconSize);
     }
   }
 
   dynamic getDefaultIcon(
+    RegimentDataModel regimen,
     Activityname? activityname,
     Uformname? uformName,
     double iconSize,
@@ -319,14 +319,20 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         cardIcon = Icons.screen_search_desktop;
         break;
       default:
-        cardIcon = 'assets/launcher/myfhb.png';
+        if (CommonUtil.isUSRegion() &&
+            regimen?.otherinfo?.isSkipAcknowledgement == "1") {
+          cardIcon = 'assets/icons/icon_acknowledgement.png';
+        } else {
+          cardIcon = 'assets/Qurhome/Qurhome.png';
+        }
     }
     var cardIconWidget = (cardIcon is String)
-        ? Image.asset(
-            cardIcon,
+        ? Image.asset(cardIcon,
             height: isDefault ? iconSize : iconSize - 5.0.sp,
             width: isDefault ? iconSize : iconSize - 5.0.sp,
-          )
+            color: (regimen?.otherinfo?.isSkipAcknowledgement == "1")
+                ? Colors.white
+                : null)
         : Icon(
             cardIcon,
             size: iconSize - 5.0.sp,
@@ -390,14 +396,15 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             firstDate: DateTime(2015, 8),
                             lastDate: DateTime(2101),
                             initialDate: _regimentViewModel.selectedRegimenDate,
-                            builder: (context,child) => Theme(
+                            builder: (context, child) => Theme(
                               data: ThemeData.light().copyWith(
                                 colorScheme: ColorScheme.light().copyWith(
-                                  primary:Color(CommonUtil().getMyPrimaryColor()),
+                                  primary:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                 ),
                               ),
                               child: child!,
-                              ),
+                            ),
                           );
                           if (selectedDate != null) {
                             _regimentViewModel.handleSearchField();
@@ -670,6 +677,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                         regimentData.uformname,
                                         regimentData.metadata),
                                     icon: getIcon(
+                                        regimentData,
                                         regimentData.activityname,
                                         regimentData.uformname,
                                         regimentData.metadata),
@@ -706,6 +714,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                           regimentData.uformname,
                                           regimentData.metadata),
                                       icon: getIcon(
+                                          regimentData,
                                           regimentData.activityname,
                                           regimentData.uformname,
                                           regimentData.metadata),
@@ -829,7 +838,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             : '',
                         color: getColor(regimentData.activityname,
                             regimentData.uformname, regimentData.metadata),
-                        icon: getIcon(regimentData.activityname,
+                        icon: getIcon(regimentData, regimentData.activityname,
                             regimentData.uformname, regimentData.metadata),
                         vitalsData: regimentData.uformdata?.vitalsData,
                         eid: regimentData.eid,
@@ -871,8 +880,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       } else {
         colors = Color(CommonUtil().getMyPrimaryColor());
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return colors = Color(CommonUtil().getMyPrimaryColor());
     }
@@ -884,9 +893,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       if (sheelBadgeController.sheelaIconBadgeCount.value > 0) {
         sheelBadgeController.getSheelaBadgeCount();
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
