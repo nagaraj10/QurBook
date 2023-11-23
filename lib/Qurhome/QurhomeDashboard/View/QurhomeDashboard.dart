@@ -242,14 +242,14 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                           padding: const EdgeInsets.only(
                             right: 16,
                           ),
-                          child: MyBlinkingBLEIcon(),
+                          child: controller.currentSelectedIndex == 2
+                              ? getDisabledBluetoothIcon()
+                              : MyBlinkingBLEIcon(),
                         )
                       : SizedBox.shrink(),
                   ((CommonUtil.isUSRegion()) &&
                           hubListViewController.isUserHasParedDevice.value &&
-                          (controller.currentSelectedIndex != 0) &&
-                          (controller.currentSelectedIndex != 1) &&
-                          (controller.currentSelectedIndex != 3))
+                          (controller.currentSelectedIndex == 2))
                       ? Padding(
                           padding: const EdgeInsets.only(
                             right: 16,

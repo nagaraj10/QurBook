@@ -44,7 +44,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     controller.conversations = [];
-    controller.timerBlinkingBLEIcon.cancel();
+    controller.timerBlinkingBLEIcon?.cancel();
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -207,10 +207,12 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         }
                       },
                     ),
-                    actions: [Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: getLanguageButton(),
-                    )],
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: getLanguageButton(),
+                      )
+                    ],
                   ),
             body: Stack(
               fit: StackFit.expand,
@@ -318,13 +320,18 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
       centerTitle: true,
       elevation: 0,
-      leadingWidth: CommonUtil.isUSRegion() ? (CommonUtil().isTablet ?? false) ? 147 : 106 : 58.0,
+      leadingWidth: CommonUtil.isUSRegion()
+          ? (CommonUtil().isTablet ?? false)
+              ? 147
+              : 106
+          : 58.0,
       actions: [
         Row(
           children: [
-            if (!CommonUtil.isUSRegion()) hubListViewController.isUserHasParedDevice.value
-                ? MyBlinkingBLEIcon()
-                : SizedBox.shrink(),
+            if (!CommonUtil.isUSRegion())
+              hubListViewController.isUserHasParedDevice.value
+                  ? MyBlinkingBLEIcon()
+                  : SizedBox.shrink(),
             SizedBox(width: 12.w),
             if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
             SizedBox(width: 12.w),
@@ -428,8 +435,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 :*/
                 CommonUtil.isUSRegion()
                     ? Row(
-                      children: [
-                        Padding(
+                        children: [
+                          Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: 8.h,
                               vertical: 4.h,
@@ -437,15 +444,16 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                             child: Icon(
                               Icons.home,
                               size: 32.sp,
-                              color: Color(CommonUtil().getQurhomePrimaryColor()),
+                              color:
+                                  Color(CommonUtil().getQurhomePrimaryColor()),
                             ),
                           ),
-                        SizedBox(width: 12.w),
-                        hubListViewController.isUserHasParedDevice.value
-                            ? MyBlinkingBLEIcon()
-                            : SizedBox.shrink(),
-                      ],
-                    )
+                          SizedBox(width: 12.w),
+                          hubListViewController.isUserHasParedDevice.value
+                              ? MyBlinkingBLEIcon()
+                              : SizedBox.shrink(),
+                        ],
+                      )
                     : Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: CommonUtil().isTablet! ? 0 : 8.h,

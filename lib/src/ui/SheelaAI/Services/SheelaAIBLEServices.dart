@@ -115,12 +115,10 @@ class SheelaBLEController extends GetxController {
         return;
       }
     }
-
     if (timerSubscription != null) {
       return;
     }
 
-    SheelaController.percentBlinkingBLEIcon = 0.0;
     timerSubscription = stream.listen(
       (val) async {
         print("Val in ");
@@ -755,13 +753,14 @@ class SheelaBLEController extends GetxController {
       timerSubscription!.cancel();
     }
     timerSubscription = null;
+
     isFromRegiment = false;
     addingDevicesInHublist = false;
     isFromVitals = false;
     filteredDeviceType = '';
     removeTimeOutTimer();
     SheelaController.isBLEStatus.value = BLEStatus.Disabled;
-    SheelaController.timerBlinkingBLEIcon.cancel();
+    SheelaController.timerBlinkingBLEIcon?.cancel();
     SheelaController.percentBlinkingBLEIcon = 0.0;
   }
 

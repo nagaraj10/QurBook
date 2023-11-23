@@ -30,17 +30,7 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
       Get.put(SheelaAIController());
     }
     _sheelaAIController = Get.find();
-    _sheelaAIController.timerBlinkingBLEIcon = Timer.periodic(
-        const Duration(
-          seconds: 1,
-        ), (timer) {
-      setState(() {
-        _sheelaAIController.percentBlinkingBLEIcon += 0.022;
-        if (_sheelaAIController.percentBlinkingBLEIcon > 1.0) {
-          _sheelaAIController.percentBlinkingBLEIcon = 0.0;
-        }
-      });
-    });
+
     super.initState();
     _animationController = AnimationController(
       vsync: this,
@@ -68,64 +58,31 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isEnabled ?? true) {
-      return Obx(() {
-        if (_sheelaAIController.isBLEStatus.value == BLEStatus.Searching) {
-          _sheelaAIController.timerBlinkingBLEIcon.cancel();
-          _sheelaAIController.percentBlinkingBLEIcon = 0.0;
-          return FadeTransition(
-            opacity: _animationController,
-            child: Icon(
-              Icons.bluetooth,
-              size: 32.sp,
-              color: Colors.blue,
-            ),
-          );
-        } else if (_sheelaAIController.isBLEStatus.value ==
-            BLEStatus.Connected) {
-          _sheelaAIController.timerBlinkingBLEIcon.cancel();
-          _sheelaAIController.percentBlinkingBLEIcon = 0.0;
-          return Icon(
+    return Obx(() {
+      if (_sheelaAIController.isBLEStatus.value == BLEStatus.Searching) {
+        return FadeTransition(
+          opacity: _animationController,
+          child: Icon(
             Icons.bluetooth,
             size: 32.sp,
-            color: Colors.green,
-          );
+            color: Colors.blue,
+          ),
+        );
+      } else if (_sheelaAIController.isBLEStatus.value == BLEStatus.Connected) {
+        return Icon(
+          Icons.bluetooth,
+          size: 32.sp,
+          color: Colors.green,
+        );
+      } else {
+        if (_sheelaAIController.bleController?.timerSubscription == null) {
+          return BLELoader();
         } else {
-          return CircularPercentIndicator(
-            radius: getCircularPercentIndicatorRadius(),
-            lineWidth: 2,
-            percent: _sheelaAIController.percentBlinkingBLEIcon,
-            backgroundColor: Colors.transparent,
-            progressColor: Colors.grey,
-            center: getBluetoothIcon(
-              icon: Icons.bluetooth_disabled,
-              color: Colors.grey,
-            ),
-          );
+          return getDisabledBluetoothIcon();
         }
-      });
-    } else {
-      return getBluetoothIcon(
-        icon: Icons.bluetooth_disabled,
-        color: Colors.grey,
-      );
-    }
+      }
+    });
   }
-
-  Widget getBluetoothIcon({
-    required IconData icon,
-    required Color color,
-  }) =>
-      Icon(
-        icon,
-        size: 24.sp,
-        color: color,
-      );
-
-  Widget getConnectAnimationBluetoothIcon() => getBluetoothIcon(
-        icon: Icons.bluetooth,
-        color: Colors.blue,
-      );
 
   void toggleZoomDirection() {
     setState(() {
@@ -144,4 +101,74 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
     _animationController.dispose();
     super.dispose();
   }
+}
+
+class BLELoader extends StatefulWidget {
+  const BLELoader({Key? key}) : super(key: key);
+
+  @override
+  State<BLELoader> createState() => _BLELoaderState();
+}
+
+class _BLELoaderState extends State<BLELoader> {
+  late Timer timerBlinkingBLEIcon;
+  double percentBlinkingBLEIcon = 0.0;
+  @override
+  void initState() {
+    timerBlinkingBLEIcon = Timer.periodic(
+        const Duration(
+          seconds: 1,
+        ), (timer) {
+      setState(() {
+        percentBlinkingBLEIcon += 0.044;
+        if (percentBlinkingBLEIcon > 1.0) {
+          percentBlinkingBLEIcon = 0.0;
+        }
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timerBlinkingBLEIcon.cancel();
+    super.dispose();
+  }
+
+  double getCircularPercentIndicatorRadius() =>
+      (CommonUtil().isTablet ?? false) ? 22 : 16;
+  @override
+  Widget build(BuildContext context) {
+    return CircularPercentIndicator(
+      radius: getCircularPercentIndicatorRadius(),
+      lineWidth: 2,
+      percent: percentBlinkingBLEIcon,
+      backgroundColor: Colors.transparent,
+      progressColor: Colors.grey,
+      center: getDisabledBluetoothIcon(),
+    );
+    ;
+  }
+}
+
+Widget getBluetoothIcon({
+  required IconData icon,
+  required Color color,
+}) =>
+    Icon(
+      icon,
+      size: 24.sp,
+      color: color,
+    );
+
+Widget getConnectAnimationBluetoothIcon() => getBluetoothIcon(
+      icon: Icons.bluetooth,
+      color: Colors.blue,
+    );
+
+Widget getDisabledBluetoothIcon() {
+  return getBluetoothIcon(
+    icon: Icons.bluetooth_disabled,
+    color: Colors.grey,
+  );
 }
