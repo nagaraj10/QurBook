@@ -120,6 +120,7 @@ class SheelaBLEController extends GetxController {
       return;
     }
 
+    SheelaController.percentBlinkingBLEIcon = 0.0;
     timerSubscription = stream.listen(
       (val) async {
         print("Val in ");
@@ -760,6 +761,8 @@ class SheelaBLEController extends GetxController {
     filteredDeviceType = '';
     removeTimeOutTimer();
     SheelaController.isBLEStatus.value = BLEStatus.Disabled;
+    SheelaController.timerBlinkingBLEIcon.cancel();
+    SheelaController.percentBlinkingBLEIcon = 0.0;
   }
 
   String getPronunciationText(SheelaResponse? currentPlayingConversation) {

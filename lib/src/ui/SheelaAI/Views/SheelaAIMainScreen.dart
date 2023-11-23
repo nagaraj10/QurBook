@@ -44,6 +44,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     controller.conversations = [];
+    controller.timerBlinkingBLEIcon.cancel();
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {

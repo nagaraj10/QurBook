@@ -8,7 +8,8 @@ import '../Controller/SheelaAIController.dart';
 import 'sheela_ble_circular_progress_indicator.dart';
 
 class MyBlinkingBLEIcon extends StatefulWidget {
-  const MyBlinkingBLEIcon({Key? key}) : super(key: key);
+  bool? isEnabled = true;
+  MyBlinkingBLEIcon({Key? key, bool isEnabled = true}) : super(key: key);
 
   @override
   _MyBlinkingBLEIconState createState() => _MyBlinkingBLEIconState();
@@ -23,20 +24,20 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
   double _scaleFactor = 1.0;
   bool _zoomIn = true;
 
-  double _percent = 0.0;
-  late Timer _timer;
-
   @override
   void initState() {
     if (!Get.isRegistered<SheelaAIController>()) {
       Get.put(SheelaAIController());
     }
     _sheelaAIController = Get.find();
-    _timer = Timer.periodic(const Duration(milliseconds: 350), (timer) {
+    _sheelaAIController.timerBlinkingBLEIcon = Timer.periodic(
+        const Duration(
+          seconds: 1,
+        ), (timer) {
       setState(() {
-        _percent += 0.015;
-        if (_percent > 1.0) {
-          _percent = 0.0;
+        _sheelaAIController.percentBlinkingBLEIcon += 0.022;
+        if (_sheelaAIController.percentBlinkingBLEIcon > 1.0) {
+          _sheelaAIController.percentBlinkingBLEIcon = 0.0;
         }
       });
     });
@@ -67,36 +68,48 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (_sheelaAIController.isBLEStatus.value == BLEStatus.Searching) {
-        return FadeTransition(
-          opacity: _animationController,
-          child: Icon(
-            Icons.bluetooth,
+    if (widget.isEnabled ?? true) {
+      return Obx(() {
+        if (_sheelaAIController.isBLEStatus.value == BLEStatus.Searching) {
+          _sheelaAIController.timerBlinkingBLEIcon.cancel();
+          _sheelaAIController.percentBlinkingBLEIcon = 0.0;
+          return FadeTransition(
+            opacity: _animationController,
+            child: Icon(
+              Icons.bluetooth,
               size: 32.sp,
-            color: Colors.blue,
-          ),
-        );
-      } else if (_sheelaAIController.isBLEStatus.value == BLEStatus.Connected) {
-        return Icon(
-          Icons.bluetooth,
-          size: 32.sp,
-          color: Colors.green,
-        );
-      } else {
-        return CircularPercentIndicator(
-          radius: getCircularPercentIndicatorRadius(),
-          lineWidth: 2,
-          percent: _percent,
-          backgroundColor: Colors.transparent,
-          progressColor: Colors.grey,
-          center: getBluetoothIcon(
-            icon: Icons.bluetooth_disabled,
-            color: Colors.grey,
-          ),
-        );
-      }
-    });
+              color: Colors.blue,
+            ),
+          );
+        } else if (_sheelaAIController.isBLEStatus.value ==
+            BLEStatus.Connected) {
+          _sheelaAIController.timerBlinkingBLEIcon.cancel();
+          _sheelaAIController.percentBlinkingBLEIcon = 0.0;
+          return Icon(
+            Icons.bluetooth,
+            size: 32.sp,
+            color: Colors.green,
+          );
+        } else {
+          return CircularPercentIndicator(
+            radius: getCircularPercentIndicatorRadius(),
+            lineWidth: 2,
+            percent: _sheelaAIController.percentBlinkingBLEIcon,
+            backgroundColor: Colors.transparent,
+            progressColor: Colors.grey,
+            center: getBluetoothIcon(
+              icon: Icons.bluetooth_disabled,
+              color: Colors.grey,
+            ),
+          );
+        }
+      });
+    } else {
+      return getBluetoothIcon(
+        icon: Icons.bluetooth_disabled,
+        color: Colors.grey,
+      );
+    }
   }
 
   Widget getBluetoothIcon({
@@ -127,6 +140,7 @@ class _MyBlinkingBLEIconState extends State<MyBlinkingBLEIcon>
 
   @override
   void dispose() {
+    _sheelaAIController.percentBlinkingBLEIcon = 0.0;
     _animationController.dispose();
     super.dispose();
   }
