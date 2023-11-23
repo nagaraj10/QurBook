@@ -760,8 +760,6 @@ class SheelaBLEController extends GetxController {
     filteredDeviceType = '';
     removeTimeOutTimer();
     SheelaController.isBLEStatus.value = BLEStatus.Disabled;
-    SheelaController.timerBlinkingBLEIcon?.cancel();
-    SheelaController.percentBlinkingBLEIcon = 0.0;
   }
 
   String getPronunciationText(SheelaResponse? currentPlayingConversation) {

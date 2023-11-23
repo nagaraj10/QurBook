@@ -107,9 +107,6 @@ class SheelaAIController extends GetxController {
 
   List<String> sheelaTTSWordList = ["sheila", "sila", "shila", "shiela"];
 
-  Timer? timerBlinkingBLEIcon;
-  double percentBlinkingBLEIcon = 0.0;
-
   @override
   void onInit() {
     super.onInit();

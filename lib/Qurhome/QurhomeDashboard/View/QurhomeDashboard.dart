@@ -23,6 +23,7 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
+import 'package:myfhb/src/ui/SheelaAI/Widgets/common_bluetooth_widget.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
@@ -243,7 +244,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             right: 16,
                           ),
                           child: controller.currentSelectedIndex == 2
-                              ? getDisabledBluetoothIcon()
+                              ? CommonBluetoothWidget.getDisabledBluetoothIcon()
                               : MyBlinkingBLEIcon(),
                         )
                       : SizedBox.shrink(),
@@ -254,7 +255,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                           padding: const EdgeInsets.only(
                             right: 16,
                           ),
-                          child: MyBlinkingBLEIcon(),
+                          child:CommonBluetoothWidget.getDisabledBluetoothIcon()
+                              ,
                         )
                       : SizedBox.shrink(),
                 ],
@@ -832,9 +834,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     return BadgeIcon(
       icon: GestureDetector(
         onTap: () {
-          if (Get.isRegistered<QurhomeDashboardController>())
+          if (Get.isRegistered<QurhomeDashboardController>()) {
             Get.find<QurhomeDashboardController>()
                 .updateBLETimer(Enable: false);
+          }
 
           Get.to(ChatUserList(careGiversList: [], isFromQurDay: true));
         },
