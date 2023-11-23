@@ -31,6 +31,11 @@ class QurhomeDashboardController extends GetxController {
   late HubListViewController hubController;
   late SheelaBLEController _sheelaBLEController;
   Timer? _bleTimer = null;
+
+  Timer? get getBleTimer {
+    return _bleTimer;
+  }
+
   SheelaAIController sheelaAIController = Get.put(SheelaAIController());
   var isLoading = false.obs;
   var eventId = ''.obs;
