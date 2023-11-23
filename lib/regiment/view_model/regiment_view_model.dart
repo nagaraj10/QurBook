@@ -217,7 +217,12 @@ class RegimentViewModel extends ChangeNotifier {
                     .isNegative ??
                 false) &&
             regimenData.ack == null) {
-          filteredRegimenList.add(regimenData);
+          if (CommonUtil.isUSRegion() &&
+              regimenData?.otherinfo?.isSkipAcknowledgement != "1") {
+            filteredRegimenList.add(regimenData);
+          } else if (regimenData?.otherinfo?.isSkipAcknowledgement == "0") {
+            filteredRegimenList.add(regimenData);
+          }
         }
       }
     });
