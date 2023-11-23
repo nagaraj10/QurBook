@@ -288,6 +288,7 @@ class IosNotificationHandler {
             rt_Sheela,
             arguments: SheelaArgument(
               textSpeechSheela: model.rawBody,
+                isNeedPreferredLangauge: true,
               eventIdViaSheela: model.eventId
             ),
           );

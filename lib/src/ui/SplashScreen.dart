@@ -485,6 +485,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             rt_Sheela,
                             arguments: SheelaArgument(
                                 isSheelaFollowup: true,
+                                isNeedPreferredLangauge: true,
                                 textSpeechSheela: temp[1]),
                           )?.then((value) {
                             PageNavigator.goToPermanent(

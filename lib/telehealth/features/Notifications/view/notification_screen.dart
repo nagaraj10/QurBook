@@ -1216,6 +1216,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   routervariable.rt_Sheela,
                   arguments: SheelaArgument(
                     textSpeechSheela: rawBody,
+                    isNeedPreferredLangauge: true
                   ),
                 )!
                     .then((value) => PageNavigator.goToPermanent(
