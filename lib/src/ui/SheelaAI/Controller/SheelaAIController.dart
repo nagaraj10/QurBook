@@ -160,7 +160,7 @@ class SheelaAIController extends GetxController {
           buttons.length) {
         var index = currentPlayingConversation!.currentButtonPlayingIndex ?? 0;
         if ((index < buttons.length - 1) &&
-            (buttons[index + 1].skipTts??false) &&
+            (buttons[index + 1].skipTts ?? false) &&
             !currentPlayingConversation!.isButtonNumber!) {
           if (currentPlayingConversation!.currentButtonPlayingIndex != null) {
             index++;
@@ -833,7 +833,7 @@ class SheelaAIController extends GetxController {
               }
               if ((conversations.isNotEmpty) &&
                   (conversations.last?.additionalInfoSheelaResponse
-                      ?.reconfirmationFlag ??
+                          ?.reconfirmationFlag ??
                       false)) {
                 redoCurrentPlayingConversation = conversations.last;
                 freeTextConversation(freeText: response);
@@ -843,7 +843,7 @@ class SheelaAIController extends GetxController {
                     ((conversations.last?.buttons?.length ?? 0) > 0)) {
                   try {
                     var responseRecived =
-                    response.toString().toLowerCase().trim();
+                        response.toString().toLowerCase().trim();
 
                     dynamic button = null;
 
@@ -851,19 +851,18 @@ class SheelaAIController extends GetxController {
                       if (responseRecived == carGiverSheela) {
                         responseRecived = careGiverSheela;
                       }
-                      button =
-                          conversations.last?.buttons.firstWhere((element) =>
-                          (element.title ?? "").toLowerCase() ==
+                      button = conversations.last?.buttons.firstWhere(
+                          (element) =>
+                              (element.title ?? "").toLowerCase() ==
                               responseRecived);
                     } else if ((conversations.last?.isButtonNumber ?? false)) {
                       bool isDigit = CommonUtil().isNumeric(responseRecived);
                       for (int i = 0;
-                      i < conversations.last?.buttons.length;
-                      i++) {
+                          i < conversations.last?.buttons.length;
+                          i++) {
                         var temp =
-                        conversations.last?.buttons[i].title.split(".");
-                        var realNumber = CommonUtil()
-                            .realNumber(
+                            conversations.last?.buttons[i].title.split(".");
+                        var realNumber = CommonUtil().realNumber(
                             int.tryParse(temp[0].toString().trim()));
                         var optionWithRealNumber =
                             "Option ${realNumber.toString().trim()}";
@@ -874,21 +873,21 @@ class SheelaAIController extends GetxController {
                         var numberWithDigit =
                             "Number ${temp[0].toString().trim()}";
                         if (((temp[isDigit ? 0 : 1].toString().trim())
-                            .toLowerCase() ==
-                            responseRecived) ||
+                                    .toLowerCase() ==
+                                responseRecived) ||
                             (realNumber.toString().toLowerCase().trim() ==
                                 responseRecived) ||
                             (optionWithRealNumber
-                                .toString()
-                                .toLowerCase()
-                                .trim() ==
+                                    .toString()
+                                    .toLowerCase()
+                                    .trim() ==
                                 responseRecived) ||
                             (optionWithDigit.toString().toLowerCase().trim() ==
                                 responseRecived) ||
                             (numberWithRealNumber
-                                .toString()
-                                .toLowerCase()
-                                .trim() ==
+                                    .toString()
+                                    .toLowerCase()
+                                    .trim() ==
                                 responseRecived) ||
                             (numberWithDigit.toString().toLowerCase().trim() ==
                                 responseRecived)) {
@@ -920,8 +919,8 @@ class SheelaAIController extends GetxController {
                         }
                       } else if (button?.btnRedirectTo ==
                           strRedirectToHelpPreview) {
-                        if (button?.videoUrl != null && button?.videoUrl !=
-                            '') {
+                        if (button?.videoUrl != null &&
+                            button?.videoUrl != '') {
                           playYoutube(button?.videoUrl);
                         } else if (button?.audioUrl != null &&
                             button?.audioUrl != '') {
@@ -939,12 +938,12 @@ class SheelaAIController extends GetxController {
                           });
                         }
                       } else if (button?.btnRedirectTo == strRedirectRedo) {
-                        final cardResponse = SheelaResponse(text: button?.title);
+                        final cardResponse =
+                            SheelaResponse(text: button?.title);
                         conversations.add(cardResponse);
                         scrollToEnd();
                         Future.delayed(Duration(seconds: 2), () {
-                          conversations
-                              .add(redoCurrentPlayingConversation);
+                          conversations.add(redoCurrentPlayingConversation);
                           currentPlayingConversation =
                               redoCurrentPlayingConversation;
                           isLoading.value = false;
@@ -1525,7 +1524,6 @@ class SheelaAIController extends GetxController {
     }
   }
 
-
   String? prefixListFiltering(String strResponse) {
     try {
       for (String strSheelaText in sheelaTTSWordList) {
@@ -1581,17 +1579,9 @@ class SheelaAIController extends GetxController {
       Buttons(
         title: strContinue,
         payload: freeTextPayload,
-
       ),
-      Buttons(
-        title: strRedo,
-        btnRedirectTo: strRedirectRedo
-      ),
-      Buttons(
-        title: strExit,
-        payload: strExit,
-        mute: sheela_hdn_btn_yes
-      ),
+      Buttons(title: strRedo, btnRedirectTo: strRedirectRedo),
+      Buttons(title: strExit, payload: strExit, mute: sheela_hdn_btn_yes),
     ];
     return buttons;
   }
