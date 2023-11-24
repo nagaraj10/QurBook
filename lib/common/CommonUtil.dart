@@ -1036,7 +1036,7 @@ class CommonUtil {
     return 0xFFFd7a2b;
   }
 
-  int getCommonPrimaryColorQurHomeBook(){
+  int getCommonPrimaryColorQurHomeBook() {
     return (PreferenceUtil.getIfQurhomeisAcive())
         ? CommonUtil().getQurhomePrimaryColor()
         : CommonUtil().getMyPrimaryColor();
@@ -6662,6 +6662,11 @@ class CommonUtil {
       canEdit = false;
     }
     return canEdit;
+  }
+
+  bool checkIfSkipAcknowledgemnt(RegimentDataModel regimen) {
+    return (CommonUtil.isUSRegion() &&
+        regimen?.otherinfo?.isSkipAcknowledgement == "1");
   }
 
   static DateTime getDateBasedOnOnceInAPlan(
