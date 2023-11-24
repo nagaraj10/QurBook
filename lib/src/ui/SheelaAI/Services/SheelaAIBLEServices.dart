@@ -115,7 +115,6 @@ class SheelaBLEController extends GetxController {
         return;
       }
     }
-
     if (timerSubscription != null) {
       return;
     }
@@ -203,7 +202,7 @@ class SheelaBLEController extends GetxController {
                   }
                   if (SheelaController.isSheelaScreenActive) return;
                   Get.to(
-                    SheelaAIMainScreen(
+                    () => SheelaAIMainScreen(
                       arguments: SheelaArgument(
                         deviceType: hublistController.bleDeviceType,
                         takeActiveDeviceReadings: true,
@@ -409,11 +408,10 @@ class SheelaBLEController extends GetxController {
     final arguments = SheelaController.arguments!;
     isCompleted = false;
     var msg = '';
+    var strText = CommonUtil().validString(arguments.deviceType);
     if ((arguments.deviceType ?? '').isNotEmpty) {
-      String strText = CommonUtil().validString(arguments.deviceType);
       if (strText.toLowerCase() == "bgl") {
-        msg =
-            "Your Blood Glucose Monitor is connected. Please insert the test strip.";
+        msg = "Your Blood Glucose Monitor is connected.";
       } else {
         if (strText.toLowerCase() == "weight") {
           strText = "Weighing scale";
@@ -423,8 +421,7 @@ class SheelaBLEController extends GetxController {
     }
 
     if (msg.isNotEmpty) {
-      String? strTextMsg = await SheelaController.getTextTranslate(
-          msg ?? '');
+      String? strTextMsg = await SheelaController.getTextTranslate(msg ?? '');
       addToConversationAndPlay(
         SheelaResponse(
           recipientId: conversationType,
@@ -432,8 +429,8 @@ class SheelaBLEController extends GetxController {
         ),
       );
       if (strText.toLowerCase().contains("bgl")) {
-        String? strTextMsg =
-            await SheelaController.getTextTranslate("Please insert strip");
+        String? strTextMsg = await SheelaController.getTextTranslate(
+            "Make sure the strip is inserted and a blood sample is added after insertion.");
         playConversations.add(SheelaResponse(
           recipientId: conversationType,
           text: strTextMsg,
@@ -444,8 +441,7 @@ class SheelaBLEController extends GetxController {
   }
 
   addBGLMessage(String msg) async {
-    String? strTextMsg = await SheelaController.getTextTranslate(
-        msg ?? '');
+    String? strTextMsg = await SheelaController.getTextTranslate(msg ?? '');
     final conv = SheelaResponse(
       recipientId: conversationType,
       text: strTextMsg,
@@ -555,8 +551,7 @@ class SheelaBLEController extends GetxController {
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
-                text:
-                strTextMsg,
+                text: strTextMsg,
               ),
             );
             String? strTextMsgTwo = await SheelaController.getTextTranslate(
@@ -564,8 +559,7 @@ class SheelaBLEController extends GetxController {
             playConversations.add(
               SheelaResponse(
                 recipientId: conversationType,
-                text:
-                strTextMsgTwo,
+                text: strTextMsgTwo,
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -580,8 +574,7 @@ class SheelaBLEController extends GetxController {
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
-                text:
-                strTextMsg,
+                text: strTextMsg,
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -595,8 +588,8 @@ class SheelaBLEController extends GetxController {
               (model.data!.pulse ?? '').isNotEmpty) {
             String? strTextMsg = await SheelaController.getTextTranslate(
                 "Thank you. Your BP systolic ${model.data!.systolic} "
-                    ", Diastolic ${model.data!.diastolic} "
-                    "and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
+                ", Diastolic ${model.data!.diastolic} "
+                "and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -615,8 +608,7 @@ class SheelaBLEController extends GetxController {
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
-                text:
-                strTextMsg,
+                text: strTextMsg,
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -651,9 +643,11 @@ class SheelaBLEController extends GetxController {
           SheelaController.isMicListening.toggle();
           isPlaying = true;
           final status = await SheelaController.playUsingLocalTTSEngineFor(
-              (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+              (getPronunciationText(currentPlayingConversation)
+                      .trim()
+                      .isNotEmpty
                   ? getPronunciationText(currentPlayingConversation)
-                  :(currentPlayingConversation.text)));
+                  : (currentPlayingConversation.text)));
           playConversations.removeAt(0);
           isPlaying = false;
           if (isCompleted) {
@@ -676,7 +670,7 @@ class SheelaBLEController extends GetxController {
         final result = await SheelaController.getGoogleTTSForText(
             (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
                 ? getPronunciationText(currentPlayingConversation)
-                :(currentPlayingConversation?.text)));
+                : (currentPlayingConversation?.text)));
         if ((result!.payload!.audioContent ?? '').isNotEmpty) {
           textForPlaying = result.payload!.audioContent;
         }
@@ -759,6 +753,7 @@ class SheelaBLEController extends GetxController {
       timerSubscription!.cancel();
     }
     timerSubscription = null;
+
     isFromRegiment = false;
     addingDevicesInHublist = false;
     isFromVitals = false;

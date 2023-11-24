@@ -604,8 +604,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
     return InkWell(
       onTap: () {
-        if (regimen.activityOrgin != strAppointmentRegimen) {
-          showRegimenDialog(regimen, itemIndex);
+        if (regimen.activityOrgin == strAppointmentRegimen) {
+          if ((regimen.eid != null) && (regimen.eid != '')) {
+            CommonUtil().goToAppointmentDetailScreen(regimen.eid);
+          }
+        } else {
+          if (CommonUtil().checkIfSkipAcknowledgemnt(regimen)) {
+            redirectToSheelaScreen(regimen);
+          } else {
+            showRegimenDialog(regimen, itemIndex);
+          }
         }
       },
       child: Transform.scale(
@@ -688,8 +696,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         SizedBox(
                           width: 20,
                         ),
-                        getIcon(regimen.activityname, regimen.uformname,
-                            regimen.metadata, itemIndex, nextRegimenPosition),
+                        getIcon(
+                            regimen,
+                            regimen.activityname,
+                            regimen.uformname,
+                            regimen.metadata,
+                            itemIndex,
+                            nextRegimenPosition),
                         SizedBox(
                           width: 20,
                         ),
@@ -718,8 +731,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     );
   }
 
-  dynamic getIcon(Activityname? activityname, Uformname? uformName,
-      Metadata? metadata, int itemIndex, int nextRegimenPosition,
+  dynamic getIcon(
+      RegimentDataModel regimen,
+      Activityname? activityname,
+      Uformname? uformName,
+      Metadata? metadata,
+      int itemIndex,
+      int nextRegimenPosition,
       {double? sizeOfIcon}) {
     final iconSize = sizeOfIcon ?? 40.0.h;
     try {
@@ -738,24 +756,25 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             width: iconSize,
             color: getTextAndIconColor(itemIndex, nextRegimenPosition),
             errorWidget: (context, url, error) {
-              return getDefaultIcon(activityname, uformName, iconSize,
+              return getDefaultIcon(regimen, activityname, uformName, iconSize,
                   itemIndex, nextRegimenPosition);
             },
           );
         }
       } else {
-        return getDefaultIcon(
-            activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
+        return getDefaultIcon(regimen, activityname, uformName, iconSize,
+            itemIndex, nextRegimenPosition);
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-      return getDefaultIcon(
-          activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
+      return getDefaultIcon(regimen, activityname, uformName, iconSize,
+          itemIndex, nextRegimenPosition);
     }
   }
 
   dynamic getDefaultIcon(
+    RegimentDataModel regimen,
     Activityname? activityname,
     Uformname? uformName,
     double iconSize,
@@ -789,13 +808,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         cardIcon = Icons.screen_search_desktop;
         break;
       default:
-        cardIcon = 'assets/Qurhome/Qurhome.png';
+        if (CommonUtil().checkIfSkipAcknowledgemnt(regimen)) {
+          cardIcon = 'assets/icons/icon_acknowledgement.png';
+        } else {
+          cardIcon = 'assets/Qurhome/Qurhome.png';
+        }
     }
     var cardIconWidget = (cardIcon is String)
         ? Image.asset(
             cardIcon,
             height: isDefault ? iconSize : iconSize - 5.0,
             width: isDefault ? iconSize : iconSize - 5.0,
+            color: (CommonUtil().checkIfSkipAcknowledgemnt(regimen))
+                ? getTextAndIconColor(itemIndex, nextRegimenPosition)
+                : null,
           )
         : Icon(
             cardIcon,
@@ -883,8 +909,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                           ),
                           child: Row(
                             children: [
-                              getIcon(regimen.activityname, regimen.uformname,
-                                  regimen.metadata, index, 0,
+                              getIcon(regimen, regimen.activityname,
+                                  regimen.uformname, regimen.metadata, index, 0,
                                   sizeOfIcon: CommonUtil().isTablet!
                                       ? dialogIconTab
                                       : dialogIconMobile),
@@ -1179,8 +1205,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             ),
                             child: Row(
                               children: [
-                                getIcon(regimen.activityname, regimen.uformname,
-                                    regimen.metadata, index, 0,
+                                getIcon(
+                                    regimen,
+                                    regimen.activityname,
+                                    regimen.uformname,
+                                    regimen.metadata,
+                                    index,
+                                    0,
                                     sizeOfIcon: CommonUtil().isTablet!
                                         ? dialogIconTab
                                         : dialogIconMobile),
@@ -1660,6 +1691,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       } else if (trimmedTitle.isNotEmpty && (trimmedTitle == "temperature")) {
         if (checkCanEdit(regimen)) {
+          if (canEditMain || fromView) {
+            openFormDataDialog(
+                context, regimen, canEdit, eventId, fieldsResponseModel,
+                eventIdReturn: eventIdReturn,
+                followEventContext: followEventContext,
+                activityName: activityName,
+                uid: uid,
+                aid: aid,
+                formId: formId,
+                formName: formName,
+                canEditMain: canEditMain,
+                fromView: fromView);
+            return;
+          }
           redirectToSheelaScreen(regimen);
         } else {
           onErrorMessage(regimen);

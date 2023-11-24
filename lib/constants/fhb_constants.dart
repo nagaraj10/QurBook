@@ -828,6 +828,18 @@ const String msgData =
 
 const String sheelaRecepId = 'Sheela Response';
 
+const String freeTextReply = 'I heard your reply as, ';
+
+const String freeTextReplyConfirm = '. You can say redo to change your response.';
+
+const String strContinue = 'Continue';
+const String strRedo = 'Redo';
+const String strExit = 'Exit';
+
+const String strRedirectRedo = 'redirectToRedo';
+
+
+
 //fetchProfilePic
 const String FETCH_PROFILE_PIC = 'file-guard/fileData/profilePicture/';
 

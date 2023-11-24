@@ -357,12 +357,14 @@ class ChatAttachments {
 
 class AdditionalInfoSheela {
   dynamic? sessionTimeoutMin;
+  bool? reconfirmationFlag;
 
-  AdditionalInfoSheela({this.sessionTimeoutMin});
+  AdditionalInfoSheela({this.sessionTimeoutMin,this.reconfirmationFlag});
 
   AdditionalInfoSheela.fromJson(Map<String, dynamic> json) {
     try {
       sessionTimeoutMin = json['sessionTimeoutMin'];
+      reconfirmationFlag = json['reconfirmationFlag']??false;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -371,6 +373,7 @@ class AdditionalInfoSheela {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['sessionTimeoutMin'] = this.sessionTimeoutMin;
+    data['reconfirmationFlag'] = this.reconfirmationFlag;
     return data;
   }
 }
