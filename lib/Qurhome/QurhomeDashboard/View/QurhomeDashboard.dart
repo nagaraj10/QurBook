@@ -219,6 +219,18 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         ),
       );
 
+      double getLeadingWidth()  {
+        double width =
+     controller.currentSelectedIndex == 0 
+        ? (CommonUtil.isUSRegion())
+            ? (CommonUtil().isTablet ?? false)
+                ? 117
+                : 83
+            : 58.0
+        : 58.0;
+        return width;
+      }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() => controller.isLoading.isTrue
@@ -234,7 +246,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
                 elevation: 0,
                 centerTitle: true,
-                leadingWidth: (CommonUtil().isTablet ?? false) ? 117 : 83,
+                leadingWidth: getLeadingWidth(),
                 actions: [
                   (!(CommonUtil.isUSRegion()) &&
                           hubListViewController.isUserHasParedDevice.value &&
