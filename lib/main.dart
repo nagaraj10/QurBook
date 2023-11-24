@@ -16,7 +16,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/app_theme.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/Controller/HubListViewController.dart';
@@ -875,7 +874,7 @@ class _MyFHBState extends State<MyFHB> {
           if (passedValArr[2] != null) {
             try {
               if (passedValArr[3] != null) {
-                new CommonUtil().acceptCareGiverTransportRequestReminder(
+                CommonUtil().acceptCareGiverTransportRequestReminder(
                     context,
                     passedValArr[2],
                     passedValArr[3],

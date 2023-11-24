@@ -80,8 +80,8 @@ class DoctorSessionTimeSlot extends StatefulWidget {
 
 class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   SlotsAvailabilityViewModel slotsAvailabilityViewModel =
-      new SlotsAvailabilityViewModel();
-  CommonWidgets commonWidgets = new CommonWidgets();
+      SlotsAvailabilityViewModel();
+  CommonWidgets commonWidgets = CommonWidgets();
   DateTime? _selectedValue = DateTime.now();
   DatePickerController _controller = DatePickerController();
 
@@ -150,7 +150,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
             width: 40.0.w,
             height: 45.0.h,
             initialSelectedDate: initialDate(),
-            selectionColor: Color(new CommonUtil().getMyPrimaryColor()),
+            selectionColor: Color(CommonUtil().getMyPrimaryColor()),
             selectedTextColor: Colors.white,
             dayTextStyle: TextStyle(
               fontSize: fhbStyles.fnt_day,
@@ -210,7 +210,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   }
 
   Widget getTimeSlots() {
-    return new FutureBuilder<AvailableTimeSlotsModel?>(
+    return FutureBuilder<AvailableTimeSlotsModel?>(
       future: slotsAvailabilityViewModel.fetchTimeSlots(
           _selectedValue.toString(),
           widget.doctorId!,
@@ -218,11 +218,11 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return new Center(
-                child: new Column(
+            return Center(
+                child: Column(
               children: <Widget>[
                 SizedBoxWidget(height: 20.0.h),
-                new SizedBox(
+                SizedBox(
                   child: CommonCircularIndicator(),
                   height: 20.0.h,
                   width: 20.0.h,
@@ -241,7 +241,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                       SizedBoxWidget(
                         height: 8.0.h,
                       ),
-                      new Text(
+                      Text(
                         snapshot.data!.message!,
                         style: TextStyle(
                           fontSize: 12.0.sp,
@@ -292,7 +292,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                               SizedBoxWidget(
                                 height: 8.0.h,
                               ),
-                              new Text(
+                              Text(
                                 slotsAreNotAvailable,
                                 style: TextStyle(
                                   fontSize: 12.0.sp,
@@ -308,7 +308,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                           SizedBoxWidget(
                             height: 8.0.h,
                           ),
-                          new Text(
+                          Text(
                             slotsAreNotAvailable,
                             style: TextStyle(
                               fontSize: 12.0.sp,
@@ -326,7 +326,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
               SizedBoxWidget(
                 height: 8.0.h,
               ),
-              new Text(
+              Text(
                 slotsAreNotAvailable,
                 style: TextStyle(
                   fontSize: 12.0.sp,

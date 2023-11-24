@@ -65,7 +65,7 @@ class TicketTypesResult {
         iconUrl: json["iconUrl"] ?? null,
         v: json["__v"],
         additionalInfo: json['additionalInfo'] != null
-            ? new AdditionalInfo.fromJson(json['additionalInfo'])
+            ? AdditionalInfo.fromJson(json['additionalInfo'])
             : null,
       );
 
@@ -138,7 +138,7 @@ class AdditionalInfo {
       if (json['field'] != null) {
             field = <Field>[];
             json['field'].forEach((v) {
-              field!.add(new Field.fromJson(v));
+              field!.add(Field.fromJson(v));
             });
           }
       healthOrgTypeId = json['healthOrgTypeId'];
@@ -150,7 +150,7 @@ class AdditionalInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       if (this.field != null) {
             data['field'] = this.field!.map((v) => v.toJson()).toList();
@@ -211,7 +211,7 @@ class Field {
       if (json['data'] != null) {
         fieldData = <FieldData>[];
         json['data'].forEach((v) {
-          fieldData!.add(new FieldData.fromJson(v));
+          fieldData!.add(FieldData.fromJson(v));
         });
       }
       displayName = json['display_name'];
@@ -234,7 +234,7 @@ class Field {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['name'] = this.name;
       data['type'] = this.type;
@@ -283,7 +283,7 @@ class FieldData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['id'] = this.id;
       data['name'] = this.name;

@@ -3,7 +3,6 @@ import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'Data.dart';
-import '../../src/model/Health/Laboratory.dart';
 
 class GlobalSearch {
   int? status;

@@ -5,7 +5,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+// TODO: multi_image_picker deprecated so need to FIX
+// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -54,7 +55,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   bool selectSingleImage = false;
   String _platformMessage = 'No Error';
 
-  List<Asset> images = <Asset>[];
+  // TODO: multi_image_picker deprecated so need to FIX
+  // List<Asset> images = <Asset>[];
   String _error = 'No Error Dectected';
 
   String? categoryName;
@@ -166,7 +168,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               isThumbnails
                   ? Container(
                       height: 60,
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      color: Color(CommonUtil().getMyPrimaryColor()),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -183,13 +185,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                   height: 40,
                                   fit: BoxFit.cover,
                                 ),
-                                /*  new Positioned(
+                                /*  Positioned(
                                     right: 0,
                                     top: 0,
                                     child:  */
-                                new Container(
+                                Container(
                                   padding: EdgeInsets.all(2),
-                                  decoration: new BoxDecoration(
+                                  decoration: BoxDecoration(
                                     color: Colors.red,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
@@ -214,7 +216,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                             child: Center(
                               child: Visibility(
                                 child: IconButton(
-                                  icon: new ImageIcon(
+                                  icon: ImageIcon(
                                     AssetImage(variable.icon_attach),
                                     color: Colors.white,
                                     size: 32.0.sp,
@@ -322,7 +324,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                     )
                   : Container(
                       height: 60,
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      color: Color(CommonUtil().getMyPrimaryColor()),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -372,7 +374,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                   Constants.ATTACH_DESC,
                                   Visibility(
                                     child: IconButton(
-                                      icon: new ImageIcon(
+                                      icon: ImageIcon(
                                         AssetImage(variable.icon_attach),
                                         color: Colors.white,
                                         size: 32.0.sp,
@@ -461,8 +463,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                   FHBBasicWidget.customShowCase(
                                       _singleMultiImg,
                                       Constants.MULTI_IMG_DESC,
-                                      new IconButton(
-                                          icon: new ImageIcon(
+                                      IconButton(
+                                          icon: ImageIcon(
                                             AssetImage(variable.icon_multi),
                                             size: 24,
                                             color: isMultipleImages
@@ -494,8 +496,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                             child: Center(
                               child: Column(
                                 children: <Widget>[
-                                  new IconButton(
-                                      icon: new ImageIcon(
+                                  IconButton(
+                                      icon: ImageIcon(
                                         AssetImage(variable.icon_image_single),
                                         color: isMultipleImages
                                             ? Colors.white54
@@ -530,37 +532,40 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> loadAssets() async {
-    List<Asset> resultList = <Asset>[];
+    // TODO: multi_image_picker deprecated so need to FIX
+    // List<Asset> resultList = <Asset>[];
 
     try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 300,
-        enableCamera: true,
-        selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
-        materialOptions: MaterialOptions(
-          actionBarColor: fhbColors.actionColor,
-          useDetailsView: false,
-          selectCircleStrokeColor: fhbColors.colorBlack,
-        ),
-      );
+      // TODO: multi_image_picker deprecated so need to FIX
+      // resultList = await MultiImagePicker.pickImages(
+      //   maxImages: 300,
+      //   enableCamera: true,
+      //   selectedAssets: images,
+      //   cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
+      //   materialOptions: MaterialOptions(
+      //     actionBarColor: fhbColors.actionColor,
+      //     useDetailsView: false,
+      //     selectCircleStrokeColor: fhbColors.colorBlack,
+      //   ),
+      // );
     } on FetchException catch (e,stackTrace) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
-    for (Asset asset in resultList) {
-      // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
-      // if(filePath!=null)imagePaths.add(filePath);
-      String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
-      imagePaths.add(filePath); //FU2.5
-    }
+// TODO: multi_image_picker deprecated so need to FIX
+    // for (Asset asset in resultList) {
+    //   // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
+    //   // if(filePath!=null)imagePaths.add(filePath);
+    //   String filePath =
+    //       await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
+    //   imagePaths.add(filePath); //FU2.5
+    // }
 
     setState(() {
-      images = resultList;
+      // TODO: multi_image_picker deprecated so need to FIX
+      // images = resultList;
     });
   }
 

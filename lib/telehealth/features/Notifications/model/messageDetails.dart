@@ -18,14 +18,14 @@ class MessageDetails {
   MessageDetails.fromJson(Map<String, dynamic> json) {
     try {
       content =
-              json['content'] != null ? new Content.fromJson(json['content']) : null;
+              json['content'] != null ? Content.fromJson(json['content']) : null;
       rawMessage = json['rawMessage'] != null
-              ? new RawMessage.fromJson(json['rawMessage'])
+              ? RawMessage.fromJson(json['rawMessage'])
               : null;
       payload =
-              json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+              json['payload'] != null ? Payload.fromJson(json['payload']) : null;
       messageContent = json['messageContent'] != null
-              ? new MessageContent.fromJson(json['messageContent'])
+              ? MessageContent.fromJson(json['messageContent'])
               : null;
       isAccepted=json['isAccepted'] != null
               ? json['isAccepted']
@@ -36,7 +36,7 @@ class MessageDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.content != null) {
       data['content'] = this.content!.toJson();
     }

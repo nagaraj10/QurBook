@@ -35,11 +35,11 @@ class Conversation {
     this.videoLinks,
     this.screen,
     this.redirect,
-    this.isSpeaking: false,
-    this.loadingDots: true,
-    this.provider_msg: false,
-    this.singleuse: true,
-    this.isActionDone: false,
+    this.isSpeaking = false,
+    this.loadingDots = true,
+    this.provider_msg = false,
+    this.singleuse = true,
+    this.isActionDone = false,
     this.redirectTo,
   });
 
@@ -75,7 +75,7 @@ class Conversation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strIsMayaSaid] = this.isMayaSaid;
     data[parameters.strText] = this.text;
     data[parameters.strImageUrl] = this.imageUrl;

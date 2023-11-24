@@ -44,13 +44,13 @@ class HealthOrganization extends StatefulWidget {
 }
 
 class _HealthOrganizationState extends State<HealthOrganization> {
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
   late MyProviderViewModel providerViewModel;
   DateTime _selectedValue = DateTime.now();
   int selectedPosition = 0;
   bool firstTym = false;
   String? doctorsName;
-  CommonWidgets commonWidgets = new CommonWidgets();
+  CommonWidgets commonWidgets = CommonWidgets();
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
       <AvailableTimeSlotsModel>[];
@@ -67,7 +67,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     mInitialTime = DateTime.now();
     super.initState();
     getDataForProvider();
-    _providersBloc = new ProvidersBloc();
+    _providersBloc = ProvidersBloc();
   }
 
   @override
@@ -114,8 +114,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: <Color>[
-                Color(new CommonUtil().getMyPrimaryColor()),
-                Color(new CommonUtil().getMyGredientColor())
+                Color(CommonUtil().getMyPrimaryColor()),
+                Color(CommonUtil().getMyGredientColor())
               ],
                   stops: [
                 0.3,
@@ -431,7 +431,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                                   getFees(eachHospitalModel[i], false)),
                           fontsize: 16.0.sp,
                           fontWeight: FontWeight.w400,
-                          colors: Color(new CommonUtil().getMyPrimaryColor())),
+                          colors: Color(CommonUtil().getMyPrimaryColor())),
                     ),
                   ),
                   SizedBox(height: 5),
@@ -446,7 +446,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   void getDataForProvider() async {
     if (firstTym == false) {
       firstTym = true;
-      providerViewModel = new MyProviderViewModel();
+      providerViewModel = MyProviderViewModel();
     }
   }
 
@@ -455,7 +455,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     if (fees != null && fees != '') {
       if (fees != '0.00' && fees != '0') {
         try {
-          fees = new CommonUtil()
+          fees = CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(fees))
               .toString();
         } catch (e,stackTrace) {
@@ -509,7 +509,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   }
 
   Widget getHospitalProviderList(String doctorId) {
-    return new FutureBuilder<HealthOrganizationModel?>(
+    return FutureBuilder<HealthOrganizationModel?>(
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -536,7 +536,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
 
   Widget providerListWidget(List<HealthOrganizationResult>? hospitalList) {
     return (hospitalList != null && hospitalList.length > 0)
-        ? new ListView.builder(
+        ? ListView.builder(
             itemBuilder: (BuildContext ctx, int i) =>
                 hospitalListItem(ctx, i, hospitalList),
             itemCount: hospitalList.length,

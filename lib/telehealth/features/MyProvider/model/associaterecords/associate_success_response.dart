@@ -13,7 +13,7 @@ class AssociateSuccessResponse {
       if (json['result'] != null) {
             result = <Result>[];
             json['result'].forEach((v) {
-              result!.add(new Result.fromJson(v));
+              result!.add(Result.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class AssociateSuccessResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -45,7 +45,7 @@ class Result {
                 <HealthRecordShareDetailCollection>[];
             json['healthRecordShareDetailCollection'].forEach((v) {
               healthRecordShareDetailCollection!
-                  .add(new HealthRecordShareDetailCollection.fromJson(v));
+                  .add(HealthRecordShareDetailCollection.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -54,7 +54,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     if (this.healthRecordShareDetailCollection != null) {
       data['healthRecordShareDetailCollection'] = this
@@ -100,17 +100,17 @@ class HealthRecordShareDetailCollection {
       status = json['status'];
       startDateTime = json['startDateTime'];
       healthRecordShareStatus = json['healthRecordShareStatus'] != null
-              ? new HealthRecordShareStatus.fromJson(json['healthRecordShareStatus'])
+              ? HealthRecordShareStatus.fromJson(json['healthRecordShareStatus'])
               : null;
       modeOfShare = json['modeOfShare'] != null
-              ? new ModeOfShare.fromJson(json['modeOfShare'])
+              ? ModeOfShare.fromJson(json['modeOfShare'])
               : null;
       isActive = json['isActive'];
       createdBy = json['createdBy'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       healthRecordMetadata = json['healthRecordMetadata'] != null
-              ? new HealthRecordShareStatus.fromJson(json['healthRecordMetadata'])
+              ? HealthRecordShareStatus.fromJson(json['healthRecordMetadata'])
               : null;
       endDateTime = json['endDateTime'];
       id = json['id'];
@@ -120,7 +120,7 @@ class HealthRecordShareDetailCollection {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['healthRecordShare'] = this.healthRecordShare;
     data['status'] = this.status;
     data['startDateTime'] = this.startDateTime;
@@ -157,7 +157,7 @@ class HealthRecordShareStatus {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     return data;
   }
@@ -199,7 +199,7 @@ class ModeOfShare {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       referenceData = json['referenceData'] != null
-              ? new ReferenceData.fromJson(json['referenceData'])
+              ? ReferenceData.fromJson(json['referenceData'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -207,7 +207,7 @@ class ModeOfShare {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;
@@ -260,7 +260,7 @@ class ReferenceData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;

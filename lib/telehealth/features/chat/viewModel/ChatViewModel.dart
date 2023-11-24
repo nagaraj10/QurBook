@@ -237,7 +237,7 @@ class ChatViewModel extends ChangeNotifier {
       {HealthRecord healthRecord,
       @required PatientInfo patientInfo,
       @required DailyListAppointmentModel dailyListAppointmentModel}) {
-    List<String> associateRecords = new List();
+    List<String> associateRecords = List();
 
     if (healthRecord.associatedRecords != null &&
         healthRecord.associatedRecords.length > 0) {

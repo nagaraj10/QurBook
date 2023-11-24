@@ -63,26 +63,26 @@ class ResheduleAppointmentInfo {
       isHealthRecordShared = json['isHealthRecordShared'];
       sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'];
       doctorSession = json['doctorSession'] != null
-              ? new CreatedBy.fromJson(json['doctorSession'])
+              ? CreatedBy.fromJson(json['doctorSession'])
               : null;
       isActive = json['isActive'];
       lastModifiedBy = json['lastModifiedBy'] != null
-              ? new CreatedBy.fromJson(json['lastModifiedBy'])
+              ? CreatedBy.fromJson(json['lastModifiedBy'])
               : null;
       bookedFor = json['bookedFor'] != null
-              ? new CreatedBy.fromJson(json['bookedFor'])
+              ? CreatedBy.fromJson(json['bookedFor'])
               : null;
       createdBy = json['createdBy'] != null
-              ? new CreatedBy.fromJson(json['createdBy'])
+              ? CreatedBy.fromJson(json['createdBy'])
               : null;
       bookedBy = json['bookedBy'] != null
-              ? new CreatedBy.fromJson(json['bookedBy'])
+              ? CreatedBy.fromJson(json['bookedBy'])
               : null;
       bookingId = json['bookingId'];
       plannedStartDateTime = json['plannedStartDateTime'];
       plannedEndDateTime = json['plannedEndDateTime'];
       status =
-              json['status'] != null ? new CreatedBy.fromJson(json['status']) : null;
+              json['status'] != null ? CreatedBy.fromJson(json['status']) : null;
       doctorSessionId = json['doctorSessionId'];
       actualStartDateTime = json['actualStartDateTime'];
       actualEndDateTime = json['actualEndDateTime'];
@@ -99,7 +99,7 @@ class ResheduleAppointmentInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isFollowUp'] = this.isFollowUp;
     data['slotNumber'] = this.slotNumber;
     data['isHealthRecordShared'] = this.isHealthRecordShared;

@@ -4,7 +4,6 @@ import 'package:myfhb/common/CommonUtil.dart';
 
 import 'fetchGoogleFitData.dart';
 import '../../src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
-import '../model/myFHBResponseModel.dart';
 import '../model/LastSyncResponse.dart';
 import 'dart:convert' show json;
 import '../../constants/fhb_query.dart' as query;

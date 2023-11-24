@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:agora_rtc_engine/rtc_channel.dart';
-import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -20,8 +18,6 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/model/videocallStatus.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
@@ -84,7 +80,7 @@ class _CallPageState extends State<CallPage> {
   final hideStatus = Provider.of<HideProvider>(Get.context!, listen: false);
   final audioStatus =
       Provider.of<AudioCallProvider>(Get.context!, listen: false);
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void dispose() {
@@ -821,7 +817,7 @@ class _CallPageState extends State<CallPage> {
                         child: Text(
                           _infoStrings[index],
                           style: TextStyle(
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             fontSize: 16.0.sp,
                           ),
                         ),
@@ -867,9 +863,11 @@ class _CallPageState extends State<CallPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          FlatButton(
-                            child: Text('Decline'),
-                            onPressed: () async {
+                          FlatButtonWidget(
+                            bgColor: Colors.transparent,
+                            isSelected: true,
+                            title: 'Decline',
+                            onPress: () async {
                               Get.back();
                               var newStatus = VideoCallStatus();
                               newStatus.setDefaultValues();
@@ -880,9 +878,11 @@ class _CallPageState extends State<CallPage> {
                                     .update(newStatus.toMap());
                             },
                           ),
-                          FlatButton(
-                            child: Text('Switch'),
-                            onPressed: () async {
+                          FlatButtonWidget(
+                            bgColor: Colors.transparent,
+                            isSelected: true,
+                            title: 'Switch',
+                            onPress: () async {
                               var permissionStatus =
                                   await CommonUtil.askPermissionForCameraAndMic(
                                 isAudioCall: false,
@@ -1071,7 +1071,7 @@ class _CallPageState extends State<CallPage> {
               ],
             ),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   // if (Platform.isIOS) {
                   //   Navigator.pop(mContext);

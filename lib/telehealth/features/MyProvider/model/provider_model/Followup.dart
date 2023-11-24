@@ -15,7 +15,7 @@ class Followup {
     try {
       fee = json[parameters.strfee];
       followupIn = json[parameters.strfollowupIn] != null
-              ? new FollowupIn.fromJson(json[parameters.strfollowupIn])
+              ? FollowupIn.fromJson(json[parameters.strfollowupIn])
               : null;
       followupValue = json[parameters.strfollowupValue];
       followupType = json[parameters.strfollowupType];
@@ -25,7 +25,7 @@ class Followup {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strfee] = this.fee;
     if (this.followupIn != null) {
       data[parameters.strfollowupIn] = this.followupIn!.toJson();

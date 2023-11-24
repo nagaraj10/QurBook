@@ -13,12 +13,12 @@ class PatientAlertListModel {
       isSuccess = json['isSuccess'];
       result = json.containsKey('result')
               ? json['result'] != null
-                  ? new PatientAlertListResult.fromJson(json['result'])
+                  ? PatientAlertListResult.fromJson(json['result'])
                   : null
               : null;
       diagnostics = json.containsKey('diagnostics')
               ? json['diagnostics'] != null
-                  ? new Diagnostics.fromJson(json['diagnostics'])
+                  ? Diagnostics.fromJson(json['diagnostics'])
                   : null
               : null;
     } catch (e,stackTrace) {
@@ -27,7 +27,7 @@ class PatientAlertListModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -45,7 +45,7 @@ class Diagnostics {
 	}
 
 	Map<String, dynamic> toJson() {
-		final Map<String, dynamic> data = new Map<String, dynamic>();
+		final Map<String, dynamic> data = Map<String, dynamic>();
 		return data;
 	}
 }

@@ -34,10 +34,11 @@ class _ImageSliderState extends State<ImageSlider> {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(top: 30, right: 10),
-              child: OutlineButton(
+              child: OutlinedButton(
                   child: Text(variable.strClose),
-                  textColor: Colors.white70,
-                  borderSide: BorderSide(color: Colors.white70),
+                  style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white70,
+                  side: BorderSide(color: Colors.white70),),
                   onPressed: Navigator.of(context).pop),
             ),
             Expanded(

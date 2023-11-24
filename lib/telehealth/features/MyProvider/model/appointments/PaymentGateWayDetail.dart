@@ -26,7 +26,7 @@ class PaymentGatewayDetail {
       sourceId = json['sourceId'];
       sourceCode = json['sourceCode'];
       responseInfo = json['responseInfo'] != null
-              ? new ResponseInfo.fromJson(json['responseInfo'])
+              ? ResponseInfo.fromJson(json['responseInfo'])
               : null;
       createdOn = json['createdOn'];
       isActive = json['isActive'];
@@ -39,7 +39,7 @@ class PaymentGatewayDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['sourceId'] = this.sourceId;
     data['sourceCode'] = this.sourceCode;
     if (this.responseInfo != null) {
@@ -128,7 +128,7 @@ class ResponseInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['phone'] = this.phone;
     data['email'] = this.email;
@@ -164,7 +164,7 @@ class PaymentRequestResult {
     try {
       success = json['success'];
       paymentRequest = json['payment_request'] != null
-              ? new PaymentRequestModel.fromJson(json['payment_request'])
+              ? PaymentRequestModel.fromJson(json['payment_request'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -172,7 +172,7 @@ class PaymentRequestResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['success'] = this.success;
     if (this.paymentRequest != null) {
       data['payment_request'] = this.paymentRequest!.toJson();

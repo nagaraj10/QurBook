@@ -1,10 +1,8 @@
 
 import 'package:flutter/material.dart';
-import '../../common/CommonUtil.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../bloc/providers_block.dart';
 import '../models/MyProviderResponseNew.dart';
-import '../models/my_providers_response_list.dart';
 import '../../src/resources/network/ApiResponse.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';

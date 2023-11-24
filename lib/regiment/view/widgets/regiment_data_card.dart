@@ -966,7 +966,7 @@ class RegimentDataCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () async {
                           if (returnAction?.eid != null &&
                               (returnAction?.action ?? '') == startActivity) {
@@ -995,11 +995,14 @@ class RegimentDataCard extends StatelessWidget {
                                 .fetchRegimentData();
                           }
                         },
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              5.0.sp,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Color(CommonUtil().getMyPrimaryColor()),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(
+                                5.0.sp,
+                              ),
                             ),
                           ),
                         ),
@@ -1018,7 +1021,7 @@ class RegimentDataCard extends StatelessWidget {
                           padding: EdgeInsets.only(
                             left: 20.0.w,
                           ),
-                          child: RaisedButton(
+                          child: ElevatedButton(
                             onPressed: () async {
                               Provider.of<RegimentViewModel>(Get.context!,
                                       listen: false)
@@ -1028,11 +1031,14 @@ class RegimentDataCard extends StatelessWidget {
                                       listen: false)
                                   .fetchRegimentData();
                             },
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  5.0.sp,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0.sp,
+                                  ),
                                 ),
                               ),
                             ),

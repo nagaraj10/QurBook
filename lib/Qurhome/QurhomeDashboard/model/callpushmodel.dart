@@ -19,7 +19,7 @@ class CallPushNSModel {
     try {
       recipients = json[c_recipients].cast<String>();
       messageDetails = json[c_messageDetails] != null
-              ? new MessageDetails.fromJson(json[c_messageDetails])
+              ? MessageDetails.fromJson(json[c_messageDetails])
               : null;
       transportMedium = json[c_transportMedium].cast<String>();
       saveMessage = json[c_saveMessage];
@@ -29,7 +29,7 @@ class CallPushNSModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[c_recipients] = this.recipients;
     if (this.messageDetails != null) {
       data[c_messageDetails] = this.messageDetails!.toJson();

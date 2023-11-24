@@ -13,7 +13,7 @@ class ChatHistoryModel {
       if (json['result'] != null) {
             result = <ChatHistoryResult?>[];
             json['result'].forEach((v) {
-              result!.add(new ChatHistoryResult.fromJson(v));
+              result!.add(ChatHistoryResult.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class ChatHistoryModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v!.toJson()).toList();
@@ -62,7 +62,7 @@ class ChatHistoryResult {
               json['isCommonContent'] != null ? json['isCommonContent'] : false;
       //messageType = json['type'];
       messages = json['messages'] != null
-              ? new Messages.fromJson(json['messages'])
+              ? Messages.fromJson(json['messages'])
               : null;
       documentId = json['documentId'];
     } catch (e,stackTrace) {
@@ -71,7 +71,7 @@ class ChatHistoryResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['chatListId'] = this.chatListId;
     data['deliveredDateTime'] = this.deliveredDateTime;
@@ -115,7 +115,7 @@ class Messages {
       isread = json['isread'];
       content = json['content'];
       timestamp = json['timestamp'] != null
-              ? new Timestamp.fromJson(json['timestamp'])
+              ? Timestamp.fromJson(json['timestamp'])
               : null;
       isSentViaSheela = (json['isSentViaSheela']??false);
     } catch (e,stackTrace) {
@@ -124,7 +124,7 @@ class Messages {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['idTo'] = this.idTo;
     data['type'] = this.type;
@@ -155,7 +155,7 @@ class Timestamp {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_seconds'] = this.sSeconds;
     data['_nanoseconds'] = this.sNanoseconds;
     return data;

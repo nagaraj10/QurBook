@@ -14,7 +14,7 @@ class GetRecordIdsFilter {
       if (json['result'] != null) {
             result = <Result>[];
             json['result'].forEach((v) {
-              result!.add(new Result.fromJson(v));
+              result!.add(Result.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -23,7 +23,7 @@ class GetRecordIdsFilter {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -68,7 +68,7 @@ class Result {
       healthRecordTypeId = json['healthRecordTypeId'];
       healthRecordTypeName = json['healthRecordTypeName'];
       metadata = json['metadata'] != null
-              ? new Metadata.fromJson(json['metadata'])
+              ? Metadata.fromJson(json['metadata'])
               : null;
       userId = json['userId'];
       isBookmarked = json['isBookmarked'];
@@ -81,7 +81,7 @@ class Result {
       if (json['healthRecordCollection'] != null) {
             healthRecordCollection = <HealthRecordCollection>[];
             json['healthRecordCollection'].forEach((v) {
-              healthRecordCollection!.add(new HealthRecordCollection.fromJson(v));
+              healthRecordCollection!.add(HealthRecordCollection.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -90,7 +90,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['healthRecordTypeId'] = this.healthRecordTypeId;
     data['healthRecordTypeName'] = this.healthRecordTypeName;
@@ -140,10 +140,10 @@ class Metadata {
   Metadata.fromJson(Map<String, dynamic> json) {
     try {
       healthRecordCategory = json['healthRecordCategory'] != null
-              ? new HealthRecordCategory.fromJson(json['healthRecordCategory'])
+              ? HealthRecordCategory.fromJson(json['healthRecordCategory'])
               : null;
       healthRecordType = json['healthRecordType'] != null
-              ? new HealthRecordType.fromJson(json['healthRecordType'])
+              ? HealthRecordType.fromJson(json['healthRecordType'])
               : null;
       memoText = json['memoText'];
       hasVoiceNotes = json['hasVoiceNotes'];
@@ -159,7 +159,7 @@ class Metadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.healthRecordCategory != null) {
       data['healthRecordCategory'] = this.healthRecordCategory!.toJson();
     }
@@ -226,7 +226,7 @@ class HealthRecordCategory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['categoryName'] = this.categoryName;
     data['categoryDescription'] = this.categoryDescription;
@@ -300,7 +300,7 @@ class HealthRecordType {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['description'] = this.description;

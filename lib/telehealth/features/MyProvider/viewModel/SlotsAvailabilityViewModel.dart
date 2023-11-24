@@ -6,8 +6,8 @@ import 'package:myfhb/telehealth/features/MyProvider/services/slotsAvailabilityS
 
 class SlotsAvailabilityViewModel{
 
-  SlotsAvailabilityService slotsAvailabilityService = new SlotsAvailabilityService();
-  SlotsResultModel sessionList = new SlotsResultModel();
+  SlotsAvailabilityService slotsAvailabilityService = SlotsAvailabilityService();
+  SlotsResultModel sessionList = SlotsResultModel();
 
 
   Future<AvailableTimeSlotsModel?> fetchTimeSlots(String date, String doctorId,String healthOrgId) async {

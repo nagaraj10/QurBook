@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
@@ -20,12 +19,9 @@ import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRep
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 
-import 'AppleHealthSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
-import 'NonAdheranceSettingsScreen.dart';
 
 class CareGiverSettings extends StatefulWidget {
   @override
@@ -78,7 +74,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
   void initState() {
     mInitialTime = DateTime.now();
     selectedList = [];
-    _deviceModel = new DevicesViewModel();
+    _deviceModel = DevicesViewModel();
     super.initState();
 
     getDeviceSelectionValues();
@@ -247,13 +243,17 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
         title: Text('Are you sure?'),
         content: Text('Do you want to update the changes'),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () => closeDialog(),
-            child: Text('No'),
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => closeDialog(),
+            title: 'No',
           ),
-          FlatButton(
-            onPressed: () => createDeviceSelection(),
-            child: Text('Yes'),
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => createDeviceSelection(),
+            title: 'Yes',
           ),
         ],
       ),
@@ -444,7 +444,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                               child: Switch(
                                 value: allowVitalNotification!,
                                 activeColor:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
@@ -468,7 +468,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                               child: Switch(
                                 value: allowSymptomsNotification!,
                                 activeColor:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
@@ -488,7 +488,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                               child: Switch(
                                 value: allowAppointmentNotification!,
                                 activeColor:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;

@@ -13,7 +13,7 @@ class TotalCountModel {
       if (json['payload'] != null) {
             payload = <Payload>[];
             json['payload'].forEach((v) {
-              payload!.add(new Payload.fromJson(v));
+              payload!.add(Payload.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class TotalCountModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
       data['payload'] = this.payload!.map((v) => v.toJson()).toList();
@@ -45,7 +45,7 @@ class Payload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['count'] = this.count;
     return data;
   }

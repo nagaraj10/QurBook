@@ -63,7 +63,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['userid'] = this.userid;
     data['username'] = this.username;
     data['fullname'] = this.fullname;

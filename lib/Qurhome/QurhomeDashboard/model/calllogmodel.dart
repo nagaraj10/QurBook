@@ -32,7 +32,7 @@ class CallLogModel {
       patientName = json['patientName'];
       recipientId = json['recipientId'];
       additionalInfo = json["additionalInfo"] != null
-          ? new AdditionalInfo.fromJson(json["additionalInfo"])
+          ? AdditionalInfo.fromJson(json["additionalInfo"])
           : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -40,7 +40,7 @@ class CallLogModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['callerUser'] = this.callerUser;
       data['recipientUser'] = this.recipientUser;
@@ -93,7 +93,7 @@ class CallEndModel {
       patientName = json['patientName'];
       recipientId = json['recipientId'];
       additionalInfo = json["additionalInfo"] != null
-          ? new AdditionalInfo.fromJson(json["additionalInfo"])
+          ? AdditionalInfo.fromJson(json["additionalInfo"])
           : null;
       id = json['id'];
     } catch (e,stackTrace) {
@@ -102,7 +102,7 @@ class CallEndModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['callerUser'] = this.callerUser;
       data['recipientUser'] = this.recipientUser;
@@ -131,7 +131,7 @@ class AdditionalInfo {
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     try {
       location = json["location"] != null
-          ? new Location.fromJson(json["location"])
+          ? Location.fromJson(json["location"])
           : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -140,7 +140,7 @@ class AdditionalInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       if (this.location != null) {
         data["location"] = this.location!.toJson();
@@ -171,7 +171,7 @@ class CallLogResponseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['isSuccess'] = this.isSuccess;
       data['message'] = this.message;
@@ -195,7 +195,7 @@ class CallRecordModel {
     try {
       isSuccess = json['isSuccess'];
       result =
-          json['result'] != null ? new Result.fromJson(json['result']) : null;
+          json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
@@ -203,7 +203,7 @@ class CallRecordModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['isSuccess'] = this.isSuccess;
       if (this.result != null) {
@@ -234,7 +234,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['resourceId'] = this.resourceId;
     data['sid'] = this.sid;
     return data;
@@ -256,7 +256,7 @@ class CallLogErrorResponseModel {
       isSuccess = json['isSuccess'];
       message = json['message'];
       response = json['response'] != null
-              ? new ResponseData.fromJson(json['response'])
+              ? ResponseData.fromJson(json['response'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -264,7 +264,7 @@ class CallLogErrorResponseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
@@ -284,14 +284,14 @@ class ResponseData {
   ResponseData.fromJson(Map<String, dynamic> json) {
     try {
       count = json['count'];
-      data = json['data'] != null ? new DataModel.fromJson(json['data']) : null;
+      data = json['data'] != null ? DataModel.fromJson(json['data']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['count'] = this.count;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
@@ -314,7 +314,7 @@ class DataModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['msg'] = this.msg;
     return data;
   }

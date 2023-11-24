@@ -112,7 +112,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               child: GridView.builder(
-                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: (itemWidth / itemHeight),
                 ),
@@ -219,8 +219,8 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                           colors: [
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                            Color(new CommonUtil().getMyGredientColor())
+                            Color(CommonUtil().getMyPrimaryColor()),
+                            Color(CommonUtil().getMyGredientColor())
                           ]).createShader(bounds);
                     },
                     blendMode: BlendMode.srcATop,

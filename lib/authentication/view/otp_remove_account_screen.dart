@@ -441,7 +441,7 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
           keyboardType: TextInputType.number,
-          autovalidate: _autoValidateBool,
+          autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
           obscureText: isPassword,
           style: TextStyle(
             fontSize: 16.0.sp,

@@ -47,7 +47,7 @@ class Doctor {
                 <DoctorProfessionalDetailCollection>[];
             json['doctorProfessionalDetailCollection'].forEach((v) {
               doctorProfessionalDetailCollection!
-                  .add(new DoctorProfessionalDetailCollection.fromJson(v));
+                  .add(DoctorProfessionalDetailCollection.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -56,7 +56,7 @@ class Doctor {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strId] = id;
     data[parameters.strSpecilization] = specialization;
     data[parameters.strisTelehealthEnabled] = isTelehealthEnabled;

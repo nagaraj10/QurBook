@@ -1,5 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -8,14 +6,7 @@ import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/main.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
@@ -117,7 +108,7 @@ class _ResultPage extends State<PaymentResultPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: new Scaffold(
+      child: Scaffold(
         body: Container(
           child: Center(
             child: Container(
@@ -154,13 +145,16 @@ class _ResultPage extends State<PaymentResultPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          FlatButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                side: BorderSide(color: Colors.white)),
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            textColor: Colors.white,
-                            padding: EdgeInsets.all(12.0),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  side: BorderSide(color: Colors.white)),
+                              backgroundColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.all(12.0),
+                            ),
                             onPressed: () {
                               Provider.of<CheckoutPageProvider>(context,
                                       listen: false)
@@ -224,14 +218,15 @@ class _ResultPage extends State<PaymentResultPage> {
                                       context,
                                       listen: false)
                                   .isMembershipCart),
-                              child: FlatButton(
+                              child: ElevatedButton(
+  style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                     side: BorderSide(color: Colors.white)),
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                textColor: Colors.white,
-                                padding: EdgeInsets.all(12.0),
+                                backgroundColor:
+                                    Color(CommonUtil().getMyPrimaryColor()),
+                                foregroundColor: Colors.white,
+                                padding: EdgeInsets.all(12.0),),
                                 onPressed: () async {
                                   if (widget.isPaymentFromNotification) {
                                     Get.offAllNamed(
@@ -269,14 +264,16 @@ class _ResultPage extends State<PaymentResultPage> {
                           : SizedBox.shrink(),
                       ((widget.isPaymentFails ?? false) &&
                               ((widget.cartUserId ?? '').isNotEmpty))
-                          ? FlatButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  side: BorderSide(color: Colors.white)),
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                              textColor: Colors.white,
-                              padding: EdgeInsets.all(12.0),
+                          ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    side: BorderSide(color: Colors.white)),
+                                backgroundColor:
+                                    Color(CommonUtil().getMyPrimaryColor()),
+                                foregroundColor: Colors.white,
+                                padding: EdgeInsets.all(12.0),
+                              ),
                               onPressed: () {
                                 if (widget.isPaymentFromNotification) {
                                   Get.offAllNamed(
@@ -315,13 +312,13 @@ class _ResultPage extends State<PaymentResultPage> {
 
   Widget getRetryButton() {
     if (!status! && !widget.isFreePlan) {
-      return FlatButton(
+      return ElevatedButton( style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
             side: BorderSide(color: Colors.white)),
-        color: Color(new CommonUtil().getMyPrimaryColor()),
-        textColor: Colors.white,
-        padding: EdgeInsets.all(12.0),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        foregroundColor: Colors.white,
+        padding: EdgeInsets.all(12.0),),
         onPressed: () {
           Provider.of<CheckoutPageProvider>(context, listen: false)
               .loader(false, isNeedRelod: true);

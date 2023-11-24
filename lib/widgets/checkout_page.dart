@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -58,8 +58,8 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-  ScrollController _controller = new ScrollController();
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  ScrollController _controller = ScrollController();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   @override
   void initState() {
@@ -153,7 +153,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               return SafeArea(
                 child: SizedBox(
                   height: 1.sh / 4.5,
-                  child: new Center(
+                  child: Center(
                     child: SizedBox(
                       width: 30.0.h,
                       height: 30.0.h,
@@ -205,7 +205,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         ? tabHeader3
                                         : mobileHeader3),
                               ),
-                              FlatButton(
+                              ElevatedButton(
                                 onPressed: () {
                                   if (widget.isFromNotification == false) {
                                     Provider.of<PlanWizardViewModel>(context,
@@ -273,141 +273,140 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           : mobileHeader1),
                                             ),
                                             Spacer(),
-                                            FlatButton(
-                                                onPressed: () {
-                                                  if (widget
-                                                          .isFromNotification ==
-                                                      false) {
-                                                    showDialog(
-                                                        barrierDismissible:
-                                                            false,
-                                                        context: Get.context!,
-                                                        builder: (context) {
-                                                          return AlertDialog(
-                                                            insetPadding:
-                                                                EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            8),
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .transparent,
-                                                            content: Container(
-                                                              width: double
-                                                                  .maxFinite,
-                                                              height: 250.0,
-                                                              child: Column(
-                                                                children: <
-                                                                    Widget>[
-                                                                  Column(
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Card(
-                                                                        shape:
-                                                                            RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(4.0),
-                                                                        ),
+                                            TextButton(
+                                              onPressed: () {
+                                                if (widget.isFromNotification ==
+                                                    false) {
+                                                  showDialog(
+                                                      barrierDismissible: false,
+                                                      context: Get.context!,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          insetPadding:
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          8),
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          content: Container(
+                                                            width: double
+                                                                .maxFinite,
+                                                            height: 250.0,
+                                                            child: Column(
+                                                              children: <Widget>[
+                                                                Column(
+                                                                  children: <Widget>[
+                                                                    Card(
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(4.0),
+                                                                      ),
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            160,
+                                                                        padding:
+                                                                            EdgeInsets.all(8.0),
                                                                         child:
-                                                                            Container(
-                                                                          height:
-                                                                              160,
-                                                                          padding:
-                                                                              EdgeInsets.all(8.0),
-                                                                          child:
-                                                                              Column(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceEvenly,
-                                                                            children: <Widget>[
-                                                                              Center(
-                                                                                child: Text(
-                                                                                  CLEAR_CART_MSG,
-                                                                                  style: TextStyle(fontSize: CommonUtil().isTablet! ? tabHeader3 : mobileHeader3, fontWeight: FontWeight.w500),
-                                                                                  textAlign: TextAlign.center,
+                                                                            Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceEvenly,
+                                                                          children: <Widget>[
+                                                                            Center(
+                                                                              child: Text(
+                                                                                CLEAR_CART_MSG,
+                                                                                style: TextStyle(fontSize: CommonUtil().isTablet! ? tabHeader3 : mobileHeader3, fontWeight: FontWeight.w500),
+                                                                                textAlign: TextAlign.center,
+                                                                              ),
+                                                                            ),
+                                                                            SizedBoxWidget(
+                                                                              height: 10,
+                                                                            ),
+                                                                            Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                              children: <Widget>[
+                                                                                SizedBoxWithChild(
+                                                                                  width: CommonUtil().isTablet! ? 120 : 90,
+                                                                                  height: CommonUtil().isTablet! ? 50 : 40,
+                                                                                  child: ElevatedButton(
+                                                                                    style: ElevatedButton.styleFrom(
+                                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+                                                                                      backgroundColor: Colors.transparent,
+                                                                                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                                                                                      padding: EdgeInsets.all(8.0),
+                                                                                    ),
+                                                                                    onPressed: () {
+                                                                                      try {
+                                                                                        Navigator.pop(context);
+                                                                                      } catch (e, stackTrace) {
+                                                                                        //print(e);
+                                                                                        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                                                                                      }
+                                                                                    },
+                                                                                    child: TextWidget(
+                                                                                      text: 'Cancel',
+                                                                                      fontsize: 14.0.sp,
+                                                                                    ),
+                                                                                  ),
                                                                                 ),
-                                                                              ),
-                                                                              SizedBoxWidget(
-                                                                                height: 10,
-                                                                              ),
-                                                                              Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                                children: <Widget>[
-                                                                                  SizedBoxWithChild(
-                                                                                    width: CommonUtil().isTablet! ? 120 : 90,
-                                                                                    height: CommonUtil().isTablet! ? 50 : 40,
-                                                                                    child: FlatButton(
+                                                                                SizedBoxWithChild(
+                                                                                  width: CommonUtil().isTablet! ? 120 : 90,
+                                                                                  height: CommonUtil().isTablet! ? 50 : 40,
+                                                                                  child: ElevatedButton(
+                                                                                    style: ElevatedButton.styleFrom(
                                                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
-                                                                                      color: Colors.transparent,
-                                                                                      textColor: Color(CommonUtil().getMyPrimaryColor()),
+                                                                                      backgroundColor: Colors.transparent,
+                                                                                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
                                                                                       padding: EdgeInsets.all(8.0),
-                                                                                      onPressed: () {
-                                                                                        try {
+                                                                                    ),
+                                                                                    onPressed: () {
+                                                                                      try {
+                                                                                        if (widget.isFromNotification == false) {
+                                                                                          Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
                                                                                           Navigator.pop(context);
-                                                                                        } catch (e,stackTrace) {
-                                                                                          //print(e);
-                                                                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
                                                                                         }
-                                                                                      },
-                                                                                      child: TextWidget(
-                                                                                        text: 'Cancel',
-                                                                                        fontsize: 14.0.sp,
-                                                                                      ),
+                                                                                      } catch (e, stackTrace) {
+                                                                                        //print(e);
+                                                                                        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                                                                                      }
+                                                                                    },
+                                                                                    child: TextWidget(
+                                                                                      text: ok,
+                                                                                      fontsize: 14.0.sp,
                                                                                     ),
                                                                                   ),
-                                                                                  SizedBoxWithChild(
-                                                                                    width: CommonUtil().isTablet! ? 120 : 90,
-                                                                                    height: CommonUtil().isTablet! ? 50 : 40,
-                                                                                    child: FlatButton(
-                                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
-                                                                                      color: Colors.transparent,
-                                                                                      textColor: Color(CommonUtil().getMyPrimaryColor()),
-                                                                                      padding: EdgeInsets.all(8.0),
-                                                                                      onPressed: () {
-                                                                                        try {
-                                                                                          if (widget.isFromNotification == false) {
-                                                                                            Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
-                                                                                            Navigator.pop(context);
-                                                                                          }
-                                                                                        } catch (e,stackTrace) {
-                                                                                          //print(e);
-                                                                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-                                                                                        }
-                                                                                      },
-                                                                                      child: TextWidget(
-                                                                                        text: ok,
-                                                                                        fontsize: 14.0.sp,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                              CommonUtil().isTablet!
-                                                                                  ? SizedBoxWidget(
-                                                                                      height: 8.0.h,
-                                                                                    )
-                                                                                  : SizedBox.shrink(),
-                                                                            ],
-                                                                          ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            CommonUtil().isTablet!
+                                                                                ? SizedBoxWidget(
+                                                                                    height: 8.0.h,
+                                                                                  )
+                                                                                : SizedBox.shrink(),
+                                                                          ],
                                                                         ),
                                                                       ),
-                                                                    ],
-                                                                  )
-                                                                ],
-                                                              ),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                              ],
                                                             ),
-                                                          );
-                                                        });
-                                                  }
-                                                },
-                                                child: Text(
-                                                  'Clear cart',
-                                                  style: TextStyle(
-                                                      color: widget
-                                                              .isFromNotification
-                                                          ? Colors.grey
-                                                          : Colors
-                                                              .redAccent[700]),
-                                                ))
+                                                          ),
+                                                        );
+                                                      });
+                                                }
+                                              },
+                                              child: Text('Clear cart'),
+                                              style: TextButton.styleFrom(
+                                                foregroundColor:
+                                                    widget.isFromNotification
+                                                        ? Colors.grey
+                                                        : Colors.redAccent[700],
+                                              ),
+                                            )
                                           ],
                                         ),
                                         Divider(),
@@ -642,9 +641,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 begin: Alignment.centerLeft,
                                                 end: Alignment.centerRight,
                                                 colors: [
-                                                  Color(new CommonUtil()
+                                                  Color(CommonUtil()
                                                       .getMyPrimaryColor()),
-                                                  Color(new CommonUtil()
+                                                  Color(CommonUtil()
                                                       .getMyGredientColor())
                                                 ],
                                               ),
@@ -1034,7 +1033,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                     .isTablet!
                                                                 ? 50
                                                                 : 40,
-                                                            child: FlatButton(
+                                                            child: ElevatedButton(style: ElevatedButton.styleFrom(
                                                               shape: RoundedRectangleBorder(
                                                                   borderRadius:
                                                                       BorderRadius
@@ -1044,14 +1043,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                       color: Color(
                                                                           CommonUtil()
                                                                               .getMyPrimaryColor()))),
-                                                              color: Colors
+                                                              backgroundColor: Colors
                                                                   .transparent,
-                                                              textColor: Color(
+                                                              foregroundColor: Color(
                                                                   CommonUtil()
                                                                       .getMyPrimaryColor()),
                                                               padding:
                                                                   EdgeInsets
-                                                                      .all(8.0),
+                                                                      .all(8.0),),
                                                               onPressed: () {
                                                                 try {
                                                                   Navigator.pop(
@@ -1079,24 +1078,37 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                     .isTablet!
                                                                 ? 50
                                                                 : 40,
-                                                            child: FlatButton(
-                                                              shape: RoundedRectangleBorder(
+                                                            child:
+                                                                ElevatedButton(
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
                                                                   borderRadius:
                                                                       BorderRadius
                                                                           .circular(
                                                                               12.0),
-                                                                  side: BorderSide(
-                                                                      color: Color(
-                                                                          CommonUtil()
-                                                                              .getMyPrimaryColor()))),
-                                                              color: Colors
-                                                                  .transparent,
-                                                              textColor: Color(
-                                                                  CommonUtil()
-                                                                      .getMyPrimaryColor()),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(8.0),
+                                                                  side:
+                                                                      BorderSide(
+                                                                    color:
+                                                                        Color(
+                                                                      CommonUtil()
+                                                                          .getMyPrimaryColor(),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                foregroundColor:
+                                                                    Color(CommonUtil()
+                                                                        .getMyPrimaryColor()),
+                                                                padding: const
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                              ),
                                                               onPressed:
                                                                   () async {
                                                                 try {

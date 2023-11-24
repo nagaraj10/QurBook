@@ -13,14 +13,14 @@ class SheelaBadgeModel {
       isSuccess = json['isSuccess'];
       message = json['message'];
       result =
-          json['result'] != null ? new SheelaBadgeResult.fromJson(json['result']) : null;
+          json['result'] != null ? SheelaBadgeResult.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
@@ -51,7 +51,7 @@ class SheelaBadgeResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['queueCount'] = this.queueCount;
    /* if (this.queueDetails != null) {
       data['queueDetails'] = this.queueDetails!.map((v) => v.toJson()).toList();
@@ -70,7 +70,7 @@ class QueueDetails {
     try {
       sheelaQueueId = json['sheelaQueueId'];
       messageDetails = json['messageDetails'] != null
-              ? new MessageDetails.fromJson(json['messageDetails'])
+              ? MessageDetails.fromJson(json['messageDetails'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -78,7 +78,7 @@ class QueueDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['sheelaQueueId'] = this.sheelaQueueId;
     if (this.messageDetails != null) {
       data['messageDetails'] = this.messageDetails!.toJson();
@@ -105,14 +105,14 @@ class MessageDetails {
     try {
       source = json['source'];
       content =
-          json['content'] != null ? new Content.fromJson(json['content']) : null;
+          json['content'] != null ? Content.fromJson(json['content']) : null;
       payload =
-          json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+          json['payload'] != null ? Payload.fromJson(json['payload']) : null;
       rawMessage = json['rawMessage'] != null
-              ? new Content.fromJson(json['rawMessage'])
+              ? Content.fromJson(json['rawMessage'])
               : null;
       messageContent = json['messageContent'] != null
-              ? new MessageContent.fromJson(json['messageContent'])
+              ? MessageContent.fromJson(json['messageContent'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -120,7 +120,7 @@ class MessageDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['source'] = this.source;
     if (this.content != null) {
       data['content'] = this.content!.toJson();
@@ -154,7 +154,7 @@ class Content {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['messageBody'] = this.messageBody;
     data['messageTitle'] = this.messageTitle;
     return data;
@@ -188,7 +188,7 @@ class Payload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['type'] = this.type;
     data['priority'] = this.priority;
     data['redirectTo'] = this.redirectTo;
@@ -222,7 +222,7 @@ class MessageContent {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['messageBody'] = this.messageBody;
     data['messageTitle'] = this.messageTitle;
     data['rawMessageBody'] = this.rawMessageBody;

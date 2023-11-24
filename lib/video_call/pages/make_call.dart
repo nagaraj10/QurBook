@@ -5,7 +5,6 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
@@ -173,7 +172,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
 
   // void callApiToUpdateNonAppointment() {
   //   String nonAppointmentUrl = 'call-log/non-appointment-call';
-  //   Map<String, dynamic> body = new Map();
+  //   Map<String, dynamic> body = Map();
   //   final now = DateTime.now();
   //   String endTime =
   //       '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';

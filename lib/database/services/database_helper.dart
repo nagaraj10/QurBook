@@ -1,6 +1,5 @@
 
 import 'dart:async';
-import 'dart:io' as io;
 
 import '../model/CountryMetrics.dart';
 import '../model/UnitsMesurement.dart';

@@ -51,22 +51,22 @@ class BillsList extends StatefulWidget {
       this.isFromBills);
 
   @override
-  _BillsListState createState() => new _BillsListState();
+  _BillsListState createState() => _BillsListState();
 }
 
 class _BillsListState extends State<BillsList> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
   List<HealthRecordCollection> mediMasterId = [];
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     super.initState();
   }
@@ -90,7 +90,7 @@ class _BillsListState extends State<BillsList> {
   Widget getWidgetToDisplayBillsList(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionBills);
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -154,7 +154,7 @@ class _BillsListState extends State<BillsList> {
             if (mediaMetaInfoObj != null &&
                 (mediaMetaInfoObj.healthRecordCollection?.length ?? 0) > 0) {
               mediMasterId =
-                  new CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
+                  CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
               if (mediMasterId.length > 0) {
                 widget.healthRecordSelected(
                     mediaMetaInfoObj.id, mediMasterId, condition);
@@ -213,7 +213,7 @@ class _BillsListState extends State<BillsList> {
                 mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                 height: 25.0.h,
                 width: 25.0.h,
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
                 errorBuilder: (context, error, stackTrace) => SizedBox(),
               ),
             ),
@@ -240,7 +240,7 @@ class _BillsListState extends State<BillsList> {
                   ),
                   Text(
                     mediaMetaInfoObj.createdOn != ''
-                        ? new FHBUtils()
+                        ? FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn)
                         : '',
                     style: TextStyle(
@@ -264,7 +264,7 @@ class _BillsListState extends State<BillsList> {
                               AssetImage(variable.icon_record_fav_active),
                               //TODO chnage theme
                               color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyPrimaryColor()),
                               size: CommonUtil().isTablet!
                                   ? tabHeader2
                                   : mobileHeader2,
@@ -277,7 +277,7 @@ class _BillsListState extends State<BillsList> {
                                   : mobileHeader2,
                             ),
                       onPressed: () {
-                        new CommonUtil()
+                        CommonUtil()
                             .bookMarkRecord(mediaMetaInfoObj, _refresh);
                       }),
                   (mediaMetaInfoObj.metadata!.hasVoiceNotes != null &&
@@ -290,7 +290,7 @@ class _BillsListState extends State<BillsList> {
                   widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                       ? Icon(
                           Icons.done,
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: Color(CommonUtil().getMyPrimaryColor()),
                         )
                       : SizedBox(),
                 ],
@@ -303,9 +303,9 @@ class _BillsListState extends State<BillsList> {
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+          .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Container(
@@ -315,7 +315,7 @@ class _BillsListState extends State<BillsList> {
             decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
           );
         } else {
-          return new Shimmer.fromColors(
+          return Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: Container(

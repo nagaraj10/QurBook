@@ -9,8 +9,6 @@ import '../model/patientlogin_model.dart';
 import '../model/patientsignup_model.dart';
 import '../model/resend_otp_model.dart';
 import '../service/authservice.dart';
-import 'dart:convert';
-import 'package:myfhb/src/resources/network/api_services.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();

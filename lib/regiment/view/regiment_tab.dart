@@ -782,14 +782,14 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   }
 
   Widget getMasterRegimenList() {
-    return new FutureBuilder<RegimentResponseModel>(
+    return FutureBuilder<RegimentResponseModel>(
       future: getMasterData(),
       builder: (BuildContext context, snapshot) {
         /*if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,

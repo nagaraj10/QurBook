@@ -19,7 +19,7 @@ class CancelAppointmentsService {
   final String _baseUrl = Constants.BASE_URL;
   String? authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-  HeaderRequest headerRequest = new HeaderRequest();
+  HeaderRequest headerRequest = HeaderRequest();
 
   Future<CancelAppointmentModel> getCancelAppointment(
       List<String?> doctorIds, List<String?> dates) async {
@@ -36,7 +36,7 @@ class CancelAppointmentsService {
 
   Future<dynamic> getApiForCancelAppointment(
       String url, String jsonBody) async {
-    Map<String, String> requestHeadersAuthContent = new Map();
+    Map<String, String> requestHeadersAuthContent = Map();
 
 //    requestHeadersAuthContent['Content-type'] = 'application/json';
 //    requestHeadersAuthContent['authorization'] =

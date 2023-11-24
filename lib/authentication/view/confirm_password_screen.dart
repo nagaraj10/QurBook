@@ -140,7 +140,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                 ),
                               ),
                               controller: CodeController,
-                              autovalidate: _autoValidateBool,
+                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                               validator: (value) {
                                 return AuthenticationValidator()
                                     .phoneOtpValidation(
@@ -162,7 +162,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                   ),
-                                  autovalidate: _autoValidateBool,
+                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                                   obscureText: _isHidden,
                                   decoration: InputDecoration(
                                     hintText: strNewPasswordHintTxt,
@@ -208,7 +208,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                   ),
-                                  autovalidate: _autoValidateBool,
+                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                                   obscureText: _isHiddenSecondary,
                                   decoration: InputDecoration(
                                     hintText: strNewPasswordAgainHintText,

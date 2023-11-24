@@ -54,7 +54,7 @@ class ClaimRecordCreate extends StatefulWidget {
 
 class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
   int _current = 0;
   int index = 0;
   int length = 0;
@@ -73,7 +73,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   FocusNode dateOfBirthFocus = FocusNode();
 
   late FamilyListBloc _familyListBloc;
-  FamilyMembers? familyData = new FamilyMembers();
+  FamilyMembers? familyData = FamilyMembers();
   List<SharedByUsers> _familyNames = [];
   bool isFamilyChanged = false;
 
@@ -105,14 +105,14 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     // TODO: implement initState
     super.initState();
     _healthReportListForUserRepository =
-        new HealthReportListForUserRepository();
+        HealthReportListForUserRepository();
     if (widget.imagePath!.isNotEmpty) {
       length = widget.imagePath!.length;
       index = 1;
     }
 
     try {
-      claimAmountTotal = new CommonUtil().getClaimAmount();
+      claimAmountTotal = CommonUtil().getClaimAmount();
       claimAmountTotal = json.decode(claimAmountTotal!);
       if (claimAmountTotal!.contains('.')) {
         claimAmountTotal = claimAmountTotal!.contains(".")
@@ -123,8 +123,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
 
-    memberShipStartDate = new CommonUtil().getMemberSipStartDate();
-    memberShipEndDate = new CommonUtil().getMemberSipEndDate();
+    memberShipStartDate = CommonUtil().getMemberSipStartDate();
+    memberShipEndDate = CommonUtil().getMemberSipEndDate();
     isActiveMemberShipSelected = PreferenceUtil.getIfMemberShipIsAcive();
 
     memberShipStartDate = json.decode(memberShipStartDate!);
@@ -133,14 +133,14 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     initializeData();
 
     if (length == 1 &&
-        new CommonUtil().checkIfFileIsPdf(widget.imagePath![0]!)) {
+        CommonUtil().checkIfFileIsPdf(widget.imagePath![0]!)) {
       ispdfPresent = true;
       pdfFile = File(widget.imagePath![0]!);
       final fileNoun = pdfFile.path.split('/').last;
       pdfFileName = fileNoun;
     }
 
-    _familyListBloc = new FamilyListBloc();
+    _familyListBloc = FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
   }
 
@@ -272,7 +272,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             enableInteractiveSelection: false,
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
-            inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             style: fhbBasicWidget.getTextStyleForValue(),
             decoration: InputDecoration(
               enabledBorder: UnderlineInputBorder(
@@ -581,10 +581,10 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     if (sharedByMeList == null) {
       sharedByMeList = [];
       sharedByMeList
-          .add(new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
+          .add(SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     } else {
       sharedByMeList.insert(
-          0, new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
+          0, SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     }
     if (_familyNames.length == 0) {
       for (int i = 0; i < sharedByMeList.length; i++) {
@@ -709,7 +709,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                                 Navigator.of(context).pop();
                               },
                             )),
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                           ),
                         ])
                   ]));
@@ -749,9 +749,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   void createClaim(String? healthRecordID) {
     var postMediaData = Map<String, dynamic>();
     var membership = {};
-    String memberShipId = new CommonUtil().getMemberShipID();
+    String memberShipId = CommonUtil().getMemberShipID();
 
-    String healthOrganizationID = new CommonUtil().getHealthOrganizationID();
+    String healthOrganizationID = CommonUtil().getHealthOrganizationID();
     membership[qr_str_id] = json.decode(memberShipId);
     postMediaData[qr_membership_tag] = membership;
 

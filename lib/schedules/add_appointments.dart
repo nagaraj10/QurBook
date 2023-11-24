@@ -110,7 +110,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            OutlineButton(
+                            OutlinedButton(
                               onPressed: () {
                                 _selectDate(context);
                               },
@@ -127,7 +127,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                                 ],
                               ),
                             ),
-                            OutlineButton(
+                            OutlinedButton(
                               onPressed: () {
                                 _selectTime(context);
                               },

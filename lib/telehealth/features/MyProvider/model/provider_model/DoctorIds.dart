@@ -113,10 +113,10 @@ class DoctorIds {
       createdBy = json[parameters.strCreatedBy];
 
       profilePic = json[parameters.strprofilePic] != null
-              ? new ProfilePic.fromJson(json[parameters.strprofilePic])
+              ? ProfilePic.fromJson(json[parameters.strprofilePic])
               : null;
       profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
-              ? new ProfilePic.fromJson(json[parameters.strprofilePicThumbnail])
+              ? ProfilePic.fromJson(json[parameters.strprofilePicThumbnail])
               : null;
       firstName = json[parameters.strfirstName];
       lastName = json[parameters.strlastName];
@@ -131,17 +131,17 @@ class DoctorIds {
       if (json[parameters.strlanguages] != null) {
             languages = <Languages>[];
             json[parameters.strlanguages].forEach((v) {
-              languages!.add(new Languages.fromJson(v));
+              languages!.add(Languages.fromJson(v));
             });
           }
       if (json[parameters.strprofessionalDetails] != null) {
             professionalDetails = <ProfessionalDetails>[];
             json[parameters.strprofessionalDetails].forEach((v) {
-              professionalDetails!.add(new ProfessionalDetails.fromJson(v));
+              professionalDetails!.add(ProfessionalDetails.fromJson(v));
             });
           }
       fees = json[parameters.strfees] != null
-              ? new Fees.fromJson(json[parameters.strfees])
+              ? Fees.fromJson(json[parameters.strfees])
               : null;
       isDefault = json[parameters.strisDefault];
       doctorPatientMappingId = json[parameters.strdoctorPatientMappingId];
@@ -154,7 +154,7 @@ class DoctorIds {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strId] = this.id;
     data[parameters.strCreatedBy] = this.createdBy;
     data[parameters.strName] = this.name;

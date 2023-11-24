@@ -51,7 +51,7 @@ class ClaimRecordDisplay extends StatefulWidget {
 
 class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
   int _current = 0;
   int index = 0;
   int length = 0;
@@ -81,7 +81,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    claimListRepository = new ClaimListRepository();
+    claimListRepository = ClaimListRepository();
     setAuthToken();
   }
 
@@ -366,7 +366,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       claimNo = claimRecordDetails?.result?.claimNumber;
       amount =(CommonUtil.REGION_CODE != "IN"?variable.strDollar+" ":variable.strRs +". ") +
           claimRecordDetails?.result?.documentMetadata![0].claimAmount;
-      final df = new DateFormat('dd-MMM-yyyy');
+      final df = DateFormat('dd-MMM-yyyy');
 
       submittedDate =
           CommonUtil.getDateStringFromDateTime(claimRecordDetails?.result?.submitDate);

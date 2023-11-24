@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
@@ -26,7 +27,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   DietPlanModel? myPlanListModel;
 
-  PlanWizardViewModel planWizardViewModel = new PlanWizardViewModel();
+  PlanWizardViewModel planWizardViewModel = PlanWizardViewModel();
 
   bool isSearch = false;
 
@@ -43,7 +44,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
   bool isSwitched = false;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String?> _selectedItem = new ValueNotifier<String?>('Default');
+  ValueNotifier<String?> _selectedItem = ValueNotifier<String?>('Default');
 
   @override
   void initState() {
@@ -105,7 +106,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onChanged: toggleSwitch,
                   value: isSwitched,
-                  activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                  activeColor: Color(CommonUtil().getMyPrimaryColor()),
                 ),
                 SizedBox(width: 2.w),
                 Text(
@@ -156,14 +157,14 @@ class _DietPlanPageState extends State<DietPlanPage> {
   }
 
   Widget getCarePlanList() {
-    return new FutureBuilder<DietPlanModel>(
+    return FutureBuilder<DietPlanModel>(
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
@@ -251,16 +252,20 @@ class _DietPlanPageState extends State<DietPlanPage> {
         content: Text(
             'You’ve not chosen any diet plan. Are you sure you want to continue'),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('No'),
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => Navigator.pop(context),
+            title: 'No',
           ),
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               Navigator.pop(context);
               Get.to(CheckoutPage());
             },
-            child: Text('Yes'),
+            title: 'Yes',
           ),
         ],
       ),
@@ -292,7 +297,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
         new CheckedPopupMenuItem(
           enabled: false,
           value: popUpChoiceSortLabel,
-          child: new Text(
+          child: Text(
             popUpChoiceSortLabel,
             style: TextStyle(fontSize: 14.0.sp, color: Colors.blueGrey),
           ),
@@ -301,40 +306,40 @@ class _DietPlanPageState extends State<DietPlanPage> {
           checked: _selectedView == popUpChoicePrice,
           value: popUpChoicePrice,
           child:
-              new Text(popUpChoicePrice, style: TextStyle(fontSize: 16.0.sp)),
+              Text(popUpChoicePrice, style: TextStyle(fontSize: 16.0.sp)),
         ),
         new CheckedPopupMenuItem(
           checked: _selectedView == popUpChoiceDura,
           value: popUpChoiceDura,
-          child: new Text(popUpChoiceDura, style: TextStyle(fontSize: 14.0.sp)),
+          child: Text(popUpChoiceDura, style: TextStyle(fontSize: 14.0.sp)),
         ),
         new CheckedPopupMenuItem(
           checked: _selectedView == popUpChoiceDefault,
           value: popUpChoiceDefault,
           child:
-              new Text(popUpChoiceDefault, style: TextStyle(fontSize: 14.0.sp)),
+              Text(popUpChoiceDefault, style: TextStyle(fontSize: 14.0.sp)),
         ),
       ],
     );
   } */
 
   Widget popMenuItemNew() {
-    return new PopupMenuButton<String>(
+    return PopupMenuButton<String>(
       icon: Icon(
         Icons.sort,
       ),
       itemBuilder: (BuildContext context) {
         List<PopupMenuEntry<String>> menuItems =
-            new List<PopupMenuEntry<String>>.generate(
+            List<PopupMenuEntry<String>>.generate(
           sortType.length,
           (int index) {
-            return new PopupMenuItem(
+            return PopupMenuItem(
               value: sortType[index],
-              child: new AnimatedBuilder(
-                child: new Text(sortType[index]),
+              child: AnimatedBuilder(
+                child: Text(sortType[index]),
                 animation: _selectedItem,
                 builder: (BuildContext context, Widget? child) {
-                  return new RadioListTile<String>(
+                  return RadioListTile<String>(
                     value: sortType[index],
                     groupValue: _selectedItem.value,
                     title: child,
@@ -368,10 +373,10 @@ class _DietPlanPageState extends State<DietPlanPage> {
         menuItems
           ..insert(
               0,
-              new CheckedPopupMenuItem(
+              CheckedPopupMenuItem(
                 enabled: false,
                 value: popUpChoiceSortLabel,
-                child: new Text(
+                child: Text(
                   popUpChoiceSortLabel,
                   style: TextStyle(fontSize: 14.0.sp, color: Colors.blueGrey),
                 ),

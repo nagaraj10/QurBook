@@ -13,7 +13,7 @@ class ReportModel {
       if (json['result'] != null) {
             result = <MyReportResult>[];
             json['result'].forEach((v) {
-              result!.add(new MyReportResult.fromJson(v));
+              result!.add(MyReportResult.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class ReportModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -76,7 +76,7 @@ class MyReportResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['groupId'] = this.groupId;
     data['groupName'] = this.groupName;

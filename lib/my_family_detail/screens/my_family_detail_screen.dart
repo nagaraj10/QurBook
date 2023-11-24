@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 
 import '../../constants/fhb_constants.dart';
-import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -579,7 +578,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 //                                    : Container(
 //                                        width: 100,
 //                                        height: 100,
-//                                        color: Color(new CommonUtil()
+//                                        color: Color(CommonUtil()
 //                                            .getMyPrimaryColor()),
 //                                        child: Center(
 //                                          child: Text(
@@ -1351,8 +1350,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 items: data.result!.map((relationShipDetail) {
                   return DropdownMenuItem(
                     value: relationShipDetail,
-                    child: new Text(relationShipDetail.name!,
-                        style: new TextStyle(
+                    child: Text(relationShipDetail.name!,
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
@@ -1380,8 +1379,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 items: variable.bloodGroupArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
                     value: eachBloodGroup,
-                    child: new Text(eachBloodGroup,
-                        style: new TextStyle(
+                    child: Text(eachBloodGroup,
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
@@ -1409,8 +1408,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 items: variable.bloodRangeArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
                     value: eachBloodGroup,
-                    child: new Text(eachBloodGroup,
-                        style: new TextStyle(
+                    child: Text(eachBloodGroup,
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),

@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import '../../../constants/fhb_constants.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 
 class LandingCard extends StatelessWidget {
@@ -215,11 +213,11 @@ class LandingCard extends StatelessWidget {
                                 backgroundColor:
                                     Color(CommonUtil().getMyPrimaryColor()),
                                 heroTag: title,
-                                child: new Stack(
+                                child: Stack(
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: new Image.asset(
+                                      child: Image.asset(
                                         'assets/icons/10.png',
                                         height: 35,
                                         width: 35,
@@ -229,9 +227,9 @@ class LandingCard extends StatelessWidget {
                                         ? Positioned(
                                             right: 5,
                                             left: 5,
-                                            child: new Container(
+                                            child: Container(
                                               padding: EdgeInsets.all(1),
-                                              decoration: new BoxDecoration(
+                                              decoration: BoxDecoration(
                                                 color: Colors.yellow,
                                                 borderRadius:
                                                     BorderRadius.circular(6),
@@ -240,9 +238,9 @@ class LandingCard extends StatelessWidget {
                                                 minWidth: 5,
                                                 minHeight: 5,
                                               ),
-                                              child: new Text(
+                                              child: Text(
                                                 ticketsCount!,
-                                                style: new TextStyle(
+                                                style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 8,
                                                 ),

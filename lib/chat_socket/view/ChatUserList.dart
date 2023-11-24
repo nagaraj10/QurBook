@@ -66,12 +66,12 @@ class _ChatUserListState extends State<ChatUserList> {
   String? patientId = '';
   String patientName = '';
 
-  ChatSocketService chocketService = new ChatSocketService();
+  ChatSocketService chocketService = ChatSocketService();
 
-  FamilyMembers familyMembersModel = new FamilyMembers();
+  FamilyMembers familyMembersModel = FamilyMembers();
   List<SharedByUsers> sharedbyme = [];
 
-  FamilyMembers familyData = new FamilyMembers();
+  FamilyMembers familyData = FamilyMembers();
 
   CaregiverPatientChatModel? familyListModel;
 
@@ -217,7 +217,7 @@ class _ChatUserListState extends State<ChatUserList> {
                   ),
                 ),
                 actions: [
-                  Center(child: new CommonUtil().getNotificationIcon(context)),
+                  Center(child: CommonUtil().getNotificationIcon(context)),
                   SizedBoxWidget(
                     width: 10,
                   ),
@@ -556,11 +556,11 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   Widget checkIfDoctorIdExist() {
-    return new FutureBuilder<String?>(
+    return FutureBuilder<String?>(
       future: getPatientDetails(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Scaffold(
+          return Scaffold(
             body: CommonCircularIndicator(),
           );
         } else if (snapshot.hasError) {
@@ -699,7 +699,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                                   .toUpperCase()
                                               : '',
                                           style: TextStyle(
-                                            color: Color(new CommonUtil()
+                                            color: Color(CommonUtil()
                                                 .getMyPrimaryColor()),
                                             fontSize: 16.0.sp,
                                             fontWeight: FontWeight.w400,

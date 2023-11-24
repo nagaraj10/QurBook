@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/common/CommonUtil.dart';
@@ -42,9 +43,11 @@ class Alert {
           title: Text(title),
           content: Text(content),
           actions: <Widget>[
-            FlatButton(
-              child: Text(confirm),
-              onPressed: onPressed as void Function()? ??
+            FlatButtonWidget(
+              bgColor: Colors.transparent,
+              isSelected: true,
+              title: confirm,
+              onPress: onPressed as void Function()? ??
                   () {
                     Navigator.of(context).pop();
                   },
@@ -71,19 +74,21 @@ class Alert {
           title: Text(title),
           content: Text(content!),
           actions: <Widget>[
-            FlatButton(
-              textColor: Colors.grey,
-              child: Text(cancel),
-              onPressed: onPressedCancel as void Function()? ??
+            FlatButtonWidget(
+              bgColor: Colors.transparent,
+              isSelected: true,
+              titleColor: Colors.grey,
+              title: cancel,
+              onPress: onPressedCancel as void Function()? ??
                   () {
                     Navigator.of(context).pop();
                   },
             ),
-            FlatButton(
-              textColor: Colors.white,
-              color: Color(CommonUtil().getMyPrimaryColor()),
-              child: Text(confirm),
-              onPressed: onPressedConfirm as void Function()? ??
+            FlatButtonWidget(
+              isSelected: true,
+              bgColor: Color(CommonUtil().getMyPrimaryColor()),
+              title: confirm,
+              onPress: onPressedConfirm as void Function()? ??
                   () {
                     Navigator.of(context).pop();
                     Navigator.pop(context);
@@ -110,11 +115,11 @@ class Alert {
           title: Text(title),
           content: Text(content),
           actions: <Widget>[
-            FlatButton(
-              textColor: Colors.white,
-              color: Color(CommonUtil().getMyPrimaryColor()),
-              child: Text(confirm),
-              onPressed: onPressedConfirm as void Function()? ??
+            FlatButtonWidget(
+              isSelected: true,
+              bgColor: Color(CommonUtil().getMyPrimaryColor()),
+              title: confirm,
+              onPress: onPressedConfirm as void Function()? ??
                   () {
                     Navigator.of(context).pop();
                     Navigator.pop(context);
@@ -155,11 +160,11 @@ class Alert {
         ),
         content: Text(content),
         actions: <Widget>[
-          FlatButton(
-            textColor: Colors.white,
-            color: Color(CommonUtil().getMyPrimaryColor()),
-            child: Text(confirm),
-            onPressed: onPressedConfirm as void Function()? ??
+          FlatButtonWidget(
+            isSelected: true,
+            bgColor: Color(CommonUtil().getMyPrimaryColor()),
+            title: confirm,
+            onPress: onPressedConfirm as void Function()? ??
                 () {
                   Navigator.of(context).pop();
                   Navigator.pop(context);

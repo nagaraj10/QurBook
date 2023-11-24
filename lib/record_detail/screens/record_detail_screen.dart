@@ -106,7 +106,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   HealthRecordCollection? audioMediaId;
   late HealthRecordCollection pdfId;
 
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
   String? authToken;
 
   var pdfFile;
@@ -327,7 +327,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
                                   if (_familyListBloc != null) {
                                     _familyListBloc = null;
-                                    _familyListBloc = new FamilyListBloc();
+                                    _familyListBloc = FamilyListBloc();
                                   }
                                   _familyListBloc!
                                       .getFamilyMembersListNew()
@@ -528,7 +528,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
 
     HealthRecordCollection _currentImage;
-    Scaffold.of(contxt).showSnackBar(
+    ScaffoldMessenger.of(contxt).showSnackBar(
       SnackBar(
         content: const Text(
           variable.strDownloadStart,
@@ -543,7 +543,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       if (Platform.isIOS) {
         final path = await CommonUtil.downloadFile(
             pdfId.healthRecordUrl!, pdfId.fileType);
-        Scaffold.of(contxt).showSnackBar(
+        ScaffoldMessenger.of(contxt).showSnackBar(
           SnackBar(
             content: const Text(variable.strFileDownloaded),
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -571,7 +571,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             setState(() {
               downloadStatus = true;
             });
-            Scaffold.of(contxt).showSnackBar(
+            ScaffoldMessenger.of(contxt).showSnackBar(
               SnackBar(
                 content: const Text(
                   variable.strFileDownloaded,
@@ -607,7 +607,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 jpefFile = res?.path;
               });
               imageList.add(jpefFile);
-              Scaffold.of(contxt).showSnackBar(
+              ScaffoldMessenger.of(contxt).showSnackBar(
                 SnackBar(
                   content: Text(
                     variable.strFileDownloaded,
@@ -1394,7 +1394,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           : Expanded(
                               child: Container(
                                 child:
-                                    new CommonUtil().showPDFInWidget(pdfFile),
+                                    CommonUtil().showPDFInWidget(pdfFile),
                               ),
                             )
                       : widget.data.metadata?.sourceName == 'SHEELA'
@@ -1706,7 +1706,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         //widget.data.healthRecordCollection = healthResult.healthRecordCollection;
         PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
         setState(() {});
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(postImageResponse!.message!),
         ));
       }

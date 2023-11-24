@@ -35,14 +35,14 @@ class PaymentGatewayDetail {
       sourceCode = json[parameters.strSourceCode];
       paymentGatewayRequestId = json[parameters.strPaymentGatewayRequestId];
       responseInfo = json[parameters.strResponseInfo] != null
-              ? new CancelResponseInfo.fromJson(json[parameters.strResponseInfo])
+              ? CancelResponseInfo.fromJson(json[parameters.strResponseInfo])
               : null;
       createdBy = json[[parameters.strCreatedBy]] != null
-              ? new CreatedBy.fromJson(json[parameters.strCreatedBy])
+              ? CreatedBy.fromJson(json[parameters.strCreatedBy])
               : null;
       createdOn = json[parameters.strCreatedOn];
       lastModifiedBy = json[parameters.strlastModifiedBy] != null
-              ? new CreatedBy.fromJson(json[parameters.strlastModifiedBy])
+              ? CreatedBy.fromJson(json[parameters.strlastModifiedBy])
               : null;
       lastModifiedOn = json[parameters.strLastModifiedOn];
       isActive = json[parameters.strIsActive];
@@ -53,7 +53,7 @@ class PaymentGatewayDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strSourceId] = this.sourceId;
     data[parameters.strSourceCode] = this.sourceCode;
     data[parameters.strPaymentGatewayRequestId] = this.paymentGatewayRequestId;

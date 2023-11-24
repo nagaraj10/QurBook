@@ -5,7 +5,6 @@ import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -76,7 +75,7 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
 
   FullPhotoScreenState({Key? key, required this.url});
 
-  ChatSocketService _chatSocketService = new ChatSocketService();
+  ChatSocketService _chatSocketService = ChatSocketService();
 
   @override
   void initState() {

@@ -6,7 +6,6 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notificationResult.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 enum LoadingStatus {
   completed,

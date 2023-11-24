@@ -64,7 +64,7 @@ class VitalsDetails extends StatefulWidget {
 
 class _VitalsDetailsState extends State<VitalsDetails>
     with TickerProviderStateMixin {
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
   bool onOkClicked = false;
@@ -496,7 +496,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                 SizedBox(
                   width: 50,
                 ),
-                OutlineButton(
+                OutlinedButton(
                   onPressed: onOkClicked
                       ? () {}
                       : () async {
@@ -512,11 +512,11 @@ class _VitalsDetailsState extends State<VitalsDetails>
                       }
                     });
                   } */ /*() {
-                      new FHBUtils().check().then((intenet) {
+                      FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           createDeviceRecords(deviceName);
                         } else {
-                          new FHBBasicWidget().showInSnackBar(
+                          FHBBasicWidget().showInSnackBar(
                               Constants.STR_NO_CONNECTIVITY, scaffold_state);
                         }
                       });
@@ -2338,7 +2338,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                     Text(
                       value2,
                       style: TextStyle(
-                          color: Color(new CommonUtil().getQurhomePrimaryColor()),
+                          color: Color(CommonUtil().getQurhomePrimaryColor()),
                           fontSize: 14.0.sp),
                     ),
                   ],
@@ -2360,7 +2360,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                     Text(
                       value3,
                       style: TextStyle(
-                          color: Color(new CommonUtil().getQurhomePrimaryColor()),
+                          color: Color(CommonUtil().getQurhomePrimaryColor()),
                           fontSize: 14.0.sp),
                     ),
                   ],
@@ -2427,8 +2427,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                              Color(new CommonUtil().getMyGredientColor())
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              Color(CommonUtil().getMyGredientColor())
                             ],
                             stops: [
                               0.3,
@@ -2543,8 +2543,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                              Color(new CommonUtil().getMyGredientColor())
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              Color(CommonUtil().getMyGredientColor())
                             ],
                             stops: [
                               0.3,
@@ -2644,7 +2644,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                               unit != '' ? unit : '',
                               style: TextStyle(
                                   color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
+                                      CommonUtil().getMyPrimaryColor()),
                                   fontSize: 14.0.sp),
                             ),*/
                                   ],

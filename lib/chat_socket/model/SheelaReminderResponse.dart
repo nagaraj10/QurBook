@@ -10,7 +10,7 @@ class SheelaReminderResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['chatListId'] = this.chatListId;
     data['chatMessageId'] = this.chatMessageId;
     return data;

@@ -1,5 +1,3 @@
-
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 
 import '../../constants/fhb_constants.dart' as constants;

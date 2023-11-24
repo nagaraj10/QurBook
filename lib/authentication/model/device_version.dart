@@ -12,14 +12,14 @@ class DeviceVersion {
     try {
       isSuccess = json['isSuccess'];
       result =
-              json['result'] != null ? new Result.fromJson(json['result']) : null;
+              json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -47,7 +47,7 @@ class Result {
       id = json['id'];
       versionName = json['versionName'];
       additionalInfo = json['additionalInfo'] != null
-              ? new DeviceAdditionalInfo.fromJson(json['additionalInfo'])
+              ? DeviceAdditionalInfo.fromJson(json['additionalInfo'])
               : null;
       isActive = json['isActive'];
       createdOn = json['createdOn'];
@@ -57,7 +57,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['versionName'] = this.versionName;
     if (this.additionalInfo != null) {
@@ -78,10 +78,10 @@ class DeviceAdditionalInfo {
     try {
       qurbook = Platform.isIOS
               ? json['qurbookios'] != null
-                  ? new Qurbook.fromJson(json['qurbookios'])
+                  ? Qurbook.fromJson(json['qurbookios'])
                   : null
               : json['qurbookandroid'] != null
-                  ? new Qurbook.fromJson(json['qurbookandroid'])
+                  ? Qurbook.fromJson(json['qurbookandroid'])
                   : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -89,7 +89,7 @@ class DeviceAdditionalInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.qurbook != null) {
       Platform.isIOS
           ? data['qurbookios'] = this.qurbook!.toJson()
@@ -113,7 +113,7 @@ class Qurbook {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['is_force_update'] = this.isForceUpdate;
     return data;
   }

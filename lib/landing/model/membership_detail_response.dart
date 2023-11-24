@@ -13,7 +13,7 @@ class MemberShipDetailResponse {
       if (json['result'] != null) {
             result = <Result>[];
             json['result'].forEach((v) {
-              result!.add(new Result.fromJson(v));
+              result!.add(Result.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class MemberShipDetailResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -58,7 +58,7 @@ class Result {
       healthOrganizationId = json['healthOrganizationId'];
       planName = json['planName'];
       additionalInfo = json['additionalInfo'] != null
-              ? new AdditionalInfo.fromJson(json['additionalInfo'])
+              ? AdditionalInfo.fromJson(json['additionalInfo'])
               : null;
       planStartDate = json['planStartDate'];
       planEndDate = json['planEndDate'];
@@ -69,7 +69,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['healthOrganizationName'] = this.healthOrganizationName;
     data['healthOrganizationId'] = this.healthOrganizationId;
@@ -129,7 +129,7 @@ class AdditionalInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['remarks'] = this.remarks;
     data['planTags'] = this.planTags;
     data['isRenewal'] = this.isRenewal;

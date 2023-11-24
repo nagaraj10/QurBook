@@ -14,14 +14,14 @@ class ResheduleModel {
     try {
       isSuccess = json['isSuccess'];
       message = json['message'];
-      result = json['result'] != null ? new ResheduleResult.fromJson(json['result']) : null;
+      result = json['result'] != null ? ResheduleResult.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
