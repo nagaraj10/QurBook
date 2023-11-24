@@ -452,7 +452,11 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                           ),
                           SizedBox(width: 12.w),
                           hubListViewController.isUserHasParedDevice.value
-                              ? MyBlinkingBLEIcon()
+                              ? controller.isBLEStatus.value ==
+                                      BLEStatus.Disabled
+                                  ? CommonBluetoothWidget
+                                      .getDisabledBluetoothIcon()
+                                  : MyBlinkingBLEIcon()
                               : SizedBox.shrink(),
                         ],
                       )
