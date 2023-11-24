@@ -95,8 +95,15 @@ class RegimentDataCard extends StatelessWidget {
                       onErrorMessage(regimentData, context);
                     }
                   } else {
-                    onCardPressed(context,
-                        aid: aid, uid: uid, formId: formId, formName: formName);
+                    if (CommonUtil().checkIfSkipAcknowledgemnt(regimentData)) {
+                      redirectToSheelaScreen(regimentData, context);
+                    } else {
+                      onCardPressed(context,
+                          aid: aid,
+                          uid: uid,
+                          formId: formId,
+                          formName: formName);
+                    }
                   }
                 }
               },
@@ -122,11 +129,16 @@ class RegimentDataCard extends StatelessWidget {
                             }
                           } else if (regimentData.activityOrgin !=
                               strAppointmentRegimen) {
-                            onCardPressed(context,
-                                aid: aid,
-                                uid: uid,
-                                formId: formId,
-                                formName: formName);
+                            if (CommonUtil()
+                                .checkIfSkipAcknowledgemnt(regimentData)) {
+                              redirectToSheelaScreen(regimentData, context);
+                            } else {
+                              onCardPressed(context,
+                                  aid: aid,
+                                  uid: uid,
+                                  formId: formId,
+                                  formName: formName);
+                            }
                           }
                         },
                         child: Container(
@@ -570,69 +582,7 @@ class RegimentDataCard extends StatelessWidget {
                   ),
                   child: Material(
                     color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () async {
-                        CommonUtil().showDialogForActivityConfirmation(
-                            context, title, () async {
-                          Navigator.pop(context);
-                          stopRegimenTTS();
-                          var canEdit = false;
-                          canEdit = CommonUtil().canEditRegimen(
-                              selectedDate, regimentData, context!);
-
-                          if (canEdit || isValidSymptom(context)) {
-                            if (regimentData.eid != null &&
-                                regimentData.eid != '') {
-                              RegimentService.getActivityStatus(
-                                      eid: regimentData.eid)
-                                  .then((value) {
-                                if (value.isSuccess ?? false) {
-                                  if (value.result != null) {
-                                    if (value.result![0].planStatus ==
-                                            UnSubscribed ||
-                                        value.result![0].planStatus ==
-                                            Expired) {
-                                      var message =
-                                          (value.result![0].planStatus ==
-                                                  UnSubscribed)
-                                              ? UnSubscribed
-                                              : Expired;
-                                      CommonUtil().showDialogForActivityStatus(
-                                          'Plan $message, $msgData',
-                                          Get.context!, pressOk: () {
-                                        Get.back();
-                                        logRegimenActivity(Get.context!);
-                                      });
-                                    } else {
-                                      logRegimenActivity(Get.context!);
-                                    }
-                                  } else {
-                                    logRegimenActivity(Get.context!);
-                                  }
-                                } else {
-                                  logRegimenActivity(Get.context!);
-                                }
-                              });
-                            } else {
-                              logRegimenActivity(Get.context!);
-                            }
-                          } else {
-                            FlutterToast().getToast(
-                              CommonUtil()
-                                  .getErrorMessage(regimentData, context),
-                              Colors.red,
-                            );
-                          }
-                        }, false);
-                      },
-                      child: Icon(
-                        regimentData.ack == null
-                            ? Icons.check_circle_outlined
-                            : Icons.check_circle_rounded,
-                        size: 30.0.sp,
-                        color: color,
-                      ),
-                    ),
+                    child: getCheckIcon(context, regimentData),
                   ),
                 ),
               ),
@@ -1143,5 +1093,69 @@ class RegimentDataCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  getCheckIcon(BuildContext context, RegimentDataModel regimentData) {
+    if (CommonUtil().checkIfSkipAcknowledgemnt(regimentData)) {
+      return SizedBox();
+    } else if (regimentData?.otherinfo?.isSkipAcknowledgement == "0") {
+      return InkWell(
+        onTap: () async {
+          CommonUtil().showDialogForActivityConfirmation(context, title,
+              () async {
+            Navigator.pop(context);
+            stopRegimenTTS();
+            var canEdit = false;
+            canEdit = CommonUtil()
+                .canEditRegimen(selectedDate, regimentData, context!);
+
+            if (canEdit || isValidSymptom(context)) {
+              if (regimentData.eid != null && regimentData.eid != '') {
+                RegimentService.getActivityStatus(eid: regimentData.eid)
+                    .then((value) {
+                  if (value.isSuccess ?? false) {
+                    if (value.result != null) {
+                      if (value.result![0].planStatus == UnSubscribed ||
+                          value.result![0].planStatus == Expired) {
+                        var message =
+                            (value.result![0].planStatus == UnSubscribed)
+                                ? UnSubscribed
+                                : Expired;
+                        CommonUtil().showDialogForActivityStatus(
+                            'Plan $message, $msgData', Get.context!,
+                            pressOk: () {
+                          Get.back();
+                          logRegimenActivity(Get.context!);
+                        });
+                      } else {
+                        logRegimenActivity(Get.context!);
+                      }
+                    } else {
+                      logRegimenActivity(Get.context!);
+                    }
+                  } else {
+                    logRegimenActivity(Get.context!);
+                  }
+                });
+              } else {
+                logRegimenActivity(Get.context!);
+              }
+            } else {
+              FlutterToast().getToast(
+                CommonUtil().getErrorMessage(regimentData, context),
+                Colors.red,
+              );
+            }
+          }, false);
+        },
+        child: Icon(
+          regimentData.ack == null
+              ? Icons.check_circle_outlined
+              : Icons.check_circle_rounded,
+          size: 30.0.sp,
+          color: color,
+        ),
+      );
+    }
   }
 }

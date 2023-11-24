@@ -1037,7 +1037,7 @@ class CommonUtil {
     return 0xFFFd7a2b;
   }
 
-  int getCommonPrimaryColorQurHomeBook(){
+  int getCommonPrimaryColorQurHomeBook() {
     return (PreferenceUtil.getIfQurhomeisAcive())
         ? CommonUtil().getQurhomePrimaryColor()
         : CommonUtil().getMyPrimaryColor();
@@ -2196,7 +2196,16 @@ class CommonUtil {
       if (url.contains('/')) {
         imageName = url.split('/').last;
       }
-      var file = File('$dir/${imageName}$extension');
+      String fileName = '$imageName$extension';
+      var file = File('$dir${imageName}$extension');
+      int fileNumber = 1;
+      // Check if the file already exists
+      while (await file.exists()) {
+        fileName = '$imageName($fileNumber)$extension';
+        file = File('$dir$fileName');
+        fileNumber++;
+      }
+
       await file.writeAsBytes(bytes);
       return file;
     } catch (e, stackTrace) {
@@ -6642,6 +6651,11 @@ class CommonUtil {
       canEdit = false;
     }
     return canEdit;
+  }
+
+  bool checkIfSkipAcknowledgemnt(RegimentDataModel regimen) {
+    return (CommonUtil.isUSRegion() &&
+        regimen?.otherinfo?.isSkipAcknowledgement == "1");
   }
 
   static DateTime getDateBasedOnOnceInAPlan(

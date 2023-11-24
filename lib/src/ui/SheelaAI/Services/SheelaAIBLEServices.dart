@@ -115,7 +115,6 @@ class SheelaBLEController extends GetxController {
         return;
       }
     }
-
     if (timerSubscription != null) {
       return;
     }
@@ -754,6 +753,7 @@ class SheelaBLEController extends GetxController {
       timerSubscription!.cancel();
     }
     timerSubscription = null;
+
     isFromRegiment = false;
     addingDevicesInHublist = false;
     isFromVitals = false;

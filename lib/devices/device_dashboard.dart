@@ -193,6 +193,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                 rt_Sheela,
                 arguments: SheelaArgument(
                   sheelaInputs: getDeviceForString(),
+                    isNeedTranslateText: true
                 ),
               );
 

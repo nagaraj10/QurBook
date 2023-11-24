@@ -301,7 +301,8 @@ class Otherinfo {
       this.needFile,
       this.snoozeText,
       this.introText,
-      this.isAllDayActivity});
+      this.isAllDayActivity,
+      this.isSkipAcknowledgement});
 
   final String? needPhoto;
   final String? needAudio;
@@ -310,6 +311,7 @@ class Otherinfo {
   final String? snoozeText;
   final String? introText;
   final bool? isAllDayActivity;
+  final String? isSkipAcknowledgement;
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
         needPhoto: (json['NeedPhoto'] ?? 0).toString(),
@@ -320,6 +322,9 @@ class Otherinfo {
         isAllDayActivity: json.containsKey('isAllDayActivity')
             ? (json['isAllDayActivity'] ?? false)
             : false,
+        isSkipAcknowledgement: json.containsKey('isSkipAcknowledgement')
+            ? (json['isSkipAcknowledgement'] ?? 0).toString()
+            : "0",
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
       );
 
@@ -422,7 +427,15 @@ class VitalsData {
       };
 }
 
-enum Activityname { DIET, VITALS, MEDICATION, SCREENING, SYMPTOM, APPOINTMENT }
+enum Activityname {
+  DIET,
+  VITALS,
+  MEDICATION,
+  SCREENING,
+  SYMPTOM,
+  APPOINTMENT,
+  ANNOUNCEMENT
+}
 
 final activitynameValues = EnumValues({
   'diet': Activityname.DIET,
@@ -430,7 +443,8 @@ final activitynameValues = EnumValues({
   'screening': Activityname.SCREENING,
   'vitals': Activityname.VITALS,
   'symptom': Activityname.SYMPTOM,
-  'appointment': Activityname.APPOINTMENT
+  'appointment': Activityname.APPOINTMENT,
+  'announcement': Activityname.ANNOUNCEMENT,
 });
 
 enum FieldType { NUMBER, CHECKBOX, TEXT, LOOKUP, RADIO }
