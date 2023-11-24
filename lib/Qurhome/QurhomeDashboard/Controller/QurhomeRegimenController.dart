@@ -329,6 +329,15 @@ class QurhomeRegimenController extends GetxController {
               thoroughfare: CommonUtil().validString(address.thoroughfare),
               subThoroughfare:
                   CommonUtil().validString(address.subThoroughfare));
+
+          String subAdminArea = (locationModel?.subAdminArea ?? '');
+          if (subAdminArea.trim().isEmpty) {
+            locationModel?.subAdminArea =
+                CommonUtil().getLocalityName(addresses);
+          }
+          /*if (kDebugMode) {
+            print("locationModel ${locationModel?.subAdminArea ?? ''}");
+          }*/
         }
       }
     } catch (e, stackTrace) {

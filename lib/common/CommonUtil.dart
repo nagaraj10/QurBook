@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_geocoder/model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -7318,6 +7319,23 @@ class CommonUtil {
           : activitiesError;
     }
   }
+
+  String getLocalityName(List<Address> addresses) {
+    try {
+      if ((addresses != null) && (addresses?.length ?? 0) > 0) {
+        for (final adr in addresses) {
+          if (adr.locality != null && (adr.locality?.length ?? 0) > 0) {
+            return (adr.locality ?? '');
+          }
+        }
+      }
+      return "";
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+    return "";
+  }
+
 }
 
 extension CapExtension on String {
