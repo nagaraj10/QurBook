@@ -9,6 +9,7 @@ import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
+import '../Widgets/common_bluetooth_widget.dart';
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
@@ -329,7 +330,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           children: [
             if (!CommonUtil.isUSRegion())
               hubListViewController.isUserHasParedDevice.value
-                  ? MyBlinkingBLEIcon()
+                  ? controller.isBLEStatus.value == BLEStatus.Disabled
+                      ? CommonBluetoothWidget.getDisabledBluetoothIcon()
+                      : MyBlinkingBLEIcon()
                   : SizedBox.shrink(),
             SizedBox(width: 12.w),
             if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
@@ -449,7 +452,11 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                           ),
                           SizedBox(width: 12.w),
                           hubListViewController.isUserHasParedDevice.value
-                              ? MyBlinkingBLEIcon()
+                              ? controller.isBLEStatus.value ==
+                                      BLEStatus.Disabled
+                                  ? CommonBluetoothWidget
+                                      .getDisabledBluetoothIcon()
+                                  : MyBlinkingBLEIcon()
                               : SizedBox.shrink(),
                         ],
                       )
