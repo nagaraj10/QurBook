@@ -252,7 +252,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                       ),
                     ],
                   )
-                : snapshot.data!.result!.sessions != null &&
+                : snapshot.data!.result != null &&
+                        snapshot.data!.result!.sessions != null &&
                         snapshot.data!.result!.sessions != null
                     ? snapshot.data!.result!.sessions![0].slots != null &&
                             snapshot.data!.result!.sessions![0].slots!.isNotEmpty

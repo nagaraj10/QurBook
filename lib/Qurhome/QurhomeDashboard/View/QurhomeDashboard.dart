@@ -23,6 +23,7 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
+import 'package:myfhb/src/ui/SheelaAI/Widgets/common_bluetooth_widget.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
@@ -218,6 +219,18 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         ),
       );
 
+      double getLeadingWidth()  {
+        double width =
+     controller.currentSelectedIndex == 0 
+        ? (CommonUtil.isUSRegion())
+            ? (CommonUtil().isTablet ?? false)
+                ? 117
+                : 83
+            : 58.0
+        : 58.0;
+        return width;
+      }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() => controller.isLoading.isTrue
@@ -233,7 +246,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
                 elevation: 0,
                 centerTitle: true,
-                leadingWidth: (CommonUtil().isTablet ?? false) ? 117 : 83,
+                leadingWidth: getLeadingWidth(),
                 actions: [
                   (!(CommonUtil.isUSRegion()) &&
                           hubListViewController.isUserHasParedDevice.value &&
@@ -242,19 +255,20 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                           padding: const EdgeInsets.only(
                             right: 16,
                           ),
-                          child: MyBlinkingBLEIcon(),
+                          child: controller.currentSelectedIndex == 2
+                              ? CommonBluetoothWidget.getDisabledBluetoothIcon()
+                              : MyBlinkingBLEIcon(),
                         )
                       : SizedBox.shrink(),
                   ((CommonUtil.isUSRegion()) &&
                           hubListViewController.isUserHasParedDevice.value &&
-                          (controller.currentSelectedIndex != 0) &&
-                          (controller.currentSelectedIndex != 1) &&
-                          (controller.currentSelectedIndex != 3))
+                          (controller.currentSelectedIndex == 2))
                       ? Padding(
                           padding: const EdgeInsets.only(
                             right: 16,
                           ),
-                          child: MyBlinkingBLEIcon(),
+                          child:CommonBluetoothWidget.getDisabledBluetoothIcon()
+                              ,
                         )
                       : SizedBox.shrink(),
                 ],
@@ -832,9 +846,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     return BadgeIcon(
       icon: GestureDetector(
         onTap: () {
-          if (Get.isRegistered<QurhomeDashboardController>())
+          if (Get.isRegistered<QurhomeDashboardController>()) {
             Get.find<QurhomeDashboardController>()
                 .updateBLETimer(Enable: false);
+          }
 
           Get.to(ChatUserList(careGiversList: [], isFromQurDay: true));
         },
