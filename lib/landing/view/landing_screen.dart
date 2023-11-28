@@ -103,7 +103,8 @@ class _LandingScreenState extends State<LandingScreen> {
   final controllerQurhomeRegimen =
       CommonUtil().onInitQurhomeRegimenController();
 
-  final sheelBadgeController = Get.put(SheelaAIController());
+  SheelaAIController? sheelBadgeController =
+  CommonUtil().onInitSheelaAIController();
 
   double selOption = 30.0.sp;
   double unSelOption = 28.0.sp;
@@ -201,8 +202,9 @@ class _LandingScreenState extends State<LandingScreen> {
           controllerQurhomeRegimen.startTimerForSheela();
         }
       } else {
-        sheelBadgeController.getSheelaBadgeCount();
+        sheelBadgeController?.getSheelaBadgeCount();
       }
+      sheelBadgeController?.isAllowSheelaLiveReminders = true;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -825,7 +827,7 @@ class _LandingScreenState extends State<LandingScreen> {
       size: 14.h,
       fontSize: 12.sp,
       badgeColor: ColorUtils.countColor,
-      badgeCount: sheelBadgeController.sheelaIconBadgeCount.value,
+      badgeCount: sheelBadgeController?.sheelaIconBadgeCount.value,
       isForSheelaQueue: true,
     );
   }
@@ -1099,6 +1101,17 @@ class _LandingScreenState extends State<LandingScreen> {
                   PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
                       0xff9929ea);
             }
+            sheelBadgeController?.isAllowSheelaLiveReminders = (selectionResult!
+                            .result![0].profileSetting!.sheelaLiveReminders !=
+                        null &&
+                    selectionResult!
+                            .result![0].profileSetting!.sheelaLiveReminders !=
+                        '')
+                ? selectionResult!
+                        .result![0].profileSetting!.sheelaLiveReminders ??
+                    true
+                : true;
+            print('----------isAllowBool: '+(sheelBadgeController?.isAllowSheelaLiveReminders??true).toString());
           } else {
             PreferenceUtil.saveTheme(
                 Constants.keyPriColor,

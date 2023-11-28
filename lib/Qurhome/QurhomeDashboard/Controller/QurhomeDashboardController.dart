@@ -36,7 +36,8 @@ class QurhomeDashboardController extends GetxController {
     return _bleTimer;
   }
 
-  SheelaAIController sheelaAIController = Get.put(SheelaAIController());
+  SheelaAIController? sheelaAIController =
+  CommonUtil().onInitSheelaAIController();
   var isLoading = false.obs;
   var eventId = ''.obs;
   var estart = ''.obs;
@@ -167,7 +168,7 @@ class QurhomeDashboardController extends GetxController {
           case "scheduleAppointment":
             if (isFirstTime) {
               isFirstTime = false;
-              if (sheelaAIController.isSheelaScreenActive) {
+              if (sheelaAIController?.isSheelaScreenActive??false) {
                 var reqJson = {
                   KIOSK_task: KIOSK_appointment_avail,
                   KIOSK_appoint_id: receivedValues[1],
@@ -187,7 +188,7 @@ class QurhomeDashboardController extends GetxController {
       const platform = MethodChannel(APPOINTMENT_DETAILS);
       platform.setMethodCallHandler((call) {
         if (call.method == APPOINTMENT_DETAILS) {
-          if (sheelaAIController.isSheelaScreenActive) {
+          if (sheelaAIController?.isSheelaScreenActive??false) {
             try {
               var data = Map<String, dynamic>.from(call.arguments);
               var reqJson = {
@@ -269,6 +270,17 @@ class QurhomeDashboardController extends GetxController {
           if (selectionResult?.result != null) {
             updateModuleAccess(selectionResult!.result!);
           }
+          sheelaAIController?.isAllowSheelaLiveReminders = (selectionResult!
+                          .result![0].profileSetting!.sheelaLiveReminders !=
+                      null &&
+                  selectionResult!
+                          .result![0].profileSetting!.sheelaLiveReminders !=
+                      '')
+              ? selectionResult!
+                      .result![0].profileSetting!.sheelaLiveReminders ??
+                  true
+              : true;
+          print('----------isAllowBoolQurhome: '+(sheelaAIController?.isAllowSheelaLiveReminders??true).toString());
         }
       });
     }

@@ -314,6 +314,7 @@ class HealthReportListForUserRepository {
   Future<CreateDeviceSelectionModel> createDeviceSelection(
       bool? allowDigit,
       bool? allowDevice,
+      bool? sheelaLiveReminders,
       bool? googleFit,
       bool? healthFit,
       bool? bpMonitor,
@@ -337,6 +338,7 @@ class HealthReportListForUserRepository {
       'profileSetting': {
         'allowDigit': allowDigit,
         'allowDevice': allowDevice,
+        'sheelaLiveRemimders': sheelaLiveReminders,
         'googleFit': googleFit,
         'healthFit': healthFit,
         'bpMonitor': bpMonitor,
@@ -367,6 +369,7 @@ class HealthReportListForUserRepository {
     userMappingId,
     bool? allowDigit,
     bool? allowDevice,
+    bool? sheelaLiveReminders,
     bool? googleFit,
     bool? healthFit,
     bool? bpMonitor,
@@ -389,6 +392,7 @@ class HealthReportListForUserRepository {
       'profileSetting': {
         'allowDigit': allowDigit,
         'allowDevice': allowDevice,
+        'sheelaLiveReminders': sheelaLiveReminders,
         'googleFit': googleFit,
         'healthFit': healthFit,
         'bpMonitor': bpMonitor,

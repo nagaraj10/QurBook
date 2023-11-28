@@ -20,6 +20,7 @@ import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/more_menu/screens/trouble_shooting.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
@@ -80,6 +81,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   bool? _isdigitRecognition = true;
   bool? _isdeviceRecognition = true;
+  bool? _isSheelaLiveReminders = true;
   bool? _isGFActive;
   late DevicesViewModel _deviceModel;
   bool? _isHKActive = false;
@@ -126,6 +128,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool isDeleteAccount = false;
 
   bool isDisplayPreference = false;
+  bool isSheelaNotificationPref = false;
   bool isIntegration = false;
   bool isColorPallete = false;
   bool loading = false;
@@ -134,6 +137,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   var qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
   bool isProd = false;
+
+  SheelaAIController? sheelaAIcontroller =
+  CommonUtil().onInitSheelaAIController();
+
   @override
   void initState() {
     qurhomeDashboardController.getModuleAccess();
@@ -617,6 +624,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           preColor = 0xff5e1fe0;
           greColor = 0xff753aec;
           _isdeviceRecognition = true;
+          _isSheelaLiveReminders = true;
           _isHKActive = false;
           _firstTym = true;
           _isBPActive = true;
@@ -661,6 +669,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     ''
             ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
             : true;
+    _isSheelaLiveReminders =
+    getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders != null &&
+        getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders !=
+            ''
+        ? getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders
+        : true;
+    sheelaAIcontroller?.isAllowSheelaLiveReminders =
+        _isSheelaLiveReminders ?? true;
     _isGFActive =
         getDeviceSelectionModel.result![0].profileSetting!.googleFit != null &&
                 getDeviceSelectionModel.result![0].profileSetting!.googleFit !=
@@ -775,6 +791,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         .createDeviceSelection(
             _isdigitRecognition,
             _isdeviceRecognition,
+            _isSheelaLiveReminders,
             _isGFActive,
             _isHKActive,
             _isBPActive,
@@ -811,6 +828,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             userMappingId,
             _isdigitRecognition,
             _isdeviceRecognition,
+            _isSheelaLiveReminders,
             _isGFActive,
             _isHKActive,
             _isBPActive,
@@ -1019,6 +1037,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isCareGiverCommunication = false;
                             isVitalPreferences = false;
                             isDisplayPreference = false;
+                            isSheelaNotificationPref = false;
                             isTouched = true;
 
                             _isdigitRecognition = newValue;
@@ -1054,6 +1073,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isCareGiverCommunication = false;
                             isVitalPreferences = false;
                             isDisplayPreference = false;
+                            isSheelaNotificationPref = false;
                             isTouched = true;
                             _isdeviceRecognition = newValue;
                             createAppColorSelection(preColor, greColor);
@@ -1448,6 +1468,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                                       isDisplayDevices = true;
                                                       isDisplayPreference =
                                                           false;
+                                                      isSheelaNotificationPref =
+                                                      false;
 
                                                       createAppColorSelection(
                                                           preColor, greColor);
@@ -1529,6 +1551,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isCareGiverCommunication = false;
                             isVitalPreferences = false;
                             isDisplayPreference = true;
+                            isSheelaNotificationPref = false;
                           },
                         );
                       },
@@ -1649,6 +1672,53 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           fontWeight: FontWeight.w500, color: Colors.black)),
                 ),
               ),
+        Divider(),
+        Theme(
+          data: theme,
+          child: ExpansionTile(
+            backgroundColor: const Color(fhbColors.bgColorContainer),
+            iconColor: Colors.black,
+            initiallyExpanded: isSheelaNotificationPref,
+            title: Text(variable.strSheelaNotificationPref,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500, color: Colors.black)),
+            children: [
+              ListTile(
+                leading: Image.asset(
+                  icon_mayaMain,
+                  height: 40.h,
+                  width: 40.w,
+                ),
+                title: Text(variable.strSheelaLiveReminders),
+                subtitle: Text(
+                  variable.strDefaultUI,
+                  style: TextStyle(fontSize: 12.0.sp),
+                ),
+                trailing: Transform.scale(
+                  scale: 0.8,
+                  child: Switch(
+                    value: _isSheelaLiveReminders ?? false,
+                    activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                    onChanged: (bool newValue) {
+                      setState(
+                        () {
+                          _isSheelaLiveReminders = newValue;
+                          isSkillIntegration = false;
+                          isCareGiverCommunication = false;
+                          isVitalPreferences = false;
+                          isDisplayPreference = false;
+                          isSheelaNotificationPref = true;
+
+                          createAppColorSelection(preColor, greColor);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         Divider(),
         Theme(
             data: theme,

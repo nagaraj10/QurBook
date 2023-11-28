@@ -107,6 +107,8 @@ class SheelaAIController extends GetxController {
 
   List<String> sheelaTTSWordList = ["sheila", "sila", "shila", "shiela"];
 
+  bool isAllowSheelaLiveReminders = true;
+
   @override
   void onInit() {
     super.onInit();
@@ -1026,6 +1028,8 @@ class SheelaAIController extends GetxController {
     currentDeviceStatus.greColor = prof.greColor;
     currentDeviceStatus.isdeviceRecognition = prof.allowDevice ?? true;
     currentDeviceStatus.isdigitRecognition = prof.allowDigit ?? true;
+    currentDeviceStatus.isSheelaLiveReminders = prof.sheelaLiveReminders ?? true;
+    isAllowSheelaLiveReminders = currentDeviceStatus.isSheelaLiveReminders ?? true;
     currentDeviceStatus.isHkActive = prof.healthFit ?? false;
     currentDeviceStatus.isBpActive = prof.bpMonitor ?? true;
     currentDeviceStatus.isGFActive = prof.glucoMeter ?? true;
@@ -1059,6 +1063,7 @@ class SheelaAIController extends GetxController {
           .createDeviceSelection(
               currentDeviceStatus.isdigitRecognition,
               currentDeviceStatus.isdeviceRecognition,
+              currentDeviceStatus.isSheelaLiveReminders,
               currentDeviceStatus.isGFActive,
               currentDeviceStatus.isHkActive,
               currentDeviceStatus.isBpActive,
@@ -1110,6 +1115,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.userMappingId,
         currentDeviceStatus.isdigitRecognition,
         currentDeviceStatus.isdeviceRecognition,
+        currentDeviceStatus.isSheelaLiveReminders,
         currentDeviceStatus.isGFActive,
         currentDeviceStatus.isHkActive,
         currentDeviceStatus.isBpActive,
