@@ -7318,6 +7318,11 @@ class CommonUtil {
           : activitiesError;
     }
   }
+  bool isAllowSheelaLiveReminders() {
+    SheelaAIController? sheelaAIController =
+    onInitSheelaAIController();
+    return sheelaAIController.isAllowSheelaLiveReminders;
+  }
 }
 
 extension CapExtension on String {

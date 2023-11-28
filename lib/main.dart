@@ -421,17 +421,27 @@ class _MyFHBState extends State<MyFHB> {
         });
       }
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
-        if (sheelaAIController.isSheelaScreenActive) {
-          var reqJson = {
-            KIOSK_task: KIOSK_remind,
-            KIOSK_eid: passedValArr[1].toString()
-          };
-          CommonUtil().callQueueNotificationPostApi(reqJson);
+        if (CommonUtil().isAllowSheelaLiveReminders()) {
+          // live reminder On deafult existint flow
+          if (sheelaAIController.isSheelaScreenActive) {
+            var reqJson = {
+              KIOSK_task: KIOSK_remind,
+              KIOSK_eid: passedValArr[1].toString()
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJson);
+          } else {
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(eId: passedValArr[1].toString()),
+            );
+          }
         } else {
-          Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(eId: passedValArr[1].toString()),
-          );
+          // live reminder off only queue flow working
+            var reqJson = {
+              KIOSK_task: KIOSK_remind,
+              KIOSK_eid: passedValArr[1].toString()
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJson);
         }
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
@@ -451,30 +461,32 @@ class _MyFHBState extends State<MyFHB> {
             CommonUtil().callQueueNotificationPostApi(reqJsonText);
           }
         } else {*/
-        if (((passedValArr[3].toString()).isNotEmpty) &&
-            (passedValArr[3] != 'null')) {
-          if (sheelaAIController.isQueueDialogShowing.value) {
-            Get.back();
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr, isFromAudio: true);
-            });
+        if (CommonUtil().isAllowSheelaLiveReminders()) {
+          if (((passedValArr[3].toString()).isNotEmpty) &&
+              (passedValArr[3] != 'null')) {
+            if (sheelaAIController.isQueueDialogShowing.value) {
+              Get.back();
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr, isFromAudio: true);
+              });
+            } else {
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr, isFromAudio: true);
+              });
+            }
           } else {
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr, isFromAudio: true);
-            });
+            if (sheelaAIController.isQueueDialogShowing.value) {
+              Get.back();
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr);
+              });
+            } else {
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr);
+              });
+            }
+            //}
           }
-        } else {
-          if (sheelaAIController.isQueueDialogShowing.value) {
-            Get.back();
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr);
-            });
-          } else {
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr);
-            });
-          }
-          //}
         }
       }
       if (passedValArr[0] == 'ack') {
@@ -1302,18 +1314,20 @@ class _MyFHBState extends State<MyFHB> {
         }
         if (parsedData != null && parsedData.length > 0) {
           if (parsedData[0] == 'isSheelaFollowup') {
-            if ((parsedData[3].toString()).isNotEmpty &&
-                parsedData[3] != 'null') {
-              return SplashScreen(
-                nsRoute: 'isSheelaFollowup',
-                bundle:
-                    'isSheelaFollowup' + '|' + 'audio' + '|' + parsedData[3],
-              );
-            } else {
-              return SplashScreen(
-                nsRoute: 'isSheelaFollowup',
-                bundle: parsedData[0] + '|' + parsedData[2],
-              );
+            if (CommonUtil().isAllowSheelaLiveReminders()) {
+              if ((parsedData[3].toString()).isNotEmpty &&
+                  parsedData[3] != 'null') {
+                return SplashScreen(
+                  nsRoute: 'isSheelaFollowup',
+                  bundle:
+                  'isSheelaFollowup' + '|' + 'audio' + '|' + parsedData[3],
+                );
+              } else {
+                return SplashScreen(
+                  nsRoute: 'isSheelaFollowup',
+                  bundle: parsedData[0] + '|' + parsedData[2],
+                );
+              }
             }
           } else if (parsedData[1] == 'appointmentList' ||
               parsedData[1] == 'appointmentHistory') {

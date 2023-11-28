@@ -55,7 +55,10 @@ class IosNotificationHandler {
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
   bool? viewRecordAction, chatWithCC = false;
-  SheelaAIController sheelaAIController = Get.find();
+  //SheelaAIController sheelaAIController = Get.find();
+
+  SheelaAIController? sheelaAIController =
+  CommonUtil().onInitSheelaAIController();
 
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
@@ -105,7 +108,7 @@ class IosNotificationHandler {
           CommonUtil().listenToCallStatus(data);
         } else if (call.method == variable.navigateToSheelaReminderMethod) {
           if ((call.arguments["eid"] ?? '').isNotEmpty && isAlreadyLoaded) {
-            if (sheelaAIController.isSheelaScreenActive) {
+            if (sheelaAIController!.isSheelaScreenActive) {
               var reqJson = {
                 KIOSK_task: KIOSK_remind,
                 KIOSK_eid: call.arguments["eid"],
@@ -258,18 +261,19 @@ class IosNotificationHandler {
     } else if (communicationSettingAction) {
       await Get.to(CareGiverSettings());
     } else if (model.isSheela ?? false) {
-      if (model.eventType != null && model.eventType == strWrapperCall) {
-        await Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            isSheelaAskForLang: true,
-            rawMessage: model.rawBody,
-            eventType: model.eventType,
-            others: model.others,
-          ),
-        );
-      } else if ((model.rawBody ?? '').isNotEmpty) {
-        /*if (sheelaAIController.isSheelaScreenActive) {
+      if (CommonUtil().isAllowSheelaLiveReminders()) {
+        if (model.eventType != null && model.eventType == strWrapperCall) {
+          await Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              isSheelaAskForLang: true,
+              rawMessage: model.rawBody,
+              eventType: model.eventType,
+              others: model.others,
+            ),
+          );
+        } else if ((model.rawBody ?? '').isNotEmpty) {
+          /*if (sheelaAIController.isSheelaScreenActive) {
           if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
             var reqJsonAudio = {
               KIOSK_task: KIOSK_audio,
@@ -287,22 +291,20 @@ class IosNotificationHandler {
           await Get.toNamed(
             rt_Sheela,
             arguments: SheelaArgument(
-              textSpeechSheela: model.rawBody,
-              eventIdViaSheela: model.eventId
-            ),
+                textSpeechSheela: model.rawBody,
+                eventIdViaSheela: model.eventId),
           );
-        //}
-      } else if ((model.message ?? '').isNotEmpty) {
-        await Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            isSheelaFollowup: true,
-            message: model.message,
-            eventIdViaSheela: model.eventId
-          ),
-        );
-      } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
-        /*if (sheelaAIController.isSheelaScreenActive) {
+          //}
+        } else if ((model.message ?? '').isNotEmpty) {
+          await Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+                isSheelaFollowup: true,
+                message: model.message,
+                eventIdViaSheela: model.eventId),
+          );
+        } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
+          /*if (sheelaAIController.isSheelaScreenActive) {
           if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
             var reqJsonAudio = {
               KIOSK_task: KIOSK_audio,
@@ -315,11 +317,11 @@ class IosNotificationHandler {
           await Get.toNamed(
             router.rt_Sheela,
             arguments: SheelaArgument(
-              audioMessage: model.sheelaAudioMsgUrl,
-              eventIdViaSheela: model.eventId
-            ),
+                audioMessage: model.sheelaAudioMsgUrl,
+                eventIdViaSheela: model.eventId),
           );
-        //}
+          //}
+        }
       }
     } else if (CommonUtil.isUSRegion() &&
         model.templateName == strPatientReferralAcceptToPatient) {
@@ -520,47 +522,49 @@ class IosNotificationHandler {
         await PreferenceUtil.saveNotificationData(model);
       }
     } else if (model.redirect == 'sheela') {
-      await fbaLog(
-        eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'sheela',
-          'navigationPage': 'Sheela Start Page',
-        },
-      );
-      if (isAlreadyLoaded) {
-        if ((model.notificationListId ?? '').isNotEmpty) {
-          await FetchNotificationService()
-              .inAppUnreadAction(model.notificationListId!);
-        }
-        if (model.rawBody != null) {
-          String? sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
-          if (sheela_lang != null && sheela_lang != '') {
-            await Get.toNamed(
-              rt_Sheela,
-              arguments: SheelaArgument(
-                isSheelaAskForLang: false,
-                langCode: sheela_lang,
-                rawMessage: model.rawBody,
-              ),
-            );
+      if (CommonUtil().isAllowSheelaLiveReminders()) {
+        await fbaLog(
+          eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'sheela',
+            'navigationPage': 'Sheela Start Page',
+          },
+        );
+        if (isAlreadyLoaded) {
+          if ((model.notificationListId ?? '').isNotEmpty) {
+            await FetchNotificationService()
+                .inAppUnreadAction(model.notificationListId!);
+          }
+          if (model.rawBody != null) {
+            String? sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
+            if (sheela_lang != null && sheela_lang != '') {
+              await Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: false,
+                  langCode: sheela_lang,
+                  rawMessage: model.rawBody,
+                ),
+              );
+            } else {
+              await Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: true,
+                  rawMessage: model.rawBody,
+                ),
+              );
+            }
           } else {
-            await Get.toNamed(
-              rt_Sheela,
-              arguments: SheelaArgument(
-                isSheelaAskForLang: true,
-                rawMessage: model.rawBody,
-              ),
-            );
+            await Get.to(() => SplashScreen(
+              nsRoute: 'sheela',
+            ));
           }
         } else {
           await Get.to(() => SplashScreen(
-                nsRoute: 'sheela',
-              ));
+            nsRoute: 'sheela',
+          ));
         }
-      } else {
-        await Get.to(() => SplashScreen(
-              nsRoute: 'sheela',
-            ));
       }
     } else if ((model.redirect == 'profile_page') ||
         (model.redirect == 'profile')) {

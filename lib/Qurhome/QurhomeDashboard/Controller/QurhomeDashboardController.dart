@@ -168,7 +168,19 @@ class QurhomeDashboardController extends GetxController {
           case "scheduleAppointment":
             if (isFirstTime) {
               isFirstTime = false;
-              if (sheelaAIController?.isSheelaScreenActive??false) {
+              if (CommonUtil().isAllowSheelaLiveReminders()) {
+                if (sheelaAIController?.isSheelaScreenActive ?? false) {
+                  var reqJson = {
+                    KIOSK_task: KIOSK_appointment_avail,
+                    KIOSK_appoint_id: receivedValues[1],
+                    KIOSK_eid: receivedValues[2],
+                    KIOSK_say_text: receivedValues[3],
+                  };
+                  CommonUtil().callQueueNotificationPostApi(reqJson);
+                } else if (PreferenceUtil.getIfQurhomeisAcive()) {
+                  redirectToSheelaScheduleAppointment();
+                }
+              } else {
                 var reqJson = {
                   KIOSK_task: KIOSK_appointment_avail,
                   KIOSK_appoint_id: receivedValues[1],
@@ -176,9 +188,8 @@ class QurhomeDashboardController extends GetxController {
                   KIOSK_say_text: receivedValues[3],
                 };
                 CommonUtil().callQueueNotificationPostApi(reqJson);
-              } else if (PreferenceUtil.getIfQurhomeisAcive()) {
-                redirectToSheelaScheduleAppointment();
               }
+
             }
             break;
         }

@@ -1690,28 +1690,26 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   width: 40.w,
                 ),
                 title: Text(variable.strSheelaLiveReminders),
-                subtitle: Text(
+                /*subtitle: Text(
                   variable.strDefaultUI,
                   style: TextStyle(fontSize: 12.0.sp),
-                ),
+                ),*/
                 trailing: Transform.scale(
                   scale: 0.8,
                   child: Switch(
                     value: _isSheelaLiveReminders ?? false,
                     activeColor: Color(new CommonUtil().getMyPrimaryColor()),
                     onChanged: (bool newValue) {
-                      setState(
-                        () {
-                          _isSheelaLiveReminders = newValue;
-                          isSkillIntegration = false;
-                          isCareGiverCommunication = false;
-                          isVitalPreferences = false;
-                          isDisplayPreference = false;
-                          isSheelaNotificationPref = true;
+                      _isSheelaLiveReminders = newValue;
+                      isSkillIntegration = false;
+                      isCareGiverCommunication = false;
+                      isVitalPreferences = false;
+                      isDisplayPreference = false;
+                      isSheelaNotificationPref = true;
 
-                          createAppColorSelection(preColor, greColor);
-                        },
-                      );
+                      createAppColorSelection(preColor, greColor).then((value) {
+                        setState(() {});
+                      });
                     },
                   ),
                 ),
