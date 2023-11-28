@@ -17,9 +17,9 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/AttachmentListSheela.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
@@ -304,6 +304,8 @@ class SheelaAIController extends GetxController {
         audioResponse.recipientId = sheelaAudioMsgUrl;
         audioResponse.audioFile = arguments!.audioMessage;
         conversations.add(audioResponse);
+        audioResponse.endOfConvDiscardDialog =
+            arguments?.allowBackBtnPress ?? false;
       } else if ((arguments?.textSpeechSheela ?? '').isNotEmpty) {
         conversations = [];
         currentPlayingConversation = null;
@@ -312,6 +314,8 @@ class SheelaAIController extends GetxController {
         var currentCon = SheelaResponse(text: msg, recipientId: sheelaRecepId);
         conversations.add(currentCon);
         currentPlayingConversation = currentCon;
+        currentPlayingConversation?.endOfConvDiscardDialog =
+            arguments?.allowBackBtnPress ?? false;
         isLoading.value = false;
         playTTS();
       } else {

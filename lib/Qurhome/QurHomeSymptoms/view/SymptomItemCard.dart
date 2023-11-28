@@ -872,7 +872,7 @@ class SymptomItemCard extends StatelessWidget {
               children: [
                 Text(
                   //TODO: Replace with actual value from API
-                  '${vitalData.vitalName} : ',
+                  '${CommonUtil().showDescTextRegimenList(vitalData)} : ',
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.grey,

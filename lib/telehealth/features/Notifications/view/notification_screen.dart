@@ -1215,11 +1215,16 @@ class _NotificationScreen extends State<NotificationScreen> {
                 Get.toNamed(
                   routervariable.rt_Sheela,
                   arguments: SheelaArgument(
+                    allowBackBtnPress: true,
                     textSpeechSheela: rawBody,
                   ),
                 )!
+                    .then((value) {
+                  readUnreadAction(result, isRead: true);
+                }); /*
                     .then((value) => PageNavigator.goToPermanent(
-                        context, router.rt_Landing));
+                        context, router.rt_Landing))*/
+                ;
               } else {
                 Get.toNamed(
                   routervariable.rt_Sheela,
@@ -1239,9 +1244,9 @@ class _NotificationScreen extends State<NotificationScreen> {
               Get.toNamed(
                 routervariable.rt_Sheela,
                 arguments: SheelaArgument(
-                  audioMessage:
-                      result.messageDetails?.payload?.sheelaAudioMsgUrl,
-                ),
+                    audioMessage:
+                        result.messageDetails?.payload?.sheelaAudioMsgUrl,
+                    allowBackBtnPress: true),
               )!
                   .then((value) {
                 readUnreadAction(result, isRead: true);
@@ -1290,16 +1295,10 @@ class _NotificationScreen extends State<NotificationScreen> {
         ).regimentMode = RegimentMode.Schedule;
         Provider.of<RegimentViewModel>(context, listen: false).regimentFilter =
             RegimentFilter.Missed;
-        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())?.then(
-          (value) => PageNavigator.goToPermanent(
-            context,
-            router.rt_Landing,
-            arguments: LandingArguments(
-              needFreshLoad: false,
-            ),
-          ),
-        );
-        readUnreadAction(result);
+        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())
+            ?.then((value) {
+          readUnreadAction(result, isRead: true);
+        });
         break;
       case "claimList":
         if ((result?.messageDetails?.payload?.claimId ?? '').isNotEmpty) {
