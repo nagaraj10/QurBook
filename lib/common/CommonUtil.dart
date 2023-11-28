@@ -5471,8 +5471,19 @@ class CommonUtil {
     } else {
       desc = '';
     }
-
+    desc = checkIfStringContiansUnderscore(desc ?? "");
     return parseHtmlString(desc);
+  }
+
+  String checkIfStringContiansUnderscore(String value) {
+    String result = "";
+    if (value.contains("_")) {
+      result = value.replaceAll("_", " ");
+    } else {
+      result = value;
+    }
+
+    return result;
   }
 
   String parseHtmlString(String? htmlString) {
