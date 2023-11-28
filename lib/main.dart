@@ -1147,6 +1147,7 @@ class _MyFHBState extends State<MyFHB> {
       Get.toNamed(
         router.rt_Sheela,
         arguments: SheelaArgument(
+          allowBackBtnPress: true,
           audioMessage: passedValArr[3].toString(),
           eventIdViaSheela: passedValArr[4].toString(),
         ),
@@ -1166,6 +1167,7 @@ class _MyFHBState extends State<MyFHB> {
         Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
+              allowBackBtnPress: true,
               isSheelaFollowup: true,
               textSpeechSheela: (passedValArr[2] != null &&
                       passedValArr[2] != 'null' &&
