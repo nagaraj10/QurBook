@@ -27,6 +27,8 @@ class SheelaArgument {
   String? eventIdViaSheela;
   bool isRetakeSurvey = false;
   bool isNeedTranslateText = false;
+  bool allowBackBtnPress = false;
+
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -56,5 +58,6 @@ class SheelaArgument {
     this.eventIdViaSheela,
     this.isRetakeSurvey = false,
     this.isNeedTranslateText = false,
+    this.allowBackBtnPress=false
   });
 }

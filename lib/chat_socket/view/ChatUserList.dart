@@ -82,7 +82,7 @@ class _ChatUserListState extends State<ChatUserList> {
   final controller = Get.put(ChatUserListController());
 
   var qurhomeDashboardController =
-  CommonUtil().onInitQurhomeDashboardController();
+      CommonUtil().onInitQurhomeDashboardController();
 
   @override
   initState() {
@@ -349,8 +349,8 @@ class _ChatUserListState extends State<ChatUserList> {
       if (data.lastName != null && data.lastName != '') {
         fulName = fulName! + ' ' + data.lastName!;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     if (data.isCarecoordinator!) {
@@ -363,8 +363,8 @@ class _ChatUserListState extends State<ChatUserList> {
             data.carecoordinatorLastName != '') {
           ccName = ccName! + ' ' + data.carecoordinatorLastName!;
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
 
@@ -406,8 +406,8 @@ class _ChatUserListState extends State<ChatUserList> {
                   initSocket(false);
                 }
               });
-            } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
               print(e);
             }
           },
@@ -617,8 +617,8 @@ class _ChatUserListState extends State<ChatUserList> {
         if (userChatList.lastName != null && userChatList.lastName != '') {
           ccName = ccName! + ' ' + userChatList.lastName!;
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
     return Column(
@@ -708,16 +708,15 @@ class _ChatUserListState extends State<ChatUserList> {
                                       ))
                               : Icon(
                                   Icons.account_circle,
-                                  size: 50.0,
+                                  size: (CommonUtil().isTablet ?? false)
+                                      ? 50.0
+                                      : 40.0,
                                   color: greyColor,
                                 ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  width: 1.sw * 0.055,
                 ),
                 Container(
                   child: Expanded(

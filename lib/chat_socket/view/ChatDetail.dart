@@ -26,7 +26,6 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -40,7 +39,6 @@ import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart
 import 'package:myfhb/telehealth/features/chat/view/ChooseDateSlot.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:open_filex/open_filex.dart';
@@ -218,6 +216,11 @@ class ChatState extends State<ChatDetail> {
 
   var pdfViewController;
 
+  double? fontSizeOne = (CommonUtil().isTablet ?? false) ? 20.0.sp : 16.0.sp;
+  double? fontSizeTwo = (CommonUtil().isTablet ?? false) ? 16.0.sp : 12.0.sp;
+  double? fontSizeThree = (CommonUtil().isTablet ?? false) ? 18.0.sp : 14.0.sp;
+  double? fontSizeFour = (CommonUtil().isTablet ?? false) ? 16.0.sp : 14.0.sp;
+
   @override
   void initState() {
     super.initState();
@@ -229,8 +232,7 @@ class ChatState extends State<ChatDetail> {
       ).updateChatHistoryList([], shouldUpdate: false);
     });
 
-    pdfViewController =
-        CommonUtil().onInitPDFViewController();
+    pdfViewController = CommonUtil().onInitPDFViewController();
 
     peerId = widget.peerId;
     peerName = widget.peerName;
@@ -788,6 +790,7 @@ class ChatState extends State<ChatDetail> {
   Widget _patientChatBar() {
     return AppBar(
       flexibleSpace: Container(
+        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
@@ -802,7 +805,7 @@ class ChatState extends State<ChatDetail> {
             ])),
         child: SafeArea(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Container(
                 child: Row(
@@ -831,11 +834,9 @@ class ChatState extends State<ChatDetail> {
                         child: _patientDetailOrSearch(),
                       ),
                     ),
-                    SizedBox(
-                      width: 1.sw * 0.03,
-                    ),
+                    Expanded(flex: 1, child: SizedBox()),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         !isCallBackDisable && isCareGiver!
                             ? SizedBoxWithChild(
@@ -880,12 +881,17 @@ class ChatState extends State<ChatDetail> {
                                 child:
                                     CommonUtil().getNotificationIcon(context),
                               ),
-                        SizedBox(width: 1.sw * 0.04),
+                        SizedBox(
+                          width: 10,
+                        ),
                         SizedBoxWithChild(
                           height: 24.0.h,
                           width: 24.0.w,
                           child: moreOptionsPopup(),
-                        )
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
                       ],
                     )
                   ],
@@ -918,7 +924,7 @@ class ChatState extends State<ChatDetail> {
               child: Text(
                 '$popUpChoiceOne',
                 style: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: fontSizeOne,
                 ),
               ),
             ),
@@ -1053,7 +1059,7 @@ class ChatState extends State<ChatDetail> {
                           : '',
                       style: TextStyle(
                         color: Color(new CommonUtil().getMyPrimaryColor()),
-                        fontSize: 16.0.sp,
+                        fontSize: fontSizeOne,
                         fontWeight: FontWeight.w400,
                       ),
                     )),
@@ -1081,7 +1087,7 @@ class ChatState extends State<ChatDetail> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: font_poppins,
-                            fontSize: 16.0.sp,
+                            fontSize: fontSizeOne,
                             color: Colors.white)),
                     getTopBookingDetail(),
                     lastReceived != null &&
@@ -1110,7 +1116,7 @@ class ChatState extends State<ChatDetail> {
           maxLines: 1,
           style: TextStyle(
               fontFamily: font_poppins,
-              fontSize: 12.0.sp,
+              fontSize: fontSizeTwo,
               color: Colors.white));
     } else {
       if (!isCareGiverApi) {
@@ -1126,7 +1132,7 @@ class ChatState extends State<ChatDetail> {
                     maxLines: 1,
                     style: TextStyle(
                         fontFamily: font_poppins,
-                        fontSize: 12.0.sp,
+                        fontSize: fontSizeTwo,
                         color: Colors.white)),
                 Text(
                     'Next Appointment: ' +
@@ -1136,7 +1142,7 @@ class ChatState extends State<ChatDetail> {
                     maxLines: 1,
                     style: TextStyle(
                         fontFamily: font_poppins,
-                        fontSize: 12.0.sp,
+                        fontSize: fontSizeTwo,
                         color: Colors.white)),
                 Text(
                     toBeginningOfSentenceCase('Last Appointment: ' +
@@ -1146,7 +1152,7 @@ class ChatState extends State<ChatDetail> {
                     maxLines: 1,
                     style: TextStyle(
                         fontFamily: font_poppins,
-                        fontSize: 12.0.sp,
+                        fontSize: fontSizeTwo,
                         color: Colors.white)),
               ],
             ),
@@ -1163,7 +1169,7 @@ class ChatState extends State<ChatDetail> {
   Widget buildListMessage() {
     return Flexible(
         child: ScrollablePositionedList.builder(
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all((CommonUtil().isTablet ?? false) ? 20.00 : 10.0),
       itemBuilder: (context, index) {
         var chatList = Provider.of<ChatSocketViewModel>(Get.context!)
             .chatHistoryList!
@@ -1206,11 +1212,14 @@ class ChatState extends State<ChatDetail> {
     return IconTheme(
       data: IconThemeData(color: Color(new CommonUtil().getMyPrimaryColor())),
       child: Container(
+        width: (CommonUtil().isTablet ?? false)
+            ? MediaQuery.of(context).size.width
+            : null,
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: <Widget>[
             Flexible(
-              flex: 4,
+              flex: (CommonUtil().isTablet ?? false) ? 8 : 4,
               child: Container(
                 height: 58.0.h,
                 child: Stack(
@@ -1392,7 +1401,7 @@ class ChatState extends State<ChatDetail> {
                           text: TextSpan(
                               style: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 14.0.sp,
+                                fontSize: fontSizeOne,
                               ),
                               children: textSpanList),
                         ),
@@ -1427,7 +1436,7 @@ class ChatState extends State<ChatDetail> {
                           text: TextSpan(
                               style: TextStyle(
                                 color: Color(CommonUtil().getMyPrimaryColor()),
-                                fontSize: 16.0.sp,
+                                fontSize: fontSizeOne,
                               ),
                               children: textSpanList),
                         ),
@@ -1596,7 +1605,7 @@ class ChatState extends State<ChatDetail> {
                         text: TextSpan(
                             style: TextStyle(
                               color: Colors.black54,
-                              fontSize: 14.0.sp,
+                              fontSize: fontSizeOne,
                             ),
                             children: textSpanList),
                       ),
@@ -1640,13 +1649,15 @@ class ChatState extends State<ChatDetail> {
                                           style: TextStyle(
                                             color: Color(new CommonUtil()
                                                 .getMyPrimaryColor()),
-                                            fontSize: 16.0.sp,
+                                            fontSize: fontSizeOne,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         )),
                                       )),
                               borderRadius: BorderRadius.all(
-                                Radius.circular(18.0),
+                                Radius.circular((CommonUtil().isTablet ?? false)
+                                    ? 35.0
+                                    : 20.0),
                               ),
                               clipBehavior: Clip.hardEdge,
                             )
@@ -1678,10 +1689,14 @@ class ChatState extends State<ChatDetail> {
                                   children: [
                                     RichText(
                                       text: TextSpan(
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fontSizeOne,
+                                          ),
                                           children: textSpanList),
                                     ),
-                                    isSentViaSheelaTextWidget(chatList,Colors.white),
+                                    isSentViaSheelaTextWidget(
+                                        chatList, Colors.white),
                                   ],
                                 ),
                               ),
@@ -1796,7 +1811,9 @@ class ChatState extends State<ChatDetail> {
                                               Text(
                                                 'Click to view PDF',
                                                 style: TextStyle(
-                                                    color: Colors.white),
+                                                  color: Colors.white,
+                                                  fontSize: fontSizeOne,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -1814,7 +1831,8 @@ class ChatState extends State<ChatDetail> {
                                               padding: EdgeInsets.all(10.0),
                                               width: 1.sw / 1.5,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     mainAxisAlignment:
@@ -1824,12 +1842,14 @@ class ChatState extends State<ChatDetail> {
                                                       Expanded(
                                                         child: fhbBasicWidget
                                                             .getAudioWidgetForChat(
-                                                                chatList.messages
+                                                                chatList
+                                                                    .messages
                                                                     ?.content),
                                                       )
                                                     ],
                                                   ),
-                                                  isSentViaSheelaTextWidget(chatList, Colors.black),
+                                                  isSentViaSheelaTextWidget(
+                                                      chatList, Colors.black),
                                                 ],
                                               ),
                                             ),
@@ -1859,7 +1879,7 @@ class ChatState extends State<ChatDetail> {
                                     .toString()),
                             style: TextStyle(
                                 color: greyColor,
-                                fontSize: 14.0.sp,
+                                fontSize: fontSizeThree,
                                 fontStyle: FontStyle.italic),
                           ),
                           margin: EdgeInsets.only(
@@ -1869,7 +1889,6 @@ class ChatState extends State<ChatDetail> {
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
               ),
-              margin: EdgeInsets.only(bottom: 10.0),
             );
     }
   }
@@ -1896,7 +1915,7 @@ class ChatState extends State<ChatDetail> {
                 //   ..color =
                 //       Colors.white,
                 decoration: TextDecoration.underline,
-                fontSize: 16.0.sp,
+                fontSize: fontSizeOne,
               ),
             ),
           ),
@@ -1913,7 +1932,9 @@ class ChatState extends State<ChatDetail> {
         child: !isPatient
             ? InkWell(
                 child: Container(
-                  margin: EdgeInsets.only(top: 8),
+                  margin: (CommonUtil().isTablet ?? false
+                      ? EdgeInsets.only(top: 8)
+                      : EdgeInsets.only(top: 2, bottom: 2)),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(999),
@@ -1929,7 +1950,7 @@ class ChatState extends State<ChatDetail> {
                             index),
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 14.0.sp,
+                          fontSize: fontSizeOne,
                         ),
                       ),
                     ),
@@ -2223,7 +2244,7 @@ class ChatState extends State<ChatDetail> {
         'File ' + dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          fontSize: 16.0.sp,
+          fontSize: fontSizeOne,
         ),
       );
     } else {
@@ -2231,7 +2252,7 @@ class ChatState extends State<ChatDetail> {
         'Click to View Pdf',
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          fontSize: 16.0.sp,
+          fontSize: fontSizeOne,
         ),
       );
     }
@@ -2246,7 +2267,7 @@ class ChatState extends State<ChatDetail> {
           content: Text(
             'Are you sure want to download?',
             style: TextStyle(
-              fontSize: 16.0.sp,
+              fontSize: fontSizeOne,
             ),
           ),
           actions: <Widget>[
@@ -2258,7 +2279,7 @@ class ChatState extends State<ChatDetail> {
               child: Text(
                 'Download',
                 style: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: fontSizeOne,
                 ),
               ),
             ),
@@ -2317,7 +2338,7 @@ class ChatState extends State<ChatDetail> {
       content: Text(
         strDownloadStart,
         style: TextStyle(
-          fontSize: 16.0.sp,
+          fontSize: fontSizeOne,
         ),
       ),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -2338,7 +2359,7 @@ class ChatState extends State<ChatDetail> {
           content: Text(
             strFileDownloaded,
             style: TextStyle(
-              fontSize: 16.0.sp,
+              fontSize: fontSizeOne,
             ),
           ),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -2349,8 +2370,7 @@ class ChatState extends State<ChatDetail> {
                 file?.path,
               ); //FU2.5
               final data = OpenPDF(type: PDFLocation.Path, path: file?.path);
-              var pdfController =
-                  CommonUtil().onInitPDFViewController();
+              var pdfController = CommonUtil().onInitPDFViewController();
               pdfController.data = data;
               Get.to(() => PDFView());
             },
@@ -2377,7 +2397,7 @@ class ChatState extends State<ChatDetail> {
               content: Text(
                 strFileDownloaded,
                 style: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: fontSizeOne,
                 ),
               ),
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -2390,8 +2410,7 @@ class ChatState extends State<ChatDetail> {
 
                   final data =
                       OpenPDF(type: PDFLocation.Path, path: filePath?.path);
-                  var pdfController =
-                  CommonUtil().onInitPDFViewController();
+                  var pdfController = CommonUtil().onInitPDFViewController();
                   pdfController.data = data;
                   Get.to(() => PDFView());
                 },
@@ -2475,7 +2494,7 @@ class ChatState extends State<ChatDetail> {
         content: Text(
           'Send to Dr. ' + peerName! != null && peerName != '' ? peerName! : '',
           style: TextStyle(
-            fontSize: 16.0.sp,
+            fontSize: fontSizeOne,
           ),
         ),
         actions: <Widget>[
@@ -2484,7 +2503,7 @@ class ChatState extends State<ChatDetail> {
             child: Text(
               'Cancel',
               style: TextStyle(
-                fontSize: 16.0.sp,
+                fontSize: fontSizeOne,
               ),
             ),
           ),
@@ -2496,7 +2515,7 @@ class ChatState extends State<ChatDetail> {
             child: Text(
               'Send',
               style: TextStyle(
-                fontSize: 16.0.sp,
+                fontSize: fontSizeOne,
               ),
             ),
           ),
@@ -2593,21 +2612,23 @@ class ChatState extends State<ChatDetail> {
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
       style: TextStyle(
-          fontFamily: font_poppins, fontSize: 12.0.sp, color: Colors.white),
+          fontFamily: font_poppins, fontSize: fontSizeTwo, color: Colors.white),
     );
   }
 
   Widget isSentViaSheelaTextWidget(ChatHistoryResult chatList, Color color) =>
       (chatList?.messages?.isSentViaSheela ?? false)
           ? Container(
-        margin: EdgeInsets.only(top: 5.0),
-            child: Text(
+              margin: EdgeInsets.only(top: 5.0),
+              child: Text(
                 strSentViaSheela,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    color: color, fontSize: 14.0.sp, fontStyle: FontStyle.italic),
+                    color: color,
+                    fontSize: fontSizeFour,
+                    fontStyle: FontStyle.italic),
               ),
-          )
+            )
           : SizedBox.shrink();
 }
 
@@ -2676,6 +2697,4 @@ class TextFieldColorizer extends TextEditingController {
 
     return TextSpan(style: style, children: children);
   }
-
-
 }
