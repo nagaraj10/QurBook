@@ -151,7 +151,7 @@ class ProfileSetting {
       googleFit = json['googleFit'];
       healthFit = json['healthFit'];
       allowDigit = json['allowDigit'];
-      sheelaLiveReminders = json['sheelaLiveReminders'];
+      sheelaLiveReminders = json['isSheelaLiveReminder'];
       glucoMeter = json['glucoMeter'];
       weighScale = json['weighScale'];
       allowDevice = json['allowDevice'];
@@ -189,7 +189,7 @@ class ProfileSetting {
     data['googleFit'] = googleFit;
     data['healthFit'] = healthFit;
     data['allowDigit'] = allowDigit;
-    data['sheelaLiveReminders'] = sheelaLiveReminders;
+    data['isSheelaLiveReminder'] = sheelaLiveReminders;
     data['glucoMeter'] = glucoMeter;
     data['weighScale'] = weighScale;
     data['allowDevice'] = allowDevice;

@@ -338,7 +338,7 @@ class HealthReportListForUserRepository {
       'profileSetting': {
         'allowDigit': allowDigit,
         'allowDevice': allowDevice,
-        'sheelaLiveRemimders': sheelaLiveReminders,
+        'isSheelaLiveReminder': sheelaLiveReminders,
         'googleFit': googleFit,
         'healthFit': healthFit,
         'bpMonitor': bpMonitor,
@@ -392,7 +392,7 @@ class HealthReportListForUserRepository {
       'profileSetting': {
         'allowDigit': allowDigit,
         'allowDevice': allowDevice,
-        'sheelaLiveReminders': sheelaLiveReminders,
+        'isSheelaLiveReminder': sheelaLiveReminders,
         'googleFit': googleFit,
         'healthFit': healthFit,
         'bpMonitor': bpMonitor,
