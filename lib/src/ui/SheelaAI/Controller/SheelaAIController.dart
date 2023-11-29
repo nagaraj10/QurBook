@@ -454,7 +454,6 @@ class SheelaAIController extends GetxController {
             conversations.add(audioResponse);
           }
           if (currentResponse.endOfConv ?? false) {
-            QurPlanReminders.getTheRemindersFromAPI();
             conversationFlag = null;
             //additionalInfo = {};
             sessionToken = const Uuid().v1();

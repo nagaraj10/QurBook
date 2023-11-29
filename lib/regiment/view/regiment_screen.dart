@@ -39,21 +39,14 @@ class RegimentScreen extends StatelessWidget {
           onTap: () => onBackPressed(context),
         ),
         actions: [
-          SwitchProfile().buildActions(
-            context,
-            _key,
-            () {
-              Provider.of<RegimentViewModel>(context, listen: false)
-                  .fetchRegimentData(
-                isInitial: true,
-              );
-              QurPlanReminders.getTheRemindersFromAPI();
-
-              (context as Element).markNeedsBuild();
-            },
-            true,
-            changeWhiteBg: true
-          ),
+          SwitchProfile().buildActions(context, _key, () {
+            Provider.of<RegimentViewModel>(context, listen: false)
+                .fetchRegimentData(
+              isInitial: true,
+            );
+            QurPlanReminders.getTheRemindersFromAPI();
+            (context as Element).markNeedsBuild();
+          }, true, changeWhiteBg: true),
         ],
       ),
       body: WillPopScope(

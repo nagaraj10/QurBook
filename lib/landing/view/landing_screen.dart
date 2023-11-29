@@ -146,7 +146,6 @@ class _LandingScreenState extends State<LandingScreen> {
       mInitialTime = DateTime.now();
       // dbInitialize();
       userId = PreferenceUtil.getStringValue(KEY_USERID);
-      // QurPlanReminders.getTheRemindersFromAPI();
       try {
         Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
       } catch (e, stackTrace) {

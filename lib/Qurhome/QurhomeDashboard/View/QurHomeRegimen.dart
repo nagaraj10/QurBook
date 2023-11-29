@@ -2476,9 +2476,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
         },
       );
-
-      QurPlanReminders.getTheRemindersFromAPI();
-
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogClosed);
     } catch (e, stackTrace) {
