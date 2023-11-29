@@ -1154,7 +1154,6 @@ class SymptomItemCard extends StatelessWidget {
           LoaderQurHome.hideLoadingDialog(Get.context!);
         });
       }
-      QurPlanReminders.getTheRemindersFromAPI();
 
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogClosed);
