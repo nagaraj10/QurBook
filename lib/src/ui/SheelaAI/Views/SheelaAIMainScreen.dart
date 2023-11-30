@@ -328,11 +328,11 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       actions: [
         Row(
           children: [
-            if (!CommonUtil.isUSRegion())
+            if (!CommonUtil.isUSRegion() && (widget.arguments?.takeActiveDeviceReadings ?? false))
               hubListViewController.isUserHasParedDevice.value
                   ? controller.isBLEStatus.value == BLEStatus.Disabled
                       ? CommonBluetoothWidget.getDisabledBluetoothIcon()
-                      : MyBlinkingBLEIcon()
+                      :    MyBlinkingBLEIcon()
                   : SizedBox.shrink(),
             SizedBox(width: 12.w),
             if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
@@ -451,7 +451,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                             ),
                           ),
                           SizedBox(width: 12.w),
-                          hubListViewController.isUserHasParedDevice.value
+                          hubListViewController.isUserHasParedDevice.value &&  (widget.arguments?.takeActiveDeviceReadings ?? false)
                               ? controller.isBLEStatus.value ==
                                       BLEStatus.Disabled
                                   ? CommonBluetoothWidget
@@ -460,17 +460,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                               : SizedBox.shrink(),
                         ],
                       )
-                    : Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: CommonUtil().isTablet! ? 0 : 8.h,
-                          vertical: CommonUtil().isTablet! ? 0 : 4.h,
-                        ),
-                        child: AssetImageWidget(
-                          icon: icon_qurhome,
-                          height: 30.h,
-                          width: 30.h,
-                        ),
-                      )),
+                    : CommonUtil().qurHomeMainIcon()),
       ),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(
