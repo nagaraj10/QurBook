@@ -5397,7 +5397,7 @@ class CommonUtil {
   }
 
   Widget qurHomeMainIcon() {
-    //Qurhome icon width and height size updated in both mobile and tablet
+    //Qurhome icon width and height size updated and used common method
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: (CommonUtil().isTablet??false) ? 0 : 8.h,
