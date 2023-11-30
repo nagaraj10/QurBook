@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
+import '../../../../common/firestore_services.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
@@ -135,8 +135,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
 
   void callBackToRefresh() {
     //myProvidersResponseList = null;
-    QurPlanReminders.getTheRemindersFromAPI();
-
+    FirestoreServices().updateFirestoreListner();
     setState(() {
       isRefresh = false;
     });

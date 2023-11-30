@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
+import '../../../../common/firestore_services.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
@@ -452,7 +451,7 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   void callBackToRefresh() {
-    QurPlanReminders.getTheRemindersFromAPI();
+    FirestoreServices().updateFirestoreListner();
     (context as Element).markNeedsBuild();
     refreshAppointments();
   }

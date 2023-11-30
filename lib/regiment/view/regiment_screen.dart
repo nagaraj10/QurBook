@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
+import '../../common/firestore_services.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/CommonUtil.dart';
@@ -44,7 +44,7 @@ class RegimentScreen extends StatelessWidget {
                 .fetchRegimentData(
               isInitial: true,
             );
-            QurPlanReminders.getTheRemindersFromAPI();
+            FirestoreServices().updateFirestoreListner();
             (context as Element).markNeedsBuild();
           }, true, changeWhiteBg: true),
         ],
