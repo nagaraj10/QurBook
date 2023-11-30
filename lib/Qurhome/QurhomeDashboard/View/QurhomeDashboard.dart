@@ -495,13 +495,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                           .getQurhomePrimaryColor()),
                                     ),
                                   )
-                                : CommonUtil().isTablet!
-                                    ? AssetImageWidget(
-                                        icon: icon_qurhome,
-                                        height: 48.h,
-                                        width: 48.h,
-                                      )
-                                    : CommonUtil().qurHomeMainIcon())),
+                                : CommonUtil().qurHomeMainIcon())),
                 bottom: PreferredSize(
                   child: Container(
                     color: Color(
