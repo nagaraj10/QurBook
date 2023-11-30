@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
@@ -125,8 +125,7 @@ class IosNotificationHandler {
     );
 
     // Receive Local Notification
-    variable.reminderMethodChannel
-        .setMethodCallHandler((call) async {
+    variable.reminderMethodChannel.setMethodCallHandler((call) async {
       if (call.method == variable.callLocalNotificationMethod) {
         final data = Map<String, dynamic>.from(call.arguments);
         if (data != null) {
@@ -139,8 +138,7 @@ class IosNotificationHandler {
                 CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = eventId;
             qurhomeDashboardController.estart.value = estart;
-            if (dosemeal == doseValueless ||
-                dosemeal == doseValueHigh) {
+            if (dosemeal == doseValueless || dosemeal == doseValueHigh) {
               qurhomeDashboardController.isOnceInAPlanActivity.value = true;
             } else {
               qurhomeDashboardController.isOnceInAPlanActivity.value = false;
@@ -172,8 +170,8 @@ class IosNotificationHandler {
           .collection("call_log")
           .doc("${model.callArguments!.channelName}")
           .set({"call_status": status});
-    } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e);
     }
     if (status == parameters.accept.toLowerCase()) {
@@ -284,22 +282,21 @@ class IosNotificationHandler {
             CommonUtil().callQueueNotificationPostApi(reqJson);
           }
         } else {*/
-          await Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(
+        await Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+              allowBackBtnPress: true,
               textSpeechSheela: model.rawBody,
-              eventIdViaSheela: model.eventId
-            ),
-          );
+              eventIdViaSheela: model.eventId),
+        );
         //}
       } else if ((model.message ?? '').isNotEmpty) {
         await Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
-            isSheelaFollowup: true,
-            message: model.message,
-            eventIdViaSheela: model.eventId
-          ),
+              isSheelaFollowup: true,
+              message: model.message,
+              eventIdViaSheela: model.eventId),
         );
       } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
         /*if (sheelaAIController.isSheelaScreenActive) {
@@ -311,14 +308,14 @@ class IosNotificationHandler {
             CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
           }
         } else {*/
-          await Future.delayed(const Duration(seconds: 5));
-          await Get.toNamed(
-            router.rt_Sheela,
-            arguments: SheelaArgument(
+        await Future.delayed(const Duration(seconds: 5));
+        await Get.toNamed(
+          router.rt_Sheela,
+          arguments: SheelaArgument(
+              allowBackBtnPress: true,
               audioMessage: model.sheelaAudioMsgUrl,
-              eventIdViaSheela: model.eventId
-            ),
-          );
+              eventIdViaSheela: model.eventId),
+        );
         //}
       }
     } else if (CommonUtil.isUSRegion() &&

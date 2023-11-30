@@ -60,7 +60,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
               monthCellStyle: DateRangePickerMonthCellStyle(
                   todayTextStyle: TextStyle(color: Colors.black)),
             )),
-            if (CommonUtil.isUSRegion())
+            //if (CommonUtil.isUSRegion())
               Container(
                 padding: EdgeInsets.all(10.sp),
                 margin: EdgeInsets.only(

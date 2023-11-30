@@ -1,39 +1,40 @@
 import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
-import 'package:myfhb/QurHub/View/HubListView.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
-import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
+import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/regiment/view/manage_activities/manage_activities_screen.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
-import '../utils/timezone/timezone_services.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
@@ -42,19 +43,16 @@ import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDet
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
-import '../utils/PageNavigator.dart';
-import 'package:connectivity/connectivity.dart';
-import 'NetworkScreen.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 
+import '../utils/PageNavigator.dart';
+import '../utils/timezone/timezone_services.dart';
+import 'NetworkScreen.dart';
 import 'SheelaAI/Models/sheela_arguments.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
 
@@ -443,6 +441,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           Get.toNamed(
                             rt_Sheela,
                             arguments: SheelaArgument(
+                              allowBackBtnPress: true,
                               isSheelaAskForLang: true,
                               textSpeechSheela: rawTitle,
                             ),
@@ -475,8 +474,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           Get.toNamed(
                             router.rt_Sheela,
                             arguments: SheelaArgument(
-                              audioMessage: temp[2].toString(),
-                            ),
+                                audioMessage: temp[2].toString(),
+                                allowBackBtnPress: true),
                           )!
                               .then((value) => PageNavigator.goToPermanent(
                                   context, router.rt_Landing));
