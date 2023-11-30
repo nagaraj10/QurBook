@@ -460,17 +460,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                               : SizedBox.shrink(),
                         ],
                       )
-                    : Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: CommonUtil().isTablet! ? 0 : 8.h,
-                          vertical: CommonUtil().isTablet! ? 0 : 4.h,
-                        ),
-                        child: AssetImageWidget(
-                          icon: icon_qurhome,
-                          height: 30.h,
-                          width: 30.h,
-                        ),
-                      )),
+                    : CommonUtil().qurHomeMainIcon()),
       ),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(
