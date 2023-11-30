@@ -26,6 +26,9 @@ class SheelaArgument {
   String? chatMessageIdSocket;
   String? eventIdViaSheela;
   bool isRetakeSurvey = false;
+  bool isNeedTranslateText = false;
+  bool allowBackBtnPress = false;
+
   bool isNeedPreferredLangauge = false;
 
   SheelaArgument({
@@ -55,6 +58,8 @@ class SheelaArgument {
     this.chatMessageIdSocket,
     this.eventIdViaSheela,
     this.isRetakeSurvey = false,
+    this.isNeedTranslateText = false,
+    this.allowBackBtnPress=false
     this.isNeedPreferredLangauge = false,
   });
 }

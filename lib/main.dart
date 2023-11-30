@@ -16,19 +16,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/app_theme.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/Controller/HubListViewController.dart';
 import 'Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
-import 'my_family_detail/screens/my_family_detail_screen.dart';
-import 'src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
-import 'src/ui/settings/CaregiverSettng.dart';
-import 'telehealth/features/MyProvider/view/BookingConfirmation.dart';
-import 'telehealth/features/appointments/controller/AppointmentDetailsController.dart';
-import 'telehealth/features/appointments/view/AppointmentDetailScreen.dart';
-import 'ticket_support/view/detail_ticket_view_screen.dart';
 import 'authentication/service/authservice.dart';
 import 'authentication/view_model/otp_view_model.dart';
 import 'caregiverAssosication/caregiverAPIProvider.dart';
@@ -54,6 +47,7 @@ import 'landing/view_model/landing_view_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
 import 'my_family/viewmodel/my_family_view_model.dart';
 import 'my_family_detail/models/my_family_detail_arguments.dart';
+import 'my_family_detail/screens/my_family_detail_screen.dart';
 import 'plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'regiment/models/regiment_arguments.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
@@ -66,9 +60,11 @@ import 'src/resources/network/ApiBaseHelper.dart';
 import 'src/ui/MyRecord.dart';
 import 'src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'src/ui/SplashScreen.dart';
 import 'src/ui/connectivity_bloc.dart';
+import 'src/ui/settings/CaregiverSettng.dart';
 import 'src/utils/FHBUtils.dart';
 import 'src/utils/PageNavigator.dart';
 import 'src/utils/dynamic_links.dart';
@@ -77,14 +73,18 @@ import 'src/utils/language/language_utils.dart';
 import 'src/utils/language/languages.dart';
 import 'src/utils/language/view_model/language_view_model.dart';
 import 'src/utils/screenutils/screenutil.dart';
+import 'telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'telehealth/features/Notifications/services/notification_services.dart';
+import 'telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'telehealth/features/appointments/view/resheduleMain.dart';
 import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'ticket_support/view/detail_ticket_view_screen.dart';
 import 'user_plans/view_model/user_plans_view_model.dart';
 import 'video_call/pages/callmain.dart';
 import 'video_call/services/iOS_Notification_Handler.dart';
@@ -428,10 +428,14 @@ class _MyFHBState extends State<MyFHB> {
           };
           CommonUtil().callQueueNotificationPostApi(reqJson);
         } else {
-          Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(eId: passedValArr[1].toString()),
-          );
+          if (sheelaAIController.isQueueDialogShowing.value) {
+            Get.back();
+            sheelaAIController.isQueueDialogShowing.value = false;
+          }
+          Future.delayed(Duration(milliseconds: 500), () async {
+            getToSheelaNavigate(passedValArr,
+                isFromActivityRemainderInvokeSheela: true);
+          });
         }
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
@@ -1124,11 +1128,26 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getToSheelaNavigate(var passedValArr, {bool isFromAudio = false}) {
+  getToSheelaNavigate(var passedValArr, {bool isFromAudio = false,bool isFromActivityRemainderInvokeSheela = false}) {
+    if (isFromActivityRemainderInvokeSheela) {
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(eId: passedValArr[1].toString()),
+      )!
+          .then((value) {
+        try {
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        }
+      });
+      return;
+    }
     if (isFromAudio) {
       Get.toNamed(
         router.rt_Sheela,
         arguments: SheelaArgument(
+          allowBackBtnPress: true,
           audioMessage: passedValArr[3].toString(),
           eventIdViaSheela: passedValArr[4].toString(),
         ),
@@ -1148,6 +1167,7 @@ class _MyFHBState extends State<MyFHB> {
         Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
+              allowBackBtnPress: true,
               isSheelaFollowup: true,
               textSpeechSheela: (passedValArr[2] != null &&
                       passedValArr[2] != 'null' &&

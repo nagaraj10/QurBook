@@ -343,7 +343,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         val action = intent.action
         val type = intent.type
         if (Intent.ACTION_SEND == action && type != null) {
-            if (Constants.TXT_PLAIN == type) {
+            if ((Constants.TXT_PLAIN == type) && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
                 handleSendText(intent) // Handle text being sent
             }
         }
