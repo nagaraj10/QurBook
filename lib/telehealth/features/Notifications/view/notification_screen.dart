@@ -1217,6 +1217,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   arguments: SheelaArgument(
                     allowBackBtnPress: true,
                     textSpeechSheela: rawBody,
+                    isNeedPreferredLangauge: true
                   ),
                 )!
                     .then((value) {
