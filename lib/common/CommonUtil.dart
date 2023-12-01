@@ -6306,7 +6306,8 @@ class CommonUtil {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket!
         .on(getReminderSheelaRedirect, (chatListresponse) {
-      if (PreferenceUtil.getIfQurhomeDashboardActiveChat()) {
+      if (PreferenceUtil.getIfQurhomeDashboardActiveChat() &&
+          isAllowSheelaLiveReminders()) {
         if (chatListresponse != null) {
           SheelaReminderResponse chatList =
               SheelaReminderResponse.fromJson(chatListresponse);

@@ -59,7 +59,7 @@ class SheelaArgument {
     this.eventIdViaSheela,
     this.isRetakeSurvey = false,
     this.isNeedTranslateText = false,
-    this.allowBackBtnPress=false
+    this.allowBackBtnPress=false,
     this.isNeedPreferredLangauge = false,
   });
 }

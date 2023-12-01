@@ -310,6 +310,7 @@ class IosNotificationHandler {
             arguments: SheelaArgument(
                 allowBackBtnPress: true,
                 textSpeechSheela: model.rawBody,
+                isNeedPreferredLangauge: true,
                 eventIdViaSheela: model.eventId),
           );
           //}
