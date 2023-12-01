@@ -184,6 +184,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
       CommonUtil().initSocket();
 
+      //Initialize a timer which will show remainder very 30 mins
       if (CommonUtil().isTablet == true) {
         SheelaRemainderPopup.checkConditionToShowPopUp();
       } else {

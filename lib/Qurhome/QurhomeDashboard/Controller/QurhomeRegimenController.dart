@@ -706,6 +706,7 @@ class QurhomeRegimenController extends GetxController {
                   DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
               (DateTime.now().isBefore(DateTime.parse(endDate ?? '')))) {
             try {
+              //Separte method to show remainder in tablet devices
               sheelaAIController.checkIfWeNeedToShowDialogBox(
                   isNeedSheelaDialog: true);
             } catch (e, stackTrace) {

@@ -325,9 +325,8 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  addSpeechTextConversation(String message){
-    var currentCon =
-    SheelaResponse(text: message, recipientId: sheelaRecepId);
+  addSpeechTextConversation(String message) {
+    var currentCon = SheelaResponse(text: message, recipientId: sheelaRecepId);
     conversations.add(currentCon);
     currentPlayingConversation = currentCon;
     currentPlayingConversation?.endOfConvDiscardDialog =
@@ -1455,6 +1454,14 @@ class SheelaAIController extends GetxController {
     });
   }
 
+/**
+ * This method checks the first and last activity time of the day
+ * Get the list of times on which the remainder should popup based on 
+ * the interval time 
+ * If the device time matched the time with any of the value in the remainder 
+ * list then check if the remainder count in not empty 
+ * If not show popup dialog else doesnt
+ */
   void showRemainderBasedOnCondition(
       {bool isNeedSheelaDialog = false,
       bool isFromQurHomeRegimen = false}) async {

@@ -7248,6 +7248,11 @@ class CommonUtil {
     }
   }
 
+/**
+ * This method is used to get value from api ,
+ * based on which the remainders are shown in intervals.
+ * Default value of the interval time would be 30 mins
+ */
   getSheelaConfig() async {
     var apiBaseHelper = ApiBaseHelper();
 

@@ -126,6 +126,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         badgeSize = badgeSize.h;
         textFontSize = 26;
       }
+      //Method To show remainder in qurbook tablet
       await SheelaRemainderPopup.checkConditionToShowPopUp();
 
       controller.updateTabIndex(0);
