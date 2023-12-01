@@ -10,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -184,23 +185,9 @@ class _LandingScreenState extends State<LandingScreen> {
 
       CommonUtil().initSocket();
 
-      if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
-        await CommonUtil().getSheelaConfig();
-        List<RegimentDataModel>? activitiesFilteredList = [];
-        await controllerQurhomeRegimen.getRegimenList();
-
-        activitiesFilteredList =
-            controllerQurhomeRegimen.qurHomeRegimenResponseModel?.regimentsList;
-        if (activitiesFilteredList != null &&
-            activitiesFilteredList.length > 0) {
-          int length = activitiesFilteredList?.length ?? 0;
-          PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_START,
-              activitiesFilteredList?[0]?.estartNew ?? '');
-          PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_END,
-              activitiesFilteredList?[length - 1]?.estartNew ?? '');
-          controllerQurhomeRegimen.callMethodToSaveRemainder();
-          controllerQurhomeRegimen.startTimerForSheela();
-        }
+      //Initialize a timer which will show remainder very 30 mins
+      if (CommonUtil().isTablet == true) {
+        SheelaRemainderPopup.checkConditionToShowPopUp();
       } else {
         sheelBadgeController?.getSheelaBadgeCount();
       }
