@@ -269,7 +269,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             rt_Sheela,
             arguments: SheelaArgument(
               sheelaInputs: widget.sheelaRequestString,
-                isNeedTranslateText: true
             ),
           )!
               .then((value) {
