@@ -111,19 +111,27 @@ class IosNotificationHandler {
           CommonUtil().listenToCallStatus(data);
         } else if (call.method == variable.navigateToSheelaReminderMethod) {
           if ((call.arguments["eid"] ?? '').isNotEmpty && isAlreadyLoaded) {
-            if (sheelaAIController!.isSheelaScreenActive) {
+            if (CommonUtil().isAllowSheelaLiveReminders()) {
+              if (sheelaAIController!.isSheelaScreenActive) {
+                var reqJson = {
+                  KIOSK_task: KIOSK_remind,
+                  KIOSK_eid: call.arguments["eid"],
+                };
+                CommonUtil().callQueueNotificationPostApi(reqJson);
+              } else {
+                await Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    eId: call.arguments["eid"],
+                  ),
+                );
+              }
+            } else {
               var reqJson = {
                 KIOSK_task: KIOSK_remind,
                 KIOSK_eid: call.arguments["eid"],
               };
               CommonUtil().callQueueNotificationPostApi(reqJson);
-            } else {
-              await Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  eId: call.arguments["eid"],
-                ),
-              );
             }
           }
         }
