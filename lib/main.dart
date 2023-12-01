@@ -1188,6 +1188,7 @@ class _MyFHBState extends State<MyFHB> {
                   ? passedValArr[2]
                   : passedValArr[1],
               audioMessage: '',
+              isNeedPreferredLangauge: true,
               eventIdViaSheela: passedValArr[4]),
         )!
             .then((value) {

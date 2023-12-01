@@ -310,18 +310,32 @@ class SheelaAIController extends GetxController {
         conversations = [];
         currentPlayingConversation = null;
         isLoading.value = true;
-        msg = arguments!.textSpeechSheela!;
-        var currentCon = SheelaResponse(text: msg, recipientId: sheelaRecepId);
-        conversations.add(currentCon);
-        currentPlayingConversation = currentCon;
-        currentPlayingConversation?.endOfConvDiscardDialog =
-            arguments?.allowBackBtnPress ?? false;
-        isLoading.value = false;
-        playTTS();
+        if (arguments?.isNeedPreferredLangauge ?? false) {
+          getTextTranslate(arguments!.textSpeechSheela ?? '').then((value) {
+            if (value != null) {
+              msg = value.toString();
+              addSpeechTextConversation(msg);
+            }
+          });
+        } else {
+          msg = (arguments?.textSpeechSheela ?? '').toString();
+          addSpeechTextConversation(msg);
+        }
       } else {
         gettingReposnseFromNative();
       }
     }
+  }
+
+  addSpeechTextConversation(String message){
+    var currentCon =
+    SheelaResponse(text: message, recipientId: sheelaRecepId);
+    conversations.add(currentCon);
+    currentPlayingConversation = currentCon;
+    currentPlayingConversation?.endOfConvDiscardDialog =
+        arguments?.allowBackBtnPress ?? false;
+    isLoading.value = false;
+    playTTS();
   }
 
   getAIAPIResponseFor(String? message, Buttons? buttonsList) async {
