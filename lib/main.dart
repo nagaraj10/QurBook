@@ -421,6 +421,7 @@ class _MyFHBState extends State<MyFHB> {
         });
       }
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
+        //// allow the user to get notifiaction
         if (CommonUtil().isAllowSheelaLiveReminders()) {
           // live reminder On deafult existint flow
           if (sheelaAIController.isSheelaScreenActive) {
@@ -465,6 +466,8 @@ class _MyFHBState extends State<MyFHB> {
             CommonUtil().callQueueNotificationPostApi(reqJsonText);
           }
         } else {*/
+
+        // allow the user to get notifiaction
         if (CommonUtil().isAllowSheelaLiveReminders()) {
           if (((passedValArr[3].toString()).isNotEmpty) &&
               (passedValArr[3] != 'null')) {
