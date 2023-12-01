@@ -37,7 +37,7 @@ class QurhomeDashboardController extends GetxController {
   }
 
   SheelaAIController? sheelaAIController =
-  CommonUtil().onInitSheelaAIController();
+      CommonUtil().onInitSheelaAIController();
   var isLoading = false.obs;
   var eventId = ''.obs;
   var estart = ''.obs;
@@ -189,7 +189,6 @@ class QurhomeDashboardController extends GetxController {
                 };
                 CommonUtil().callQueueNotificationPostApi(reqJson);
               }
-
             }
             break;
         }
@@ -199,7 +198,24 @@ class QurhomeDashboardController extends GetxController {
       const platform = MethodChannel(APPOINTMENT_DETAILS);
       platform.setMethodCallHandler((call) {
         if (call.method == APPOINTMENT_DETAILS) {
-          if (sheelaAIController?.isSheelaScreenActive??false) {
+          if (CommonUtil().isAllowSheelaLiveReminders()) {
+            if (sheelaAIController?.isSheelaScreenActive ?? false) {
+              try {
+                var data = Map<String, dynamic>.from(call.arguments);
+                var reqJson = {
+                  KIOSK_task: KIOSK_appointment_avail,
+                  KIOSK_appoint_id: data[id_sheela] ?? ''.toString(),
+                  KIOSK_eid: data[eid_sheela] ?? ''.toString(),
+                  KIOSK_say_text: data[sayText_sheela] ?? ''.toString(),
+                };
+                CommonUtil().callQueueNotificationPostApi(reqJson);
+              } catch (e, stackTrace) {
+                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+              }
+            } else if (PreferenceUtil.getIfQurhomeisAcive()) {
+              redirectToSheelaScheduleAppointment();
+            }
+          } else {
             try {
               var data = Map<String, dynamic>.from(call.arguments);
               var reqJson = {
@@ -212,8 +228,6 @@ class QurhomeDashboardController extends GetxController {
             } catch (e, stackTrace) {
               CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
-          } else if (PreferenceUtil.getIfQurhomeisAcive()) {
-            redirectToSheelaScheduleAppointment();
           }
         }
         return Future.value('');
@@ -291,7 +305,9 @@ class QurhomeDashboardController extends GetxController {
                       .result![0].profileSetting!.sheelaLiveReminders ??
                   true
               : true;
-          print('----------isAllowBoolQurhome: '+(sheelaAIController?.isAllowSheelaLiveReminders??true).toString());
+          print('----------isAllowBoolQurhome: ' +
+              (sheelaAIController?.isAllowSheelaLiveReminders ?? true)
+                  .toString());
         }
       });
     }

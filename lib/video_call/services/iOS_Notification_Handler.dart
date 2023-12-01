@@ -51,21 +51,19 @@ class IosNotificationHandler {
   bool escalteAction = false;
   bool rejectAction = false;
   bool declineAction = false;
-  bool? viewMemberAction,
-      viewDetails = false;
+  bool? viewMemberAction, viewDetails = false;
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
-  bool? viewRecordAction,
-      chatWithCC = false;
+  bool? viewRecordAction, chatWithCC = false;
 
   //SheelaAIController sheelaAIController = Get.find();
 
   SheelaAIController? sheelaAIController =
-  CommonUtil().onInitSheelaAIController();
+      CommonUtil().onInitSheelaAIController();
 
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
-          (call) async {
+      (call) async {
         if (call.method == variable.notificationResponseMethod) {
           if (!isAlreadyLoaded) {
             notificationReceivedFromKilledState = true;
@@ -151,7 +149,7 @@ class IosNotificationHandler {
 
           if (CommonUtil.isUSRegion() && estart != null) {
             var qurhomeDashboardController =
-            CommonUtil().onInitQurhomeDashboardController();
+                CommonUtil().onInitQurhomeDashboardController();
             qurhomeDashboardController.eventId.value = eventId;
             qurhomeDashboardController.estart.value = estart;
             if (dosemeal == doseValueless || dosemeal == doseValueHigh) {
@@ -166,14 +164,11 @@ class IosNotificationHandler {
           } else {
             // await Get.toNamed(router.rt_Regimen,
             //     arguments: RegimentArguments(eventId: eventId));
-            Provider
-                .of<RegimentViewModel>(
+            Provider.of<RegimentViewModel>(
               Get.context!,
               listen: false,
-            )
-                .regimentMode = RegimentMode.Schedule;
-            Provider
-                .of<RegimentViewModel>(Get.context!, listen: false)
+            ).regimentMode = RegimentMode.Schedule;
+            Provider.of<RegimentViewModel>(Get.context!, listen: false)
                 .regimentFilter = RegimentFilter.Missed;
             PageNavigator.goToPermanent(Get.context!, router.rt_Regimen,
                 arguments: RegimentArguments(eventId: eventId));
@@ -221,22 +216,20 @@ class IosNotificationHandler {
       Get.key.currentState!.pop();
       rtcEngine!.leaveChannel();
       rtcEngine!.destroy();
-      Provider
-          .of<RTCEngineProvider>(Get.context!, listen: false)
+      Provider.of<RTCEngineProvider>(Get.context!, listen: false)
           .isVideoPaused = false;
     }
   }
 
-  void navigateToMyRecordsCategory(dynamic categoryType, List<String>? hrmId,
-      bool isTerminate) async {
+  void navigateToMyRecordsCategory(
+      dynamic categoryType, List<String>? hrmId, bool isTerminate) async {
     await CommonUtil().getCategoryListPos(categoryType).then(
-          (value) =>
-          CommonUtil().goToMyRecordsScreen(
+          (value) => CommonUtil().goToMyRecordsScreen(
             value,
             hrmId,
             isTerminate,
           ),
-    );
+        );
   }
 
   actionForTheNotification() async {
@@ -361,9 +354,8 @@ class IosNotificationHandler {
           'navigationPage': 'MyProvider List Screen',
         });
         await Get.toNamed(router.rt_UserAccounts,
-            arguments: UserAccountsArguments(selectedIndex: 2))
-            ?.then((value) =>
-            PageNavigator.goToPermanent(
+                arguments: UserAccountsArguments(selectedIndex: 2))
+            ?.then((value) => PageNavigator.goToPermanent(
                 Get.key.currentContext!, router.rt_Landing));
       } else if (model.templateName == strNotifyPatientServiceTicketByCC &&
           (model.eventId ?? '').isNotEmpty) {
@@ -380,7 +372,7 @@ class IosNotificationHandler {
           ),
         );
       } else if (model.templateName ==
-          parameters.notifyCaregiverForMedicalRecord &&
+              parameters.notifyCaregiverForMedicalRecord &&
           chatWithCC!) {
         if (!notificationReceivedFromKilledState) {
           if ((model.userId ?? '').isNotEmpty &&
@@ -388,22 +380,21 @@ class IosNotificationHandler {
               (model.doctorPicture ?? '').isNotEmpty &&
               (model.careCoordinatorUserId ?? '').isNotEmpty) {
             await Get.to(
-                  () =>
-                  ChatDetail(
-                    peerId: model.userId,
-                    peerName: model.patientName,
-                    peerAvatar: model.doctorPicture,
-                    patientId: "",
-                    patientName: "",
-                    patientPicture: "",
-                    isFromVideoCall: false,
-                    isFromFamilyListChat: true,
-                    isFromCareCoordinator: model.isFromCareCoordinator ?? false,
-                    carecoordinatorId: model.careCoordinatorUserId,
-                    isCareGiver: model.isCaregiver ?? false,
-                    groupId: '',
-                    lastDate: model.deliveredDateTime,
-                  ),
+              () => ChatDetail(
+                peerId: model.userId,
+                peerName: model.patientName,
+                peerAvatar: model.doctorPicture,
+                patientId: "",
+                patientName: "",
+                patientPicture: "",
+                isFromVideoCall: false,
+                isFromFamilyListChat: true,
+                isFromCareCoordinator: model.isFromCareCoordinator ?? false,
+                carecoordinatorId: model.careCoordinatorUserId,
+                isCareGiver: model.isCaregiver ?? false,
+                groupId: '',
+                lastDate: model.deliveredDateTime,
+              ),
             );
           } else {
             await Get.to(() => ChatUserList());
@@ -415,7 +406,7 @@ class IosNotificationHandler {
           await PreferenceUtil.saveNotificationData(model);
         }
       } else if (model.templateName ==
-          parameters.notifyCaregiverForMedicalRecord &&
+              parameters.notifyCaregiverForMedicalRecord &&
           viewRecordAction!) {
         if (model.redirectData != null) {
           final dataOne = model.redirectData![1];
@@ -439,8 +430,9 @@ class IosNotificationHandler {
             );
           }
         }
-      } else if (model.type == parameters.FETCH_LOG) {} else
-      if (model.templateName == parameters.familyMemberCaregiverRequest) {
+      } else if (model.type == parameters.FETCH_LOG) {
+      } else if (model.templateName ==
+          parameters.familyMemberCaregiverRequest) {
         //No Navigation required
       } else if (model.templateName ==
           parameters.associationNotificationToCaregiver) {
@@ -453,10 +445,9 @@ class IosNotificationHandler {
         });
         await await isAlreadyLoaded
             ? Get.to(() => NotificationMain())
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: parameters.doctorCancellation,
-            ));
+            : Get.to(() => SplashScreen(
+                  nsRoute: parameters.doctorCancellation,
+                ));
       } else if ((model.templateName ?? '').isNotEmpty &&
           model.templateName == parameters.chat) {
         await fbaLog(eveParams: {
@@ -466,10 +457,9 @@ class IosNotificationHandler {
         });
         await await isAlreadyLoaded
             ? Get.to(() => ChatUserList())
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: parameters.chat,
-            ));
+            : Get.to(() => SplashScreen(
+                  nsRoute: parameters.chat,
+                ));
       } else if (model.redirectData != null) {
         final dataOne = model.redirectData![1];
         final dataTwo = model.redirectData![2];
@@ -502,12 +492,12 @@ class IosNotificationHandler {
         }
         try {
           await Get.to(
-                () => HubListView(),
+            () => HubListView(),
             binding: BindingsBuilder(
-                  () {
+              () {
                 if (!Get.isRegistered<HubListViewController>()) {
                   Get.lazyPut(
-                        () => HubListViewController(),
+                    () => HubListViewController(),
                   );
                 }
               },
@@ -527,7 +517,7 @@ class IosNotificationHandler {
       } else if (model.redirect == parameters.strAppointmentDetail &&
           (model.appointmentId ?? '').isNotEmpty) {
         AppointmentDetailsController appointmentDetailsController =
-        CommonUtil().onInitAppointmentDetailsController();
+            CommonUtil().onInitAppointmentDetailsController();
         appointmentDetailsController.getAppointmentDetail(model.appointmentId!);
         await Get.to(() => AppointmentDetailScreen());
       } else if (model.redirect == parameters.chat) {
@@ -536,18 +526,17 @@ class IosNotificationHandler {
               (model.doctorName ?? '').isNotEmpty &&
               (model.doctorPicture ?? '').isNotEmpty) {
             await Get.to(
-                  () =>
-                  ChatDetail(
-                    peerId: model.doctorId,
-                    peerName: model.doctorName,
-                    peerAvatar: model.doctorPicture,
-                    patientId: "",
-                    patientName: "",
-                    patientPicture: "",
-                    isFromVideoCall: false,
-                    isCareGiver: false,
-                    isForGetUserId: true,
-                  ),
+              () => ChatDetail(
+                peerId: model.doctorId,
+                peerName: model.doctorName,
+                peerAvatar: model.doctorPicture,
+                patientId: "",
+                patientName: "",
+                patientPicture: "",
+                isFromVideoCall: false,
+                isCareGiver: false,
+                isForGetUserId: true,
+              ),
             );
           } else {
             await Get.to(() => ChatUserList());
@@ -564,42 +553,42 @@ class IosNotificationHandler {
             'navigationPage': 'Sheela Start Page',
           },
         );
-        if (isAlreadyLoaded) {
-          if ((model.notificationListId ?? '').isNotEmpty) {
-            await FetchNotificationService()
-                .inAppUnreadAction(model.notificationListId!);
-          }
-          if (model.rawBody != null) {
-            String? sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
-            if (sheela_lang != null && sheela_lang != '') {
-              await Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: false,
-                  langCode: sheela_lang,
-                  rawMessage: model.rawBody,
-                ),
-              );
+        if (CommonUtil().isAllowSheelaLiveReminders()) {
+          if (isAlreadyLoaded) {
+            if ((model.notificationListId ?? '').isNotEmpty) {
+              await FetchNotificationService()
+                  .inAppUnreadAction(model.notificationListId!);
+            }
+            if (model.rawBody != null) {
+              String? sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
+              if (sheela_lang != null && sheela_lang != '') {
+                await Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    isSheelaAskForLang: false,
+                    langCode: sheela_lang,
+                    rawMessage: model.rawBody,
+                  ),
+                );
+              } else {
+                await Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    isSheelaAskForLang: true,
+                    rawMessage: model.rawBody,
+                  ),
+                );
+              }
             } else {
-              await Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: true,
-                  rawMessage: model.rawBody,
-                ),
-              );
+              await Get.to(() => SplashScreen(
+                    nsRoute: 'sheela',
+                  ));
             }
           } else {
-            await Get.to(() =>
-                SplashScreen(
+            await Get.to(() => SplashScreen(
                   nsRoute: 'sheela',
                 ));
           }
-        } else {
-          await Get.to(() =>
-              SplashScreen(
-                nsRoute: 'sheela',
-              ));
         }
       } else if ((model.redirect == 'profile_page') ||
           (model.redirect == 'profile')) {
@@ -611,11 +600,10 @@ class IosNotificationHandler {
 
         await await isAlreadyLoaded
             ? Get.toNamed(router.rt_UserAccounts,
-            arguments: UserAccountsArguments(selectedIndex: 0))
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'profile_page',
-            ));
+                arguments: UserAccountsArguments(selectedIndex: 0))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'profile_page',
+                ));
       } else if (model.redirect == parameters.myCartDetails &&
           (model.planId ?? '').isNotEmpty) {
         final userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -623,32 +611,29 @@ class IosNotificationHandler {
         if (model.userId == userId) {
           await await isAlreadyLoaded
               ? Get.to(
-                () =>
-                MyPlanDetail(
-                    packageId: model.planId,
-                    showRenew: renewAction,
-                    templateName: model.templateName),
-          )!
-              .then((value) {
-            renewAction = false;
-          })
-              : Get.to(() =>
-              SplashScreen(
-                nsRoute: 'regiment_screen',
-              ))!
-              .then((value) {
-            renewAction = false;
-          });
+                  () => MyPlanDetail(
+                      packageId: model.planId,
+                      showRenew: renewAction,
+                      templateName: model.templateName),
+                )!
+                  .then((value) {
+                  renewAction = false;
+                })
+              : Get.to(() => SplashScreen(
+                        nsRoute: 'regiment_screen',
+                      ))!
+                  .then((value) {
+                  renewAction = false;
+                });
         } else {
           CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
         }
       } else if (model.redirect == parameters.claimList &&
           (model.claimId ?? '').isNotEmpty) {
         await Get.to(
-              () =>
-              ClaimRecordDisplay(
-                claimID: model.claimId,
-              ),
+          () => ClaimRecordDisplay(
+            claimID: model.claimId,
+          ),
         );
         // }
       } else if (model.redirect == parameters.myPlanDetails &&
@@ -656,12 +641,11 @@ class IosNotificationHandler {
         final userId = PreferenceUtil.getStringValue(KEY_USERID);
         if (model.userId == userId) {
           await Get.to(
-                () =>
-                MyPlanDetail(
-                  packageId: model.planId,
-                  showRenew: false,
-                  templateName: model.templateName,
-                ),
+            () => MyPlanDetail(
+              packageId: model.planId,
+              showRenew: false,
+              templateName: model.templateName,
+            ),
           )!
               .then((value) {
             renewAction = false;
@@ -680,10 +664,9 @@ class IosNotificationHandler {
         });
         await await isAlreadyLoaded
             ? Get.toNamed(router.rt_AppSettings)
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'googlefit',
-            ));
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'googlefit',
+                ));
       } else if ((model.redirect == 'th_provider') ||
           (model.redirect == 'provider')) {
         await fbaLog(eveParams: {
@@ -693,11 +676,10 @@ class IosNotificationHandler {
         });
         await await isAlreadyLoaded
             ? Get.toNamed(router.rt_TelehealthProvider,
-            arguments: HomeScreenArguments(selectedIndex: 1))
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'th_provider',
-            ));
+                arguments: HomeScreenArguments(selectedIndex: 1))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'th_provider',
+                ));
       } else if ((model.redirect == 'my_record') ||
           (model.redirect == 'prescription_list') ||
           (model.redirect == 'add_doc')) {
@@ -709,11 +691,10 @@ class IosNotificationHandler {
         await CommonUtil().getUserProfileData();
         await await isAlreadyLoaded
             ? Get.toNamed(router.rt_HomeScreen,
-            arguments: HomeScreenArguments(selectedIndex: 1))
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'my_record',
-            ));
+                arguments: HomeScreenArguments(selectedIndex: 1))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'my_record',
+                ));
       } else if (model.redirect == 'devices_tab') {
         await fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
@@ -723,13 +704,12 @@ class IosNotificationHandler {
         await CommonUtil().getUserProfileData();
         await await isAlreadyLoaded
             ? Get.toNamed(
-          router.rt_HomeScreen,
-          arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
-        )
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'my_record',
-            ));
+                router.rt_HomeScreen,
+                arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
+              )
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'my_record',
+                ));
       } else if (model.redirect == 'bills') {
         await fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
@@ -739,13 +719,12 @@ class IosNotificationHandler {
         await CommonUtil().getUserProfileData();
         await await isAlreadyLoaded
             ? Get.toNamed(
-          router.rt_HomeScreen,
-          arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
-        )
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'my_record',
-            ));
+                router.rt_HomeScreen,
+                arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
+              )
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'my_record',
+                ));
       } else if (model.redirect == 'regiment_screen') {
         await fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
@@ -758,7 +737,7 @@ class IosNotificationHandler {
           if (model.eventId != null) {
             if (CommonUtil.isUSRegion()) {
               var qurhomeDashboardController =
-              CommonUtil().onInitQurhomeDashboardController();
+                  CommonUtil().onInitQurhomeDashboardController();
               qurhomeDashboardController.eventId.value = model.eventId!;
               await Get.to(() => QurhomeDashboard())?.then((value) =>
                   PageNavigator.goToPermanent(Get.context!, router.rt_Landing));
@@ -767,14 +746,12 @@ class IosNotificationHandler {
                   arguments: RegimentArguments(eventId: model.eventId));
             }
           } else {
-            await Get.to(() =>
-                SplashScreen(
+            await Get.to(() => SplashScreen(
                   nsRoute: 'regiment_screen',
                 ));
           }
         } else {
-          await Get.to(() =>
-              SplashScreen(
+          await Get.to(() => SplashScreen(
                 nsRoute: 'regiment_screen',
               ));
         }
@@ -785,10 +762,9 @@ class IosNotificationHandler {
           'navigationPage': 'My Cart',
         });
         await Get.to(
-              () =>
-              CheckoutPage(
-                isFromNotification: true,
-              ),
+          () => CheckoutPage(
+            isFromNotification: true,
+          ),
         );
       } else if (model.redirect == 'dashboard') {
         await fbaLog(eveParams: {
@@ -798,11 +774,10 @@ class IosNotificationHandler {
         });
         isAlreadyLoaded
             ? PageNavigator.goToPermanent(
-            Get.key.currentContext!, router.rt_Landing)
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'regiment_screen',
-            ));
+                Get.key.currentContext!, router.rt_Landing)
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'regiment_screen',
+                ));
       } else if (model.redirect == 'th_provider_hospital') {
         await fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
@@ -811,11 +786,10 @@ class IosNotificationHandler {
         });
         await await isAlreadyLoaded
             ? Get.toNamed(router.rt_TelehealthProvider,
-            arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1))
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'th_provider_hospital',
-            ));
+                arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'th_provider_hospital',
+                ));
       } else if ((model.redirect == 'myfamily_list') ||
           (model.redirect == 'profile_my_family')) {
         await fbaLog(eveParams: {
@@ -825,11 +799,10 @@ class IosNotificationHandler {
         });
         await await isAlreadyLoaded
             ? Get.toNamed(router.rt_UserAccounts,
-            arguments: UserAccountsArguments(selectedIndex: 1))
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'myfamily_list',
-            ));
+                arguments: UserAccountsArguments(selectedIndex: 1))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'myfamily_list',
+                ));
       } else if (model.redirect == 'myprovider_list') {
         await fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
@@ -838,11 +811,10 @@ class IosNotificationHandler {
         });
         await await isAlreadyLoaded
             ? Get.toNamed(router.rt_UserAccounts,
-            arguments: UserAccountsArguments(selectedIndex: 2))
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'myprovider_list',
-            ));
+                arguments: UserAccountsArguments(selectedIndex: 2))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'myprovider_list',
+                ));
       } else if (model.redirect == 'myplans') {
         await fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
@@ -851,11 +823,10 @@ class IosNotificationHandler {
         });
         await await isAlreadyLoaded
             ? Get.toNamed(router.rt_UserAccounts,
-            arguments: UserAccountsArguments(selectedIndex: 3))
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: 'myplans',
-            ));
+                arguments: UserAccountsArguments(selectedIndex: 3))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'myplans',
+                ));
       } else if ((model.redirect == 'appointmentList') ||
           (model.redirect == 'appointmentHistory')) {
         await fbaLog(eveParams: {
@@ -867,10 +838,9 @@ class IosNotificationHandler {
         await PreferenceUtil.saveNotificationData(model);
         isAlreadyLoaded
             ? PageNavigator.goTo(Get.context!, router.rt_Landing)
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: model.redirect,
-            ));
+            : Get.to(() => SplashScreen(
+                  nsRoute: model.redirect,
+                ));
       } else if (model.redirect == 'manageActivities') {
         await fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
@@ -879,7 +849,7 @@ class IosNotificationHandler {
         });
         await Get.toNamed(rt_ManageActivitiesScreen);
       } else if ((model.redirect ==
-          parameters.escalateToCareCoordinatorToRegimen) &&
+              parameters.escalateToCareCoordinatorToRegimen) &&
           escalteAction) {
         escalteAction = false;
         CommonUtil().escalateNonAdherance(
@@ -894,13 +864,12 @@ class IosNotificationHandler {
       } else {
         isAlreadyLoaded
             ? PageNavigator.goTo(
-          Get.context!,
-          router.rt_Landing,
-        )
-            : Get.to(() =>
-            SplashScreen(
-              nsRoute: '',
-            ));
+                Get.context!,
+                router.rt_Landing,
+              )
+            : Get.to(() => SplashScreen(
+                  nsRoute: '',
+                ));
       }
     }
   }
