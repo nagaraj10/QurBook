@@ -694,7 +694,7 @@ class QurhomeRegimenController extends GetxController {
     String? startDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
     String? endDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
     try {
-      if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+      if (CommonUtil().isTablet == true) {
         if (startDate != null &&
             startDate != "" &&
             endDate != null &&
@@ -706,7 +706,8 @@ class QurhomeRegimenController extends GetxController {
                   DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
               (DateTime.now().isBefore(DateTime.parse(endDate ?? '')))) {
             try {
-              sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+              sheelaAIController.checkIfWeNeedToShowDialogBox(
+                  isNeedSheelaDialog: true);
             } catch (e, stackTrace) {
               CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
@@ -727,7 +728,7 @@ class QurhomeRegimenController extends GetxController {
   }
 
   void startTimerForSheela() {
-    if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+    if (CommonUtil().isTablet == true) {
       try {
         evryOneMinuteRemainder = Timer.periodic(
           Duration(minutes: 1),

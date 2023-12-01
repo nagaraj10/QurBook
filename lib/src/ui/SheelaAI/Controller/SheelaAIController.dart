@@ -1139,6 +1139,16 @@ class SheelaAIController extends GetxController {
     }
   }
 
+  checkIfWeNeedToShowDialogBox(
+      {bool isNeedSheelaDialog = false,
+      bool isFromQurHomeRegimen = false}) async {
+    if ((CommonUtil().isTablet == true)) {
+      showRemainderBasedOnCondition(
+          isFromQurHomeRegimen: isFromQurHomeRegimen,
+          isNeedSheelaDialog: isNeedSheelaDialog);
+    }
+  }
+
   getSheelaBadgeCount(
       {bool isNeedSheelaDialog = false,
       bool isFromQurHomeRegimen = false}) async {
@@ -1159,19 +1169,14 @@ class SheelaAIController extends GetxController {
                 isNeedSheelaDialog = true;
               }
               if (isNeedSheelaDialog) {
-                if ((CommonUtil.REGION_CODE != "US" &&
-                    CommonUtil().isTablet == true)) {
-                  showRemainderBasedOnCondition(
-                      isFromQurHomeRegimen: isFromQurHomeRegimen,
-                      isNeedSheelaDialog: isNeedSheelaDialog);
-                } else if ((value.result?.queueCount ?? 0) > 0 &&
+                if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
                   if (isQueueDialogShowing.value == false) {
-                    isQueueDialogShowing.value = true;
-
-                    showDialogForSheelaBox(
-                        isFromQurHomeRegimen: isFromQurHomeRegimen,
-                        isNeedSheelaDialog: isNeedSheelaDialog);
+                    if (CommonUtil().isTablet != true) {
+                      showDialogForSheelaBox(
+                          isFromQurHomeRegimen: isFromQurHomeRegimen,
+                          isNeedSheelaDialog: isNeedSheelaDialog);
+                    }
                   }
                 }
               }
@@ -1453,27 +1458,26 @@ class SheelaAIController extends GetxController {
         startDate != "" &&
         endDate != null &&
         endDate != "") {
-      if (((sheelaAIController.sheelaIconBadgeCount.value ?? 0)) > 0) {
-        if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) ||
-                DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
-            (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
-            (qurhomeCOntroller.evryOneMinuteRemainder != null ||
-                qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
-          if (activitiesFilteredList != null &&
-              activitiesFilteredList.length > 0) {
-            for (int i = 0; i < activitiesFilteredList.length; i++) {
-              if (((DateTime.now()
-                              .difference(activitiesFilteredList[i])
-                              .inMinutes ??
-                          0) ==
-                      0) ||
-                  ((DateTime.now()
-                              .difference(activitiesFilteredList[i])
-                              .inMinutes ??
-                          0) ==
-                      1)) {
+      if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) ||
+              DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
+          (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
+          (qurhomeCOntroller.evryOneMinuteRemainder != null ||
+              qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
+        if (activitiesFilteredList != null &&
+            activitiesFilteredList.length > 0) {
+          for (int i = 0; i < activitiesFilteredList.length; i++) {
+            if (((DateTime.now()
+                            .difference(activitiesFilteredList[i])
+                            .inMinutes ??
+                        0) ==
+                    0) ||
+                ((DateTime.now()
+                            .difference(activitiesFilteredList[i])
+                            .inMinutes ??
+                        0) ==
+                    1)) {
+              if (((sheelaAIController.sheelaIconBadgeCount.value ?? 0)) > 0) {
                 if (isQueueDialogShowing.value == false) {
-                  isQueueDialogShowing.value = true;
                   playAudioPlayer().then((value) {
                     activitiesFilteredList.removeAt(i);
                     showDialogForSheelaBox(
