@@ -111,6 +111,7 @@ class IosNotificationHandler {
           CommonUtil().listenToCallStatus(data);
         } else if (call.method == variable.navigateToSheelaReminderMethod) {
           if ((call.arguments["eid"] ?? '').isNotEmpty && isAlreadyLoaded) {
+            //// allow the user to get notifications
             if (CommonUtil().isAllowSheelaLiveReminders()) {
               if (sheelaAIController!.isSheelaScreenActive) {
                 var reqJson = {
@@ -127,6 +128,7 @@ class IosNotificationHandler {
                 );
               }
             } else {
+              // live reminder off only queue flow working
               var reqJson = {
                 KIOSK_task: KIOSK_remind,
                 KIOSK_eid: call.arguments["eid"],
@@ -286,6 +288,7 @@ class IosNotificationHandler {
     } else if (communicationSettingAction) {
       await Get.to(CareGiverSettings());
     } else if (model.isSheela ?? false) {
+      //// allow the user for auto redirect to sheela screen on time
       if (CommonUtil().isAllowSheelaLiveReminders()) {
         if (model.eventType != null && model.eventType == strWrapperCall) {
           await Get.toNamed(

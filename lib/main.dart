@@ -421,9 +421,9 @@ class _MyFHBState extends State<MyFHB> {
         });
       }
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
-        //// allow the user to get notifiaction
+        //// allow the user for auto redirect to sheela screen on time
         if (CommonUtil().isAllowSheelaLiveReminders()) {
-          // live reminder On deafult existint flow
+          // live reminder On deafult existing flow
           if (sheelaAIController.isSheelaScreenActive) {
             var reqJson = {
               KIOSK_task: KIOSK_remind,
@@ -467,7 +467,7 @@ class _MyFHBState extends State<MyFHB> {
           }
         } else {*/
 
-        // allow the user to get notifiaction
+        ///// allow the user for auto redirect to sheela screen on time
         if (CommonUtil().isAllowSheelaLiveReminders()) {
           if (((passedValArr[3].toString()).isNotEmpty) &&
               (passedValArr[3] != 'null')) {
