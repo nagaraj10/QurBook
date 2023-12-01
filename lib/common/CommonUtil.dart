@@ -5400,13 +5400,13 @@ class CommonUtil {
     //Qurhome icon width and height size updated and used common method
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: (CommonUtil().isTablet??false) ? 0 : 8.h,
-        vertical: (CommonUtil().isTablet??false) ? 0 : 4.h,
+        horizontal: (CommonUtil().isTablet ?? false) ? 0 : 8.h,
+        vertical: (CommonUtil().isTablet ?? false) ? 0 : 4.h,
       ),
       child: AssetImageWidget(
         icon: icon_qurhome,
-        height: (CommonUtil().isTablet??false) ? 48.h :32.h,
-        width: (CommonUtil().isTablet??false) ? 48.h :32.h,
+        height: (CommonUtil().isTablet ?? false) ? 48.h : 32.h,
+        width: (CommonUtil().isTablet ?? false) ? 48.h : 32.h,
       ),
     );
   }
@@ -7248,6 +7248,11 @@ class CommonUtil {
     }
   }
 
+/**
+ * This method is used to get value from api ,
+ * based on which the remainders are shown in intervals.
+ * Default value of the interval time would be 30 mins
+ */
   getSheelaConfig() async {
     var apiBaseHelper = ApiBaseHelper();
 
@@ -7272,7 +7277,11 @@ class CommonUtil {
           } else {
             PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
           }
+        } else {
+          PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
         }
+      } else {
+        PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
       }
     }
     return sheelaRemainderConfig;
@@ -7347,7 +7356,6 @@ class CommonUtil {
     }
     return "";
   }
-
 }
 
 extension CapExtension on String {
