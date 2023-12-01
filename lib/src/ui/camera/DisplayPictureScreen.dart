@@ -220,9 +220,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     try {
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
       setFileName();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     if (categoryName != Constants.STR_DEVICES) {
@@ -467,8 +466,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -503,8 +502,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -543,8 +542,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -584,10 +583,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
-              pulse.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              pulse.text = digitRecogResponse.result!.deviceMeasurementsHead!
+                  .deviceMeasurements![0].values!;
             }
           }
         }
@@ -622,12 +621,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
-              diaStolicPressure.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![1].values!;
-              pulse.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![2].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              diaStolicPressure.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![1].values!;
+              pulse.text = digitRecogResponse.result!.deviceMeasurementsHead!
+                  .deviceMeasurements![2].values!;
             }
           }
         }
@@ -792,8 +791,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   void setFileName() {
     if (categoryName == variable.strDevices) {
       fileName = new TextEditingController(
-          text:
-              deviceName! + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+          text: deviceName! +
+              '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     } else {
       fileName = new TextEditingController(
           text: categoryName! +
@@ -913,7 +912,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //postMediaData[parameters.strHealthRecordCategory] = categoryDataObj.toJson();
     MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
 
-    MediaDataList mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as Future<MediaDataList>);
+    MediaDataList mediaTypesResponse =
+        await (_mediaTypeBlock.getMediTypesList() as Future<MediaDataList>);
 
     List<MediaResult>? metaDataFromSharedPrefernce = mediaTypesResponse.result;
     if (categoryName != Constants.STR_DEVICES) {

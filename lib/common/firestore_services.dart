@@ -17,6 +17,8 @@ class FirestoreServices {
   Stream<DocumentSnapshot<Map<String, dynamic>>>? fireStoreSubscription;
   final qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
+  final qurhomeRegimenController =
+      CommonUtil().onInitQurhomeRegimenController();
   void setupListenerForFirestoreChanges() {
     final userId = PreferenceUtil.getStringValue(KEY_USERID);
     fireStoreSubscription = FirebaseFirestore.instance
@@ -38,16 +40,20 @@ class FirestoreServices {
                     switch (current) {
                       //activity_vital_sos_1701347623184
                       case 'activity':
+                        qurhomeRegimenController.updateRegimentData();
                         QurPlanReminders.getTheRemindersFromAPI();
                         break;
                       case 'vital':
                         qurhomeDashboardController.getModuleAccess();
                         break;
                       case 'sos':
-                        print('sos');
+                        qurhomeRegimenController.getSOSButtonStatus();
                         break;
                       default:
-                        print('non');
+                        qurhomeRegimenController.updateRegimentData();
+                        QurPlanReminders.getTheRemindersFromAPI();
+                        qurhomeRegimenController.getSOSButtonStatus();
+                        qurhomeDashboardController.getModuleAccess();
                     }
                   }
                 }

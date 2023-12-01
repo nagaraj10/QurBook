@@ -93,9 +93,6 @@ class _QurHomePatientRegimenListScreenState
       });
 
       WidgetsBinding.instance?.addObserver(this);
-      controller.timer?.cancel();
-      controller.timer = null;
-      controller.startTimer();
       super.initState();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -125,148 +122,137 @@ class _QurHomePatientRegimenListScreenState
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return GestureDetector(
-        onPanUpdate: (dragUpdateDetails) {},
-        onPanEnd: (panEndDetails) {},
-        onPanCancel: () {
-          if (CommonUtil.isUSRegion()) {
-            controller.restartTimer();
-          }
-        },
         child: Scaffold(
-          appBar: widget.addAppBar
-              ? AppBar(
-                  backgroundColor: Colors.white,
-                  toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
-                  elevation: 0,
-                  centerTitle: true,
-                  title: Text(
-                    strRegimen,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+      appBar: widget.addAppBar
+          ? AppBar(
+              backgroundColor: Colors.white,
+              toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                strRegimen,
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              leading: IconWidget(
+                icon: Icons.arrow_back_ios,
+                colors: Colors.black,
+                size: CommonUtil().isTablet! ? 38.0 : 24.0,
+                onTap: () {
+                  Get.back();
+                },
+              ),
+              bottom: PreferredSize(
+                child: Container(
+                  color: Color(
+                    CommonUtil().getQurhomeGredientColor(),
                   ),
-                  leading: IconWidget(
-                    icon: Icons.arrow_back_ios,
-                    colors: Colors.black,
-                    size: CommonUtil().isTablet! ? 38.0 : 24.0,
-                    onTap: () {
-                      Get.back();
-                    },
-                  ),
-                  bottom: PreferredSize(
-                    child: Container(
-                      color: Color(
-                        CommonUtil().getQurhomeGredientColor(),
-                      ),
-                      height: 1.0,
-                    ),
-                    preferredSize: Size.fromHeight(
-                      1.0,
-                    ),
-                  ),
-                )
-              : null,
-          body: Stack(
-            children: [
-              Container(
-                height: 60,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Row(
-                    children: [
-                      CommonUtil.isUSRegion()
-                          ? Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: InkWell(
-                                    onTap: () {
-                                      controller.cancelTimer();
-                                      Get.to(CalendarMonth(
-                                              patientId: widget
-                                                  .careGiverPatientListResult!
-                                                  .childId))!
-                                          .then((value) {
-                                        controller.restartTimer();
-                                        controller.getRegimenList(
-                                            isLoading: true,
-                                            date: value,
-                                            patientId: widget
-                                                .careGiverPatientListResult!
-                                                .childId);
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.asset(
-                                        icon_calendar,
-                                        height: 26,
-                                        width: 26,
-                                      ),
-                                    )),
-                              ),
-                            )
-                          : Container(),
-                      Container(
-                          child: Expanded(
-                        child: CommonUtil.isUSRegion()
-                            ? GetBuilder<QurhomeRegimenController>(
-                                id: "refershStatusText",
-                                builder: (val) {
-                                  return Visibility(
-                                      visible:
-                                          !controller.isTodaySelected.value,
-                                      maintainAnimation: true,
-                                      maintainState: true,
-                                      child: AnimatedOpacity(
-                                        duration:
-                                            const Duration(milliseconds: 2000),
-                                        curve: Curves.fastOutSlowIn,
-                                        opacity:
-                                            !controller.isTodaySelected.value
-                                                ? 1
-                                                : 0,
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
+                  height: 1.0,
+                ),
+                preferredSize: Size.fromHeight(
+                  1.0,
+                ),
+              ),
+            )
+          : null,
+      body: Stack(
+        children: [
+          Container(
+            height: 60,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Row(
+                children: [
+                  CommonUtil.isUSRegion()
+                      ? Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: InkWell(
+                                onTap: () {
+                                  Get.to(CalendarMonth(
+                                          patientId: widget
+                                              .careGiverPatientListResult!
+                                              .childId))!
+                                      .then((value) {
+                                    controller.getRegimenList(
+                                        isLoading: true,
+                                        date: value,
+                                        patientId: widget
+                                            .careGiverPatientListResult!
+                                            .childId);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    icon_calendar,
+                                    height: 26,
+                                    width: 26,
+                                  ),
+                                )),
+                          ),
+                        )
+                      : Container(),
+                  Container(
+                      child: Expanded(
+                    child: CommonUtil.isUSRegion()
+                        ? GetBuilder<QurhomeRegimenController>(
+                            id: "refershStatusText",
+                            builder: (val) {
+                              return Visibility(
+                                  visible: !controller.isTodaySelected.value,
+                                  maintainAnimation: true,
+                                  maintainState: true,
+                                  child: AnimatedOpacity(
+                                    duration:
+                                        const Duration(milliseconds: 2000),
+                                    curve: Curves.fastOutSlowIn,
+                                    opacity: !controller.isTodaySelected.value
+                                        ? 1
+                                        : 0,
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 5),
+                                        child: Card(
+                                          color: Colors.grey,
                                           child: Padding(
-                                            padding: EdgeInsets.only(top: 5),
-                                            child: Card(
-                                              color: Colors.grey,
-                                              child: Padding(
-                                                padding: EdgeInsets.all(5),
-                                                child: Text(
-                                                  controller.statusText.value,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 11),
-                                                ),
-                                              ),
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              controller.statusText.value,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 11),
                                             ),
                                           ),
                                         ),
-                                      ));
-                                })
-                            : Container(),
-                      )),
-                    ],
-                  ),
-                ),
+                                      ),
+                                    ),
+                                  ));
+                            })
+                        : Container(),
+                  )),
+                ],
               ),
-              Obx(() => controller.loadingData.isTrue
-                  ? controller.loadingDataWithoutProgress.isTrue
-                      ? getDataFromAPI(controller, isPortrait)
-                      : Center(
-                          child: CircularProgressIndicator(),
-                        )
-                  : GetBuilder<QurhomeRegimenController>(
-                      id: "newUpdate",
-                      builder: (val) {
-                        print("working builder");
-                        return getDataFromAPI(val, isPortrait);
-                      })),
-            ],
+            ),
           ),
-        ));
+          Obx(() => controller.loadingData.isTrue
+              ? controller.loadingDataWithoutProgress.isTrue
+                  ? getDataFromAPI(controller, isPortrait)
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    )
+              : GetBuilder<QurhomeRegimenController>(
+                  id: "newUpdate",
+                  builder: (val) {
+                    print("working builder");
+                    return getDataFromAPI(val, isPortrait);
+                  })),
+        ],
+      ),
+    ));
   }
 
   getDataFromAPI(QurhomeRegimenController val, var isPortrait) {

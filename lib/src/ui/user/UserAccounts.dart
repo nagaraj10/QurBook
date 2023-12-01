@@ -299,8 +299,8 @@ class _UserAccountsState extends State<UserAccounts>
         } else {
           new CommonUtil().commonMethodToSetPreference();
         }
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         new CommonUtil().commonMethodToSetPreference();
       }
