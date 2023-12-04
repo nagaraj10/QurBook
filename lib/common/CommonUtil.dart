@@ -2025,7 +2025,7 @@ class CommonUtil {
     }
   }
 
-  Future<bool> checkAppLock({bool useErrorDialogs: true}) async {
+  Future<bool> checkAppLock({bool useErrorDialogs: true, Function(String)? authErrorCallback }) async {
     try {
       var value = await LocalAuthentication().authenticate(
         localizedReason: strAuthToUseApp,
@@ -2041,9 +2041,11 @@ class CommonUtil {
         //   cancelButton: 'No thanks',
         // ),
       );
+      authErrorCallback?.call('');
       print("value:${value}");
       return value;
     } on PlatformException catch (e, stackTrace) {
+       authErrorCallback?.call(e.code);
       if (e.code == auth_error.notAvailable) {
         print(e.message);
         return false;
