@@ -17,6 +17,7 @@ import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ class CareGiverSettings extends StatefulWidget {
 class _CareGiverSettingsState extends State<CareGiverSettings> {
   bool? _isdigitRecognition = true;
   bool? _isdeviceRecognition = true;
+  bool? _sheelaLiveReminders = true;
   bool? _isGFActive;
   DevicesViewModel? _deviceModel;
   bool? _isHKActive = false;
@@ -73,6 +75,9 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
   bool? allowSymptomsNotification = true;
 
   PreferredMeasurement? preferredMeasurement;
+
+  SheelaAIController? sheelaAIcontroller =
+  CommonUtil().onInitSheelaAIController();
 
   @override
   void initState() {
@@ -139,6 +144,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
         } else {
           userMappingId = '';
           _isdeviceRecognition = true;
+          _sheelaLiveReminders = true;
           _isHKActive = false;
           _firstTym = true;
           _isBPActive = true;
@@ -155,6 +161,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
         userMappingId = '';
         _isdigitRecognition = true;
         _isdeviceRecognition = true;
+        _sheelaLiveReminders = true;
         _isHKActive = false;
         _firstTym = true;
         _isBPActive = true;
@@ -177,6 +184,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
         .createDeviceSelection(
             _isdigitRecognition,
             _isdeviceRecognition,
+            _sheelaLiveReminders,
             _isGFActive,
             _isHKActive,
             _isBPActive,
@@ -215,6 +223,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
             userMappingId,
             _isdigitRecognition,
             _isdeviceRecognition,
+            _sheelaLiveReminders,
             _isGFActive,
             _isHKActive,
             _isBPActive,
@@ -282,6 +291,15 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                   ''
           ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
           : true;
+      _sheelaLiveReminders = getDeviceSelectionModel
+          .result![0].profileSetting!.sheelaLiveReminders !=
+          null &&
+          getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders !=
+              ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders
+          : true;
+      sheelaAIcontroller?.isAllowSheelaLiveReminders =
+          _sheelaLiveReminders ?? false;
       /*_isGFActive =
           getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
                   getDeviceSelectionModel.result[0].profileSetting.googleFit !=

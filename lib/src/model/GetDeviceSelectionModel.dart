@@ -110,6 +110,7 @@ class ProfileSetting {
   bool? googleFit;
   bool? healthFit;
   bool? allowDigit;
+  bool? sheelaLiveReminders;
   bool? glucoMeter;
   bool? weighScale;
   bool? allowDevice;
@@ -130,6 +131,7 @@ class ProfileSetting {
       this.googleFit,
       this.healthFit,
       this.allowDigit,
+      this.sheelaLiveReminders,
       this.glucoMeter,
       this.weighScale,
       this.allowDevice,
@@ -148,6 +150,7 @@ class ProfileSetting {
       googleFit = json['googleFit'];
       healthFit = json['healthFit'];
       allowDigit = json['allowDigit'];
+      sheelaLiveReminders = json['isSheelaLiveReminder'];
       glucoMeter = json['glucoMeter'];
       weighScale = json['weighScale'];
       allowDevice = json['allowDevice'];
@@ -184,6 +187,8 @@ class ProfileSetting {
 
     data['googleFit'] = googleFit;
     data['healthFit'] = healthFit;
+    data['allowDigit'] = allowDigit;
+    data['isSheelaLiveReminder'] = sheelaLiveReminders;
     data['glucoMeter'] = glucoMeter;
     data['allowDevice'] = allowDevice;
     data['thermoMeter'] = thermoMeter;

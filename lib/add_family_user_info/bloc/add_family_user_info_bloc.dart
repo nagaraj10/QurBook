@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 
 import '../models/update_add_family_info.dart';
 import '../models/update_relatiosnship_model.dart';
@@ -109,6 +110,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   String? userMappingId = '';
   bool? _isdigitRecognition = true;
   bool? _isdeviceRecognition = true;
+  bool? _sheelaLiveReminders = true;
   bool? _isGFActive;
   bool? _isHKActive = false;
   bool _firstTym = true;
@@ -145,6 +147,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   bool? allowSymptomsNotification = true;
 
   PreferredMeasurement? preferredMeasurement;
+
+  SheelaAIController? sheelaAIcontroller =
+  CommonUtil().onInitSheelaAIController();
 
   @override
   void dispose() {
@@ -350,6 +355,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         } else {
           userMappingId = '';
           _isdeviceRecognition = true;
+          _sheelaLiveReminders = true;
           _isHKActive = false;
           _firstTym = true;
           _isBPActive = true;
@@ -366,6 +372,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         userMappingId = '';
         _isdigitRecognition = true;
         _isdeviceRecognition = true;
+        _sheelaLiveReminders = true;
         _isHKActive = false;
         _firstTym = true;
         _isBPActive = true;
@@ -382,6 +389,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             .createDeviceSelection(
                 _isdigitRecognition,
                 _isdeviceRecognition,
+                _sheelaLiveReminders,
                 _isGFActive,
                 _isHKActive,
                 _isBPActive,
@@ -408,6 +416,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                 .createDeviceSelection(
                     _isdigitRecognition,
                     _isdeviceRecognition,
+                    _sheelaLiveReminders,
                     _isGFActive,
                     _isHKActive,
                     _isBPActive,
@@ -453,6 +462,14 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                     ''
             ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
             : true;
+    _sheelaLiveReminders =
+    getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders != null &&
+        getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders !=
+            ''
+        ? getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders
+        : true;
+    sheelaAIcontroller?.isAllowSheelaLiveReminders =
+        _sheelaLiveReminders ?? true;
     _isHKActive =
         getDeviceSelectionModel.result![0].profileSetting!.healthFit != null &&
                 getDeviceSelectionModel.result![0].profileSetting!.healthFit !=
@@ -565,6 +582,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             userMappingId,
             _isdigitRecognition,
             _isdeviceRecognition,
+            _sheelaLiveReminders,
             _isGFActive,
             _isHKActive,
             _isBPActive,
@@ -591,6 +609,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
               .createDeviceSelection(
                   _isdigitRecognition,
                   _isdeviceRecognition,
+                  _sheelaLiveReminders,
                   _isGFActive,
                   _isHKActive,
                   _isBPActive,
