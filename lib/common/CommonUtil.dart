@@ -6306,7 +6306,8 @@ class CommonUtil {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket!
         .on(getReminderSheelaRedirect, (chatListresponse) {
-      if (PreferenceUtil.getIfQurhomeDashboardActiveChat()) {
+      if (PreferenceUtil.getIfQurhomeDashboardActiveChat() &&
+          isAllowSheelaLiveReminders()) {
         if (chatListresponse != null) {
           SheelaReminderResponse chatList =
               SheelaReminderResponse.fromJson(chatListresponse);
@@ -7356,6 +7357,12 @@ class CommonUtil {
     }
     return "";
   }
+  bool isAllowSheelaLiveReminders() {
+    SheelaAIController? sheelaAIController =
+    onInitSheelaAIController();
+    return sheelaAIController.isAllowSheelaLiveReminders;
+  }
+
 }
 
 extension CapExtension on String {

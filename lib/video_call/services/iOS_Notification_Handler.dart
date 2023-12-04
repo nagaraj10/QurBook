@@ -55,7 +55,11 @@ class IosNotificationHandler {
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
   bool? viewRecordAction, chatWithCC = false;
-  SheelaAIController sheelaAIController = Get.find();
+
+  //SheelaAIController sheelaAIController = Get.find();
+
+  SheelaAIController? sheelaAIController =
+      CommonUtil().onInitSheelaAIController();
 
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
@@ -105,19 +109,29 @@ class IosNotificationHandler {
           CommonUtil().listenToCallStatus(data);
         } else if (call.method == variable.navigateToSheelaReminderMethod) {
           if ((call.arguments["eid"] ?? '').isNotEmpty && isAlreadyLoaded) {
-            if (sheelaAIController.isSheelaScreenActive) {
+            //// allow the user to get notifications
+            if (CommonUtil().isAllowSheelaLiveReminders()) {
+              if (sheelaAIController!.isSheelaScreenActive) {
+                var reqJson = {
+                  KIOSK_task: KIOSK_remind,
+                  KIOSK_eid: call.arguments["eid"],
+                };
+                CommonUtil().callQueueNotificationPostApi(reqJson);
+              } else {
+                await Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    eId: call.arguments["eid"],
+                  ),
+                );
+              }
+            } else {
+              // live reminder off only queue flow working
               var reqJson = {
                 KIOSK_task: KIOSK_remind,
                 KIOSK_eid: call.arguments["eid"],
               };
               CommonUtil().callQueueNotificationPostApi(reqJson);
-            } else {
-              await Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  eId: call.arguments["eid"],
-                ),
-              );
             }
           }
         }
@@ -207,6 +221,17 @@ class IosNotificationHandler {
     }
   }
 
+  void navigateToMyRecordsCategory(
+      dynamic categoryType, List<String>? hrmId, bool isTerminate) async {
+    await CommonUtil().getCategoryListPos(categoryType).then(
+          (value) => CommonUtil().goToMyRecordsScreen(
+            value,
+            hrmId,
+            isTerminate,
+          ),
+        );
+  }
+
   actionForTheNotification() async {
     if (model.isCall!) {
       updateStatus(model.status!.toLowerCase());
@@ -256,18 +281,20 @@ class IosNotificationHandler {
     } else if (communicationSettingAction) {
       await Get.to(CareGiverSettings());
     } else if (model.isSheela ?? false) {
-      if (model.eventType != null && model.eventType == strWrapperCall) {
-        await Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            isSheelaAskForLang: true,
-            rawMessage: model.rawBody,
-            eventType: model.eventType,
-            others: model.others,
-          ),
-        );
-      } else if ((model.rawBody ?? '').isNotEmpty) {
-        /*if (sheelaAIController.isSheelaScreenActive) {
+      //// allow the user for auto redirect to sheela screen on time
+      if (CommonUtil().isAllowSheelaLiveReminders()) {
+        if (model.eventType != null && model.eventType == strWrapperCall) {
+          await Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              isSheelaAskForLang: true,
+              rawMessage: model.rawBody,
+              eventType: model.eventType,
+              others: model.others,
+            ),
+          );
+        } else if ((model.rawBody ?? '').isNotEmpty) {
+          /*if (sheelaAIController.isSheelaScreenActive) {
           if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
             var reqJsonAudio = {
               KIOSK_task: KIOSK_audio,
@@ -282,25 +309,25 @@ class IosNotificationHandler {
             CommonUtil().callQueueNotificationPostApi(reqJson);
           }
         } else {*/
-        await Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-              allowBackBtnPress: true,
-              textSpeechSheela: model.rawBody,
-              isNeedPreferredLangauge: true,
-              eventIdViaSheela: model.eventId),
-        );
-        //}
-      } else if ((model.message ?? '').isNotEmpty) {
-        await Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-              isSheelaFollowup: true,
-              message: model.message,
-              eventIdViaSheela: model.eventId),
-        );
-      } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
-        /*if (sheelaAIController.isSheelaScreenActive) {
+          await Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+                allowBackBtnPress: true,
+                textSpeechSheela: model.rawBody,
+                isNeedPreferredLangauge: true,
+                eventIdViaSheela: model.eventId),
+          );
+          //}
+        } else if ((model.message ?? '').isNotEmpty) {
+          await Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+                isSheelaFollowup: true,
+                message: model.message,
+                eventIdViaSheela: model.eventId),
+          );
+        } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
+          /*if (sheelaAIController.isSheelaScreenActive) {
           if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
             var reqJsonAudio = {
               KIOSK_task: KIOSK_audio,
@@ -309,82 +336,138 @@ class IosNotificationHandler {
             CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
           }
         } else {*/
-        await Future.delayed(const Duration(seconds: 5));
-        await Get.toNamed(
-          router.rt_Sheela,
-          arguments: SheelaArgument(
-              allowBackBtnPress: true,
-              audioMessage: model.sheelaAudioMsgUrl,
-              eventIdViaSheela: model.eventId),
-        );
-        //}
-      }
-    } else if (CommonUtil.isUSRegion() &&
-        model.templateName == strPatientReferralAcceptToPatient) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'myprovider_list',
-        'navigationPage': 'MyProvider List Screen',
-      });
-      await Get.toNamed(router.rt_UserAccounts,
-              arguments: UserAccountsArguments(selectedIndex: 2))
-          ?.then((value) => PageNavigator.goToPermanent(
-              Get.key.currentContext!, router.rt_Landing));
-    } else if (model.templateName == strNotifyPatientServiceTicketByCC &&
-        (model.eventId ?? '').isNotEmpty) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'notifyPatientServiceTicketByCC',
-        'navigationPage': 'TicketDetails',
-      });
-      await Get.to(
-        DetailedTicketView(
-          null,
-          true,
-          model.eventId,
-        ),
-      );
-    } else if (model.templateName ==
-            parameters.notifyCaregiverForMedicalRecord &&
-        chatWithCC!) {
-      if (!notificationReceivedFromKilledState) {
-        if ((model.userId ?? '').isNotEmpty &&
-            (model.patientName ?? '').isNotEmpty &&
-            (model.doctorPicture ?? '').isNotEmpty &&
-            (model.careCoordinatorUserId ?? '').isNotEmpty) {
-          await Get.to(
-            () => ChatDetail(
-              peerId: model.userId,
-              peerName: model.patientName,
-              peerAvatar: model.doctorPicture,
-              patientId: "",
-              patientName: "",
-              patientPicture: "",
-              isFromVideoCall: false,
-              isFromFamilyListChat: true,
-              isFromCareCoordinator: model.isFromCareCoordinator ?? false,
-              carecoordinatorId: model.careCoordinatorUserId,
-              isCareGiver: model.isCaregiver ?? false,
-              groupId: '',
-              lastDate: model.deliveredDateTime,
-            ),
+          await Future.delayed(const Duration(seconds: 5));
+          await Get.toNamed(
+            router.rt_Sheela,
+            arguments: SheelaArgument(
+                allowBackBtnPress: true,
+                audioMessage: model.sheelaAudioMsgUrl,
+                eventIdViaSheela: model.eventId),
           );
-        } else {
-          await Get.to(() => ChatUserList());
+          //}
         }
-      } else {
-        model.viewRecordAction = viewRecordAction;
-        model.chatWithCC = chatWithCC;
-        notificationReceivedFromKilledState = false;
-        await PreferenceUtil.saveNotificationData(model);
-      }
-    } else if (model.templateName ==
-            parameters.notifyCaregiverForMedicalRecord &&
-        viewRecordAction!) {
-      if (model.redirectData != null) {
+      } else if (CommonUtil.isUSRegion() &&
+          model.templateName == strPatientReferralAcceptToPatient) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'myprovider_list',
+          'navigationPage': 'MyProvider List Screen',
+        });
+        await Get.toNamed(router.rt_UserAccounts,
+                arguments: UserAccountsArguments(selectedIndex: 2))
+            ?.then((value) => PageNavigator.goToPermanent(
+                Get.key.currentContext!, router.rt_Landing));
+      } else if (model.templateName == strNotifyPatientServiceTicketByCC &&
+          (model.eventId ?? '').isNotEmpty) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'notifyPatientServiceTicketByCC',
+          'navigationPage': 'TicketDetails',
+        });
+        await Get.to(
+          DetailedTicketView(
+            null,
+            true,
+            model.eventId,
+          ),
+        );
+      } else if (model.templateName ==
+              parameters.notifyCaregiverForMedicalRecord &&
+          chatWithCC!) {
+        if (!notificationReceivedFromKilledState) {
+          if ((model.userId ?? '').isNotEmpty &&
+              (model.patientName ?? '').isNotEmpty &&
+              (model.doctorPicture ?? '').isNotEmpty &&
+              (model.careCoordinatorUserId ?? '').isNotEmpty) {
+            await Get.to(
+              () => ChatDetail(
+                peerId: model.userId,
+                peerName: model.patientName,
+                peerAvatar: model.doctorPicture,
+                patientId: "",
+                patientName: "",
+                patientPicture: "",
+                isFromVideoCall: false,
+                isFromFamilyListChat: true,
+                isFromCareCoordinator: model.isFromCareCoordinator ?? false,
+                carecoordinatorId: model.careCoordinatorUserId,
+                isCareGiver: model.isCaregiver ?? false,
+                groupId: '',
+                lastDate: model.deliveredDateTime,
+              ),
+            );
+          } else {
+            await Get.to(() => ChatUserList());
+          }
+        } else {
+          model.viewRecordAction = viewRecordAction;
+          model.chatWithCC = chatWithCC;
+          notificationReceivedFromKilledState = false;
+          await PreferenceUtil.saveNotificationData(model);
+        }
+      } else if (model.templateName ==
+              parameters.notifyCaregiverForMedicalRecord &&
+          viewRecordAction!) {
+        if (model.redirectData != null) {
+          final dataOne = model.redirectData![1];
+          final dataTwo = model.redirectData![2];
+
+          if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
+            final userId = PreferenceUtil.getStringValue(KEY_USERID);
+            if ((model.userId ?? '') == userId) {
+              CommonUtil().navigateToRecordDetailsScreen(dataTwo);
+            } else {
+              CommonUtil.showFamilyMemberPlanExpiryDialog(
+                model.patientName,
+                redirect: model.redirect,
+              );
+            }
+          } else {
+            navigateToMyRecordsCategory(
+              dataOne,
+              dataTwo,
+              false,
+            );
+          }
+        }
+      } else if (model.type == parameters.FETCH_LOG) {
+      } else if (model.templateName ==
+          parameters.familyMemberCaregiverRequest) {
+        //No Navigation required
+      } else if (model.templateName ==
+          parameters.associationNotificationToCaregiver) {
+        //No Navigation required
+      } else if (model.isCancellation) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'DoctorCancellation',
+          'navigationPage': 'Appointment List',
+        });
+        await await isAlreadyLoaded
+            ? Get.to(() => NotificationMain())
+            : Get.to(() => SplashScreen(
+                  nsRoute: parameters.doctorCancellation,
+                ));
+      } else if ((model.templateName ?? '').isNotEmpty &&
+          model.templateName == parameters.chat) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'chat',
+          'navigationPage': 'Tele Health Chat list',
+        });
+        await await isAlreadyLoaded
+            ? Get.to(() => ChatUserList())
+            : Get.to(() => SplashScreen(
+                  nsRoute: parameters.chat,
+                ));
+      } else if (model.redirectData != null) {
         final dataOne = model.redirectData![1];
         final dataTwo = model.redirectData![2];
-
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'myRecords',
+          'navigationPage': '$dataOne',
+        });
         if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
           final userId = PreferenceUtil.getStringValue(KEY_USERID);
           if ((model.userId ?? '') == userId) {
@@ -402,455 +485,392 @@ class IosNotificationHandler {
             false,
           );
         }
-      }
-    } else if (model.type == parameters.FETCH_LOG) {
-    } else if (model.templateName == parameters.familyMemberCaregiverRequest) {
-      //No Navigation required
-    } else if (model.templateName ==
-        parameters.associationNotificationToCaregiver) {
-      //No Navigation required
-    } else if (model.isCancellation) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'DoctorCancellation',
-        'navigationPage': 'Appointment List',
-      });
-      await await isAlreadyLoaded
-          ? Get.to(() => NotificationMain())
-          : Get.to(() => SplashScreen(
-                nsRoute: parameters.doctorCancellation,
-              ));
-    } else if ((model.templateName ?? '').isNotEmpty &&
-        model.templateName == parameters.chat) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'chat',
-        'navigationPage': 'Tele Health Chat list',
-      });
-      await await isAlreadyLoaded
-          ? Get.to(() => ChatUserList())
-          : Get.to(() => SplashScreen(
-                nsRoute: parameters.chat,
-              ));
-    } else if (model.redirectData != null) {
-      final dataOne = model.redirectData![1];
-      final dataTwo = model.redirectData![2];
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'myRecords',
-        'navigationPage': '$dataOne',
-      });
-      if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
+      } else if (model.redirect == parameters.stringConnectedDevicesScreen) {
+        if (!isAlreadyLoaded) {
+          await Future.delayed(const Duration(seconds: 5));
+          isAlreadyLoaded = true;
+        }
+        try {
+          await Get.to(
+            () => HubListView(),
+            binding: BindingsBuilder(
+              () {
+                if (!Get.isRegistered<HubListViewController>()) {
+                  Get.lazyPut(
+                    () => HubListViewController(),
+                  );
+                }
+              },
+            ),
+          );
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        }
+      } else if (model.redirect == parameters.strAppointmentDetail &&
+          (model.appointmentId ?? '').isNotEmpty &&
+          (model.patientId ?? '').isNotEmpty &&
+          (acceptAction || declineAction)) {
+        new CommonUtil().acceptCareGiverTransportRequestReminder(
+            Get.context!, model.appointmentId!, model.patientId!, acceptAction);
+        acceptAction = false;
+        declineAction = false;
+      } else if (model.redirect == parameters.strAppointmentDetail &&
+          (model.appointmentId ?? '').isNotEmpty) {
+        AppointmentDetailsController appointmentDetailsController =
+            CommonUtil().onInitAppointmentDetailsController();
+        appointmentDetailsController.getAppointmentDetail(model.appointmentId!);
+        await Get.to(() => AppointmentDetailScreen());
+      } else if (model.redirect == parameters.chat) {
+        if (!notificationReceivedFromKilledState) {
+          if ((model.doctorId ?? '').isNotEmpty &&
+              (model.doctorName ?? '').isNotEmpty &&
+              (model.doctorPicture ?? '').isNotEmpty) {
+            await Get.to(
+              () => ChatDetail(
+                peerId: model.doctorId,
+                peerName: model.doctorName,
+                peerAvatar: model.doctorPicture,
+                patientId: "",
+                patientName: "",
+                patientPicture: "",
+                isFromVideoCall: false,
+                isCareGiver: false,
+                isForGetUserId: true,
+              ),
+            );
+          } else {
+            await Get.to(() => ChatUserList());
+          }
+        } else {
+          notificationReceivedFromKilledState = false;
+          await PreferenceUtil.saveNotificationData(model);
+        }
+      } else if (model.redirect == 'sheela') {
+        await fbaLog(
+          eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'sheela',
+            'navigationPage': 'Sheela Start Page',
+          },
+        );
+        if (CommonUtil().isAllowSheelaLiveReminders()) {
+          if (isAlreadyLoaded) {
+            if ((model.notificationListId ?? '').isNotEmpty) {
+              await FetchNotificationService()
+                  .inAppUnreadAction(model.notificationListId!);
+            }
+            if (model.rawBody != null) {
+              String? sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
+              if (sheela_lang != null && sheela_lang != '') {
+                await Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    isSheelaAskForLang: false,
+                    langCode: sheela_lang,
+                    rawMessage: model.rawBody,
+                  ),
+                );
+              } else {
+                await Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    isSheelaAskForLang: true,
+                    rawMessage: model.rawBody,
+                  ),
+                );
+              }
+            } else {
+              await Get.to(() => SplashScreen(
+                    nsRoute: 'sheela',
+                  ));
+            }
+          } else {
+            await Get.to(() => SplashScreen(
+                  nsRoute: 'sheela',
+                ));
+          }
+        }
+      } else if ((model.redirect == 'profile_page') ||
+          (model.redirect == 'profile')) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'profile_page',
+          'navigationPage': 'User Profile page',
+        });
+
+        await await isAlreadyLoaded
+            ? Get.toNamed(router.rt_UserAccounts,
+                arguments: UserAccountsArguments(selectedIndex: 0))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'profile_page',
+                ));
+      } else if (model.redirect == parameters.myCartDetails &&
+          (model.planId ?? '').isNotEmpty) {
         final userId = PreferenceUtil.getStringValue(KEY_USERID);
-        if ((model.userId ?? '') == userId) {
-          CommonUtil().navigateToRecordDetailsScreen(dataTwo);
+
+        if (model.userId == userId) {
+          await await isAlreadyLoaded
+              ? Get.to(
+                  () => MyPlanDetail(
+                      packageId: model.planId,
+                      showRenew: renewAction,
+                      templateName: model.templateName),
+                )!
+                  .then((value) {
+                  renewAction = false;
+                })
+              : Get.to(() => SplashScreen(
+                        nsRoute: 'regiment_screen',
+                      ))!
+                  .then((value) {
+                  renewAction = false;
+                });
+        } else {
+          CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
+        }
+      } else if (model.redirect == parameters.claimList &&
+          (model.claimId ?? '').isNotEmpty) {
+        await Get.to(
+          () => ClaimRecordDisplay(
+            claimID: model.claimId,
+          ),
+        );
+        // }
+      } else if (model.redirect == parameters.myPlanDetails &&
+          (model.planId ?? '').isNotEmpty) {
+        final userId = PreferenceUtil.getStringValue(KEY_USERID);
+        if (model.userId == userId) {
+          await Get.to(
+            () => MyPlanDetail(
+              packageId: model.planId,
+              showRenew: false,
+              templateName: model.templateName,
+            ),
+          )!
+              .then((value) {
+            renewAction = false;
+          });
         } else {
           CommonUtil.showFamilyMemberPlanExpiryDialog(
             model.patientName,
-            redirect: model.redirect,
+            redirect: parameters.myPlanDetails,
           );
         }
-      } else {
-        navigateToMyRecordsCategory(
-          dataOne,
-          dataTwo,
-          false,
-        );
-      }
-    } else if (model.redirect == parameters.stringConnectedDevicesScreen) {
-      if (!isAlreadyLoaded) {
-        await Future.delayed(const Duration(seconds: 5));
-        isAlreadyLoaded = true;
-      }
-      try {
-        await Get.to(
-          () => HubListView(),
-          binding: BindingsBuilder(
-            () {
-              if (!Get.isRegistered<HubListViewController>()) {
-                Get.lazyPut(
-                  () => HubListViewController(),
-                );
-              }
-            },
-          ),
-        );
-      } catch (e, stackTrace) {
-        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-      }
-    } else if (model.redirect == parameters.strAppointmentDetail &&
-        (model.appointmentId ?? '').isNotEmpty &&
-        (model.patientId ?? '').isNotEmpty &&
-        (acceptAction || declineAction)) {
-      new CommonUtil().acceptCareGiverTransportRequestReminder(
-          Get.context!, model.appointmentId!, model.patientId!, acceptAction);
-      acceptAction = false;
-      declineAction = false;
-    } else if (model.redirect == parameters.strAppointmentDetail &&
-        (model.appointmentId ?? '').isNotEmpty) {
-      AppointmentDetailsController appointmentDetailsController =
-          CommonUtil().onInitAppointmentDetailsController();
-      appointmentDetailsController.getAppointmentDetail(model.appointmentId!);
-      await Get.to(() => AppointmentDetailScreen());
-    } else if (model.redirect == parameters.chat) {
-      if (!notificationReceivedFromKilledState) {
-        if ((model.doctorId ?? '').isNotEmpty &&
-            (model.doctorName ?? '').isNotEmpty &&
-            (model.doctorPicture ?? '').isNotEmpty) {
-          await Get.to(
-            () => ChatDetail(
-              peerId: model.doctorId,
-              peerName: model.doctorName,
-              peerAvatar: model.doctorPicture,
-              patientId: "",
-              patientName: "",
-              patientPicture: "",
-              isFromVideoCall: false,
-              isCareGiver: false,
-              isForGetUserId: true,
-            ),
-          );
-        } else {
-          await Get.to(() => ChatUserList());
-        }
-      } else {
-        notificationReceivedFromKilledState = false;
-        await PreferenceUtil.saveNotificationData(model);
-      }
-    } else if (model.redirect == 'sheela') {
-      await fbaLog(
-        eveParams: {
+      } else if (model.redirect == 'googlefit') {
+        await fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
-          'ns_type': 'sheela',
-          'navigationPage': 'Sheela Start Page',
-        },
-      );
-      if (isAlreadyLoaded) {
-        if ((model.notificationListId ?? '').isNotEmpty) {
-          await FetchNotificationService()
-              .inAppUnreadAction(model.notificationListId!);
-        }
-        if (model.rawBody != null) {
-          String? sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
-          if (sheela_lang != null && sheela_lang != '') {
-            await Get.toNamed(
-              rt_Sheela,
-              arguments: SheelaArgument(
-                isSheelaAskForLang: false,
-                langCode: sheela_lang,
-                rawMessage: model.rawBody,
-              ),
-            );
-          } else {
-            await Get.toNamed(
-              rt_Sheela,
-              arguments: SheelaArgument(
-                isSheelaAskForLang: true,
-                rawMessage: model.rawBody,
-              ),
-            );
-          }
-        } else {
-          await Get.to(() => SplashScreen(
-                nsRoute: 'sheela',
-              ));
-        }
-      } else {
-        await Get.to(() => SplashScreen(
-              nsRoute: 'sheela',
-            ));
-      }
-    } else if ((model.redirect == 'profile_page') ||
-        (model.redirect == 'profile')) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'profile_page',
-        'navigationPage': 'User Profile page',
-      });
-
-      await await isAlreadyLoaded
-          ? Get.toNamed(router.rt_UserAccounts,
-              arguments: UserAccountsArguments(selectedIndex: 0))
-          : Get.to(() => SplashScreen(
-                nsRoute: 'profile_page',
-              ));
-    } else if (model.redirect == parameters.myCartDetails &&
-        (model.planId ?? '').isNotEmpty) {
-      final userId = PreferenceUtil.getStringValue(KEY_USERID);
-
-      if (model.userId == userId) {
-        await await isAlreadyLoaded
-            ? Get.to(
-                () => MyPlanDetail(
-                    packageId: model.planId,
-                    showRenew: renewAction,
-                    templateName: model.templateName),
-              )!
-                .then((value) {
-                renewAction = false;
-              })
-            : Get.to(() => SplashScreen(
-                      nsRoute: 'regiment_screen',
-                    ))!
-                .then((value) {
-                renewAction = false;
-              });
-      } else {
-        CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
-      }
-    } else if (model.redirect == parameters.claimList &&
-        (model.claimId ?? '').isNotEmpty) {
-      await Get.to(
-        () => ClaimRecordDisplay(
-          claimID: model.claimId,
-        ),
-      );
-      // }
-    } else if (model.redirect == parameters.myPlanDetails &&
-        (model.planId ?? '').isNotEmpty) {
-      final userId = PreferenceUtil.getStringValue(KEY_USERID);
-      if (model.userId == userId) {
-        await Get.to(
-          () => MyPlanDetail(
-            packageId: model.planId,
-            showRenew: false,
-            templateName: model.templateName,
-          ),
-        )!
-            .then((value) {
-          renewAction = false;
+          'ns_type': 'googlefit',
+          'navigationPage': 'Google Fit page',
         });
-      } else {
-        CommonUtil.showFamilyMemberPlanExpiryDialog(
-          model.patientName,
-          redirect: parameters.myPlanDetails,
-        );
-      }
-    } else if (model.redirect == 'googlefit') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'googlefit',
-        'navigationPage': 'Google Fit page',
-      });
-      await await isAlreadyLoaded
-          ? Get.toNamed(router.rt_AppSettings)
-          : Get.to(() => SplashScreen(
-                nsRoute: 'googlefit',
-              ));
-    } else if ((model.redirect == 'th_provider') ||
-        (model.redirect == 'provider')) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'th_provider',
-        'navigationPage': 'Tele Health Provider',
-      });
-      await await isAlreadyLoaded
-          ? Get.toNamed(router.rt_TelehealthProvider,
-              arguments: HomeScreenArguments(selectedIndex: 1))
-          : Get.to(() => SplashScreen(
-                nsRoute: 'th_provider',
-              ));
-    } else if ((model.redirect == 'my_record') ||
-        (model.redirect == 'prescription_list') ||
-        (model.redirect == 'add_doc')) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'my_record',
-        'navigationPage': 'My Records',
-      });
-      await CommonUtil().getUserProfileData();
-      await await isAlreadyLoaded
-          ? Get.toNamed(router.rt_HomeScreen,
-              arguments: HomeScreenArguments(selectedIndex: 1))
-          : Get.to(() => SplashScreen(
-                nsRoute: 'my_record',
-              ));
-    } else if (model.redirect == 'devices_tab') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'my_record',
-        'navigationPage': 'My Records',
-      });
-      await CommonUtil().getUserProfileData();
-      await await isAlreadyLoaded
-          ? Get.toNamed(
-              router.rt_HomeScreen,
-              arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
-            )
-          : Get.to(() => SplashScreen(
-                nsRoute: 'my_record',
-              ));
-    } else if (model.redirect == 'bills') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'my_record',
-        'navigationPage': 'My Records',
-      });
-      await CommonUtil().getUserProfileData();
-      await await isAlreadyLoaded
-          ? Get.toNamed(
-              router.rt_HomeScreen,
-              arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
-            )
-          : Get.to(() => SplashScreen(
-                nsRoute: 'my_record',
-              ));
-    } else if (model.redirect == 'regiment_screen') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': CommonUtil.isUSRegion()
-            ? 'QurHomeRegimenScreen'
-            : 'regiment_screen',
-        'navigationPage': 'Regimen Screen',
-      });
-      if (isAlreadyLoaded) {
-        if (model.eventId != null) {
-          if (CommonUtil.isUSRegion()) {
-            var qurhomeDashboardController =
-                CommonUtil().onInitQurhomeDashboardController();
-            qurhomeDashboardController.eventId.value = model.eventId!;
-            await Get.to(() => QurhomeDashboard())?.then((value) =>
-                PageNavigator.goToPermanent(Get.context!, router.rt_Landing));
+        await await isAlreadyLoaded
+            ? Get.toNamed(router.rt_AppSettings)
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'googlefit',
+                ));
+      } else if ((model.redirect == 'th_provider') ||
+          (model.redirect == 'provider')) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'th_provider',
+          'navigationPage': 'Tele Health Provider',
+        });
+        await await isAlreadyLoaded
+            ? Get.toNamed(router.rt_TelehealthProvider,
+                arguments: HomeScreenArguments(selectedIndex: 1))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'th_provider',
+                ));
+      } else if ((model.redirect == 'my_record') ||
+          (model.redirect == 'prescription_list') ||
+          (model.redirect == 'add_doc')) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'my_record',
+          'navigationPage': 'My Records',
+        });
+        await CommonUtil().getUserProfileData();
+        await await isAlreadyLoaded
+            ? Get.toNamed(router.rt_HomeScreen,
+                arguments: HomeScreenArguments(selectedIndex: 1))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'my_record',
+                ));
+      } else if (model.redirect == 'devices_tab') {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'my_record',
+          'navigationPage': 'My Records',
+        });
+        await CommonUtil().getUserProfileData();
+        await await isAlreadyLoaded
+            ? Get.toNamed(
+                router.rt_HomeScreen,
+                arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
+              )
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'my_record',
+                ));
+      } else if (model.redirect == 'bills') {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'my_record',
+          'navigationPage': 'My Records',
+        });
+        await CommonUtil().getUserProfileData();
+        await await isAlreadyLoaded
+            ? Get.toNamed(
+                router.rt_HomeScreen,
+                arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
+              )
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'my_record',
+                ));
+      } else if (model.redirect == 'regiment_screen') {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': CommonUtil.isUSRegion()
+              ? 'QurHomeRegimenScreen'
+              : 'regiment_screen',
+          'navigationPage': 'Regimen Screen',
+        });
+        if (isAlreadyLoaded) {
+          if (model.eventId != null) {
+            if (CommonUtil.isUSRegion()) {
+              var qurhomeDashboardController =
+                  CommonUtil().onInitQurhomeDashboardController();
+              qurhomeDashboardController.eventId.value = model.eventId!;
+              await Get.to(() => QurhomeDashboard())?.then((value) =>
+                  PageNavigator.goToPermanent(Get.context!, router.rt_Landing));
+            } else {
+              await Get.toNamed(router.rt_Regimen,
+                  arguments: RegimentArguments(eventId: model.eventId));
+            }
           } else {
-            await Get.toNamed(router.rt_Regimen,
-                arguments: RegimentArguments(eventId: model.eventId));
+            await Get.to(() => SplashScreen(
+                  nsRoute: 'regiment_screen',
+                ));
           }
         } else {
           await Get.to(() => SplashScreen(
                 nsRoute: 'regiment_screen',
               ));
         }
-      } else {
-        await Get.to(() => SplashScreen(
-              nsRoute: 'regiment_screen',
-            ));
-      }
-    } else if (model.redirect == 'mycart') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'my cart',
-        'navigationPage': 'My Cart',
-      });
-      await Get.to(
-        () => CheckoutPage(
-          isFromNotification: true,
-        ),
-      );
-    } else if (model.redirect == 'dashboard') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'dashboard',
-        'navigationPage': 'Device List Screen',
-      });
-      isAlreadyLoaded
-          ? PageNavigator.goToPermanent(
-              Get.key.currentContext!, router.rt_Landing)
-          : Get.to(() => SplashScreen(
-                nsRoute: 'regiment_screen',
-              ));
-    } else if (model.redirect == 'th_provider_hospital') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'th_provider_hospital',
-        'navigationPage': 'TH provider Hospital Screen',
-      });
-      await await isAlreadyLoaded
-          ? Get.toNamed(router.rt_TelehealthProvider,
-              arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1))
-          : Get.to(() => SplashScreen(
-                nsRoute: 'th_provider_hospital',
-              ));
-    } else if ((model.redirect == 'myfamily_list') ||
-        (model.redirect == 'profile_my_family')) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'myfamily_list',
-        'navigationPage': 'MyFamily List Screen',
-      });
-      await await isAlreadyLoaded
-          ? Get.toNamed(router.rt_UserAccounts,
-              arguments: UserAccountsArguments(selectedIndex: 1))
-          : Get.to(() => SplashScreen(
-                nsRoute: 'myfamily_list',
-              ));
-    } else if (model.redirect == 'myprovider_list') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'myprovider_list',
-        'navigationPage': 'MyProvider List Screen',
-      });
-      await await isAlreadyLoaded
-          ? Get.toNamed(router.rt_UserAccounts,
-              arguments: UserAccountsArguments(selectedIndex: 2))
-          : Get.to(() => SplashScreen(
-                nsRoute: 'myprovider_list',
-              ));
-    } else if (model.redirect == 'myplans') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'myplans',
-        'navigationPage': 'MyPlans Screen',
-      });
-      await await isAlreadyLoaded
-          ? Get.toNamed(router.rt_UserAccounts,
-              arguments: UserAccountsArguments(selectedIndex: 3))
-          : Get.to(() => SplashScreen(
-                nsRoute: 'myplans',
-              ));
-    } else if ((model.redirect == 'appointmentList') ||
-        (model.redirect == 'appointmentHistory')) {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'appointmentList',
-        'navigationPage': 'Tele Health Appointment list',
-      });
-      model.redirect = 'appointmentList';
-      await PreferenceUtil.saveNotificationData(model);
-      isAlreadyLoaded
-          ? PageNavigator.goTo(Get.context!, router.rt_Landing)
-          : Get.to(() => SplashScreen(
-                nsRoute: model.redirect,
-              ));
-    } else if (model.redirect == 'manageActivities') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'manageActivities',
-        'navigationPage': 'ManageActivities list',
-      });
-      await Get.toNamed(rt_ManageActivitiesScreen);
-    } else if ((model.redirect ==
-            parameters.escalateToCareCoordinatorToRegimen) &&
-        escalteAction) {
-      escalteAction = false;
-      CommonUtil().escalateNonAdherance(
-          model.careCoordinatorUserId,
-          model.patientName,
-          model.careGiverName,
-          model.activityTime,
-          model.activityName,
-          model.userId,
-          model.uid,
-          model.patientPhoneNumber);
-    } else {
-      isAlreadyLoaded
-          ? PageNavigator.goTo(
-              Get.context!,
-              router.rt_Landing,
-            )
-          : Get.to(() => SplashScreen(
-                nsRoute: '',
-              ));
-    }
-  }
-
-  void navigateToMyRecordsCategory(
-      dynamic categoryType, List<String>? hrmId, bool isTerminate) async {
-    await CommonUtil().getCategoryListPos(categoryType).then(
-          (value) => CommonUtil().goToMyRecordsScreen(
-            value,
-            hrmId,
-            isTerminate,
+      } else if (model.redirect == 'mycart') {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'my cart',
+          'navigationPage': 'My Cart',
+        });
+        await Get.to(
+          () => CheckoutPage(
+            isFromNotification: true,
           ),
         );
+      } else if (model.redirect == 'dashboard') {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'dashboard',
+          'navigationPage': 'Device List Screen',
+        });
+        isAlreadyLoaded
+            ? PageNavigator.goToPermanent(
+                Get.key.currentContext!, router.rt_Landing)
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'regiment_screen',
+                ));
+      } else if (model.redirect == 'th_provider_hospital') {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'th_provider_hospital',
+          'navigationPage': 'TH provider Hospital Screen',
+        });
+        await await isAlreadyLoaded
+            ? Get.toNamed(router.rt_TelehealthProvider,
+                arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'th_provider_hospital',
+                ));
+      } else if ((model.redirect == 'myfamily_list') ||
+          (model.redirect == 'profile_my_family')) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'myfamily_list',
+          'navigationPage': 'MyFamily List Screen',
+        });
+        await await isAlreadyLoaded
+            ? Get.toNamed(router.rt_UserAccounts,
+                arguments: UserAccountsArguments(selectedIndex: 1))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'myfamily_list',
+                ));
+      } else if (model.redirect == 'myprovider_list') {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'myprovider_list',
+          'navigationPage': 'MyProvider List Screen',
+        });
+        await await isAlreadyLoaded
+            ? Get.toNamed(router.rt_UserAccounts,
+                arguments: UserAccountsArguments(selectedIndex: 2))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'myprovider_list',
+                ));
+      } else if (model.redirect == 'myplans') {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'myplans',
+          'navigationPage': 'MyPlans Screen',
+        });
+        await await isAlreadyLoaded
+            ? Get.toNamed(router.rt_UserAccounts,
+                arguments: UserAccountsArguments(selectedIndex: 3))
+            : Get.to(() => SplashScreen(
+                  nsRoute: 'myplans',
+                ));
+      } else if ((model.redirect == 'appointmentList') ||
+          (model.redirect == 'appointmentHistory')) {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'appointmentList',
+          'navigationPage': 'Tele Health Appointment list',
+        });
+        model.redirect = 'appointmentList';
+        await PreferenceUtil.saveNotificationData(model);
+        isAlreadyLoaded
+            ? PageNavigator.goTo(Get.context!, router.rt_Landing)
+            : Get.to(() => SplashScreen(
+                  nsRoute: model.redirect,
+                ));
+      } else if (model.redirect == 'manageActivities') {
+        await fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'manageActivities',
+          'navigationPage': 'ManageActivities list',
+        });
+        await Get.toNamed(rt_ManageActivitiesScreen);
+      } else if ((model.redirect ==
+              parameters.escalateToCareCoordinatorToRegimen) &&
+          escalteAction) {
+        escalteAction = false;
+        CommonUtil().escalateNonAdherance(
+            model.careCoordinatorUserId,
+            model.patientName,
+            model.careGiverName,
+            model.activityTime,
+            model.activityName,
+            model.userId,
+            model.uid,
+            model.patientPhoneNumber);
+      } else {
+        isAlreadyLoaded
+            ? PageNavigator.goTo(
+                Get.context!,
+                router.rt_Landing,
+              )
+            : Get.to(() => SplashScreen(
+                  nsRoute: '',
+                ));
+      }
+    }
   }
 }

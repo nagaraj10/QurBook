@@ -8,6 +8,7 @@ class DeviceStatus {
     this.userMappingId,
     this.isdigitRecognition,
     this.isdeviceRecognition,
+    this.isSheelaLiveReminders,
     this.isGFActive,
     this.isHkActive,
     this.firstTym,
@@ -31,6 +32,7 @@ class DeviceStatus {
   String? userMappingId = '';
   bool? isdigitRecognition = true;
   bool? isdeviceRecognition = true;
+  bool? isSheelaLiveReminders = true;
   bool? isGFActive = false;
   bool? isHkActive = false;
   bool? firstTym = true;
