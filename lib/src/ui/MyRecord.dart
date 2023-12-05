@@ -1,10 +1,9 @@
-
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../../common/firestore_services.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
@@ -113,11 +112,10 @@ class _MyRecordsState extends State<MyRecords> {
   List<String> selectedMedia = [];
   static bool audioPage = false;
   LandingViewModel? landingViewModel;
- late BuildContext context;
+  late BuildContext context;
   var qurhomeDashboardController =
-  CommonUtil().onInitQurhomeDashboardController();
-  var landingScreenController =
-  CommonUtil().onInitLandingScreenController();
+      CommonUtil().onInitQurhomeDashboardController();
+  var landingScreenController = CommonUtil().onInitLandingScreenController();
 
   @override
   void initState() {
@@ -147,9 +145,8 @@ class _MyRecordsState extends State<MyRecords> {
                 : ShowCaseWidget.of(_myContext)!
                     .startShowCase([_cameraKey, _voiceKey]));
       });
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -196,7 +193,8 @@ class _MyRecordsState extends State<MyRecords> {
   Widget getCompleteWidgets() {
     return Scaffold(
       key: scaffold_state,
-      appBar: widget.isHome && !(landingScreenController?.isSearchVisible.value ?? false)
+      appBar: widget.isHome &&
+              !(landingScreenController?.isSearchVisible.value ?? false)
           ? null
           : AppBar(
               elevation: 0,
@@ -208,7 +206,8 @@ class _MyRecordsState extends State<MyRecords> {
                 size: 24.0.sp,
                 onTap: () {
                   if (widget.isHome) {
-                    if (landingScreenController?.isSearchVisible.value ?? false) {
+                    if (landingScreenController?.isSearchVisible.value ??
+                        false) {
                       _searchQueryController.clear();
                       landingScreenController?.changeSearchBar(
                         isEnabled: false,
@@ -362,7 +361,7 @@ class _MyRecordsState extends State<MyRecords> {
 
       List<CategoryResult>? categoryDataFromPrefernce =
           PreferenceUtil.getCategoryTypeDisplay(
-              Constants.KEY_CATEGORYLIST_VISIBLE) ;
+              Constants.KEY_CATEGORYLIST_VISIBLE);
       if (data != null && data.length > 0) {
         categoryData = fliterCategories(data);
         categoryData.add(categoryDataObjClone);
@@ -408,9 +407,8 @@ class _MyRecordsState extends State<MyRecords> {
             PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID!)
                 .then((value) {});
           });
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
       },
       onScroll: (position) {
@@ -425,9 +423,8 @@ class _MyRecordsState extends State<MyRecords> {
             PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID!)
                 .then((value) {});
           });
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
       },
       categoryData: categoryData,
@@ -527,15 +524,16 @@ class _MyRecordsState extends State<MyRecords> {
             width: 2.0.w,
           ),
           new CommonUtil().getNotificationIcon(context),
-          new SwitchProfile()
-              .buildActions(context, _keyLoader, callBackToRefresh, false,changeWhiteBg: true),
+          new SwitchProfile().buildActions(
+              context, _keyLoader, callBackToRefresh, false,
+              changeWhiteBg: true),
         ],
       ),
     );
   }
 
   void callBackToRefresh() {
-    QurPlanReminders.getTheRemindersFromAPI();
+    FirestoreServices().updateFirestoreListner();
 
     (context as Element).markNeedsBuild();
   }
@@ -736,7 +734,8 @@ class _CustomTabsState extends State<CustomTabView>
     controller = TabController(
       length: widget.itemCount,
       vsync: this,
-      initialIndex: _currentPosition! >= widget.itemCount ? 0 : _currentPosition!,
+      initialIndex:
+          _currentPosition! >= widget.itemCount ? 0 : _currentPosition!,
     );
     controller!.addListener(onPositionChange);
     controller!.animation!.addListener(onScroll);
@@ -968,7 +967,8 @@ class _CustomTabsState extends State<CustomTabView>
                       }
                     }
                   },
-                  child: widget.isFromChat! ? Text('Attach') : Text('Associate'),
+                  child:
+                      widget.isFromChat! ? Text('Attach') : Text('Associate'),
                   textColor: Color(new CommonUtil().getMyPrimaryColor()),
                   color: Colors.white,
                   borderSide: BorderSide(
@@ -1176,8 +1176,8 @@ class _CustomTabsState extends State<CustomTabView>
           );
   }
 
-  Widget getStackBody(List<CategoryResult>? data, HealthRecordList? completeData,
-      List<MediaResult>? mediaData) {
+  Widget getStackBody(List<CategoryResult>? data,
+      HealthRecordList? completeData, List<MediaResult>? mediaData) {
     if (mediaData == null) {
       return Container();
     }
@@ -1228,8 +1228,7 @@ class _CustomTabsState extends State<CustomTabView>
     callBackToRefresh();
   }
 
-
-void addMediaRemoveMaster(String? metaId, bool? condition) {
+  void addMediaRemoveMaster(String? metaId, bool? condition) {
     commonMethodToAddOrRemove(metaId!, condition!, null);
   }
 
@@ -1495,14 +1494,14 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
         try {
           _currentPosition = controller!.index;
 
-          if ((categoryDataList != null) && (categoryDataList?.length ?? 0) > 0) {
+          if ((categoryDataList != null) &&
+              (categoryDataList?.length ?? 0) > 0) {
             categoryName =
                 categoryDataList.elementAt(_currentPosition!).categoryName;
             categoryID = categoryDataList.elementAt(_currentPosition!).id;
           }
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
       }
     }
@@ -1523,9 +1522,8 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
               .elementAt(controller!.animation!.value.toInt())
               .id;
         }
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
   }
@@ -1578,8 +1576,8 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
     });
 
     TextEditingController fileName = new TextEditingController(
-        text:
-            categoryName! + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+        text: categoryName! +
+            '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     new CommonDialogBox().getDialogBoxForNotes(
         context,
         containsAudio,
@@ -1719,7 +1717,8 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
   }
 
   saveCategoryToPrefernce() async {
-    if ((widget.categoryData != null) && (widget.categoryData?.length ?? 0) > 0) {
+    if ((widget.categoryData != null) &&
+        (widget.categoryData?.length ?? 0) > 0) {
       categoryName =
           widget.categoryData!.elementAt(_currentPosition!).categoryName;
       categoryID = widget.categoryData!.elementAt(_currentPosition!).id;
