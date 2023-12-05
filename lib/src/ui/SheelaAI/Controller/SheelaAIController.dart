@@ -107,6 +107,8 @@ class SheelaAIController extends GetxController {
 
   List<String> sheelaTTSWordList = ["sheila", "sila", "shila", "shiela"];
 
+  bool isAllowSheelaLiveReminders = true;
+
   @override
   void onInit() {
     super.onInit();
@@ -308,18 +310,31 @@ class SheelaAIController extends GetxController {
         conversations = [];
         currentPlayingConversation = null;
         isLoading.value = true;
-        msg = arguments!.textSpeechSheela!;
-        var currentCon = SheelaResponse(text: msg, recipientId: sheelaRecepId);
-        conversations.add(currentCon);
-        currentPlayingConversation = currentCon;
-        currentPlayingConversation?.endOfConvDiscardDialog =
-            arguments?.allowBackBtnPress ?? false;
-        isLoading.value = false;
-        playTTS();
+        if (arguments?.isNeedPreferredLangauge ?? false) {
+          getTextTranslate(arguments!.textSpeechSheela ?? '').then((value) {
+            if (value != null) {
+              msg = value.toString();
+              addSpeechTextConversation(msg);
+            }
+          });
+        } else {
+          msg = (arguments?.textSpeechSheela ?? '').toString();
+          addSpeechTextConversation(msg);
+        }
       } else {
         gettingReposnseFromNative();
       }
     }
+  }
+
+  addSpeechTextConversation(String message) {
+    var currentCon = SheelaResponse(text: message, recipientId: sheelaRecepId);
+    conversations.add(currentCon);
+    currentPlayingConversation = currentCon;
+    currentPlayingConversation?.endOfConvDiscardDialog =
+        arguments?.allowBackBtnPress ?? false;
+    isLoading.value = false;
+    playTTS();
   }
 
   getAIAPIResponseFor(String? message, Buttons? buttonsList) async {
@@ -1029,6 +1044,8 @@ class SheelaAIController extends GetxController {
     currentDeviceStatus.greColor = prof.greColor;
     currentDeviceStatus.isdeviceRecognition = prof.allowDevice ?? true;
     currentDeviceStatus.isdigitRecognition = prof.allowDigit ?? true;
+    currentDeviceStatus.isSheelaLiveReminders = prof.sheelaLiveReminders ?? true;
+    isAllowSheelaLiveReminders = currentDeviceStatus.isSheelaLiveReminders ?? true;
     currentDeviceStatus.isHkActive = prof.healthFit ?? false;
     currentDeviceStatus.isBpActive = prof.bpMonitor ?? true;
     currentDeviceStatus.isGFActive = prof.glucoMeter ?? true;
@@ -1062,6 +1079,7 @@ class SheelaAIController extends GetxController {
           .createDeviceSelection(
               currentDeviceStatus.isdigitRecognition,
               currentDeviceStatus.isdeviceRecognition,
+              currentDeviceStatus.isSheelaLiveReminders,
               currentDeviceStatus.isGFActive,
               currentDeviceStatus.isHkActive,
               currentDeviceStatus.isBpActive,
@@ -1113,6 +1131,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.userMappingId,
         currentDeviceStatus.isdigitRecognition,
         currentDeviceStatus.isdeviceRecognition,
+        currentDeviceStatus.isSheelaLiveReminders,
         currentDeviceStatus.isGFActive,
         currentDeviceStatus.isHkActive,
         currentDeviceStatus.isBpActive,
@@ -1138,6 +1157,16 @@ class SheelaAIController extends GetxController {
     }
   }
 
+  checkIfWeNeedToShowDialogBox(
+      {bool isNeedSheelaDialog = false,
+      bool isFromQurHomeRegimen = false}) async {
+    if ((CommonUtil().isTablet == true)) {
+      showRemainderBasedOnCondition(
+          isFromQurHomeRegimen: isFromQurHomeRegimen,
+          isNeedSheelaDialog: isNeedSheelaDialog);
+    }
+  }
+
   getSheelaBadgeCount(
       {bool isNeedSheelaDialog = false,
       bool isFromQurHomeRegimen = false}) async {
@@ -1158,19 +1187,14 @@ class SheelaAIController extends GetxController {
                 isNeedSheelaDialog = true;
               }
               if (isNeedSheelaDialog) {
-                if ((CommonUtil.REGION_CODE != "US" &&
-                    CommonUtil().isTablet == true)) {
-                  showRemainderBasedOnCondition(
-                      isFromQurHomeRegimen: isFromQurHomeRegimen,
-                      isNeedSheelaDialog: isNeedSheelaDialog);
-                } else if ((value.result?.queueCount ?? 0) > 0 &&
+                if ((value.result?.queueCount ?? 0) > 0 &&
                     PreferenceUtil.getIfQurhomeisAcive()) {
                   if (isQueueDialogShowing.value == false) {
-                    isQueueDialogShowing.value = true;
-
-                    showDialogForSheelaBox(
-                        isFromQurHomeRegimen: isFromQurHomeRegimen,
-                        isNeedSheelaDialog: isNeedSheelaDialog);
+                    if (CommonUtil().isTablet != true) {
+                      showDialogForSheelaBox(
+                          isFromQurHomeRegimen: isFromQurHomeRegimen,
+                          isNeedSheelaDialog: isNeedSheelaDialog);
+                    }
                   }
                 }
               }
@@ -1435,6 +1459,14 @@ class SheelaAIController extends GetxController {
     });
   }
 
+/**
+ * This method checks the first and last activity time of the day
+ * Get the list of times on which the remainder should popup based on 
+ * the interval time 
+ * If the device time matched the time with any of the value in the remainder 
+ * list then check if the remainder count in not empty 
+ * If not show popup dialog else doesnt
+ */
   void showRemainderBasedOnCondition(
       {bool isNeedSheelaDialog = false,
       bool isFromQurHomeRegimen = false}) async {
@@ -1452,27 +1484,26 @@ class SheelaAIController extends GetxController {
         startDate != "" &&
         endDate != null &&
         endDate != "") {
-      if (((sheelaAIController.sheelaIconBadgeCount.value ?? 0)) > 0) {
-        if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) ||
-                DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
-            (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
-            (qurhomeCOntroller.evryOneMinuteRemainder != null ||
-                qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
-          if (activitiesFilteredList != null &&
-              activitiesFilteredList.length > 0) {
-            for (int i = 0; i < activitiesFilteredList.length; i++) {
-              if (((DateTime.now()
-                              .difference(activitiesFilteredList[i])
-                              .inMinutes ??
-                          0) ==
-                      0) ||
-                  ((DateTime.now()
-                              .difference(activitiesFilteredList[i])
-                              .inMinutes ??
-                          0) ==
-                      1)) {
+      if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) ||
+              DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
+          (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
+          (qurhomeCOntroller.evryOneMinuteRemainder != null ||
+              qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
+        if (activitiesFilteredList != null &&
+            activitiesFilteredList.length > 0) {
+          for (int i = 0; i < activitiesFilteredList.length; i++) {
+            if (((DateTime.now()
+                            .difference(activitiesFilteredList[i])
+                            .inMinutes ??
+                        0) ==
+                    0) ||
+                ((DateTime.now()
+                            .difference(activitiesFilteredList[i])
+                            .inMinutes ??
+                        0) ==
+                    1)) {
+              if (((sheelaAIController.sheelaIconBadgeCount.value ?? 0)) > 0) {
                 if (isQueueDialogShowing.value == false) {
-                  isQueueDialogShowing.value = true;
                   playAudioPlayer().then((value) {
                     activitiesFilteredList.removeAt(i);
                     showDialogForSheelaBox(

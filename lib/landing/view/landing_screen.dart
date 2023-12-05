@@ -10,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import '../../common/firestore_services.dart';
@@ -103,7 +104,8 @@ class _LandingScreenState extends State<LandingScreen> {
   final controllerQurhomeRegimen =
       CommonUtil().onInitQurhomeRegimenController();
 
-  final sheelBadgeController = Get.put(SheelaAIController());
+  SheelaAIController? sheelBadgeController =
+  CommonUtil().onInitSheelaAIController();
 
   double selOption = 30.0.sp;
   double unSelOption = 28.0.sp;
@@ -182,26 +184,13 @@ class _LandingScreenState extends State<LandingScreen> {
 
       CommonUtil().initSocket();
 
-      if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
-        await CommonUtil().getSheelaConfig();
-        List<RegimentDataModel>? activitiesFilteredList = [];
-        await controllerQurhomeRegimen.getRegimenList();
-
-        activitiesFilteredList =
-            controllerQurhomeRegimen.qurHomeRegimenResponseModel?.regimentsList;
-        if (activitiesFilteredList != null &&
-            activitiesFilteredList.length > 0) {
-          int length = activitiesFilteredList?.length ?? 0;
-          PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_START,
-              activitiesFilteredList?[0]?.estartNew ?? '');
-          PreferenceUtil.saveString(Constants.SHEELA_REMAINDER_END,
-              activitiesFilteredList?[length - 1]?.estartNew ?? '');
-          controllerQurhomeRegimen.callMethodToSaveRemainder();
-          controllerQurhomeRegimen.startTimerForSheela();
-        }
+      //Initialize a timer which will show remainder very 30 mins
+      if (CommonUtil().isTablet == true) {
+        SheelaRemainderPopup.checkConditionToShowPopUp();
       } else {
-        sheelBadgeController.getSheelaBadgeCount();
+        sheelBadgeController?.getSheelaBadgeCount();
       }
+      sheelBadgeController?.isAllowSheelaLiveReminders = true;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -824,7 +813,7 @@ class _LandingScreenState extends State<LandingScreen> {
       size: 14.h,
       fontSize: 12.sp,
       badgeColor: ColorUtils.countColor,
-      badgeCount: sheelBadgeController.sheelaIconBadgeCount.value,
+      badgeCount: sheelBadgeController?.sheelaIconBadgeCount.value,
       isForSheelaQueue: true,
     );
   }
@@ -1098,6 +1087,17 @@ class _LandingScreenState extends State<LandingScreen> {
                   PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
                       0xff9929ea);
             }
+            sheelBadgeController?.isAllowSheelaLiveReminders = (selectionResult!
+                            .result![0].profileSetting!.sheelaLiveReminders !=
+                        null &&
+                    selectionResult!
+                            .result![0].profileSetting!.sheelaLiveReminders !=
+                        '')
+                ? selectionResult!
+                        .result![0].profileSetting!.sheelaLiveReminders ??
+                    true
+                : true;
+            print('----------isAllowBool: '+(sheelBadgeController?.isAllowSheelaLiveReminders??true).toString());
           } else {
             PreferenceUtil.saveTheme(
                 Constants.keyPriColor,
