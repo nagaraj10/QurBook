@@ -1673,7 +1673,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 ),
               ),
         Divider(),
-        /// this widget is for sheela live reminder toggle on off
+        // this widget is for sheela live reminder toggle on off widget added
         Theme(
           data: theme,
           child: ExpansionTile(
