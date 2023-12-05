@@ -763,7 +763,6 @@ class FormDataDialogState extends State<FormDataDialog> {
       selectedTime: _currentTime,
     );
     if (saveResponse.isSuccess ?? false) {
-      QurPlanReminders.getTheRemindersFromAPI();
       if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
         LoaderQurHome.hideLoadingDialog(Get.context!);
       } else {

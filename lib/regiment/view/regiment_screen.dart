@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
+import '../../common/firestore_services.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/CommonUtil.dart';
@@ -39,21 +39,14 @@ class RegimentScreen extends StatelessWidget {
           onTap: () => onBackPressed(context),
         ),
         actions: [
-          SwitchProfile().buildActions(
-            context,
-            _key,
-            () {
-              Provider.of<RegimentViewModel>(context, listen: false)
-                  .fetchRegimentData(
-                isInitial: true,
-              );
-              QurPlanReminders.getTheRemindersFromAPI();
-
-              (context as Element).markNeedsBuild();
-            },
-            true,
-            changeWhiteBg: true
-          ),
+          SwitchProfile().buildActions(context, _key, () {
+            Provider.of<RegimentViewModel>(context, listen: false)
+                .fetchRegimentData(
+              isInitial: true,
+            );
+            FirestoreServices().updateFirestoreListner();
+            (context as Element).markNeedsBuild();
+          }, true, changeWhiteBg: true),
         ],
       ),
       body: WillPopScope(

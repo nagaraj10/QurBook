@@ -164,6 +164,7 @@ import 'CommonConstants.dart';
 import 'PreferenceUtil.dart';
 import 'ShowPDFFromFile.dart';
 import 'common_circular_indicator.dart';
+import 'firestore_services.dart';
 import 'keysofmodel.dart' as keysConstant;
 import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 
@@ -3626,7 +3627,6 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result!.result == 'Done') {
                                       //setState(() {});
-                                      QurPlanReminders.getTheRemindersFromAPI();
                                       Navigator.of(_keyLoader.currentContext!,
                                               rootNavigator: true)
                                           .pop();
@@ -4190,7 +4190,7 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result!.result == 'Done') {
                                       //setState(() {});
-                                      QurPlanReminders.getTheRemindersFromAPI();
+
                                       Navigator.of(_keyLoader.currentContext!,
                                               rootNavigator: true)
                                           .pop();
@@ -6154,7 +6154,7 @@ class CommonUtil {
   OnInitAction() async {
     try {
       dbInitialize();
-      QurPlanReminders.getTheRemindersFromAPI();
+
       //initSocket();
       Future.delayed(const Duration(seconds: 1)).then((_) {
         if (Platform.isIOS) {
@@ -6174,6 +6174,7 @@ class CommonUtil {
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
+      FirestoreServices().setupListenerForFirestoreChanges();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
           () => PDFViewController(),

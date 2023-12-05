@@ -13,6 +13,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
+import '../../common/firestore_services.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
@@ -47,7 +48,6 @@ import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart' as constants;
 import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
-import '../../reminders/QurPlanReminders.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -148,7 +148,6 @@ class _LandingScreenState extends State<LandingScreen> {
       mInitialTime = DateTime.now();
       // dbInitialize();
       userId = PreferenceUtil.getStringValue(KEY_USERID);
-      // QurPlanReminders.getTheRemindersFromAPI();
       try {
         Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
       } catch (e, stackTrace) {
@@ -1206,7 +1205,7 @@ class _LandingScreenState extends State<LandingScreen> {
               landingViewModel!.checkIfUserIdSame().then((value) {
                 isUserMainId = value;
               });
-              QurPlanReminders.getTheRemindersFromAPI();
+              FirestoreServices().updateFirestoreListner();
 
               setState(() {});
               (context as Element).markNeedsBuild();
