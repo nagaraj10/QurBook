@@ -950,6 +950,9 @@ class SheelaAIController extends GetxController {
                           playTTS();
                           scrollToEnd();
                         });
+                      } else if ((button?.btnRedirectTo ?? "") ==
+                          strHomeScreenForce.toLowerCase()) {
+                        Get.back();
                       } else {
                         startSheelaFromButton(
                             buttonText: button.title,
