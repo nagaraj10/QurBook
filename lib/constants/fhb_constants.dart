@@ -639,6 +639,7 @@ const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
 const String strMyFamilyList = 'myfamily_list';
 const String strHomeScreen = 'home_screen';
+const String strHomeScreenForce = 'home_screen_force';
 const String strManageActivities = 'Enable / Disable Activities';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Plans';
