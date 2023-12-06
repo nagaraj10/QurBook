@@ -93,7 +93,7 @@ class QurhomeRegimenController extends GetxController {
   startUpdateUITimer() {
     updateUITimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
-      refreshTheNextActivity(regimentList);
+      refreshTheNextActivity(regimentList,null);
     });
   }
 
@@ -115,7 +115,7 @@ class QurhomeRegimenController extends GetxController {
       qurHomeRegimenResponseModel =
           await _apiProvider.getRegimenList(date, patientId: patientId);
       var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
-      refreshTheNextActivity(regimentList);
+      refreshTheNextActivity(regimentList,patientId);
       loadingData.value = false;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -126,7 +126,7 @@ class QurhomeRegimenController extends GetxController {
     }
   }
 
-  refreshTheNextActivity(List<RegimentDataModel> regimentList) {
+  refreshTheNextActivity(List<RegimentDataModel> regimentList,var userId) {
     if (regimentList.length > 0) {
       regimentList.removeWhere((element) {
         bool isOnceInplan = element.dayrepeat?.trim().toLowerCase() ==
@@ -173,7 +173,7 @@ class QurhomeRegimenController extends GetxController {
           currentIndex = regimentList.length - 1;
         }
       }
-      if (patientId == null) {
+      if (userId == null) {
         updateAppointments(regimentList);
       }
       qurhomeDashboardController.getValuesNativeAppointment();
