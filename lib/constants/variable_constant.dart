@@ -890,6 +890,8 @@ const String strSelfRegimen = 'Self';
 //chat
 const String icon_unread_chat = 'assets/icons/ic_unread_chat.png';
 
+const String warning_icon = 'assets/warning_icon.png';
+
 const String strNoMessage = 'No Messages';
 
 const String strNoAttachments = 'No Attachments';
