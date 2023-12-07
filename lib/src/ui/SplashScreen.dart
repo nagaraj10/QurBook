@@ -130,11 +130,11 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
             }
           });
         }
-        if (kDebugMode) {
-          setState(() {
-            _loaded = true;
-          });
-        }
+        // if (kDebugMode) {
+        //   setState(() {
+        //     _loaded = true;
+        //   });
+        // }
       } else {
         callAppLockFeatureMethod(
             widget.nsRoute != null && widget.nsRoute == call ? true : false);
@@ -149,8 +149,8 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
         String authToken = PreferenceUtil.getStringValue(
             Constants.KEY_AUTHTOKEN)!; // To check whether it's logged in or not
         if (PreferenceUtil.getEnableAppLock() && authToken != null) {
-          _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false,authErrorCallback:(e){
-            _biometricNotEntrolled = e==auth_error.notEnrolled;
+          _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false,authErrorCallback:(e) {
+            _biometricNotEntrolled = e==auth_error.notEnrolled || e==auth_error.passcodeNotSet;
           });
           if (_loaded) {
             setState(() {});
@@ -161,7 +161,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
               );
             }
           } else {
-            _biometricNotEntrolled ? _showAuthenticationError() : _showMyDialog();
+          _biometricNotEntrolled ? _showAuthenticationError() : _showMyDialog();
           }
         } else {
           if (Platform.isIOS) {

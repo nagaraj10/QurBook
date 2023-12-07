@@ -2055,7 +2055,7 @@ class CommonUtil {
       } else if (e.code == auth_error.passcodeNotSet) {
         /// Indicates that the user has not yet configured a passcode (iOS) or
         /// PIN/pattern/password (Android) on the device.
-        return true; // Nothing sets but app lock code called
+        // return false; // Nothing sets but app lock code called
       } else {}
       return false;
     }
