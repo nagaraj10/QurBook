@@ -275,14 +275,14 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
               insetPadding: EdgeInsets.symmetric(horizontal: 20),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              content: Column(
+              content:Column(
                 mainAxisSize: MainAxisSize.min,
                 children:[
                   SizedBox(
                     height: 10,
                   ),
                   Image.asset(
-                   'assets/warning_icon.png',
+                    'assets/warning_icon.png',
                     height: 30,
                     width: 30,
                   ),
@@ -291,52 +291,56 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                   ),
                   Text(
                     variable.strAuthenticationError,
-
                     style:
                     TextStyle(fontSize: 22,
-                  //      color: Colors.red,
+                        //      color: Colors.red,
                         fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(
-                    height: 10,
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Divider(
+                      height: 2,
+                      thickness: 1.3,
+                    ),
                   ),
                   RichText(
                     textAlign: TextAlign.start,
                     text: TextSpan(
-                   style: TextStyle(fontSize: 14,
-                       height: 1.6,
-                       color:Colors.black,fontWeight: FontWeight.w400),
-                    children: [
-                      TextSpan(
-                        text: 'Please go to settings ',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      WidgetSpan(
-                        child: GestureDetector(
-                          onTap: ()async {
-                            AppSettings.openLockAndPasswordSettings();
-                            _isSettingsOpen = true;
-                            Navigator.of(context).pop();
-                          },
-                          child: Image.asset(variable.os_settings_icon,
-                          height: 25,),
+                      style: TextStyle(fontSize: 14,
+                          height: 1.6,
+                          color:Colors.black,fontWeight: FontWeight.w400),
+                      children: [
+                        TextSpan(
+                          text: '${variable.strPleaseGoTo} ',
+                          style: TextStyle(fontSize: 16.0),
                         ),
-                      ),
-                      TextSpan(
-                        text:
-                        'screen to set your authentication or login again to reset your security settings',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ],
-                  ),
+                        TextSpan(
+                            text:variable.strSettings,
+                            style: TextStyle(fontSize: 16.0,
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap=(){
+                                AppSettings.openLockAndPasswordSettings();
+                                _isSettingsOpen = true;
+                                Navigator.of(context).pop();
+                              }
+                        ),
+                        TextSpan(
+                          text:
+                          ' ${variable.strErrorAuthDescription}',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   TextButton(
                     child: Text(
-                      'Login',
+                      variable.strLogin,
                       style: TextStyle(
                         color: Color(0xff2a08c0),
                       ),
@@ -347,7 +351,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                     },
                   ),
                 ],
-              ),
+              )
             ));
       },
     );
