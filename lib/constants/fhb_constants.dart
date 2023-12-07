@@ -159,6 +159,9 @@ const String stop_detecting = 'StopDetecting';
 const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
 
+//Biometric Auth error
+const String isFromAuthError = 'isFromAuthError';
+
 const String audioFileType = 'audio/mp3';
 const String MSG_VERIFYEMAIL_VERIFIED =
     'Email is already verified by other user.';

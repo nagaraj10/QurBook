@@ -282,7 +282,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                     height: 10,
                   ),
                   Image.asset(
-                    'assets/warning_icon.png',
+                    variable.warning_icon,
                     height: 30,
                     width: 30,
                   ),
@@ -342,7 +342,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                     child: Text(
                       variable.strLogin,
                       style: TextStyle(
-                        color: Color(0xff2a08c0),
+                        color:Color(CommonUtil().getMyPrimaryColor()),
                       ),
                     ),
                     onPressed: () {
@@ -1176,16 +1176,13 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
     }
   }
   void moveToLoginPage() {
-    PreferenceUtil.clearAllData().then(
-          (value) {
-        Navigator.pushAndRemoveUntil(
-          Get.context!,
-          MaterialPageRoute(
-            builder: (context) => PatientSignInScreen(),
-          ),
-              (route) => false,
-        );
-      },
+    PreferenceUtil.setBool(isFromAuthError,true);
+    Navigator.pushAndRemoveUntil(
+      Get.context!,
+      MaterialPageRoute(
+        builder: (context) => PatientSignInScreen(),
+      ),
+          (route) => false,
     );
   }
 }
