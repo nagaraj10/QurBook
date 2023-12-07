@@ -38,6 +38,7 @@ class MySettings extends StatefulWidget {
 class _MySettingsState extends State<MySettings> {
   bool? _isdigitRecognition = true;
   bool? _isdeviceRecognition = true;
+  bool? _sheelaLiveReminders = true;
   bool? _isGFActive;
   late DevicesViewModel _deviceModel;
   bool? _isHKActive = false;
@@ -149,6 +150,7 @@ class _MySettingsState extends State<MySettings> {
         userMappingId = '';
         _isdigitRecognition = true;
         _isdeviceRecognition = true;
+        _sheelaLiveReminders = true;
         _isHKActive = false;
         _firstTym = true;
         _isBPActive = true;
@@ -171,6 +173,7 @@ class _MySettingsState extends State<MySettings> {
         .createDeviceSelection(
             _isdigitRecognition,
             _isdeviceRecognition,
+            _sheelaLiveReminders,
             _isGFActive,
             _isHKActive,
             _isBPActive,
@@ -209,6 +212,7 @@ class _MySettingsState extends State<MySettings> {
             userMappingId,
             _isdigitRecognition,
             _isdeviceRecognition,
+            _sheelaLiveReminders,
             _isGFActive,
             _isHKActive,
             _isBPActive,
@@ -267,6 +271,12 @@ class _MySettingsState extends State<MySettings> {
                   null &&
               getDeviceSelectionModel.result![0].profileSetting!.allowDevice != ''
           ? getDeviceSelectionModel.result![0].profileSetting!.allowDevice
+          : true;
+      _sheelaLiveReminders = getDeviceSelectionModel!
+          .result![0].profileSetting!.sheelaLiveReminders !=
+          null &&
+          getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders != ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders
           : true;
       if (getDeviceSelectionModel.isSuccess!) {
         if (getDeviceSelectionModel

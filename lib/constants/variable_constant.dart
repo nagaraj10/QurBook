@@ -445,6 +445,8 @@ const String strDisplayDevices = 'Choose Vitals';
 const String strUnitPreferences = 'Unit Preferences';
 const String strDisplayPreferences = 'Display Preferences';
 
+const String strSheelaNotificationPref = 'Sheela Notification Preference';
+
 const String strSkillsIntegration = 'Skills/Integration';
 const String strIntegration = 'Integration';
 const String strPrivacyAndSecurity = 'Privacy and Security';
@@ -753,6 +755,9 @@ const String strConnectWeighingScale =
     'Please connect your weighing scale and start recording';
 const String strConnectBGL =
     'Please connect your Blood Glucose test strips to the meter and start taking the readings';
+
+//sheel live remiders
+const String strSheelaLiveReminders = 'Sheela live reminders';
 
 //introslider
 

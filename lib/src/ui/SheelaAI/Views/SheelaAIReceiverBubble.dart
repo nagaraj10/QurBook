@@ -358,6 +358,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         Future.delayed(const Duration(seconds: 3), () {
                           buttonData?.isSelected = false;
                         });
+                      } else if ((buttonData?.btnRedirectTo ?? "") ==
+                          strHomeScreenForce.toLowerCase()) {
+                        Get.back();
                       } else {
                         if (controller.isLoading.isTrue) {
                           return;

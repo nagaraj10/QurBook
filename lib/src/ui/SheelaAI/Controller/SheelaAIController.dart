@@ -107,6 +107,8 @@ class SheelaAIController extends GetxController {
 
   List<String> sheelaTTSWordList = ["sheila", "sila", "shila", "shiela"];
 
+  bool isAllowSheelaLiveReminders = true;
+
   @override
   void onInit() {
     super.onInit();
@@ -467,7 +469,6 @@ class SheelaAIController extends GetxController {
             conversations.add(audioResponse);
           }
           if (currentResponse.endOfConv ?? false) {
-            QurPlanReminders.getTheRemindersFromAPI();
             conversationFlag = null;
             //additionalInfo = {};
             sessionToken = const Uuid().v1();
@@ -953,6 +954,9 @@ class SheelaAIController extends GetxController {
                           playTTS();
                           scrollToEnd();
                         });
+                      } else if ((button?.btnRedirectTo ?? "") ==
+                          strHomeScreenForce.toLowerCase()) {
+                        Get.back();
                       } else {
                         startSheelaFromButton(
                             buttonText: button.title,
@@ -1043,6 +1047,8 @@ class SheelaAIController extends GetxController {
     currentDeviceStatus.greColor = prof.greColor;
     currentDeviceStatus.isdeviceRecognition = prof.allowDevice ?? true;
     currentDeviceStatus.isdigitRecognition = prof.allowDigit ?? true;
+    currentDeviceStatus.isSheelaLiveReminders = prof.sheelaLiveReminders ?? true;
+    isAllowSheelaLiveReminders = currentDeviceStatus.isSheelaLiveReminders ?? true;
     currentDeviceStatus.isHkActive = prof.healthFit ?? false;
     currentDeviceStatus.isBpActive = prof.bpMonitor ?? true;
     currentDeviceStatus.isGFActive = prof.glucoMeter ?? true;
@@ -1076,6 +1082,7 @@ class SheelaAIController extends GetxController {
           .createDeviceSelection(
               currentDeviceStatus.isdigitRecognition,
               currentDeviceStatus.isdeviceRecognition,
+              currentDeviceStatus.isSheelaLiveReminders,
               currentDeviceStatus.isGFActive,
               currentDeviceStatus.isHkActive,
               currentDeviceStatus.isBpActive,
@@ -1127,6 +1134,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.userMappingId,
         currentDeviceStatus.isdigitRecognition,
         currentDeviceStatus.isdeviceRecognition,
+        currentDeviceStatus.isSheelaLiveReminders,
         currentDeviceStatus.isGFActive,
         currentDeviceStatus.isHkActive,
         currentDeviceStatus.isBpActive,
