@@ -614,38 +614,40 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Sheela Start Page',
           });
           try {
-            if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
-              var rawTitle = "";
-              var rawBody = "";
-              var eventType = "";
-              var others = "";
+            if (CommonUtil().isAllowSheelaLiveReminders()) {
+              if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
+                var rawTitle = "";
+                var rawBody = "";
+                var eventType = "";
+                var others = "";
 
-              if (passedValArr[2] == strWrapperCall) {
-                eventType = passedValArr[2];
-                rawTitle = passedValArr[3].split('|')[1];
-                rawBody = passedValArr[3].split('|')[2];
-                others = passedValArr[3].split('|')[0];
-              } else {
-                rawTitle = passedValArr[2].split('|')[0];
-                rawBody = passedValArr[2].split('|')[1];
-                if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
-                  notificationListId = passedValArr[3];
-                  FetchNotificationService()
-                      .inAppUnreadAction(notificationListId);
+                if (passedValArr[2] == strWrapperCall) {
+                  eventType = passedValArr[2];
+                  rawTitle = passedValArr[3].split('|')[1];
+                  rawBody = passedValArr[3].split('|')[2];
+                  others = passedValArr[3].split('|')[0];
+                } else {
+                  rawTitle = passedValArr[2].split('|')[0];
+                  rawBody = passedValArr[2].split('|')[1];
+                  if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
+                    notificationListId = passedValArr[3];
+                    FetchNotificationService()
+                        .inAppUnreadAction(notificationListId);
+                  }
                 }
-              }
 
-              Get.toNamed(
-                routervariable.rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: true,
-                  rawMessage: rawBody,
-                  eventType: eventType,
-                  others: others,
-                ),
-              );
-            } else {
-              Get.to(SuperMaya());
+                Get.toNamed(
+                  routervariable.rt_Sheela,
+                  arguments: SheelaArgument(
+                    isSheelaAskForLang: true,
+                    rawMessage: rawBody,
+                    eventType: eventType,
+                    others: others,
+                  ),
+                );
+              } else {
+                Get.to(SuperMaya());
+              }
             }
           } catch (e, stackTrace) {
             CommonUtil().appLogs(message: e, stackTrace: stackTrace);
