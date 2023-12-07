@@ -145,7 +145,6 @@ const String strCallLab = 'laboratories/';
 //ForIcons
 
 const String icon_camera_image = 'assets/icons/camera_image.png';
-const String os_settings_icon = 'assets/icons/os_setting_icon.png';
 const String icon_sheela_queue = 'assets/icons/sheela_queue.gif';
 const String icon_delete_image = 'assets/icons/delete_image.png';
 const String icon_edit_image = 'assets/icons/edit.png';
