@@ -2026,7 +2026,7 @@ class CommonUtil {
     }
   }
 
-  Future<bool> checkAppLock({bool useErrorDialogs: true}) async {
+  Future<bool> checkAppLock({bool useErrorDialogs: true, Function(String)? authErrorCallback }) async {
     try {
       var value = await LocalAuthentication().authenticate(
         localizedReason: strAuthToUseApp,
@@ -2042,9 +2042,11 @@ class CommonUtil {
         //   cancelButton: 'No thanks',
         // ),
       );
+      authErrorCallback?.call('');
       print("value:${value}");
       return value;
     } on PlatformException catch (e, stackTrace) {
+       authErrorCallback?.call(e.code);
       if (e.code == auth_error.notAvailable) {
         print(e.message);
         return false;
@@ -2054,7 +2056,7 @@ class CommonUtil {
       } else if (e.code == auth_error.passcodeNotSet) {
         /// Indicates that the user has not yet configured a passcode (iOS) or
         /// PIN/pattern/password (Android) on the device.
-        return true; // Nothing sets but app lock code called
+        // return false; // Nothing sets but app lock code called
       } else {}
       return false;
     }
