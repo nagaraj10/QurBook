@@ -295,6 +295,10 @@ const String strBookmarkRecord = 'bookmark record';
 //lockscreen
 const String strQurbookLocked = 'QurHome is locked';
 const String strUnlock = 'Unlock';
+const String strLogin = 'Login';
+const String strAuthenticationError = 'Authentication error';
+const String strPleaseGoTo = 'Please go to';
+const String strErrorAuthDescription = 'screen to set your authentication or login again to reset your security settings';
 const String strQurbookLockDescription =
     'For your security, you can only use QurHome when its unlocked';
 
@@ -885,6 +889,8 @@ const String strSelfRegimen = 'Self';
 
 //chat
 const String icon_unread_chat = 'assets/icons/ic_unread_chat.png';
+
+const String warning_icon = 'assets/warning_icon.png';
 
 const String strNoMessage = 'No Messages';
 
