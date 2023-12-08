@@ -31,6 +31,7 @@ class QurhomeDashboardController extends GetxController {
   late HubListViewController hubController;
   late SheelaBLEController _sheelaBLEController;
   Timer? _bleTimer = null;
+  bool isFirstTime = true;
 
   Timer? get getBleTimer {
     return _bleTimer;
@@ -158,7 +159,7 @@ class QurhomeDashboardController extends GetxController {
   }
 
   void getValuesNativeAppointment() {
-    bool isFirstTime = true;
+     isFirstTime = true;
     _appointmentSubscription ??=
         streamAppointment.receiveBroadcastStream().listen((val) {
       print(val);
