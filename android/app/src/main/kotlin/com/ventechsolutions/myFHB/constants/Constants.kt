@@ -25,6 +25,7 @@ object Constants {
     val CN_ONG_NS = "ongoing_ns.channel"
     val CN_EVE_STREAM = "com.example.agoraflutterquickstart/stream"
     val SPEECH_TO_TEXT_STREAM = "speechToText/stream"
+    val SNOOZE_STREAM = "snooze/stream"
     val Bluetooth_EVE_STREAM = "QurbookBLE/stream"
     val Appointment_EVE_STREAM = "ScheduleAppointment/stream"
 
@@ -87,6 +88,7 @@ object Constants {
     val CAREGIVER_REQUESTER ="caregiverRequestor"
     val BLE_CONNECT ="bleConnect"
     val DEVICES_CHANNEL ="QurbookBLE/method"
+    val SNOOZE_CHANNEL ="snooze/stream"
     val CARE_COORDINATOR_USER_ID ="careCoordinatorUserId"
     val PATIENT_NAME ="patientName"
     val PATIENT_ID ="patientId"

@@ -18,6 +18,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/AttachmentListSheela.dart';
@@ -957,6 +958,72 @@ class SheelaAIController extends GetxController {
                       } else if ((button?.btnRedirectTo ?? "") ==
                           strHomeScreenForce.toLowerCase()) {
                         Get.back();
+                      } else if ((button?.isSnoozeAction ?? false)) {
+                        try {
+                          var apiReminder;
+                          Reminder reminder = Reminder();
+                          reminder.uformname = conversations
+                                  .last
+                                  .additionalInfoSheelaResponse
+                                  ?.snoozeData
+                                  ?.uformName ??
+                              '';
+                          reminder.activityname = conversations
+                                  .last
+                                  .additionalInfoSheelaResponse
+                                  ?.snoozeData
+                                  ?.activityName ??
+                              '';
+                          reminder.title = conversations
+                                  .last
+                                  .additionalInfoSheelaResponse
+                                  ?.snoozeData
+                                  ?.title ??
+                              '';
+                          reminder.description = conversations
+                                  .last
+                                  .additionalInfoSheelaResponse
+                                  ?.snoozeData
+                                  ?.description ??
+                              '';
+                          reminder.eid = conversations
+                                  .last
+                                  .additionalInfoSheelaResponse
+                                  ?.snoozeData
+                                  ?.eid ??
+                              '';
+                          reminder.estart = conversations
+                                  .last
+                                  .additionalInfoSheelaResponse
+                                  ?.snoozeData
+                                  ?.estart ??
+                              '';
+                          reminder.dosemeal = conversations
+                                  .last
+                                  .additionalInfoSheelaResponse
+                                  ?.snoozeData
+                                  ?.dosemeal ??
+                              '';
+                          reminder.snoozeTime = CommonUtil()
+                              .getTimeMillsSnooze(button?.payload ?? '');
+                          List<Reminder> data = [reminder];
+                          for (var i = 0; i < data.length; i++) {
+                            apiReminder = data[i];
+                          }
+                          if (Platform.isAndroid) {
+                            // snooze invoke to android native for locally save the reminder data
+                            snoozeMethodChannel.invokeMethod(snoozeSheela, {
+                              'data': jsonEncode(apiReminder.toMap())
+                            }).then((value) {
+                              startSheelaFromButton(
+                                  buttonText: button.title,
+                                  payload: button.payload,
+                                  buttons: button);
+                            });
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
                       } else {
                         startSheelaFromButton(
                             buttonText: button.title,
