@@ -364,6 +364,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                           strHomeScreenForce.toLowerCase()) {
                         Get.back();
                       } else if ((buttonData?.isSnoozeAction ?? false)) {
+                        /// we can true this condition is for if snooze enable from api
                         try {
                           var apiReminder;
                           Reminder reminder = Reminder();

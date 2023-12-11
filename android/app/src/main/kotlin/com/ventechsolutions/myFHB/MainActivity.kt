@@ -2337,6 +2337,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             SNOOZE_REMINDER_STREAM
         ).setMethodCallHandler { call, result ->
             try {
+                // beolow method is for snooze reminder via sheela from sheela conversation
                 if (call.method == SNOOZE_SHEELA) {
                     val data = call.argument<String>("data")
                     val retMap: Map<String, Any> = Gson().fromJson(

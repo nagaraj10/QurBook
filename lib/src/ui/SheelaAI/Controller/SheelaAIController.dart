@@ -959,6 +959,7 @@ class SheelaAIController extends GetxController {
                           strHomeScreenForce.toLowerCase()) {
                         Get.back();
                       } else if ((button?.isSnoozeAction ?? false)) {
+                        /// we can true this condition is for if snooze enable from api
                         try {
                           var apiReminder;
                           Reminder reminder = Reminder();
