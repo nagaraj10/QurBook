@@ -262,7 +262,7 @@ class QurhomeRegimenController extends GetxController {
 
   @override
   void onInit() {
-    //startUpdateUITimer();
+    startUpdateUITimer();
     super.onInit();
   }
 
