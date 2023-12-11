@@ -88,7 +88,6 @@ object Constants {
     val CAREGIVER_REQUESTER ="caregiverRequestor"
     val BLE_CONNECT ="bleConnect"
     val DEVICES_CHANNEL ="QurbookBLE/method"
-    val SNOOZE_CHANNEL ="snooze/stream"
     val CARE_COORDINATOR_USER_ID ="careCoordinatorUserId"
     val PATIENT_NAME ="patientName"
     val PATIENT_ID ="patientId"
