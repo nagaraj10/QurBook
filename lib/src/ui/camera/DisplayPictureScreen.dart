@@ -1,10 +1,9 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
 import 'package:myfhb/common/ShowPDFFromFile.dart';
+import '../../../common/firestore_services.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -121,7 +120,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     return result;
   }
 
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   CarouselController? carouselSlider;
   int _current = 0;
@@ -221,9 +221,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     try {
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
       setFileName();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     if (categoryName != Constants.STR_DEVICES) {
@@ -468,8 +467,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -504,8 +503,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -544,8 +543,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -585,10 +584,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
-              pulse.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              pulse.text = digitRecogResponse.result!.deviceMeasurementsHead!
+                  .deviceMeasurements![0].values!;
             }
           }
         }
@@ -623,12 +622,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (digitRecogResponse.result!.deviceMeasurementsHead!
                     .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
-              deviceController.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
-              diaStolicPressure.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![1].values!;
-              pulse.text = digitRecogResponse
-                  .result!.deviceMeasurementsHead!.deviceMeasurements![2].values!;
+              deviceController.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![0].values!;
+              diaStolicPressure.text = digitRecogResponse.result!
+                  .deviceMeasurementsHead!.deviceMeasurements![1].values!;
+              pulse.text = digitRecogResponse.result!.deviceMeasurementsHead!
+                  .deviceMeasurements![2].values!;
             }
           }
         }
@@ -793,8 +792,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   void setFileName() {
     if (categoryName == variable.strDevices) {
       fileName = TextEditingController(
-          text:
-              deviceName! + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+          text: deviceName! +
+              '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     } else {
       fileName = TextEditingController(
           text: categoryName! +
@@ -914,7 +913,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //postMediaData[parameters.strHealthRecordCategory] = categoryDataObj.toJson();
     MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
 
-    MediaDataList mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as Future<MediaDataList>);
+    MediaDataList mediaTypesResponse =
+        await (_mediaTypeBlock.getMediTypesList() as Future<MediaDataList>);
 
     List<MediaResult>? metaDataFromSharedPrefernce = mediaTypesResponse.result;
     if (categoryName != Constants.STR_DEVICES) {
@@ -971,7 +971,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   void callBackToRefresh() {
-    QurPlanReminders.getTheRemindersFromAPI();
+    FirestoreServices().updateFirestoreListner();
     setState(() {});
   }
 

@@ -129,9 +129,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       );
       //initSocketCountUnread();
       WidgetsBinding.instance?.addObserver(this);
-      controller.timer?.cancel();
-      controller.timer = null;
-      controller.startTimer();
+
       super.initState();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -149,7 +147,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (CommonUtil.isUSRegion() &&
           strEStart.trim().isNotEmpty &&
           !(qurhomeDashboardController.isOnceInAPlanActivity.value)) {
-        controller.restartTimer();
         await controller.getRegimenList(isLoading: true, date: strEStart);
       } else {
         await controller.getRegimenList();
@@ -256,191 +253,174 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return GestureDetector(
-        onPanUpdate: (dragUpdateDetails) {},
-        onPanEnd: (panEndDetails) {},
-        onPanCancel: () {
-          if (CommonUtil.isUSRegion()) {
-            controller.restartTimer();
-          }
-        },
-        // onTapDown: (tapDownDetails) {
-        //   print('onTapDown');
-        //
-        // },
-        // onTapUp: (tapUpDetails) {
-        //   print('onTapUp');
-        //
-        // },
-        child: Scaffold(
-          appBar: widget.addAppBar
-              ? AppBar(
-                  backgroundColor: Colors.white,
-                  toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
-                  elevation: 0,
-                  centerTitle: true,
-                  title: Text(
-                    strRegimen,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+      onPanUpdate: (dragUpdateDetails) {},
+      onPanEnd: (panEndDetails) {},
+      child: Scaffold(
+        appBar: widget.addAppBar
+            ? AppBar(
+                backgroundColor: Colors.white,
+                toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
+                elevation: 0,
+                centerTitle: true,
+                title: Text(
+                  strRegimen,
+                  style: TextStyle(
+                    color: Colors.black,
                   ),
-                  leading: IconWidget(
-                    icon: Icons.arrow_back_ios,
-                    colors: Colors.black,
-                    size: CommonUtil().isTablet! ? 38.0 : 24.0,
-                    onTap: () {
-                      Get.back();
-                    },
-                  ),
-                  bottom: PreferredSize(
-                    child: Container(
-                      color: Color(
-                        CommonUtil().getQurhomeGredientColor(),
-                      ),
-                      height: 1.0,
+                ),
+                leading: IconWidget(
+                  icon: Icons.arrow_back_ios,
+                  colors: Colors.black,
+                  size: CommonUtil().isTablet! ? 38.0 : 24.0,
+                  onTap: () {
+                    Get.back();
+                  },
+                ),
+                bottom: PreferredSize(
+                  child: Container(
+                    color: Color(
+                      CommonUtil().getQurhomeGredientColor(),
                     ),
-                    preferredSize: Size.fromHeight(
-                      1.0,
-                    ),
+                    height: 1.0,
                   ),
-                )
-              : null,
-          body: Stack(
-            children: [
-              Container(
-                height: 60,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Row(
-                    children: [
-                      CommonUtil.isUSRegion()
-                          ? Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: InkWell(
-                                    onTap: () {
-                                      controller.cancelTimer();
-                                      Get.to(CalendarMonth())!.then((value) {
-                                        controller.restartTimer();
-                                        controller.getRegimenList(
-                                            isLoading: true, date: value);
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.asset(
-                                        icon_calendar,
-                                        height: 26,
-                                        width: 26,
-                                      ),
-                                    )),
-                              ),
-                            )
-                          : Container(),
-                      Container(
-                          child: Expanded(
-                        child: CommonUtil.isUSRegion()
-                            ? GetBuilder<QurhomeRegimenController>(
-                                id: "refershStatusText",
-                                builder: (val) {
-                                  return Visibility(
-                                      visible:
-                                          !controller.isTodaySelected.value,
-                                      maintainAnimation: true,
-                                      maintainState: true,
-                                      child: AnimatedOpacity(
-                                        duration:
-                                            const Duration(milliseconds: 2000),
-                                        curve: Curves.fastOutSlowIn,
-                                        opacity:
-                                            !controller.isTodaySelected.value
-                                                ? 1
-                                                : 0,
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(top: 5),
-                                            child: Card(
-                                              color: Color(
-                                                CommonUtil()
-                                                    .getQurhomePrimaryColor(),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(5),
-                                                child: Text(
-                                                  controller.statusText.value,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 11),
-                                                ),
+                  preferredSize: Size.fromHeight(
+                    1.0,
+                  ),
+                ),
+              )
+            : null,
+        body: Stack(
+          children: [
+            Container(
+              height: 60,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Row(
+                  children: [
+                    CommonUtil.isUSRegion()
+                        ? Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: InkWell(
+                                  onTap: () {
+                                    Get.to(CalendarMonth())!.then((value) {
+                                      controller.getRegimenList(
+                                          isLoading: true, date: value);
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset(
+                                      icon_calendar,
+                                      height: 26,
+                                      width: 26,
+                                    ),
+                                  )),
+                            ),
+                          )
+                        : Container(),
+                    Container(
+                        child: Expanded(
+                      child: CommonUtil.isUSRegion()
+                          ? GetBuilder<QurhomeRegimenController>(
+                              id: "refershStatusText",
+                              builder: (val) {
+                                return Visibility(
+                                    visible: !controller.isTodaySelected.value,
+                                    maintainAnimation: true,
+                                    maintainState: true,
+                                    child: AnimatedOpacity(
+                                      duration:
+                                          const Duration(milliseconds: 2000),
+                                      curve: Curves.fastOutSlowIn,
+                                      opacity: !controller.isTodaySelected.value
+                                          ? 1
+                                          : 0,
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(top: 5),
+                                          child: Card(
+                                            color: Color(
+                                              CommonUtil()
+                                                  .getQurhomePrimaryColor(),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5),
+                                              child: Text(
+                                                controller.statusText.value,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 11),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ));
-                                })
-                            : Container(),
-                      )),
-                      if (!widget.addAppBar)
-                        Obx(() => controller.isShowSOSButton.value
-                            ? GestureDetector(
-                                onTap: () {
-                                  try {
-                                    FHBUtils().check().then((intenet) async {
-                                      if (intenet != null && intenet) {
-                                        if (CommonUtil().isTablet! &&
-                                            controller.careCoordinatorId.value
-                                                .trim()
-                                                .isEmpty) {
-                                          await controller
-                                              .getCareCoordinatorId();
-                                        }
-                                        initSOSCall();
-                                      } else {
-                                        FlutterToast().getToast(
-                                          STR_NO_CONNECTIVITY,
-                                          Colors.red,
-                                        );
-                                      }
-                                    });
-                                  } catch (e, stackTrace) {
-                                    print(e);
-                                  }
-                                },
-                                child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 16.0),
-                                    child: Container(
-                                      height: 40.h,
-                                      width: 80.h,
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xFFFB5422),
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(100),
-                                          bottomRight: Radius.circular(100),
-                                        ),
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          'SOS',
-                                          style: TextStyle(
-                                              fontSize: 14.0.h,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                    ));
+                              })
+                          : Container(),
+                    )),
+                    if (!widget.addAppBar)
+                      Obx(() => controller.isShowSOSButton.value
+                          ? GestureDetector(
+                              onTap: () {
+                                try {
+                                  FHBUtils().check().then((intenet) async {
+                                    if (intenet != null && intenet) {
+                                      if (CommonUtil().isTablet! &&
+                                          controller.careCoordinatorId.value
+                                              .trim()
+                                              .isEmpty) {
+                                        await controller.getCareCoordinatorId();
+                                      }
+                                      initSOSCall();
+                                    } else {
+                                      FlutterToast().getToast(
+                                        STR_NO_CONNECTIVITY,
+                                        Colors.red,
+                                      );
+                                    }
+                                  });
+                                } catch (e, stackTrace) {
+                                  print(e);
+                                }
+                              },
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 16.0),
+                                  child: Container(
+                                    height: 40.h,
+                                    width: 80.h,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFFFB5422),
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(100),
+                                        bottomRight: Radius.circular(100),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'SOS',
+                                        style: TextStyle(
+                                            fontSize: 14.0.h,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ),
                                 ),
-                              )
-                            : SizedBox.shrink()),
-                    ],
-                  ),
+                              ),
+                            )
+                          : SizedBox.shrink()),
+                  ],
                 ),
               ),
-              Obx(() => controller.loadingData.isTrue
+            ),
+            Obx(
+              () => controller.loadingData.isTrue
                   ? controller.loadingDataWithoutProgress.isTrue
                       ? getDataFromAPI(controller, isPortrait)
                       : Center(
@@ -451,10 +431,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       builder: (val) {
                         print("working builder");
                         return getDataFromAPI(val, isPortrait);
-                      })),
-            ],
-          ),
-        ));
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   getDataFromAPI(QurhomeRegimenController val, var isPortrait) {
@@ -2434,7 +2417,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     try {
       Provider.of<RegimentViewModel>(context!, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogOpened);
-      controller.cancelTimer();
       Get.to(FormDataDialog(
         introText: regimen?.otherinfo?.introText ?? '',
         fieldsData: fieldsResponseModel?.result!.fields,
@@ -2476,9 +2458,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
         },
       );
-
-      QurPlanReminders.getTheRemindersFromAPI();
-
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogClosed);
     } catch (e, stackTrace) {
@@ -2496,11 +2475,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         controller.updateSOSAgentCallDialogStatus(false);
         Get.back();
       }
-      var isTimezoneChanged =
-          await TimezoneServices().checkUpdateTimezone(isUpdateTimezone: false);
+      var isTimezoneChanged = await TimezoneServices().checkUpdateTimezone(
+        isUpdateTimezone: false,
+      );
       if (isTimezoneChanged) {
         await controller.getRegimenList(
-            isLoading: true, date: controller.selectedDate.value.toString());
+          isLoading: true,
+          date: controller.selectedDate.value.toString(),
+        );
         if (CommonUtil.isUSRegion()) {
           final currentTimezone = await TimeZoneHelper.getCurrentTimezone;
           await TimezoneServices().updateTimezone(currentTimezone);

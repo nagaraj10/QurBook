@@ -125,6 +125,14 @@ class PreferenceUtil {
     return _prefsInstance?.getString(key);
   }
 
+  static Future<bool> setBool(String key, bool value){
+    return _prefsInstance!.setBool(key,value);
+  }
+  static bool getBool(String key){
+    if(_prefsInstance==null) return false;
+    return _prefsInstance!.getBool(key)??false;
+  }
+
   static Future<bool> saveTheme(String key, int value) async {
     final instance = await _prefs!;
     return instance.setInt(key, value);
@@ -221,13 +229,26 @@ class PreferenceUtil {
     if (_prefsInstance == null) {}
     final instance = await _prefs!;
     for (String key in instance.getKeys()) {
-      if (key != KEY_PUSH_KIT_TOKEN) {
+      ///Added key!=Constants.KeyShowIntroScreens to skip the clearing process of introduction screen.
+      if (key != KEY_PUSH_KIT_TOKEN && key!=Constants.KeyShowIntroScreens) {
         instance.remove(key);
       }
     }
 
     return true;
     // return instance.clear();
+  }
+
+ static Future<void> clearPreferencesExceptSome(List<String> keysToKeep) async {
+    if (_prefsInstance == null) {}
+    final instance = await _prefs!;
+    Set<String> allKeys = instance.getKeys();
+    // Step 2: Remove keys to keep
+    allKeys.removeWhere((key) => keysToKeep.contains(key));
+    // Step 3: Delete the remaining keys
+    for (String key in allKeys) {
+      instance.remove(key);
+    }
   }
 
   static Future<bool> savePrefereDoctors(

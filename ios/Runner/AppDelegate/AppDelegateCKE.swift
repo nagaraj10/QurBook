@@ -241,7 +241,7 @@ extension AppDelegate {
     func endCall() {
 //        isCallStarted = false
         
-        if let uuid = cxCallUDID{
+        if let uuid = cxCallUDID , let cxCallKitCallController {
             let endCallAction = CXEndCallAction(call: uuid)
             let callTransaction = CXTransaction()
             callTransaction.addAction(endCallAction)
@@ -306,14 +306,14 @@ extension AppDelegate {
                 }
 
                 guard let data = listenerSnapshot?.data() else {
-                    if(self.isCallStarted){
+                    if self.isCallStarted {
                         self.endCall()
                         self.isCallStarted = false
                     }
                     return
                 }
-                if(!data.isEmpty){
-                    if(data["call_status"] as! String == "call_ended_by_user"){
+                if !data.isEmpty {
+                    if let callStatus = data["call_status"] as? String, callStatus == "call_ended_by_user" {
                         self.endCall()
                     }
                 }

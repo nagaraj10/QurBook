@@ -1,11 +1,17 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:get/get.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
@@ -82,19 +88,21 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
   GetDeviceSelectionModel? selectionResult;
   bool _loaded = false;
-  //bool _loaded = true;
+  bool _isSettingsOpen = false;
+  bool _biometricNotEntrolled = false;
 
   @override
   void initState() {
     super.initState();
     PreferenceUtil.init();
+    WidgetsBinding.instance?.addObserver(this);
     CommonUtil().ListenForTokenUpdate();
     Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
     CommonUtil().OnInitAction();
@@ -122,11 +130,11 @@ class _SplashScreenState extends State<SplashScreen> {
             }
           });
         }
-        if (kDebugMode) {
-          setState(() {
-            _loaded = true;
-          });
-        }
+        // if (kDebugMode) {
+        //   setState(() {
+        //     _loaded = true;
+        //   });
+        // }
       } else {
         callAppLockFeatureMethod(
             widget.nsRoute != null && widget.nsRoute == call ? true : false);
@@ -141,7 +149,9 @@ class _SplashScreenState extends State<SplashScreen> {
         String authToken = PreferenceUtil.getStringValue(
             Constants.KEY_AUTHTOKEN)!; // To check whether it's logged in or not
         if (PreferenceUtil.getEnableAppLock() && authToken != null) {
-          _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false);
+          _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false,authErrorCallback:(e) {
+            _biometricNotEntrolled = e==auth_error.notEnrolled || e==auth_error.passcodeNotSet;
+          });
           if (_loaded) {
             setState(() {});
             if (Platform.isIOS) {
@@ -151,7 +161,7 @@ class _SplashScreenState extends State<SplashScreen> {
               );
             }
           } else {
-            _showMyDialog();
+          _biometricNotEntrolled ? _showAuthenticationError() : _showMyDialog();
           }
         } else {
           if (Platform.isIOS) {
@@ -247,6 +257,101 @@ class _SplashScreenState extends State<SplashScreen> {
                   ],
                 ),
               ),
+            ));
+      },
+    );
+  }
+
+  Future<void> _showAuthenticationError() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return WillPopScope(
+            onWillPop: () async {
+              return false;
+            },
+            child: AlertDialog(
+              insetPadding: EdgeInsets.symmetric(horizontal: 20),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              content:Column(
+                mainAxisSize: MainAxisSize.min,
+                children:[
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Image.asset(
+                    variable.warning_icon,
+                    height: 30,
+                    width: 30,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    variable.strAuthenticationError,
+                    style:
+                    TextStyle(fontSize: 22,
+                        //      color: Colors.red,
+                        fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Divider(
+                      height: 2,
+                      thickness: 1.3,
+                    ),
+                  ),
+                  RichText(
+                    textAlign: TextAlign.start,
+                    text: TextSpan(
+                      style: TextStyle(fontSize: 14,
+                          height: 1.6,
+                          color:Colors.black,fontWeight: FontWeight.w400),
+                      children: [
+                        TextSpan(
+                          text: '${variable.strPleaseGoTo} ',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        TextSpan(
+                            text:variable.strSettings,
+                            style: TextStyle(fontSize: 16.0,
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap=(){
+                                AppSettings.openLockAndPasswordSettings();
+                                _isSettingsOpen = true;
+                                Navigator.of(context).pop();
+                              }
+                        ),
+                        TextSpan(
+                          text:
+                          ' ${variable.strErrorAuthDescription}',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextButton(
+                    child: Text(
+                      variable.strLogin,
+                      style: TextStyle(
+                        color:Color(CommonUtil().getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      moveToLoginPage();
+                    },
+                  ),
+                ],
+              )
             ));
       },
     );
@@ -484,6 +589,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             rt_Sheela,
                             arguments: SheelaArgument(
                                 isSheelaFollowup: true,
+                                isNeedPreferredLangauge: true,
                                 textSpeechSheela: temp[1]),
                           )?.then((value) {
                             PageNavigator.goToPermanent(
@@ -1043,11 +1149,40 @@ class _SplashScreenState extends State<SplashScreen> {
         });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      String? authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      /// Added Lifecycle because not possible to receive the callback  from os so handled manually.
+      if(PreferenceUtil.getEnableAppLock() && authToken != null && _isSettingsOpen){
+        _isSettingsOpen =false;
+        callAppLockFeatureMethod(false);
+    }
+    }
+  }
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+
   void getProfileData() async {
     try {
       await CommonUtil().getUserProfileData();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
+  }
+  void moveToLoginPage() {
+    PreferenceUtil.setBool(isFromAuthError,true);
+    Navigator.pushAndRemoveUntil(
+      Get.context!,
+      MaterialPageRoute(
+        builder: (context) => PatientSignInScreen(),
+      ),
+          (route) => false,
+    );
   }
 }

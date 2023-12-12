@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -51,7 +50,8 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(int.parse(metadata!.color!.replaceFirst('#', '0xFF')));
+        cardColor =
+            Color(int.parse(metadata!.color!.replaceFirst('#', '0xFF')));
       } else {
         switch (activityname) {
           case Activityname.DIET:
@@ -78,8 +78,8 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
             cardColor = Color(CommonUtil().getMyPrimaryColor());
         }
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       cardColor = Color(CommonUtil().getMyPrimaryColor());
     }
@@ -210,8 +210,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
                   if (regimentViewModel.activityStatus ==
                       ActivityStatus.Loading) {
                     return CommonCircularIndicator();
-                  } else if ((regimentViewModel.activitiesList.length) >
-                      0) {
+                  } else if ((regimentViewModel.activitiesList.length) > 0) {
                     final regimentsList = regimentViewModel.activitiesList;
                     return ListView.builder(
                       shrinkWrap: true,
@@ -269,7 +268,6 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
   void onBackPressed(BuildContext context) {
     if (Navigator.canPop(context)) {
       _regimentViewModel.fetchRegimentData();
-      QurPlanReminders.getTheRemindersFromAPI();
       Get.back();
     } else {
       Get.offAllNamed(

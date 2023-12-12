@@ -10,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
@@ -125,6 +126,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         badgeSize = badgeSize.h;
         textFontSize = 26;
       }
+      //Method To show remainder in qurbook tablet
+      await SheelaRemainderPopup.checkConditionToShowPopUp();
 
       controller.updateTabIndex(0);
       controller.setActiveQurhomeTo(
@@ -219,17 +222,16 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         ),
       );
 
-      double getLeadingWidth()  {
-        double width =
-     controller.currentSelectedIndex == 0 
+  double getLeadingWidth() {
+    double width = controller.currentSelectedIndex == 0
         ? (CommonUtil.isUSRegion())
             ? (CommonUtil().isTablet ?? false)
                 ? 117
                 : 83
             : 58.0
         : 58.0;
-        return width;
-      }
+    return width;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -267,8 +269,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                           padding: const EdgeInsets.only(
                             right: 16,
                           ),
-                          child:CommonBluetoothWidget.getDisabledBluetoothIcon()
-                              ,
+                          child:
+                              CommonBluetoothWidget.getDisabledBluetoothIcon(),
                         )
                       : SizedBox.shrink(),
                 ],

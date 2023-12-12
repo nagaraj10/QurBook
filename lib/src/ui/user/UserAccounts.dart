@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import '../../../common/firestore_services.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/myPlan/view/myPlanList.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
@@ -210,8 +210,7 @@ class _UserAccountsState extends State<UserAccounts>
       landingViewModel!.checkIfUserIdSame().then((value) {
         isUserMainId = value;
       });
-      QurPlanReminders.getTheRemindersFromAPI();
-
+      FirestoreServices().updateFirestoreListner();
       (context as Element).markNeedsBuild();
       setState(() {});
     }, true, (profileData ?? MyProfileModel())).then((widget) {
@@ -300,8 +299,8 @@ class _UserAccountsState extends State<UserAccounts>
         } else {
           CommonUtil().commonMethodToSetPreference();
         }
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         CommonUtil().commonMethodToSetPreference();
       }

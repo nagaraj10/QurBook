@@ -454,7 +454,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
             rt_Sheela,
             arguments: SheelaArgument(
               sheelaInputs: widget.sheelaRequestString,
-              isNeedTranslateText: true
             ),
           )!.then((value) {
             controllerGetx.onTapFilterBtn(0);
