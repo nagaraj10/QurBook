@@ -171,8 +171,14 @@ dependencies {
 }
 apply plugin: 'com.google.gms.google-services'
 repositories {
-    maven { url 'http://maven.fabric.io/public' }
-    maven { url 'https://www.jitpack.io' }
+    maven {
+        url 'http://maven.fabric.io/public'
+        allowInsecureProtocol = true
+    }
+    maven {
+        url 'https://www.jitpack.io'
+        allowInsecureProtocol = true
+    }
     mavenCentral()
 
 }

@@ -1192,7 +1192,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         override fun onScaleWeightDataUpdate(p0: String?, p1: LSScaleWeight?) {
             super.onScaleWeightDataUpdate(p0, p1)
 
-            if(p1?.remainCount==0 && (p1?.utc<currentConnectedTime)){
+            if(p1?.remainCount==0 && (p1!!.utc!!<currentConnectedTime)){
                 runOnUiThread {
                     Handler().postDelayed({
                         p1?.weight?.let {
@@ -2073,12 +2073,12 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                     when (smsRetrieverStatus.statusCode) {
                         CommonStatusCodes.SUCCESS -> {
                             // Get consent intent
-                            val consentIntent =
+                            val consentIntent:Intent? =
                                 extras.getParcelable<Intent>(SmsRetriever.EXTRA_CONSENT_INTENT)
                             try {
                                 // Start activity to show consent dialog to user, activity must be started in
                                 // 5 minutes, otherwise you'll receive another TIMEOUT intent
-                                startActivityForResult(consentIntent, SMS_CONSENT_REQUEST)
+                                startActivityForResult(consentIntent!!, SMS_CONSENT_REQUEST)
                             } catch (e: ActivityNotFoundException) {
                                 // Handle the exception ...
                             }
