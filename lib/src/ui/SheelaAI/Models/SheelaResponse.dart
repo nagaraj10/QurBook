@@ -13,10 +13,11 @@ class SpeechModelAPIResponse {
   SpeechModelAPIResponse.fromJson(Map<String, dynamic> json) {
     try {
       isSuccess = json['isSuccess'] ?? false;
-      result =
-              json['result'] != null ? SheelaResponse.fromJson(json['result']) : null;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      result = json['result'] != null
+          ? SheelaResponse.fromJson(json['result'])
+          : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -55,7 +56,7 @@ class SheelaResponse {
   bool? directCall;
   String? recipient;
   String timeStamp =
-      FHBUtils().getFormattedDateString(DateTime.now().toString());
+  FHBUtils().getFormattedDateString(DateTime.now().toString());
   GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
   int? currentButtonPlayingIndex;
@@ -70,40 +71,39 @@ class SheelaResponse {
   bool? isButtonNumber;
   String? pronunciationText;
 
-  SheelaResponse(
-      {this.recipientId,
-      this.text,
-      this.audioURL,
-      this.endOfConv,
-      this.buttons,
-      this.imageURL,
-      this.searchURL,
-      this.lang,
-      this.postId,
-      this.matchedQuestion,
-      this.videoLinks,
-      this.translatedUserText,
-      this.redirect,
-      this.enableMic,
-      this.providerMsg,
-      this.redirectTo,
-      this.singleuse,
-      this.isActionDone,
-      this.eid,
-      this.directCall,
-      this.recipient,
-      this.ttsResponse,
-      this.loading,
-      this.conversationFlag,
-      this.additionalInfo,
-      this.additionalInfoSheelaResponse,
-      this.sessionId,
-      this.relationshipId,
-      this.imageURLS,
-      this.audioFile,
-      this.playAudioInit,
-      this.isButtonNumber,
-      this.pronunciationText});
+  SheelaResponse({this.recipientId,
+    this.text,
+    this.audioURL,
+    this.endOfConv,
+    this.buttons,
+    this.imageURL,
+    this.searchURL,
+    this.lang,
+    this.postId,
+    this.matchedQuestion,
+    this.videoLinks,
+    this.translatedUserText,
+    this.redirect,
+    this.enableMic,
+    this.providerMsg,
+    this.redirectTo,
+    this.singleuse,
+    this.isActionDone,
+    this.eid,
+    this.directCall,
+    this.recipient,
+    this.ttsResponse,
+    this.loading,
+    this.conversationFlag,
+    this.additionalInfo,
+    this.additionalInfoSheelaResponse,
+    this.sessionId,
+    this.relationshipId,
+    this.imageURLS,
+    this.audioFile,
+    this.playAudioInit,
+    this.isButtonNumber,
+    this.pronunciationText});
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     try {
@@ -112,28 +112,28 @@ class SheelaResponse {
       audioURL = json['audioURL'];
       endOfConv = json['endOfConv'];
       endOfConvDiscardDialog =
-              json['endOfConv'] != null ? json['endOfConv'] : false;
+      json['endOfConv'] != null ? json['endOfConv'] : false;
       if (json['buttons'] != null) {
-            buttons = <Buttons>[];
-            json['buttons'].forEach((v) {
-              buttons?.add(Buttons.fromJson(v));
-            });
-          }
+        buttons = <Buttons>[];
+        json['buttons'].forEach((v) {
+          buttons?.add(Buttons.fromJson(v));
+        });
+      }
       if (json['imageURL'] is List) {
-            imageURLS = json['imageURL'].cast<String>();
-          } else if (json['imageURL'] is String) {
-            imageURL = json['imageURL'];
-          }
+        imageURLS = json['imageURL'].cast<String>();
+      } else if (json['imageURL'] is String) {
+        imageURL = json['imageURL'];
+      }
       searchURL = json['searchURL'];
       lang = json['lang'];
       postId = json['postId'];
       matchedQuestion = json['matchedQuestion'];
       if (json['videoLinks'] != null) {
-            videoLinks = <VideoLinks>[];
-            json['videoLinks'].forEach((v) {
-              videoLinks?.add(VideoLinks.fromJson(v));
-            });
-          }
+        videoLinks = <VideoLinks>[];
+        json['videoLinks'].forEach((v) {
+          videoLinks?.add(VideoLinks.fromJson(v));
+        });
+      }
       translatedUserText = json['translated_user_text'];
       redirect = json['redirect'];
       enableMic = json['enable_mic'];
@@ -146,25 +146,25 @@ class SheelaResponse {
       recipient = json['recipient'];
       conversationFlag = json['conversationFlag'];
       additionalInfo = json['additionalInfo'];
-      additionalInfoSheelaResponse =
-      json['additionalInfo'] != null ? AdditionalInfoSheela.fromJson(
-          json['additionalInfo']) : null;
+      additionalInfoSheelaResponse = json['additionalInfo'] != null
+          ? AdditionalInfoSheela.fromJson(json['additionalInfo'])
+          : null;
       sessionId = json['sessionId'];
       relationshipId = json['relationshipId'];
       isButtonNumber = (json['IsButtonNumber'] ?? false);
 
       if (buttons != null && buttons!.length > 0) {
-            List<Buttons>? buttonsList = [];
-            buttons!.forEach((element) {
-              if (element.hidden != sheela_hdn_btn_yes) {
-                buttonsList.add(element);
-              }
-            });
-            buttons = buttonsList;
+        List<Buttons>? buttonsList = [];
+        buttons!.forEach((element) {
+          if (element.hidden != sheela_hdn_btn_yes) {
+            buttonsList.add(element);
           }
+        });
+        buttons = buttonsList;
+      }
       pronunciationText = (json['pronunciationText'] ?? '');
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -222,6 +222,7 @@ class Buttons {
   String? imageUrl;
   String? videoUrl;
   String? audioUrl;
+  bool? isSnoozeAction;
   List<ChatAttachments>? chatAttachments;
 
   Buttons({
@@ -237,6 +238,7 @@ class Buttons {
     this.imageUrl,
     this.videoUrl,
     this.audioUrl,
+    this.isSnoozeAction = false,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -252,14 +254,15 @@ class Buttons {
       imageUrl = (json['imageUrl'] ?? '');
       videoUrl = (json['videoUrl'] ?? '');
       audioUrl = (json['audioUrl'] ?? '');
+      isSnoozeAction = (json['isSnoozeAction'] ?? false);
       if (json['chatAttachments'] != null) {
         chatAttachments = <ChatAttachments>[];
         json['chatAttachments'].forEach((v) {
           chatAttachments!.add(new ChatAttachments.fromJson(v));
         });
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -276,6 +279,7 @@ class Buttons {
     data['imageUrl'] = this.imageUrl;
     data['videoUrl'] = this.videoUrl;
     data['audioUrl'] = this.audioUrl;
+    data['isSnoozeAction'] = this.isSnoozeAction;
     if (this.chatAttachments != null) {
       data['chatAttachments'] =
           this.chatAttachments!.map((v) => v.toJson()).toList();
@@ -296,8 +300,8 @@ class VideoLinks {
       title = json['title'];
       thumbnail = json['thumbnail'];
       url = json['url'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -319,14 +323,13 @@ class ChatAttachments {
   Messages? messages;
   String? documentId;
 
-  ChatAttachments(
-      {this.id,
-        this.chatListId,
-        this.deliveredDateTime,
-        this.isRead,
-        this.messageType,
-        this.messages,
-        this.documentId});
+  ChatAttachments({this.id,
+    this.chatListId,
+    this.deliveredDateTime,
+    this.isRead,
+    this.messageType,
+    this.messages,
+    this.documentId});
 
   ChatAttachments.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -358,15 +361,20 @@ class ChatAttachments {
 class AdditionalInfoSheela {
   dynamic? sessionTimeoutMin;
   bool? reconfirmationFlag;
+  SnoozeData? snoozeData;
 
-  AdditionalInfoSheela({this.sessionTimeoutMin,this.reconfirmationFlag});
+  AdditionalInfoSheela(
+      {this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData});
 
   AdditionalInfoSheela.fromJson(Map<String, dynamic> json) {
     try {
       sessionTimeoutMin = json['sessionTimeoutMin'];
-      reconfirmationFlag = json['reconfirmationFlag']??false;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      reconfirmationFlag = json['reconfirmationFlag'] ?? false;
+      snoozeData = json['snoozeData'] != null
+          ? SnoozeData.fromJson(json['snoozeData'])
+          : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -374,6 +382,51 @@ class AdditionalInfoSheela {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['sessionTimeoutMin'] = this.sessionTimeoutMin;
     data['reconfirmationFlag'] = this.reconfirmationFlag;
+    data['snoozeData'] = this.snoozeData;
+    return data;
+  }
+}
+
+class SnoozeData {
+  String? uformName;
+  String? activityName;
+  String? title;
+  String? description;
+  String? eid;
+  String? estart;
+  String? dosemeal;
+
+  SnoozeData({this.uformName,
+    this.activityName,
+    this.title,
+    this.description,
+    this.eid,
+    this.estart,
+    this.dosemeal});
+
+  SnoozeData.fromJson(Map<String, dynamic> json) {
+    try {
+      uformName = json['uformName'];
+      activityName = json['activityName'];
+      title = json['title'];
+      description = json['description'];
+      eid = json['eid'];
+      estart = json['estart'];
+      dosemeal = json['dosemeal'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['uformName'] = this.uformName;
+    data['activityName'] = this.activityName;
+    data['title'] = this.title;
+    data['description'] = this.description;
+    data['eid'] = this.eid;
+    data['estart'] = this.estart;
+    data['dosemeal'] = this.dosemeal;
     return data;
   }
 }
@@ -389,16 +442,15 @@ class Messages {
   bool? isPatient;
   String? chatMessageId;
 
-  Messages(
-      {this.id,
-        this.idTo,
-        this.type,
-        this.idFrom,
-        this.isread,
-        this.content,
-        this.isUpload,
-        this.isPatient,
-        this.chatMessageId});
+  Messages({this.id,
+    this.idTo,
+    this.type,
+    this.idFrom,
+    this.isread,
+    this.content,
+    this.isUpload,
+    this.isPatient,
+    this.chatMessageId});
 
   Messages.fromJson(Map<String, dynamic> json) {
     id = json['id'];

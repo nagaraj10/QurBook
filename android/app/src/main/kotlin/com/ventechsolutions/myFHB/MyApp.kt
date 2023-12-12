@@ -32,6 +32,7 @@ public class MyApp : Application(), Application.ActivityLifecycleCallbacks {
         var recordId = ""
         const val TAG: String = "MyApp"
         var snoozeTapCountTime: Int = 0
+        var snoozeSheelaTapCount: Int = 0
     }
 
     fun updateStatus(isAccept: Boolean) {
