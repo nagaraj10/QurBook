@@ -97,6 +97,7 @@ extension AppDelegate: MessagingDelegate {
             else if call.method == self.snoozeReminderMethod {
                 if let notificationArray = call.arguments as? NSArray,
                    let notifiationToShow = notificationArray[0] as? NSDictionary {
+                    notifiationToShow.setValue("Reminders", forKey: "NotificationType")
                     self.scheduleNotification(message: notifiationToShow, snooze: true)
                     DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 2) {
                         result("success")
