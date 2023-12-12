@@ -165,6 +165,7 @@ import 'CommonConstants.dart';
 import 'PreferenceUtil.dart';
 import 'ShowPDFFromFile.dart';
 import 'common_circular_indicator.dart';
+import 'firestore_services.dart';
 import 'keysofmodel.dart' as keysConstant;
 import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 
@@ -408,9 +409,9 @@ class CommonUtil {
       heightObj = Height(
           unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'feet/Inches');
       weightObj =
-         Height(unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+          Height(unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
       tempObj =
-         Height(unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+          Height(unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
       isKg = true;
       isPounds = false;
 
@@ -427,13 +428,13 @@ class CommonUtil {
       await PreferenceUtil.saveString(
           Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
 
-      heightObj =Height(
+      heightObj = Height(
           unitCode: Constants.STR_VAL_HEIGHT_IND,
           unitName: variable.str_centi.toLowerCase());
-      weightObj =Height(
+      weightObj = Height(
           unitCode: Constants.STR_VAL_WEIGHT_IND,
           unitName: variable.str_Kilogram.toLowerCase());
-      tempObj =Height(
+      tempObj = Height(
           unitCode: Constants.STR_VAL_TEMP_IND,
           unitName: variable.str_far.toLowerCase());
       isKg = false;
@@ -2026,7 +2027,8 @@ class CommonUtil {
     }
   }
 
-  Future<bool> checkAppLock({bool useErrorDialogs = true}) async {
+  Future<bool> checkAppLock(
+      {bool useErrorDialogs: true, Function(String)? authErrorCallback}) async {
     try {
       var value = await LocalAuthentication().authenticate(
         localizedReason: strAuthToUseApp,
@@ -2042,9 +2044,11 @@ class CommonUtil {
         //   cancelButton: 'No thanks',
         // ),
       );
+      authErrorCallback?.call('');
       print("value:${value}");
       return value;
     } on PlatformException catch (e, stackTrace) {
+      authErrorCallback?.call(e.code);
       if (e.code == auth_error.notAvailable) {
         print(e.message);
         return false;
@@ -2054,7 +2058,7 @@ class CommonUtil {
       } else if (e.code == auth_error.passcodeNotSet) {
         /// Indicates that the user has not yet configured a passcode (iOS) or
         /// PIN/pattern/password (Android) on the device.
-        return true; // Nothing sets but app lock code called
+        // return false; // Nothing sets but app lock code called
       } else {}
       return false;
     }
@@ -2799,8 +2803,10 @@ class CommonUtil {
       confirm: OutlinedButton(
         onPressed: () {
           Get.back();
-        },style: OutlinedButton.styleFrom(
-        side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),),
+        },
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+        ),
         child: Text(
           variable.strOK,
           style: TextStyle(
@@ -3474,12 +3480,14 @@ class CommonUtil {
                           onPressed: () async {
                             // open profile page
                             Navigator.of(context).pop();
-                          },style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
                             ),
-                          ),),
+                          ),
                           child: Text(
                             'cancel'.toUpperCase(),
                             style: TextStyle(
@@ -3513,12 +3521,14 @@ class CommonUtil {
                                   isFromAppointmentOrSlotPage: false,
                                   isForFamily: false,
                                 ));
-                          },style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
                             ),
-                          ),),
+                          ),
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
                             'complete profile'.toUpperCase(),
@@ -3580,12 +3590,14 @@ class CommonUtil {
                           onPressed: () async {
                             // open profile page
                             Navigator.of(context).pop();
-                          },style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
                             ),
-                          ),),
+                          ),
                           child: Text(
                             'no'.toUpperCase(),
                             style: TextStyle(
@@ -3611,7 +3623,6 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result!.result == 'Done') {
                                       //setState(() {});
-                                      QurPlanReminders.getTheRemindersFromAPI();
                                       Navigator.of(_keyLoader.currentContext!,
                                               rootNavigator: true)
                                           .pop();
@@ -3641,12 +3652,14 @@ class CommonUtil {
                                 }
                               }
                             });
-                          },style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
                             ),
-                          ),),
+                          ),
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
                             'yes'.toUpperCase(),
@@ -3832,12 +3845,14 @@ class CommonUtil {
                         });
                       }
                     }
-                  },style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
                     ),
-                  ),),
+                  ),
                   //hoverColor: Color(getMyPrimaryColor()),
                   child: Text(
                     'accept'.toUpperCase(),
@@ -3855,12 +3870,14 @@ class CommonUtil {
                     // open profile page
                     Get.back();
                     Get.back(result: 'refreshUI');
-                  },style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
                     ),
-                  ),),
+                  ),
                   child: Text(
                     'Reject'.toUpperCase(),
                     style: TextStyle(
@@ -3929,14 +3946,14 @@ class CommonUtil {
       dynamic nsBody,
       String? packageDuration}) async {
     DateTime initDate;
-    var formatter =DateFormat('yyyy-MM-dd');
+    var formatter = DateFormat('yyyy-MM-dd');
 
     DateTime startDateFinal = startDate != null
-        ?DateFormat("yyyy-MM-dd").parse(startDate)
+        ? DateFormat("yyyy-MM-dd").parse(startDate)
         : DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime endDateFinal = endDate != null
-        ?DateFormat("yyyy-MM-dd").parse(endDate)
+        ? DateFormat("yyyy-MM-dd").parse(endDate)
         : DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
@@ -4008,12 +4025,14 @@ class CommonUtil {
                               // open profile page
                               isRenewDialogOpened = false;
                               Navigator.of(context).pop();
-                            },style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: Color(
-                                getMyPrimaryColor(),
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(
+                                color: Color(
+                                  getMyPrimaryColor(),
+                                ),
                               ),
-                            ),),
+                            ),
                             child: Text(
                               'no'.toUpperCase(),
                               style: TextStyle(
@@ -4076,12 +4095,14 @@ class CommonUtil {
                                     'Renewal limit reached for this plan. Please try after few days',
                                     Colors.black);
                               }
-                            },style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: Color(
-                                getMyPrimaryColor(),
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(
+                                color: Color(
+                                  getMyPrimaryColor(),
+                                ),
                               ),
-                            ),),
+                            ),
                             //hoverColor: Color(getMyPrimaryColor()),
                             child: Text(
                               'yes'.toUpperCase(),
@@ -4144,12 +4165,14 @@ class CommonUtil {
                           onPressed: () async {
                             // open profile page
                             Navigator.of(context).pop();
-                          },style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
                             ),
-                          ),),
+                          ),
                           child: Text(
                             'cancel'.toUpperCase(),
                             style: TextStyle(
@@ -4175,7 +4198,7 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result!.result == 'Done') {
                                       //setState(() {});
-                                      QurPlanReminders.getTheRemindersFromAPI();
+
                                       Navigator.of(_keyLoader.currentContext!,
                                               rootNavigator: true)
                                           .pop();
@@ -4205,12 +4228,14 @@ class CommonUtil {
                                 }
                               }
                             });
-                          },style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
                             ),
-                          ),),
+                          ),
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
                             'confirm'.toUpperCase(),
@@ -4547,8 +4572,8 @@ class CommonUtil {
     }
   }
 
-  showStatusToUser(
-      ResultFromResponse response, GlobalKey<ScaffoldMessengerState>? scaffoldKey) {
+  showStatusToUser(ResultFromResponse response,
+      GlobalKey<ScaffoldMessengerState>? scaffoldKey) {
     if (response.status) {
       scaffoldKey!.currentState!.showSnackBar(
         SnackBar(
@@ -5240,8 +5265,10 @@ class CommonUtil {
       confirm: OutlinedButton(
         onPressed: () {
           Get.back();
-        },style: OutlinedButton.styleFrom(
-        side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),),
+        },
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+        ),
         child: Text(
           variable.strOK,
           style: TextStyle(
@@ -5327,10 +5354,12 @@ class CommonUtil {
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
             actions: [
-              ElevatedButton(style: ElevatedButton.styleFrom(
-                  foregroundColor: isQurhome
-                      ? Color(CommonUtil().getQurhomePrimaryColor())
-                      : Color(CommonUtil().getMyPrimaryColor()),),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: isQurhome
+                        ? Color(CommonUtil().getQurhomePrimaryColor())
+                        : Color(CommonUtil().getMyPrimaryColor()),
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -5339,11 +5368,13 @@ class CommonUtil {
                     style: TextStyle(
                         fontSize: CommonUtil().isTablet! ? 22.0.sp : null),
                   )),
-              ElevatedButton(style: ElevatedButton.styleFrom(
-                  // FlatButton widget is used to make a text to work like a button
-                  foregroundColor: isQurhome
-                      ? Color(CommonUtil().getQurhomePrimaryColor())
-                      : Color(CommonUtil().getMyPrimaryColor()),),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    // FlatButton widget is used to make a text to work like a button
+                    foregroundColor: isQurhome
+                        ? Color(CommonUtil().getQurhomePrimaryColor())
+                        : Color(CommonUtil().getMyPrimaryColor()),
+                  ),
                   onPressed: onPressedYes,
                   // function used to perform after pressing the button
                   child: Text(
@@ -5389,13 +5420,13 @@ class CommonUtil {
     //Qurhome icon width and height size updated and used common method
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: (CommonUtil().isTablet??false) ? 0 : 8.h,
-        vertical: (CommonUtil().isTablet??false) ? 0 : 4.h,
+        horizontal: (CommonUtil().isTablet ?? false) ? 0 : 8.h,
+        vertical: (CommonUtil().isTablet ?? false) ? 0 : 4.h,
       ),
       child: AssetImageWidget(
         icon: icon_qurhome,
-        height: (CommonUtil().isTablet??false) ? 48.h :32.h,
-        width: (CommonUtil().isTablet??false) ? 48.h :32.h,
+        height: (CommonUtil().isTablet ?? false) ? 48.h : 32.h,
+        width: (CommonUtil().isTablet ?? false) ? 48.h : 32.h,
       ),
     );
   }
@@ -5480,7 +5511,7 @@ class CommonUtil {
   String parseHtmlString(String? htmlString) {
     var text = "";
     if (validString(htmlString).trim().isNotEmpty) {
-      var unescape =HtmlUnescape();
+      var unescape = HtmlUnescape();
       text = unescape.convert(htmlString!);
     }
     return text;
@@ -6143,7 +6174,7 @@ class CommonUtil {
   OnInitAction() async {
     try {
       dbInitialize();
-      QurPlanReminders.getTheRemindersFromAPI();
+
       //initSocket();
       Future.delayed(const Duration(seconds: 1)).then((_) {
         if (Platform.isIOS) {
@@ -6163,6 +6194,7 @@ class CommonUtil {
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
+      FirestoreServices().setupListenerForFirestoreChanges();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
           () => PDFViewController(),
@@ -6295,7 +6327,8 @@ class CommonUtil {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket!
         .on(getReminderSheelaRedirect, (chatListresponse) {
-      if (PreferenceUtil.getIfQurhomeDashboardActiveChat()) {
+      if (PreferenceUtil.getIfQurhomeDashboardActiveChat() &&
+          isAllowSheelaLiveReminders()) {
         if (chatListresponse != null) {
           SheelaReminderResponse chatList =
               SheelaReminderResponse.fromJson(chatListresponse);
@@ -7237,6 +7270,11 @@ class CommonUtil {
     }
   }
 
+/**
+ * This method is used to get value from api ,
+ * based on which the remainders are shown in intervals.
+ * Default value of the interval time would be 30 mins
+ */
   getSheelaConfig() async {
     var apiBaseHelper = ApiBaseHelper();
 
@@ -7261,7 +7299,11 @@ class CommonUtil {
           } else {
             PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
           }
+        } else {
+          PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
         }
+      } else {
+        PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
       }
     }
     return sheelaRemainderConfig;
@@ -7337,6 +7379,32 @@ class CommonUtil {
     return "";
   }
 
+  bool isAllowSheelaLiveReminders() {
+    SheelaAIController? sheelaAIController = onInitSheelaAIController();
+    return sheelaAIController.isAllowSheelaLiveReminders;
+  }
+
+  String getTimeMillsSnooze(String snoozeSelectTime) {
+    String timeMills = '';
+    try {
+      if (snoozeSelectTime != '') {
+        switch (snoozeSelectTime) {
+          case '5':
+            timeMills = Platform.isAndroid ? '300000' : '300';
+            break;
+          case '15':
+            timeMills = Platform.isAndroid ? '900000' : '900';
+            break;
+          case '30':
+            timeMills = Platform.isAndroid ? '1800000' : '1800';
+            break;
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+    return timeMills;
+  }
 }
 
 extension CapExtension on String {
@@ -7418,8 +7486,7 @@ class VideoCallCommonUtils {
             : keysConstant.c_ns_msg_audio,
       );
 
-      MessageDetails msg =
-         MessageDetails(content: _content, payload: payLoad);
+      MessageDetails msg = MessageDetails(content: _content, payload: payLoad);
 
       CallPushNSModel callModel = CallPushNSModel(
           recipients: [
@@ -8138,7 +8205,7 @@ class VideoCallCommonUtils {
   }
 
   void prepareMyData() async {
-    PreferenceUtil prefs =PreferenceUtil();
+    PreferenceUtil prefs = PreferenceUtil();
 
     /*try {
       mtTitle = await prefs.getValueBasedOnKey("display_name");
@@ -8163,7 +8230,7 @@ class VideoCallCommonUtils {
     try {
       var regController = Get.find<QurhomeRegimenController>();
       final apiResponse = QurHomeApiProvider();
-      Map<String, dynamic> body =Map();
+      Map<String, dynamic> body = Map();
       final now = DateTime.now();
       String endTime =
           '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
@@ -8345,7 +8412,7 @@ class VideoCallCommonUtils {
       bool? isFromSOS,
       dynamic isDoctor}) {
     try {
-      FlutterToast toast =FlutterToast();
+      FlutterToast toast = FlutterToast();
       final apiResponse = QurHomeApiProvider();
       var regController = Get.find<QurhomeRegimenController>();
       bool callPageShouldEndAutomatically = true;
@@ -8414,7 +8481,7 @@ class VideoCallCommonUtils {
           String startedTime = '';
           clearAudioPlayer(audioPlayer!);
           if (!isFromAppointment!) {
-            Map<String, dynamic> body =Map();
+            Map<String, dynamic> body = Map();
             final now = DateTime.now();
             startedTime =
                 '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
@@ -8499,7 +8566,7 @@ class VideoCallCommonUtils {
 
       if (regController.isFromSOS.value) {
         AdditionalInfo additionalInfo =
-           AdditionalInfo(location: regController.locationModel);
+            AdditionalInfo(location: regController.locationModel);
 
         CallEndModel callLogModel = CallEndModel(
             callerUser: regController.userId.value,
@@ -8608,7 +8675,7 @@ class VideoCallCommonUtils {
       String callStartTime, String callEndTime, String status, bool isCallLog) {
     var regController = Get.find<QurhomeRegimenController>();
     AdditionalInfo additionalInfo =
-       AdditionalInfo(location: regController.locationModel);
+        AdditionalInfo(location: regController.locationModel);
 
     CallLogModel callLogModel = CallLogModel(
         callerUser: regController.userId.value,
@@ -8642,7 +8709,7 @@ class VideoCallCommonUtils {
   getDob(String dob) {
     if (dob != '' && dob != null) {
       String currentYear = dob.split('-')[0];
-      DateFormat format =DateFormat("yyyy");
+      DateFormat format = DateFormat("yyyy");
 
       DateTime dt = format.parse(currentYear);
       final date2 = DateTime.now().year;

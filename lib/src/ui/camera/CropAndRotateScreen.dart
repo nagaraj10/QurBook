@@ -6,7 +6,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/common/firestore_services.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -28,7 +28,8 @@ class CropAndRotateScreen extends StatefulWidget {
 }
 
 class CropAndRotateScreenState extends State<CropAndRotateScreen> {
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   String? categoryName, categoryNameClone;
@@ -82,14 +83,15 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
             },
           ),
         ),
-        SwitchProfile()
-            .buildActions(context, _keyLoader, callBackToRefresh, false,changeWhiteBg: true)
+        SwitchProfile().buildActions(
+            context, _keyLoader, callBackToRefresh, false,
+            changeWhiteBg: true)
       ],
     );
   }
 
   void callBackToRefresh() {
-    QurPlanReminders.getTheRemindersFromAPI();
+    FirestoreServices().updateFirestoreListner();
     (context as Element).markNeedsBuild();
   }
 

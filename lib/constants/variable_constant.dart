@@ -295,6 +295,10 @@ const String strBookmarkRecord = 'bookmark record';
 //lockscreen
 const String strQurbookLocked = 'Qurbook is locked';
 const String strUnlock = 'Unlock';
+const String strLogin = 'Login';
+const String strAuthenticationError = 'Authentication error';
+const String strPleaseGoTo = 'Please go to';
+const String strErrorAuthDescription = 'screen to set your authentication or login again to reset your security settings';
 const String strQurbookLockDescription =
     'For your security, you can only use Qurbook when its unlocked';
 
@@ -439,6 +443,8 @@ const String strVitalsPreferences = 'Vitals Preferences';
 const String strDisplayDevices = 'Choose Vitals';
 const String strUnitPreferences = 'Unit Preferences';
 const String strDisplayPreferences = 'Display Preferences';
+
+const String strSheelaNotificationPref = 'Sheela Notification Preference';
 
 const String strSkillsIntegration = 'Skills/Integration';
 const String strIntegration = 'Integration';
@@ -749,6 +755,9 @@ const String strConnectWeighingScale =
 const String strConnectBGL =
     'Please connect your Blood Glucose test strips to the meter and start taking the readings';
 
+//sheel live remiders
+const String strSheelaLiveReminders = 'Sheela live reminders';
+
 //introslider
 
 List<String> slideIcons = [
@@ -848,7 +857,10 @@ const String str_far = 'Fahrenheit';
 //Reminders
 //
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
+const snoozeMethodChannel = MethodChannel('snooze/stream');
 const addReminderMethod = 'addReminder';
+const snoozeReminderMethod = 'snoozeReminder';
+const snoozeSheela = 'snoozeFromSheela';
 const navigateToSheelaReminderMethod = 'navigateToSheelaReminderMethod';
 const notificationReceivedMethod = "notificationReceived";
 const removeReminderMethod = 'removeReminder';
@@ -880,6 +892,8 @@ const String strSelfRegimen = 'Self';
 
 //chat
 const String icon_unread_chat = 'assets/icons/ic_unread_chat.png';
+
+const String warning_icon = 'assets/warning_icon.png';
 
 const String strNoMessage = 'No Messages';
 

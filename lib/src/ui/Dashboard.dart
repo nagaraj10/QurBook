@@ -76,7 +76,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
     */
     //dbInitialize();
-    //QurPlanReminders.getTheRemindersFromAPI();
     //callImportantsMethod();
 
     String? profilebanner =

@@ -745,7 +745,7 @@ class RegimentDataCard extends StatelessWidget {
             LoaderClass.hideLoadingDialog(Get.context!);
           });
         }
-        QurPlanReminders.getTheRemindersFromAPI();
+
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogClosed);
       } else if (!regimentData.hasform!) {
