@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/firebase_analytics_service.dart';
+import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/AudioWidget.dart';
@@ -361,6 +363,87 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                       } else if ((buttonData?.btnRedirectTo ?? "") ==
                           strHomeScreenForce.toLowerCase()) {
                         Get.back();
+                      } else if ((buttonData?.isSnoozeAction ?? false)) {
+                        /// we can true this condition is for if snooze enable from api
+                        try {
+                          var apiReminder;
+                          Reminder reminder = Reminder();
+                          reminder.uformname = chat.additionalInfoSheelaResponse
+                                  ?.snoozeData?.uformName ??
+                              '';
+                          reminder.activityname = chat
+                                  .additionalInfoSheelaResponse
+                                  ?.snoozeData
+                                  ?.activityName ??
+                              '';
+                          reminder.title = chat.additionalInfoSheelaResponse
+                                  ?.snoozeData?.title ??
+                              '';
+                          reminder.description = chat
+                                  .additionalInfoSheelaResponse
+                                  ?.snoozeData
+                                  ?.description ??
+                              '';
+                          reminder.eid = chat.additionalInfoSheelaResponse
+                                  ?.snoozeData?.eid ??
+                              '';
+                          reminder.estart = chat.additionalInfoSheelaResponse
+                                  ?.snoozeData?.estart ??
+                              '';
+                          reminder.dosemeal = chat.additionalInfoSheelaResponse
+                                  ?.snoozeData?.dosemeal ??
+                              '';
+                          reminder.snoozeTime = CommonUtil().getTimeMillsSnooze(buttonData?.payload??'');
+                          List<Reminder> data = [reminder];
+                          for (var i = 0; i < data.length; i++) {
+                            apiReminder = data[i];
+                          }
+                          if (Platform.isAndroid) {
+                            // snooze invoke to android native for locally save the reminder data
+                            snoozeMethodChannel.invokeMethod(
+                                snoozeSheela,
+                                {'data': jsonEncode(apiReminder.toMap())}).then((value) {
+                              if (controller.isLoading.isTrue) {
+                                return;
+                              }
+                              if (chat.singleuse != null &&
+                                  chat.singleuse! &&
+                                  chat.isActionDone != null) {
+                                chat.isActionDone = true;
+                              }
+                              buttonData?.isSelected = true;
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData?.title,
+                                  payload: buttonData?.payload,
+                                  buttons: buttonData);
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData?.isSelected = false;
+                              });
+                            });
+                          } else {
+                            reminderMethodChannel.invokeMethod(snoozeReminderMethod, [apiReminder.toMap()]).then((value) {
+                              if (controller.isLoading.isTrue) {
+                                return;
+                              }
+                              if (chat.singleuse != null &&
+                                  chat.singleuse! &&
+                                  chat.isActionDone != null) {
+                                chat.isActionDone = true;
+                              }
+                              buttonData?.isSelected = true;
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData?.title,
+                                  payload: buttonData?.payload,
+                                  buttons: buttonData);
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData?.isSelected = false;
+                              });
+                            });
+                          }
+                        } catch (e,  stackTrace) {
+                          print("");
+                            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                        }
                       } else {
                         if (controller.isLoading.isTrue) {
                           return;
