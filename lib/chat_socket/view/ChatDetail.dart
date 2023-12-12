@@ -2278,12 +2278,14 @@ class ChatState extends State<ChatDetail> {
                 saveImageToGallery(fileUrl, contxt, isPdf, type);
                 Navigator.pop(context);
               },
-              child: Text(
+              title: 'Download',
+              fontSize: fontSizeOne,
+              /*child: Text(
                 'Download',
                 style: TextStyle(
                   fontSize: fontSizeOne,
                 ),
-              ),
+              ),*/
             ),
           ],
         );
@@ -2500,28 +2502,32 @@ class ChatState extends State<ChatDetail> {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () => closeDialog(),
-            child: Text(
+          FlatButtonWidget(
+            onPress: () => closeDialog(),
+            title: 'Cancel',
+            fontSize: fontSizeOne,
+            /*child: Text(
               'Cancel',
               style: TextStyle(
                 fontSize: fontSizeOne,
               ),
-            ),
+            ),*/
           ),
           FlatButtonWidget(
             bgColor: Colors.transparent,
             isSelected: true,
+            title: 'Send',
+            fontSize: fontSizeOne,
             onPress: () {
               closeDialog();
               getMediaURL(healthRecordList);
             },
-            child: Text(
+            /*child: Text(
               'Send',
               style: TextStyle(
                 fontSize: fontSizeOne,
               ),
-            ),
+            ),*/
           ),
         ],
       ),
