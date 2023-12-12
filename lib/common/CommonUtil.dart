@@ -7372,13 +7372,13 @@ class CommonUtil {
       if (snoozeSelectTime != '') {
         switch (snoozeSelectTime) {
           case '5':
-            timeMills = '300000';
+            timeMills = Platform.isAndroid ? '300000' : '300';
             break;
           case '15':
-            timeMills = '900000';
+            timeMills = Platform.isAndroid ? '900000' : '900';
             break;
           case '30':
-            timeMills = '1800000';
+            timeMills =  Platform.isAndroid ?'1800000' : '1800';
             break;
         }
       }

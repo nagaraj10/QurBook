@@ -420,10 +420,29 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                 buttonData?.isSelected = false;
                               });
                             });
+                          } else {
+                            reminderMethodChannel.invokeMethod(snoozeReminderMethod, [apiReminder.toMap()]).then((value) {
+                              if (controller.isLoading.isTrue) {
+                                return;
+                              }
+                              if (chat.singleuse != null &&
+                                  chat.singleuse! &&
+                                  chat.isActionDone != null) {
+                                chat.isActionDone = true;
+                              }
+                              buttonData?.isSelected = true;
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData?.title,
+                                  payload: buttonData?.payload,
+                                  buttons: buttonData);
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData?.isSelected = false;
+                              });
+                            });
                           }
-
-                        } catch (e) {
-                          print(e);
+                        } catch (e,  stackTrace) {
+                          print("");
+                            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                         }
                       } else {
                         if (controller.isLoading.isTrue) {

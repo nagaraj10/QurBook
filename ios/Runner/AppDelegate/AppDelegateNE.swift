@@ -93,7 +93,17 @@ extension AppDelegate: MessagingDelegate {
                     notifiationToShow.setValue("Reminders", forKey: "NotificationType")
                     self.scheduleNotification(message: notifiationToShow)
                 }
-            }else if call.method == self.removeReminderMethod{
+            }
+            else if call.method == self.snoozeReminderMethod {
+                if let notificationArray = call.arguments as? NSArray,
+                   let notifiationToShow = notificationArray[0] as? NSDictionary {
+                    self.scheduleNotification(message: notifiationToShow, snooze: true)
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 2) {
+                        result("success")
+                    }
+                }
+            }
+            else if call.method == self.removeReminderMethod {
                 if let  dataArray = call.arguments as? NSArray,let id = dataArray[0] as? String{
                     self.notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
                 }else if let data = call.arguments as? NSDictionary,let id = data["deliveredNotificationId"] as? String{
@@ -265,8 +275,9 @@ extension AppDelegate: MessagingDelegate {
         }
         content.userInfo = message as! [AnyHashable : Any]
         var request:UNNotificationRequest;
-        if snooze{
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 300, repeats: false)
+        if snooze {
+            var timeInterval: Double = Double((message["snoozeTime"] as? String) ?? "300") ?? 300
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
             request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         }else{
             let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)

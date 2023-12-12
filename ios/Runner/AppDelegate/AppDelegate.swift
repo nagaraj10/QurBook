@@ -42,6 +42,7 @@ import PushKit
     let speechSynthesizer = AVSpeechSynthesizer()
     let reminderChannel = Constants.reminderMethodChannel
     let addReminderMethod = Constants.addReminderMethod
+    let snoozeReminderMethod = Constants.snoozeReminderMethod
     let removeReminderMethod = Constants.removeReminderMethod
     
     let notificationCenter = UNUserNotificationCenter.current()

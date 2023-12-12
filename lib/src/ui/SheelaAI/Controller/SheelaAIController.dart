@@ -1021,9 +1021,16 @@ class SheelaAIController extends GetxController {
                                   payload: button.payload,
                                   buttons: button);
                             });
+                          } else {
+                            reminderMethodChannel.invokeMethod(snoozeReminderMethod, [apiReminder.toMap()]).then((value) {
+                              startSheelaFromButton(
+                                  buttonText: button.title,
+                                  payload: button.payload,
+                                  buttons: button);
+                            });
                           }
-                        } catch (e) {
-                          print(e);
+                        } catch (e,  stackTrace) {
+                            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                         }
                       } else {
                         startSheelaFromButton(
