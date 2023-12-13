@@ -2436,8 +2436,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         Constants.KEY_PROFILE_MAIN, profileValue);
                   }
 
-                  PreferenceUtil.saveProfileData(
-                      Constants.KEY_PROFILE, profileValue);
+                  var useridMain = (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN))??'';
+                  var userid = (PreferenceUtil.getStringValue(Constants.KEY_USERID))??'';
+
+                  if (useridMain == userid) {
+                    PreferenceUtil.saveProfileData(
+                        Constants.KEY_PROFILE, profileValue);
+                  }
 
                   imageURI = null;
                   Navigator.pop(dialogContext);

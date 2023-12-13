@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -72,42 +73,50 @@ class FirestoreServices {
     setupListenerForFirestoreChanges();
   }
 
+// This function is responsible for creating a document using Firestore.
   Future<bool> createDocument() async {
     try {
+      // Fetching the headers required for the request using HeaderRequest class.
       final header = await HeaderRequest().getRequestHeadersTimeSlot();
+
+      // Retrieving the user ID from shared preferences or using an empty string if not found.
       final userId = PreferenceUtil.getStringValue(KEY_USERID) ?? '';
+
+      // Creating a payload for the request.
       final payload = RequestPayload(
         isActivityRefresh: true,
         isSosEnabled: true,
         isVitalModuleDisable: true,
       );
+
+      // Creating message details with the specified payload.
       final msgDetails = MessageDetails(payload: payload);
+
+      // Creating the request body model for Firestore.
       final requestBody = FirestoreRequestModel(
           recipients: [userId],
           messageDetails: msgDetails,
           transportMedium: ['Firebase'],
           saveMessage: false);
-      final jsonBody = requestBody.toJson();
+
+      // Converting the request body to JSON format.
+      final jsonBody = json.encode(requestBody.toJson());
+
+      // Making a POST request to the specified URL with the constructed headers and JSON body.
       final res = await ApiServices.post(
         BASE_URL + qr_messaging,
         headers: header,
         body: jsonBody,
       );
 
+// Checking if the request was successful (status code 200) and returning true, otherwise returning false.
       if (res?.statusCode == 200) {
         return true;
       } else {
-        FlutterToast().getToast(
-          'Failed to subscribe for updates.',
-          Colors.red,
-        );
         return false;
       }
     } on Exception catch (e, stackTrace) {
-      FlutterToast().getToast(
-        'Failed to subscribe for updates.',
-        Colors.red,
-      );
+      // Handling exceptions, logging the error message and stack trace, then returning false.
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       return false;
     }
