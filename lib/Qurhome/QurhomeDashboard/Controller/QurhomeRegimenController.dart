@@ -77,13 +77,8 @@ class QurhomeRegimenController extends GetxController {
   List<DateTime?> remainderTimestamps = [];
 
   Location? locationModel;
-
-  //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
   var qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
-  Duration duration =
-      CommonUtil.isUSRegion() ? Duration(minutes: 2) : Duration(seconds: 30);
-  Timer? timer;
 
   var isFirstTime = true.obs;
 
@@ -93,9 +88,20 @@ class QurhomeRegimenController extends GetxController {
   List<ErrorAppLogDataModel>? errorAppLogList = [];
   Timer? remainderQueueTimer;
   Timer? evryOneMinuteRemainder;
+  Timer? updateUITimer;
 
-  getRegimenList(
-      {bool isLoading = true, String? date, String? patientId}) async {
+  startUpdateUITimer() {
+    updateUITimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
+      refreshTheNextActivity(regimentList,null);
+    });
+  }
+
+  getRegimenList({
+    bool isLoading = true,
+    String? date,
+    String? patientId,
+  }) async {
     try {
       if (!isLoading) {
         loadingDataWithoutProgress.value = true;
@@ -108,35 +114,43 @@ class QurhomeRegimenController extends GetxController {
       loadingData.value = true;
       qurHomeRegimenResponseModel =
           await _apiProvider.getRegimenList(date, patientId: patientId);
-      qurHomeRegimenResponseModel?.regimentsList?.removeWhere((element) =>
-          element!.isEventDisabled && !element!.isSymptom ||
-          !element!.scheduled &&
-              !(element?.dayrepeat?.trim().toLowerCase() ==
-                  strText.trim().toLowerCase()));
+      var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
+      refreshTheNextActivity(regimentList,patientId);
+      loadingData.value = false;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      loadingData.value = false;
+      if (kDebugMode) {
+        printError(info: "Regimentlist: " + e.toString());
+      }
+    }
+  }
+
+  refreshTheNextActivity(List<RegimentDataModel> regimentList,var userId) {
+    if (regimentList.length > 0) {
+      regimentList.removeWhere((element) {
+        bool isOnceInplan = element.dayrepeat?.trim().toLowerCase() ==
+            strText.trim().toLowerCase();
+        return element.isEventDisabled && !element.isSymptom ||
+            !element.scheduled && !isOnceInplan;
+      });
       bool allActivitiesCompleted = true;
-
       statusText.value =
-          "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
-
-      for (int i = 0;
-          i < qurHomeRegimenResponseModel!.regimentsList!.length;
-          i++) {
+          "${stringViewTotalNumberOfActivites} ${regimentList.length}";
+      for (int i = 0; i < regimentList.length; i++) {
         String strCurrLoggedEID = CommonUtil().validString(currLoggedEID.value);
-        String strCurrRegimenEID = CommonUtil().validString(
-            qurHomeRegimenResponseModel?.regimentsList![i].eid ?? "");
+        String strCurrRegimenEID =
+            CommonUtil().validString(regimentList[i].eid ?? "");
         if (strCurrLoggedEID.trim().isNotEmpty &&
             strCurrLoggedEID.contains(strCurrRegimenEID)) {
           nextRegimenPosition = i;
           currentIndex = i;
           currLoggedEID.value = "";
           allActivitiesCompleted = false;
-          restartTimer();
           break;
-        } else if (DateTime.now()
-            .isBefore(qurHomeRegimenResponseModel!.regimentsList![i].estart!)) {
-          if (qurHomeRegimenResponseModel!.regimentsList![i].ack_local !=
-              null) {
-            if (qurHomeRegimenResponseModel!.regimentsList!.length > (i + 1)) {
+        } else if (DateTime.now().isBefore(regimentList[i].estart!)) {
+          if (regimentList[i].ack_local != null) {
+            if (regimentList.length > (i + 1)) {
               nextRegimenPosition = i + 1;
               currentIndex = i + 1;
               allActivitiesCompleted = false;
@@ -154,66 +168,52 @@ class QurhomeRegimenController extends GetxController {
         }
       }
       if (allActivitiesCompleted) {
-        if ((qurHomeRegimenResponseModel?.regimentsList?.length ?? 0) > 0) {
-          nextRegimenPosition =
-              qurHomeRegimenResponseModel!.regimentsList!.length - 1;
-          currentIndex = qurHomeRegimenResponseModel!.regimentsList!.length - 1;
+        if (regimentList.length > 0) {
+          nextRegimenPosition = regimentList.length - 1;
+          currentIndex = regimentList.length - 1;
         }
       }
-      if (patientId == null) {
-        for (int i = 0;
-            i < qurHomeRegimenResponseModel!.regimentsList!.length;
-            i++) {
-          if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin !=
-              null) {
-            if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
-                'Appointment') {
-              if (qurHomeRegimenResponseModel!.regimentsList![i].estart !=
-                      null &&
-                  qurHomeRegimenResponseModel!.regimentsList![i].estart != '') {
-                if (qurHomeRegimenResponseModel!.regimentsList![i].eid !=
-                        null &&
-                    qurHomeRegimenResponseModel!.regimentsList![i].eid != '') {
-                  var apiReminder =
-                      qurHomeRegimenResponseModel!.regimentsList![i];
-                  const platform = MethodChannel(APPOINTMENT_DETAILS);
-                  try {
-                    if (Platform.isIOS) {
-                      platform.invokeMethod(
-                          APPOINTMENT_DETAILS, apiReminder.toJson());
-                    } else {
-                      await platform.invokeMethod(APPOINTMENT_DETAILS,
-                          {'data': jsonEncode(apiReminder.toJson())});
-                    }
-                  } catch (e, stackTrace) {
-                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      if (userId == null) {
+        updateAppointments(regimentList);
+      }
+      qurhomeDashboardController.getValuesNativeAppointment();
+    }
 
-                    if (kDebugMode) {
-                      print(e);
-                    }
-                  }
+    update(["newUpdate"]);
+    if (isFirstTime.value) {
+      isFirstTime.value = false;
+      getUserDetails();
+      getCareCoordinatorId();
+    }
+  }
+
+  updateAppointments(List<RegimentDataModel> regimentList) async {
+    for (int i = 0; i < regimentList.length; i++) {
+      if (regimentList[i].activityOrgin != null) {
+        if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
+            'Appointment') {
+          if (regimentList[i].estart != null && regimentList[i].estart != '') {
+            if (regimentList[i].eid != null && regimentList[i].eid != '') {
+              var apiReminder = regimentList[i];
+              const platform = MethodChannel(APPOINTMENT_DETAILS);
+              try {
+                if (Platform.isIOS) {
+                  platform.invokeMethod(
+                      APPOINTMENT_DETAILS, apiReminder.toJson());
+                } else {
+                  await platform.invokeMethod(APPOINTMENT_DETAILS,
+                      {'data': jsonEncode(apiReminder.toJson())});
+                }
+              } catch (e, stackTrace) {
+                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                if (kDebugMode) {
+                  print(e);
                 }
               }
             }
           }
         }
       }
-      onStopLoadingCircle();
-      qurhomeDashboardController.getValuesNativeAppointment();
-
-      update(["newUpdate"]);
-      if (isFirstTime.value) {
-        isFirstTime.value = false;
-        getUserDetails();
-        getCareCoordinatorId();
-      }
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-      if (kDebugMode) {
-        printError(info: "Regimentlist: " + e.toString());
-      }
-      onStopLoadingCircle();
     }
   }
 
@@ -247,8 +247,9 @@ class QurhomeRegimenController extends GetxController {
   @override
   void onClose() {
     try {
-      timer?.cancel();
       remainderQueueTimer?.cancel();
+      updateUITimer?.cancel();
+      updateUITimer = null;
       super.onClose();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -261,6 +262,7 @@ class QurhomeRegimenController extends GetxController {
 
   @override
   void onInit() {
+    startUpdateUITimer();
     super.onInit();
   }
 
@@ -335,9 +337,6 @@ class QurhomeRegimenController extends GetxController {
             locationModel?.subAdminArea =
                 CommonUtil().getLocalityName(addresses);
           }
-          /*if (kDebugMode) {
-            print("locationModel ${locationModel?.subAdminArea ?? ''}");
-          }*/
         }
       }
     } catch (e, stackTrace) {
@@ -365,11 +364,14 @@ class QurhomeRegimenController extends GetxController {
           var careCoordinatorDetails = careCoordinatorData.result!;
           var activeUser = "care coordinator";
 
-          final index = careCoordinatorDetails.indexWhere((element) =>
-              (CommonUtil()
-                  .validString(element.userType)
-                  .toLowerCase()
-                  .contains(activeUser)));
+          final index = careCoordinatorDetails.indexWhere(
+            (element) => (CommonUtil()
+                .validString(element.userType)
+                .toLowerCase()
+                .contains(
+                  activeUser,
+                )),
+          );
           if (index >= 0) {
             careCoordinatorId.value = CommonUtil()
                 .validString(careCoordinatorData.result![index].userId);
@@ -407,7 +409,6 @@ class QurhomeRegimenController extends GetxController {
       }
 
       loadingData.value = true;
-
       final status = await VideoCallCommonUtils()
           .getCurrentVideoCallRelatedPermission(isAudioCall: true);
 
@@ -440,7 +441,9 @@ class QurhomeRegimenController extends GetxController {
         });
       } else {
         FlutterToast().getToast(
-            'Could not start call due to permission issue', Colors.red);
+          'Could not start call due to permission issue',
+          Colors.red,
+        );
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -514,87 +517,25 @@ class QurhomeRegimenController extends GetxController {
     isSOSAgentCallDialogOpen.value = newStatus;
   }
 
-  void startTimer() {
+  void updateRegimentData() {
     try {
-      timer = new Timer.periodic(
-        Duration(seconds: 1),
-        (Timer timer) {
-          final addSeconds = -1;
-          final seconds = duration.inSeconds + addSeconds;
-          if (seconds == 0) {
-            this.timer?.cancel();
-            this.timer = null;
-            dateHeader.value = getFormatedDate();
-            //selectedCalendar.value = DateTime.now();
-            if (qurhomeDashboardController.forPatientList.value) {
-              getRegimenList(
-                  isLoading: false,
-                  patientId: qurhomeDashboardController
-                      .careGiverPatientListResult!.childId);
-            } else {
-              getRegimenList(isLoading: false);
-            }
-            qurhomeDashboardController.getModuleAccess();
-            getSOSButtonStatus();
-            if (CommonUtil.isUSRegion()) {
-              duration = Duration(minutes: 2);
-            } else {
-              duration = Duration(seconds: 30);
-            }
-            startTimer();
-          } else if (seconds < 11) {
-            if (!isTodaySelected.value) {
-              // statusText.value = '${strRegimenRedirection} ${seconds.toString()}';
-              statusText.value =
-                  "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
-              update(["refershStatusText"]);
-            }
-            duration = Duration(seconds: seconds);
-          } else {
-            if (!isTodaySelected.value) {
-              if (CommonUtil().calculateDifference(selectedDate.value) < 0) {
-                //past
-                isTodaySelected.value = false;
-                // statusText.value = strViewPastDateRegimen;
-                statusText.value =
-                    "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
-              } else if (CommonUtil().calculateDifference(selectedDate.value) >
-                  0) {
-                //future
-                isTodaySelected.value = false;
-                // statusText.value = strViewFutureDateRegimen;
-                statusText.value =
-                    "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
-              }
-              update(["refershStatusText"]);
-            }
-            duration = Duration(seconds: seconds);
-          }
-        },
-      );
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-      if (kDebugMode) {
-        printError(info: e.toString());
-      }
-    }
-  }
-
-  void restartTimer() {
-    try {
-      timer?.cancel();
-      this.timer = null;
-      if (CommonUtil.isUSRegion()) {
-        duration = Duration(minutes: 2);
+      dateHeader.value = getFormatedDate();
+      if (qurhomeDashboardController.forPatientList.value) {
+        getRegimenList(
+            isLoading: false,
+            patientId:
+                qurhomeDashboardController.careGiverPatientListResult!.childId);
       } else {
-        duration = Duration(seconds: 30);
+        getRegimenList(isLoading: false);
       }
-
-      startTimer();
+      if (!isTodaySelected.value) {
+        isTodaySelected.value = false;
+        statusText.value =
+            "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
+        update(["refershStatusText"]);
+      }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
       if (kDebugMode) {
         printError(info: e.toString());
       }
@@ -602,15 +543,8 @@ class QurhomeRegimenController extends GetxController {
   }
 
   showCurrLoggedRegimen(RegimentDataModel regimen) {
-    cancelTimer();
-    restartTimer();
     currLoggedEID.value = CommonUtil().validString(regimen.eid?.toString());
-    getRegimenList(date: selectedDate.value.toString());
-  }
-
-  cancelTimer() {
-    timer?.cancel();
-    timer = null;
+    // getRegimenList(date: selectedDate.value.toString());
   }
 
   String getFormatedDate({String? date = null}) {
@@ -651,21 +585,6 @@ class QurhomeRegimenController extends GetxController {
     return prefix + formattedDate;
   }
 
-  onStopLoadingCircle() async {
-    try {
-      await qurhomeDashboardController.getModuleAccess();
-      await getSOSButtonStatus();
-      loadingData.value = false;
-      loadingDataWithoutProgress.value = false;
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-  }
-
   getSOSButtonStatus() async {
     try {
       await _apiProvider.getSOSButtonStatus();
@@ -694,7 +613,7 @@ class QurhomeRegimenController extends GetxController {
     String? startDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
     String? endDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
     try {
-      if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+      if (CommonUtil().isTablet == true) {
         if (startDate != null &&
             startDate != "" &&
             endDate != null &&
@@ -706,7 +625,9 @@ class QurhomeRegimenController extends GetxController {
                   DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
               (DateTime.now().isBefore(DateTime.parse(endDate ?? '')))) {
             try {
-              sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+              //Separte method to show remainder in tablet devices
+              sheelaAIController.checkIfWeNeedToShowDialogBox(
+                  isNeedSheelaDialog: true);
             } catch (e, stackTrace) {
               CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
@@ -727,7 +648,7 @@ class QurhomeRegimenController extends GetxController {
   }
 
   void startTimerForSheela() {
-    if (CommonUtil.REGION_CODE != "US" && CommonUtil().isTablet == true) {
+    if (CommonUtil().isTablet == true) {
       try {
         evryOneMinuteRemainder = Timer.periodic(
           Duration(minutes: 1),

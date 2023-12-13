@@ -39,6 +39,7 @@ struct Constants {
     static let devicesMethodChannel = "QurbookBLE/method"
     static let reminderMethodChannel = "flutter.native/reminder"
     static let addReminderMethod = "addReminder"
+    static let snoozeReminderMethod = "snoozeReminder"
     static let iOSMethodChannel = "flutter.native/iOS"
     static let getWifiDetailsMethod = "getWifiDetails"
     static let removeReminderMethod = "removeReminder"

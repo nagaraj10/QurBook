@@ -159,6 +159,9 @@ const String stop_detecting = 'StopDetecting';
 const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
 
+//Biometric Auth error
+const String isFromAuthError = 'isFromAuthError';
+
 const String audioFileType = 'audio/mp3';
 const String MSG_VERIFYEMAIL_VERIFIED =
     'Email is already verified by other user.';
@@ -639,6 +642,7 @@ const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
 const String strMyFamilyList = 'myfamily_list';
 const String strHomeScreen = 'home_screen';
+const String strHomeScreenForce = 'home_screen_force';
 const String strManageActivities = 'Enable / Disable Activities';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Plans';

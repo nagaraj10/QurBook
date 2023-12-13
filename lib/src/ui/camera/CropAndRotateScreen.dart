@@ -6,7 +6,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/common/firestore_services.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -82,14 +82,15 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
             },
           ),
         ),
-        new SwitchProfile()
-            .buildActions(context, _keyLoader, callBackToRefresh, false,changeWhiteBg: true)
+        new SwitchProfile().buildActions(
+            context, _keyLoader, callBackToRefresh, false,
+            changeWhiteBg: true)
       ],
     );
   }
 
   void callBackToRefresh() {
-    QurPlanReminders.getTheRemindersFromAPI();
+    FirestoreServices().updateFirestoreListner();
     (context as Element).markNeedsBuild();
   }
 

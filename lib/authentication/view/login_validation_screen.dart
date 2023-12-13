@@ -349,6 +349,9 @@ class _PatientSignInValidationScreenState extends State<PatientSignInValidationS
       parseJwtPayLoad(decodesstring!)[strToken][strIsVirtualNumberUser];
       print(isSkipMFA);
       if (isSkipMFA) {
+        if(PreferenceUtil.getStringValue(isFromAuthError)=='true'){
+          await PreferenceUtil.clearAllData();
+        }
         final String userId =
         parseJwtPayLoad(decodesstring??'')[strToken][strUserId];
 

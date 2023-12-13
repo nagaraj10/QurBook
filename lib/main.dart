@@ -421,21 +421,32 @@ class _MyFHBState extends State<MyFHB> {
         });
       }
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
-        if (sheelaAIController.isSheelaScreenActive) {
+        //// allow the user for auto redirect to sheela screen on time
+        if (CommonUtil().isAllowSheelaLiveReminders()) {
+          // live reminder On deafult existing flow
+          if (sheelaAIController.isSheelaScreenActive) {
+            var reqJson = {
+              KIOSK_task: KIOSK_remind,
+              KIOSK_eid: passedValArr[1].toString()
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJson);
+          } else {
+            if (sheelaAIController.isQueueDialogShowing.value) {
+              Get.back();
+              sheelaAIController.isQueueDialogShowing.value = false;
+            }
+            Future.delayed(Duration(milliseconds: 500), () async {
+              getToSheelaNavigate(passedValArr,
+                  isFromActivityRemainderInvokeSheela: true);
+            });
+          }
+        } else {
+          // live reminder off only queue flow working
           var reqJson = {
             KIOSK_task: KIOSK_remind,
             KIOSK_eid: passedValArr[1].toString()
           };
           CommonUtil().callQueueNotificationPostApi(reqJson);
-        } else {
-          if (sheelaAIController.isQueueDialogShowing.value) {
-            Get.back();
-            sheelaAIController.isQueueDialogShowing.value = false;
-          }
-          Future.delayed(Duration(milliseconds: 500), () async {
-            getToSheelaNavigate(passedValArr,
-                isFromActivityRemainderInvokeSheela: true);
-          });
         }
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
@@ -455,31 +466,36 @@ class _MyFHBState extends State<MyFHB> {
             CommonUtil().callQueueNotificationPostApi(reqJsonText);
           }
         } else {*/
-        if (((passedValArr[3].toString()).isNotEmpty) &&
-            (passedValArr[3] != 'null')) {
-          if (sheelaAIController.isQueueDialogShowing.value) {
-            Get.back();
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr, isFromAudio: true);
-            });
+
+        ///// allow the user for auto redirect to sheela screen on time
+        if (CommonUtil().isAllowSheelaLiveReminders()) {
+          if (((passedValArr[3].toString()).isNotEmpty) &&
+              (passedValArr[3] != 'null')) {
+            if (sheelaAIController.isQueueDialogShowing.value) {
+              Get.back();
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr, isFromAudio: true);
+              });
+            } else {
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr, isFromAudio: true);
+              });
+            }
           } else {
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr, isFromAudio: true);
-            });
+            if (sheelaAIController.isQueueDialogShowing.value) {
+              Get.back();
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr);
+              });
+            } else {
+              Future.delayed(Duration(milliseconds: 500), () async {
+                getToSheelaNavigate(passedValArr);
+              });
+            }
+            //}
           }
-        } else {
-          if (sheelaAIController.isQueueDialogShowing.value) {
-            Get.back();
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr);
-            });
-          } else {
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr);
-            });
-          }
-          //}
         }
+
       }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
@@ -598,38 +614,40 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Sheela Start Page',
           });
           try {
-            if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
-              var rawTitle = "";
-              var rawBody = "";
-              var eventType = "";
-              var others = "";
+            if (CommonUtil().isAllowSheelaLiveReminders()) {
+              if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
+                var rawTitle = "";
+                var rawBody = "";
+                var eventType = "";
+                var others = "";
 
-              if (passedValArr[2] == strWrapperCall) {
-                eventType = passedValArr[2];
-                rawTitle = passedValArr[3].split('|')[1];
-                rawBody = passedValArr[3].split('|')[2];
-                others = passedValArr[3].split('|')[0];
-              } else {
-                rawTitle = passedValArr[2].split('|')[0];
-                rawBody = passedValArr[2].split('|')[1];
-                if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
-                  notificationListId = passedValArr[3];
-                  FetchNotificationService()
-                      .inAppUnreadAction(notificationListId);
+                if (passedValArr[2] == strWrapperCall) {
+                  eventType = passedValArr[2];
+                  rawTitle = passedValArr[3].split('|')[1];
+                  rawBody = passedValArr[3].split('|')[2];
+                  others = passedValArr[3].split('|')[0];
+                } else {
+                  rawTitle = passedValArr[2].split('|')[0];
+                  rawBody = passedValArr[2].split('|')[1];
+                  if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
+                    notificationListId = passedValArr[3];
+                    FetchNotificationService()
+                        .inAppUnreadAction(notificationListId);
+                  }
                 }
-              }
 
-              Get.toNamed(
-                routervariable.rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: true,
-                  rawMessage: rawBody,
-                  eventType: eventType,
-                  others: others,
-                ),
-              );
-            } else {
-              Get.to(SuperMaya());
+                Get.toNamed(
+                  routervariable.rt_Sheela,
+                  arguments: SheelaArgument(
+                    isSheelaAskForLang: true,
+                    rawMessage: rawBody,
+                    eventType: eventType,
+                    others: others,
+                  ),
+                );
+              } else {
+                Get.to(SuperMaya());
+              }
             }
           } catch (e, stackTrace) {
             CommonUtil().appLogs(message: e, stackTrace: stackTrace);

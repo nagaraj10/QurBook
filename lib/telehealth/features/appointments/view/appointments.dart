@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
+import '../../../../common/firestore_services.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
@@ -66,10 +65,9 @@ class _AppointmentsState extends State<Appointments> {
       Provider.of<AppointmentsListViewModel>(context, listen: false)
           .fetchAppointments();
       super.initState();
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -84,9 +82,8 @@ class _AppointmentsState extends State<Appointments> {
     });
     try {
       getCategoryList();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -187,10 +184,10 @@ class _AppointmentsState extends State<Appointments> {
                             historyInfo!.clear();
                           });
                         }
-                      } catch (e,stackTrace) {
+                      } catch (e, stackTrace) {
                         //print(e);
-                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+                        CommonUtil()
+                            .appLogs(message: e, stackTrace: stackTrace);
                       }
                     },
                   ),
@@ -256,7 +253,8 @@ class _AppointmentsState extends State<Appointments> {
                           height: 10.0.h,
                         ),
                         isSearch
-                            ? (upcomingInfo != null && upcomingInfo!.length != 0)
+                            ? (upcomingInfo != null &&
+                                    upcomingInfo!.length != 0)
                                 ? commonWidget.title(TranslationConstants
                                     .upcomingAppointments
                                     .t())
@@ -318,9 +316,9 @@ class _AppointmentsState extends State<Appointments> {
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext ctx, int i) {
-                                  appointmentsData.result!.past!.sort((b, a) => a
-                                      .plannedStartDateTime!
-                                      .compareTo(b.plannedStartDateTime!
+                                  appointmentsData.result!.past!.sort((b, a) =>
+                                      a.plannedStartDateTime!.compareTo(b
+                                          .plannedStartDateTime!
                                           .toLowerCase()));
                                   historyInfo!.sort((b, a) => a
                                       .plannedStartDateTime!
@@ -388,8 +386,7 @@ class _AppointmentsState extends State<Appointments> {
 
   Widget appBar() {
     return PreferredSize(
-
-    preferredSize: Size.fromHeight(70),
+      preferredSize: Size.fromHeight(70),
       child: AppBar(
         flexibleSpace: GradientAppBar(),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -452,7 +449,7 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   void callBackToRefresh() {
-    QurPlanReminders.getTheRemindersFromAPI();
+    FirestoreServices().updateFirestoreListner();
     (context as Element).markNeedsBuild();
     refreshAppointments();
   }
@@ -464,7 +461,7 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   Future<String> refreshPage() async {
-     appointmentsViewModel.clearAppointments();
+    appointmentsViewModel.clearAppointments();
     await appointmentsViewModel.fetchAppointments();
     return 'success';
   }

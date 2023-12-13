@@ -164,6 +164,7 @@ import 'CommonConstants.dart';
 import 'PreferenceUtil.dart';
 import 'ShowPDFFromFile.dart';
 import 'common_circular_indicator.dart';
+import 'firestore_services.dart';
 import 'keysofmodel.dart' as keysConstant;
 import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 
@@ -2025,7 +2026,7 @@ class CommonUtil {
     }
   }
 
-  Future<bool> checkAppLock({bool useErrorDialogs: true}) async {
+  Future<bool> checkAppLock({bool useErrorDialogs: true, Function(String)? authErrorCallback }) async {
     try {
       var value = await LocalAuthentication().authenticate(
         localizedReason: strAuthToUseApp,
@@ -2041,9 +2042,11 @@ class CommonUtil {
         //   cancelButton: 'No thanks',
         // ),
       );
+      authErrorCallback?.call('');
       print("value:${value}");
       return value;
     } on PlatformException catch (e, stackTrace) {
+       authErrorCallback?.call(e.code);
       if (e.code == auth_error.notAvailable) {
         print(e.message);
         return false;
@@ -2053,7 +2056,7 @@ class CommonUtil {
       } else if (e.code == auth_error.passcodeNotSet) {
         /// Indicates that the user has not yet configured a passcode (iOS) or
         /// PIN/pattern/password (Android) on the device.
-        return true; // Nothing sets but app lock code called
+        // return false; // Nothing sets but app lock code called
       } else {}
       return false;
     }
@@ -3626,7 +3629,6 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result!.result == 'Done') {
                                       //setState(() {});
-                                      QurPlanReminders.getTheRemindersFromAPI();
                                       Navigator.of(_keyLoader.currentContext!,
                                               rootNavigator: true)
                                           .pop();
@@ -4190,7 +4192,7 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result!.result == 'Done') {
                                       //setState(() {});
-                                      QurPlanReminders.getTheRemindersFromAPI();
+
                                       Navigator.of(_keyLoader.currentContext!,
                                               rootNavigator: true)
                                           .pop();
@@ -5400,13 +5402,13 @@ class CommonUtil {
     //Qurhome icon width and height size updated and used common method
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: (CommonUtil().isTablet??false) ? 0 : 8.h,
-        vertical: (CommonUtil().isTablet??false) ? 0 : 4.h,
+        horizontal: (CommonUtil().isTablet ?? false) ? 0 : 8.h,
+        vertical: (CommonUtil().isTablet ?? false) ? 0 : 4.h,
       ),
       child: AssetImageWidget(
         icon: icon_qurhome,
-        height: (CommonUtil().isTablet??false) ? 48.h :32.h,
-        width: (CommonUtil().isTablet??false) ? 48.h :32.h,
+        height: (CommonUtil().isTablet ?? false) ? 48.h : 32.h,
+        width: (CommonUtil().isTablet ?? false) ? 48.h : 32.h,
       ),
     );
   }
@@ -6154,7 +6156,7 @@ class CommonUtil {
   OnInitAction() async {
     try {
       dbInitialize();
-      QurPlanReminders.getTheRemindersFromAPI();
+
       //initSocket();
       Future.delayed(const Duration(seconds: 1)).then((_) {
         if (Platform.isIOS) {
@@ -6174,6 +6176,7 @@ class CommonUtil {
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
+      FirestoreServices().setupListenerForFirestoreChanges();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
           () => PDFViewController(),
@@ -6306,7 +6309,8 @@ class CommonUtil {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         .socket!
         .on(getReminderSheelaRedirect, (chatListresponse) {
-      if (PreferenceUtil.getIfQurhomeDashboardActiveChat()) {
+      if (PreferenceUtil.getIfQurhomeDashboardActiveChat() &&
+          isAllowSheelaLiveReminders()) {
         if (chatListresponse != null) {
           SheelaReminderResponse chatList =
               SheelaReminderResponse.fromJson(chatListresponse);
@@ -7248,6 +7252,11 @@ class CommonUtil {
     }
   }
 
+/**
+ * This method is used to get value from api ,
+ * based on which the remainders are shown in intervals.
+ * Default value of the interval time would be 30 mins
+ */
   getSheelaConfig() async {
     var apiBaseHelper = ApiBaseHelper();
 
@@ -7272,7 +7281,11 @@ class CommonUtil {
           } else {
             PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
           }
+        } else {
+          PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
         }
+      } else {
+        PreferenceUtil.saveInt(SHEELA_REMAINDER_TIME, (30));
       }
     }
     return sheelaRemainderConfig;
@@ -7347,7 +7360,33 @@ class CommonUtil {
     }
     return "";
   }
+  bool isAllowSheelaLiveReminders() {
+    SheelaAIController? sheelaAIController =
+    onInitSheelaAIController();
+    return sheelaAIController.isAllowSheelaLiveReminders;
+  }
 
+  String getTimeMillsSnooze(String snoozeSelectTime) {
+    String timeMills = '';
+    try {
+      if (snoozeSelectTime != '') {
+        switch (snoozeSelectTime) {
+          case '5':
+            timeMills = Platform.isAndroid ? '300000' : '300';
+            break;
+          case '15':
+            timeMills = Platform.isAndroid ? '900000' : '900';
+            break;
+          case '30':
+            timeMills =  Platform.isAndroid ?'1800000' : '1800';
+            break;
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+    return timeMills;
+  }
 }
 
 extension CapExtension on String {
