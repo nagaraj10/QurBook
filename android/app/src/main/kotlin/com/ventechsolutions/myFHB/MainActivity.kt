@@ -2645,7 +2645,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                 Log.d("CLOSE_SHEELA_DIALOG", "CLOSE_SHEELA_DIALOG")
                 try {
                     close.performClick()
-                    countDownTimerDialog.dismiss()
+                    //countDownTimerDialog.dismiss()
                     result.success("success")
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
@@ -3413,6 +3413,11 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     //todo this method need to uncomment
     private fun speakWithVoiceAssistant(langCode: String) {
         Log.e("langs", langCode)
+
+
+        // Safely destroy the SpeechRecognizer to release resources
+        speechRecognizer?.destroy()
+
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
 
         speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
