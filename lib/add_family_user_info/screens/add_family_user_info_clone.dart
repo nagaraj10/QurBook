@@ -738,7 +738,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     var picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
-        firstDate: DateTime(1940),
+        firstDate: DateTime(1900),
         lastDate: DateTime.now());
 
     if (picked != null) {
