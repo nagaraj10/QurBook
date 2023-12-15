@@ -961,48 +961,52 @@ class SheelaAIController extends GetxController {
                           Reminder reminder = Reminder();
                           reminder.uformname = conversations
                                   .last
-                                  .additionalInfoSheelaResponse
+                                  ?.additionalInfoSheelaResponse
                                   ?.snoozeData
                                   ?.uformName ??
                               '';
                           reminder.activityname = conversations
                                   .last
-                                  .additionalInfoSheelaResponse
+                                  ?.additionalInfoSheelaResponse
                                   ?.snoozeData
                                   ?.activityName ??
                               '';
                           reminder.title = conversations
                                   .last
-                                  .additionalInfoSheelaResponse
+                                  ?.additionalInfoSheelaResponse
                                   ?.snoozeData
                                   ?.title ??
                               '';
                           reminder.description = conversations
                                   .last
-                                  .additionalInfoSheelaResponse
+                                  ?.additionalInfoSheelaResponse
                                   ?.snoozeData
                                   ?.description ??
                               '';
                           reminder.eid = conversations
                                   .last
-                                  .additionalInfoSheelaResponse
+                                  ?.additionalInfoSheelaResponse
                                   ?.snoozeData
                                   ?.eid ??
                               '';
-                          reminder.estart = conversations
-                                  .last
-                                  .additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.estart ??
-                              '';
+                          reminder.estart = CommonUtil()
+                              .snoozeDataFormat(DateTime.now().add(Duration(
+                                  minutes: int.parse(button?.payload ?? '0'))))
+                              .toString();
                           reminder.dosemeal = conversations
                                   .last
-                                  .additionalInfoSheelaResponse
+                                  ?.additionalInfoSheelaResponse
                                   ?.snoozeData
                                   ?.dosemeal ??
                               '';
                           reminder.snoozeTime = CommonUtil()
                               .getTimeMillsSnooze(button?.payload ?? '');
+                          reminder.tplanid = '0';
+                          reminder.teid_user = '0';
+                          reminder.remindin = '0';
+                          reminder.remindin_type = '0';
+                          reminder.providerid = '0';
+                          reminder.remindbefore = '0';
                           List<Reminder> data = [reminder];
                           for (var i = 0; i < data.length; i++) {
                             apiReminder = data[i];
@@ -1018,15 +1022,18 @@ class SheelaAIController extends GetxController {
                                   buttons: button);
                             });
                           } else {
-                            reminderMethodChannel.invokeMethod(snoozeReminderMethod, [apiReminder.toMap()]).then((value) {
+                            reminderMethodChannel.invokeMethod(
+                                snoozeReminderMethod,
+                                [apiReminder.toMap()]).then((value) {
                               startSheelaFromButton(
                                   buttonText: button.title,
                                   payload: button.payload,
                                   buttons: button);
                             });
                           }
-                        } catch (e,  stackTrace) {
-                            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                        } catch (e, stackTrace) {
+                          CommonUtil()
+                              .appLogs(message: e, stackTrace: stackTrace);
                         }
                       } else {
                         startSheelaFromButton(

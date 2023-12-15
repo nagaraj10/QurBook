@@ -875,20 +875,22 @@ class CommonUtil {
       var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       final profileResult = myProfile!.result!;
 
-      await CommonUtil()
-          .sendDeviceToken(
-              PreferenceUtil.getStringValue(Constants.KEY_USERID),
-              profileResult.userContactCollection3![0]!.email,
-              profileResult.userContactCollection3![0]!.phoneNumber,
-              token,
-              false)
-          .then((value) async {
-        // if (Platform.isIOS) {
-        //   _firebaseMessaging.deleteInstanceID();
-        // }
-        await QurPlanReminders.deleteAllLocalReminders();
-        moveToLoginPage();
-      });
+      List<Future<dynamic>> apiCalls = [
+        CommonUtil().sendDeviceToken(
+            PreferenceUtil.getStringValue(Constants.KEY_USERID),
+            profileResult.userContactCollection3![0]!.email,
+            profileResult.userContactCollection3![0]!.phoneNumber,
+            token,
+            false),
+        // Record the user's last access time
+        CommonUtil().saveUserLastAccessTime()
+      ];
+
+      await Future.wait(apiCalls);
+
+      await QurPlanReminders.deleteAllLocalReminders();
+      moveToLoginPage();
+
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       // if (Platform.isIOS) {
@@ -1712,6 +1714,14 @@ class CommonUtil {
         newFormat = DateFormat('EEE, MMM d, yyyy');
       }
     }
+    updatedDate = updatedDate + newFormat.format(newDateTime);
+    return updatedDate;
+  }
+
+  snoozeDataFormat(DateTime newDateTime) {
+    DateFormat newFormat;
+    var updatedDate = '';
+    newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
     updatedDate = updatedDate + newFormat.format(newDateTime);
     return updatedDate;
   }
@@ -6182,6 +6192,8 @@ class CommonUtil {
           () => PDFViewController(),
         );
       }
+      // Record the user's last access time
+      saveUserLastAccessTime();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -7386,6 +7398,32 @@ class CommonUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return timeMills;
+  }
+
+  // Saves the user's last access time on the server.
+  saveUserLastAccessTime() async {
+    try {
+      // Retrieve the user's ID from preferences
+      String userId = PreferenceUtil.getStringValue(KEY_USERID) ?? '';
+
+      // Check if the user ID is not empty
+      if ((validString(userId ?? '').trim().isNotEmpty)) {
+        // Initialize the version string
+        String version = '';
+        // Fetch the app version and build number
+        await PackageInfo.fromPlatform().then((packageInfo) {
+          version = (packageInfo.version + ' + ' + packageInfo.buildNumber);
+        });
+
+        // Create an instance of QurHomeApiProvider
+        final apiResponse = QurHomeApiProvider();
+        // Call saveUserLastAccessTime method on QurHomeApiProvider
+        await apiResponse.saveUserLastAccessTime(version: version);
+      }
+    } catch (e, stackTrace) {
+      // Log any errors using appLogs
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 }
 
