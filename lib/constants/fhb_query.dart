@@ -458,4 +458,8 @@ const String qr_textToTranslate = 'textToTranslate';
 const String qr_targetLanguageCode = 'TargetLanguageCode';
 const String qr_sourceLanguageCode = 'sourceLanguageCode';
 
+//captureUserLastAccessTime
+const String lastAccessTime = 'lastAccessTime';
+const String save_last_access_time = 'user/device-audit-logs';
+
 
