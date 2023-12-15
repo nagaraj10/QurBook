@@ -78,11 +78,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   @override
   void initState() {
     try {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        controller.forPatientList.value = false;
+        sheelBadgeController.isQueueDialogShowing.value = false;
+        onInit();
+      });
       super.initState();
-      controller.forPatientList.value = false;
-      sheelBadgeController.isQueueDialogShowing.value = false;
-
-      onInit();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
