@@ -682,7 +682,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         //maxLines: 3,
                         style: TextStyle(
                           fontSize: 13.0.sp,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           color: strValue == "--"
                               ? Colors.grey
                               : Colors.black.withOpacity(0.7),
