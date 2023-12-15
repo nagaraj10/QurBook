@@ -2028,7 +2028,7 @@ class CommonUtil {
   }
 
   Future<bool> checkAppLock(
-      {bool useErrorDialogs: true, Function(String)? authErrorCallback}) async {
+      {bool useErrorDialogs = true, Function(String)? authErrorCallback}) async {
     try {
       var value = await LocalAuthentication().authenticate(
         localizedReason: strAuthToUseApp,
@@ -6929,7 +6929,7 @@ class CommonUtil {
             width: double.infinity,
             child: Scrollbar(
               controller: scrollController, // <---- Here, the controller
-              isAlwaysShown: false, // <---- Required
+              thumbVisibility: false, // <---- Required
               child: SingleChildScrollView(
                 controller: scrollController,
                 child: Column(

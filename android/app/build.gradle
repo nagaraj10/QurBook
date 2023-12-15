@@ -24,7 +24,6 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'kotlin-android-extensions'
 
 
 android {
@@ -105,6 +104,11 @@ android {
         main{
             jniLibs.srcDirs = ['libs']
         }
+    }
+
+    // Enable View Binding for the project's build features
+    buildFeatures {
+        viewBinding = true
     }
 
 //    allprojects {
