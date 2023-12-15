@@ -22,7 +22,6 @@ import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
@@ -2487,6 +2486,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           final currentTimezone = await TimeZoneHelper.getCurrentTimezone;
           await TimezoneServices().updateTimezone(currentTimezone);
         }
+      }
+      if (CommonUtil.isUSRegion()) {
+        // Record the user's last access time
+        CommonUtil().saveUserLastAccessTime();
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
