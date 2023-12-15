@@ -581,17 +581,6 @@ class _VerifyPatientState extends State<VerifyPatient>
 
   _checkResponse(PatientSignupOtp response)async{
     if (response.isSuccess!) {
-      /// Added this if the user from the biometric auth error dialog.
-      /// Removing preference Except below datas Because those cant be retrieved from other screens.
-      if(PreferenceUtil.getBool(Constants.isFromAuthError)){
-       await PreferenceUtil.clearPreferencesExceptSome([
-          Constants.KeyShowIntroScreens,
-          Constants.KEY_LASTLOGGEDTIME,
-          Constants.KEY_USERID_MAIN,
-          Constants.KEY_AUTHTOKEN,
-          Constants.KEY_PUSH_KIT_TOKEN
-        ]);
-      }
       _getPatientDetails();
     } else {
       LoaderClass.hideLoadingDialog(context);
