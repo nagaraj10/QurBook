@@ -7366,6 +7366,27 @@ class CommonUtil {
     return sheelaAIController.isAllowSheelaLiveReminders;
   }
 
+  String getTimeMillsSnooze(String snoozeSelectTime) {
+    String timeMills = '';
+    try {
+      if (snoozeSelectTime != '') {
+        switch (snoozeSelectTime) {
+          case '5':
+            timeMills = Platform.isAndroid ? '300000' : '300';
+            break;
+          case '15':
+            timeMills = Platform.isAndroid ? '900000' : '900';
+            break;
+          case '30':
+            timeMills =  Platform.isAndroid ?'1800000' : '1800';
+            break;
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+    return timeMills;
+  }
 }
 
 extension CapExtension on String {
