@@ -647,6 +647,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   color: Colors.black.withOpacity(0.7),
                 ),
               ),
+              SizedBox(
+                width: 25,
+              ),
               isLocationLink
                   ? Expanded(
                       flex: 2,
@@ -656,10 +659,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             if (await canLaunch(value)) {
                               await launch(value);
                             }
-                          } catch (e,stackTrace) {
+                          } catch (e, stackTrace) {
                             print(e);
-                                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
                           }
                         },
                         child: Text(
@@ -679,7 +682,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         //maxLines: 3,
                         style: TextStyle(
                           fontSize: 13.0.sp,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                           color: strValue == "--"
                               ? Colors.grey
                               : Colors.black.withOpacity(0.7),

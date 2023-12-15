@@ -78,7 +78,7 @@ class AppointmentDetailsController extends GetxController {
             "${appointmentDetailsModel?.result?.additionalInfo?.modeOfService?.name ?? ""}";
 
         scheduleDateTime.value =
-            "${constants.changeDateFormat(CommonUtil().validString(appointmentDetailsModel!.result?.plannedStartDateTime ?? ""))}";
+            "${constants.changeDateFormat(CommonUtil().validString(appointmentDetailsModel!.result?.plannedStartDateTime ?? ""), isFromAppointment: true)}";
 
         scheduleDateTime.value = scheduleDateTime.value.trim().isNotEmpty
             ? "${scheduleDateTime.value}, ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel!.result?.plannedStartDateTime ?? "")).toString()}"
@@ -96,9 +96,8 @@ class AppointmentDetailsController extends GetxController {
         try {
           endTimeForTransportation = DateTime.parse(
               appointmentDetailsModel?.result?.plannedStartDateTime ?? "");
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
         if (appointmentType.value.toLowerCase() != strTransportation) {
           if (showEndTime) {
@@ -277,8 +276,8 @@ class AppointmentDetailsController extends GetxController {
       }
 
       loadingData.value = false;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: "error in try: " + e.toString());
@@ -306,8 +305,8 @@ class AppointmentDetailsController extends GetxController {
       addressLine2 = "";
       city = "";
       state = "";
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -321,8 +320,8 @@ class AppointmentDetailsController extends GetxController {
           appointmentDetailsModel!.result?.additionalInfo!.title ?? "";
       description.value =
           appointmentDetailsModel!.result?.additionalInfo!.description ?? "";
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -347,8 +346,8 @@ class AppointmentDetailsController extends GetxController {
 
       locationUrl =
           appointmentDetailsModel!.result?.additionalInfo?.locationUrl ?? "";
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -387,8 +386,8 @@ class AppointmentDetailsController extends GetxController {
         return "--";
       else
         return strText.trim();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
