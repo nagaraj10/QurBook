@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 const String lblNotifications = 'Notifications';
 const String lblNoNotification = 'Looks like there are no notifications';
@@ -16,12 +17,23 @@ const String strRemiderPostFrequency14 = 'PlanExpiryReminderPostfrequency14';
 String notificationDate(String value) => value != null
     ? DateFormat('dd MMM yyyy').format(DateTime.parse(value)).toString()
     : '';
-
-String changeDateFormat(String value) {
+/**
+ * Change the string to date format 
+ * Added a new paramter when isFromAppointment bool is true ,we dhow the date format 
+ * in Qurhome in MM-DD-YYYY format else it shows in 
+ * dd MMM yyyy format
+ */
+String changeDateFormat(String value, {bool isFromAppointment = false}) {
   var pos = value.lastIndexOf('.');
   String lastElementRemoved = (pos != -1) ? value.substring(0, pos) : value;
   String result = lastElementRemoved.replaceAll("T", " ");
-  return DateFormat('dd MMM yyyy').format(DateTime.parse(result)).toString();
+  return isFromAppointment
+      ? (CommonUtil.isUSRegion()
+              ? DateFormat('MM-dd-yyyy')
+              : DateFormat('dd MMM yyyy'))
+          .format(DateTime.parse(result))
+          .toString()
+      : DateFormat('dd MMM yyyy').format(DateTime.parse(result)).toString();
 }
 
 String notificationTime(String value) =>
