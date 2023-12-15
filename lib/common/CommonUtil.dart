@@ -1718,6 +1718,14 @@ class CommonUtil {
     return updatedDate;
   }
 
+  snoozeDataFormat(DateTime newDateTime) {
+    DateFormat newFormat;
+    var updatedDate = '';
+    newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    updatedDate = updatedDate + newFormat.format(newDateTime);
+    return updatedDate;
+  }
+
   regimentDateFormatV2(
     DateTime newDateTime, {
     bool isAck = false,

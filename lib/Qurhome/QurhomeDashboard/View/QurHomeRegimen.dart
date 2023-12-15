@@ -1074,9 +1074,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             reminder.description =
                                 regimen.description.toString();
                             reminder.eid = regimen.eid.toString();
-                            reminder.estart = regimen.estart!
-                                .add(Duration(minutes: int.parse(time[0])))
-                                .toString();
+                            reminder.estart = CommonUtil().snoozeDataFormat(
+                                DateTime.now().add(Duration(minutes: 1))).toString();
                             reminder.remindin = regimen.remindin.toString();
                             reminder.remindbefore = regimen.remindin.toString();
                             reminder.dosemeal =
