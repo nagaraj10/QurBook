@@ -121,7 +121,10 @@ class _LandingScreenState extends State<LandingScreen> {
       WidgetsBinding.instance?.addObserver(
         LifecycleEventHandler(
           resumeCallBack: () async {
-            TimezoneServices().checkUpdateTimezone();
+            await TimezoneServices().checkUpdateTimezone();
+
+            // Record the user's last access time
+            CommonUtil().saveUserLastAccessTime();
           },
         ),
       );

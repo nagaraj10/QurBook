@@ -1175,8 +1175,9 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
-  void moveToLoginPage() {
-    PreferenceUtil.setBool(isFromAuthError,true);
+  void moveToLoginPage()async {
+    /// Removing the preferences and navigating to Login
+    await PreferenceUtil.clearAllData();
     Navigator.pushAndRemoveUntil(
       Get.context!,
       MaterialPageRoute(

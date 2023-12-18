@@ -155,7 +155,8 @@ class VitalDetailController extends GetxController {
           _sheelaBLEController.stopScanning();
         },
         title: device,
-        isFromVital: true,
+        // Set 'isVitalsManualRecordingRestricted' to true
+        isVitalsManualRecordingRestricted: true,
       );
     }
   }

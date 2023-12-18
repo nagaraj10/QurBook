@@ -1,5 +1,6 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart';
 import '../../../constants/variable_constant.dart' as variable;
 import 'package:myfhb/authentication/constants/constants.dart' as constants;
 
@@ -680,6 +682,56 @@ class QurHomeApiProvider {
       if (kDebugMode) {
         printError(info: e.toString());
       }
+    }
+  }
+
+  // Saves the user's last access time on the server.
+  saveUserLastAccessTime({String version = '',String appNameTemp = ''}) async {
+    try {
+
+      // Get the request headers with time slot
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+
+      // Get the local device name
+      String deviceName = "${Platform?.localHostname}";
+
+      // Get the current date and time
+      DateTime utcDateTime = DateTime.now().toUtc();
+
+      // Format the date and time in the desired format
+      String formattedDateTime =
+          DateFormat(Appointments_iso_format).format(utcDateTime);
+
+      // Prepare the data to be sent in the request body
+      var data = {
+        appName: appNameTemp,
+        strDeviceName: CommonUtil().validString(deviceName ?? ''),
+        strAppVersion: version != null ? ('v' + version) : '',
+        lastAccessTime: CommonUtil().validString(formattedDateTime ?? ''),
+      };
+
+      // Send a POST request to save the last access time
+      http.Response res = (await ApiServices.post(
+        Constants.BASE_URL + save_last_access_time,
+        headers: header,
+        body: json.encode(data),
+      ))!;
+
+      // Check the response status code
+      if (res?.statusCode == 200) {
+        // Success
+      } else {
+        // Failure
+      }
+
+      // Log the response in debug mode
+      if (kDebugMode) {
+        log('saveUserLastAccessTime request ${json.encode(data)} and response ${(res?.statusCode ?? '').toString()} ${(res?.body ?? '').toString()}');
+      }
+
+    } catch (e, stackTrace) {
+      // Log the error using appLogs
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
