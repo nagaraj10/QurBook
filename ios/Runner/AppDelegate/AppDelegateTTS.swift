@@ -276,7 +276,16 @@ extension AppDelegate {
         }
         return modifiedWords.joined(separator: " ")
     }
-
+    
+    
+    ///   Converts a string representation of minutes in words to a formatted string with numeric value and the word "minutes."
+    /// - Parameter input: A string representing minutes in words (e.g., "one minutes", "five mins", "three minutes").
+    /// - Returns: A formatted string with the numeric value followed by the word "minutes," or the original input string if the conversion is not possible.
+    /// - Example:
+    /// ```swift
+    ///       let result = convertToFormattedMinutes("two minutes")
+    /// ```
+    /// Result: "2 minutes"
     func convertToFormattedMinutes(_ input: String) -> String {
         let numberWords: [String: Int] = ["one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9]
         let words = input.components(separatedBy: " ")
