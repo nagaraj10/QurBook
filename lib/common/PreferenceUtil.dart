@@ -741,4 +741,25 @@ class PreferenceUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  // Retrieve the boolean value indicating whether manual recording of vitals is restricted
+  static bool getIsVitalsManualRecordingRestricted() {
+    return _prefsInstance!.getBool(
+          Constants.KEY_IS_Vitals_ManualRecording_Restricted,
+        ) ??
+        false;
+  }
+
+  // Save the boolean value indicating whether manual recording of vitals is restricted
+  static Future<bool> saveIsVitalsManualRecordingRestricted({
+    bool isVitalsManualRecordingRestricted = false,
+  }) async {
+    // Obtain an instance of shared preferences
+    final instance = await _prefs!;
+    // Save the value to shared preferences
+    return instance.setBool(
+      Constants.KEY_IS_Vitals_ManualRecording_Restricted,
+      isVitalsManualRecordingRestricted,
+    );
+  }
 }

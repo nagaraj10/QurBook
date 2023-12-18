@@ -1,5 +1,6 @@
 
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/CaregiverCommunicationSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
@@ -299,8 +300,10 @@ class PrimaryProvider {
 
 class AdditionalInfoModuleAccess {
   List<ModuleAccess>? moduleAccess;
+  //boolean variable to indicate whether vitals should be recorded
+  bool? recordVitals;
 
-  AdditionalInfoModuleAccess({this.moduleAccess});
+  AdditionalInfoModuleAccess({this.moduleAccess,this.recordVitals});
 
   AdditionalInfoModuleAccess.fromJson(Map<String, dynamic> json) {
     try {
@@ -310,7 +313,13 @@ class AdditionalInfoModuleAccess {
               moduleAccess?.add(new ModuleAccess.fromJson(v));
             });
           }
+      // Extract and assign the 'record_vitals' value from JSON, default to false if not present
+      recordVitals = (json['record_vitals']??false);
+      // Save the 'recordVitals' value to shared preferences
+      saveIsVitalsManualRecordingRestricted(recordVitals);
     } catch (e,stackTrace) {
+      // Handle exceptions by saving the 'recordVitals' value and logging the error
+      saveIsVitalsManualRecordingRestricted(recordVitals);
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
@@ -320,7 +329,17 @@ class AdditionalInfoModuleAccess {
     if (this.moduleAccess != null) {
       data['module-access'] = this.moduleAccess?.map((v) => v.toJson()).toList();
     }
+    data['record_vitals'] = this.recordVitals;
     return data;
+  }
+
+  // Save the boolean value indicating whether manual recording of vitals is restricted
+  // to shared preferences using PreferenceUtil
+  saveIsVitalsManualRecordingRestricted(bool? recordVital) {
+    // Save the value to shared preferences, defaulting to false if 'recordVital' is null
+    PreferenceUtil.saveIsVitalsManualRecordingRestricted(
+      isVitalsManualRecordingRestricted: (recordVital ?? false),
+    );
   }
 }
 

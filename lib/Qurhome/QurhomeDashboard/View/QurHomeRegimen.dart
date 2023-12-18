@@ -1530,7 +1530,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               _sheelaBLEController.stopScanning();
             },
             title: strConnectPulseMeter,
-            isFromVital: false,
+            // Determine the value for 'isVitalsManualRecordingRestricted' based on region
+            isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()?PreferenceUtil.getIsVitalsManualRecordingRestricted():false,
           );
           _sheelaBLEController.isFromRegiment = true;
           _sheelaBLEController.filteredDeviceType = 'spo2';
@@ -1575,7 +1576,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               _sheelaBLEController.stopScanning();
             },
             title: strConnectBpMeter,
-            isFromVital: false,
+            // Determine the value for 'isVitalsManualRecordingRestricted' based on region
+            isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()?PreferenceUtil.getIsVitalsManualRecordingRestricted():false,
           );
           _sheelaBLEController.isFromRegiment = true;
           _sheelaBLEController.filteredDeviceType = 'bp';
@@ -1617,7 +1619,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               _sheelaBLEController.stopScanning();
             },
             title: strConnectWeighingScale,
-            isFromVital: false,
+            // Determine the value for 'isVitalsManualRecordingRestricted' based on region
+            isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()?PreferenceUtil.getIsVitalsManualRecordingRestricted():false,
           );
           _sheelaBLEController.isFromRegiment = true;
           _sheelaBLEController.filteredDeviceType = 'weight';
@@ -1662,7 +1665,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               _sheelaBLEController.stopScanning();
             },
             title: strConnectBGL,
-            isFromVital: false,
+            // Determine the value for 'isVitalsManualRecordingRestricted' based on region
+            isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()?PreferenceUtil.getIsVitalsManualRecordingRestricted():false,
           );
           _sheelaBLEController.isFromRegiment = true;
           _sheelaBLEController.filteredDeviceType = 'bgl';

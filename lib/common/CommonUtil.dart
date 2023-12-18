@@ -38,7 +38,6 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/more_menu/models/available_devices/TroubleShootingModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
@@ -5658,7 +5657,8 @@ class CommonUtil {
       {Function()? onPressManual,
       Function()? onPressCancel,
       String? title,
-      bool? isFromVital}) async {
+        // Display "Enter Manually" button only if manual recording is not restricted
+      bool? isVitalsManualRecordingRestricted}) async {
     showGeneralDialog(
       context: context,
       barrierColor: Colors.black38,
@@ -5688,7 +5688,8 @@ class CommonUtil {
                                 TextStyle(fontSize: 18.sp, color: Colors.white),
                             textAlign: TextAlign.center)),
                   ),
-                  if (!isFromVital!)
+                  // Display "Enter Manually" button only if manual recording is not restricted
+                  if (!isVitalsManualRecordingRestricted!)
                     SizedBox(
                       width: 180.w,
                       child: TextButton(
