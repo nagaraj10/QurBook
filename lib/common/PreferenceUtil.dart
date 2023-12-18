@@ -741,13 +741,4 @@ class PreferenceUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
-
-  // Retrieve the boolean value indicating whether manual recording of vitals is restricted
-  static bool getIsVitalsManualRecordingRestricted() {
-    return _prefsInstance!.getBool(
-          Constants.KEY_IS_Vitals_ManualRecording_Restricted,
-        ) ??
-        false;
-  }
-
 }
