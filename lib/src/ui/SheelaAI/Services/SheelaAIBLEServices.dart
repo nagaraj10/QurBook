@@ -587,9 +587,9 @@ class SheelaBLEController extends GetxController {
               (model.data!.diastolic ?? '').isNotEmpty &&
               (model.data!.pulse ?? '').isNotEmpty) {
             String? strTextMsg = await SheelaController.getTextTranslate(
-                "Thank you. Your BP systolic ${model.data!.systolic} "
-                ", Diastolic ${model.data!.diastolic} "
-                "and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
+                "Thank you. Your BP ${model.data!.systolic} "
+                "over ${model.data!.diastolic} "
+                "and pulse ${model.data!.pulse} are successfully recorded. Bye.");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
