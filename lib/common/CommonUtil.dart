@@ -7411,15 +7411,25 @@ class CommonUtil {
       if ((validString(userId ?? '').trim().isNotEmpty)) {
         // Initialize the version string
         String version = '';
+        // Initialize an empty string variable to store the app name
+        String appName = '';
         // Fetch the app version and build number
         await PackageInfo.fromPlatform().then((packageInfo) {
           version = (packageInfo.version + ' + ' + packageInfo.buildNumber);
+          // Check the package name and set the corresponding app name
+          if (packageInfo.packageName == appQurbookBundleId) {
+            appName = strAppTypeQurbook;
+          } else if (packageInfo.packageName == appQurhomeBundleId) {
+            appName = strAppTypeQurhome;
+          } else if (packageInfo.packageName == appQurdayBundleId) {
+            appName = strAppTypeQurday;
+          }
         });
 
         // Create an instance of QurHomeApiProvider
         final apiResponse = QurHomeApiProvider();
         // Call saveUserLastAccessTime method on QurHomeApiProvider
-        await apiResponse.saveUserLastAccessTime(version: version);
+        await apiResponse.saveUserLastAccessTime(version: version,appNameTemp: appName);
       }
     } catch (e, stackTrace) {
       // Log any errors using appLogs
