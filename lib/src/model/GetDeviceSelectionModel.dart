@@ -1,6 +1,7 @@
 
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/model/CaregiverCommunicationSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
@@ -337,8 +338,9 @@ class AdditionalInfoModuleAccess {
   // to shared preferences using PreferenceUtil
   saveIsVitalsManualRecordingRestricted(bool? recordVital) {
     // Save the value to shared preferences, defaulting to false if 'recordVital' is null
-    PreferenceUtil.saveIsVitalsManualRecordingRestricted(
-      isVitalsManualRecordingRestricted: (recordVital ?? false),
+    PreferenceUtil.setBool(
+      KEY_IS_Vitals_ManualRecording_Restricted,
+      (recordVital ?? false),
     );
   }
 }
