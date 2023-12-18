@@ -696,11 +696,11 @@ class QurHomeApiProvider {
       String deviceName = "${Platform?.localHostname}";
 
       // Get the current date and time
-      DateTime now = DateTime.now();
+      DateTime utcDateTime = DateTime.now().toUtc();
 
       // Format the date and time in the desired format
       String formattedDateTime =
-          DateFormat(Appointments_iso_format).format(now);
+          DateFormat(Appointments_iso_format).format(utcDateTime);
 
       // Prepare the data to be sent in the request body
       var data = {
