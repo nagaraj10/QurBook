@@ -686,7 +686,7 @@ class QurHomeApiProvider {
   }
 
   // Saves the user's last access time on the server.
-  saveUserLastAccessTime({String version = ''}) async {
+  saveUserLastAccessTime({String version = '',String appNameTemp = ''}) async {
     try {
 
       // Get the request headers with time slot
@@ -704,7 +704,7 @@ class QurHomeApiProvider {
 
       // Prepare the data to be sent in the request body
       var data = {
-        appName: constants.strSource,
+        appName: appNameTemp,
         strDeviceName: CommonUtil().validString(deviceName ?? ''),
         strAppVersion: version != null ? ('v' + version) : '',
         lastAccessTime: CommonUtil().validString(formattedDateTime ?? ''),
@@ -726,7 +726,7 @@ class QurHomeApiProvider {
 
       // Log the response in debug mode
       if (kDebugMode) {
-        log('saveUserLastAccessTime response ${(res?.statusCode ?? '').toString()} ${(res?.body ?? '').toString()}');
+        log('saveUserLastAccessTime request ${json.encode(data)} and response ${(res?.statusCode ?? '').toString()} ${(res?.body ?? '').toString()}');
       }
 
     } catch (e, stackTrace) {
