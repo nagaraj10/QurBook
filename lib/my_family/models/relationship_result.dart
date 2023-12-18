@@ -1,8 +1,5 @@
-
-
 import 'package:myfhb/common/CommonUtil.dart';
 
-import 'FamilyMembersRes.dart';
 import 'relationships.dart';
 
 class Result {
@@ -38,13 +35,13 @@ class Result {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       if (json['referenceValueCollection'] != null) {
-            referenceValueCollection = <RelationsShipModel>[];
-            json['referenceValueCollection'].forEach((v) {
-              referenceValueCollection!.add(RelationsShipModel.fromJson(v));
-            });
-          }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        referenceValueCollection = <RelationsShipModel>[];
+        json['referenceValueCollection'].forEach((v) {
+          referenceValueCollection!.add(RelationsShipModel.fromJson(v));
+        });
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 

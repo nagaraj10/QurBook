@@ -8,6 +8,7 @@ import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import '../../add_family_otp/models/add_family_otp_arguments.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
@@ -24,7 +25,6 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../bloc/FamilyListBloc.dart';
-import '../models/FamilyMembersRes.dart';
 import '../models/relationship_response_list.dart';
 import '../models/relationships.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
@@ -160,7 +160,8 @@ class _MyFamilyState extends State<MyFamily> {
             return ErrorsWidget();
           } else {
             if (snapshot.hasData && snapshot.data?.result != null) {
-              return getMyFamilyMembers(snapshot.data?.result);
+              return getMyFamilyMembers(snapshot.data?.result,
+                  snapshot.data?.result?.sharedByUsers ?? []);
             } else {
               return refreshIndicatorWithEmptyContainer();
             }
@@ -199,7 +200,8 @@ class _MyFamilyState extends State<MyFamily> {
                             Constants.KEY_FAMILYMEMBERNEW,
                             snapshot.data.data.result); */
 
-              familyWidget = getMyFamilyMembers(snapshot.data!.data!.result);
+              familyWidget = getMyFamilyMembers(snapshot.data!.data!.result,
+                  snapshot.data?.data?.result?.sharedByUsers ?? []);
               break;
           }
         } else {
@@ -265,9 +267,12 @@ class _MyFamilyState extends State<MyFamily> {
             PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW)); */
   }
 
-  Widget getMyFamilyMembers(FamilyMemberResult? data) {
-    return data != null
-        ? data.sharedByUsers!.isNotEmpty
+  Widget getMyFamilyMembers(
+      FamilyMemberResult? data, List<SharedByUsers> sharedByUsersListNew) {
+    List<SharedByUsers> sharedByUsersList = [];
+    sharedByUsersList = _familyListBloc?.getSharedByListList(data) ?? [];
+    return sharedByUsersList != null
+        ? sharedByUsersList.isNotEmpty
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
                 child: RefreshIndicator(
@@ -283,11 +288,11 @@ class _MyFamilyState extends State<MyFamily> {
                     shrinkWrap: true,
                     padding: EdgeInsets.only(bottom: 20),
                     itemBuilder: (c, i) => getCardWidgetForUser(
-                        data.sharedByUsers![i == 0 ? 0 : i - 1],
+                        sharedByUsersList[i == 0 ? 0 : i - 1],
                         i,
-                        data.sharedByUsers,
+                        sharedByUsersList,
                         userCollection: data),
-                    itemCount: data.sharedByUsers!.length + 1,
+                    itemCount: sharedByUsersList.length + 1,
                   ),
                 ))
             : refreshIndicatorWithEmptyContainer()
