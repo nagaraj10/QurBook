@@ -269,11 +269,22 @@ extension AppDelegate {
     }
     
     func prefixListFiltering(bestTranscription: String) -> String {
-        let words = bestTranscription.lowercased().split(separator: " ").map(String.init)
+        let words = convertToFormattedMinutes(bestTranscription.lowercased()).split(separator: " ").map(String.init)
         
         let modifiedWords = words.enumerated().map { (index, word) in
             return sheelaTTSWordList.contains(word) ? replacementWordSheelaTTS : (index == 0 ? word.capitalized : word)
         }
         return modifiedWords.joined(separator: " ")
+    }
+
+    func convertToFormattedMinutes(_ input: String) -> String {
+        let numberWords: [String: Int] = ["one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9]
+        let words = input.components(separatedBy: " ")
+        
+        if words.count == 2, let number = numberWords[words.first ?? ""], ["minute", "minutes", "mins", "min"].contains(words[1]) {
+            return "\(number) \(words[1])"
+        } else {
+            return input
+        }
     }
 }
