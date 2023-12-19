@@ -220,7 +220,6 @@ class FamilyListBloc implements BaseBloc {
     List<SharedByUsers> sharedByUsersList = [];
     List<SharedByUsers> sharedByUsersListOriginal = [];
     List<SharedToUsers> sharedToUsersList = [];
-    List<SharedByUsers> sharedByUserListAdded = [];
 
     sharedByUsersList = data?.sharedByUsers ??
         []; // arraylist to get he combined list from sharedToUser an sharedByUserList
