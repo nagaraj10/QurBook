@@ -39,7 +39,8 @@ class FamilyListView {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
 
 // return the combine family member list
-    sharedByUsersList = _familyListBloc?.getSharedByListList(data) ?? [];
+    sharedByUsersList =
+        _familyListBloc?.getSharedByUsersCombinedList(data) ?? [];
 
     return showDialog(
         context: context,

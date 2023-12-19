@@ -216,7 +216,7 @@ class FamilyListBloc implements BaseBloc {
  * This method combines thelist of sharedByUser and sharedToUser together
  * by checking if the parent id is not similar to child id 
  */
-  List<SharedByUsers> getSharedByListList(FamilyMemberResult? data) {
+  List<SharedByUsers> getSharedByUsersCombinedList(FamilyMemberResult? data) {
     List<SharedByUsers> sharedByUsersList = [];
     List<SharedByUsers> sharedByUsersListOriginal = [];
     List<SharedToUsers> sharedToUsersList = [];

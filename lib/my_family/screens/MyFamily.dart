@@ -270,7 +270,8 @@ class _MyFamilyState extends State<MyFamily> {
   Widget getMyFamilyMembers(
       FamilyMemberResult? data, List<SharedByUsers> sharedByUsersListNew) {
     List<SharedByUsers> sharedByUsersList = [];
-    sharedByUsersList = _familyListBloc?.getSharedByListList(data) ?? [];
+    sharedByUsersList =
+        _familyListBloc?.getSharedByUsersCombinedList(data) ?? [];
     return sharedByUsersList != null
         ? sharedByUsersList.isNotEmpty
             ? Container(
