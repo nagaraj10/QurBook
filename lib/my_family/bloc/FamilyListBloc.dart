@@ -222,9 +222,12 @@ class FamilyListBloc implements BaseBloc {
     List<SharedToUsers> sharedToUsersList = [];
     List<SharedByUsers> sharedByUserListAdded = [];
 
-    sharedByUsersList = data?.sharedByUsers ?? [];
-    sharedToUsersList = data?.sharedToUsers ?? [];
-    sharedByUsersListOriginal = data?.sharedByUsers ?? [];
+    sharedByUsersList = data?.sharedByUsers ??
+        []; // arraylist to get he combined list from sharedToUser an sharedByUserList
+    sharedToUsersList =
+        data?.sharedToUsers ?? []; // adding the existing list to this array
+    sharedByUsersListOriginal =
+        data?.sharedByUsers ?? []; // arraylist to retain the original value
     bool? add;
     if (sharedToUsersList.isNotEmpty ?? false) {
       if ((sharedToUsersList.length ?? 0) > 0) {
@@ -232,11 +235,12 @@ class FamilyListBloc implements BaseBloc {
             (sharedByUsersListOriginal.length ?? 0) > 0) {
           sharedToUsersList.forEach((sharedToUsers) {
             sharedByUsersListOriginal.any((sharedByUser) {
+              //Check if the parentid and child id is similar
               add = (sharedToUsers?.parent?.id == sharedByUser?.child?.id) ??
                   false;
               return add ?? false;
             });
-
+            //if not similar add the object to existing list
             if (add == false) {
               SharedByUsers sharedByUserObj = SharedByUsers();
               sharedByUserObj.id = sharedToUsers?.id;
