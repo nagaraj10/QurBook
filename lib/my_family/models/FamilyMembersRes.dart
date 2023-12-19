@@ -56,6 +56,7 @@ class FamilyMemberResult {
           sharedToUsers!.add(SharedToUsers.fromJson(v));
         });
       }
+
       try {
         virtualUserParent = json['virtualUserParent'] != null
             ? VirtualUserParent.fromJson(json['virtualUserParent'])
@@ -103,6 +104,7 @@ class SharedByUsers {
   String? nonAdheranceId;
   ChatListItem? chatListItem;
   String? nickNameSelf;
+  bool? showDelink = true;
   SharedByUsers(
       {this.id,
       this.status,
@@ -146,6 +148,25 @@ class SharedByUsers {
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
+  }
+  SharedByUsers.fromSharedToUsers(SharedToUsers sharedToUsers) {
+    id = sharedToUsers.id;
+    status = sharedToUsers.status;
+    nickName = sharedToUsers.nickName;
+    isActive = sharedToUsers.isActive;
+    createdOn = sharedToUsers.createdOn;
+    lastModifiedOn = sharedToUsers.lastModifiedOn;
+    isCaregiver = sharedToUsers.isCaregiver;
+    isNewUser = sharedToUsers.isNewUser;
+    remainderForId = sharedToUsers.remainderForId;
+    remainderFor = sharedToUsers.remainderFor;
+    remainderMins = sharedToUsers.remainderMins;
+    nonAdheranceId = sharedToUsers.nonAdheranceId;
+    child = sharedToUsers.parent;
+    relationship = sharedToUsers.relationship;
+    nickName = sharedToUsers.nickName;
+    showDelink =
+        false; //for shared to users the delink button shouldnot be visible
   }
 
   Map<String, dynamic> toJson() {

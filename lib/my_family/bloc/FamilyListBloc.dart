@@ -235,34 +235,19 @@ class FamilyListBloc implements BaseBloc {
           sharedToUsersList.forEach((sharedToUsers) {
             sharedByUsersListOriginal.any((sharedByUser) {
               //Check if the parentid and child id is similar
-              add = (sharedToUsers?.parent?.id == sharedByUser?.child?.id) ??
-                  false;
+              add = (sharedToUsers.parent?.id == sharedByUser.child?.id);
               return add ?? false;
             });
             //if not similar add the object to existing list
             if (add == false) {
-              SharedByUsers sharedByUserObj = SharedByUsers();
-              sharedByUserObj.id = sharedToUsers?.id;
-              sharedByUserObj.status = sharedToUsers?.status;
-              sharedByUserObj.nickName = sharedToUsers?.nickName;
-              sharedByUserObj.isActive = sharedToUsers?.isActive;
-              sharedByUserObj.createdOn = sharedToUsers?.createdOn;
-              sharedByUserObj.lastModifiedOn = sharedToUsers?.lastModifiedOn;
-              sharedByUserObj.isCaregiver = sharedToUsers?.isCaregiver;
-              sharedByUserObj.isNewUser = sharedToUsers?.isNewUser;
-              sharedByUserObj.remainderForId = sharedToUsers?.remainderForId;
-              sharedByUserObj.remainderFor = sharedToUsers?.remainderFor;
-              sharedByUserObj.remainderMins = sharedToUsers?.remainderMins;
-              sharedByUserObj.nonAdheranceId = sharedToUsers?.nonAdheranceId;
-              sharedByUserObj.child = sharedToUsers?.parent;
-              sharedByUserObj.relationship = sharedToUsers?.relationship;
-              sharedByUserObj.nickName = sharedToUsers.nickName;
+              SharedByUsers sharedByUserObj =
+                  SharedByUsers.fromSharedToUsers(sharedToUsers);
               sharedByUsersList.add(sharedByUserObj);
             }
           });
         }
       }
     }
-    return sharedByUsersList ?? [];
+    return sharedByUsersList;
   }
 }

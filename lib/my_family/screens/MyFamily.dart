@@ -160,8 +160,9 @@ class _MyFamilyState extends State<MyFamily> {
             return ErrorsWidget();
           } else {
             if (snapshot.hasData && snapshot.data?.result != null) {
-              return getMyFamilyMembers(snapshot.data?.result,
-                  snapshot.data?.result?.sharedByUsers ?? []);
+              return getMyFamilyMembers(
+                snapshot.data?.result,
+              );
             } else {
               return refreshIndicatorWithEmptyContainer();
             }
@@ -200,8 +201,9 @@ class _MyFamilyState extends State<MyFamily> {
                             Constants.KEY_FAMILYMEMBERNEW,
                             snapshot.data.data.result); */
 
-              familyWidget = getMyFamilyMembers(snapshot.data!.data!.result,
-                  snapshot.data?.data?.result?.sharedByUsers ?? []);
+              familyWidget = getMyFamilyMembers(
+                snapshot.data!.data!.result,
+              );
               break;
           }
         } else {
@@ -267,8 +269,7 @@ class _MyFamilyState extends State<MyFamily> {
             PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW)); */
   }
 
-  Widget getMyFamilyMembers(
-      FamilyMemberResult? data, List<SharedByUsers> sharedByUsersListNew) {
+  Widget getMyFamilyMembers(FamilyMemberResult? data) {
     List<SharedByUsers> sharedByUsersList = [];
     sharedByUsersList =
         _familyListBloc?.getSharedByUsersCombinedList(data) ?? [];
@@ -588,71 +589,76 @@ class _MyFamilyState extends State<MyFamily> {
                 ),
               ),
               position != 0
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                            FHBUtils().check().then((intenet) {
-                              if (intenet != null && intenet) {
-                                CommonUtil.showLoadingDialog(dialogContext,
-                                    _keyLoader, variable.Please_Wait);
-                                final checkDelinkData = {};
-                                checkDelinkData[variable.patientId] = userid;
-                                checkDelinkData[variable.familyMemberId] =
-                                    data.child?.id;
+                  ? Visibility(
+                      visible: data.showDelink ??
+                          true, //if showDelink then only make the widget visible
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              FHBUtils().check().then((intenet) {
+                                if (intenet != null && intenet) {
+                                  CommonUtil.showLoadingDialog(dialogContext,
+                                      _keyLoader, variable.Please_Wait);
+                                  final checkDelinkData = {};
+                                  checkDelinkData[variable.patientId] = userid;
+                                  checkDelinkData[variable.familyMemberId] =
+                                      data.child?.id;
 
-                                final jsonString =
-                                    convert.jsonEncode(checkDelinkData);
-                                _familyListRespository
-                                    .checkDelink(jsonString)
-                                    .then((value) {
-                                  Navigator.of(_keyLoader.currentContext!,
-                                          rootNavigator: true)
-                                      .pop();
-                                  if (value.isSuccess!) {
-                                    Alert.displayConfirmProceed(context,
-                                        title: "ALERT", content: value.message,
-                                        onPressedConfirm: () {
-                                      Navigator.pop(context);
+                                  final jsonString =
+                                      convert.jsonEncode(checkDelinkData);
+                                  _familyListRespository
+                                      .checkDelink(jsonString)
+                                      .then((value) {
+                                    Navigator.of(_keyLoader.currentContext!,
+                                            rootNavigator: true)
+                                        .pop();
+                                    if (value.isSuccess!) {
+                                      Alert.displayConfirmProceed(context,
+                                          title: "ALERT",
+                                          content: value.message,
+                                          onPressedConfirm: () {
+                                        Navigator.pop(context);
+                                        commonMethodToDelink(data.child?.id);
+                                      }, onPressedCancel: () {
+                                        Navigator.pop(context);
+                                      });
+                                    } else {
                                       commonMethodToDelink(data.child?.id);
-                                    }, onPressedCancel: () {
-                                      Navigator.pop(context);
-                                    });
-                                  } else {
-                                    commonMethodToDelink(data.child?.id);
-                                  }
-                                });
-                              } else {
-                                FHBBasicWidget().showInSnackBar(
-                                    Constants.STR_NO_CONNECTIVITY,
-                                    scaffold_state);
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            margin:
-                                EdgeInsets.only(left: 10, right: 10, top: 10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
+                                    }
+                                  });
+                                } else {
+                                  FHBBasicWidget().showInSnackBar(
+                                      Constants.STR_NO_CONNECTIVITY,
+                                      scaffold_state);
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              margin:
+                                  EdgeInsets.only(left: 10, right: 10, top: 10),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()))),
+                              child: Text(
+                                variable.DeLink,
+                                style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w500,
                                     color: Color(
-                                        CommonUtil().getMyPrimaryColor()))),
-                            child: Text(
-                              variable.DeLink,
-                              style: TextStyle(
-                                  fontSize: 16.0.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
-                              softWrap: false,
-                              overflow: TextOverflow.ellipsis,
+                                        CommonUtil().getMyPrimaryColor())),
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     )
                   : Container()
             ],

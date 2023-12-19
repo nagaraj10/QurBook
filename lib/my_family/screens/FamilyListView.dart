@@ -36,7 +36,7 @@ class FamilyListView {
       {bool removeDuplicate = false}) async {
     // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     List<SharedByUsers> sharedByUsersList = [];
-    FamilyListBloc _familyListBloc = new FamilyListBloc();
+    FamilyListBloc _familyListBloc = FamilyListBloc();
 
 // return the combine family member list
     sharedByUsersList =
